@@ -1,0 +1,95 @@
+# CI for the standalone edu-platform monorepo.
+# Compact port of quality-preview-deploy.yml from przeprogramowani-sites,
+# reduced to a single app. Dropped (re-add per runbook if needed): Slack
+# notifications, e2e gate deploy, multi-project affected matrix.
+name: CI & Deploy
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          GH_PKG_TOKEN: ${{ secrets.GH_PKG_TOKEN }}
+
+      - name: Lint, type-check, and test
+        run: npx nx run-many -t lint check test
+        env:
+          MAILERLITE_API_KEY: 'test_api_key'
+          MAILERLITE_GROUP_ID: 'test_group_id'
+
+      - name: Build
+        run: npx nx run-many -t build
+        env:
+          MAILERLITE_API_KEY: 'test_api_key'
+          MAILERLITE_GROUP_ID: 'test_group_id'
+
+      - name: Deploy previews (PR)
+        if: github.event_name == 'pull_request'
+        run: |
+          npx nx run edu-platform:deploy:preview --args.branch="${GITHUB_HEAD_REF//\//-}"
+          npx nx run 10x-assistant:deploy:preview --args.branch="${GITHUB_HEAD_REF//\//-}"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Deploy production (master)
+        if: github.ref == 'refs/heads/master'
+        run: |
+          npx nx run edu-platform:deploy
+          npx nx run 10x-assistant:deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+  e2e:
+    needs: ci
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          GH_PKG_TOKEN: ${{ secrets.GH_PKG_TOKEN }}
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+        working-directory: apps/edu-platform
+
+      - name: Run e2e tests against preview
+        run: npx playwright test
+        working-directory: apps/edu-platform
+        env:
+          E2E_BASE_URL: https://${{ github.head_ref }}.przeprogramowani-edu.pages.dev
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-edu-platform
+          path: apps/edu-platform/playwright-report/

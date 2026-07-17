@@ -1,0 +1,84 @@
+<meta name="lesson-id" content="Typowanie event handlerów"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/5zsmm93gmqkllaphogv51r7ocg2h" style="width: 100%; max-width: 100%;"><p>Fundamentem nowoczesnych aplikacji webowych jest obsługa interakcji użytkownika z interfejsem. </p><p>React z TypeScript oferuje wiele możliwości zarządzania tymi interakcjami w bezpieczny sposób. Poprawne typowanie event handlerów nie tylko zwiększa bezpieczeństwo kodu, ale również ułatwia jego utrzymanie i rozwój. </p><p>W tej lekcji omówimy różne rodzaje zdarzeń w React, pokażemy, jak efektywnie typować event handlerów przy użyciu TypeScript oraz przedstawimy najlepsze praktyki, które pomogą unikać typowych błędów.</p><h3>Rodzaje eventów</h3><p>React obsługuje szeroki zakres zdarzeń, które odpowiadają różnym interakcjom użytkownika z aplikacją. Poniżej przedstawiamy listę najważniejszych typów eventów dostępnych w React 18+:</p><ul><li><p><strong>AnimationEvent</strong> – związany z animacjami CSS, pozwala reagować na różne etapy animacji.</p></li><li><p><strong>ChangeEvent</strong> – występuje przy zmianie wartości elementów &lt;input&gt;, &lt;select&gt; oraz &lt;textarea&gt;, co jest kluczowe przy obsłudze formularzy.</p></li><li><p><strong>ClipboardEvent</strong> – obejmuje zdarzenia związane ze schowkiem, takie jak kopiowanie, wklejanie czy wycinanie tekstu.</p></li><li><p><strong>CompositionEvent</strong> – zdarzenia, które występują, gdy użytkownik wprowadza tekst w sposób niebezpośredni, na przykład pisząc po japońsku na polskiej klawiaturze za pomocą Input Method Editor (IME).</p></li><li><p><strong>DragEvent</strong> – obsługuje interakcje typu "drag and drop" wykonywane myszką.</p></li><li><p><strong>FocusEvent</strong> – wywoływany, gdy element zyskuje lub traci fokus, co jest istotne dla dostępności aplikacji.</p></li><li><p><strong>FormEvent</strong> – pojawia się za każdym razem, gdy formularz lub jego element uzyskuje lub traci fokus, wartość elementu zostaje zmieniona lub formularz zostaje przesłany.</p></li><li><p><strong>InvalidEvent</strong> – uruchamiany, gdy kontrolka formularza nie przechodzi walidacji, na przykład gdy użytkownik wprowadzi liczbę przekraczającą dozwolony zakres w polu &lt;input type="number" max="10"&gt;.</p></li><li><p><strong>KeyboardEvent</strong> – odpowiada interakcjom z klawiaturą, gdzie każdy event odpowiada naciskaniu pojedynczego klawisza.</p></li><li><p><strong>MouseEvent</strong> – dotyczy interakcji użytkownika z myszką.</p></li><li><p><strong>PointerEvent</strong> – obejmuje interakcje z dowolnym urządzeniem wskazującym, takim jak myszka, rysik czy ekran dotykowy. Jest rekomendowanym rozwiązaniem zamiast MouseEvent ze względu na większą uniwersalność.</p></li><li><p><strong>TouchEvent</strong> – zdarzenia wynikające z interakcji użytkownika z urządzeniem dotykowym, rozszerzające UIEvent.</p></li><li><p><strong>TransitionEvent</strong> – związany z przejściami CSS, umożliwia reagowanie na ich zakończenie.</p></li><li><p><strong>UIEvent</strong> – bazowy typ dla wielu innych eventów, takich jak MouseEvent, TouchEvent czy PointerEvent.</p></li><li><p><strong>WheelEvent</strong> – obsługuje scrollowanie za pomocą kółka myszy lub podobnych urządzeń wejściowych, odpowiada za event typu wheel, a nie scroll.</p></li><li><p><strong>SyntheticEvent</strong> – podstawowy typ dla wszystkich powyższych eventów w React, zapewniający spójne zachowanie niezależnie od przeglądarki.</p></li></ul><h2>Jak typować w praktyce?</h2><p>W codziennej pracy często napotkasz sytuacje, w których TypeScript nie poradzi sobie z automatycznym określeniem typu parametru eventu. Na przykład:</p><pre><code>const handleClick = (e) =&gt; {}; // Parameter 'e' implicitly has an 'any' type.
+
+&lt;button onClick={handleClick}&gt;Click me&lt;/button&gt;;</code></pre><p>W powyższym przykładzie TypeScript zgłasza błąd, ponieważ nie jest jasne, jaki typ powinien mieć parametr <em>e</em> w funkcji <em>handleClick</em>. Problem ten pojawia się również w przypadku innych funkcji obsługi zdarzeń, takich jak <em>onSubmit</em> czy <em>onMouseOver</em>, które otrzymują różne elementy DOM jako argumenty.</p><p>Aby poprawnie typować zdarzenia, warto zastosować pewne techniki ułatwiające określenie właściwego typu. Jednym z podejść jest stworzenie funkcji inline wewnątrz obsługi zdarzenia, co pozwala na automatyczne rozpoznanie typu przez TypeScript:</p><pre><code>&lt;button onClick={(e) =&gt; {}} /&gt; // (parametr) e: React.MouseEvent&lt;HTMLButtonElement&gt;</code></pre><p>Po najechaniu kursorem na <em>e</em>, TypeScript wskazuje, że ma on typ <em>React.MouseEvent&lt;HTMLButtonElement&gt;</em>. Możemy teraz skopiować ten typ i użyć go do zdefiniowania naszej funkcji <em>handleClick</em>:</p><pre><code>const handleClick = (e: React.MouseEvent&lt;HTMLButtonElement&gt;) =&gt; {
+  console.log(e);
+};
+
+const ExampleComponent = () =&gt; (
+  &lt;button onClick={handleClick}&gt;
+    Click me
+  &lt;/button&gt;
+);</code></pre><p>Chociaż ten sposób działa, może wydawać się nieco powolny, zwłaszcza gdy mamy do czynienia z wieloma eventami w aplikacji. Istnieje jednak bardziej efektywna metoda, która pozwala na automatyczne wywnioskowanie typu bez konieczności ręcznego kopiowania go.</p><h3><a href="https://www.totaltypescript.com/event-types-in-react-and-typescript#solution-3-use-reactcomponentprops" target="_blank" rel="noopener noreferrer"><strong>#</strong></a>React.ComponentProps</h3><p>Sposobem na przyspieszenie tego byłoby usunięcie kroku, w którym sprawdzamy typ obsługi. Byłoby wspaniale powiedzieć „Chcę tego typu obsługi” i pozwolić TypeScriptowi dowiedzieć się reszty.</p><p>W tym celu możemy użyć ComponentProps, który omówiliśmy szczegółowo w lekcji <a class="entity" href="https://przeprogramowani.circle.so/c/o-ts-react-pro/sections/381451/lessons/1442840" target="_blank" rel="noopener noreferrer">#Ekstrakcja propsów</a>. Możemy go wykorzystać również w tym kontekście, zawężając działanie do typu event handlera:</p><pre><code>const handleClick: React.ComponentProps&lt;"button"&gt;["onClick"] = (e) =&gt; {
+  console.log(e);
+};
+
+const ExampleButton = () =&gt; (
+  &lt;button onClick={handleClick}&gt;
+    Click me
+  &lt;/button&gt;
+);</code></pre><p>W powyższym przykładzie, <em>ComponentProps&lt;"button"&gt;</em> zwraca typ propsów dla elementu <em>&lt;button&gt;</em>, a <em>["onClick"]</em> wyciąga typ właściwości <em>onClick</em>. Dzięki temu TypeScript automatycznie określa, że <em>e</em> ma typ <em>React.MouseEvent&lt;HTMLButtonElement&gt;</em>, co eliminuje potrzebę ręcznego definiowania typu.</p><h2>Eventy natywne vs eventy Reacta</h2><p>Podczas pracy z Reactem, warto zrozumieć różnicę między natywnymi eventami JavaScript a eventami dostarczanymi przez Reacta. Na przykład, istnieje zarówno globalny MouseEvent, jak i MouseEvent eksportowany przez Reacta. Oba typy są używane do nasłuchiwania zdarzeń, jednak mają swoje specyficzne cechy.</p><p>Natywny MouseEvent odnosi się do standardowych zdarzeń JavaScript i jest częścią globalnego API przeglądarki. Z kolei React.MouseEvent jest dostosowaną wersją tego eventu, zoptymalizowaną pod kątem systemu <a href="https://react.dev/reference/react-dom/components/common#react-event-object" target="_blank" rel="noopener noreferrer">eventów syntetycznych Reacta</a>. Eventy Reacta uwzględniają kompatybilność między różnymi przeglądarkami i zawierają dodatkowe właściwości specyficzne dla Reacta, takie jak persist.</p><p>Choć oba typy eventów mają wiele wspólnych cech i mogą być używane zamiennie w wielu przypadkach, zaleca się korzystanie z eventów Reacta, aby w pełni wykorzystać optymalizacje i dodatkowe funkcjonalności oferowane przez bibliotekę.</p><h3>Dołączanie natywnych event listenerów</h3><p>Czasami w aplikacji React potrzebujemy dodać natywne event listenery, które nie są bezpośrednio związane z konkretnymi komponentami. Przykładem może być globalny listener na zdarzenie scroll, który reaguje na przewijanie całej strony.</p><p>W takich przypadkach zazwyczaj używamy hooka useEffect do rejestracji i usunięcia event listenera:</p><pre><code>function Navigation() {
+  useEffect(() =&gt; {
+    const onScroll = (e: Event) =&gt; {
+      // Obsługa zdarzenia przewijania
+      console.log('Scrolling', e);
+    };
+
+    document.addEventListener('scroll', onScroll);
+    return () =&gt; {
+      document.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
+  return (
+    // Logika komponentu
+    &lt;nav&gt;
+      {/* Elementy nawigacyjne */}
+    &lt;/nav&gt;
+  );
+}</code></pre><p>W powyższym przykładzie, <em>onScroll</em> jest typowany jako <em>Event</em>, ponieważ jest to natywny event przeglądarki. Ponieważ ten listener jest niezależny od systemu eventów Reacta, używamy natywnych typów, aby zapewnić poprawność typowania.</p><h2>Używaj event.currentTarget zamiast event.target</h2><p>Podczas obsługi zdarzeń w React warto korzystać z <em>event.currentTarget</em> zamiast <em>event.target</em>, aby uniknąć potencjalnych błędów wynikających z delegacji zdarzeń:</p><pre><code>const UnsafeExample = () =&gt; {
+  const handleClick = (e: React.MouseEvent&lt;HTMLButtonElement&gt;) =&gt; {
+    // ❌ Niebezpieczne - może rzucić błędem w runtime dla img oraz span
+    const value = e.target.value; 
+  };
+
+  return (
+    &lt;button onClick={handleClick}&gt;
+      &lt;span&gt;Click me&lt;/span&gt;
+      &lt;img src="icon.png" alt="" /&gt;
+    &lt;/button&gt;
+  );
+};</code></pre><p><em>event.currentTarget</em> odnosi się do elementu, do którego przypisano listener, podczas gdy <a href="http://event.target/" target="_blank" rel="noopener noreferrer"><em>event.target</em></a><em> </em>może odnosić się do dowolnego elementu w drzewie DOM, na którym faktycznie doszło do zdarzenia.</p><pre><code>const SafeExample = () =&gt; {
+  const handleClick = (e: React.MouseEvent&lt;HTMLButtonElement&gt;) =&gt; {
+    // Bezpieczne - currentTarget jest zawsze HTMLButtonElement
+    const button = e.currentTarget;
+    console.log(button.value);
+  };
+
+  return (
+    &lt;button onClick={handleClick}&gt;
+      &lt;span&gt;Click me&lt;/span&gt;
+      &lt;img src="icon.png" alt="" /&gt;
+    &lt;/button&gt;
+  );
+};</code></pre><p><strong>Unikaj korzystania z event.target bez odpowiednich zabezpieczeń</strong></p><p>Korzystanie z event.target może prowadzić do niebezpiecznych sytuacji, gdy użytkownik kliknie w element wewnątrz komponentu, który nie ma oczekiwanych właściwości. Aby bezpiecznie korzystać z event.target, należy stosować type guardy, które sprawdzają typ elementu przed jego użyciem:</p><pre><code>const SafeClickExample = () =&gt; {
+  const handleClick = (e: React.MouseEvent&lt;HTMLButtonElement&gt;) =&gt; {
+    if (e.target instanceof HTMLSpanElement) {
+      // Obsługa kliknięcia w &lt;span&gt;
+      console.log('Clicked on span:', e.target.textContent);
+    } else if (e.target instanceof HTMLImageElement) {
+      // Obsługa kliknięcia w &lt;img&gt;
+      console.log('Clicked on image:', e.target.src);
+    } else {
+      // Obsługa kliknięcia w &lt;button&gt;
+      console.log('Clicked on button');
+    }
+  };
+
+  return (
+    &lt;button onClick={handleClick}&gt;
+      &lt;span&gt;Click&lt;/span&gt;
+      &lt;img src="icon.png" alt="icon" /&gt;
+    &lt;/button&gt;
+  );
+};
+</code></pre><p>W tym przykładzie, używając instanceof, upewniamy się, że e.target jest odpowiednim typem przed dostępem do jego właściwości, co zapobiega błędom w czasie wykonywania.</p><h2>Podsumowanie</h2><p>Typowanie event handlerów w React z wykorzystaniem TypeScript jest kluczowe dla zapewnienia bezpieczeństwa typów i uniknięcia błędów w aplikacji. </p><p>Korzystając z takich narzędzi jak ComponentProps, możemy uprościć proces typowania i uczynić nasz kod bardziej czytelnym i mniej podatnym na błędy. </p><p>Ważne jest również zrozumienie różnicy między natywnymi eventami a eventami Reacta oraz stosowanie dobrych praktyk, takich jak preferowanie event.currentTarget nad <a href="http://event.target/" target="_blank" rel="noopener noreferrer">event.target</a>. </p><h2>Ćwiczenia</h2><ul><li><p><strong>241-event-typing</strong> - Dodaj odpowiednie typy do event handlera, który pozwoli na dynamiczne wnioskowanie typu eventu "onChange" na elemencie &lt;select&gt;</p></li></ul></div></body></html>

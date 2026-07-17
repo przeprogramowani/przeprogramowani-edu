@@ -1,0 +1,201 @@
+<meta name="lesson-id" content="Komponenty generyczne"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/5zsmm93gmqkllaphogv51r7ocg2h" style="width: 100%; max-width: 100%;"><p>Komponenty generyczne w React wraz z TypeScript umożliwiają elastyczne dostosowywanie się do różnych typów danych, co czyni je bardziej uniwersalnymi i wielokrotnie użytecznymi. </p><p>W tej lekcji przeanalizujemy praktyczne przykłady tworzenia komponentów generycznych, wykorzystania typów domyślnych, zagnieżdżania generyków oraz ich zastosowania w komponentach klasowych.</p><h2>Cele lekcji</h2><p>Po ukończeniu tej lekcji będziesz w stanie:</p><ul><li><p>Tworzyć komponenty generyczne z wykorzystaniem TypeScript.</p></li><li><p>Wykorzystywać techniki rozwiązywania konfliktów składniowych w JSX/TSX.</p></li><li><p>Stosować generyki w zagnieżdżonych strukturach komponentów.</p></li><li><p>Używać generyki w komponentach klasowych.</p></li></ul><h2>Teoria</h2><h3>Czym są komponenty generyczne?</h3><p>Komponenty generyczne pozwalają na dynamiczne definiowanie typów używanych w komponencie. Dzięki temu możliwe jest tworzenie uniwersalnych komponentów, które mogą obsługiwać różne struktury danych. TypeScript wspiera ten mechanizm poprzez <strong>parametry generyczne</strong>, które można definiować na poziomie interfejsu propsów.</p><p><strong>Przykład podstawowy: Generyczny komponent Table</strong></p><p>Rozpocznijmy od stworzenia komponentu Table, który renderuje listę obiektów dowolnego typu. Dodamy parametr generyczny TRow, który będzie reprezentował typ danych dla każdego wiersza.</p><pre><code>interface TableProps&lt;TRow&gt; {
+  rows: TRow[];
+  renderRow: (row: TRow) =&gt; React.ReactNode;
+}
+
+export const Table = &lt;TRow,&gt;({ rows, renderRow }: TableProps&lt;TRow&gt;) =&gt; (
+  &lt;table&gt;
+    &lt;tbody&gt;
+      {rows.map((row, index) =&gt; (
+        &lt;tr key={index}&gt;{renderRow(row)}&lt;/tr&gt;
+      ))}
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+);</code></pre><p>W przykładzie powyżej <em>TableProps&lt;TRow&gt;</em> definiuje strukturę propsów komponentu Table, który przyjmuje dowolny typ <em>TRow</em>. Umożliwia to przekazanie różnych typów danych do komponentu:</p><pre><code>type Product = {
+  id: number;
+  name: string;
+  price: number;
+};
+
+const App = () =&gt; {
+  const products: Product[] = [
+    { id: 1, name: 'Laptop', price: 1200 },
+    { id: 2, name: 'Phone', price: 700 },
+  ];
+
+  return (
+    &lt;Table
+      rows={products}
+      renderRow={(product) =&gt; (
+        &lt;&gt;
+          &lt;td&gt;{product.id}&lt;/td&gt;
+          &lt;td&gt;{product.name}&lt;/td&gt;
+          &lt;td&gt;{product.price}&lt;/td&gt;
+        &lt;/&gt;
+      )}
+    /&gt;
+  );
+};</code></pre><h3>Rozwiązywanie konfliktów składniowych JSX dla generyków</h3><p>Przy pracy z generykami w JSX/TSX, TypeScript może mylnie interpretować nawiasy kątowe jako elementy JSX, co prowadzi do błędów parsowania. Aby uniknąć tego problemu, można zastosować kilka technik:</p><ol start="1"><li><p><strong>Dodanie przecinka po parametrze typu (&lt;T,&gt;).</strong></p></li><li><p><strong>Użycie </strong><strong><em>extends unknown</em></strong><strong> dla typu generycznego (&lt;T extends unknown&gt;).</strong></p></li></ol><pre><code>// Użycie przecinka dla rozróżnienia od elementu JSX
+const Table = &lt;T,&gt;({ rows }: TableProps&lt;T&gt;) =&gt; { /* ... */ }
+
+// Alternatywnie
+const Table = &lt;T extends unknown&gt;({ rows }: TableProps&lt;T&gt;) =&gt; { /* ... */ }</code></pre><p>Rekomendujemy stosowanie &lt;T,&gt;, ponieważ ta składnia jest krótsza i bardziej jednoznaczna. Użycie extends unknown może wprowadzać niepotrzebne komplikacje, zwłaszcza dla początkujących.</p><p>Czy trzeba przekazywać typy generyczne, czy wystarczy ich użycie w propsach?</p><p>W większości przypadków TypeScript potrafi samodzielnie wywnioskować typ generyczny na podstawie przekazanych propsów, co oznacza, że jawne przekazanie typu, np. List&lt;Product&gt;, jest zbędne. TypeScript automatycznie rozpoznaje typy danych zdefiniowanych w propsach i przypisuje odpowiedni typ do parametru generycznego.</p><pre><code>interface ListProps&lt;T&gt; {
+  items: T[];
+  renderItem: (item: T) =&gt; React.ReactNode;
+}
+
+const List = &lt;T,&gt;({ items, renderItem }: ListProps&lt;T&gt;) =&gt; (
+  &lt;ul&gt;
+    {items.map((item, index) =&gt; (
+      &lt;li key={index}&gt;{renderItem(item)}&lt;/li&gt;
+    ))}
+  &lt;/ul&gt;
+);
+
+const App = () =&gt; {
+  const products = [
+    { id: 1, name: 'Laptop' },
+    { id: 2, name: 'Phone' },
+  ];
+
+  return (
+    // TypeScript automatycznie rozpoznaje typ `T` jako { id: number; name: string }
+    &lt;List
+      items={products}
+      renderItem={(product) =&gt; &lt;span&gt;{product.name}&lt;/span&gt;}
+    /&gt;
+  );
+};</code></pre><p><strong>Kiedy warto jawnie podać typ generyczny?</strong></p><p>Chociaż wnioskowanie typu zazwyczaj działa dobrze, istnieją sytuacje, gdy jawne określenie typu generycznego jest korzystne:</p><ul><li><p><strong>Złożone struktury danych:</strong> Gdy dane są bardzo złożone, na przykład zawierają opcjonalne pola lub zagnieżdżone typy, TypeScript może potrzebować dodatkowych wskazówek, aby jednoznacznie rozpoznać typ.</p></li><li><p><strong>Nietypowe konwersje lub użycie typów:</strong> Jeśli typ propsów zawiera wartość, która mogłaby pasować do różnych typów, TypeScript może zgłosić błąd. W takim przypadku jawne określenie typu rozwiązuje problem.</p></li></ul><p>Jednak takie sytuacje występują rzadko, dlatego w większości przypadków przekazywanie typu jest niekonieczne.</p><h3>Przekazywanie typów generycznych do komponentów podrzędnych</h3><p>Komponenty kontenerowe mogą wykorzystywać generyki i przekazywać je dalej do komponentów podrzędnych, co umożliwia pełną kompatybilność typów w całym drzewie komponentów.</p><pre><code>interface ListProps&lt;T&gt; {
+  items: T[];
+  renderItem: (item: T) =&gt; React.ReactNode;
+}
+
+const List = &lt;T,&gt;({ items, renderItem }: ListProps&lt;T&gt;) =&gt; (
+  &lt;ul&gt;
+    {items.map((item, index) =&gt; (
+      &lt;li key={index}&gt;{renderItem(item)}&lt;/li&gt;
+    ))}
+  &lt;/ul&gt;
+);
+
+interface ContainerProps&lt;T&gt; {
+  items: T[];
+}
+
+const Container = &lt;T,&gt;({ items }: ContainerProps&lt;T&gt;) =&gt; (
+  &lt;List items={items} renderItem={(item: T) =&gt; &lt;span&gt;{JSON.stringify(item)}&lt;/span&gt;} /&gt;
+);</code></pre><p>W tym przykładzie Container przyjmuje dowolny typ T i przekazuje go do komponentu List, aby zachować zgodność:</p><pre><code>interface Item {
+  id: number;
+  description: string;
+}
+
+const App = () =&gt; {
+  const items: Item[] = [
+    { id: 1, description: 'Item 1' },
+    { id: 2, description: 'Item 2' },
+  ];
+
+  return (
+    &lt;Container items={items} /&gt;
+  );
+}; </code></pre><h3>Zagnieżdżone typy generyczne</h3><p>Komponenty generyczne stają się szczególnie przydatne, gdy pracujemy ze złożonymi, zagnieżdżonymi strukturami danych, np. hierarchicznymi listami lub drzewami. Zagnieżdżając typy, możemy dokładniej kontrolować, jak typy propagują się w strukturach danych.</p><pre><code>interface TreeNode&lt;T&gt; {
+  value: T;
+  children?: TreeNode&lt;T&gt;[];
+}
+
+interface TreeProps&lt;T&gt; {
+  nodes: TreeNode&lt;T&gt;[];
+  renderNode: (node: TreeNode&lt;T&gt;) =&gt; React.ReactNode;
+}
+
+export const Tree = &lt;T,&gt;({ nodes, renderNode }: TreeProps&lt;T&gt;) =&gt; (
+  &lt;ul&gt;
+    {nodes.map((node, index) =&gt; (
+      &lt;li key={index}&gt;
+        {renderNode(node)}
+        {node.children &amp;&amp; &lt;Tree nodes={node.children} renderNode={renderNode} /&gt;}
+      &lt;/li&gt;
+    ))}
+  &lt;/ul&gt;
+);</code></pre><p>Powyższy komponent Tree jest w stanie wyświetlać dowolne drzewo zagnieżdżonych danych, zachowując pełną kontrolę nad typowaniem na każdym poziomie hierarchii.</p><pre><code>type Category = {
+  name: string;
+};
+
+const App = () =&gt; {
+  const categoryTree: TreeNode&lt;Category&gt;[] = [
+    {
+      value: { name: 'Electronics' },
+      children: [
+        { value: { name: 'Laptops' } },
+        { value: { name: 'Phones' } },
+      ],
+    },
+    {
+      value: { name: 'Furniture' },
+      children: [
+        { value: { name: 'Tables' } },
+        { value: { name: 'Chairs' } },
+      ],
+    },
+  ];
+
+  return (
+    &lt;Tree
+      nodes={categoryTree}
+      renderNode={(node) =&gt; &lt;span&gt;{node.value.name}&lt;/span&gt;}
+    /&gt;
+  );
+};</code></pre><h3>Komponenty klasowe z typami generycznymi</h3><p>W przypadku komponentów klasowych, generyki działają podobnie jak w funkcjonalnych komponentach, lecz wymagają deklaracji typu generycznego zaraz po nazwie klasy i przed dziedziczeniem z extends​.</p><pre><code>interface TableProps&lt;TRow&gt; {
+  rows: TRow[];
+  renderRow: (row: TRow) =&gt; React.ReactNode;
+}
+
+class Table&lt;TRow,&gt; extends React.Component&lt;TableProps&lt;TRow&gt;&gt; {
+  render() {
+    const { rows, renderRow } = this.props;
+    return (
+      &lt;table&gt;
+        &lt;tbody&gt;
+          {rows.map((row, index) =&gt; (
+            &lt;tr key={index}&gt;{renderRow(row)}&lt;/tr&gt;
+          ))}
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    );
+  }
+}</code></pre><p>Komponent Table z powyższego przykładu jest klasą generyczną, w której możemy dokładnie typować dane przy użyciu TRow. Działa analogicznie do pierwszego przykładu komponentu funkcyjnego. </p><h2><strong>Alternatywa dla generyków: unie dyskryminowane</strong></h2><p>Unie dyskryminowane to technika pozwalająca na obsługę kilku wariantów typu bez stosowania generyków, co zwiększa czytelność kodu, gdy typ jest ograniczony do kilku konkretnych przypadków. </p><p>Unie dyskryminowane składają się z:</p><ul><li><p><strong>Unii typów, </strong>która zawiera kilka możliwych struktur, w kontekście Reacta będą to zazwyczaj propsy.</p></li><li><p><strong>Właściwości dyskryminującej</strong> (np. variant, type), która pozwala odróżnić jeden wariant od drugiego.</p></li></ul><p>Zamiast używać generyków, które mogą prowadzić do bardziej skomplikowanej struktury, unie dyskryminowane są użyteczne, gdy komponent ma kilka ustalonych stanów.</p><p><strong>Przykład: Modal z unią dyskryminowaną</strong></p><p>Rozważmy komponent Modal, który może występować w dwóch wariantach:</p><ol start="1"><li><p>Z przyciskiem (<em>with-button</em>), w którym oczekiwany jest buttonLabel i onButtonClick.</p></li><li><p>Bez przycisku (<em>without-button</em>), gdzie te właściwości są zbędne.</p></li></ol><pre><code>interface ModalWithButton {
+  variant: "with-button";
+  isOpen: boolean;
+  buttonLabel: string;
+  onButtonClick: () =&gt; void;
+}
+
+interface ModalWithoutButton {
+  variant: "without-button";
+  isOpen: boolean;
+}
+
+type ModalProps = ModalWithButton | ModalWithoutButton;
+
+const Modal = (props: ModalProps) =&gt; {
+  return (
+    &lt;div style={{ display: props.isOpen ? "block" : "none" }}&gt;
+      {props.variant === "with-button" &amp;&amp; (
+        &lt;button onClick={props.onButtonClick}&gt;{props.buttonLabel}&lt;/button&gt;
+      )}
+      {props.variant === "without-button" &amp;&amp; &lt;p&gt;Modal bez przycisku&lt;/p&gt;}
+    &lt;/div&gt;
+  );
+};</code></pre><p>Przykład użycia:</p><pre><code>const App = () =&gt; {
+  return (
+    &lt;div&gt;
+      &lt;Modal
+        variant="with-button"
+        isOpen={true}
+        buttonLabel="Kliknij mnie"
+        onButtonClick={() =&gt; alert("Kliknięto przycisk!")}
+      /&gt;
+      &lt;Modal variant="without-button" isOpen={true} /&gt;
+    &lt;/div&gt;
+  );
+};</code></pre><p>Unie dyskryminowane oferują kilka korzyści:</p><ul><li><p><strong>Prosta obsługa różnych wariantów</strong>: Umożliwiają łatwe definiowanie komponentów lub funkcji z różnymi zestawami wymaganych i opcjonalnych pól w zależności od wariantu.</p></li><li><p><strong>Bezpieczeństwo typowania</strong>: Dzięki unii TypeScript zapewnia, że tylko właściwe atrybuty są dostępne dla danego wariantu, co minimalizuje błędy.</p></li></ul><h3>Zalecenia: generyki vs unie dyskryminowane</h3><p>Stosuj unie dyskryminowane, gdy masz kilka ustalonych wariantów komponentu, a każdy z nich wymaga innego zestawu propsów. Są szczególnie użyteczne w komponentach z różnymi trybami wyświetlania lub akcjami. </p><p>Generyki natomiast są bardziej odpowiednie, gdy komponent powinien być elastyczny w obsłudze różnych typów danych, które mogą się zmieniać, na przykład w komponentach renderujących listy lub pracujących z dynamicznymi strukturami danych.</p><p>Podsumowując:</p><ul><li><p><strong>Unie dyskryminowane</strong> są idealne do tworzenia komponentów z ograniczoną liczbą, ale różnorodnymi wariantami.</p></li><li><p><strong>Generyki</strong> zapewniają elastyczność dla komponentów, które nie muszą obsługiwać z góry określonych wariantów, ale mogą przyjmować różne typy danych.</p></li></ul><h2>Podsumowanie</h2><p>W tej lekcji nauczyliśmy się tworzyć komponenty generyczne w React z TypeScriptem, co umożliwia tworzenie bardziej elastycznych i wielokrotnie użytecznych komponentów obsługujących różne typy danych. Omówiliśmy następujące kluczowe punkty:</p><ul><li><p><strong>Tworzenie generycznych komponentów:</strong> Dowiedzieliśmy się, jak używać generyków do dynamicznego definiowania typów w komponentach, co pozwala na lepsze dopasowanie komponentu do danych, które przyjmuje.</p></li><li><p><strong>Rozwiązywanie konfliktów składniowych JSX:</strong> Omówiliśmy sposoby na uniknięcie problemów z parsowaniem generyków w JSX, szczególnie przy użyciu przecinka po parametrze typu.</p></li><li><p><strong>Automatyczne wnioskowanie typów:</strong> Zrozumieliśmy, że TypeScript zazwyczaj potrafi automatycznie wywnioskować typ generyczny na podstawie przekazanych propsów, co często eliminuje konieczność ręcznego określania typów w JSX.</p></li><li><p><strong>Zagnieżdżone struktury generyczne:</strong> Przykłady takie jak Tree pokazały, jak stosować generyki w złożonych, hierarchicznych strukturach danych, co ułatwia pracę z danymi o różnych poziomach zagnieżdżenia.</p></li><li><p><strong>Generyki w komponentach klasowych:</strong> Zobaczyliśmy, jak zastosować generyki w komponentach klasowych, zachowując pełną kontrolę nad typowaniem danych.</p></li><li><p><strong>Alternatywa dla generyków – unie dyskryminowane:</strong> Poznaliśmy unie dyskryminowane jako wygodne rozwiązanie do obsługi komponentów z ograniczoną liczbą, ale różnorodnymi wariantów, co zwiększa czytelność kodu w sytuacjach, gdy liczba typów jest ograniczona i można precyzyjnie określić strukturę danych.</p></li></ul><p>Dzięki tym umiejętnościom możesz tworzyć komponenty, które są zarówno bardziej elastyczne, jak i bezpieczne pod względem typów, co znacząco zwiększa ich użyteczność i niezawodność w różnych scenariuszach.</p><h2>Ćwiczenia</h2><ul><li><p><strong>251-generic-list</strong> - Dodaj typ generyczne do komponentu List, który pozwoli na dynamiczne wnioskowanie typu elementów listy oraz funkcji renderującej. Wymagaj aby elementy listy miały właściwość id.</p></li></ul></div></body></html>

@@ -1,0 +1,50 @@
+---
+import Course from '@/components/Course.astro';
+import EmptyCourseState from '@/components/EmptyCourseState.astro';
+import CourseLayout from '@/layouts/CourseLayout.astro';
+import { type CourseSlug, COLLECTION_MAPPINGS } from '@/models/CollectionMappings';
+import { getLessonsForCourseCollection } from '@/server/content/courseContent';
+import { verifyAuth } from '@/server/verifyAuth';
+
+const courseSlug = Astro.params.courseSlug as CourseSlug;
+const courseCollection = COLLECTION_MAPPINGS[courseSlug];
+
+if (courseSlug === '10xdevs-3-prework') {
+  return Astro.redirect('/external/10xdevs-3-prework');
+}
+
+if (courseSlug === '10xdevs-3') {
+  return Astro.redirect('/external/10xdevs-3');
+}
+
+if (!Object.keys(COLLECTION_MAPPINGS).includes(courseSlug)) {
+  return Astro.redirect('/');
+}
+
+const authResult = await verifyAuth(Astro, courseSlug);
+
+if (!authResult.isAuthenticated) {
+  return Astro.redirect('/login');
+}
+
+const lessons = await getLessonsForCourseCollection(courseCollection);
+const firstLessonId = lessons[0]?.id ?? null;
+---
+
+{
+  firstLessonId ? (
+    <Course
+      courseSlug={courseSlug}
+      collection={courseCollection}
+      lessonId={firstLessonId}
+      userEmail={authResult.email}
+    />
+  ) : (
+    <CourseLayout courseSlug={courseSlug} lessonName="Kurs w przygotowaniu">
+      <EmptyCourseState
+        title="Kurs w przygotowaniu"
+        description="Materiały pojawią się tutaj wkrótce."
+      />
+    </CourseLayout>
+  )
+}

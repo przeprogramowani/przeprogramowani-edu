@@ -1,0 +1,167 @@
+---
+/**
+ * Strona narzedzia 10x-cli (slug 10x-cli, kontekst publiczny). Co to jest,
+ * instalacja + logowanie, najwazniejsze komendy i workflow (od komendy do
+ * agenta). Adresy/komendy z config (TENX_CLI); tresc w i18n/cli.ts.
+ *
+ * hud-top, xnav, footer i wspolny CSS renderuje TenxCosmicLayout; tutaj markup
+ * + scoped CSS (bloki komend w stylu terminala).
+ */
+import type { Lang } from '../i18n';
+import { CLI } from '../i18n/cli';
+import { TENX_CLI } from '../config';
+import { pageHref } from '../pages';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+}
+
+const { base, lang = 'pl' } = Astro.props;
+const t = CLI[lang];
+---
+
+<style is:global>
+/* Reguly specyficzne dla strony (diff vs CSS wspolny w TenxCosmicLayout) */
+header h1 .glow{color:#3ddad0;text-shadow:0 0 24px rgba(61,218,208,.4)}
+
+/* bloki komend w stylu terminala */
+.cli-cmds{display:grid;gap:12px;margin-top:22px}
+.cli-cmd{border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 72%,transparent);padding:14px 16px}
+.cli-cmd code.c{display:block;font-family:var(--mono);font-size:.95rem;color:#3ddad0;letter-spacing:.02em}
+.cli-cmd code.c::before{content:'$ ';color:var(--dim)}
+.cli-cmd .d{margin-top:8px;font-size:.88rem;color:var(--muted);line-height:1.55}
+.cli-cmd .d code,.cli-flow code,.mech .v code,.cli-flags code{font-family:var(--mono);font-size:.85em;background:color-mix(in srgb,var(--surface) 82%,transparent);padding:1px 5px;color:var(--txt)}
+.cli-flags{margin-top:16px;font-size:.86rem;line-height:1.7;color:var(--muted);max-width:74ch}
+
+/* workflow - lista kroków numerowana */
+.cli-flow{margin-top:20px;counter-reset:step;list-style:none;padding:0;display:grid;gap:12px}
+.cli-flow li{position:relative;padding:12px 16px 12px 52px;border:1px solid var(--line-soft);background:color-mix(in srgb,var(--surface) 45%,transparent);
+  color:var(--muted);font-size:.92rem;line-height:1.55}
+.cli-flow li::before{counter-increment:step;content:counter(step);position:absolute;left:14px;top:12px;
+  font-family:var(--disp);font-weight:700;font-size:.8rem;color:var(--acc);
+  border:1px solid color-mix(in srgb,var(--acc) 55%,transparent);width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+.cli-note{margin-top:16px}
+</style>
+
+<header>
+  <p class="eyebrow" style="--acc:#3ddad0"><span class="ico ico-cli" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1 set:html={t.h1Html} />
+  <p class="sub" set:html={t.subHtml} />
+  <nav class="route" aria-label={t.routeAria}>
+    <a href="#instalacja" style="--hov:#7c8cff">{t.route[0]}</a>
+    <a href="#komendy" style="--hov:#3ddad0">{t.route[1]}</a>
+    <a href="#skille" style="--hov:#a78bfa">{t.route[2]}</a>
+    <a href="#workflow">{t.route[3]}</a>
+  </nav>
+</header>
+
+<!-- ============ 01 CO TO JEST ============ -->
+<section class="sector" id="co-to" style="--acc:#3ddad0">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.what.num}</span>
+      <span class="sec-uni"><span class="ico ico-radar" aria-hidden="true"></span>{t.what.kicker}</span>
+    </div>
+    <h2>{t.what.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.what.leadHtml} /></div>
+  <div class="rv">
+    <dl class="mech">
+      {t.what.rows.map((r) => (
+        <div><dt><span class="ico ico-star" aria-hidden="true"></span>{r.dt}</dt><dd class="v" style="margin:0" set:html={r.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<!-- ============ 02 INSTALACJA ============ -->
+<section class="sector" id="instalacja" style="--acc:#7c8cff">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.install.num}</span>
+      <span class="sec-uni"><span class="ico ico-cube" aria-hidden="true"></span>{t.install.kicker}</span>
+    </div>
+    <h2>{t.install.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.install.leadHtml} /></div>
+  <div class="rv">
+    <dl class="mech">
+      {t.install.steps.map((s) => (
+        <div><dt><span class="ico ico-check" aria-hidden="true"></span>{s.dt}</dt><dd class="v" style="margin:0" set:html={s.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<!-- ============ 03 KOMENDY ============ -->
+<section class="sector" id="komendy" style="--acc:#3ddad0">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.cmds.num}</span>
+      <span class="sec-uni"><span class="ico ico-cli" aria-hidden="true"></span>{t.cmds.kicker}</span>
+    </div>
+    <h2>{t.cmds.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.cmds.leadHtml} /></div>
+  <div class="cli-cmds rv">
+    {t.cmds.list.map((c) => (
+      <div class="cli-cmd">
+        <code class="c">{c.cmd}</code>
+        <p class="d" set:html={c.descHtml} />
+      </div>
+    ))}
+  </div>
+  <p class="cli-flags rv" set:html={t.cmds.flagsHtml} />
+</section>
+
+<!-- ============ 04 SKILLE PO NAZWIE ============ -->
+<section class="sector" id="skille" style="--acc:#a78bfa">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.skills.num}</span>
+      <span class="sec-uni"><span class="ico ico-cli" aria-hidden="true"></span>{t.skills.kicker}</span>
+    </div>
+    <h2>{t.skills.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.skills.leadHtml} /></div>
+  <div class="cli-cmds rv">
+    <div class="cli-cmd"><code class="c">{t.skills.cmd}</code></div>
+  </div>
+  <div class="target rv"><span class="k"><span class="ico ico-doc" aria-hidden="true"></span>Tip</span><p set:html={t.skills.noteHtml} /></div>
+</section>
+
+<!-- ============ 05 WORKFLOW ============ -->
+<section class="sector" id="workflow" style="--acc:#3ddad0">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.flow.num}</span>
+      <span class="sec-uni"><span class="ico ico-fast" aria-hidden="true"></span>{t.flow.kicker}</span>
+    </div>
+    <h2>{t.flow.h2}</h2>
+  </div>
+  <ol class="cli-flow rv">
+    {t.flow.steps.map((s) => <li set:html={s} />)}
+  </ol>
+  <div class="target rv cli-note"><span class="k"><span class="ico ico-check" aria-hidden="true"></span>OK</span><p set:html={t.flow.noteHtml} /></div>
+</section>
+
+<!-- ============ DALEJ ============ -->
+<section class="sector" id="dalej" style="--acc:#3ddad0">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.next.num}</span>
+      <span class="sec-uni"><span class="ico ico-star" aria-hidden="true"></span>{t.next.kicker}</span>
+    </div>
+    <h2>{t.next.h2}</h2>
+  </div>
+  <div class="solo rv">
+    <div class="tx">
+      <span class="mono"><span class="ico ico-link" aria-hidden="true"></span>Skróty</span>
+      <dl class="mech">
+        <div><dt><span class="ico ico-cli" aria-hidden="true"></span>Repo</dt><dd class="v" style="margin:0"><a href={TENX_CLI.repo} target="_blank" rel="noopener" style="color:var(--acc)">{t.next.repoLabel}</a>{t.next.repoRest}</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Kurs</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'jak-dziala-kurs', lang)} style="color:var(--acc)">{t.next.kursLink}</a>{t.next.kursRest}</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,354 @@
+:root,
+[data-lesson-theme='dark'] {
+  color-scheme: dark;
+  --lesson-bg: #111827;
+  --lesson-surface: #111827;
+  --lesson-panel: #1f2937;
+  --lesson-panel-subtle: rgba(31, 41, 55, 0.48);
+  --lesson-panel-strong: rgba(31, 41, 55, 0.96);
+  --lesson-border: #374151;
+  --lesson-border-subtle: rgba(55, 65, 81, 0.72);
+  --lesson-text: #f3f4f6;
+  --lesson-text-muted: #9ca3af;
+  --lesson-text-soft: #d1d5db;
+  --lesson-overlay: rgba(3, 7, 18, 0.72);
+  --lesson-link: #60a5fa;
+  --lesson-accent: #3b82f6;
+  --lesson-accent-surface: rgba(37, 99, 235, 0.25);
+  --lesson-accent-border: rgba(96, 165, 250, 0.35);
+  --lesson-accent-text: #dbeafe;
+  --lesson-success-surface: rgba(6, 95, 70, 0.3);
+  --lesson-success-text: #d1fae5;
+  --lesson-code-bg: #0d1117;
+  --lesson-code-inline-bg: rgba(31, 41, 55, 0.9);
+  --lesson-code-text: #e5e7eb;
+  --lesson-scrollbar-track: rgba(31, 41, 55, 0.5);
+  --lesson-scrollbar-thumb: rgba(59, 130, 246, 0.5);
+  --lesson-scrollbar-thumb-hover: rgba(59, 130, 246, 0.8);
+}
+
+[data-lesson-theme='light'] {
+  color-scheme: light;
+  --lesson-bg: #f3f4f6;
+  --lesson-surface: #ffffff;
+  --lesson-panel: #ffffff;
+  --lesson-panel-subtle: rgba(243, 244, 246, 0.9);
+  --lesson-panel-strong: rgba(255, 255, 255, 0.96);
+  --lesson-border: #d1d5db;
+  --lesson-border-subtle: rgba(209, 213, 219, 0.86);
+  --lesson-text: #111827;
+  --lesson-text-muted: #6b7280;
+  --lesson-text-soft: #374151;
+  --lesson-overlay: rgba(17, 24, 39, 0.32);
+  --lesson-link: #1d4ed8;
+  --lesson-accent: #2563eb;
+  --lesson-accent-surface: rgba(37, 99, 235, 0.12);
+  --lesson-accent-border: rgba(37, 99, 235, 0.28);
+  --lesson-accent-text: #1e3a8a;
+  --lesson-success-surface: rgba(16, 185, 129, 0.14);
+  --lesson-success-text: #065f46;
+  --lesson-code-bg: #f6f8fa;
+  --lesson-code-inline-bg: #eef2f7;
+  --lesson-code-text: #24292f;
+  --lesson-scrollbar-track: rgba(229, 231, 235, 0.9);
+  --lesson-scrollbar-thumb: rgba(37, 99, 235, 0.42);
+  --lesson-scrollbar-thumb-hover: rgba(37, 99, 235, 0.68);
+}
+
+.lesson-shell {
+  background: var(--lesson-bg);
+  color: var(--lesson-text);
+}
+
+.lesson-surface {
+  background: var(--lesson-surface);
+  color: var(--lesson-text);
+}
+
+.lesson-panel,
+.lesson-sidebar {
+  background: var(--lesson-panel);
+  color: var(--lesson-text);
+}
+
+.lesson-panel-subtle {
+  background: var(--lesson-panel-subtle);
+}
+
+.lesson-topbar,
+.lesson-sticky-header {
+  background: var(--lesson-panel-strong);
+  border-color: var(--lesson-border);
+  color: var(--lesson-text);
+}
+
+.lesson-divider {
+  border-color: var(--lesson-border);
+}
+
+.lesson-divider-subtle {
+  border-color: var(--lesson-border-subtle);
+}
+
+.lesson-muted {
+  color: var(--lesson-text-muted);
+}
+
+.lesson-soft {
+  color: var(--lesson-text-soft);
+}
+
+.lesson-nav-row {
+  color: var(--lesson-text-soft);
+}
+
+.lesson-nav-row:hover {
+  background: var(--lesson-panel-subtle);
+  color: var(--lesson-text);
+}
+
+.lesson-nav-row-active {
+  background: var(--lesson-accent-surface);
+  color: var(--lesson-accent-text);
+  border-color: var(--lesson-accent);
+}
+
+.lesson-nav-row-success-active {
+  background: var(--lesson-success-surface);
+  color: var(--lesson-success-text);
+  border-color: #10b981;
+}
+
+.lesson-button-primary,
+.lesson-button-secondary,
+.lesson-icon-button,
+.lesson-progress-button,
+.lesson-markdown-button {
+  border: 1px solid var(--lesson-border);
+  color: var(--lesson-text);
+  background: var(--lesson-panel-strong);
+}
+
+.lesson-button-primary,
+.lesson-markdown-button {
+  border-color: rgba(37, 99, 235, 0.72);
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
+.lesson-prose a.lesson-markdown-button {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.lesson-button-primary:hover,
+.lesson-markdown-button:hover {
+  background: #2563eb;
+}
+
+.lesson-prose a.lesson-markdown-button:hover {
+  color: #ffffff;
+}
+
+.lesson-button-secondary:hover,
+.lesson-icon-button:hover,
+.lesson-progress-button:hover {
+  border-color: var(--lesson-accent);
+  background: var(--lesson-panel-subtle);
+  color: var(--lesson-text);
+}
+
+.lesson-overlay {
+  background: var(--lesson-overlay);
+}
+
+.lesson-logo-dark {
+  display: none;
+}
+
+.lesson-logo-full {
+  display: none;
+}
+
+.lesson-logo-compact {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .lesson-logo-full {
+    display: block;
+  }
+
+  .lesson-logo-compact {
+    display: none;
+  }
+}
+
+.lesson-logo-dark.lesson-logo-full,
+.lesson-logo-dark.lesson-logo-compact {
+  display: none;
+}
+
+[data-lesson-theme='light'] .lesson-logo-light {
+  display: none;
+}
+
+[data-lesson-theme='light'] .lesson-logo-dark {
+  display: none;
+}
+
+[data-lesson-theme='light'] .lesson-logo-dark.lesson-logo-compact {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  [data-lesson-theme='light'] .lesson-logo-dark.lesson-logo-full {
+    display: block;
+  }
+
+  [data-lesson-theme='light'] .lesson-logo-dark.lesson-logo-compact {
+    display: none;
+  }
+}
+
+.lesson-theme-toggle {
+  position: relative;
+  display: inline-flex;
+  height: 2.5rem;
+  width: 2.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.lesson-theme-toggle:disabled {
+  opacity: 0.72;
+}
+
+.lesson-theme-toggle__moon {
+  display: none;
+}
+
+.lesson-theme-toggle[data-theme='light'] .lesson-theme-toggle__sun {
+  display: none;
+}
+
+.lesson-theme-toggle[data-theme='light'] .lesson-theme-toggle__moon {
+  display: block;
+}
+
+.lesson-prose {
+  color: var(--lesson-text-soft);
+  --tw-prose-body: var(--lesson-text-soft);
+  --tw-prose-headings: var(--lesson-text);
+  --tw-prose-lead: var(--lesson-text-soft);
+  --tw-prose-links: var(--lesson-link);
+  --tw-prose-bold: var(--lesson-text);
+  --tw-prose-counters: var(--lesson-text-muted);
+  --tw-prose-bullets: var(--lesson-text-muted);
+  --tw-prose-hr: var(--lesson-border);
+  --tw-prose-quotes: var(--lesson-text);
+  --tw-prose-quote-borders: var(--lesson-border);
+  --tw-prose-captions: var(--lesson-text-muted);
+  --tw-prose-code: var(--lesson-code-text);
+  --tw-prose-pre-code: var(--lesson-code-text);
+  --tw-prose-pre-bg: var(--lesson-code-bg);
+  --tw-prose-th-borders: var(--lesson-border);
+  --tw-prose-td-borders: var(--lesson-border-subtle);
+}
+
+.lesson-prose a {
+  color: var(--lesson-link);
+}
+
+.lesson-prose h1,
+.lesson-prose h2,
+.lesson-prose h3,
+.lesson-prose h4,
+.lesson-prose strong {
+  color: var(--lesson-text);
+}
+
+.lesson-prose :not(pre) > code {
+  background: var(--lesson-code-inline-bg);
+  border: 1px solid var(--lesson-border-subtle);
+  border-radius: 0.25rem;
+  color: var(--lesson-code-text);
+  padding: 0.1rem 0.28rem;
+}
+
+.lesson-prose pre {
+  background: var(--lesson-code-bg);
+  border: 1px solid var(--lesson-border-subtle);
+  color: var(--lesson-code-text);
+}
+
+[data-lesson-theme='light'] .lesson-prose .hljs {
+  background: var(--lesson-code-bg);
+  color: #24292f;
+}
+
+[data-lesson-theme='light'] .lesson-prose .hljs-comment,
+[data-lesson-theme='light'] .lesson-prose .hljs-quote {
+  color: #6e7781;
+}
+
+[data-lesson-theme='light'] .lesson-prose .hljs-keyword,
+[data-lesson-theme='light'] .lesson-prose .hljs-selector-tag,
+[data-lesson-theme='light'] .lesson-prose .hljs-subst {
+  color: #cf222e;
+}
+
+[data-lesson-theme='light'] .lesson-prose .hljs-literal,
+[data-lesson-theme='light'] .lesson-prose .hljs-number,
+[data-lesson-theme='light'] .lesson-prose .hljs-tag .hljs-attr,
+[data-lesson-theme='light'] .lesson-prose .hljs-template-variable,
+[data-lesson-theme='light'] .lesson-prose .hljs-variable {
+  color: #953800;
+}
+
+[data-lesson-theme='light'] .lesson-prose .hljs-doctag,
+[data-lesson-theme='light'] .lesson-prose .hljs-string {
+  color: #0a3069;
+}
+
+[data-lesson-theme='light'] .lesson-prose .hljs-section,
+[data-lesson-theme='light'] .lesson-prose .hljs-title,
+[data-lesson-theme='light'] .lesson-prose .hljs-selector-id {
+  color: #8250df;
+}
+
+[data-lesson-theme='light'] .lesson-prose .hljs-type,
+[data-lesson-theme='light'] .lesson-prose .hljs-class .hljs-title {
+  color: #953800;
+}
+
+[data-lesson-theme='light'] .lesson-prose .hljs-tag,
+[data-lesson-theme='light'] .lesson-prose .hljs-name,
+[data-lesson-theme='light'] .lesson-prose .hljs-attribute {
+  color: #116329;
+}
+
+.lesson-scrollbar::-webkit-scrollbar,
+.lesson-scrollbar *::-webkit-scrollbar {
+  width: 8px;
+}
+
+.lesson-scrollbar::-webkit-scrollbar-track,
+.lesson-scrollbar *::-webkit-scrollbar-track {
+  background: var(--lesson-scrollbar-track);
+  border-radius: 4px;
+}
+
+.lesson-scrollbar::-webkit-scrollbar-thumb,
+.lesson-scrollbar *::-webkit-scrollbar-thumb {
+  background: var(--lesson-scrollbar-thumb);
+  border-radius: 4px;
+}
+
+.lesson-scrollbar::-webkit-scrollbar-thumb:hover,
+.lesson-scrollbar *::-webkit-scrollbar-thumb:hover {
+  background: var(--lesson-scrollbar-thumb-hover);
+}

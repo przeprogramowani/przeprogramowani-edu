@@ -1,0 +1,86 @@
+---
+import { COURSE_SLUG_TO_NAME, CourseSlug } from '@/models/CollectionMappings';
+
+interface Props {
+  courseSlug: CourseSlug;
+  lessonName: string;
+}
+
+const { courseSlug, lessonName }: Props = Astro.props;
+
+const courseName = COURSE_SLUG_TO_NAME[courseSlug];
+
+import LayoutScripts from './LayoutScripts.astro';
+import '@/styles/sidebar.css';
+import '@/styles/lesson-theme.css';
+---
+
+<!doctype html>
+<html lang="en" class="sidebar-not-hydrated" data-lesson-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{courseName} - {lessonName} - Przeprogramowani - Platforma z kursami</title>
+    <link rel="stylesheet" href="/fonts/cocogoose/cocogoose.css" />
+    <link rel="stylesheet" href="/fonts/cocogoose-light/cocogoose-light.css" />
+    <link rel="stylesheet" href="/styles/highlight-github-dark.min.css" />
+
+    <script is:inline>
+      (function () {
+        var theme = 'dark';
+        try {
+          var saved = localStorage.getItem('lesson-theme');
+          if (saved === 'light' || saved === 'dark') {
+            theme = saved;
+          }
+        } catch (e) {}
+        document.documentElement.dataset.lessonTheme = theme;
+      })();
+    </script>
+
+    <!-- Apply sidebar collapsed state immediately to prevent FOUC -->
+    <!-- Keep storage keys in sync with SIDEBAR_STORAGE_KEY / EXTERNAL_SIDEBAR_STORAGE_KEY in src/lib/topBarHelpers.ts -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem('sidebar-collapsed');
+          if (saved === null) {
+            saved = localStorage.getItem('external-sidebar-collapsed');
+          }
+          if (saved === 'true') {
+            document.body.classList.add('sidebar-collapsed');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="lesson-shell overflow-y-hidden">
+    <slot />
+
+    <!-- Remove sidebar-not-hydrated class after hydration -->
+    <script>
+      document.documentElement.classList.remove('sidebar-not-hydrated');
+    </script>
+  </body>
+</html>
+
+<script>
+  import hljs from 'highlight.js';
+
+  document.addEventListener('DOMContentLoaded', function () {
+    hljs.highlightAll();
+  });
+</script>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<LayoutScripts />

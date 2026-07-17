@@ -1,0 +1,41 @@
+---
+import SharedLessonLayout from '../layouts/SharedLessonLayout.astro';
+import MarkdownDownloadButton from '@/components/shared/MarkdownDownloadButton.astro';
+import { CourseSlug, COURSE_SLUG_TO_NAME } from '../models/CollectionMappings';
+import { slugify } from '../utils/slugify';
+
+interface Props {
+  courseSlug: CourseSlug;
+  lessonName: string;
+  lessonContent: string;
+  markdownUrl: string;
+}
+
+const { courseSlug, lessonName, lessonContent, markdownUrl } = Astro.props;
+const courseName = COURSE_SLUG_TO_NAME[courseSlug];
+const slugifiedName = slugify(lessonName);
+---
+
+<SharedLessonLayout title={lessonName}>
+  <div class="bg-gray-800 text-gray-100 p-4">
+    <div class="max-w-[800px] mx-auto flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-white">{courseName}</h1>
+      </div>
+      <MarkdownDownloadButton
+        markdownUrl={markdownUrl}
+        slugifiedName={slugifiedName}
+        buttonText="📄 Markdown"
+        ariaLabel="Pobierz lekcję w formacie Markdown - czyste formatowanie tekstowe bez HTML"
+      />
+    </div>
+  </div>
+
+  <div class="bg-gray-900 rounded-xl shadow max-w-7xl mx-auto">
+    <!-- Add md:ml-72 for desktop TOC sidebar spacing -->
+    <div class="prose prose-invert mx-auto max-w-[800px] space-y-8 py-6 md:py-8 md:ml-72">
+      <h1 class="text-4xl font-bold">{lessonName}</h1>
+      <div set:html={lessonContent} />
+    </div>
+  </div>
+</SharedLessonLayout>

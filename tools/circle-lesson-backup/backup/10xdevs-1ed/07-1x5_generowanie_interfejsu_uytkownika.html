@@ -1,0 +1,522 @@
+<meta name="lesson-id" content="[1x5] Generowanie interfejsu użytkownika"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/al4fn1jeaggzfoh85p4hbaykaffs" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>Programowanie z modelami językowymi to szansa na łatwiejsze tworzenie interfejsów użytkownika - ekspercki poziom znajomości CSSów nie jest wymagany!</p><p>Nie oznacza to jednak, że model - tak jak programista - może na własne oczy zobaczyć, poczuć i na bieżąco korygować efekty swojej pracy. Paradoksalnie, to ograniczenie LLMów jest najbardziej odczuwalne w warstwie UI, a tak trudne w interpretacji polecenia jak “utwórz ładny formularz” daje bardzo różne efekty i ma więcej wspólnego z ruletką niż frontend engineeringiem.</p><p>Aby ten problem zaadresować, pracę nad UI/UX sprowadzimy do jasnych poleceń względem elementów interfejsu, ich relacji, interakcji i wykorzystywanych bibliotek. Przy okazji postaramy się minimalizować liczbę niepowiązanych reguł CSS które łatwo pominąć, stawiając na spójne komponenty zawierające zarówno strukturę jak i określony sposób opisywania stylu (dzięki <a href="https://ui.shadcn.com/" target="_blank" rel="noopener noreferrer">shadcn/ui</a> oraz <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">bibliotece Tailwind</a>).</p><p>Na początku kilka słów o fundamentach tej lekcji.</p><h2>Tailwind</h2><p>Tailwind CSS to framework utility-first, który pozwala na budowanie nowoczesnych interfejsów za pomocą predefiniowanych klas CSS stosowanych bezpośrednio w HTML. Zamiast pisać własne style, używasz gotowych klas jak flex, pt-4, text-center czy bg-blue-500.</p><img loading="lazy" src="https://assets-v2.circle.so/96qdluemwwkqpcwup9ipmy2iyaul" style="width: 100%; max-width: 100%;"><h3>Korzyści ze stosowania Tailwind:</h3><ul><li><p><strong>Szybkość tworzenia</strong> - projektowanie interfejsu bezpośrednio w HTML bez przełączania się między plikami</p></li><li><p><strong>Spójność</strong> - predefiniowany system designu z ustalonymi wielkościami, kolorami i odstępami</p></li><li><p><strong>Mała objętość CSS</strong> - produkcyjny build zawiera tylko wykorzystane klasy</p></li><li><p><strong>Wysoka konfigurowalność</strong> - możliwość dostosowania kolorów, breakpointów, fontów i innych elementów za pomocą własnej konfiguracji (kiedyś w tailwind.config.js, od wersji 4 w pliku global.css)</p></li><li><p><strong>Świetna dokumentacja</strong> - łatwo znajdziesz potrzebne klasy i ich zastosowanie</p></li></ul><h3>Obsługa:</h3><pre><code>&lt;!-- Przycisk stylowany Tailwindem --&gt;
+&lt;button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"&gt;
+  Kliknij mnie
+&lt;/button&gt;</code></pre><p>Tailwind doskonale współpracuje z LLMami, ponieważ nazwy klas są intuicyjne i samodzielnie dokumentujące się (np. text-center, mt-4), co sprawia, że modele językowe skutecznie generują poprawny kod korzystający z tych klas.</p><p>Instrukcję instalacji Tailwinda w frameworkach webowych znajdziesz <a href="https://tailwindcss.com/docs/installation/framework-guides" target="_blank" rel="noopener noreferrer">pod tym linkiem</a>. W 10x-astro-starter jest on już przygotowany i gotowy do akcji.</p><h2>Shadcn/ui</h2><p>Shadcn/ui to kolekcja gotowych, dostosowywanych komponentów zbudowanych na React, Radix UI i Tailwind. W przeciwieństwie do tradycyjnych bibliotek, z których zaciągamy elementy bez wiedzy o szczegółach, shadcn/ui stosuje podejście oparte o generator komponentów wewnątrz projektu.</p><img loading="lazy" src="https://assets-v2.circle.so/37lizwzxbx4i7c7zwhwk88f5776z" style="width: 100%; max-width: 100%;"><h3>Cechy biblioteki:</h3><ul><li><p><strong>Dostęp do kodu</strong> - komponenty stają się częścią twojego projektu, co daje pełną kontrolę nad ich modyfikacją</p></li><li><p><strong>Przystępna złożoność</strong> - komponenty są zbudowane jak klocki, które można łatwo rozbudowywać</p></li><li><p><strong>Dostępność</strong> - zbudowane na Radix UI, zapewniają dostępność (a11y) bez dodatkowej pracy</p></li><li><p><strong>Elastyczność</strong> - łatwa zmiana stylów, kolorów i zachowań poprzez global.css, bez walki z abstrakcjami</p></li><li><p><strong>Spójny design</strong> - wszystkie komponenty współpracują ze sobą wizualnie i funkcjonalnie</p></li></ul><p>Połączenie Tailwind i shadcn/ui tworzy potężny ekosystem, który pozwala programistom (a także LLMom) tworzyć spójne, dostępne i estetyczne interfejsy użytkownika bez konieczności pisania tysięcy linijek własnego kodu HTML/CSS/JS - łatwego do pominięcia przez programistę i błędnie interpretowanego przez AI.</p><h2>Konfiguracja shadcn/ui</h2><p>Shadcn/ui wymaga odpowiedniej konfiguracji przed rozpoczęciem używania komponentów. Proces instalacji i konfiguracji składa się z kilku kluczowych kroków, w których centralną rolę odgrywa komenda init. </p><p>W 10x-astro-starter shadcn/ui jest już skonfigurowane i gotowe do pracy.</p><h3>Proces inicjalizacji shadcn/ui</h3><p>Pierwszym krokiem jest inicjalizacja shadcn/ui w projekcie za pomocą komendy:</p><pre><code>npx shadcn@latest init</code></pre><p>Po uruchomieniu tej komendy, narzędzie przechodzi przez weryfikację bieżącej konfiguracji projektu, w tym sprawdzenia instalacji Tailwinda oraz dodania aliasów ścieżek w tsconfig.json.</p><p>Instrukcję instalacji shadcn/ui w frameworkach webowych znajdziesz <a href="https://ui.shadcn.com/docs/installation" target="_blank" rel="noopener noreferrer">tutaj</a>.</p><p>Ważne: wykonując komendę init nie korzystaj z flagi `—defaults`, chwilowo prowadzi ona do błędu, który jest powiązany z nowym Tailwind 4 (<a href="https://github.com/shadcn-ui/ui/issues/6446" target="_blank" rel="noopener noreferrer">Github Issue</a>).</p><h3>Po inicjalizacji</h3><p>Po zakończeniu procesu init, projekt jest gotowy do dodawania poszczególnych komponentów za pomocą komendy:</p><pre><code>npx shadcn@latest add button card avatar</code></pre><p>Każdy zainstalowany w ten sposób komponent trafia bezpośrednio do katalogu komponentów w projekcie, gdzie można go dowolnie modyfikować zgodnie z potrzebami.</p><p>Warto podkreślić, że shadcn/ui, w przeciwieństwie do tradycyjnych bibliotek komponentów, nie jest zależnością projektu - to raczej zbiór szablonów, które po instalacji stają się integralną częścią kodu aplikacji. To właśnie dlatego inicjalizacja jest tak ważnym krokiem - ustawia ona cały ekosystem projektu pod kątem spójnego designu i organizacji kodu.</p><h2>Sesja planistyczna interfejsu użytkownika</h2><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1072998313?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Podczas sesji planistycznej wykorzystałem następujący prompt dla modeli reasoningowych:</p><pre><code>Jesteś asystentem AI, którego zadaniem jest pomoc w zaplanowaniu architektury interfejsu użytkownika dla MVP (Minimum Viable Product) na podstawie dostarczonych informacji. Twoim celem jest wygenerowanie listy pytań i zaleceń, które zostaną wykorzystane w kolejnym promptowaniu do utworzenia szczegółowej architektury UI, map podróży użytkownika i struktury nawigacji.
+
+Prosimy o uważne zapoznanie się z poniższymi informacjami:
+
+&lt;product_requirements&gt;
+@prd.md
+&lt;/product_requirements&gt;
+
+&lt;tech_stack&gt;
+@tech-stack.md
+&lt;/tech_stack&gt;
+
+&lt;api_plan&gt;
+@api-plan.md
+&lt;/api_plan&gt;
+
+Przeanalizuj dostarczone informacje, koncentrując się na aspektach istotnych dla projektowania interfejsu użytkownika. Rozważ następujące kwestie:
+
+1. Zidentyfikuj kluczowe widoki i ekrany na podstawie wymagań produktu i dostępnych endpointów API.
+2. Określ potencjalne przepływy użytkownika i nawigację między widokami, uwzględniając możliwości API.
+3. Rozważ komponenty UI i wzorce interakcji, które mogą być konieczne do efektywnej komunikacji z API.
+4. Pomyśl o responsywności i dostępności interfejsu.
+5. Oceń wymagania bezpieczeństwa i uwierzytelniania w kontekście integracji z API.
+6. Rozważ wszelkie konkretne biblioteki UI lub frameworki, które mogą być korzystne dla projektu.
+7. Przeanalizuj, jak struktura API wpływa na projekt UI i przepływy danych w aplikacji.
+
+Na podstawie analizy wygeneruj listę pytań i zaleceń. Powinny one dotyczyć wszelkich niejasności, potencjalnych problemów lub obszarów, w których potrzeba więcej informacji, aby stworzyć efektywną architekturę UI. Rozważ pytania dotyczące:
+
+1. Hierarchia i organizacja widoków w odniesieniu do struktury API
+2. Przepływy użytkownika i nawigacja wspierane przez dostępne endpointy
+3. Responsywność i adaptacja do różnych urządzeń
+4. Dostępność i inkluzywność
+5. Bezpieczeństwo i autoryzacja na poziomie UI w powiązaniu z mechanizmami API
+6. Spójność designu i doświadczenia użytkownika
+7. Strategia zarządzania stanem aplikacji i synchronizacji z API
+8. Obsługa stanów błędów i wyjątków zwracanych przez API
+9. Strategie buforowania i optymalizacji wydajności w komunikacji z API
+
+Dane wyjściowe powinny mieć następującą strukturę:
+
+&lt;ui_architecture_planning_output&gt;
+&lt;pytania&gt;
+[Wymień tutaj swoje pytania, ponumerowane]
+&lt;/pytania&gt;
+
+&lt;rekomendacje&gt;
+[Wymień tutaj swoje zalecenia, ponumerowane]
+&lt;/rekomendacje&gt;
+&lt;/ui_architecture_planning_output&gt;
+
+Pamiętaj, że Twoim celem jest dostarczenie kompleksowej listy pytań i zaleceń, które pomogą w stworzeniu solidnej architektury UI dla MVP, w pełni zintegrowanej z dostępnymi endpointami API. Skoncentruj się na jasności, trafności i dokładności swoich wyników. Nie dołączaj żadnych dodatkowych komentarzy ani wyjaśnień poza określonym formatem wyjściowym.
+
+Kontynuuj ten proces, generując nowe pytania i rekomendacje w oparciu o przekazany kontekst i odpowiedzi użytkownika, dopóki użytkownik wyraźnie nie poprosi o podsumowanie.
+
+Pamiętaj, aby skupić się na jasności, trafności i dokładności wyników. Nie dołączaj żadnych dodatkowych komentarzy ani wyjaśnień poza określonym formatem wyjściowym.</code></pre><p>Następnie, aby uzyskać podsumowanie wykorzystałem następujący prompt:</p><pre><code>{{latest-round-answers}} &lt;- lista odpowiedzi na drugą runde pytań
+
+---
+
+Jesteś asystentem AI, którego zadaniem jest podsumowanie rozmowy na temat planowania architektury UI dla MVP i przygotowanie zwięzłego podsumowania dla następnego etapu rozwoju. W historii konwersacji znajdziesz następujące informacje:
+1. Dokument wymagań produktu (PRD)
+2. Informacje o stacku technologicznym
+3. Plan API
+4. Historia rozmów zawierająca pytania i odpowiedzi
+5. Zalecenia dotyczące architektury UI
+
+Twoim zadaniem jest:
+1. Podsumować historię konwersacji, koncentrując się na wszystkich decyzjach związanych z planowaniem architektury UI.
+2. Dopasować zalecenia modelu do odpowiedzi udzielonych w historii konwersacji. Zidentyfikować, które zalecenia są istotne w oparciu o dyskusję.
+3. Przygotować szczegółowe podsumowanie rozmowy, które obejmuje:
+   a. Główne wymagania dotyczące architektury UI
+   b. Kluczowe widoki, ekrany i przepływy użytkownika
+   c. Strategię integracji z API i zarządzania stanem
+   d. Kwestie dotyczące responsywności, dostępności i bezpieczeństwa
+   e. Wszelkie nierozwiązane kwestie lub obszary wymagające dalszego wyjaśnienia
+4. Sformatować wyniki w następujący sposób:
+
+&lt;conversation_summary&gt;
+&lt;decisions&gt;
+[Wymień decyzje podjęte przez użytkownika, ponumerowane].
+&lt;/decisions&gt;
+&lt;matched_recommendations&gt;
+[Lista najistotniejszych zaleceń dopasowanych do rozmowy, ponumerowanych]
+&lt;/matched_recommendations&gt;
+&lt;ui_architecture_planning_summary&gt;
+[Podaj szczegółowe podsumowanie rozmowy, w tym elementy wymienione w kroku 3].
+&lt;/ui_architecture_planning_summary&gt;
+&lt;unresolved_issues&gt;
+[Wymień wszelkie nierozwiązane kwestie lub obszary wymagające dalszych wyjaśnień, jeśli takie istnieją]
+&lt;/unresolved_issues&gt;
+&lt;/conversation_summary&gt;
+
+Końcowy wynik powinien zawierać tylko treść w formacie markdown. Upewnij się, że Twoje podsumowanie jest jasne, zwięzłe i zapewnia cenne informacje dla następnego etapu planowania architektury UI i integracji z API.</code></pre><h2>Generowanie wysokopoziomowego planu UI</h2><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1072991790?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Do wygenerowania ui-plan.md, wykorzystałem następujący prompt dla modeli reasoningowych:</p><pre><code>Jesteś wykwalifikowanym architektem frontend, którego zadaniem jest stworzenie kompleksowej architektury interfejsu użytkownika w oparciu o dokument wymagań produktu (PRD), plan API i notatki z sesji planowania. Twoim celem jest zaprojektowanie struktury interfejsu użytkownika, która skutecznie spełnia wymagania produktu, jest zgodna z możliwościami API i zawiera spostrzeżenia z sesji planowania.
+
+Najpierw dokładnie przejrzyj następujące dokumenty:
+
+Dokument wymagań produktu (PRD):
+&lt;prd&gt;
+{{prd}} &lt;- zamień na referencję do @prd.md
+&lt;/prd&gt;
+
+Plan API:
+&lt;api_plan&gt;
+{{api-plan}} &lt;- zamień na referencję do @api-plan.md
+&lt;/api_plan&gt;
+
+Session Notes:
+&lt;session_notes&gt;
+{{session-notes}} &lt;- wklej notatki z podsumowaniem sesji planistycznej
+&lt;/session_notes&gt;
+
+Twoim zadaniem jest stworzenie szczegółowej architektury interfejsu użytkownika, która obejmuje niezbędne widoki, mapowanie podróży użytkownika, strukturę nawigacji i kluczowe elementy dla każdego widoku. Projekt powinien uwzględniać doświadczenie użytkownika, dostępność i bezpieczeństwo.
+
+Wykonaj następujące kroki, aby ukończyć zadanie:
+
+1. Dokładnie przeanalizuj PRD, plan API i notatki z sesji.
+2. Wyodrębnij i wypisz kluczowe wymagania z PRD.
+3. Zidentyfikuj i wymień główne punkty końcowe API i ich cele.
+4. Utworzenie listy wszystkich niezbędnych widoków na podstawie PRD, planu API i notatek z sesji.
+5. Określenie głównego celu i kluczowych informacji dla każdego widoku.
+6. Zaplanuj podróż użytkownika między widokami, w tym podział krok po kroku dla głównego przypadku użycia.
+7. Zaprojektuj strukturę nawigacji.
+8. Zaproponuj kluczowe elementy interfejsu użytkownika dla każdego widoku, biorąc pod uwagę UX, dostępność i bezpieczeństwo.
+9. Rozważ potencjalne przypadki brzegowe lub stany błędów.
+10. Upewnij się, że architektura interfejsu użytkownika jest zgodna z planem API.
+11. Przejrzenie i zmapowanie wszystkich historyjek użytkownika z PRD do architektury interfejsu użytkownika.
+12. Wyraźne mapowanie wymagań na elementy interfejsu użytkownika.
+13. Rozważ potencjalne punkty bólu użytkownika i sposób, w jaki interfejs użytkownika je rozwiązuje.
+
+Dla każdego głównego kroku pracuj wewnątrz tagów &lt;ui_architecture_planning&gt; w bloku myślenia, aby rozbić proces myślowy przed przejściem do następnego kroku. Ta sekcja może być dość długa. To w porządku, że ta sekcja może być dość długa.
+
+Przedstaw ostateczną architekturę interfejsu użytkownika w następującym formacie Markdown:
+
+```markdown
+# Architektura UI dla [Nazwa produktu]
+
+## 1. Przegląd struktury UI
+
+[Przedstaw ogólny przegląd struktury UI]
+
+## 2. Lista widoków
+
+[Dla każdego widoku podaj:
+- Nazwa widoku
+- Ścieżka widoku
+- Główny cel
+- Kluczowe informacje do wyświetlenia
+- Kluczowe komponenty widoku
+- UX, dostępność i względy bezpieczeństwa]
+
+## 3. Mapa podróży użytkownika
+
+[Opisz przepływ między widokami i kluczowymi interakcjami użytkownika]
+
+## 4. Układ i struktura nawigacji
+
+[Wyjaśnij, w jaki sposób użytkownicy będą poruszać się między widokami]
+
+## 5. Kluczowe komponenty
+
+[Wymień i krótko opisz kluczowe komponenty, które będą używane w wielu widokach].
+```
+
+Skup się wyłącznie na architekturze interfejsu użytkownika, podróży użytkownika, nawigacji i kluczowych elementach dla każdego widoku. Nie uwzględniaj szczegółów implementacji, konkretnego projektu wizualnego ani przykładów kodu, chyba że są one kluczowe dla zrozumienia architektury.
+
+Końcowy rezultat powinien składać się wyłącznie z architektury UI w formacie Markdown w języku polskim, którą zapiszesz w pliku .ai/ui-plan.md. Nie powielaj ani nie powtarzaj żadnej pracy wykonanej w bloku myślenia.</code></pre><h2>Szczegółowy plan implementacji widoku do generowania fiszek</h2><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1072991739?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Do wygenerowania szczegółowego planu implementacji widoku wykorzystałem następujący prompt dla modeli reasoningowych. Wykorzystałem o3-mini-high ze względu na niską cenę, ale rekomendujemy o1 lub Gemini 2.5 Pro ze względu na dużą ilość kontekstu i szczegółów:</p><pre><code>Jako starszy programista frontendu Twoim zadaniem jest stworzenie szczegółowego planu wdrożenia nowego widoku w aplikacji internetowej. Plan ten powinien być kompleksowy i wystarczająco jasny dla innego programisty frontendowego, aby mógł poprawnie i wydajnie wdrożyć widok.
+
+Najpierw przejrzyj następujące informacje:
+
+1. Product Requirements Document (PRD):
+&lt;prd&gt;
+{{prd}} &lt;- zamień na referencję do pliku @prd.md
+&lt;/prd&gt;
+
+2. Opis widoku:
+&lt;view_description&gt;
+{{view-description}} &lt;- wklej opis implementowanego widoku z ui-plan.md
+&lt;/view_description&gt;
+
+3. User Stories:
+&lt;user_stories&gt;
+{{user-stories}} &lt;- wklej historyjki użytkownika z @prd.md, które będą adresowane przez widok
+&lt;/user_stories&gt;
+
+4. Endpoint Description:
+&lt;endpoint_description&gt;
+{{endpoint-description}} &lt;- wklej opisy endpointów z api-plan.md, z których będzie korzystał widok 
+&lt;/endpoint_description&gt;
+
+5. Endpoint Implementation:
+&lt;endpoint_implementation&gt;
+{{endpoint-implementation}} &lt;- zamień na referencję do implementacji endpointów, z których będzie korzystał widok (np. @generations.ts, @flashcards.ts)
+&lt;/endpoint_implementation&gt;
+
+6. Type Definitions:
+&lt;type_definitions&gt;
+{{types}} &lt;- zamień na referencję do pliku z definicjami DTOsów (np. @types.ts)
+&lt;/type_definitions&gt;
+
+7. Tech Stack:
+&lt;tech_stack&gt;
+{{tech-stack}} &lt;- zamień na referencję do pliku @tech-stack.md
+&lt;/tech_stack&gt;
+
+Przed utworzeniem ostatecznego planu wdrożenia przeprowadź analizę i planowanie wewnątrz tagów &lt;implementation_breakdown&gt; w swoim bloku myślenia. Ta sekcja może być dość długa, ponieważ ważne jest, aby być dokładnym.
+
+W swoim podziale implementacji wykonaj następujące kroki:
+1. Dla każdej sekcji wejściowej (PRD, User Stories, Endpoint Description, Endpoint Implementation, Type Definitions, Tech Stack):
+  - Podsumuj kluczowe punkty
+ - Wymień wszelkie wymagania lub ograniczenia
+ - Zwróć uwagę na wszelkie potencjalne wyzwania lub ważne kwestie
+2. Wyodrębnienie i wypisanie kluczowych wymagań z PRD
+3. Wypisanie wszystkich potrzebnych głównych komponentów, wraz z krótkim opisem ich opisu, potrzebnych typów, obsługiwanych zdarzeń i warunków walidacji
+4. Stworzenie wysokopoziomowego diagramu drzewa komponentów
+5. Zidentyfikuj wymagane DTO i niestandardowe typy ViewModel dla każdego komponentu widoku. Szczegółowo wyjaśnij te nowe typy, dzieląc ich pola i powiązane typy.
+6. Zidentyfikuj potencjalne zmienne stanu i niestandardowe hooki, wyjaśniając ich cel i sposób ich użycia
+7. Wymień wymagane wywołania API i odpowiadające im akcje frontendowe
+8. Zmapuj każdej historii użytkownika do konkretnych szczegółów implementacji, komponentów lub funkcji
+9. Wymień interakcje użytkownika i ich oczekiwane wyniki
+10. Wymień warunki wymagane przez API i jak je weryfikować na poziomie komponentów
+11. Zidentyfikuj potencjalne scenariusze błędów i zasugeruj, jak sobie z nimi poradzić
+12. Wymień potencjalne wyzwania związane z wdrożeniem tego widoku i zasugeruj możliwe rozwiązania
+
+Po przeprowadzeniu analizy dostarcz plan wdrożenia w formacie Markdown z następującymi sekcjami:
+
+1. Przegląd: Krótkie podsumowanie widoku i jego celu.
+2. Routing widoku: Określenie ścieżki, na której widok powinien być dostępny.
+3. Struktura komponentów: Zarys głównych komponentów i ich hierarchii.
+4. Szczegóły komponentu: Dla każdego komponentu należy opisać:
+ - Opis komponentu, jego przeznaczenie i z czego się składa
+ - Główne elementy HTML i komponenty dzieci, które budują komponent
+ - Obsługiwane zdarzenia
+ - Warunki walidacji (szczegółowe warunki, zgodnie z API)
+ - Typy (DTO i ViewModel) wymagane przez komponent
+ - Propsy, które komponent przyjmuje od rodzica (interfejs komponentu)
+5. Typy: Szczegółowy opis typów wymaganych do implementacji widoku, w tym dokładny podział wszelkich nowych typów lub modeli widoku według pól i typów.
+6. Zarządzanie stanem: Szczegółowy opis sposobu zarządzania stanem w widoku, określenie, czy wymagany jest customowy hook.
+7. Integracja API: Wyjaśnienie sposobu integracji z dostarczonym punktem końcowym. Precyzyjnie wskazuje typy żądania i odpowiedzi.
+8. Interakcje użytkownika: Szczegółowy opis interakcji użytkownika i sposobu ich obsługi.
+9. Warunki i walidacja: Opisz jakie warunki są weryfikowane przez interfejs, których komponentów dotyczą i jak wpływają one na stan interfejsu
+10. Obsługa błędów: Opis sposobu obsługi potencjalnych błędów lub przypadków brzegowych.
+11. Kroki implementacji: Przewodnik krok po kroku dotyczący implementacji widoku.
+
+Upewnij się, że Twój plan jest zgodny z PRD, historyjkami użytkownika i uwzględnia dostarczony stack technologiczny.
+
+Ostateczne wyniki powinny być w języku polskim i zapisane w pliku o nazwie .ai/{view-name}-view-implementation-plan.md. Nie uwzględniaj żadnej analizy i planowania w końcowym wyniku.
+
+Oto przykład tego, jak powinien wyglądać plik wyjściowy (treść jest do zastąpienia):
+
+```markdown
+# Plan implementacji widoku [Nazwa widoku]
+
+## 1. Przegląd
+[Krótki opis widoku i jego celu]
+
+## 2. Routing widoku
+[Ścieżka, na której widok powinien być dostępny]
+
+## 3. Struktura komponentów
+[Zarys głównych komponentów i ich hierarchii]
+
+## 4. Szczegóły komponentów
+### [Nazwa komponentu 1]
+- Opis komponentu [opis]
+- Główne elementy: [opis]
+- Obsługiwane interakcje: [lista]
+- Obsługiwana walidacja: [lista, szczegółowa]
+- Typy: [lista]
+- Propsy: [lista]
+
+### [Nazwa komponentu 2]
+[...]
+
+## 5. Typy
+[Szczegółowy opis wymaganych typów]
+
+## 6. Zarządzanie stanem
+[Opis zarządzania stanem w widoku]
+
+## 7. Integracja API
+[Wyjaśnienie integracji z dostarczonym endpointem, wskazanie typów żądania i odpowiedzi]
+
+## 8. Interakcje użytkownika
+[Szczegółowy opis interakcji użytkownika]
+
+## 9. Warunki i walidacja
+[Szczegółowy opis warunków i ich walidacji]
+
+## 10. Obsługa błędów
+[Opis obsługi potencjalnych błędów]
+
+## 11. Kroki implementacji
+1. [Krok 1]
+2. [Krok 2]
+3. [...]
+```
+
+Rozpocznij analizę i planowanie już teraz. Twój ostateczny wynik powinien składać się wyłącznie z planu wdrożenia w języku polskim w formacie markdown, który zapiszesz w pliku .ai/{view-name}-view-implementation-plan.md i nie powinien powielać ani powtarzać żadnej pracy wykonanej w podziale implementacji.</code></pre><h2>Implementacja widoku generowania fiszek z shadcn/ui i Tailwind</h2><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1072991671?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Do zaimplementowania widoku wykorzystałem prompt:</p><pre><code>Twoim zadaniem jest zaimplementowanie widoku frontendu w oparciu o podany plan implementacji i zasady implementacji. Twoim celem jest stworzenie szczegółowej i dokładnej implementacji, która jest zgodna z dostarczonym planem, poprawnie reprezentuje strukturę komponentów, integruje się z API i obsługuje wszystkie określone interakcje użytkownika.
+
+Najpierw przejrzyj plan implementacji:
+
+&lt;implementation_plan&gt;
+{{implementation-plan}} &lt;- zamień na referencję do planu implementacji widoku (np. @generations-view-implementation-plan.md)
+&lt;/implementation_plan&gt;
+
+Teraz przejrzyj zasady implementacji:
+
+&lt;implementation_rules&gt;
+{{frontend-rules}}  &lt;- zamień na referencję do reguł frontendowych (np. @shared.mdc, @frontend.mdc, @astro.mdc, @react.mdc, @ui-shadcn-helper.mdc)
+&lt;/implementation_rules&gt;
+
+Przejrzyj zdefiniowane typy:
+
+&lt;types&gt;
+{{types}} &lt;- zamień na referencję do definicji DTOsów (np. @types.ts)
+&lt;/types&gt;
+
+Wdrażaj plan zgodnie z następującym podejściem:
+
+&lt;implementation_approach&gt;
+Realizuj maksymalnie 3 kroki planu implementacji, podsumuj krótko co zrobiłeś i opisz plan na 3 kolejne działania - zatrzymaj w tym momencie pracę i czekaj na mój feedback.
+&lt;/implementation_approach&gt;
+
+Dokładnie przeanalizuj plan wdrożenia i zasady. Zwróć szczególną uwagę na strukturę komponentów, wymagania dotyczące integracji API i interakcje użytkownika opisane w planie.
+
+Wykonaj następujące kroki, aby zaimplementować widok frontendu:
+
+1. Struktura komponentów:
+   - Zidentyfikuj wszystkie komponenty wymienione w planie wdrożenia.
+   - Utwórz hierarchiczną strukturę tych komponentów.
+   - Upewnij się, że obowiązki i relacje każdego komponentu są jasno zdefiniowane.
+
+2. Integracja API:
+   - Zidentyfikuj wszystkie endpointy API wymienione w planie.
+   - Wdróż niezbędne wywołania API dla każdego endpointa.
+   - Obsłuż odpowiedzi z API i odpowiednio aktualizacji stan komponentów.
+
+3. Interakcje użytkownika:
+   - Wylistuj wszystkie interakcje użytkownika określone w planie wdrożenia.
+   - Wdróż obsługi zdarzeń dla każdej interakcji.
+   - Upewnij się, że każda interakcja wyzwala odpowiednią akcję lub zmianę stanu.
+
+4. Zarządzanie stanem:
+   - Zidentyfikuj wymagany stan dla każdego komponentu.
+   - Zaimplementuj zarządzanie stanem przy użyciu odpowiedniej metody (stan lokalny, custom hook, stan współdzielony).
+   - Upewnij się, że zmiany stanu wyzwalają niezbędne ponowne renderowanie.
+
+5. Stylowanie i layout:
+   - Zastosuj określone stylowanie i layout, jak wspomniano w planie wdrożenia.
+   - Zapewnienie responsywności, jeśli wymaga tego plan.
+
+6. Obsługa błędów i przypadki brzegowe:
+   - Wdrożenie obsługi błędów dla wywołań API i interakcji użytkownika.
+   - Rozważ i obsłuż potencjalne edge case'y wymienione w planie.
+
+7. Optymalizacja wydajności:
+   - Wdrożenie wszelkich optymalizacji wydajności określonych w planie lub zasadach.
+   - Zapewnienie wydajnego renderowania i minimalnej liczby niepotrzebnych ponownych renderowań.
+
+8. Testowanie:
+   - Jeśli zostało to określone w planie, zaimplementuj testy jednostkowe dla komponentów i funkcji.
+   - Dokładnie przetestuj wszystkie interakcje użytkownika i integracje API.
+
+W trakcie całego procesu implementacji należy ściśle przestrzegać dostarczonych zasad implementacji. Zasady te mają pierwszeństwo przed wszelkimi ogólnymi najlepszymi praktykami, które mogą być z nimi sprzeczne.
+
+Upewnij się, że twoja implementacja dokładnie odzwierciedla dostarczony plan implementacji i przestrzega wszystkich określonych zasad. Zwróć szczególną uwagę na strukturę komponentów, integrację API i obsługę interakcji użytkownika.</code></pre><p>Poniżej załączam również helpera, który pomaga agentowi efektywnie korzystać z biblioteki komponentów shadcn/ui (ui-shadcn-helper.mdc):</p><pre><code># Shadcn UI Components
+
+Ten projekt wykorzystuje @shadcn/ui dla komponentów interfejsu użytkownika. Są to pięknie zaprojektowane, dostępne komponenty, które można dostosować do swojej aplikacji.
+
+## Odszukiwanie zainstalowanych komponentów
+
+Komponenty są dostępne w folderze `src/components/ui`, zgodnie z aliasami z pliku `components.json`
+
+## Wykorzystanie komponentu
+
+Zaimportuj komponent zgodnie ze skonfigurowanym aliasem `@/`
+
+```tsx
+import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+```
+
+Przykładowe wykorzystanie komponnetów:
+
+```tsx
+&lt;Button variant="outline"&gt;Click me&lt;/Button&gt;
+
+&lt;Card&gt;
+  &lt;CardHeader&gt;
+    &lt;CardTitle&gt;Card Title&lt;/CardTitle&gt;
+    &lt;CardDescription&gt;Card Description&lt;/CardDescription&gt;
+  &lt;/CardHeader&gt;
+  &lt;CardContent&gt;
+    &lt;p&gt;Card Content&lt;/p&gt;
+  &lt;/CardContent&gt;
+  &lt;CardFooter&gt;
+    &lt;p&gt;Card Footer&lt;/p&gt;
+  &lt;/CardFooter&gt;
+&lt;/Card&gt;
+```
+
+## Instalowanie dodatkowych komponentów
+
+Wiele innych komponentów jest dostępnych, ale nie są one obecnie zainstalowane. Pełną listę można znaleźć na stronie https://ui.shadcn.com/r
+
+Aby zainstalować nowy komponent, wykorzystaj shadcn CLI
+
+
+```bash
+npx shadcn@latest add [component-name]
+```
+
+Przykładowo, aby dodać komponent accordion
+
+```bash
+npx shadcn@latest add accordion
+```
+
+Ważne: `npx shadcn-ui@latest` zostało wycofane, korzystaj z `npx shadcn@latest`
+
+Niektóre popularne komponenty to:
+
+- Accordion
+- Alert
+- AlertDialog
+- AspectRatio
+- Avatar
+- Calendar
+- Checkbox
+- Collapsible
+- Command
+- ContextMenu
+- DataTable
+- DatePicker
+- Dropdown Menu
+- Form
+- Hover Card
+- Menubar
+- Navigation Menu
+- Popover
+- Progress
+- Radio Group
+- ScrollArea
+- Select
+- Separator
+- Sheet
+- Skeleton
+- Slider
+- Switch
+- Table
+- Textarea
+- Sonner (previously Toast)
+- Toggle
+- Tooltip
+
+## Component Styling
+
+Ten projekt wykorzystuje wariant stylu „new-york” z kolorem bazowym "neutral" i zmiennymi CSS do tworzenia motywów, zgodnie z konfiguracją w sekcji `components.json`.</code></pre><h3>Model zaczyna się gubić? Podsumowanie i nowy wątek!</h3><p>W przypadku bardziej skomplikowanych pracy, gdzie potrzebujemy więcej niż 5-6 iteracji 3×3, okno kontekstowe Claude 3.5 Sonnet zacznie się wypełniać i jakość pracy modelu zacznie spadać. Kiedy zauważysz taki problem, cofnij się do checkpointa, w którym zaczęły się problemy. </p><p>Zamień poprzedniego prompta na prośbę o zatrzymanie implementacji i utworzenie pliku ze statusem prac <em> .ai/{view-name}-implementation-status</em>, który wykorzystasz w nowym wątku:</p><pre><code>Podsumuj swoją pracę w pliku .ai/{nazwa-zadania}-implementation-status.md w formacie markdown:
+
+```markdown
+# Status implementacji widoku {nazwa widoku}
+
+## Zrealizowane kroki
+[Szczegółowa lista zrealizowanych kroków]
+
+## Kolejne kroki
+[Lista dalszych kroków, zgodna z planem implementacji]
+```
+
+Po utworzeniu pliku ze statusem, napisz "Gotowe". Na tym zakończ pracę w tym wątku. </code></pre><p>Przeanalizuj plik ze statusem, warto zwrócić uwagę na kolejne kroki gdzie może pojawić się scope creep, czyli aspiracyjne pomysły modelu, które wykraczają poza oryginalny zakres planu implementacji.</p><p>Pozbądź się tego co nie jest kluczowe, ulepszenia i refaktoryzacje lepiej wprowadzać w dedykowanych konwersacjach skupionych na konkretnym celu (więcej o tym w module 2). Na tym etapie warto skupić się na zrealizowaniu głównego celu jakim jest działający moduł, który spełnia kluczowe standardy. </p><p>W nowym wątku wykorzystaj wariację poprzedniego prompta, który dodatkowo zawiera odniesienie do statusu implementacji:</p><pre><code>Twoim zadaniem jest zaimplementowanie widoku frontendu w oparciu o podany plan implementacji i zasady implementacji. Twoim celem jest stworzenie szczegółowej i dokładnej implementacji, która jest zgodna z dostarczonym planem, poprawnie reprezentuje strukturę komponentów, integruje się z API i obsługuje wszystkie określone interakcje użytkownika.
+
+Najpierw przejrzyj plan implementacji:
+
+&lt;implementation_plan&gt;
+{{implementation-plan}} &lt;- zamień na referencję do planu implementacji widoku (np. @generations-view-implementation-plan.md)
+&lt;/implementation_plan&gt;
+
+Teraz przejrzyj zasady implementacji:
+
+&lt;implementation_rules&gt;
+{{frontend-rules}}  &lt;- zamień na referencję do reguł frontendowych (np. @shared.mdc, @frontend.mdc, @astro.mdc, @react.mdc, @ui-shadcn-helper.mdc)
+&lt;/implementation_rules&gt;
+
+Przejrzyj zdefiniowane typy:
+
+&lt;types&gt;
+{{types}} &lt;- zamień na referencję do definicji DTOsów (np. @types.ts)
+&lt;/types&gt;
+
+Wdrażaj plan zgodnie z następującym podejściem:
+
+&lt;implementation_approach&gt;
+Realizuj maksymalnie 3 kroki planu implementacji, podsumuj krótko co zrobiłeś i opisz plan na 3 kolejne działania - zatrzymaj w tym momencie pracę i czekaj na mój feedback.
+&lt;/implementation_approach&gt;
+
+Nie zaczynaj pracy od poczatku kroków implementacji, weź pod uwagę obecny status:
+
+&lt;implementation_status&gt;
+{{implementation-status}} &lt;- zamień na referencję do utworzonego statusu implementacji 👈
+&lt;/implementation_status&gt;
+
+Dokładnie przeanalizuj plan wdrożenia, zasady i jego obecny status (zacznij od "Następne kroki"). Zwróć szczególną uwagę na strukturę komponentów, wymagania dotyczące integracji API i interakcje użytkownika opisane w planie.
+
+// reszta prompta taka sama jak w oryginalnym poleceniu implementacji</code></pre><p>Takie podejście zaoszczędzi Ci dużo straconego czasu i frustracji. Sonnet 3.5 mimo swoich licznych zalet, ma swoje ograniczenia, którymi trzeba świadomie zarządzać. Wraz z biegiem czasu modele będą co raz lepiej pracowały na dłuższym kontekście (Gemini 2.5 Pro 🤞) i tego typu techniki będą co raz mniej istotne.</p><h2>Kreatywne inspiracje</h2><p>Współpracując z AI nad budowaniem interfejsu użytkownika możesz wspomagać się też odniesieniami do popularnych stron i design systemów takich jak:</p><ul><li><p><a href="https://m3.material.io/" target="_blank" rel="noopener noreferrer">Google Material Design</a></p></li><li><p><a href="https://developer.apple.com/design/human-interface-guidelines" target="_blank" rel="noopener noreferrer">Apple Human Interface Guidelines</a></p></li><li><p><a href="https://fluent2.microsoft.design/" target="_blank" rel="noopener noreferrer">Microsoft Fluent Design System</a> </p></li><li><p><a href="https://carbondesignsystem.com/" target="_blank" rel="noopener noreferrer">Carbon Design System od IBM</a></p></li><li><p>Airbnb / Booking / Uber / etc.</p></li></ul><p>Pamiętaj jednak, że AI nie widzi tych interfejsów w sposób dosłowny, a raczej bazuje na słownych opisach tego, jak wyglądają poszczególne elementy. Stąd, aby zainspirować się danym stylem, najpierw w trybie “Chat with AI” możesz poprosić o charakterystykę danego rozwiązania</p><pre><code>Jesteś specjalistą frontend developmentu tworzącym nowoczesne i przystępne interfejsy użytkownika.
+
+Opisz cechy design systemu {{AirBnb}} pod kątem elementów takich jak:
+
+1. Button
+2. Input
+3. Typography
+4. Card
+5. Modal/Dialog
+6. Form
+7. Navigation
+8. List
+9. Feedback
+10. Layout</code></pre><p>Na podstawie wygenerowanego opisu, w kolejnym prompcie możesz utworzyć zestaw gotowych do użycia komponentów (powyższą listę możesz modyfikować aby otrzymać inne komponenty):</p><pre><code>W folderze src/components utwórz zestaw komponentów opartych o React/Tailwind w oparciu o te rekomendacje.
+
+Skup się wyłącznie na tworzeniu komponentów i nie modyfikuj konfiguracji Tailwinda. Możesz dodawać&nbsp;biblioteki pomocnicze po mojej akceptacji.</code></pre><p>Po wygenerowaniu komponentów, całość można zaprezentować na tzw. stronach “kitchen sink”, które w jednym miejscu zbierają wszystkie elementy w formie demo:</p><pre><code>Utwórz stronę typu "kitchen sink" (src/pages/kitchen-sink) prezentując nowo dodane komponenty w jednym miejscu.</code></pre><p>“<a href="https://conversionswp.com/bootstrap-5-kitchen-sink/" target="_blank" rel="noopener noreferrer">Kitchen sink</a>” to zwyczajowa nazwa strony, która ułatwia prezentację wszystkich elementów wchodzących w skład danego design systemu. Może być przydatna do szybkiej oceny komponentów, które utworzyliśmy przy współpracy z AI.</p><p>Poniżej przykłady działania tego scenariusza:</p><p><strong>Microsoft Fluent 2.0:</strong></p><img loading="lazy" src="https://assets-v2.circle.so/b3ezjsg1vw0sncxr3e5eg5t625aj" style="width: 100%; max-width: 100%;"><p><strong>Apple Human Interface Guidelines:</strong></p><img loading="lazy" src="https://assets-v2.circle.so/vbnwfaxoz658buvgsse5792z8x58" style="width: 100%; max-width: 100%;"><p><strong>Airbnb:</strong></p><img loading="lazy" src="https://assets-v2.circle.so/xhisx8eokmrb4jq4rhay10g1dppm" style="width: 100%; max-width: 100%;"><p><strong>Uber:</strong></p><img loading="lazy" src="https://assets-v2.circle.so/6t0at4o7066uewbnkc3m06rf0hfx" style="width: 100%; max-width: 100%;"><p>Dzięki komponentom wygenerowanym w ten sposób otrzymujesz swój lokalny, oparty o komponenty design system, którego cechy możesz dodatkowo zachować w pliku Markdown (opis z pierwszego prompta) i wykorzystywać do rozszerzania o nowe elementy. Im bardziej popularną inspirację wybierzesz, tym lepsze efekty już za pierwszym razem.</p><p>Przy generowaniu komponentu możesz dodatkowo wskazać na “rules for AI” pod Reacta i Tailwinda, aby zadbać o poprawną konstrukcję każdego elementu. To szybki sposób na udany UI!</p><h2>🏁 Podsumowanie</h2><p>W tej lekcji poznaliśmy kluczowe aspekty budowania interfejsów użytkownika z wykorzystaniem nowoczesnych narzędzi i bibliotek:</p><ul><li><p><strong>Tailwind CSS</strong> - framework utility-first, który pozwala na tworzenie interfejsów za pomocą predefiniowanych klas CSS bez pisania własnych styli. Oferuje szybkość tworzenia, spójność, małą objętość kodu oraz wysoką konfigurowalność.</p></li><li><p><strong>Shadcn/ui</strong> - kolekcja gotowych komponentów zbudowanych na React, Radix UI i Tailwind, które stają się częścią projektu. Daje to pełną kontrolę nad kodem, zapewnia dostępność, elastyczność i spójny design.</p></li><li><p><strong>Planowanie architektury UI</strong> - metodyczne podejście do projektowania interfejsu, wykorzystujące sesje planistyczne, generowanie wysokopoziomowego planu UI oraz tworzenie szczegółowych planów implementacji poszczególnych widoków.</p></li><li><p><strong>Implementacja widoków</strong> - strukturyzowany proces obejmujący budowę komponentów, integrację z API, obsługę interakcji użytkownika, zarządzanie stanem, stylowanie oraz obsługę błędów zgodnie z przyjętymi zasadami i specyfikacją.</p></li><li><p><strong>Kreatywne inspiracje</strong> - możliwość wykorzystania popularnych systemów projektowych (Material Design, Human Interface Guidelines, Fluent Design) jako inspiracji przy tworzeniu własnych komponentów, z wykorzystaniem stron typu "kitchen sink" do prezentacji elementów.</p></li></ul><p>Pamiętaj, że programowanie z LLM w kontekście UI to szansa na szybsze tworzenie interfejsów użytkownika, ale wymaga jasnych poleceń i strukturyzowanego podejścia. Najlepsze rezultaty osiąga się łącząc AI z dobrze zdefiniowanymi komponentami i frameworkami CSS, które minimalizują potrzebę generowania skomplikowanych, niepowiązanych reguł stylowania.</p><h2>👨‍💻 Ćwiczenia praktyczne</h2><p><strong>Zadanie 1: Zaincjalizuj bibliotekę komponentów</strong> <br><strong>Cel:</strong> Skonfigurowanie biblioteki komponentów w swoim projekcie. <br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Jeśli korzystasz z Reacta, zaincjalizuj shadcn/ui w swoim projekcie</p></li><li><p>Jeśli korzystasz z innego frameworka, wybierz i zainstaluj odpowiednią bibliotekę komponentów</p></li><li><p>Upewnij się, że podstawowe komponenty (Button, Card, Input) są dostępne do użycia</p></li><li><p>Sprawdź poprawność konfiguracji tworząc prosty przykład wykorzystujący te komponenty</p></li><li><p>Zapoznaj się z dokumentacją wybranej biblioteki, aby zrozumieć dostępne opcje konfiguracji<br></p></li></ol><p><strong>Zadanie 2: Przeprowadź sesję planistyczną dla interfejsu użytkownika</strong> <br><strong>Cel:</strong> Zdefiniowanie założeń i struktury interfejsu użytkownika dla Twojej aplikacji. <br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Wykorzystaj prompt z sekcji "Sesja planistyczna interfejsu użytkownika"</p></li><li><p>Przeprowadź minimum dwie rundy pytań i odpowiedzi dotyczących planowanego interfejsu</p></li><li><p>Wygeneruj podsumowanie sesji planistycznej</p></li><li><p>Zapisz wyniki jako punkt odniesienia do dalszych prac</p></li></ol><p><strong>Zadanie 3: Wygeneruj wysokopoziomowy plan UI</strong> <br><strong>Cel:</strong> Stworzenie kompleksowego planu architektury interfejsu użytkownika. <br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Wykorzystaj prompt z sekcji "Generowanie wysokopoziomowego planu UI"</p></li><li><p>Wygeneruj i poddaj rewizji plan UI za pomocą modelu reasoningowego</p></li><li><p>Zapisz wygenerowany plan jako .ai/ui-plan.md</p></li><li><p>Upewnij się, że plan zawiera wszystkie kluczowe widoki, mapę podróży użytkownika oraz strukturę nawigacji<br></p></li></ol><p><strong>Zadanie 4: Stwórz szczegółowy plan implementacji widoku</strong> <br><strong>Cel:</strong> Opracowanie szczegółowego planu wdrożenia kluczowego widoku aplikacji. <br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Wybierz kluczowy widok dla Twojej aplikacji z wysokopoziomowego planu UI</p></li><li><p>Wykorzystaj prompt z sekcji "Szczegółowy plan implementacji widoku"</p></li><li><p>Dostosuj prompt, uwzględniając specificzne endpointy API i typy danych</p></li><li><p>Wygeneruj szczegółowy plan implementacji widoku</p></li><li><p>Zapisz plan jako .ai/{nazwa-widoku}-view-implementation-plan.md</p></li><li><p>Upewnij się, że plan zawiera kluczowe komponenty, warunki walidacji, typy, obsługę stanu oraz sensowny plan implementacji krok po kroku<br></p></li></ol><p><strong>Zadanie 5: Zaimplementuj widok</strong> <br><strong>Cel:</strong> Pełna implementacja widoku zgodnie z wygenerowanym planem. <br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Wykorzystaj prompt z sekcji "Implementacja widoku z shadcn/ui i Tailwind"</p></li><li><p>Jeśli korzystasz z shadcn/ui, dołącz ui-shadcn-helper.mdc do implementation_rules</p></li><li><p>Etapowo wdrażaj plan implementacji, korzystając z workflow 3×3 (3 kroki implementacji, feedback, kolejne 3 kroki)</p></li><li><p>Upewnij się, że implementacja obejmuje wszystkie komponenty, integrację z API oraz obsługę interakcji użytkownika</p></li><li><p>Przetestuj zaimplementowany widok pod kątem funkcjonalności i zgodności z planem</p></li><li><p>W razie potrzeby wprowadź poprawki lub rozszerzenia</p></li></ol><p><br></p><img loading="lazy" src="https://assets-v2.circle.so/bhe5tn2ay37vnkh8spzbevyv6jp5" style="width: 100%; max-width: 100%;"></div></body></html>

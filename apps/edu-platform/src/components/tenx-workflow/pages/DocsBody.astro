@@ -1,0 +1,1290 @@
+---
+/**
+ * Tresc strony "Dokumentacja (quick search)" - przeszukiwalny indeks calej
+ * kampanii 10x Workflow (55 wpisow: strony, kroki, wezly, lekcje, skille).
+ * Zrodlo: kampania 10xdevs-docs.html; hud (logo, breadcrumb, xnav), tlo,
+ * gwiazdy i footer daje TenxCosmicLayout.
+ */
+import { lessonUrl } from '../config';
+import { pageHref } from '../pages';
+import { DOCS, type DocEntry } from '../docs-data';
+
+interface Props {
+  base: string;
+}
+
+const { base } = Astro.props;
+
+/** Adres wpisu: strona docelowa z rejestru stron + opcjonalna kotwica. */
+const doc = (slug: string, anchor?: string) =>
+  anchor ? `${pageHref(base, slug)}#${anchor}` : pageHref(base, slug);
+
+/* Dane wpisow zyja w ../docs-data.ts (wspolne ze strona i paleta wyszukiwania
+   w TenxCosmicLayout). Ponizsza serializacja odtwarza literal DOCS w skrypcie
+   inline 1:1 z historycznym formatem recznym (klucze bez cudzyslowow,
+   apostrofy, wpis per linia, przecinek na koncu), zeby wyrenderowany HTML
+   strony pozostal identyczny po ekstrakcji danych. */
+const q = (s: string) => `'${s.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+const docLine = (d: DocEntry) =>
+  '{' +
+  [
+    `id:${q(d.id)}`,
+    `typ:${q(d.typ)}`,
+    `kind:${q(d.kind)}`,
+    `modul:${q(d.modul)}`,
+    `tytul:${q(d.tytul)}`,
+    `streszczenie:${q(d.streszczenie)}`,
+    `tagi:[${d.tagi.map(q).join(',')}]`,
+    `artefakt:${d.artefakt === null ? 'null' : q(d.artefakt)}`,
+    ...(d.url ? [`url:${q(d.url)}`] : []),
+  ].join(',') +
+  '},';
+
+/* Pelna tresc skryptu wyszukiwarki (naglowek + const DOCS + IIFE) budowana we
+   frontmatterze, bo Astro nie interpoluje wyrazen w <script is:inline>. */
+const searchScript =
+  `
+/* Indeks wyszukiwarki. Karty wpisow sa wyrenderowane statycznie w HTML
+   (czytelne bez JS); DOCS trzyma metadane do filtrowania - id musi
+   odpowiadac data-id karty. Adresy stron zyja tylko w statycznych kartach
+   (pageHref w szablonie), wiec DOCS ich nie trzyma; wpisy lekcji nosza
+   dodatkowo \`url\` lekcji na platformie (/external/10xdevs-3/pl/NN). */
+const DOCS = [
+/* DOCS: dopisuj nowe wpisy poniżej */
+` +
+  DOCS.map(docLine).join('\n') +
+  '\n];\n\n' +
+  String.raw`(function(){
+  var q=document.getElementById('q'),count=document.getElementById('count'),empty=document.getElementById('empty');
+  var emptyMsg=document.getElementById('empty-msg'),emptyClear=document.getElementById('empty-clear');
+  if(!q)return;
+  var state={q:'',kind:'*',modul:'*'};
+  function norm(s){return (s||'').toLowerCase().replace(/ł/g,'l').normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+  DOCS.forEach(function(d){
+    d._h=norm([d.tytul,d.streszczenie,(d.tagi||[]).join(' '),d.artefakt||''].join(' '));
+    d._el=document.querySelector('article.doc[data-id="'+d.id+'"]');
+  });
+  function pl(n){var r=n%10,h=n%100;if(n===1)return'wpis';if(r>=2&&r<=4&&(h<12||h>14))return'wpisy';return'wpisów';}
+  function apply(){
+    var nq=norm(state.q),vis=0;
+    DOCS.forEach(function(d){
+      if(!d._el)return;
+      var ok=(state.kind==='*'||d.kind===state.kind)&&(state.modul==='*'||d.modul===state.modul)&&(!nq||d._h.indexOf(nq)>-1);
+      d._el.hidden=!ok;if(ok)vis++;
+    });
+    document.querySelectorAll('.mod-group').forEach(function(g){
+      g.hidden=!g.querySelector('article.doc:not([hidden])');
+    });
+    count.textContent=vis+' '+pl(vis);
+    if(vis===0&&emptyMsg){
+      emptyMsg.textContent=state.q?'BRAK WYNIKÓW DLA „'+state.q.trim()+'” // ZMIEŃ FRAZĘ ALBO FILTRY':'BRAK WYNIKÓW // ZMIEŃ FRAZĘ ALBO FILTRY';
+    }
+    empty.classList.toggle('on',vis===0);
+  }
+  function chipGroup(attr,key){
+    var chips=document.querySelectorAll('.chip[data-'+attr+']');
+    chips.forEach(function(ch){
+      ch.addEventListener('click',function(){
+        chips.forEach(function(o){o.setAttribute('aria-pressed',o===ch?'true':'false');});
+        state[key]=ch.getAttribute('data-'+attr);
+        apply();
+      });
+    });
+  }
+  chipGroup('kind','kind');
+  chipGroup('modul','modul');
+  function resetAll(){
+    q.value='';state.q='';state.kind='*';state.modul='*';
+    document.querySelectorAll('.chip[data-kind],.chip[data-modul]').forEach(function(ch){
+      var v=ch.getAttribute('data-kind')||ch.getAttribute('data-modul');
+      ch.setAttribute('aria-pressed',v==='*'?'true':'false');
+    });
+    apply();
+    q.focus();
+  }
+  if(emptyClear)emptyClear.addEventListener('click',resetAll);
+  q.addEventListener('input',function(){state.q=q.value;apply();});
+  document.addEventListener('keydown',function(e){
+    if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus();}
+    else if(e.key==='Escape'&&(state.q||document.activeElement===q)){q.value='';state.q='';apply();}
+  });
+  apply();
+  if(window.matchMedia('(min-width:900px) and (hover:hover) and (pointer:fine)').matches){
+    q.focus({preventScroll:true});
+  }
+})();` +
+  '\n';
+---
+
+<header>
+  <p class="eyebrow" style="--acc:var(--indigo)"><span class="ico ico-lens" aria-hidden="true"></span>DOKUMENTACJA // QUICK SEARCH</p>
+  <h1>Cała mapa 10x Workflow <span class="glow">w jednym indeksie</span></h1>
+  <p class="sub">Cała kampania w jednym przeszukiwalnym indeksie: <strong>M1 Fundament, CSC (M2), skalowanie, M3 Jakość, M4 Legacy, M5 Teamwork</strong> - strony, kroki, węzły, lekcje i skille. Wpisz frazę albo naciśnij <kbd>/</kbd> - lista filtruje się natychmiast. <strong>Escape</strong> czyści wyszukiwanie.</p>
+</header>
+
+<div class="searchbar" id="searchbar">
+  <div class="search-row">
+    <div class="search-box">
+      <span class="ico ico-lens" aria-hidden="true"></span>
+      <input id="q" type="search" autocomplete="off" placeholder="Szukaj: koncept, technika, flow, skill, artefakt… ( / przenosi tu kursor)" aria-label="Szukaj w dokumentacji">
+    </div>
+    <span id="count" class="mono" aria-live="polite">55 wpisów</span>
+  </div>
+  <div class="chips" role="group" aria-label="Filtr rodzaju wpisu">
+    <span class="lbl mono">RODZAJ</span>
+    <button type="button" class="chip" data-kind="*" aria-pressed="true">Wszystko</button>
+    <button type="button" class="chip" data-kind="strona" aria-pressed="false">Strony</button>
+    <button type="button" class="chip" data-kind="koncept" aria-pressed="false">Koncepty</button>
+    <button type="button" class="chip" data-kind="technika" aria-pressed="false">Techniki</button>
+    <button type="button" class="chip" data-kind="flow" aria-pressed="false">Flow</button>
+  </div>
+  <div class="chips" role="group" aria-label="Filtr modułu">
+    <span class="lbl mono">MODUŁ</span>
+    <button type="button" class="chip" data-modul="*" aria-pressed="true">Wszystkie</button>
+    <button type="button" class="chip" data-modul="CSC" aria-pressed="false">CSC</button>
+    <button type="button" class="chip" data-modul="M1" aria-pressed="false">M1</button>
+    <button type="button" class="chip" data-modul="SKALOWANIE" aria-pressed="false">Skalowanie</button>
+    <button type="button" class="chip" data-modul="M3" aria-pressed="false">M3</button>
+    <button type="button" class="chip" data-modul="M4" aria-pressed="false">M4</button>
+    <button type="button" class="chip" data-modul="M5" aria-pressed="false">M5</button>
+  </div>
+</div>
+<noscript>
+  <style is:inline>.searchbar{display:none}</style>
+  <p class="mono noscript-note">WYSZUKIWARKA WYMAGA JAVASCRIPT - PONIŻEJ PEŁNA LISTA WPISÓW.</p>
+</noscript>
+
+<main id="results">
+
+<!-- ============ START: STRONY MODULOW ============ -->
+<section class="mod-group" id="mod-strony">
+  <div class="mod-head"><h2>START // STRONY MODUŁÓW</h2></div>
+
+  <article class="doc" data-id="m1" data-kind="strona" style="--acc:#7c8cff">
+    <div class="doc-head">
+      <span class="badge">STRONA</span>
+      <h3><a href={doc('fundament')}>Moduł 1: Fundament - strona modułu</a></h3>
+    </div>
+    <p class="doc-sum">Pięć lekcji, które zamieniają mglisty pomysł w projekt gotowy do lotu: <b>PRD, skille, bootstrap, onboarding agenta i pierwszy deploy</b>. Rampa kończy się tam, gdzie startuje CSC.</p>
+    <div class="doc-tags"><span class="tag">m1</span><span class="tag">fundament</span><span class="tag">moduł 1</span><span class="tag">landing</span><span class="tag">rampa startowa</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Mapa modułu 1: skąd biorą się jednostki pracy, zanim pierwsza zmiana wejdzie w new.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: pomysł (greenfield) lub istniejące repo (brownfield). Wyjście: prd.md, roadmap.md i środowisko - scaffold, AGENTS.md, działający deploy.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Pięć lekcji = pięć pytań fundamentu; każda kończy się artefaktem na dysku.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="csc" data-kind="strona" style="--acc:#7c8cff">
+    <div class="doc-head">
+      <span class="badge">STRONA</span>
+      <h3><a href={doc('csc')}>Core Skills Chain (CSC) - strona modułu</a></h3>
+    </div>
+    <p class="doc-sum">Rdzeń 10x Workflow: pięć skoków jednej jednostki pracy - <b>new → research → plan → implement → review</b>. Każdy krok zostawia artefakt na dysku.</p>
+    <div class="doc-tags"><span class="tag">csc</span><span class="tag">workflow</span><span class="tag">łańcuch</span><span class="tag">moduł 2</span><span class="tag">landing</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Jedna mapa całego łańcucha: pokazuje, po co istnieje każdy krok i co gwarantuje, zanim wejdziesz w szczegóły pojedynczego skilla.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: jednostka pracy z fundamentu (prd.md, roadmap.md). Wyjście: przejście new → review z artefaktem na dysku po każdym kroku.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Kroki komunikują się plikami w <b>context/changes/&lt;change-id&gt;/</b> - artefakt zatrzymuje maszynę, człowiek zatwierdza, łańcuch rusza dalej.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="skalowanie" data-kind="strona" style="--acc:#7c8cff">
+    <div class="doc-head">
+      <span class="badge">STRONA</span>
+      <h3><a href={doc('skalowanie')}>Skalowanie (scale tier) - strona warstwy</a></h3>
+    </div>
+    <p class="doc-sum">Warstwa nad łańcuchem: <b>quality gates → goal → loops</b>. Skalowanie to więcej cykli równolegle z bramkami jakości i autonomią - sufit przepustowości wyznacza Twoja zdolność do review.</p>
+    <div class="doc-tags"><span class="tag">skalowanie</span><span class="tag">scale tier</span><span class="tag">quality gates</span><span class="tag">goal</span><span class="tag">loops</span><span class="tag">landing</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Mapa warstwy „ponad łańcuchem": trzy węzły, które podnoszą rygor i autonomię, gdy rośnie ryzyko i/lub złożoność.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: działający łańcuch CSC na pojedynczych jednostkach pracy. Wyjście: więcej cykli równolegle, każdy domykany bramkami i review.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Łańcuch się nie zmienia - dokładasz mu obstawę: bramki jakości per faza, autonomiczny przelot planu, równoległe cykle w rytmie.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="m3" data-kind="strona" style="--acc:#7c8cff">
+    <div class="doc-head">
+      <span class="badge">STRONA</span>
+      <h3><a href={doc('jakosc')}>Moduł 3: Jakość - strona modułu</a></h3>
+    </div>
+    <p class="doc-sum">Pięć lekcji o jakości: <b>najpierw ryzyka, nie pliki</b> - chroń najgroźniejsze scenariusze testem, którego asercja realnie pada. Jakość domyka blok 10xBuilder.</p>
+    <div class="doc-tags"><span class="tag">m3</span><span class="tag">jakość</span><span class="tag">moduł 3</span><span class="tag">testy</span><span class="tag">landing</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Mapa modułu 3: jak chronić działający produkt testami według ryzyka, nie według listy plików - i jak nie ufać zieleni, która nie umie zrobić się czerwona.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: działający produkt z fundamentu i łańcucha. Wyjście: mapa ryzyk, testy, które realnie padają, warstwy hooków, przeloty E2E i diagnozy z dowodów.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Pięć lekcji = pięć pytań jakości; zielony test, który nie pada po zepsuciu, niczego nie pilnuje (mutation check).</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="m4" data-kind="strona" style="--acc:#7c8cff">
+    <div class="doc-head">
+      <span class="badge">STRONA</span>
+      <h3><a href={doc('legacy')}>Moduł 4: Legacy - strona modułu (10xArchitect)</a></h3>
+    </div>
+    <p class="doc-sum">Pięć lekcji o zastanym kodzie: <b>decyzje architektoniczne z dowodów, nie z intuicji</b>. Kręgosłup modułu: 5-elementowy raport architektoniczny - obronialny, nie przyjęty na wiarę.</p>
+    <div class="doc-tags"><span class="tag">m4</span><span class="tag">legacy</span><span class="tag">10xarchitect</span><span class="tag">raport architektoniczny</span><span class="tag">landing</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Mapa modułu 4: jak wejść w cudzy, zastany kod z dowodami zamiast intuicji - obszar, którego niemal żaden kurs AI nie rusza.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zastany system - cudzy kod, brak testów, archeologia decyzji. Wyjście: <b>5-elementowy raport architektoniczny</b>: architektura kontekstu, mapa projektu, przegląd feature’a + hot spots, okazje refaktorowe, okazje DDD.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Pięć lekcji = pięć pytań architekta; raport ma być Twój - obronialny, nie przyjęty na wiarę.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="m5" data-kind="strona" style="--acc:#7c8cff">
+    <div class="doc-head">
+      <span class="badge">STRONA</span>
+      <h3><a href={doc('teamwork')}>Moduł 5: Teamwork - strona modułu (10xChampion)</a></h3>
+    </div>
+    <p class="doc-sum">Pięć lekcji o pracy zespołowej z agentami: <b>agent zarabia dla zespołu dopiero wtedy, gdy działa bez Ciebie</b>. Artefakty AI to kod - jedno źródło prawdy, wersjonowanie, dystrybucja. Domyka kampanię.</p>
+    <div class="doc-tags"><span class="tag">m5</span><span class="tag">teamwork</span><span class="tag">10xchampion</span><span class="tag">drużyna</span><span class="tag">landing</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Mapa modułu 5: od osobistego workflow do zespołu - narzędzia wewnętrzne, agent poza IDE, review w CI, rejestr artefaktów, delegacja zdalna.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: workflow działający u Ciebie. Wyjście: agent pracujący dla zespołu - odznakę 10xChampion domyka jeden z dwóch projektów: <b>pipeline CI/CD do review kodu</b> albo <b>rejestr artefaktów</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Pięć lekcji = pięć pytań zespołowych; dowodem są działające instalacje - pipeline z komentarzem agenta na PR albo rejestr z wydanymi wersjami.</dd></div>
+      </dl>
+    </details>
+  </article>
+</section>
+
+<!-- ============ MODUŁ: CSC ============ -->
+<section class="mod-group" data-modul="CSC" id="mod-csc">
+  <div class="mod-head"><h2>CSC // CORE SKILLS CHAIN // MODUŁ 2</h2></div>
+
+  <article class="doc" data-id="k-new" data-kind="flow" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">KROK</span>
+      <h3><a href={doc('csc', 'k-new')}>Krok 01: new - jedna jednostka pracy</a></h3>
+      <span class="art mono">change.md</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>jedna jednostka pracy</b>. Gwarancja: <b>jasny, odwracalny zakres</b>. Tnie zamiar na zmianę na tyle małą, że da się ją ogarnąć i cofnąć.</p>
+    <div class="doc-tags"><span class="tag">krok 01</span><span class="tag">new</span><span class="tag">zakres</span><span class="tag">change.md</span><span class="tag">/10x-new</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Bez bramy zadanie „popraw onboarding" rozlewa się na całe repo i nigdy nie wiadomo, co znaczy „zrobione".</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: luźny pomysł lub zgłoszenie. Wyjście: folder <b>context/changes/&lt;change-id&gt;/</b> z plikiem change.md - tożsamością zmiany.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Artefakt zatrzymuje maszynę: człowiek patrzy na zakres i decyduje, czy to jest ta bitwa, zanim cokolwiek poleci dalej.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="k-research" data-kind="flow" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">KROK</span>
+      <h3><a href={doc('csc', 'k-research')}>Krok 02: research - dowody do planu</a></h3>
+      <span class="art mono">research.md</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>dowody do planu</b>. Gwarancja: <b>fakty zamiast założeń</b>. Plan ma powstać na dowodach z repozytorium, nie na pamięci sprzed trzech refaktorów.</p>
+    <div class="doc-tags"><span class="tag">krok 02</span><span class="tag">research</span><span class="tag">dowody</span><span class="tag">research.md</span><span class="tag">/10x-research</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Największy sabotażysta planu to własne „wiem, jak to działa" - research zastępuje je pomiarem repozytorium.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: change.md. Wyjście: <b>research.md</b> - ścieżki plików, konwencje, realne punkty zaczepienia.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Równolegli subagenci przeczesują repo, każdy swój obszar; wynik ląduje na dysku, więc kolejne kroki czytają fakty z pliku zamiast polegać na pamięci rozmowy.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="k-plan" data-kind="flow" style="--acc:#a78bfa">
+    <div class="doc-head">
+      <span class="badge">KROK</span>
+      <h3><a href={doc('csc', 'k-plan')}>Krok 03: plan - kluczowe decyzje deva</a></h3>
+      <span class="art mono">plan.md</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>kluczowe decyzje deva</b>. Gwarancja: <b>etapy + warunki sukcesu</b>. Decyzje zapadają przed kodem, gdzie są tanie do zmiany.</p>
+    <div class="doc-tags"><span class="tag">krok 03</span><span class="tag">plan</span><span class="tag">fazy</span><span class="tag">plan.md</span><span class="tag">/10x-plan</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Usuwa ból implementacji „na żywioł", w której kluczowe decyzje zapadają mimochodem, w środku pisania kodu.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: research.md. Wyjście: <b>plan.md</b> - fazy z warunkami sukcesu (automatycznymi i ręcznymi) plus sekcja Progress.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Plan iteruje z człowiekiem, dopóki jest tekstem; zatwierdzony staje się kontraktem, a Progress maszyną stanów dla implementacji.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="k-implement" data-kind="flow" style="--acc:#3ddad0">
+    <div class="doc-head">
+      <span class="badge">KROK</span>
+      <h3><a href={doc('csc', 'k-implement')}>Krok 04: implement - implementacja etap po etapie</a></h3>
+      <span class="art mono">commity per faza</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>implementacja etap po etapie</b>. Gwarancja: <b>commitowane, weryfikowalne kroki</b>. Każda faza to punkt powrotu zamiast jednego wielkiego diffa.</p>
+    <div class="doc-tags"><span class="tag">krok 04</span><span class="tag">implement</span><span class="tag">commity</span><span class="tag">progress</span><span class="tag">/10x-implement</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Usuwa ból jednej wielkiej zmiany bez punktów kontrolnych, której nie da się ani przerwać, ani cofnąć.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: <b>commity per faza</b> i odhaczona sekcja Progress.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Progress jako maszyna stanów - faza kończy się dopiero, gdy warunki sukcesu są zielone i zmiana jest zacommitowana; przerwana sesja wraca od ostatniego zielonego etapu.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="k-review" data-kind="flow" style="--acc:#e2564a">
+    <div class="doc-head">
+      <span class="badge">KROK</span>
+      <h3><a href={doc('csc', 'k-review')}>Krok 05: review - czy implementacja realizuje plan?</a></h3>
+      <span class="art mono">raport review</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>czy implementacja realizuje plan?</b> Gwarancja: <b>analiza subagentów: plan vs kod</b>. Konkretny raport rozbieżności zamiast rytualnego „wygląda dobrze".</p>
+    <div class="doc-tags"><span class="tag">krok 05</span><span class="tag">review</span><span class="tag">dryf</span><span class="tag">plan vs kod</span><span class="tag">/10x-impl-review</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Odpowiednikiem rytuału nad niezrozumianą maszyną jest „działa, mergujemy" - review sprawdza, czy kod dotrzymał obietnic planu.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: plan.md i gotowy diff. Wyjście: <b>raport review</b> - dryf względem planu, niebezpieczne decyzje, zgodność z konwencjami repo.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Analiza subagentów - każdy porównuje inny wymiar planu z kodem; człowiek dostaje listę konkretnych rozbieżności.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-new" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-new</h3>
+      <span class="art mono">change.md</span>
+    </div>
+    <p class="doc-sum">Inicjalizuje folder zmiany <b>context/changes/&lt;change-id&gt;/</b> z plikiem change.md - tożsamością jednostki pracy.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">krok 01 · new</span><span class="tag">change.md</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Każda zmiana potrzebuje tożsamości na dysku, zanim ruszy jakakolwiek praca - inaczej zakres żyje tylko w oknie czatu.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: identyfikator zmiany plus luźny opis zamiaru. Wyjście: <b>context/changes/&lt;change-id&gt;/change.md</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Jeden plik z frontmatterem i opisem zakresu; kolejne skille łańcucha czytają go jako punkt startowy.</dd></div>
+      </dl>
+    </details>
+    <p class="doc-open"><a href={`${base}/skill/10x-new`}>STRONA SKILLA →</a></p>
+  </article>
+
+  <article class="doc" data-id="s-research" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-research</h3>
+      <span class="art mono">research.md</span>
+    </div>
+    <p class="doc-sum">Przeczesuje repozytorium równoległymi subagentami i składa wynik w research.md - kompletny obraz kodu pod plan.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">krok 02 · research</span><span class="tag">subagenci</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Plan pisany z pamięci (modelu albo własnej) dziedziczy jej luki; research zastępuje pamięć pomiarem.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: change.md lub pytanie badawcze. Wyjście: <b>research.md</b> obok change.md.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Fan-out subagentów: każdy bada swój obszar (kod, testy, historia), a wyniki są scalane w jeden dokument z odnośnikami do plików.</dd></div>
+      </dl>
+    </details>
+    <p class="doc-open"><a href={`${base}/skill/10x-research`}>STRONA SKILLA →</a></p>
+  </article>
+
+  <article class="doc" data-id="s-plan" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-plan</h3>
+      <span class="art mono">plan.md</span>
+    </div>
+    <p class="doc-sum">Tworzy szczegółowy plan implementacji przez gruntowny research i iterację z człowiekiem: fazy, warunki sukcesu, sekcja Progress.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">krok 03 · plan</span><span class="tag">fazy</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Kluczowe decyzje deva mają zapaść, gdy są tanie - w tekście, nie w połowie diffa.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: change.md + research.md. Wyjście: <b>plan.md</b> z fazami i sekcją Progress.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Iteracja: czytasz, kwestionujesz, poprawiasz; zatwierdzony plan staje się kontraktem dla /10x-implement.</dd></div>
+      </dl>
+    </details>
+    <p class="doc-open"><a href={`${base}/skill/10x-plan`}>STRONA SKILLA →</a></p>
+  </article>
+
+  <article class="doc" data-id="s-implement" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-implement</h3>
+      <span class="art mono">commity per faza</span>
+    </div>
+    <p class="doc-sum">Realizuje plan z context/changes/&lt;change-id&gt;/plan.md faza po fazie, z weryfikacją warunków sukcesu po każdej fazie.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">krok 04 · implement</span><span class="tag">progress</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Realizacja planu ma być serią punktów powrotu, nie jednym wielkim diffem, którego nikt nie przeczyta.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: kod, <b>commity per faza</b>, odhaczona sekcja Progress.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Faza po fazie: implementacja, weryfikacja warunków sukcesu, commit; Progress pilnuje, gdzie jesteś po przerwie.</dd></div>
+      </dl>
+    </details>
+    <p class="doc-open"><a href={`${base}/skill/10x-implement`}>STRONA SKILLA →</a></p>
+  </article>
+
+  <article class="doc" data-id="s-impl-review" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-impl-review</h3>
+      <span class="art mono">raport review</span>
+    </div>
+    <p class="doc-sum">Recenzuje implementację względem planu: dryf, niebezpieczne decyzje, zgodność ze wzorcami repo.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">krok 05 · review</span><span class="tag">dryf</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Im większy diff, tym łatwiej o dryf między tym, co plan obiecał, a tym, co kod robi.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: plan.md (opcjonalnie konkretna faza) i diff. Wyjście: <b>raport review</b> z listą rozbieżności.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Subagenci porównują wymiary planu z kodem: zgodność zakresu, bezpieczeństwo decyzji, wzorce repo.</dd></div>
+      </dl>
+    </details>
+    <p class="doc-open"><a href={`${base}/skill/10x-impl-review`}>STRONA SKILLA →</a></p>
+  </article>
+
+</section>
+
+<!-- ============ MODUŁ: M1 ============ -->
+<section class="mod-group" data-modul="M1" id="mod-m1">
+  <div class="mod-head"><h2>M1 // FUNDAMENT // MODUŁ 1</h2></div>
+
+  <article class="doc" data-id="l-01" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('fundament', 'l-01')}>Lekcja 01: Od pomysłu do PRD - co naprawdę budujemy?</a></h3>
+      <span class="art mono">shape-notes.md → prd.md</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>co naprawdę budujemy?</b> Gwarancja: <b>ustalenia, których kolejne prompty nie podważą</b>. Sesja sokratejska /10x-shape, potem /10x-prd.</p>
+    <div class="doc-tags"><span class="tag">lekcja 01</span><span class="tag">prd</span><span class="tag">shape</span><span class="tag">/10x-shape</span><span class="tag">/10x-prd</span></div>
+    <p class="doc-open"><a href={lessonUrl('01')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Bez testu pytań „mam pomysł na apkę" rozpada się przy trzecim prompcie.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: luźny pomysł lub istniejący projekt (auto-wykrycie greenfield/brownfield). Wyjście: <b>shape-notes.md</b>, a z niego <b>prd.md</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Pytania idą przed generowaniem - PRD spisuje ustalenia na dysku, więc kolejne prompty budują na decyzjach, zamiast po cichu je podważać.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="l-02" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('fundament', 'l-02')}>Lekcja 02: Od chatbota do Agenta - czym gra agent?</a></h3>
+      <span class="art mono">skille z kontraktami</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>czym gra agent?</b> Gwarancja: <b>powtarzalne narzędzia zamiast jednorazowych promptów</b>. Skill to nie prompt - to odtwarzalna para kontraktów wejścia/wyjścia.</p>
+    <div class="doc-tags"><span class="tag">lekcja 02</span><span class="tag">skille</span><span class="tag">metaprompting</span><span class="tag">agent</span></div>
+    <p class="doc-open"><a href={lessonUrl('02')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Prompt żyje raz i umiera w historii czatu; powtarzalna praca ma być modułem, nie improwizacją w oknie czatu.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: powtarzający się problem, dziś załatwiany coraz dłuższym promptem. Wyjście: <b>skill z kontraktem wejścia/wyjścia</b>, zapisany obok kodu.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Metaprompting - agent pomaga pisać własne narzędzia; każdy dopracowany skill podnosi jakość wszystkich kolejnych przebiegów.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="l-03" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('fundament', 'l-03')}>Lekcja 03: AI-Powered Bootstrap - na czym stawiamy?</a></h3>
+      <span class="art mono">tech-stack.md + scaffold</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>na czym stawiamy?</b> Gwarancja: <b>starter z oficjalnego CLI, nie boilerplate z generatora</b>. Greenfield: tech-stack-selector → bootstrapper; brownfield: stack-assess → health-check.</p>
+    <div class="doc-tags"><span class="tag">lekcja 03</span><span class="tag">bootstrap</span><span class="tag">stack</span><span class="tag">greenfield</span><span class="tag">brownfield</span></div>
+    <p class="doc-open"><a href={lessonUrl('03')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Boilerplate generowany z pamięci modelu psuje się przy pierwszej aktualizacji frameworka - fundamenty kładzie oficjalne CLI.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: prd.md (greenfield) albo istniejące repo (brownfield). Wyjście: <b>tech-stack.md i działający scaffold</b> z oficjalnego CLI.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Delegacja do oficjalnych CLI plus jasna polityka uprawnień: co agent uruchamia sam, a co wymaga człowieka.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="l-04" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('fundament', 'l-04')}>Lekcja 04: Agent Onboarding - co agent ma wiedzieć?</a></h3>
+      <span class="art mono">AGENTS.md</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>co agent ma wiedzieć?</b> Gwarancja: <b>kontekst projektu bez szumu</b>. Tylko to, czego model nie wywnioskuje z pretrainingu.</p>
+    <div class="doc-tags"><span class="tag">lekcja 04</span><span class="tag">agents.md</span><span class="tag">onboarding</span><span class="tag">ai rules</span></div>
+    <p class="doc-open"><a href={lessonUrl('04')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Kontekst bez szumu decyduje, czy pracuje z Tobą weteran, czy rekrut po złej odprawie.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: repo po bootstrapie. Wyjście: <b>AGENTS.md</b> z /10x-agents-md, oceniony przez /10x-rule-review.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Pętla feedbacku: każde potknięcie agenta to kandydat na regułę; przegląd reguł wycina szum, zanim zagłuszy sygnał.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="l-05" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('fundament', 'l-05')}>Lekcja 05: Z localhosta na produkcję - gdzie i jak wypływamy?</a></h3>
+      <span class="art mono">infrastructure.md + roadmap.md + deploy</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>gdzie i jak wypływamy?</b> Gwarancja: <b>działający deploy zamiast wiecznego localhosta</b>. Kalkulacja przed skokiem: infra-research, roadmap, deployment.</p>
+    <div class="doc-tags"><span class="tag">lekcja 05</span><span class="tag">deploy</span><span class="tag">produkcja</span><span class="tag">infrastruktura</span><span class="tag">roadmap</span></div>
+    <p class="doc-open"><a href={lessonUrl('05')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Deploy to świadoma decyzja infrastrukturalna, nie odruch - i dopiero produkcja ją weryfikuje.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: działający projekt na localhoście plus prd.md. Wyjście: <b>infrastructure.md, roadmap.md i pierwszy działający deploy</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Platforma wybrana z dowodów (/10x-infra-research), roadmapa wyznacza kolejność, /10x-deployment domyka bramkę gotowości preflightem.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-shape" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-shape</h3>
+      <span class="art mono">shape-notes.md</span>
+    </div>
+    <p class="doc-sum">Prowadzi ustrukturyzowaną rozmowę odkrywczą, która zamienia pomysł - greenfield lub brownfield, wykrywane z repo - w shape-notes.md, wejście do /10x-prd.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja 01</span><span class="tag">fundament</span><span class="tag">discovery</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Pomysł bez spisanych ustaleń rozmywa się z każdym promptem; sesja sokratejska wyciąga decyzje, zanim powstanie kod.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: pomysł lub istniejący projekt. Wyjście: <b>shape-notes.md</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Rozmowa prowadzona pytaniami; kontekst (greenfield/brownfield) wykrywany automatycznie z katalogu roboczego.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-prd" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-prd</h3>
+      <span class="art mono">prd.md</span>
+    </div>
+    <p class="doc-sum">Generuje context/foundation/prd.md z shape-notes.md według zamkniętego schematu; sam trafia w szablon greenfield (10 sekcji) lub brownfield (11 sekcji).</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja 01</span><span class="tag">prd</span><span class="tag">fundament</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">PRD zgodny ze schematem to wspólny język dalszych skilli - roadmapa i wybór stacku czytają go bez zgadywania.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: shape-notes.md (lub surowe notatki). Wyjście: <b>context/foundation/prd.md</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Routing po context_type z shape-notes.md albo auto-detekcji; schemat PRD jest zamknięty, nie negocjowany per projekt.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-tech-stack-selector" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-tech-stack-selector</h3>
+      <span class="art mono">tech-stack.md</span>
+    </div>
+    <p class="doc-sum">Wybiera starter i stack dla projektu greenfield po PRD: czyta prd.md, przechodzi rejestr starterów przez cztery bramki jakości i zapisuje tech-stack.md.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja 03</span><span class="tag">stack</span><span class="tag">greenfield</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Stack pod agenta musi przejść bramki: typowany, oparty na konwencjach, popularny, dobrze udokumentowany.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: context/foundation/prd.md. Wyjście: <b>context/foundation/tech-stack.md</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Rejestr starterów świadomy języka plus cztery bramki jakości; wynik to hand-off dla /10x-bootstrapper.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-bootstrapper" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-bootstrapper</h3>
+      <span class="art mono">scaffold + log</span>
+    </div>
+    <p class="doc-sum">Stawia scaffold w bieżącym katalogu po wyborze stacku: czyta tech-stack.md, uruchamia CLI oficjalnego startera i zapisuje log weryfikacji.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja 03</span><span class="tag">bootstrap</span><span class="tag">cli</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Fundamenty kładzie oficjalne CLI startera, nie generowany z pamięci boilerplate.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: context/foundation/tech-stack.md. Wyjście: <b>działający scaffold plus log weryfikacji</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Twarda polityka konfliktów: katalog context/ zawsze przeżywa uruchomienie startera.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-stack-assess" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-stack-assess</h3>
+      <span class="art mono">stack-assessment.md</span>
+    </div>
+    <p class="doc-sum">Ocenia stack istniejącego projektu pod agenta według 4 bramek jakości; zapisuje stack-assessment.md z ocenami per komponent, lukami i gotowymi wpisami do CLAUDE.md/AGENTS.md.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja 03</span><span class="tag">brownfield</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Brownfieldowy odpowiednik wyboru stacku: zanim agent zacznie pracę, trzeba wiedzieć, gdzie stack mu pomoże, a gdzie podłoży nogę.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: istniejące repo. Wyjście: <b>context/foundation/stack-assessment.md</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Cztery bramki jakości (typowany, oparty na konwencjach, popularny, udokumentowany) oceniane per komponent stacku.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-health-check" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-health-check</h3>
+      <span class="art mono">health-check.md</span>
+    </div>
+    <p class="doc-sum">Audyt zdrowia istniejącego projektu: zależności, bezpieczeństwo, wykrycie test runnera, CI/CD i brakująca konfiguracja; kończy się werdyktem gotowości na agenta.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja 03</span><span class="tag">brownfield</span><span class="tag">audyt</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Agent w chorym repo mnoży problemy zamiast je rozwiązywać - najpierw diagnoza, potem praca.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: istniejące repo (po /10x-stack-assess). Wyjście: <b>context/foundation/health-check.md</b> z priorytetami napraw.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Audyt zależności i bezpieczeństwa, detekcja test runnera, analiza CI/CD i brakującej konfiguracji - z priorytetyzacją.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-agents-md" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-agents-md</h3>
+      <span class="art mono">AGENTS.md</span>
+    </div>
+    <p class="doc-sum">Generuje AGENTS.md - zwięzły przewodnik po repo dla agentów AI: konwencje, komendy, pułapki; krytyczne reguły na górze.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja 04</span><span class="tag">onboarding</span><span class="tag">agents.md</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Agent bez kontekstu projektu wnioskuje z pretrainingu - a pretraining nie zna Twoich konwencji ani pułapek.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: repo (manifest, README, skrypty, konfiguracja lintu/testów, układ, historia commitów). Wyjście: <b>AGENTS.md</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Dokument mały, precyzyjny, z odsyłaczami zamiast powtórzeń - agent czyta raz i nie blokuje się na oczywistościach.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-roadmap" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-roadmap</h3>
+      <span class="art mono">roadmap.md</span>
+    </div>
+    <p class="doc-sum">Generuje roadmap.md z PRD jako uporządkowany zestaw pionowych wycinków end-to-end - kolejne widoczne dla użytkownika kamienie milowe do oddania w /10x-plan.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja 05</span><span class="tag">roadmap</span><span class="tag">fundament</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Holistyczny PRD nie mówi, co budować najpierw - roadmapa tnie go na kolejność, którą da się odhaczać.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: context/foundation/prd.md (po wyborze stacku/bootstrapie, gdy dotyczy). Wyjście: <b>context/foundation/roadmap.md</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Pionowe wycinki end-to-end zamiast warstw technicznych; każdy wycinek jest kandydatem na jednostkę pracy dla łańcucha CSC.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-infra-research" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-infra-research</h3>
+      <span class="art mono">infrastructure.md</span>
+    </div>
+    <p class="doc-sum">Krótki wywiad plus równoległy research platform do deploymentu MVP, z kontrolą biasu źródeł; zapisuje infrastructure.md z punktowanym porównaniem i rejestrem ryzyk.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja 05</span><span class="tag">infrastruktura</span><span class="tag">platforma</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Wybór platformy „bo wszyscy tak robią" to decyzja bez dowodów - a decyzję o infrastrukturze trudno potem cofnąć.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: prd.md lub tech-stack.md plus krótki wywiad. Wyjście: <b>context/foundation/infrastructure.md</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Równoległy research webowy z kontrolą biasu źródeł; wynik to punktowane porównanie plus rejestr ryzyk.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-deployment" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-deployment</h3>
+      <span class="art mono">raport gotowości + config</span>
+    </div>
+    <p class="doc-sum">Bramka gotowości do deployu na PaaS (Cloudflare, Vercel, Netlify, Fly.io, Railway, Render): realny preflight, raport gotowości, natywna konfiguracja platformy, opcjonalny deploy z CLI.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja 05</span><span class="tag">deploy</span><span class="tag">paas</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">„U mnie działa" nie jest bramką - deploy ma przejść preflight, zanim dotknie produkcji.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: projekt plus wybrana platforma PaaS. Wyjście: <b>raport gotowości, konfiguracja platformy</b>, opcjonalnie deploy przez CLI.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Realny preflight zamiast checklisty z pamięci: build, konfiguracja, zmienne środowiskowe, dopiero potem zielone światło.</dd></div>
+      </dl>
+    </details>
+  </article>
+</section>
+
+<!-- ============ MODUŁ: SKALOWANIE ============ -->
+<section class="mod-group" data-modul="SKALOWANIE" id="mod-skalowanie">
+  <div class="mod-head"><h2>SKALOWANIE // SCALE TIER</h2></div>
+
+  <article class="doc" data-id="w-01" data-kind="koncept" style="--acc:#f0a64a">
+    <div class="doc-head">
+      <span class="badge">WĘZEŁ</span>
+      <h3><a href={doc('skalowanie', 'w-01')}>Węzeł 01: quality gates - próba, której nie da się ominąć</a></h3>
+      <span class="art mono">komplet zielonych bramek per faza</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>co pilnuje jakości, gdy Ciebie nie ma?</b> Gwarancja: <b>żadna faza nie przechodzi na czerwono</b>. Lint i typecheck po każdej edycji, testy per faza, commit tylko na zielono.</p>
+    <div class="doc-tags"><span class="tag">węzeł 01</span><span class="tag">quality gates</span><span class="tag">bramki</span><span class="tag">gom dżabbar</span><span class="tag">deliberate-break</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Bez bramek autonomia oznacza kod, którego nikt nie sprawdził w chwili powstania - jedyną bramką jesteś Ty i musisz patrzeć na wszystko.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: plan z warunkami sukcesu. Wyjście: <b>faza domknięta automatycznie</b> - lint/typecheck per edycja, testy per faza, commit na zielono.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Deliberate-break check: celowo psujesz implementację i potwierdzasz, że test pada - bramce można zaufać dopiero wtedy, gdy widziałeś, jak się zamyka.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="w-02" data-kind="flow" style="--acc:#f472b6">
+    <div class="doc-head">
+      <span class="badge">WĘZEŁ</span>
+      <h3><a href={doc('skalowanie', 'w-02')}>Węzeł 02: goal - plan wykonuje się bez autora</a></h3>
+      <span class="art mono">commity per faza + run report</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>jak plan wykonuje się bez Ciebie?</b> Gwarancja: <b>commit per faza na zielono albo uczciwy STOP</b>. Autonomiczne przejście planu przez /10x-goal-implement pod /goal.</p>
+    <div class="doc-tags"><span class="tag">węzeł 02</span><span class="tag">goal</span><span class="tag">autonomia</span><span class="tag">seldon</span><span class="tag">stop-blok</span><span class="tag">/10x-goal-implement</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Bez tego węzła siedzisz między fazami jako klikacz „dalej" i autonomia kończy się na pierwszym pytaniu.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: <b>commit per faza na zielono albo uczciwy STOP</b> - plus run report.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Fazy wykonują się same, Progress pracuje jak maszyna stanów, a przy strukturalnym rozjeździe wykonanie zatrzymuje się STOP-blokiem zamiast improwizować.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="w-03" data-kind="flow" style="--acc:#ffd166">
+    <div class="doc-head">
+      <span class="badge">WĘZEŁ</span>
+      <h3><a href={doc('skalowanie', 'w-03')}>Węzeł 03: loops - więcej cykli równolegle</a></h3>
+      <span class="art mono">osobny cykl per tor</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>ile cykli naraz udźwigniesz?</b> Gwarancja: <b>więcej przepustowości bez nierecenzowanego kodu</b>. Równoległe cykle plan → implement → review z izolacją kontekstu; rytm zamiast na żądanie.</p>
+    <div class="doc-tags"><span class="tag">węzeł 03</span><span class="tag">loops</span><span class="tag">równoległość</span><span class="tag">izolacja kontekstu</span><span class="tag">/loop</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Eskadra nie skaluje się przez wsadzenie dwunastu pilotów do jednego myśliwca - więcej cykli równolegle z izolacją kontekstu, nie więcej agentów na jednym wycinku.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: kilka niezależnych jednostek pracy. Wyjście: <b>osobny cykl per tor</b> - change-folder plus raport review, bez nierecenzowanego kodu.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Cykle biegną w rytmie (/loop), każdy we własnym kontekście (worktree/sesje), a wszystkie zbiegają do jednej bramy - Twojego review; sufit wyznacza dowódca, nie liczba maszyn.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-goal-implement" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-goal-implement</h3>
+      <span class="art mono">commity + checklist</span>
+    </div>
+    <p class="doc-sum">Autonomiczna realizacja planu pod /goal - bez człowieka między fazami; rodzeństwo /10x-implement do przebiegów nienadzorowanych i headless.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">skalowanie</span><span class="tag">węzeł 02 · goal</span><span class="tag">autonomia</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Skalowanie łańcucha: gdy plan jest dobry, przejście faz nie wymaga człowieka - wymaga bramek.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: commity per faza (Conventional Commits) plus lista rzeczy do ręcznego sprawdzenia na koniec.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Subagent na fazę plus automatyczny stos bramek jakości (warunki planu, kontrola celowo psutego testu, pełny zestaw testów); commit dopiero po zielonym.</dd></div>
+      </dl>
+    </details>
+  </article>
+</section>
+
+<!-- ============ MODUŁ: M3 ============ -->
+<section class="mod-group" data-modul="M3" id="mod-m3">
+  <div class="mod-head"><h2>M3 // JAKOŚĆ</h2></div>
+
+  <article class="doc" data-id="q-01" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('jakosc', 'q-01')}>Lekcja 01: Plan testów - co zabija projekt najpierw?</a></h3>
+      <span class="art mono">test-plan.md</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>co zabija projekt najpierw?</b> Gwarancja: <b>najgroźniejsze scenariusze chronione najpierw</b>. Mapa ryzyk wpływ × prawdopodobieństwo; ryzyko opisane jako awaria u usera.</p>
+    <div class="doc-tags"><span class="tag">lekcja q-01</span><span class="tag">plan testów</span><span class="tag">mapa ryzyk</span><span class="tag">fremeni</span><span class="tag">/10x-test-plan</span></div>
+    <p class="doc-open"><a href={lessonUrl('11')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Zamiast pokrywać pliki po kolei, mapuje ryzyka na osi wpływ × prawdopodobieństwo - „koszyk gubi pozycje przy odświeżeniu", nie „brak testów w cart.ts".</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: działający produkt i PRD. Wyjście: <b>context/foundation/test-plan.md</b> - mapa ryzyk pocięta na fazy rolloutu, od najgroźniejszych scenariuszy w dół.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">/10x-test-plan orkiestruje dowiezienie testów, nie pisze ich sam - każdą fazę prowadzi przez research → plan → implement, a ponowne uruchomienie wznawia od następnej fazy.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="q-02" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('jakosc', 'q-02')}>Lekcja 02: Od planu do testów - skąd test wie, co jest poprawne?</a></h3>
+      <span class="art mono">test chroniący ryzyko + czerwień</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>skąd test wie, co jest poprawne?</b> Gwarancja: <b>asercja, która realnie pada na zepsutym kodzie</b>. Wyrocznia z wymagań i researchu, nie z kodu; mutation check.</p>
+    <div class="doc-tags"><span class="tag">lekcja q-02</span><span class="tag">wyrocznia</span><span class="tag">mutation</span><span class="tag">anti-patterny</span><span class="tag">/10x-tdd</span></div>
+    <p class="doc-open"><a href={lessonUrl('12')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Test odczytujący oczekiwaną wartość z implementacji tylko ją powiela - przyklepie każdy bug, który już tam mieszka; anti-patterny: asercje spisane z kodu, snapshoty bez zrozumienia, mocki testujące mocki.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: jedno ryzyko z test-plan.md. Wyjście: test, którego <b>asercja realnie pada na zepsutym kodzie</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Mutation check: zepsuj chronione zachowanie celowo i potwierdź czerwień; /10x-tdd wymusza kolejność - czerwony test przed kodem, zieleń jako dowód, refactor na osłoniętym gruncie.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="q-03" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('jakosc', 'q-03')}>Lekcja 03: Hooki i triggery - co łapie błąd, zanim go zobaczysz?</a></h3>
+      <span class="art mono">hooki per-edit / pre-commit / pre-push</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>co łapie błąd, zanim go zobaczysz?</b> Gwarancja: <b>dryf wykryty sekundy po powstaniu, nie na końcu fazy</b>. Warstwowa obrona według kosztu: per-edit → pre-commit → pre-push.</p>
+    <div class="doc-tags"><span class="tag">lekcja q-03</span><span class="tag">hooki</span><span class="tag">tarcze</span><span class="tag">lint</span><span class="tag">typecheck</span></div>
+    <p class="doc-open"><a href={lessonUrl('13')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Im dalej błąd doleci, tym drożej kosztuje jego zestrzelenie - obrona jest uporządkowana według kosztu, warstwa za warstwą, od najtańszej na zewnątrz.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: reguły jakości projektu - lint, typecheck, szybkie testy. Wyjście: <b>hooki zapięte na zdarzenia</b> - per-edit, pre-commit i pre-push, każdy z własnym budżetem czasu.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Self-checking pipeline - dryf wykrywany sekundy po powstaniu, w tle, bez udziału człowieka; do końca fazy dolatuje tylko to, czego żadna warstwa nie mogła złapać wcześniej.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="q-04" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('jakosc', 'q-04')}>Lekcja 04: Testy E2E - czy całość naprawdę leci?</a></h3>
+      <span class="art mono">testy Playwright + seed test</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>czy całość naprawdę leci?</b> Gwarancja: <b>przelot end-to-end tam, gdzie unit by skłamał</b>. Najtańszy test dający sygnał - E2E tylko tam, gdzie mock by skłamał; coverage nie jest celem.</p>
+    <div class="doc-tags"><span class="tag">lekcja q-04</span><span class="tag">e2e</span><span class="tag">playwright</span><span class="tag">rocinante</span><span class="tag">seed test</span><span class="tag">/10x-e2e</span></div>
+    <p class="doc-open"><a href={lessonUrl('14')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Przelot przez wszystkie moduły naraz - UI, API, dane - dokładnie tam, gdzie mock by skłamał; jeśli wystarcza test jednostkowy, E2E jest przepychem.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: działająca aplikacja i ryzyko z planu, którego nie pokryje nic tańszego. Wyjście: <b>testy Playwright plus seed test</b> przygotowujący dane pod przelot.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">/10x-e2e prowadzi ryzyko przez plan → generate → review → verify na uruchomionej aplikacji, multimodalnie - agent czyta DOM i patrzy na zrzuty ekranu jednocześnie.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="q-05" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('jakosc', 'q-05')}>Lekcja 05: Debugowanie - co mówią wszystkie przyrządy naraz?</a></h3>
+      <span class="art mono">diagnoza + test przypinający naprawę</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>co mówią wszystkie przyrządy naraz?</b> Gwarancja: <b>diagnoza z dowodów, nie z przeczucia</b>. Synteza dowodów z wielu źródeł: Sentry, wrangler logs, konsola i network z Playwrighta.</p>
+    <div class="doc-tags"><span class="tag">lekcja q-05</span><span class="tag">debugowanie</span><span class="tag">sentry</span><span class="tag">pielgrzymi</span><span class="tag">wrangler</span><span class="tag">multi-source</span></div>
+    <p class="doc-open"><a href={lessonUrl('15')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Żadne pojedyncze źródło niczego nie wyjaśnia - wszystkie naraz wskazują to samo miejsce; liczy się synteza dowodów, nie mistrzostwo w jednym narzędziu.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: objaw - błąd u usera, czerwony test, alert. Wyjście: <b>diagnoza poparta dowodami</b> i naprawa przypięta testem, żeby regresja nie wróciła.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Zbierz odczyty wszystkich przyrządów naraz i szukaj przecięcia opowieści; po drodze wytęp połykanie błędów - try/catch zwracający 200 to zamiatanie dowodów (OWASP A10:2025).</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-test-plan" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-test-plan</h3>
+      <span class="art mono">test-plan.md</span>
+    </div>
+    <p class="doc-sum">Fazowy orkiestrator wdrażania testów w istniejącym produkcie: pisze test-plan.md i prowadzi każdą fazę rolloutu przez pełny łańcuch CSC.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja q-01 · plan testów</span><span class="tag">testy</span><span class="tag">brownfield</span><span class="tag">orkiestrator</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Pokrycie testami istniejącego produktu to seria zmian, nie jeden zryw - potrzebuje stanu i kolejności.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: PRD i roadmapa istniejącego produktu. Wyjście: <b>context/foundation/test-plan.md</b> plus kolejne fazy rolloutu jako zmiany CSC.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Każda faza przechodzi /10x-new → research → plan → implement; ponowne uruchomienie wznawia od następnej fazy zapisanej w test-plan.md.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-tdd" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-tdd</h3>
+      <span class="art mono">testy + kod</span>
+    </div>
+    <p class="doc-sum">Prowadzi zatwierdzony plan faza po fazie test-first, przez red → green → refactor - tylko fazy, które da się TDD-ować; resztę kieruje do /10x-implement.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja q-02 · wyrocznia</span><span class="tag">krok 04 · implement</span><span class="tag">tdd</span><span class="tag">testy</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Wariant implementacji dla logiki, którą opłaca się przybić testem, zanim powstanie.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: testy plus kod, wspólna sekcja Progress z /10x-implement.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Red → green → refactor per faza; fazy, których nie da się prowadzić test-first, wracają do /10x-implement.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-e2e" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-e2e</h3>
+      <span class="art mono">testy E2E</span>
+    </div>
+    <p class="doc-sum">Prowadzi przeglądarkowe (E2E) fazy planu na działającej aplikacji, ryzyko po ryzyku: plan → generacja → review → weryfikacja.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja q-04 · e2e</span><span class="tag">krok 04 · implement</span><span class="tag">e2e</span><span class="tag">playwright</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Część ryzyk widać dopiero w przeglądarce - ale tylko tę część; reszta należy do /10x-tdd i /10x-implement.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: plan.md z fazami E2E plus zbudowany feature. Wyjście: testy E2E, wspólna sekcja Progress.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Jedno ryzyko na raz; skill sam odsyła fazy, które nie potrzebują przeglądarki, do tańszych narzędzi.</dd></div>
+      </dl>
+    </details>
+  </article>
+</section>
+
+<!-- ============ MODUŁ: M4 ============ -->
+<section class="mod-group" data-modul="M4" id="mod-m4">
+  <div class="mod-head"><h2>M4 // LEGACY (10XARCHITECT)</h2></div>
+
+  <article class="doc" data-id="a-01" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('legacy', 'a-01')}>Lekcja 01: Skalowanie kontekstu - ile kontekstu naraz uniesie agent?</a></h3>
+      <span class="art mono">lean AGENTS.md + context/</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>ile kontekstu naraz uniesie agent?</b> Gwarancja: <b>kontekst racjonowany, nie wylewany</b>. Nie „co agent ma wiedzieć?", tylko „co agent ma wiedzieć TERAZ?".</p>
+    <div class="doc-tags"><span class="tag">lekcja a-01</span><span class="tag">kontekst</span><span class="tag">filtrfrak</span><span class="tag">agents.md</span><span class="tag">context/</span></div>
+    <p class="doc-open"><a href={lessonUrl('16')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Okno kontekstu jest zasobem jak woda na pustyni - wylany zapas nie wraca; kontekst trzeba racjonować, nie wylewać.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: repozytorium z kontekstem rozlanym po README, wiki i głowach ludzi. Wyjście: <b>lean root AGENTS.md</b> plus context/ jako system-of-record - fakty dociągane na żądanie, nie w jednym przeładowanym prompcie.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Drabina dojrzałości - od zera do systemu, w którym każda dawka kontekstu ma swoje miejsce i swój moment podania.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="a-02" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('legacy', 'a-02')}>Lekcja 02: Mapa projektu - jak wygląda teren, zanim wejdziesz?</a></h3>
+      <span class="art mono">mapa projektu - pozycja ① raportu</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>jak wygląda teren, zanim wejdziesz?</b> Gwarancja: <b>mapa z dowodów, nie z folderów</b>. Szeroki skan: historia gita, wyszukiwania strukturalne, grafy zależności.</p>
+    <div class="doc-tags"><span class="tag">lekcja a-02</span><span class="tag">mapa projektu</span><span class="tag">sondy</span><span class="tag">wide scan</span><span class="tag">git churn</span></div>
+    <p class="doc-open"><a href={lessonUrl('17')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Struktura folderów kłamie - mapa ma powstać z dowodów: które moduły są deep, a które shallow, co jest core, co peripheral, co load-bearing.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: nieznane repozytorium. Wyjście: <b>mapa projektu</b> (pozycja ① raportu) - deep vs shallow, core vs peripheral, load-bearing.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Równoległe sondy - /10x-research wysyła subagentów, git log i churn pokazują, gdzie projekt naprawdę żyje, a graf zależności - co się zawali, gdy pociągniesz nitkę.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="a-03" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('legacy', 'a-03')}>Lekcja 03: Feature i hot spots - gdzie kod pęka najczęściej?</a></h3>
+      <span class="art mono">przegląd feature’a + hot spots</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>gdzie kod pęka najczęściej?</b> Gwarancja: <b>ryzyko wskazane z dowodów, nie na wyczucie</b>. Hot spot = złożoność × częstość zmian; semantykę domyka deterministyczne CLI.</p>
+    <div class="doc-tags"><span class="tag">lekcja a-03</span><span class="tag">hot spots</span><span class="tag">ceres</span><span class="tag">ast-grep</span><span class="tag">change coupling</span><span class="tag">tornhill</span></div>
+    <p class="doc-open"><a href={lessonUrl('18')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Awarie nie rozkładają się równo po repozytorium - wracają w te same miejsca; tam, gdzie skomplikowane spotyka często dotykane, ryzyko rośnie najszybciej.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: mapa projektu i jeden feature. Wyjście: <b>przegląd feature’a + hot spots</b> (pozycje ② i ③ raportu) - przepływ danych end-to-end plus lista miejsc, które pękają najczęściej.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Deterministyczne CLI domyka semantykę - ast-grep znajduje wzorce w składni, code-maat liczy change coupling, observability dokłada dowody z produkcji; agent interpretuje, pomiar jest maszynowy.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="a-04" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('legacy', 'a-04')}>Lekcja 04: Refaktor odwracalny - jak przebudować bez zatrzymywania maszyny?</a></h3>
+      <span class="art mono">okazje refaktorowe + ADR-y</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>jak przebudować bez zatrzymywania maszyny?</b> Gwarancja: <b>każdy krok odwracalny i osobno zielony</b>. Strangler Fig, Branch by Abstraction, Mikado, ADR-y - zamiast big-bangu.</p>
+    <div class="doc-tags"><span class="tag">lekcja a-04</span><span class="tag">refaktor</span><span class="tag">strangler fig</span><span class="tag">mikado</span><span class="tag">adr</span><span class="tag">fowler</span></div>
+    <p class="doc-open"><a href={lessonUrl('19')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Wielki przepisujący skok kończy się katastrofą, bo nie ma z niego drogi powrotu - sekwencja małych, osobno zielonych kroków ma ją zawsze.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: hot spot z dowodami i test chroniący zachowanie - napisany, zanim ruszy refaktor. Wyjście: <b>okazje refaktorowe</b> (pozycja ④ raportu) plus ADR-y dokumentujące decyzje.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Wzorce odwracalności - Strangler Fig (nowe oplata stare, zanim je zastąpi), Branch by Abstraction, metoda Mikado - a /10x-plan tnie ścieżkę na fazy, z których każda kończy się zielenią albo cofnięciem kroku, nie planu.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="a-05" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('legacy', 'a-05')}>Lekcja 05: DDD z agentem - czy model mówi językiem domeny?</a></h3>
+      <span class="art mono">okazje DDD + glosariusz</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>czy model mówi językiem domeny?</b> Gwarancja: <b>granice i język, których zespół potrafi bronić</b>. Event Storming, ubiquitous language, bounded contexts, inwarianty.</p>
+    <div class="doc-tags"><span class="tag">lekcja a-05</span><span class="tag">ddd</span><span class="tag">event storming</span><span class="tag">bounded context</span><span class="tag">ubiquitous language</span><span class="tag">evans</span></div>
+    <p class="doc-open"><a href={lessonUrl('20')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Bounded contexts działają, gdy granice są ostre, a język jednoznaczny - „zamówienie" w magazynie i „zamówienie" w płatnościach to dwa różne pojęcia i mają prawo mieć dwa różne modele.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: chaos pojęć zastanej domeny. Wyjście: <b>okazje DDD</b> (pozycja ⑤ raportu) - kandydaci na bounded contexts, glosariusz ubiquitous language, inwarianty, entities vs value objects.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">AI jako coach DDD - agent prowadzi Event Storming, proponuje granice i nazwy, ale to człowiek broni każdej decyzji; model, którego zespół nie potrafi obronić, nie jest modelem, tylko notatką.</dd></div>
+      </dl>
+    </details>
+  </article>
+</section>
+
+<!-- ============ MODUŁ: M5 ============ -->
+<section class="mod-group" data-modul="M5" id="mod-m5">
+  <div class="mod-head"><h2>M5 // TEAMWORK (10XCHAMPION)</h2></div>
+
+  <article class="doc" data-id="t-01" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('teamwork', 't-01')}>Lekcja 01: AI Internal Builders - co zbudować, a co kupić?</a></h3>
+      <span class="art mono">wewnętrzny helper</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>co zbudować, a co kupić?</b> Gwarancja: <b>najmniejsze narzędzie, które zamyka realną lukę</b>. Zostań przy SaaS tam, gdzie niesie odpowiedzialność platformową; buduj wokół lokalnej luki zespołu.</p>
+    <div class="doc-tags"><span class="tag">lekcja t-01</span><span class="tag">build vs buy</span><span class="tag">pasiarze</span><span class="tag">helper</span></div>
+    <p class="doc-open"><a href={lessonUrl('21')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Tam, gdzie SaaS niesie odpowiedzialność platformową - auth, billing, compliance - zostajesz przy SaaS; budujesz dopiero wokół luki, której żaden produkt z półki nie zna.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: realna luka w przepływie zespołu. Wyjście: <b>najmniejsze narzędzie, które ją zamyka</b> - i decyzja build vs buy podjęta świadomie, nie z rozpędu.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Zanim powstanie pierwsza linijka, pada pytanie, kto poniesie odpowiedzialność, gdy narzędzie zawiedzie - jeśli platforma, kupujesz; jeśli luka jest wasza, budujesz najmniejszą rzecz, która działa.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="t-02" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('teamwork', 't-02')}>Lekcja 02: Pierwszy agent zespołowy - z czego składa się agent, gdy zdejmiesz IDE?</a></h3>
+      <span class="art mono">pierwszy agent zespołowy + metryki kosztów</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>z czego składa się agent, gdy zdejmiesz IDE?</b> Gwarancja: <b>agent złożony świadomie, z licznikiem kosztów</b>. Zejście poziom niżej, do prymitywów SDK; koszty i metryki od pierwszego dnia.</p>
+    <div class="doc-tags"><span class="tag">lekcja t-02</span><span class="tag">sdk</span><span class="tag">drużyna</span><span class="tag">koszty</span><span class="tag">metryki</span></div>
+    <p class="doc-open"><a href={lessonUrl('22')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Nowego członka zespołu składasz sam - model, narzędzia, pętla, kontekst - więc rozumiesz jego zachowanie, zamiast ufać czarnej skrzynce.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: prymitywy SDK agentowego. Wyjście: <b>agent złożony świadomie</b>, z licznikiem kosztów i metrykami od pierwszego dnia.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Pierwsze rozwidlenie projektu - ready-made SDK vs assemble-it-yourself - rozstrzyga, ile kontroli potrzebujesz; agent bez licznika to członek zespołu, którego pensji nikt nie zna.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="t-03" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('teamwork', 't-03')}>Lekcja 03: Code review w erze AI - kto pilnuje każdego PR, gdy śpisz?</a></h3>
+      <span class="art mono">pipeline CI z komentarzem agenta na PR</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>kto pilnuje każdego PR, gdy śpisz?</b> Gwarancja: <b>review na każdym PR, nie tylko gdy masz czas</b>. Agent jako krok pipeline’u, uruchamiany bez Ciebie; severity × impact i triage.</p>
+    <div class="doc-tags"><span class="tag">lekcja t-03</span><span class="tag">obserwator</span><span class="tag">ci/cd</span><span class="tag">pipeline</span><span class="tag">pr</span><span class="tag">/10x-impl-review-ci</span></div>
+    <p class="doc-open"><a href={lessonUrl('23')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Przewagę ma stały obserwator: agent widzi każdą zmianę - także PR wysłany o trzeciej w nocy, także ten, którego nie miałbyś siły przeczytać.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: PR w repozytorium zespołu. Wyjście: <b>pipeline CI, w którym agent zostawia komentarz na każdym PR</b> - review przestaje zależeć od Twojego kalendarza.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">/10x-impl-review-ci na GitHub Actions ocenia zmiany po severity × impact, a triage odróżnia znaleziska warte poprawki od szumu - recenzent zgłaszający wszystko jest tak samo bezużyteczny jak ten, który nie zgłasza niczego.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="t-04" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('teamwork', 't-04')}>Lekcja 04: Shared AI Registry - skąd zespół bierze wspólne skille?</a></h3>
+      <span class="art mono">rejestr paczek: definicja + wydane wersje</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>skąd zespół bierze wspólne skille?</b> Gwarancja: <b>jedna wersja prawdy zamiast dryfujących kopii</b>. Artefakty AI to kod: jedno źródło prawdy, wersjonowanie, auth, dystrybucja.</p>
+    <div class="doc-tags"><span class="tag">lekcja t-04</span><span class="tag">encyklopedia</span><span class="tag">rejestr</span><span class="tag">wersjonowanie</span><span class="tag">/10x-contract</span></div>
+    <p class="doc-open"><a href={lessonUrl('24')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Skille, komendy i reguły mają mieć jedno źródło prawdy, wersje i mechanizm dystrybucji - zamiast dryfujących kopii wklejanych między maszynami.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: skille i reguły rozproszone po komputerach zespołu. Wyjście: <b>rejestr paczek</b> - repo z definicją paczki, wydanymi wersjami i auth, z którego każdy instaluje tę samą prawdę.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Install / update / uninstall jak w menedżerze pakietów, z dostarczaniem do wielu narzędzi - kanał dystrybucji dobierasz według audytorium, nie według efektowności demo.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="t-05" data-kind="koncept" style="--acc:#4ade9b">
+    <div class="doc-head">
+      <span class="badge">LEKCJA</span>
+      <h3><a href={doc('teamwork', 't-05')}>Lekcja 05: Async i remote agents - jak delegować pracę na odległość?</a></h3>
+      <span class="art mono">zadanie delegowane zdalnie + raport w review</span>
+    </div>
+    <p class="doc-sum">Pytanie: <b>jak delegować pracę na odległość?</b> Gwarancja: <b>granice ustawione, zanim agent ruszy, kontrola wraca w review</b>. Delegacja z odroczoną kontrolą: sandbox, granice sieci i sekretów przed startem.</p>
+    <div class="doc-tags"><span class="tag">lekcja t-05</span><span class="tag">flota</span><span class="tag">async</span><span class="tag">sandbox</span><span class="tag">remote</span><span class="tag">monitoring</span></div>
+    <p class="doc-open"><a href={lessonUrl('25')}>OTWÓRZ LEKCJĘ →</a></p>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Rozkazy idą przed bitwą - w trakcie nikt już nie negocjuje zasięgu dział; granice sieci i sekretów ustawia się, zanim agent wystartuje.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zadanie, które nie wymaga Twojej obecności. Wyjście: <b>agent pracujący zdalnie w sandboxie</b> z jawnie zakreślonymi granicami - i raport, który wraca do review.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Odpowiedzialność nie znika z delegacją, tylko zmienia moment - wraca w monitoringu i review; kontrolujesz wynik, nie każdy ruch.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-impl-review-ci" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-impl-review-ci</h3>
+      <span class="art mono">impl-review.md + komentarz na PR</span>
+    </div>
+    <p class="doc-sum">Uruchamia review implementacji nieinterakcyjnie w CI na PR: znajduje plan, sprawdza dryf, bezpieczeństwo, wzorce i pokrycie testami, commituje raport na branch PR i zostawia komentarz z podsumowaniem.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja t-03 · review w ci</span><span class="tag">ci/cd</span><span class="tag">github actions</span><span class="tag">pr</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Review na każdym PR bez człowieka w pętli - CI-owa wersja /10x-impl-review, stały obserwator zespołu.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: PR z planem w context/changes/&lt;change-id&gt;/. Wyjście: <b>reviews/impl-review.md</b> zacommitowany na branch PR plus komentarz z podsumowaniem.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Nieinterakcyjny przebieg w GitHub Actions (Claude Code Action): odnajduje plan, porównuje dryf, bezpieczeństwo, wzorce i pokrycie testami.</dd></div>
+      </dl>
+    </details>
+  </article>
+
+  <article class="doc" data-id="s-contract" data-kind="technika" style="--acc:#4cc9f0">
+    <div class="doc-head">
+      <span class="badge">SKILL</span>
+      <h3>/10x-contract</h3>
+      <span class="art mono">contract-surfaces.md</span>
+    </div>
+    <p class="doc-sum">Rejestruje nośne nazwy i schematy (kontrakty) w docs/reference/contract-surfaces.md - powierzchnie, których zmiana łamie konsumentów w dole strumienia.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja t-04 · registry</span><span class="tag">kontrakty</span><span class="tag">wersjonowanie</span></div>
+    <details class="doc-detal"><summary>Detal</summary>
+      <dl class="mech">
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Wspólne artefakty żyją dłużej niż sesja - zmiana nośnej nazwy lub schematu łamie cudzy kod, więc kontrakt musi być zarejestrowany.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: świeżo utworzony lub rozpoznany wiążący kontrakt (nazwa, schemat). Wyjście: wpis w <b>docs/reference/contract-surfaces.md</b>.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Rejestr powierzchni kontraktowych czytany przed refaktorami - zmiana przechodzi świadomie, z wersją, nie przypadkiem.</dd></div>
+      </dl>
+    </details>
+  </article>
+</section>
+
+<p id="empty" class="mono"><span id="empty-msg">BRAK WYNIKÓW // ZMIEŃ FRAZĘ ALBO FILTRY</span><button type="button" id="empty-clear" class="chip">Wyczyść frazę i filtry</button></p>
+
+</main>
+
+<style is:global>
+/* ---------- docs: kompaktowe nadpisania wspolnego layoutu ---------- */
+[hidden]{display:none !important}
+html body{font-size:16px;line-height:1.6}
+body .wrap{max-width:980px}
+body header{padding:clamp(32px,6vh,60px) 0 26px;border-bottom:0}
+header h1{
+  font-size:clamp(1.55rem,3.8vw,2.3rem);font-weight:700;line-height:1.16;
+  letter-spacing:.01em;max-width:28ch;margin-top:12px;
+}
+header .sub{margin-top:14px;max-width:64ch;color:var(--muted);font-size:.98rem}
+.sub kbd{
+  font-family:var(--mono);font-size:.78rem;color:var(--txt);
+  border:1px solid var(--line);border-bottom-width:2px;padding:1px 7px;background:var(--surface);
+}
+
+/* ---------- pasek wyszukiwania (sticky) ---------- */
+.searchbar{
+  position:sticky;top:0;z-index:6;margin:0 -24px;padding:14px 24px 12px;
+  background:rgba(7,10,20,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line);
+}
+.search-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.search-box{position:relative;flex:1;min-width:250px}
+.search-box .ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);background:var(--dim);width:14px;height:14px;pointer-events:none}
+#q{
+  width:100%;padding:11px 14px 11px 38px;
+  background:color-mix(in srgb,var(--surface) 80%,transparent);
+  border:1px solid var(--line);color:var(--txt);
+  font-family:var(--body);font-size:.95rem;border-radius:0;appearance:none;
+}
+#q::placeholder{color:var(--dim)}
+#q:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 16px rgba(124,140,255,.25)}
+#q::-webkit-search-cancel-button{display:none}
+#count{white-space:nowrap;color:var(--muted)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.chips .lbl{min-width:52px}
+.chip{
+  font-family:var(--disp);font-weight:600;font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);background:none;cursor:pointer;
+  border:1px solid var(--line);padding:6px 12px;
+  transition:color .15s,border-color .15s,box-shadow .15s;
+}
+.chip:hover{color:var(--txt);border-color:var(--muted)}
+.chip[aria-pressed="true"]{
+  color:var(--indigo);border-color:var(--indigo);
+  box-shadow:0 0 12px rgba(124,140,255,.3);
+}
+.chip:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+.noscript-note{margin-top:20px}
+
+/* ---------- wyniki ---------- */
+.mod-group{padding:34px 0 6px}
+.mod-head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.mod-head h2{
+  font-family:var(--mono);font-size:.78rem;font-weight:400;
+  letter-spacing:.2em;color:var(--indigo);white-space:nowrap;
+}
+.mod-head::after{content:'';flex:1;height:1px;background:var(--line-soft)}
+
+article.doc{
+  border:1px solid var(--line);
+  background:color-mix(in srgb,var(--surface) 55%,transparent);
+  padding:15px 18px 13px;margin-bottom:12px;
+}
+.doc-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.badge{
+  font-family:var(--disp);font-weight:700;font-size:.6rem;letter-spacing:.18em;
+  color:var(--acc);border:1px solid color-mix(in srgb,var(--acc) 55%,transparent);
+  padding:2px 8px;flex:none;
+}
+.doc-head h3{font-size:.98rem;font-weight:700;line-height:1.35}
+.doc-head h3 a{
+  color:var(--txt);text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--acc) 45%,transparent);
+  transition:color .15s,border-color .15s;
+}
+.doc-head h3 a:hover,.doc-head h3 a:focus-visible{color:var(--acc);border-color:var(--acc)}
+.doc-head .art{margin-left:auto;flex:none;color:var(--dim)}
+.doc-sum{margin-top:8px;font-size:.89rem;color:var(--muted);max-width:78ch}
+.doc-sum b{color:var(--txt);font-weight:600}
+.doc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tag{
+  font-family:var(--mono);font-size:.63rem;letter-spacing:.08em;color:var(--dim);
+  border:1px solid var(--line-soft);padding:2px 8px;
+}
+
+/* link do lekcji kursu na platformie (karty wpisow-lekcji) */
+.doc-open{margin-top:10px}
+.doc-open a{
+  display:inline-block;font-family:var(--disp);font-weight:600;font-size:.68rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--acc);
+  border:1px solid color-mix(in srgb,var(--acc) 55%,transparent);
+  padding:5px 12px;text-decoration:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.doc-open a:hover,.doc-open a:focus-visible{
+  border-color:var(--acc);
+  box-shadow:0 0 12px color-mix(in srgb,var(--acc) 30%,transparent);
+}
+
+/* detal - rozwijane wiersze mech (kompaktowa wersja strony docs) */
+details.doc-detal{margin-top:11px}
+details.doc-detal summary{
+  cursor:pointer;list-style:none;display:inline-block;
+  font-family:var(--disp);font-weight:600;font-size:.68rem;letter-spacing:.16em;
+  text-transform:uppercase;color:color-mix(in srgb,var(--acc) 75%,var(--muted));
+}
+details.doc-detal summary::-webkit-details-marker{display:none}
+details.doc-detal summary::before{content:'[+] '}
+details.doc-detal[open] summary::before{content:'[-] '}
+details.doc-detal summary:hover{color:var(--acc)}
+.doc .mech{margin:8px 0 2px;border-top:1px solid var(--line);display:grid}
+.doc .mech>div{display:grid;grid-template-columns:172px 1fr;gap:16px;
+  padding:11px 0;border-bottom:1px solid var(--line-soft);align-items:baseline}
+.doc .mech dt{font-family:var(--disp);font-weight:600;font-size:.72rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--acc);
+  display:flex;align-items:center;gap:7px}
+.doc .mech dt .ico{width:12px;height:12px}
+.doc .mech .v{font-size:.89rem;color:var(--muted);margin:0}
+.doc .mech .v b{color:var(--txt);font-weight:600}
+@media(max-width:560px){.doc .mech>div{grid-template-columns:1fr;gap:4px}}
+
+/* pusty wynik */
+#empty{display:none;padding:44px 0;text-align:center;color:var(--dim)}
+#empty.on{display:block}
+#empty .chip{margin-left:12px}
+
+/* ---------- druk / eksport do PDF ---------- */
+@media print{
+  html body{font-size:12px}
+  .searchbar{display:none !important}
+  article.doc,.doc .mech>div{break-inside:avoid}
+  .mod-group{padding-top:8mm}
+}
+</style>
+
+<script is:inline set:html={searchScript}></script>

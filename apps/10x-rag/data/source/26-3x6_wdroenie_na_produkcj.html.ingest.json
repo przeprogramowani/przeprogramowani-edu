@@ -1,0 +1,376 @@
+{
+  "lessonId": "[3x6] Wdrożenie na produkcję",
+  "file": "26-3x6_wdroenie_na_produkcj.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 6,
+      "order": 1
+    },
+    {
+      "slug": "feature-flagi---bezpieczna-produkcja",
+      "title": "Feature flagi - bezpieczna produkcja",
+      "blocks": 22,
+      "order": 2
+    },
+    {
+      "slug": "analiza",
+      "title": "Analiza",
+      "blocks": 8,
+      "order": 3
+    },
+    {
+      "slug": "pierwsze-kroki-z-cloudflare",
+      "title": "Pierwsze kroki z Cloudflare",
+      "blocks": 12,
+      "order": 4
+    },
+    {
+      "slug": "wdrozenie-astro-na-cloudflare-pages",
+      "title": "Wdrożenie Astro na Cloudflare Pages",
+      "blocks": 9,
+      "order": 5
+    },
+    {
+      "slug": "nodejs-vs-cloudflare-runtime",
+      "title": "Node.js vs Cloudflare Runtime",
+      "blocks": 7,
+      "order": 6
+    },
+    {
+      "slug": "debugowanie-cloudflare-functions",
+      "title": "Debugowanie Cloudflare Functions",
+      "blocks": 3,
+      "order": 7
+    },
+    {
+      "slug": "wdrozenia-z-dockerem",
+      "title": "Wdrożenia z Dockerem",
+      "blocks": 8,
+      "order": 8
+    },
+    {
+      "slug": "komentarz-do-zmiennych-i-konfiguracji",
+      "title": "💬 Komentarz do zmiennych i konfiguracji",
+      "blocks": 3,
+      "order": 9
+    },
+    {
+      "slug": "wdrozenie-na-digital-ocean",
+      "title": "Wdrożenie na Digital Ocean",
+      "blocks": 13,
+      "order": 10
+    },
+    {
+      "slug": "nowy-projekt-i-konfiguracja-digital-ocean",
+      "title": "Nowy projekt i konfiguracja Digital Ocean",
+      "blocks": 10,
+      "order": 11
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 4,
+      "order": 12
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "Ćwiczenia praktyczne",
+      "blocks": 0,
+      "order": 13
+    },
+    {
+      "slug": "zadanie-1-master-branch-workflow",
+      "title": "Zadanie 1: Master Branch Workflow",
+      "blocks": 3,
+      "order": 14
+    },
+    {
+      "slug": "zadanie-2-opublikuj-aplikacje-live",
+      "title": "🎖️ Zadanie 2: Opublikuj aplikację LIVE!",
+      "blocks": 4,
+      "order": 15
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:09f07b33:43cc23fa",
+      "tokenEstimate": 62,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:43cc23fa:0-1",
+      "tokenEstimate": 62,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:09f07b33:24701484",
+      "tokenEstimate": 194,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:24701484:0-5",
+      "tokenEstimate": 318,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:09f07b33:b8d1b3ee",
+      "tokenEstimate": 162,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:b8d1b3ee:0-7",
+      "tokenEstimate": 359,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "chk:09f07b33:b8d1b3ee:7-12",
+      "tokenEstimate": 373,
+      "span": [
+        7,
+        12
+      ]
+    },
+    {
+      "id": "chk:09f07b33:b8d1b3ee:12-20",
+      "tokenEstimate": 386,
+      "span": [
+        12,
+        20
+      ]
+    },
+    {
+      "id": "chk:09f07b33:b8d1b3ee:19-21",
+      "tokenEstimate": 160,
+      "span": [
+        19,
+        21
+      ]
+    },
+    {
+      "id": "sec:09f07b33:bb2fe39b",
+      "tokenEstimate": 184,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:bb2fe39b:0-7",
+      "tokenEstimate": 280,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:09f07b33:de030df2",
+      "tokenEstimate": 187,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:de030df2:0-11",
+      "tokenEstimate": 264,
+      "span": [
+        0,
+        11
+      ]
+    },
+    {
+      "id": "sec:09f07b33:5f180528",
+      "tokenEstimate": 196,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:5f180528:0-8",
+      "tokenEstimate": 248,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:09f07b33:4abe4d93",
+      "tokenEstimate": 202,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:4abe4d93:0-6",
+      "tokenEstimate": 396,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:09f07b33:671a7c7f",
+      "tokenEstimate": 103,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:671a7c7f:0-2",
+      "tokenEstimate": 103,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:09f07b33:d7117e9a",
+      "tokenEstimate": 211,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:d7117e9a:0-7",
+      "tokenEstimate": 230,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:09f07b33:1387166d",
+      "tokenEstimate": 174,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:1387166d:0-2",
+      "tokenEstimate": 174,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:09f07b33:54e61c7d",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:54e61c7d:0-12",
+      "tokenEstimate": 382,
+      "span": [
+        0,
+        12
+      ]
+    },
+    {
+      "id": "sec:09f07b33:f08469f9",
+      "tokenEstimate": 181,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:f08469f9:0-9",
+      "tokenEstimate": 181,
+      "span": [
+        0,
+        9
+      ]
+    },
+    {
+      "id": "sec:09f07b33:7eabec50",
+      "tokenEstimate": 166,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:7eabec50:0-3",
+      "tokenEstimate": 166,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:09f07b33:dcc8ec86",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:09f07b33:8c4cebdf",
+      "tokenEstimate": 157,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:8c4cebdf:0-2",
+      "tokenEstimate": 157,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:09f07b33:477c6504",
+      "tokenEstimate": 144,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:09f07b33:477c6504:0-3",
+      "tokenEstimate": 144,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

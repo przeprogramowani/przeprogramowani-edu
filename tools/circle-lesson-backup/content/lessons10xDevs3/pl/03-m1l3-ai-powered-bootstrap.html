@@ -1,0 +1,265 @@
+<p>W lekcji Od chatbota do Agenta (M1L2) na dysku wylądował <strong>tech-stack.md</strong>. Razem z <strong>prd.md</strong> masz teraz dwa artefakty: kontrakt biznesowy i kontrakt techniczny.</p>
+<p>Tylko że projekt jeszcze nie istnieje.</p>
+<p>To pierwszy moment w 10xDevs, w którym agent przestaje tylko rozmawiać. Za chwilę wywoła CLI, stworzy katalogi i pobierze zależności.</p>
+<p>I tu pojawia się pytanie, które zna każdy, kto pierwszy raz daje agentowi dostęp do dysku: <em>jak daleko go puścić?</em></p>
+<p>Za mało zaufania i toniesz w klikaniu "Yes" przy każdym kroku. Za dużo i po tygodniu odkrywasz, że agent miał dostęp do rzeczy, do których nie powinien mieć.</p>
+<p>Są alternatywne sposoby, i między innymi to właśnie adresujemy w tej lekcji.</p>
+<h3>Co już masz na dysku</h3>
+<p>Łańcuch <strong>/10x-shape → /10x-prd → /10x-tech-stack-selector → /10x-bootstrapper</strong> operuje na plikach kontekstowych w folderze <strong>/context</strong>. Każde ogniwo czyta pliki i zapisuje nowe artefakty na dysku.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-1-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-1-10x.png</a></p></blockquote>
+<p>W tej lekcji ten przepływ zostaje domknięty: <strong>tech-stack.md</strong> zostanie wykorzystany przez <strong>/10x-bootstrapper</strong>, a na wyjściu stworzy szkielet projektu i raport <strong>verification.md</strong>.</p>
+<p>Masz istniejący projekt? Skorzystasz ze skilla <strong>/10x-health-check</strong>, który sprawdzi stan repozytorium. Tę ścieżkę omówimy w dalszej części lekcji.</p>
+<h3>Uruchomienie bootstrappera</h3>
+<p>Wpisujesz w terminalu:</p>
+<pre><code>/10x-bootstrapper @tech-stack.md
+</code></pre>
+<p>Skill zaczyna od jednej weryfikacji: czy na dysku istnieje <strong>context/foundation/tech-stack.md</strong>?</p>
+<p>Jeśli nie istnieje, skill odmawia wykonania i przekierowuje cię do <strong>/10x-tech-stack-selector</strong>. Nie próbuje wyciągnąć stacku z historii rozmowy, nie pyta "to jaki stack?" w ad-hoc dialogu. Nie improwizuje.</p>
+<p>Brzmi banalnie, dopóki nie zobaczysz, ile sesji wpada w tarapaty na tym, że "wczoraj ustaliliśmy, że Astro", a dziś agent ma czysty kontekst i szczerze nie wie, o czym mówisz.</p>
+<p>Hand-off jako warunek wstępny to pierwsza z trzech bramek, które poznasz w tej lekcji. Bramka <strong>pre-execution</strong>: zanim agent cokolwiek wykona, sprawdza, czy ma do tego niezbędne podstawy.</p>
+<p>Tu: czy ma plik wejściowy. W innych skillach to może być przykładowo: czy testy przechodzą, czy nie ma niezacommitowanych zmian. Zasada jest ta sama: bez mandatu agent nie rusza.</p>
+<h3>Dlaczego agent nie pisze projektu sam</h3>
+<p>Kiedy <strong>tech-stack.md</strong> jest na dysku, bootstrapper czyta z niego <strong>starter_id</strong>, wyszukuje ten starter w wewnętrznym rejestrze i wykonuje komendę z pola <strong>cmd_template</strong>. Dla projektu w JS/TS może to być przykładowo:</p>
+<pre><code class="language-bash">npm create astro@latest -- --template minimal
+</code></pre>
+<p>Dlaczego agent w ogóle nie próbuje napisać tego projektu od zera tylko korzysta z starter CLI?</p>
+<p>Bo to <strong>dokładnie ta sama robota</strong>, którą zespół Astro skodyfikował w swoim oficjalnym kreatorze. <strong>npm create astro@latest</strong> wygeneruje ci poprawny <strong>package.json</strong>, poprawny <strong>astro.config.mjs</strong>, poprawny <strong>tsconfig.json</strong> i strukturę katalogów dopasowaną do wersji Astro 6.x. Zna konwencje, zna domyślne integracje, wie, co jest aktualne, a co nie.</p>
+<p>Agent gdyby próbował to zreplikować z pamięci, dowiózłby pół-działający boilerplate. <strong>package.json</strong> z <strong>"astro": "^4.0.0"</strong> , <strong>astro.config.mjs</strong> ze składnią z dwóch wersji wstecz - bo takie kombinacje najczęściej występują w danych treningowych. Spędzisz dwa dni na łataniu tego, co <strong>npm create astro</strong> zrobiłby w trzydzieści sekund.</p>
+<p>Stąd uniwersalna reguła:</p>
+<blockquote>
+<p><strong>Jeśli istnieje CLI, które potrafi zrealizować zadanie, agent powinien do niego delegować, zamiast działać na podstawie danych treningowych.</strong></p>
+</blockquote>
+<p>Bootstrapper jest jedną instancją tej reguły. Ale ta sama logika obowiązuje wszędzie:</p>
+<ul>
+<li>Chcesz dodać Dockerfile? Najpierw <strong>docker init</strong> (jest taka komenda od Dockera), a agent dopisze to, czego CLI nie pokryje.</li>
+<li>Chcesz nowy generator komponentów? Najpierw <strong>ng generate component</strong> w Angularze albo <strong>bun create vite</strong> z templatem, nie "napisz mi komponent React od zera".</li>
+<li>Chcesz nową migrację Prismy? <strong>npx prisma migrate dev --name add_users</strong>, nie generowanie SQL z głowy.</li>
+</ul>
+<p>Zachowanie modelu, które znasz z preworku (pewność siebie mimo niepełnej wiedzy) jest najbardziej kosztowne tam, gdzie obok stoi narzędzie z autorytatywną odpowiedzią. Tak więc warto zawsze warto się zastanowić: <em>czy istnieje CLI, do którego mogę to zdelegować?</em></p>
+<h3>Trzy bramki egzekucji</h3>
+<p>Bootstrapper to konkretny skill, ale wzorzec w nim stosowany jest uniwersalny. Każda egzekucja agenta - bootstrap, health-check, refaktor, generacja migracji - przechodzi przez trzy bramki:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-2-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-2-10x.png</a></p></blockquote>
+<ol>
+<li><strong>Pre-execution.</strong> Zanim agent zrobi cokolwiek na dysku albo w sieci, sprawdza, czy ma do tego mandat. W bootstrapperze to weryfikacja hand-offu (<strong>tech-stack.md</strong> na dysku) i <em>recency check</em>: czy starter nie jest porzucony.</li>
+<li><strong>In-execution.</strong> W trakcie wykonania interakcja przebiega między agentem a <em>harnessem</em>, czyli narzędziem, w którym agent działa (Claude Code, Cursor, Codex). Harness pyta cię o pozwolenie albo wykonuje komendę bez pytania, w zależności od polityki.</li>
+<li><strong>Post-execution.</strong> Skill audytuje wynik i zapisuje raport. W bootstrapperze to <strong>npm audit</strong> plus <strong>verification.md</strong> z statusem każdej fazy.</li>
+</ol>
+<p>Każda bramka ma innego właściciela. Pre-execution kontroluje kontrakt skilla. In-execution to harness i twoja polityka uprawnień. Post-execution to narzędzia zewnętrzne: <strong>npm audit</strong>, testy, CI.</p>
+<p>Trzy pytania do każdego skilla: co sprawdza, zanim ruszy? Co harness chce ode mnie w trakcie? Co dostanę na wyjściu jako weryfikację? W tej lekcji największą uwagę poświęcimy bramce in-execution, bo na nią ma wpływ <em>twoja</em> konfiguracja harnessu.</p>
+<h3>Uprawnienia w trakcie pracy</h3>
+<p>Skill po przejście hand-offu zacznie pracować z Twoim repo. I tu wchodzi rola harnessu. Zobaczmy jak to wygląda w praktyce:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1192952338?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1192952338?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<p>W Claude Code w trakcie pracy zobaczysz na ekranie prośby o uprawnienia:</p>
+<pre><code>Claude wants to run a command:
+  npm create astro@latest
+
+[1] Yes
+[2] Yes, don't ask again for npm commands in this directory
+[3] No, and tell Claude what to do differently
+</code></pre>
+<p>Każda taka prośba to moment, w którym harness pyta: <em>czy to akceptujesz?</em> Domyślnie pyta o wszystko, co dotyka dysku albo sieci. Bez pytania puszcza tylko komendy czysto odczytujące (<strong>ls</strong>, <strong>cat</strong>, <strong>grep</strong>, <strong>git status</strong>).</p>
+<p>Trzy decyzje, które masz do podjęcia przy każdym prompcie:</p>
+<ul>
+<li><strong>Yes</strong> — pojedyncza zgoda, jednorazowo. Następna sesja zapyta cię o to samo.</li>
+<li><strong>Yes, don't ask again</strong> — harness dopisuje regułę do <strong>.claude/settings.json</strong> w projekcie i przestaje pytać o tę kategorię.</li>
+<li><strong>No</strong> — odrzucasz; agent dostaje feedback i ma inaczej rozwiązać problem.</li>
+</ul>
+<p>Klikasz "Yes" za każdym razem? Wieczorem masz za sobą dwie godziny potwierdzania rutyny. Klikasz wszystko "Yes, don't ask again" bez zastanowienia? Po tygodniu agent może wykonać dowolną komendę bash w katalogu projektu.</p>
+<p>Jak to rozstrzygnąć? Filtr przy każdym prompcie: <strong>co ten wzorzec może popsuć?</strong></p>
+<p>"Nic" (np. <strong>npm install</strong> w katalogu projektu) - śmiało dodajesz regułę "Yes, don't ask again".</p>
+<p>"Wszystko, co <strong>git push</strong> może wyrzucić na remote" - zostawiasz indywidualną zgodę.</p>
+<p>"Potencjalnie cały dysk" (np. <strong>Bash(*)</strong>) - nie zgadzasz się na taką regułę.</p>
+<p>Reguły w Claude Code są ewaluowane w kolejności <strong>deny → ask → allow</strong>. Pierwsza pasująca wygrywa. *<em>Bash(git push <em>)</em></em> na denyliście ma priorytet nad *<em>Bash(git add <em>)</em></em> na allowliście, niezależnie od kolejności wpisów.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-3-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-3-10x.png</a></p></blockquote>
+<p>Wbudowane narzędzia harnessu (<strong>Read</strong>, <strong>Edit</strong>, <strong>Write</strong>) i komendy bash to <em>różne światy</em>. Reguła <strong>Read(./.env)</strong> w <strong>deny</strong> zablokuje odczyt <strong>.env</strong> z poziomu agenta, ale nie zatrzyma <strong>cat .env</strong> w bashu, bo to inna ścieżka egzekucji.</p>
+<p>Polityka filtruje wywołania narzędzi po nazwie i argumentach, nie po efekcie.</p>
+<p>To ważna informacja, że <strong>polityka uprawnień dla agenta nie jest absolutna</strong>.</p>
+<p>W innych narzędziach wzorzec jest analogiczny, składnia inna:</p>
+<ul>
+<li>W <strong>Codex</strong>: <strong>--sandbox workspace-write --ask-for-approval on-request</strong>. Konfiguracja w <strong>~/.codex/config.toml</strong>.</li>
+<li>W <strong>Cursor</strong>: allowlist w <strong>~/.cursor/permissions.json</strong> albo w UI ustawień.</li>
+</ul>
+<p>Linki do dokumentacji znajdziesz w <em>Materiałach dodatkowych</em>. Składnia się różni, sposób działania pozostaje taki sam.</p>
+<h3>Rekomendowana konfiguracja startowa</h3>
+<p>Zamiast uczyć się polityki na sucho, zacznij od konkretnego pliku. Po pierwszym bootstrapie otwórz <strong>.claude/settings.json</strong> w swoim projekcie i wklej tę konfigurację:</p>
+
+<p>Dlaczego akurat te reguły?</p>
+<p><strong>Allow: operacje lokalne, w obrębie projektu:</strong></p>
+<ul>
+<li><strong>Bash(npm *)</strong>, <strong>Bash(npx *)</strong>, *<em>Bash(node <em>)</em></em> — instalacja zależności, uruchamianie skryptów, narzędzia z rejestru npm. Jedyne wyjście poza projekt to warstwa sieciowa (rejestr npm), ale tej i tak potrzebujesz do pracy.</li>
+<li><strong>Bash(git add *)</strong>, <strong>Bash(git commit *)</strong>, *<em>Bash(git diff <em>)</em></em> i pozostałe operacje lokalne gita — czytają i piszą w <strong>.git/</strong>, ale niczego nie publikują na remote. Rozdzielamy je zamiast pisać szerokie <strong>Bash(git *)</strong>, żeby agent nie dostał niejawnej zgody na <strong>git push</strong>, <strong>git reset --hard</strong> czy <strong>git clean -fd</strong>.</li>
+<li><strong>Read</strong>, <strong>Edit</strong>, <strong>Write</strong> — wbudowane narzędzia Claude Code do operacji na plikach. Działają w obrębie katalogu roboczego.</li>
+</ul>
+<p><strong>Ask: operacje, o które agent zapyta przed wykonaniem:</strong></p>
+<ul>
+<li><strong>Bash(curl *)</strong>, *<em>Bash(wget <em>)</em></em> — agent nie powinien samodzielnie pobierać i uruchamiać skryptów z sieci bez twojej wiedzy. Pojedynczy <strong>curl</strong> po dokumentację? Zobaczysz prompt i zdecydujesz.</li>
+<li>*<em>Bash(git push <em>)</em></em> i <strong>Bash(git push)</strong> — push to decyzja publikacyjna. Dwa wzorce, bo goły <strong>git push</strong> (bez argumentów) też publikuje na remote. Agent zapyta cię za każdym razem, zamiast publikować w ciemno.</li>
+</ul>
+<p><strong>Deny: operacje zablokowane bezwarunkowo:</strong></p>
+<ul>
+<li>*<em>Bash(rm -rf <em>)</em></em> — może zniszczyć cały katalog domowy, jeśli agent źle podstawi argument. Nie chcesz nawet widzieć prompta; chcesz, żeby to nigdy nie przeszło.</li>
+</ul>
+<p><strong>Jak to się zmienia w czasie?</strong></p>
+<p>Ta lista to punkt wyjścia, nie cel. Po tygodniu pracy zauważysz wzorce: jeśli co sesję zatwierdzasz <strong>Bash(docker compose *)</strong>, dorzuć ją do allow. Jeśli okaże się, że *<em>Bash(npx <em>)</em></em> puścił komendę, której nie chciałeś, przenieś ją do deny albo rozpisz na węższe wzorce.</p>
+<p>Konfiguracja startowa → konfiguracja dojrzała. Allow rośnie o wzorce, które przeszły twój filtr. Deny rośnie o wzorce, które cię zaskoczyły. Reguły, które nie pasują do żadnej z tych list, zostają w ask. I to jest ich właściwe miejsce.</p>
+<h3>Polityka uprawnień i YOLO mode</h3>
+<p>Konfiguracja z poprzedniej sekcji to kilka minut pracy. Daje ci stan pośredni: rutyna przechodzi bez pytania, destrukcja jest zablokowana, a reszta wymaga twojej zgody.</p>
+<p>Po drugiej stronie skali siedzi <em>YOLO mode</em>, w Claude Code formalnie <strong>bypassPermissions</strong> (flaga <strong>--dangerously-skip-permissions</strong>). Wszystko przechodzi bez pytania.</p>
+<p>Naturalny odruch po dwóch godzinach klikania "Yes": <em>włączam YOLO i jadę dalej</em>. Anthropic zna ten odruch i wprost pisze w dokumentacji (parafraza):</p>
+<blockquote>
+<p>Używaj tego trybu wyłącznie w izolowanych środowiskach: kontenery, maszyny wirtualne, dev containery bez dostępu do sieci. Tam, gdzie Claude Code nie może uszkodzić twojego systemu hosta.</p>
+</blockquote>
+<h3>Dev container w praktyce</h3>
+<p>Co to właściwie znaczy? Dev container to kontener, w którym uruchamiasz Claude Code zamiast na swoim systemie. Agent widzi tylko to, co zamontowałeś: twoje repo, wybrane zależności, nic więcej. Nie ma dostępu do <strong>~/.ssh</strong>, do kluczy chmurowych, do produkcyjnych baz danych.</p>
+<p>W praktyce chodzi o trzy warunki: agent działa jako użytkownik nie-root, ma ograniczony ruch sieciowy i widzi tylko zaufane repozytorium z potrzebnymi plikami. Dev container chroni system hosta, ale nie zwalnia cię z kontroli projektu, bo pliki w zamontowanym repo nadal lądują na twoim dysku.</p>
+<p>Jeśli kiedyś dojdziesz do wniosku, że YOLO mode spełnia twoje warunki brzegowe, zacznij od referencyjnego <strong>devcontainer.json</strong> z dokumentacji Claude Code. Link znajdziesz w <em>Materiałach dodatkowych</em>.</p>
+<p>W takich warunkach <strong>--dangerously-skip-permissions</strong> jest świadomym wyborem. Bez nich to delegowanie <em>swoich</em> uprawnień systemowych modelowi, którego rozumowanie nie jest ci do końca dostępne.</p>
+<h3>Skala uprawnień</h3>
+<p>Masz więc dwa krańce skali. Na jednym <strong>paraliż uprawnień</strong>: domyślna polityka, każdy prompt potwierdzany ręcznie, dwie godziny klikania "Yes" dziennie. Na drugim <strong>pełna delegacja</strong>: YOLO mode bez warunków brzegowych, agent robi co chce.</p>
+<p>Między nimi leży <strong>stan pośredni</strong>. I to jest rekomendacja kursowa na ten etap.</p>
+<p>Stan pośredni to tryb pracy, w którym:</p>
+<ul>
+<li>masz kilka świadomie dobranych reguł <strong>allow</strong> (np. <strong>Bash(npm *)</strong>, <strong>Read</strong>, <strong>Write</strong>), więc Claude Code nie pyta o rutynę,</li>
+<li>masz kilka reguł <strong>deny</strong> na wzorce niebezpieczne (np. <strong>Bash(rm -rf *)</strong>, <strong>Bash(git push *)</strong>), które blokuje bez pytania,</li>
+<li>wszystko poza tymi dwiema listami <strong>nadal wymaga twojej zgody</strong>.</li>
+</ul>
+<p>W praktyce: bootstrapper odpala <strong>npm create astro@latest</strong> bez pytania (bo *<em>Bash(npm <em>)</em></em> jest na allowliście), ale kiedy chce uruchomić niesklasyfikowaną komendę, zatrzymuje się i czeka. Nie toniesz w promptach, ale nie tracisz kontroli nad tym, co nieoczywiste.</p>
+<p>Kluczowa różnica wobec YOLO: w stanie pośrednim Claude Code <em>nadal cię pyta</em> o operacje, których nie przewidziałeś. To sieć bezpieczeństwa na wypadek zachowań spoza twoich reguł. W YOLO mode tej siatki nie ma.</p>
+<p>Claude Code oferuje też tryb <strong>auto</strong> (research preview), który automatycznie redukuje liczbę promptów bez wyłączania kontroli bezpieczeństwa, np. jawnie blokuje <strong>Bash(*)</strong> i wildcardowane interpretery na wejściu. Warto obserwować jego rozwój jako potencjalną alternatywę dla ręcznego kształtowania allowlisty.</p>
+<p>Warto jednak pamiętać o tym, że:</p>
+<p><strong>Polityka uprawnień jest kontrolą probabilistyczną, nie absolutną.</strong> Podnosi koszt pomyłki (agent musi się zatrzymać, ty masz okazję zauważyć), ale go nie zeruje.</p>
+<p>Są udokumentowane przypadki, w których Claude Code, mając zablokowaną komendę <strong>npx</strong> na denyliście, sięgnął po ten sam plik binarny przez ścieżkę <strong>/proc/self/root/usr/bin/npx</strong>, omijając pattern matching.</p>
+<p>W innym scenariuszu model zaproponował: <em>the bubblewrap sandbox is failing... let me try disabling the sandbox</em>, po czym poprosił użytkownika, żeby uruchomił komendę bez sandboxu.</p>
+<p>To pojedyncze, udokumentowane przypadki, nie codzienność. Wystarczą jednak, żeby skorygować model mentalny: polityka uprawnień to nie zamek w drzwiach. To próg na podłodze - spowolni i zaalarmuje, ale nie zatrzyma za każdym razem.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-4-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-4-10x.png</a></p></blockquote>
+<p>Stąd zalecenie kursowe na tę lekcję: <strong>polityka jako punkt wyjścia, YOLO jako świadoma decyzja z warunkami brzegowymi, defense in depth jako zasada</strong>. Trzymaj się tych trzech, póki nie masz jeszcze instynktu, kiedy bezpiecznie któryś z nich poluzować.</p>
+<h3><strong>verification.md</strong> jako raport z bootstrappera</h3>
+<p>Skill skończył pracę: scaffold wylądował na dysku, <strong>.git/</strong> został pominięty (bootstrapper v1 nie wykonuje <strong>git init</strong>; to twoja decyzja, kiedy zainicjalizować historię).</p>
+<p>W katalogu pojawił się <strong>context/changes/bootstrap-verification/verification.md</strong>.</p>
+<p>Co tam jest?</p>
+<p>To trzecia bramka, <strong>post-execution</strong>. Agent dał ci raport o swojej pracy w formie plikowej, nie konwersacyjnej. Wrócisz do tego pliku za tydzień i nadal będziesz wiedział, co się wtedy stało.</p>
+<p>W tym przypadku mamy trzy fazy weryfikacji. Każda ma status: <strong>passed</strong>, <strong>warned</strong>, <strong>failed</strong>, <strong>skipped</strong>. Każda krótko mówi, dlaczego.</p>
+<ul>
+<li><strong>Phase 1 — pre-scaffold verification.</strong> Czy starter (np. <strong>astro@latest</strong>) nie jest porzucony? Świeży? <strong>passed</strong>. Ostatnia publikacja sprzed dwóch lat? <strong>warned</strong>, skill nie staje, ale zaznacza sygnał w raporcie.</li>
+<li><strong>Phase 2 — scaffold and merge.</strong> Wywołanie <strong>npm create astro@latest</strong>. Skończyło się exit code 0 (<strong>passed</strong>) albo non-zero (<strong>failed</strong>, <strong>HARD-STOP</strong>). O "HARD-STOP" za chwilę.</li>
+<li><strong>Phase 3 — post-scaffold verification.</strong> <strong>npm audit</strong> (dla projektów JS/TS). Pięć poziomów ważności: <strong>info</strong>, <strong>low</strong>, <strong>moderate</strong>, <strong>high</strong>, <strong>critical</strong>. Niezerowy exit code <em>nie zatrzymuje</em> bootstrappera; ta informacje daje sygnał, ale nie blokuje.</li>
+</ul>
+<p><strong>warned</strong> oznacza, że wiesz, gdzie zacząć dochodzenie. <strong>failed</strong> oznacza, że scaffold się nie domknął i trzeba interweniować.</p>
+<h3>Health-check: audyt istniejącego projektu</h3>
+<p>Masz istniejący projekt? Nie uruchamiaj bootstrappera, który został zaprojektowy dla greenfieldów.</p>
+<p>W przypadku brownfieldu <strong>/10x-health-check</strong> to właściwy punkt wejścia. Bierze istniejący projekt i przepuszcza go przez te same analogiczne bramki analityczne:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-5-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-5-10x.png</a></p></blockquote>
+<ol>
+<li><strong>Pre-check</strong> — audyt zależności (<strong>npm audit</strong>, <strong>pip-audit</strong>, <strong>cargo audit</strong>, zależnie od ekosystemu), obecność lockfile'a, znane podatności. Zanim agent zacznie z projektem pracować, sprawdza, w jakim stanie jest fundament.</li>
+<li><strong>In-check</strong> — analiza read-only. Czy jest test runner i czy testy się uruchamiają? Czy jest pipeline CI/CD? Czy brakuje konfiguracji (<strong>tsconfig.json</strong> ze strict, <strong>.prettierrc</strong>, <strong>.editorconfig</strong>)?</li>
+<li><strong>Post-check</strong> — werdykt agent-readiness: <strong>healthy</strong>, <strong>needs-attention</strong> lub <strong>critical-issues</strong>. Plus priorytetyzowana lista fixów w dwóch kategoriach: fixy do zrobienia teraz (Category A: brakujący test runner, krytyczne podatności, brak lockfile'a) i fixy omawiane w kolejnych lekcjach (Category B: brak CI/CD to temat lekcji Sprint Zero (M1L5), brak AGENTS.md to temat lekcji Agent Onboarding (M1L4)).</li>
+</ol>
+<p>Jeśli  w poprzedniej lekcji (M1L2) urchomiłeś <strong>/10x-stack-assess</strong>, health-check czyta <strong>stack-assessment.md</strong> i linkuje swoje odkrycia do wykrytych luk.</p>
+<p>Przykład: stack-assess zidentyfikował, że twój stack nie spełnia bramki "typed", a health-check potwierdza, że CI nie ma kroku type-check.</p>
+<p>Dwa raporty razem dają spójny obraz: gdzie stack ma luki <em>i</em> gdzie infrastruktura projektu tych luk nie kompensuje.</p>
+<p>Wynik: <strong>context/foundation/health-check.md</strong>, plik z raportem, który pełni tę samą rolę co <strong>verification.md</strong> w greenfield: daje następnym ogniwom łańcucha plikowy kontekst o stanie projektu przed onboardingiem agenta (M1L4).</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-6-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-6-10x.png</a></p></blockquote>
+<p>Obie ścieżki zbiegają się w lekcji Agent Onboarding (M1L4) z równoważnym kontekstem.</p>
+<h2>🧑🏻‍💻 Zadania praktyczne</h2>
+<p>Teraz twoja kolej. Pobierz paczkę lekcyjną:</p>
+<pre><code class="language-bash">npx @przeprogramowani/10x-cli@latest get m1l3
+</code></pre>
+<p>Kiedy masz paczkę:</p>
+<ul>
+<li><strong>Greenfield:</strong> Uruchom <strong>/10x-bootstrapper</strong> na swoim <strong>tech-stack.md</strong> z poprzedniej lekcji (M1L2). Sprawdź, czy skill pomyślnie utworzył szkielet projektu i przeszedł trzy bramki, przejrzyj <strong>verification.md</strong> i upewnij się, że testy przechodzą.</li>
+<li><strong>Brownfield:</strong> Uruchom <strong>/10x-health-check</strong> w katalogu swojego istniejącego projektu. Przejrzyj wynik w <strong>health-check.md</strong>: stan zależności, pokrycie testami, konfiguracja CI/CD i werdykt agent-readiness.</li>
+</ul>
+<h2>Odbierz swoją odznakę</h2>
+<p>Po ukończeniu tej lekcji odbierz odznakę w sekcji <a href="https://platforma.przeprogramowani.pl/10xdevs-3/mission-log">10xDevs Mission Log</a> a następnie pochwal się swoim osiągnięciem!</p>
+<h2>🔎 Deep Dive</h2>
+<p>Ta sekcja zawiera dodatkowe pogłębienie wiedzy na temat wybranych zagadnień związanych z lekcją. W tym Deep Dive znajdziesz:</p>
+<ul>
+<li><strong>Cztery tryby awaryjne</strong> — antywzorce pierwszego tygodnia z agentem i konkretne antidota na każdy z nich</li>
+<li><strong>YOLO mode w wykonaniu autorów 10xDevs</strong> — kiedy pełna delegacja ma sens i jakie warunki brzegowe muszą być spełnione</li>
+<li><strong>Twój kod w chmurze: prywatność i trening modeli</strong> — kto trenuje na twoim kodzie, jak to wyłączyć i czym różnią się tiery dostawców</li>
+<li><strong>Co jeśli delegacja zawodzi</strong> — jak bootstrapper reaguje na błąd CLI (HARD-STOP) i dlaczego agent nie próbuje naprawiać za narzędzie</li>
+<li><strong>Jak bootstrapper traktuje istniejące pliki</strong> — polityka konfliktów: kiedy zachowuje twoje pliki, kiedy merguje, kiedy tworzy sibling .scaffold</li>
+</ul>
+<p>Ta sekcja lekcji nie jest obowiązkowa, ale warto się z nią zapoznać jeżeli chcesz zostać ekspertem.</p>
+<h3>Cztery tryby awaryjne</h3>
+<p>Wzorce bezpieczeństwa omówiliśmy w trakcie lekcji. A jak wyglądają antywzorce? Cztery tryby, w które najczęściej wpadają kursanci po pierwszym tygodniu z agentem.</p>
+<p><strong>Approve-everything Stockholm.</strong> Każdą prośbę o uprawnienia potwierdzasz ręcznie, bo nie wiesz, co bezpieczne. Po dwóch dniach workflow to mecz o wytrzymałość, nie o produkt, i porzucasz agenta jako "nie do utrzymania".</p>
+<p>Antidotum: kilka świadomie dodanych reguł <strong>allow</strong> po pierwszym bootstrapie, plus filtr "co to może popsuć poza moim repo" przy każdej decyzji.</p>
+<p><strong>YOLO mode bez warunków.</strong> <strong>Bash(*)</strong> w allowlist po pierwszym frustrującym dniu. Agent dostaje dostęp do produkcyjnych integracji przez MCP. Kilka dni później pojawia się komenda, której nie powinno być, i znika baza albo plik z sekretami.</p>
+<p>Antidotum: dwie reguły <strong>deny</strong> dla wzorców niebezpiecznych, brak prod-data po stronie agenta, repo w gicie. <em>Świadome</em> YOLO mode jest możliwe, ale wymaga warunków brzegowych, do których ten kurs jeszcze cię nie doprowadził.</p>
+<p><strong>AI tworzy projekt od zera.</strong> Pomijasz skilla i promptujesz: <em>po prostu stwórz mi projekt Astro z auth</em>. Agent generuje pół-działający boilerplate, tracisz dwa dni na łatanie tego, co <strong>npm create astro</strong> zrobiłby poprawnie w trzydzieści sekund.</p>
+<p>Antidotum: przy każdym prompcie pytaj, czy istnieje CLI, do którego agent może to zdelegować.</p>
+<p><strong>Brownfield-as-greenfield.</strong> Masz istniejący projekt, ale zamiast go audytować, uruchamiasz bootstrappera. Scaffold konfliktuje z istniejącym kodem, <strong>.scaffold</strong> siblings mnożą się po katalogu, czas idzie na rozwiązywanie kolizji.</p>
+<p>Antidotum: jeśli projekt istnieje, <strong>/10x-health-check</strong> to właściwy punkt wejścia. Bootstrapper jest dla pustego katalogu.</p>
+<p>Wszystkie cztery tryby to naturalne zachowania pierwszego tygodnia: lęk, frustracja, iluzja kompetencji modelu, odruch "zacznijmy od zera".ss</p>
+<h3>YOLO mode w wykonaniu 10xDevs</h3>
+<p>To pytanie pojawia się w prawie każdej kohorcie: <em>a czy Wy, prowadzący, potwierdzacie każde działanie agenta?</em></p>
+<p>Nie. Od września 2025 r. pracujemy głównie z aktywnym <strong>--dangerously-skip-permissions</strong> dla głównych projektów. Nic spektakularnego się nie zdarzyło, oprócz jednego przypadku, w którym agent w trakcie debugowania... skasował lokalną bazę danych. Kolejne takie próby zatrzymała później reguła w <strong>CLAUDE.md</strong>, która wprost zabrania operacji destruktywnych na bazie bez interaktywnego potwierdzenia.</p>
+<p>Ale: pracujemy w bezpiecznym środowisku. Bez serwerów MCP podłączonych do produkcji, z wersjonowaniem gita i dyscypliną branchowania. Nasz YOLO mode spełnia warunki brzegowe, które Anthropic opisuje w dokumentacji devcontainerów.</p>
+<p>Stąd rekomendacja kursowa: zostań w stanie pośrednim (allow/deny plus Claude Code pytający o resztę) dopóki nie masz instynktu, <em>kiedy</em> któryś z warunków brzegowych przestaje obowiązywać.</p>
+<h3>Twój kod w chmurze: prywatność i trening modeli</h3>
+<p>Polityka uprawnień chroni Twój dysk. Ale kiedy agent czyta plik i wysyła go do API, Twój kod opuszcza maszynę. Co się z nim dzieje po drugiej stronie?</p>
+<p>Odpowiedź zależy od dwóch rzeczy: <strong>kto jest dostawcą modelu</strong> i <strong>na jakim tierze pracujesz</strong>.</p>
+<h3>Trzy tiery, trzy różne zasady</h3>
+<p>Większość dostawców dzieli swoje produkty na trzy warstwy, a każda ma inną politykę prywatności:</p>
+<ol>
+<li><strong>Darmowa aplikacja</strong> (ChatGPT Free, Gemini, claude.ai Free) — Twoje dane domyślnie <strong>trenują model</strong>. Możesz to wyłączyć, ale musisz to zrobić aktywnie w ustawieniach usługi.</li>
+<li><strong>Płatna subskrypcja indywidualna</strong> (ChatGPT Plus/Pro, Claude Pro/Max, Gemini Advanced) — zależy od dostawcy. U Anthropic i OpenAI <em>możesz</em> wyłączyć trening. U Google płatna subskrypcja konsumencka <strong>nie zmienia polityki treningu</strong> (trzeba wyłączyć "Keep Activity" ręcznie, dokładnie jak na darmowym tierze).</li>
+<li><strong>API / plany biznesowe</strong> (Anthropic API, OpenAI API, Google Vertex AI, Claude Team/Enterprise, ChatGPT Team/Enterprise) — Twoje dane domyślnie <strong>nie trenują modelu</strong>. To zasadnicza różnica wobec tierów konsumenckich.</li>
+</ol>
+<p>Kluczowy wniosek: <strong>API i plany biznesowe są prywatne domyślnie. Aplikacje konsumenckie - nie.</strong></p>
+<h3>Dostawcy amerykańscy: na co zwrócić uwagę</h3>
+<p><strong>Anthropic (Claude, Claude Code):</strong> Na konsumenckich planach (Free, Pro, Max) Anthropic wyświetla pop-up z pytaniem, czy pozwalasz na trening. Jeśli zgodziłeś się przy rejestracji i chcesz to zmienić, wejdź w <strong>claude.ai/settings</strong> → sekcja <em>Data Privacy Controls</em> i wyłącz. Na planach komercyjnych (Team, Enterprise, API) Twoje dane <strong>nie trenują modelu</strong>, chyba że admin explicite zapisze organizację do Development Partner Program.</p>
+<p><strong>OpenAI (ChatGPT, Codex):</strong> Na darmowym i Plus/Pro toggle "Improve the model for everyone" jest <strong>włączony domyślnie</strong>. Wyłączasz go w Settings → Data Controls. Uwaga: wyłączenie tego toggle'a <em>nie</em> obejmuje Codex. Codex ma osobne ustawienie w <strong>chatgpt.com/codex/settings/general</strong>. Na API dane nie trenują od marca 2023. Na Team/Enterprise trening jest wyłączony domyślnie.</p>
+<p><strong>Google (Gemini):</strong> Jedyny z wielkiej trójki, u którego <strong>płatna subskrypcja konsumencka nie zmienia polityki treningu</strong>. Gemini Advanced / Google One AI Premium traktuje dane identycznie jak darmowy tier. Jeśli "Keep Activity" jest włączone (domyślnie tak), Google używa Twoich rozmów do treningu i ludzcy recenzenci mogą je czytać. Wyłączasz to w myactivity.google.com.</p>
+<h3>Dostawcy chińscy: jurysdykcja ma znaczenie</h3>
+<p>DeepSeek i Alibaba (Qwen) oferują modele, które potrafią konkurować ceną z dostawcami amerykańskimi. Ale różnica nie leży w jakości modelu. Leży w <strong>jurysdykcji danych</strong>.</p>
+<p><strong>DeepSeek</strong> przechowuje wszystkie dane w Chinach (PRC). Polityka prywatności wprost mówi: <em>"We directly collect, process and store your Personal Data in People's Republic of China."</em> Nie istnieje opcja wyboru regionu. Stanford FMTI Transparency Report (grudzień 2025) przyznał DeepSeek <strong>0 na 5 punktów</strong> za przejrzystość użycia danych.</p>
+<p><strong>Alibaba Cloud (Qwen/DashScope)</strong> jest lepszy pod jednym względem: oferuje tryby deploymentu z przechowywaniem danych poza Chinami (Singapur, USA, EU). Ale spółka-matka pozostaje podmiotem chińskiego prawa.</p>
+<p>Dlaczego to istotne? Trzy chińskie ustawy tworzą ramy, w których <strong>żadna chińska firma nie może odmówić udostępnienia danych chińskim służbom:</strong></p>
+<ul>
+<li><strong>Ustawa o Wywiadzie Narodowym (2017), art. 7:</strong> Każda organizacja i obywatel musi <em>wspierać, pomagać i współpracować</em> z wywiadem państwowym.</li>
+<li><strong>Ustawa o Bezpieczeństwie Danych (2021):</strong> Zabrania udostępniania danych przechowywanych w Chinach zagranicznym organom ścigania bez zgody rządu chińskiego.</li>
+<li><strong>PIPL (2021):</strong> Chiński odpowiednik GDPR, ale z jednorazowym prawem dostępu państwa bez mechanizmu odmowy.</li>
+</ul>
+<p>Między Chinami a UE/EOG nie istnieje decyzja o adekwatności ochrony danych. DeepSeek nie ma przedstawiciela GDPR w UE. Żaden z chińskich dostawców nie oferuje Data Processing Agreement porównywalnego z tym, co dają Anthropic, OpenAI czy Google.</p>
+<p><strong>Praktyczna konsekwencja:</strong> Kod wysłany do API DeepSeek ląduje na serwerach w Chinach i potencjalnie trenuje model, bez jasnej ścieżki opt-out. Jeśli pracujesz z kodem firmowym, sprawdź politykę swojego pracodawcy, zanim wyślesz cokolwiek przez chińskie API. Cena nie anuluje konsekwencji prawnych.</p>
+<h3>Checklist przed pierwszą sesją z agentem</h3>
+<ul>
+<li>Sprawdź, na jakim tierze pracujesz (darmowy / subskrypcja / API / biznesowy).</li>
+<li>Jeśli konsumencki tier — wyłącz trening modeli w ustawieniach dostawcy.</li>
+<li>Jeśli pracujesz z kodem firmowym — potwierdź z compliance, czy dostawca spełnia wymagania (DPA, region przechowywania danych, certyfikaty).</li>
+</ul>
+<h3>Co, jeśli delegacja zawodzi</h3>
+<p>Wzorzec "deleguj do autorytatywnego CLI" działa, dopóki działa samo CLI. A kiedy nie?</p>
+<p>Bootstrapper traktuje to jako <strong>HARD-STOP</strong>. Jeśli <strong>npm create astro@latest</strong> zwróci niezerowy exit code, skill się zatrzymuje. Nie próbuje naprawiać sytuacji od strony agenta, nie improwizuje brakujących plików, nie kontynuuje do <strong>npm audit</strong>.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-8-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-8-10x.png</a></p></blockquote>
+<p>Co zostaje na dysku?</p>
+<ul>
+<li>Katalog <strong>.bootstrap-scaffold/</strong> z tym, co CLI zdążył wygenerować przed błędem.</li>
+<li>Częściowy <strong>verification.md</strong> ze statusem <strong>failed</strong> i krótkim opisem błędu.</li>
+<li>Twój oryginalny <strong>tech-stack.md</strong> nietknięty. Kontrakt z poprzedniej lekcji (M1L2) wraca jako wejście dla retry.</li>
+</ul>
+<p>Otwierasz <strong>.bootstrap-scaffold/</strong> i szukasz przyczyny. Najczęstsze: brak dostępu do sieci, lockfile ze starszej wersji <strong>npm</strong>, konflikt nazwy katalogu, brakująca zmienna środowiskowa. Naprawiasz <em>na poziomie systemu</em>, nie na poziomie agenta, i uruchamiasz <strong>/10x-bootstrapper</strong> ponownie.</p>
+<p>Wzorzec do zapamiętania: <strong>kiedy autorytatywne CLI mówi nie, agent też mówi nie</strong>. Próba obejścia ("a niech model dopisze ten plik ręcznie") prowadzi prosto pół-działającego boilerplate'u, którego w następnych modułach nie da się utrzymać.</p>
+<h3>Jak bootstrapper traktuje istniejące pliki</h3>
+<p>Załóżmy, że w katalogu masz już <strong>package.json</strong>, zostawiony po wcześniejszej eksploracji albo ręcznie napisanej wersji projektu. <strong>npm create astro@latest</strong> chce zapisać swój <strong>package.json</strong>. Co się dzieje?</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-9-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l3-lesson-draft-9-10x.png</a></p></blockquote>
+<p>Bootstrapper nie nadpisuje. Twój <strong>package.json</strong> zostaje, wersja ze scaffoldu trafia do <strong>package.json.scaffold</strong> jako <em>sibling</em>. Porównujesz oba i podejmujesz decyzję: zachować swoje, przyjąć scaffold, zmergować ręcznie.</p>
+<p>Jeden katalog jest traktowany szczególnie: <strong>context/</strong>. Wszystko, co tam leży (<strong>prd.md</strong>, <strong>tech-stack.md</strong>, ewentualne inne notatki) <em>jest zachowywane verbatim, bez wyjątków</em>. To twoje ślady decyzji projektowych z poprzednich lekcji (M1L1, M1L2). Bootstrapper traktuje je jako dane, nie kandydatów do wymiany.</p>
+<p><strong>.gitignore</strong> jest specjalnie obsługiwany: bootstrapper merguje twoje wpisy z wpisami ze scaffoldu. Nie tracisz lokalnych ignorów, ale dostajesz świeży zestaw od startera.</p>
+<p>Cały ten mechanizm to in-execution w praktyce: <strong>nie chcesz, żeby agent miał wolną rękę nad twoim dyskiem</strong>. Chcesz, żeby narzędzie miało wbudowane reguły, których nie musisz wymuszać promptem.</p>
+<h2>📚 Materiały dodatkowe</h2>
+<ul>
+<li><a href="https://code.claude.com/docs/en/permissions">Configure permissions</a> — oficjalna dokumentacja składni <strong>permissions.allow</strong> / <strong>deny</strong> / <strong>ask</strong>, kolejności ewaluacji i wzorców <strong>Bash(...)</strong>. To źródło, do którego wracasz, kiedy nie pamiętasz, czy *<em>Bash(npm <em>)</em></em> to słuszna reguła dla <strong>npx</strong>.</li>
+<li><a href="https://code.claude.com/docs/en/permission-modes">Choose a permission mode</a> — pełna lista trybów (<strong>default</strong>, <strong>acceptEdits</strong>, <strong>plan</strong>, <strong>auto</strong>, <strong>dontAsk</strong>, <strong>bypassPermissions</strong>) i ostrzeżenia producenta wokół <strong>--dangerously-skip-permissions</strong>.</li>
+<li><a href="https://code.claude.com/docs/en/devcontainer">Development containers</a> — rekomendacja Anthropica, jak uruchamiać YOLO mode w warunkach brzegowych (dev container, użytkownik nie-root, ograniczony dostęp do sieci).</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a> — zasada "deleguj do narzędzi, których zachowanie znasz" i projektowanie interfejsów dla agenta z tą samą starannością, co dla człowieka.</li>
+<li><a href="https://developers.openai.com/codex/agent-approvals-security">Agent approvals &amp; security</a> — odpowiednik Claude Code'owej polityki w Codex CLI: <strong>--sandbox</strong>, <strong>--ask-for-approval</strong>, <strong>~/.codex/config.toml</strong>.</li>
+<li><a href="https://cursor.com/docs/agent/security">Agent Security</a> — odpowiednik dla Cursora: <strong>~/.cursor/permissions.json</strong>, ostrzeżenie o trybie "Run Everything", przyznanie w samej dokumentacji, że <em>allowlist is best-effort — bypasses are possible</em>.</li>
+<li><a href="https://docs.npmjs.com/cli/v10/commands/npm-audit">npm audit</a> — pięć poziomów ważności i semantyka exit codes; przyda się przy czytaniu <strong>verification.md</strong>.</li>
+<li><a href="https://ona.com/stories/how-claude-code-escapes-its-own-denylist-and-sandbox">How Claude Code escapes its own denylist and sandbox</a> — udokumentowany przypadek obejścia polityki przez agenta (Ona, marzec 2026 r.). Czytaj jako materiał kontekstowy, nie jako reklamę produktu, który tekst promuje.</li>
+<li><a href="https://www.luiscardoso.dev/blog/sandboxes-for-ai">A field guide to sandboxes for AI</a> — niezależny praktyk porządkujący trzy decyzje wokół izolacji agenta: <em>boundary</em>, <em>policy</em>, <em>lifecycle</em>. Dobre uzupełnienie do bramki in-execution.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/02">[1.2]</a> <em>Chatbot vs Agent vs Harness</em> — definicja harnessu jako warstwy kontroli; wraca tu jako konfigurowalny komponent, nie tylko pojęciowa kategoria.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/06">[2.3]</a> <em>Claude Code — podstawy operacyjne</em> — kategorie uprawnień, które tu operacjonalizujesz przez konkretną politykę.</li>
+</ul>

@@ -1,0 +1,1 @@
+export { generateMagicLinkEmail } from './magicLink';

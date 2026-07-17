@@ -1,0 +1,30 @@
+{
+  "lessonId": "[4x6] Domain-Driven Design z AI",
+  "file": "32-4x6_domaindriven_design_z_ai.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 4,
+      "order": 0
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:7a1ce8a9:43cc23fa",
+      "tokenEstimate": 66,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7a1ce8a9:43cc23fa:0-3",
+      "tokenEstimate": 138,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

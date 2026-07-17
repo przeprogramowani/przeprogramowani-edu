@@ -1,0 +1,64 @@
+<meta name="lesson-id" content="Typy nieznane i wartości puste"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>Jeśli do nauki TypeScriptu podchodziłeś już wcześniej, być może spotkałeś się ze słynnym typem “any”, którego stosowanie powszechnie uważany jest za antywzorzec. W tej lekcji wyjaśnimy ci dlaczego tak jest (i czy zawsze?), ale omówimy też inne typy, które mogą się pojawić w twoim kodzie na skutek pracy z TypeScriptem i poszczególnymi operatorami.</p><h2>Typy nieznane - any i unknown</h2><p>Oba typy wskazują na brak wiedzy o tym, czym jest przetwarzana wartość. Mają one istotną różnicę z punktu widzenia działania aplikacji i bezpieczeństwa kodu.</p><h3>Typ <em>any</em> jest używany, gdy:</h3><ul><li><p>Chcemy <strong>całkowicie wyłączyć sprawdzanie typów</strong> dla danej zmiennej. Jest to typ, który „wyłącza” TypeScript i pozwala na wykonywanie operacji bez żadnych ograniczeń.</p></li><li><p><strong>Nie zależy nam na bezpieczeństwie typu</strong> w danej sytuacji, np. gdy szybko prototypujemy coś w kodzie i chcemy skupić się na logice, a nie na dokładnym typowaniu.</p></li><li><p>Pracujemy z <strong>kodem napisanym w czystym JavaScript</strong>, gdzie typy nie zostały określone. W takich przypadkach <em>any</em> pozwala uniknąć błędów kompilacji, szczególnie jeśli chcemy szybko zintegrować jakiś moduł JS.</p></li><li><p><strong>Migracja kodu do TypeScript</strong> jest w toku i jeszcze nie wiadomo, jaki dokładnie typ powinien zostać przypisany do pewnych zmiennych. Wtedy <em>any</em> może być stosowany tymczasowo jako miejsce na bardziej precyzyjne typy, które zostaną dodane później. </p></li></ul><p>Przyzwyczajenie do any potrafi uzależnić i to główny powód, dla którego jest to typ uważany za antywzorzec. Traktuj go jako tymczasową taśmę klejącą, a w dłuższej perspektywie wymieniaj na precyzyjne typy. Kompilator może ci w tym pomóc oferując dodatkową opcję, która wyłącza możliwość niejawnego posługiwania się tym typem w projekcie: <strong>noImplicitAny </strong>(w sekcji compilerOptions)<strong>.</strong></p><h3>Typ <em>unknown</em> jest używany gdy:</h3><ul><li><p><strong>Nie znamy typu wartości podczas kompilacji</strong>, ale chcemy zachować pewien poziom kontroli nad typem przed użyciem tej wartości. unknown wymusza na nas sprawdzenie typu, zanim wykonamy na tej zmiennej konkretne operacje.</p></li><li><p><strong>Przyjmujemy dane z zewnętrznego źródła</strong>, np. z API lub z formularza, gdzie typ danych jest niepewny. unknown jest dobrym wyborem, bo pozwala zachować bezpieczeństwo typu – przed użyciem musimy wykonać sprawdzenie i rzutowanie zmiennej na określony typ danych.</p></li><li><p>Chcemy zabezpieczyć kod przed <strong>nieoczekiwanymi błędami typów</strong>. Użycie unknown zmusza nas do jawnego sprawdzenia typu przy pomocy operatora typeof lub innych mechanizmów. Dzięki temu unikamy sytuacji, w której próbujemy wykonać operację na typie niezgodnym (np. próbujemy wywołać metodę, której dana wartość nie ma).</p></li></ul><p>Zobaczmy różnicę pomiędzy tymi typami na kolejnym filmie:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1034468509?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2>Brak wartości - never i void</h2><p>W tej sekcji omówimy dwa specjalne typy w TypeScript: never i void, które często są mylone ze sobą ze względu na ich podobne zastosowania. Dowiesz się, kiedy i jak ich używać oraz dlaczego są one istotne w kontekście pisania bezpiecznego i czytelnego kodu.</p><h3>Void</h3><p>Typ <em>void</em> jest stosowany głównie do określania funkcji, które <strong>nie zwracają wartości</strong>. W kontekście JavaScript, funkcje tego typu zwracają <em>undefined</em> - na przykład, kiedy nie używamy słowa kluczowego return, funkcja automatycznie zwróci <em>undefined</em>. Typ void wskazuje, że zwracana wartość funkcji nie ma znaczenia i nie jest używana.</p><pre><code>function logMessage(message: string): void {
+    console.log(message);
+}</code></pre><p>W praktyce, przy tego typu funkcjach określenie typu zwracanego pomijamy, a TypeScript sam zajmie się jego rozpoznaniem.</p><h3>Never</h3><p>Patrząc na typy jak na zbiory wartości, <em>never</em> będzie oznaczał pusty zbiór wartości - coś, co powstało na skutek naszej pracy z kodem lub typami, a co przestaje mieć wartości możliwe do przypisania. Jak to możliwe?</p><p>Przykładowo, kiedy poprzez unię spróbujemy uzyskać część wspólną <em>stringów</em> i <em>numberów</em>, otrzymamy typ <em>never - </em>nie ma wartości, która jest jednocześnie łańcuchem znaków i liczbą:</p><pre><code>type F = string;
+type G = number;
+
+type H = F &amp; G; // never</code></pre><p>Typ <em>never </em>może również służyć&nbsp;do oznaczania funkcji, które nigdy się nie zakończą (pętle) lub nie zwrócą wartości możliwej do obsłużenia (wyjątki):</p><pre><code>function alwaysThrows(): never {
+  throw new Error("Always throws");
+}
+
+const a: never = alwaysThrows();
+
+function alwaysLoops(): never {
+  while (true) {}
+}
+
+const b: never = alwaysLoops();</code></pre><p>Kiedy taki typ może się przydać? Ciekawym przykładem są konstrukcje <em>switch</em> połączone z literałami typów - musimy wykorzystać&nbsp;wszystkie “kejsy”, a to, co pozostanie, będzie właśnie typu <em>never. </em>Jeśli jakiegoś przypadku nie obsłużymy (np. blue) lub dodamy nowy, system typów wskaże błąd (sprawdź sam):</p><pre><code>function unknownColor(x: never): never {
+    throw new Error("Nieznany kolor!");
+}
+
+// Wprowadź nowy kolor i zobacz zachowanie TypeScriptu
+type Color = 'red' | 'green' | 'blue';
+
+function getColorName(c: Color): string {
+    switch(c) {
+        case 'red':
+            return 'is red';
+        case 'green':
+            return 'is green';
+        case 'blue':
+            return 'is blue';
+        default:
+            return unknownColor(c);
+    }
+}</code></pre><p>Źródło - <a href="https://www.zhenghao.io/posts/ts-never" target="_blank" rel="noopener noreferrer">ts-never</a></p><p><strong>👉 Dla ciekawskich</strong>: Istnieje wiele języków z podobną konstrukcją&nbsp;do <em>never</em>. W teorii typów nazywa się je “Bottom types” albo “inhabitable types”, czyli typy, które nie mogą przyjąć do swojego zbioru żadnej wartości. <a href="https://en.wikipedia.org/wiki/Bottom_type#In_programming_languages" target="_blank" rel="noopener noreferrer">Zobacz więcej.</a></p><h3>Void czy never?</h3><p>Zdarza się, że programiści mylą te dwa typy, zakładając, że funkcja, która "nic nie zwraca", powinna mieć typ <em>never</em>. W rzeczywistości <em>never</em> jest znacznie bardziej restrykcyjny i oznacza brak możliwości zwrócenia czegokolwiek, nawet <em>undefined</em>.</p><pre><code>// ❌ Nieprawidłowe podejście
+function logWarning(message: string): never {
+    console.warn(message);
+}
+
+// ✅ Prawidłowe podejście
+function logWarning(message: string): void {
+    console.warn(message);
+}</code></pre><h2><strong>Null i undefined</strong></h2><blockquote><p>I call it my billion-dollar mistake. It was the invention of the null reference in 1965 - Tony Hoare</p></blockquote><p>Na koniec krótkie omówienie dwóch typów, które wprost nie reprezentują zbiorów, ale są raczej odwzorowaniem wartości z języka JavaScript:</p><ul><li><p>null - symbolizuje wartość “pustą”</p></li><li><p>undefined - symbolizuje zadeklarowaną zmienną bez wartości początkowej</p></li></ul><pre><code>let noValue: null = null;
+let undefinedValue: undefined;
+
+console.log(noValue); // null
+console.log(undefinedValue); // undefined</code></pre><p>Szczególnie w przypadku wartości <em>null</em>, często stosuje się ją w parze z innymi typami, aby zaznaczyć opcjonalne występowanie określonej wartości:</p><pre><code>const img: HTMLImageElement | null = document.querySelector("img");
+
+// Type guard - zmiana typu z "HTMLImageElement | null" na "HTMLImageElement"
+if (img) { 
+  img.src = '...';
+}</code></pre><p>Jeśli mamy pewność, że dany element istnieje, możemy wykorzystać <strong>wykrzyknik</strong> aby to zaznaczyć:</p><pre><code>const img: HTMLImageElement | null = document.querySelector("img");
+
+img!.src = "https://...";</code></pre><p><strong>Ważne ustawienie kompilatora</strong></p><p>W ustawieniach kompilatora TypeScript istnieje ustawienie <strong>strictNullChecks</strong>, które wpływa na to, jak TypeScript traktuje puste wartości (null i undefined).</p><p>Gdy to ustawienie jest włączone (domyślnie), null i undefined są traktowane jako <strong>osobne typy</strong>, co oznacza, że przypisanie ich do zmiennej o określonym typie, który nie uwzględnia tych wartości, spowoduje błąd kompilacji. Dzięki temu musisz jawnie określić, kiedy dana zmienna może przyjąć wartość pustą, co zwiększa bezpieczeństwo i czytelność kodu, a także zmniejsza prawdopodobieństwo błędów w runtime.</p><p>Wpływa to również na pracę z biblioteką standardową - niektóre metody w bibliotekach TypeScript mają sygnatury, które wymagają uwzględnienia pustych wartości. Jest to stosowane wyłącznie jeżeli strictNullChecks jest ustawione na true:</p><pre><code>// strictNullChecks: true
+const img: HTMLImageElement | null = document.querySelector("img");
+
+// strictNullChecks: false
+const img: HTMLImageElement = document.querySelector("img");</code></pre><p><strong>Przydatny operator</strong></p><p>Zarówno JavaScript jak i TypeScript wspierają ten sam operator do zabezpieczania się przed wartościami <em>null</em> i <em>undefined</em> - <em>nullish coalescing operator “??”. </em>Jeśli zmienna nie ma przypisanej wartości lub jest ona pusta (null), pod uwagę zostanie wzięta prawa część tego operatora:</p><pre><code>const cfg = null;
+const generate = () =&gt; 5;
+
+const result = cfg ?? generate();
+console.log(result); // 5
+
+// Cukier składniowy względem:
+// const result = (cfg !== null &amp;&amp; cfg !== undefined) ? cfg : generate();</code></pre><h3>Macierz przypisania</h3><p>Oficjalna dokumentacja TypeScript rozwija użyteczną&nbsp;macierz, która pokazuje poszczególne relacje pomiędzy omawianymi do tej pory typami.</p><p>Aby pozostawać&nbsp;zawsze na bieżąco, poniższą stronę możesz dodać do zakładek i wracać&nbsp;do niej wtedy, kiedy napotkasz konflikt typów.</p><p>Zobacz najnowszą wersję tej macierzy - <a href="https://www.typescriptlang.org/docs/handbook/type-compatibility.html#any-unknown-object-void-undefined-null-and-never-assignability" target="_blank" rel="noopener noreferrer">link do dokumentacji</a>.</p><h2>Podsumowanie</h2><p>W tej lekcji poznałeś cztery nowe typy, które pomogą ci obsłużyć sytuacje nieprzewidziane:</p><ul><li><p>dla typów nieznanych - any i unknown</p></li><li><p>dla braku wartości - void i never</p></li></ul><p>Świadome wykorzystywanie tych typów pozwoli ci tworzyć bardziej czytelny i bezpieczny kod, jasno określając intencje, akceptowalne wartości i zachowanie funkcji.</p><h2>Ćwiczenia</h2><ul><li><p><strong>231-never-say-never - </strong>masz do ulepszenia system przetwarzający różne rodzaje zdarzeń w aplikacji.  Rozbuduj funkcję obsługi zdarzeń, aby uniknąć błędu spowodowanego przez przypisanie do zmiennej typu never.</p></li></ul><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

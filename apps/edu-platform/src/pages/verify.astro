@@ -1,0 +1,69 @@
+---
+import Layout from '@/layouts/BaseLayout.astro';
+import {verifyMagicLink} from '@/server/magicLinkManager';
+import { generateToken, getSessionCookieOptions, normalizeEmail } from '@/server/auth';
+import {JWT_SECRET} from 'astro:env/server';
+import { upsertUser } from '@/server/supabase/userService';
+import { syncFromAirtable } from '@/server/supabase/airtableSyncService';
+import { syncAllCircleCourses } from '@/server/supabase/circleSyncService';
+import { upsertGrant } from '@/server/supabase/accessService';
+import { resolveRedirect } from '@/server/redirects';
+import { log } from '@/lib/logger';
+
+const { env, ctx } = Astro.locals.runtime;
+
+const token = Astro.url.searchParams.get('token');
+const redirectParam = Astro.url.searchParams.get('redirect');
+
+// Build error redirect URL preserving the redirect param
+const errorRedirectSuffix = redirectParam ? `&redirect=${redirectParam}` : '';
+
+if (!token) {
+  return Astro.redirect(`/login?error=MISSING_TOKEN${errorRedirectSuffix}`);
+}
+
+const magicLinkResult = await verifyMagicLink(token as string, env);
+
+if (!magicLinkResult) {
+  log({ level: 'warn', event: 'magic_link.expired_or_invalid' });
+  return Astro.redirect(`/login?error=MISSING_USER${errorRedirectSuffix}`);
+}
+
+const { email: rawEmail, newsletterOptIn } = magicLinkResult;
+const email = normalizeEmail(rawEmail as string);
+
+const jwtToken = await generateToken(email, JWT_SECRET);
+
+if (jwtToken) {
+  // Set the JWT as a cookie
+  Astro.cookies.set('token', jwtToken, getSessionCookieOptions());
+}
+
+// Supabase sync — registered with ctx.waitUntil so CF Workers keeps the
+// execution context alive after the redirect response is sent
+log({ level: 'info', event: 'magic_link.consumed', email });
+const syncEnv = env;
+const syncPromise = upsertUser(email, syncEnv, { newsletterOptIn })
+  .then(async (userId) => {
+    await upsertGrant(userId, 'explorers', 'free', syncEnv);
+    await Promise.allSettled([
+      syncFromAirtable(userId, email, syncEnv),
+      syncAllCircleCourses(userId, email, syncEnv),
+    ]);
+  })
+  .catch((err) => console.error('[verify] Supabase sync failed:', err));
+
+if (syncEnv.ENV === 'PROD') {
+  ctx.waitUntil(syncPromise);
+} else {
+  await syncPromise;
+}
+
+return Astro.redirect(resolveRedirect(redirectParam));
+---
+
+<Layout>
+  <div class='min-h-screen flex flex-col items-center justify-center bg-gray-900'>
+    <h1 class='text-white text-2xl font-bold'>Zalogowano</h1>
+  </div>
+</Layout>

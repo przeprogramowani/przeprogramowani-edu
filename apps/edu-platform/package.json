@@ -1,0 +1,58 @@
+{
+  "name": "edu-platform",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev -- --mode=local",
+    "dev:lan": "astro dev --host -- --mode=local",
+    "build": "node ../../tools/astro-patches/patch-content-datastore.js && npm run check:lesson-html && rm -f .astro/data-store.json node_modules/.astro/data-store.json && astro build && npm run check:build-content",
+    "check": "astro check",
+    "check:build-content": "node scripts/verify-build-content.mjs",
+    "preview": "astro preview",
+    "astro": "astro",
+    "generate:assets": "node scripts/generate-placeholder-assets.mjs",
+    "generate:guid-mappings": "tsx scripts/generate-guid-mappings.ts",
+    "generate:lesson-html": "tsx scripts/generate-lesson-html.ts",
+    "generate:lesson-html:dry": "tsx scripts/generate-lesson-html.ts --dry-run",
+    "copy:10xdevs3-prework:i18n": "tsx scripts/copy-10xdevs3-prework-to-i18n.ts",
+    "copy:10xdevs3-prework:en-from-i18n": "tsx scripts/copy-10xdevs3-prework-en-from-i18n.ts",
+    "enrich:lesson-html": "tsx scripts/enrich-lesson-html.ts",
+    "enrich:lesson-html:en": "npm run enrich:lesson-html -- --lang en",
+    "prep:lesson-html": "npm run generate:lesson-html && npm run enrich:lesson-html:en && npm run check:lesson-html",
+    "report:prework-code-blocks": "tsx scripts/repair-prework-code-blocks.ts --report",
+    "repair:prework-code-blocks": "tsx scripts/repair-prework-code-blocks.ts --write",
+    "check:lesson-html": "tsx scripts/generate-lesson-html.ts --check && tsx scripts/enrich-lesson-html.ts --check --lang en && npm run report:prework-code-blocks",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "test:explorers": "vitest run src/explorers/",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test --update-snapshots"
+  },
+  "dependencies": {
+    "@edu/circle": "0.0.1",
+    "@sentry/astro": "^10.52.0",
+    "@sentry/cloudflare": "^10.52.0",
+    "@supabase/supabase-js": "^2.98.0",
+    "@tsndr/cloudflare-worker-jwt": "3.1.3",
+    "airtable": "0.12.2",
+    "cheerio": "1.1.2",
+    "highlight.js": "^11.11.1",
+    "mermaid": "^11.14.0",
+    "node-html-markdown": "1.3.0",
+    "phaser": "^3.90.0",
+    "resend": "^6.6.0"
+  },
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.4.2",
+    "@napi-rs/canvas": "^0.1.93",
+    "@playwright/test": "^1.59.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/svelte": "^5.3.1",
+    "jsdom": "^29.0.2",
+    "tsx": "^4.20.3"
+  },
+  "engines": {
+    "node": "22"
+  }
+}

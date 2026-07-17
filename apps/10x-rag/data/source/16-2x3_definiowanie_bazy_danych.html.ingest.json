@@ -1,0 +1,214 @@
+{
+  "lessonId": "[2x3] Definiowanie bazy danych",
+  "file": "16-2x3_definiowanie_bazy_danych.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 6,
+      "order": 1
+    },
+    {
+      "slug": "wprowadzenie-do-supabase",
+      "title": "Wprowadzenie do Supabase",
+      "blocks": 14,
+      "order": 2
+    },
+    {
+      "slug": "sesja-planowania-bazy-danych",
+      "title": "Sesja planowania bazy danych",
+      "blocks": 5,
+      "order": 3
+    },
+    {
+      "slug": "definiowanie-schematu-bazy-danych-db-planmd",
+      "title": "Definiowanie schematu bazy danych db-plan.md",
+      "blocks": 5,
+      "order": 4
+    },
+    {
+      "slug": "wdrazanie-bazy-danych-poprzez-migracje",
+      "title": "Wdrażanie bazy danych poprzez migracje",
+      "blocks": 3,
+      "order": 5
+    },
+    {
+      "slug": "widok-schematu-bazy-w-supabase-studio-schema-visualizer",
+      "title": "Widok schematu bazy w Supabase Studio Schema Visualizer",
+      "blocks": 8,
+      "order": 6
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 3,
+      "order": 7
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 9,
+      "order": 8
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:e1ee04c2:43cc23fa",
+      "tokenEstimate": 61,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e1ee04c2:43cc23fa:0-1",
+      "tokenEstimate": 61,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:e1ee04c2:24701484",
+      "tokenEstimate": 222,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e1ee04c2:24701484:0-5",
+      "tokenEstimate": 265,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:e1ee04c2:7129f540",
+      "tokenEstimate": 158,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e1ee04c2:7129f540:0-8",
+      "tokenEstimate": 370,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "chk:e1ee04c2:7129f540:8-13",
+      "tokenEstimate": 234,
+      "span": [
+        8,
+        13
+      ]
+    },
+    {
+      "id": "sec:e1ee04c2:ca556234",
+      "tokenEstimate": 115,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e1ee04c2:ca556234:0-4",
+      "tokenEstimate": 115,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:e1ee04c2:04de28c4",
+      "tokenEstimate": 137,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e1ee04c2:04de28c4:0-4",
+      "tokenEstimate": 137,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:e1ee04c2:60c47061",
+      "tokenEstimate": 96,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e1ee04c2:60c47061:0-2",
+      "tokenEstimate": 96,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:e1ee04c2:cd9017cb",
+      "tokenEstimate": 180,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e1ee04c2:cd9017cb:0-7",
+      "tokenEstimate": 180,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:e1ee04c2:33c7f0dd",
+      "tokenEstimate": 72,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e1ee04c2:33c7f0dd:0-2",
+      "tokenEstimate": 271,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:e1ee04c2:dcc8ec86",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e1ee04c2:dcc8ec86:0-8",
+      "tokenEstimate": 347,
+      "span": [
+        0,
+        8
+      ]
+    }
+  ]
+}

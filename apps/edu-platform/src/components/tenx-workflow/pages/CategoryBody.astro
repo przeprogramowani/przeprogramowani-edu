@@ -1,0 +1,107 @@
+---
+/**
+ * Strona domowa kategorii (Przegald): naglowek + indeks podstron z zajawkami.
+ * Jeden komponent obsluguje wszystkie kategorie (kurs, moduly, skille,
+ * ekosystem) - rozni je prop `category`. Lista podstron budowana z rejestru
+ * (categoryMembers) w kontekscie widza (`pages`); dla 'skille' zrodlem jest
+ * SKILL_PAGES. Kolory/glify z PAGE_META i SKILL_PAGES (kanon uniwersow),
+ * teksty z i18n/categories.ts. hud-top, xnav, footer i CSS z TenxCosmicLayout.
+ */
+import type { Lang } from '../i18n';
+import { CATEGORIES, CATEGORY_META, PAGE_META } from '../i18n/categories';
+import { categoryMembers, pageHref, pageText, type NavCategoryId, type WorkflowPage } from '../pages';
+import { SKILL_PAGES } from '../skills';
+import { UNIVERSES } from '../universes';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+  category: NavCategoryId;
+  /** Strony widoczne w kontekscie widza (gated/public) - filtruja indeks. */
+  pages: WorkflowPage[];
+}
+
+const { base, lang = 'pl', category, pages } = Astro.props;
+const t = CATEGORIES[lang][category];
+const accent = CATEGORY_META[category].accent;
+
+/** Karta indeksu: link do podstrony z glifem, numerem i zajawka. */
+interface Item {
+  href: string;
+  accent: string;
+  glyph: string;
+  num: string;
+  h3: string;
+  p: string;
+  /** kanon (motyw SF) znika w trybie neutralnym. */
+  sfOnly?: boolean;
+}
+
+let items: Item[];
+if (category === 'skille') {
+  // Skille nie maja wpisow w rejestrze - zrodlem jest SKILL_PAGES.
+  items = SKILL_PAGES.map((sk) => {
+    const te = t.teasers[sk.slug];
+    return {
+      href: pageHref(base, `skill/${sk.slug}`, lang),
+      accent: sk.accent,
+      glyph: UNIVERSES[sk.universeId as keyof typeof UNIVERSES].glyph,
+      num: te?.num ?? 'SKILL',
+      h3: te?.h3 ?? sk.skill,
+      p: te?.p ?? '',
+    };
+  });
+} else {
+  items = categoryMembers(category, pages).map((p) => {
+    const view = pageText(p, lang);
+    const meta = PAGE_META[p.slug];
+    const te = t.teasers[p.slug];
+    return {
+      href: p.href ?? pageHref(base, p.slug, lang),
+      accent: meta?.accent ?? accent,
+      glyph: meta?.glyph ?? CATEGORY_META[category].glyph,
+      num: te?.num ?? view.moduleLabel,
+      h3: te?.h3 ?? view.navLabel,
+      p: te?.p ?? '',
+      sfOnly: p.sfOnly,
+    };
+  });
+}
+
+// Linia "cel" (powrot na mostek / do CSC): tokeny {mostek} i {csc} -> adresy.
+const backHtml = t.backHtml
+  .replace('{mostek}', pageHref(base, 'index', lang))
+  .replace('{csc}', pageHref(base, 'csc', lang));
+---
+
+<header>
+  <p class="eyebrow" style={`--acc:${accent}`}><span class="ico ico-radar" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1>{t.h1}</h1>
+  <p class="sub" set:html={t.subHtml} />
+</header>
+
+<!-- ============ INDEKS PODSTRON ============ -->
+<section class="sector" id="index" style={`--acc:${accent}`}>
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.indexEyebrow}</span>
+    </div>
+    <h2>{t.h1}</h2>
+  </div>
+  <div class="sum-grid rv">
+    {items.map((it) => (
+      <a class:list={['sum-card', { 'sf-only': it.sfOnly }]} href={it.href} style={`--acc:${it.accent}`}>
+        <Fragment set:html={it.glyph} />
+        <span class="num">{it.num}</span>
+        <h3>{it.h3}</h3>
+        <p>{it.p}</p>
+      </a>
+    ))}
+  </div>
+  {backHtml && (
+    <div class="target rv">
+      <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{lang === 'en' ? 'Navigation' : 'Nawigacja'}</span>
+      <p set:html={backHtml} />
+    </div>
+  )}
+</section>

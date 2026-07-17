@@ -1,0 +1,59 @@
+name: Render & Upload Diagrams
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'apps/edu-platform/workbench/lessons/*/lesson-draft.md'
+      - 'apps/edu-platform/workbench/scripts/render-mermaid.mjs'
+      - 'apps/edu-platform/workbench/scripts/upload-assets.mjs'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force re-render and re-upload all diagrams'
+        type: boolean
+        default: false
+
+jobs:
+  render-and-upload:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/edu-platform
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@przeprogramowani'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: .
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PKG_TOKEN }}
+
+      - name: Install Chromium dependencies
+        run: npx puppeteer browsers install chrome
+
+      - name: Restore diagram cache
+        uses: actions/cache@v4
+        with:
+          path: apps/edu-platform/workbench/assets/diagrams/
+          key: diagrams-${{ hashFiles('apps/edu-platform/workbench/lessons/*/lesson-draft.md') }}
+          restore-keys: diagrams-
+
+      - name: Render mermaid diagrams
+        run: node workbench/scripts/render-mermaid.mjs workbench/lessons/*/lesson-draft.md ${{ inputs.force && '--force' || '' }}
+
+      - name: Upload diagrams to CDN
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-central-1
+        run: node workbench/scripts/upload-assets.mjs ${{ inputs.force && '--force' || '' }}

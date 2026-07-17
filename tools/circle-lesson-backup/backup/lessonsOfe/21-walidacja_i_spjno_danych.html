@@ -1,0 +1,124 @@
+<meta name="lesson-id" content="Walidacja i spójność danych"><html><head></head><body><div><img loading="lazy" src="https://assets-v3.circle.so/jk533j94l2v1ltdxl04z7yyz0llh" style="width: 100%; max-width: 100%;"><img loading="lazy" src="https://assets-v2.circle.so/nydjfgunnmdibe8fodaxklkes4uv" style="width: 100%; max-width: 100%;"><h2>Weryfikowanie formatu danych</h2><p>Każda dokumentacja - nawet ta nowoczesna i interaktywna - to w pewnym sensie wyłącznie obietnica tego, co powinno się wydarzyć korzystając z aktualnej wersji backendowego API.</p><p>Zdarza się, że od momentu złożenia obietnicy (zapoznanie się z dokumentacją) a jej weryfikacją (wywołanie rzeczywistego API) rzeczywistość backendowa się zmienia, a w efekcie tego pojawiają się problemy na styku dwóch warstw całej aplikacji.</p><p>Dobrze ilustruje to poniższy schemat - przeanalizujmy go poruszając się od lewej do prawej:</p><img loading="lazy" src="https://assets-v3.circle.so/ssvk80hnnubrbci6ajqrghqy0jtc" style="width: 100%; max-width: 100%;"><p>Kolejne etapy powstawania problemu są następujące:</p><ol start="1"><li><p>Rozpoczynamy proces budowania frontendu - pobieramy specyfikację OpenAPI z backendu (api-v1.yml)</p></li><li><p>Przy pomocy dowolnego generatora tworzymy najnowsze typy i klienty HTTP dla frontendu</p></li><li><p>Wdrażamy aplikację frontendową - wszystko działa poprawnie</p></li><li><p>W międzyczasie aktualizowany jest backend - wystawiana jest nowa specyfikacja (api-v2.yml)</p></li><li><p>Frontend nadal działa i korzysta z nieaktualnych klientów HTTP - mamy problem!</p></li></ol><p>Kiedy korzystamy z OpenAPI generując klienty HTTP, mamy załatwiony etap <strong><em>compile-time</em></strong><em>. </em>Do zaadresowania wciąż pozostaje <strong><em>runtime</em></strong>, czyli etap działania naszej aplikacji, w trakcie którego komunikujemy się z naszym backendem.</p><p>👉  Pamiętaj, że etapu <strong><em>runtime</em></strong> nie załatwia również TypeScript, którego statyczne definicje typów mogą nie być dopasowane do rzeczywistych danych otrzymywanych z backendu. Co więcej, na etapie typowania możemy mieć pełną zgodność i poprawność kompilacji, a aplikacja i tak będzie działać niepoprawnie jeśli backend wprowadzi tzw. “breaking change” - pokazujemy to na kolejnym filmie poniżej.</p><p>Aby zagwarantować poprawność typów i formatu danych na etapie <strong><em>runtime</em></strong>, warto wykorzystać narzędzia takie jak <strong>Zod, </strong>które w trakcie działania aplikacji weryfikują nasze oczekiwania względem danych i porównują je z rzeczywistością.</p><h3>Praca z biblioteką Zod</h3><p>Aby skorzystać z Zoda w naszym projekcie, zaczynamy od instalacji niezbędnej zależności:</p><pre><code>npm install zod</code></pre><p>Po instalacji możemy określić pierwszy schemat danych, którym będziemy się posługiwać w aplikacji. Będzie to obiekt reprezentujący lekcję, z trzema polami - id, tytuł i treść, wszystkie typu string:</p><pre><code>import { z } from 'zod';
+
+const LessonSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  content: z.string(),
+});</code></pre><p>Mając określony schemat, możemy teraz przykładać do niego rozmaite obiekty sprawdzając, czy ich kształt jest zgodny z naszymi oczekiwaniami. Jeśli tak jest, to otrzymamy wartość danych z precyzyjnie określonym typem. W przeciwnym wypadku zostanie wyrzucony wyjątek:</p><pre><code>import { z } from 'zod';
+
+const suspiciousData = {
+  id: '1',
+  title: 'TypeScript Basics',
+  content: 'Lorem ipsum...'
+}
+
+try {
+  LessonSchema.parse(suspiciousData);
+} catch (err) {
+  if (err instanceof z.ZodError) {
+    console.log(err.issues);
+  }
+}</code></pre><p>W podstawowym schemacie danych skupiamy się przede wszystkim na oczekiwanych typach, ale możemy również doprecyzować kryteria pochodne, takie jak oczekiwany rozmiar tytułu i treści naszej lekcji:</p><pre><code>const LessonSchema = z.object({
+  id: z.string(),
+  title: z
+    .string()
+    .min(1, { message: 'Title cannot be empty' })
+    .max(20, { message: 'Title cannot be longer than 20 characters' }),
+  content: z
+    .string()
+    .min(1, { message: 'Content cannot be empty' })
+    .max(1000, { message: 'Content cannot be longer than 1000 characters' }),
+});</code></pre><p>Zwróć uwagę, że zmienna LessonSchema nie określa surowego typu danych (lub interfejsu), a jest tak naprawdę <em>“obiektem do weryfikowania obiektów” </em>(typ zmiennej <em>LessonSchema</em> to <strong><em>ZodObject</em></strong>).</p><p>Pracując z TypeScriptem możemy jednak z łatwością przeprowadzić wnioskowanie o typie docelowym, korzystając z funkcji <em>infer</em> wystawianej przez Zoda:</p><pre><code>type Lesson = z.infer&lt;typeof LessonSchema&gt;; // Typ uzyskany na podstawie schematu obiektu
+
+// Wykorzystanie uzyskanego typu
+const lesson: Lesson = {
+  id: '1',
+  title: 'TypeScript Basics',
+  content: 'Lorem ipsum...'  
+};</code></pre><p>Znając podstawy Zoda możemy teraz przetestować go w przykładowym projekcie, gdzie pobieramy dane z backendu i w trakcie działania aplikacji chcemy sprawdzić ich spójność:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1045260824?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>W drugim przykładzie Zoda wykorzystamy do walidowania formularzy:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1045261396?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p><strong>📝 Oba przykłady wykorzystania Zoda znajdziesz w projekcie examples/module2/lesson3/zod-validation</strong></p><p>Jaka jest największa korzyść z wprowadzania Zoda do projektów frontendowych? Zamiast niezależnego utrzymywania typów danych, ich walidatorów i komunikatów błędów, Zod daje nam jeden spójny przepis na poukładanie fundamentów naszej aplikacji.</p><p>Jeśli dodatkowo z Zoda korzystamy na backendzie, opisując poszczególne endpointy i parametry zapytań, to bardzo dobrze połączy się on z poprzednim fragmentem dotyczącym OpenAPI. Dzięki takim bibliotekom jak <a href="https://github.com/asteasolutions/zod-to-openapi" target="_blank" rel="noopener noreferrer">zod-to-openapi</a> połączymy obie te składowe w jedną całość.</p><img loading="lazy" src="https://assets-v3.circle.so/zje321n5hj3ccb0d9t03extzl32w" style="width: 100%; max-width: 100%;"><p>Zależność na konkretną bibliotekę to pewien trade-off, który musimy zaakceptować, ale wydaje się, że jest to koszt, jaki warto ponieść. Świadczy o tym również rosnąca popularność tej biblioteki na przestrzeni ostatniego roku i pozytywne opinie całego community frontendowego:</p><img loading="lazy" src="https://assets-v3.circle.so/jn5lzo1dgl0lvxzq2wsaugnuijrt" style="width: 100%; max-width: 100%;"><p>Alternatywami Zoda, które możesz poznać we własnym zakresie, są <a href="https://github.com/jquense/yup" target="_blank" rel="noopener noreferrer">Yup</a> i <a href="https://valibot.dev/" target="_blank" rel="noopener noreferrer">Valibot</a>.</p><h3>Frontend i backend bliżej siebie - tRPC</h3><p>Jednym z ciekawszych narzędzi, które w pełni czerpie z zaawansowanego modelu walidacji danych Zoda, jest full-stackowa biblioteka <a href="https://trpc.io/" target="_blank" rel="noopener noreferrer"><strong>tRPC</strong></a>, dzięki której warstwy backendu i frontendu mogą być oparte o ten sam zestaw typów, a ewentualne niespójności wychwytywane już na etapie budowania aplikacji.</p><img loading="lazy" src="https://assets-v3.circle.so/x2pq0ngmzfr1azsotib5l7c24mcp" style="width: 100%; max-width: 100%;"><p><a href="https://trpc.io/" target="_blank" rel="noopener noreferrer">(źródło)</a></p><p>tRPC to biblioteka, która ponad standardowymi zapytaniami HTTP wprowadza dodatkową warstwę abstrakcji, dzięki której frontend może pobierać dane z backendu tak, jakby wywoływał wprost dostępne tam funkcje (RPC = Remote Procedure Calling).</p><p>Na samym etapie komunikowania się pomiędzy warstwami wywołują się standardowe zapytania typu GET lub POST, ale z punktu widzenia developera stają się one detalem implementacyjnym. Rozwijając projekty korzystające z tRPC definiujemy zestaw funkcji, które stają się widoczne zarówno na serwerze, jak i kliencie.</p><p>Fundamentem modelu promowanego przez tRPC są 3 rodzaje <strong>Procedur:</strong></p><ul><li><p><strong>Query</strong> - funkcje do pobierania danych</p></li><li><p><strong>Mutacje</strong> - funkcje do tworzenia, aktualizowania lub usuwania danych </p></li><li><p><strong>Subskrypcje</strong> - funkcje wprowadzające nasłuchiwanie na zmiany oparte o WebSockety</p></li></ul><p>Wszystkie procedury wystawiane z serwera zbiera <strong>Router</strong>, gdzie definiujemy kształt naszego API:</p><pre><code>import { initTRPC } from '@trpc/server';
+import { z } from 'zod';
+&nbsp;
+const t = initTRPC.create();
+&nbsp;
+export const router = t.router;
+export const publicProcedure = t.procedure;
+&nbsp;
+const appRouter = router({
+  userById: publicProcedure.input(z.string()).query(async () =&gt; {
+    const user = await ... // Skorzystaj z bazy, cache lub dowolnego innego źródła danych
+    return user;
+  })
+});
+
+export type AppRouter = typeof appRouter;</code></pre><p>Tak zdefiniowany Router możemy następnie zaimportować na frontendzie, gdzie uzyskamy pełną zgodność i walidację typów realizowaną przez Zoda i TypeScript:</p><pre><code>import { createTRPCClient, httpBatchLink } from '@trpc/client';
+import type { AppRouter } from './server';
+
+const trpc = createTRPCClient&lt;AppRouter&gt;({
+  links: [
+    httpBatchLink({
+      url: 'http://localhost:3000',
+    }),
+  ],
+});
+
+const user = await trpc.userById.query('1');</code></pre><p>Jak widzisz, nie ma tutaj posługiwania się zapytaniami HTTP, nie ma rozróżniania metod na GET czy POST, a całość opiera się na klasycznych funkcjach TypeScripta. To właśnie clue podejścia RPC (co by nie mówić - znanego <a href="https://en.wikipedia.org/wiki/Remote_procedure_call" target="_blank" rel="noopener noreferrer">od wielu lat</a> w innych ekosystemach programowania).</p><p>Warto pamiętać, że tRPC to nie jest to tzw. “silver bullet” na problemy synchronizacji frontendu z backendem, a jedno z wielu potencjalnych rozwiązań. Twórcy tej biblioteki mówią wprost, że najlepiej sprawdzi się ona tam, gdzie obie warstwy aplikacji webowej są rozwijane blisko siebie (np. w monorepo). Wtedy synchronizacja typów i funkcji odbywa się w czasie rzeczywistym, na poziomie każdego commita i wprowadzanej zmiany.</p><p>Kiedy nie masz dostępu do backendu, albo backend celowo chce być otwarty na różne rodzaje klientów, nie tylko te oparte o TypeScripta, to lepszym rozwiązaniem będą otwarte specyfikacje OpenAPI i generowane na ich podstawie klienty, albo wspomniane w poprzednich lekcjach alternatywy do REST, takie jak GraphQL.</p><img loading="lazy" src="https://assets-v2.circle.so/bkj9mflkrvpzare2z3c0zwvo8cj3" style="width: 100%; max-width: 100%;"><h2>Jakość formatu danych a złożoność aplikacji</h2><p>Do tej pory skupialiśmy się przede wszystkim na pracy z gotowymi serwisami, gdzie zarówno endpointy, metody jak i parametry były z góry określone. Naszym zadaniem było zinterpretowanie dokumentacji,  wygenerowanie klienta dzięki OpenAPI, no i wykonanie właściwej integracji.</p><p>Zdarza się jednak, że jako frontend developerzy będziemy siedzieć przy tym samym stole, przy którym projektuje się kształt przyszłych endpointów i API na potrzeby naszej aplikacji. Wspólna praca nad planowaniem i projektowaniem kontraktów (ustalonego formatu danych, akceptowanego przed producenta i konsumenta) może w znaczny sposób przełożyć się na to, jak łatwo w dłuższej perspektywie będzie utrzymać i rozwijać nasz produkt.</p><p>Na co zwracać uwagę i jak wpływać na format danych, aby nasze aplikacje na tym zyskały?</p><h3><strong>Dane ponad algorytmy</strong></h3><p>Jeden z najbardziej istotnych fragmentów <a href="http://www.catb.org/~esr/writings/taoup/html/ch01s06.html#rule5" target="_blank" rel="noopener noreferrer">Unix Philosophy</a> mówi o tym, że wiedza powinna być&nbsp;zawarta w danych, a dzięki temu algorytmy mogą pozostać na niskim poziomie złożoności.</p><blockquote><p>Data is more tractable than program logic. It follows that <u>where you see a choice between complexity in data structures and complexity in code, choose the former</u>. More: in evolving a design, you should actively seek ways to shift complexity from code to data.</p></blockquote><p>Szczególnie interesujące jest to ostatnie zdanie - kiedy twoja aplikacja ewoluuje, zawsze szukaj okazji na przeniesienie złożoności z kodu, na typy i format danych. Przetestujmy to w praktyce.</p><p>Załóżmy, że mamy funkcję, która przetwarza dane o użytkownikach pochodzące z API. Funkcja ta musi obsłużyć różne role użytkowników i na tej podstawie generować odpowiednie dane wyjściowe - AppUser.</p><p>Nasze typy wejściowe i wyjściowe prezentują się następująco:</p><pre><code>// In
+type APIUser = {
+  id: string;
+  name: string;
+  role: 'admin' | 'editor' | 'viewer';
+};
+
+// Out
+type AppUser = APIUser &amp; {
+  accessLevel: 'high' | 'medium' | 'low';
+  canModifyContent: boolean;
+};</code></pre><p>W pierwszym podejściu spróbujmy zmapować dane bez wykorzystywania dodatkowych struktur:</p><pre><code>function processUsers(users: APIUser[]): AppUser[] {
+  return users.map(user =&gt; {
+    switch (user.role) {
+      case 'admin':
+        return { ...user, accessLevel: 'high', canModifyContent: true };
+      case 'editor':
+        return { ...user, accessLevel: 'medium', canModifyContent: true };
+      case 'viewer':
+        return { ...user, accessLevel: 'low', canModifyContent: false };
+      default:
+        throw new Error('Unknown role');
+    }
+  });
+}</code></pre><p>Funkcja <em>processUsers </em>zajmuje się nie tylko mapowaniem użytkowników, ale również przechowywaniem i dobieraniem uprawnień do konkretnej roli. Mało tutaj <em>single responsibility, </em>co?</p><p>Zobaczmy teraz jak uprościć logikę kodu, przenosząc reguły biznesowe do nowego obiektu. W tym celu wprowadzimy mapowanie ról na właściwości, co pozwoli nam zredukować złożoność w logice funkcji <strong>processUsers</strong>:</p><pre><code>// Częstotliwość zmian - duża
+const roleProperties = {
+  admin: { accessLevel: 'high', canModifyContent: true },
+  editor: { accessLevel: 'medium', canModifyContent: true },
+  viewer: { accessLevel: 'low', canModifyContent: false },
+};
+
+// Częstotliwość zmian - mała
+function processUsers(users: APIUser[]): AppUser[] {
+  return users.map(user =&gt; {
+    const properties = roleProperties[user.role];
+    if (!properties) {
+      throw new Error('Unknown role');
+    }
+    return { ...user, ...properties };
+  });
+}</code></pre><p>W tym modelu nie tylko obniżamy złożoność funkcji, ale rozdzielamy również te fragmenty logiki, które różnią się od siebie częstotliwością zmian. O ile model uprawnień może być aktualizowany z każdym nowym typem użytkownika, tak sama funkcja do mapowania może już pozostać niezmienną, a tym samym - mniej podatną na potencjalne usterki.</p><p>W kolejnym przykładzie - dotyczącym już&nbsp;tematu tej lekcji, czyli komunikacji z API - wyobraźmy sobie, że budujemy UI takiej aplikacji jak GitHub, gdzie do zaprezentowania mamy drzewo plików i folderów w repozytorium użytkownika. Razem z autorem “Repository API” dyskutujemy nad oczekiwanym formatem danych, jakie powinien przyjmować frontend:</p><img loading="lazy" src="https://assets-v3.circle.so/os7uey3p4azq96dscxsuzorujem7" style="width: 100%; max-width: 100%;"><p>Zespół musi podjąć decyzję co do formatu danych, jaki będzie przekazywane z API do frontendu:</p><ul><li><p><strong>Opcja A</strong> - zwrócenie płaskiej listy folderów i plików jednego typu:</p></li></ul><pre><code>interface ProjectItem {
+  id: string;
+  parentId: string | null;
+  name: string;
+  type: 'file' | 'directory';
+}
+
+type ProjectStructure = ProjectItem[];</code></pre><ul><li><p><strong>Opcja B - </strong>zwrócenie drzewiastej struktury danych reprezentującej cały projekt</p></li></ul><pre><code>interface File {
+  id: string;
+  name: string;
+  type: 'file';
+}
+
+interface Directory {
+  id: string;
+  name: string;
+  type: 'directory';
+  children: Array&lt;File | Directory&gt;;
+}
+
+type ProjectStructure = Directory;</code></pre><p>Na którą opcję warto się zdecydować?</p><p>Zauważ, że o ile <strong>Opcja A </strong>wydaje się “łatwiejsza” w realizacji na poziomie samego API, tak po stronie aplikacji frontendowej wprowadza nową odpowiedzialność. Tą odpowiedzialnością jest zbudowanie i utrzymywanie algorytmu do mapowania płaskiej struktury na drzewo plików i katalogów. Kiedy tego typu operacje realizujesz po stronie klienta, możesz dojść do błędnego wniosku, że React czy Angular są odpowiedzialne za wolne działanie twojej aplikacji, a problemem jest nic innego jak błędnie zdefiniowany format danych.</p><p>W <strong>Opcji B</strong> przedstawiamy nieco większe oczekiwania względem backendu, jednak po pierwsze jest szansa, że ten algorytm został już zaimplementowany na potrzeby weryfikowania drzew projektów, po drugie ta opcja zdecydowanie obniży nam złożoność po stronie frontendu, a po trzecie nie będzie wymagać realizowania kosztownych operacji po stronie klienta (a tym może być zarówno MacBook Pro, jak i pięcioletni budżetowy smartfon).</p><p>Jeśli miałbym zdecydować, gdzie ten algorytm mapowania listy obiektów na strukturę drzewiastą umieścić, to zdecydowanie byłbym za tym, żeby dane określonego kształtu były już zwracane z poziomu API. Nie ma znaczenia, jak bardzo lubię pisać złożone algorytmy, albo jak bardzo lubię rozwiązywać łamigłówki logiczne - mniej pracy po stronie frontendu to mniej wykorzystanych zasobów po stronie użytkownika.</p><p>Dobrze, ale skąd wiadomo, na jaką strukturę się&nbsp;zdecydować?</p><p>Na to pytanie jest kilka odpowiedzi - z jednej strony pomoże ci doświadczenie, bo typowe problemy bywają możliwe do rozwiązania na typowe, zdefiniowane wcześniej sposoby. Tutaj przydaje się wiedza o klasycznych algorytmach i strukturach danych, którą zdobędziesz np. <a href="https://ksiegarnia.pwn.pl/Wprowadzenie-do-algorytmow,68706413,p.html" target="_blank" rel="noopener noreferrer">dzięki tej książce</a>.</p><p>Z drugiej strony pomoże ci sama świadomość istnienia “Representation Principle”. Za każdym razem, kiedy podświadomie czujesz, że budowany przez ciebie algorytm staje się zbyt złożony (szczególnie w warstwie serwisów, procesowania i mapowania danych na frontendzie), wróć do analizy tego, jakimi danymi się posługujesz. Być może ich format nie pomaga w redukowaniu złożoności?</p><h2><strong>Dla ambitnych</strong></h2><p>Jeśli interesuje cię korzystanie z bardziej złożonych typów danych na frontendzie, zapoznaj się z prezentacją na temat React Fiber, czyli struktury danych wprowadzonej na potrzeby optymalizowania działania Reacta.</p><p>👉 To bardziej zaawansowana tematyka dotycząca implementacji frameworków. Jej zakres wykracza poza tematykę naszego kursu - zamieszczamy tę prelekcję&nbsp;dla ciekawskich.</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;"><iframe src="https://www.youtube.com/embed/ZCuYPiUIONs?rel=0" width="360" height="202" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"></iframe></div></div><p>Opisywana w powyższym filmie struktura znajduje się obecnie <a href="https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiber.js#L136" target="_blank" rel="noopener noreferrer">w tym fragmencie</a> repozytorium Reacta.</p><h2>👨‍💻 Ćwiczenia praktyczne</h2><ul><li><p>Zbuduj aplikację wyświetlającą listę bohaterów serialu Rick and Morty w oparciu o specyfikację OpenAPI</p><ul><li><p>Wygeneruj klienta do API przy pomocy narzędzia <a href="https://openapi-generator.tech/" target="_blank" rel="noopener noreferrer">OpenAPI Generator</a></p></li></ul><ul><li><p>Skorzystaj ze specyfikacji API dostępnej <a href="https://gist.githubusercontent.com/przeprogramowani/6e35bd3a347f4a58de6ec16514739f23/raw/506b7ff69b9bd8b32bc52bac318f6cd3fb468833/rickandmorty.json" target="_blank" rel="noopener noreferrer">pod tym adresem URL</a> (podaj adres url jako input)</p></li></ul></li></ul><ul><li><p>Rozbuduj formularz z projektu <strong>examples/module2/lesson3/flight-scanner</strong> o etap walidacji danych</p><ul><li><p>Zweryfikuj co najmniej trzy warunki, np.:</p><ul><li><p>Lokalizacja startowa musi być wypełniona</p></li><li><p>Daty muszą być w poprawnym formacie DD-MM-YYYY</p></li><li><p>Typ podróży (w jedną stronę lub powrót) musi być&nbsp;jedną z dwóch oczekiwanych wartości</p></li></ul></li><li><p>Zbuduj oczekiwany schemat danych w oparciu o bibliotekę Zod i funkcje <a href="https://zod.dev/?id=refine" target="_blank" rel="noopener noreferrer">refine</a>/<a href="https://zod.dev/?id=superrefine" target="_blank" rel="noopener noreferrer">superRefine</a></p></li><li><p>W przypadku błędów, wyświetl komunikaty walidacji informujące użytkownika o stanie formularza</p></li><li><p>Skup się na najważniejszych elementach ćwiczenia - refaktoryzacja w kierunku ulubionego frameworka to element opcjonalny</p></li></ul></li></ul><h2>📚 Materiały Dodatkowe</h2><ul><li><p><a href="https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/" target="_blank" rel="noopener noreferrer">https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/</a></p></li></ul><ul><li><p><a href="https://www.parsonsmatt.org/2017/10/11/type_safety_back_and_forth.html" target="_blank" rel="noopener noreferrer">https://www.parsonsmatt.org/2017/10/11/type_safety_back_and_forth.html</a></p></li></ul><hr><img loading="lazy" src="https://assets-v3.circle.so/5fcb3gn53rizh9yz0rq1r04c8c6t" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 1800px; position: relative;"><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdDMzBkCkJVS_uRYVHEpOxdY5jyDIkror2LSB42h-UdAYpRyQ/viewform?usp=send_form&amp;embedded=true&amp;usp=embed_googleplus" width="360" height="1800" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen=""></iframe></div></div><p><br></p><img loading="lazy" src="https://assets-v3.circle.so/rsrbr0hux335ueiz9kr2ruv5grfd" style="width: 100%; max-width: 100%;"></div></body></html>

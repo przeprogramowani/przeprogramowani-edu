@@ -1,0 +1,139 @@
+<meta name="lesson-id" content="Testy jednostkowe i testy komponentów"><html><head></head><body><div><img loading="lazy" src="https://assets-v3.circle.so/9uvazhyeslwbaxjp1iapquzv4gfs" style="width: 100%; max-width: 100%;"><img loading="lazy" src="https://assets-v2.circle.so/bjnxbpxdbwzoaj3wllz6nouyj1rn" style="width: 100%; max-width: 100%;"><h2>Testy jednostkowe</h2><p>Testy jednostkowe to prawdziwy fundament piramidy testów. Praca w tym obszarze koncentruje się na weryfikacji najmniejszych, niepodzielnych części kodu (unitów - stąd <em>testy jednostkowe</em> lub <em>unit testy</em>), które świadomie izolujemy od całego kontekstu aplikacji. </p><p>Na poziomie unit testów najczęściej będziemy weryfikować pojedyncze funkcje, moduły i komponenty, których dalsza integracja wpływa na całą aplikację. </p><p>W tej warstwie testów możemy sprawdzać działanie logiki warunkowej (zarówno na poziomie komponentów jak i serwisów), efekty renderowania komponentu (w zależności od stanu początkowego i akcji użytkownika), zmiany stanu globalnego aplikacji (gdzie symulujemy akcje i zdarzenia), czy przepływ danych na zamkniętym fragmencie aplikacji.</p><p>Aby poznać najważniejsze aspekty testowania jednostkowego, zobaczmy jak zweryfikować działanie funkcji opisanej w następujący sposób:</p><blockquote><p>Funkcja sprawdza, czy imię i nazwisko przekazane w formularzu są wypełnione, a także sprawdza, czy wiek podany przez użytkownika nie ma wartości mniejszej od zera. W przypadku błędów zwraca listę komunikatów dotyczących niepoprawnie wypełnionych pól.</p></blockquote><p>Oto implementacja takiej funkcji:</p><pre><code>// validator.ts
+export function formValidator(firstName: string, lastName: string, age: number) {
+    const errors: string[] = [];
+    
+    if (!firstName) {
+        errors.push('First name is required');
+    }
+    
+    if (!lastName) {
+        errors.push('Last name is required');
+    }
+    
+    if (age &lt; 0) {
+        errors.push('Age must be a positive number');
+    }
+    
+    return errors;
+}</code></pre><p>Aby rozpocząć pisanie testów, musimy najpierw określić tzw. <strong>scenariusze testowe</strong>, czyli zestaw istotnych warunków początkowych i oczekiwanych warunków końcowych. Świadomie piszemy o warunkach i parametrach istotnych, bo w teorii do danej funkcji można przekazać co tylko chcemy, ale nasze testy nie mogą rosnąć w nieskończoność. Skupiamy się więc na takim stanie aplikacji, który może wystąpić w warunkach rzeczywistych.</p><p>Jeśli nie wiesz jak rozpocząć pisanie scenariuszy, to możesz zastosować format <strong>IF (this) THEN (that)</strong>, co przykładowo daje następujące przepisy na testy:</p><ul><li><p><strong>JEŚLI </strong>firstName jest puste <strong>TO</strong> powinniśmy otrzymać odpowiedni błąd</p></li><li><p><strong>JEŚLI</strong> lastName jest puste <strong>TO</strong> powinniśmy otrzymać odpowiedni błąd</p></li><li><p><strong>JEŚLI</strong> age jest mniejsze od zera <strong>TO</strong> powinniśmy otrzymać odpowiedni błąd</p></li></ul><p>Zauważ, że już na tym etapie testy i scenariusze testowe dodają wartość do naszego projektu, bo dzięki nim otrzymujemy dokumentację oczekiwanego zachowania systemu. W firmowych bazach wiedzy (np. Confluence lub Notion) znajdziemy niekiedy tabelki lub artykuły, które opisują aplikację&nbsp;właśnie na podstawie testów.</p><p>Przechodząc do poziomu samych testów, zwykle będziemy tutaj stosować strukturę “3xA”:</p><ul><li><p><strong>Arrange</strong> - Przygotuj środowisko i warunki początkowe testu</p></li><li><p><strong>Act</strong> - Wykonaj fragment logiki, którą testujesz</p></li><li><p><strong>Assert</strong> - Przeprowadź weryfikację stanu końcowego</p></li></ul><p>Stosując ten format, nasz test podzieli się na trzy następujące po sobie etapy:</p><pre><code>test('...', () =&gt; {
+
+  // Arrange - Przygotuj dane i obiekty (stan początkowy)
+  const name = '';
+
+  // Act - Wykonaj logikę aplikacji
+  const errors = validate(name);
+
+  // Assert - Zweryfikuj oczekiwania (stan końcowy)
+  expect(errors).toHaveLength(1);
+
+}</code></pre><p>Wielu programistów decyduje się na dodawanie komentarzy, które wskazują na poszczególne etapy testu jednostkowego. Po czasie taka formalna struktura zamienia się w nawyk, bywa też redukowana do dwóch etapów (np. arrange + act → assert), a same komentarze stają się opcjonalne.</p><p>Czy jesteś w stanie odnaleźć te trzy fazy - Arrange, Act i Assert - w testach poniżej?</p><pre><code>// validator.test.ts
+import { formValidator } from './validator';
+
+describe('Form validation', () =&gt; {
+    // Scenariusz 1
+    test('should return an error if first name is missing', () =&gt; {
+        const firstName = '';
+        const lastName = 'Doe';
+        const age = 30;
+
+        const errors = formValidator(firstName, lastName, age);
+        expect(errors).toContain('First name is required');
+    });
+
+    // Scenariusz 2
+    test('should return an error if last name is missing', () =&gt; {
+        const errors = formValidator('John', '', 30);
+        expect(errors).toContain('Last name is required');
+    });
+
+    // Scenariusz 3
+    test('should return an error if age is negative', () =&gt; {
+        const errors = formValidator('John', 'Doe', -1);
+        expect(errors).toContain('Age must be a positive number');
+    });
+});</code></pre><p>W pierwszym scenariuszu nasze “3xA” było zdefiniowane bardzo dosłownie - mamy tutaj jawny etap przygotowania danych, mamy wykonanie logiki i na końcu sprawdzenie efektów naszej funkcji. W kolejnych scenariuszach widzimy połączone fazy Arrange i Act, co często zdarza się w przypadku pisaniu testów krótszych niż kilka linijek.</p><p>Nasz <strong><em>test suite</em></strong><em> (validator.test.ts)</em><strong>, </strong>czyli moduł grupujący zestaw testów z tego samego obszaru, korzysta z kilku typowych funkcji pochodzących z zewnętrznego frameworka.</p><p>Przy pomocy funkcji <strong>describe</strong> możemy określić zakres testowanej funkcjonalności, a konkretne scenariusze weryfikujemy przy pomocy funkcji <strong>test</strong>. Funkcje takie jak <strong>expect</strong> czy <strong>toContain</strong> dostarczane są przez konkretne narzędzia do testowania, które omówimy w dalszej części tej lekcji.</p><p>Uruchamiając takie testy w jednym z popularnych narzędzi uzyskujemy natychmiastowy feedback co do jakości stworzonego przez nas kodu:</p><img loading="lazy" src="https://assets-v3.circle.so/uew4c26o733v2qwo3h2f9kdhd31u" style="width: 100%; max-width: 100%;"><p>Kiedy w przyszłości zmodyfikujemy fragment funkcji, względem której istnieją wcześniej napisane testy, będziemy tego świadomi natychmiast po ich uruchomieniu:</p><img loading="lazy" src="https://assets-v3.circle.so/dsrze5eut17my30diyy21sbhbvnj" style="width: 100%; max-width: 100%;"><p>Zwróć uwagę, że pomimo dążenia do kompletu zielonych testów, to właśnie <strong>te czerwone zarabiają na siebie najszybciej</strong>. W końcu o problemach chcemy się dowiadywać tak wcześnie, jak to możliwe, a nie na skutek telefonu od klienta.</p><p>Z drugiej strony, jeśli w twoim projekcie zauważasz dziesiątki wiecznie zielonych testów, których nikt nigdy nie zepsuł, to warto przyjrzeć im się bliżej. Czy na pewno testujesz właściwe fragmenty kodu? Czy nie wpływają one negatywnie na czas budowania projektu? Czy twoje scenariusze nie są zbyt proste i odseparowane od rzeczywistych działań użytkowników?</p><p>Nie ma jednoznacznej odpowiedzi, ale zostawiamy to spostrzeżenie dla ciekawskich.</p><h3>Kod testowalny</h3><p>Bardziej doświadczeni programiści mogą zwrócić uwagę na poprzedni przykład i stwierdzić, że w rzeczywistości rozwijanie testów jednostkowych jest zdecydowanie trudniejsze. Szczególnie w kodzie zastanym, gdzie wielokrotnie zmieniały się wymagania, standardy i osoby decyzyjne, pisanie testów może być utrudnione.</p><p>Zobaczmy na kolejny przykład, który może to ilustrować. Mamy tutaj komponent, w którym świadomie łamiemy dobre praktyki przedstawiane we wcześniejszych lekcjach:</p><pre><code>import { FormEvent, FormEventHandler, useState } from 'react';
+
+function Form() {
+  function formValidator(firstName: string, lastName: string, age: number) {
+    const errors: string[] = [];
+
+    if (!firstName) {
+      errors.push('Imię jest wymagane');
+    }
+
+    if (!lastName) {
+      errors.push('Nazwisko jest wymagane');
+    }
+
+    if (!age || age &lt; 0) {
+      errors.push('Wiek musi być dodatni');
+    }
+
+    return errors;
+  }
+
+  const [firstName, setFirstName] = useState&lt;string&gt;('');
+  const [lastName, setLastName] = useState&lt;string&gt;('');
+  const [age, setAge] = useState&lt;number&gt;(0);
+  const [errors, setErrors] = useState&lt;string[]&gt;([]);
+
+  const handleSubmit: FormEventHandler&lt;HTMLFormElement&gt; = (
+    event: FormEvent
+  ) =&gt; {
+    event.preventDefault();
+    const results = formValidator(firstName, lastName, age);
+    setErrors(results);
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;label className="flex flex-col max-w-[200px] my-2" htmlFor="first-name"&gt;
+        &lt;span className="text-white"&gt;Imię&lt;/span&gt;{' '}
+        &lt;input
+          id="first-name"
+          name="first-name"
+          type="text"
+          value={firstName}
+          onChange={(e) =&gt; setFirstName(e.target.value)}
+        /&gt;
+      &lt;/label&gt;
+      &lt;label className="flex flex-col max-w-[200px] my-2" htmlFor="last-name"&gt;
+        &lt;span className="text-white"&gt;Nazwisko&lt;/span&gt;{' '}
+        &lt;input
+          id="last-name"
+          name="last-name"
+          type="text"
+          value={lastName}
+          onChange={(e) =&gt; setLastName(e.target.value)}
+        /&gt;
+      &lt;/label&gt;
+      &lt;label className="flex flex-col max-w-[200px] my-2" htmlFor="age"&gt;
+        &lt;span className="text-white"&gt;Wiek&lt;/span&gt;{' '}
+        &lt;input
+          id="age"
+          name="age"
+          type="number"
+          value={age}
+          onChange={(e) =&gt; setAge(parseInt(e.target.value, 10))}
+        /&gt;
+      &lt;/label&gt;
+
+      &lt;ul&gt;
+        {errors.map((error) =&gt; (
+          &lt;li className="text-red-400" key={error}&gt;
+            {error}
+          &lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+
+      &lt;button
+        type="submit"
+        className="px-6 py-2 rounded-lg bg-blue-500 hover:bg-blue-300 mt-2"
+      &gt;
+        Zapisz
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+}
+
+export default Form;</code></pre><p>Patrząc na taki komponent można odnieść mylne wrażenie, że testowanie jednostkowe na frontendzie jest trudniejsze, niż w rzeczywistości. Rzeczywisty wpływ na testowanie ma tutaj jednak sama struktura komponentu i złamanie zasad, o których mówiliśmy w pierwszym module (separacja warstw widoku i logiki, wydzielenie walidacji do osobnego modułu).</p><p>Jeśli zdecydujesz się przeprowadzić refaktoryzację takiego komponentu wydzielając niezależne fragmenty logiki do osobnych modułów, to odkryjesz kolejną wartość pisania testów. Ich efektem ubocznym jest podnoszenie jakości kodu, jego modularyzacja i wydzielanie jaśniejszych granic odpowiedzialności.</p><p>Znając podstawowe założenia dotyczące testowania i generalną rekomendację dotyczącą refaktoryzacji, zobacz teraz jak pisać pierwsze testy jednostkowe w twojej aplikacji.</p><h3>Pierwsze kroki</h3><p>Aby zacząć rozwijać testy jednostkowe w projekcie frontendowym, musimy zacząć od rozszerzenia naszego projektu o dedykowane narzędzia. Kiedyś w tym celu stosowano dwa rodzaje bibliotek - tzw. test runnery, umożliwiające uruchamianie testów i generowanie raportów (np. Karma), oraz biblioteki do budowania warunków logicznych i tzw. asercji (np. Chai).</p><p>Obecnie odchodzi się od takich podziałów wykorzystując biblioteki dostarczające całościowe wsparcie dla testowania jednostkowego - na przykład <a href="https://vitest.dev/" target="_blank" rel="noopener noreferrer">Vitest</a> oraz <a href="https://jestjs.io/" target="_blank" rel="noopener noreferrer">Jest</a>. Obie biblioteki dostarczają podobny zestaw funkcji ułatwiających testowanie, ale z powodu wsparcia dla ES Modules, TypeScripta i JSX, to <strong>Vitest </strong>będzie naszą kursową&nbsp;rekomendacją.</p><img loading="lazy" src="https://assets-v3.circle.so/fg3zu4w44nm2zh50xond04tm5f16" style="width: 100%; max-width: 100%;"><p><a href="https://vitest.dev/guide/features.html" target="_blank" rel="noopener noreferrer">(źródło)</a></p><p>Zobacz jak rozwijać testy jednostkowe w oparciu o tę technologię:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1045261234?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>📝 Ten przykład znajdziesz w folderze <strong><em>examples/module2/lesson1/order-discount</em></strong>.</p><p><em>Testy jednostkowe możesz uruchomić poleceniem `npm test` w folderze </em><strong><em>examples</em></strong><em>. Polecenie przyjmuje jako parametr właściwy folder z testami, np. `npm test module2/lesson1/order-discount`.</em></p><h3>Zarządzanie zależnościami</h3><p>Pisząc testy jednostkowe szybko zauważysz, że pozornie standardowy kod frontendowy może być pełen obiektów pochodzących z różnych światów i środowisk (np. kod logiki aplikacji, funkcje przeglądarki, funkcje z zewnętrznych bibliotek). Zawsze staraj się precyzyjnie określać co jest przedmiotem testu (tzw. SUT - System Under Test), a co z perspektywy testu można zignorować.</p><p>Te możliwe do zignorowania zewnętrzne zależności można w <strong>Vitest</strong> obsłużyć na co najmniej dwa sposoby:</p><ul><li><p><strong>spy</strong> - pozwala śledzić, czy i jak określona zależność została użyta</p></li><li><p><strong>mock - </strong>pozwala zastępować konkretną zależność (np. funkcję) jego alternatywną wersją</p></li></ul><p>Zobaczmy to na przykładzie:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1045261170?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>📝 Ten przykład znajdziesz w folderze <strong><em>examples/module2/lesson1/mocks-spies</em></strong>.</p><p>W praktyce zdarza się, że bardziej złożone fragmenty kodu polegające na wielu zewnętrznych zależnościach należy najpierw uporządkować, zanim przejdziemy do ich testowania. To jednak kolejny sygnał dla programisty, który dzięki testowaniu może wprowadzić swój projekt na wyższy poziom.</p><h3>Środowiska</h3><p>Domyślnie uruchamiane testy w Vitest działają w środowisku node.js - oznacza to, że obiekty takie jak Window, Document czy LocalStorage nie będą dostępne z poziomu testów.</p><p>Aby umożliwić ci testowanie jednostkowe z obiektami wbudowanymi bez potrzeby uruchamiania przeglądarki, Vitest daje możliwość konfigurowania środowisk do testów. To najbardziej popularne to <strong>js-dom </strong>- jego wykorzystanie i konfigurację zobaczysz poniżej:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1045261137?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>📝 Ten przykład znajdziesz w folderze <strong><em>examples/module2/lesson1/jsdom-example</em></strong>.</p><h2>Testy komponentów</h2><p>Szczególnym rodzajem testów frontendowych, który można zlokalizować gdzieś pomiędzy pierwszym i drugim szczeblem piramidy testów, są testy komponentów. Możemy dzięki nim symulować renderowanie fragmentów interfejsu użytkownika i weryfikować, co przy określonych parametrach zostanie zwrócone do przeglądarki.</p><p>Jedną z najbardziej uniwersalnych bibliotek, która ułatwia pisanie tego typu testów, jest <a href="https://testing-library.com/" target="_blank" rel="noopener noreferrer">Testing Library</a> od <a href="https://twitter.com/kentcdodds" target="_blank" rel="noopener noreferrer">Kenta C. Doddsa</a>. Dzięki adapterom dla popularnych frameworków, Testing Library odpowie na potrzeby większości nowoczesnych frontend developerów. </p><p>Aby zrozumieć założenia tej biblioteki, przyjrzyjmy się krótkiemu fragmentowi dokumentacji:</p><blockquote><p>You want to write maintainable tests for your Angular/Vue/React components. As a part of this goal, you want your tests to avoid including implementation details of your components and rather <strong>focus on making your tests give you the confidence</strong> for which they are intended.</p></blockquote><p>Właśnie dlatego dwa główne założenia Testing Library są nastepujące:</p><ul><li><p>Praca na obiektach Document Object Modelu (zamiast na abstrakcyjnych obiektach frameworkowych)</p></li><li><p>Praca na funkcjach symulujących rzeczywiste akcje użytkownika (a nie cykl życia komponentów)</p></li></ul><p>Pamiętaj, że Testing Library nie jest test runnerem, więc testy w oparciu o tę bibliotekę musimy uruchamiać we wspomnianym wcześniej Vitest lub Jest.</p><p>Zobaczmy, jak to wygląda w praktyce:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1045261198?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Aby skonfigurować Testing Library w popularnych frameworkach, wejdź pod wybrany link:</p><ul><li><p><a href="https://testing-library.com/docs/angular-testing-library/intro" target="_blank" rel="noopener noreferrer">Testing Library pod Angulara</a></p></li><li><p><a href="https://testing-library.com/docs/vue-testing-library/setup" target="_blank" rel="noopener noreferrer">Testing Library pod Vue</a></p></li><li><p><a href="https://testing-library.com/docs/react-testing-library/setup/" target="_blank" rel="noopener noreferrer">Testing Library pod Reacta</a></p></li><li><p><a href="https://testing-library.com/docs/svelte-testing-library/setup" target="_blank" rel="noopener noreferrer">Testing Library pod Svelte</a></p></li></ul><p>Więcej na temat pobierania elementów na stronie - <a href="https://testing-library.com/docs/queries/about/" target="_blank" rel="noopener noreferrer">zobacz ten link</a>.</p><p>📝 Ten przykład znajdziesz w folderze <strong><em>examples/module2/lesson1/form-component</em></strong>.</p><h2>Druga strona medalu</h2><p>Testy jednostkowe (i testy komponentów) są nieodzownym elementem procesu wytwarzania oprogramowania, oferującym precyzyjne sprawdzanie poszczególnych fragmentów kodu. Pomimo ich niezaprzeczalnych zalet, nie są też pozbawione wad, które mogą wpłynąć na ogólną jakość i niezawodność aplikacji.</p><p>Testy jednostkowe <strong>koncentrują się na izolowanych fragmentach kodu</strong> pomijając to, w jaki sposób różne części aplikacji ze sobą współpracują. Taka izolacja może <strong>nie ujawnić problemów integracyjnych</strong> czy zachowań na styku komponentów. Testy jednostkowe mogą czasami generować <strong>fałszywie negatywne wyniki</strong> (<em>false negatives</em>) sugerując, że kod jest poprawny, podczas gdy w rzeczywistości na poziomie interfejsu lub sprzecznych wymagań użytkownik zmaga się z problemami. Może to prowadzić do fałszywego poczucia bezpieczeństwa z perspektywy autorów projektu.</p><p>Dodatkowo, <strong>wiele niefunkcjonalnych wymagań</strong> w aplikacji dużej skali, takich jak wydajność czy dostępność, wymaga od nas stosowania innego rodzaju testów. Właśnie dlatego w kolejnych lekcjach pójdziemy w górę przedstawionej wcześniej piramidy, ale absolutnie nie zrezygnujemy z testowania jako takiego.</p><img loading="lazy" src="https://assets-v2.circle.so/bnaf8uv8sggmh4prp6zjapysqyyn" style="width: 100%; max-width: 100%;"><h2>📚 Materiały dodatkowe</h2><p>Poniższe materiały pozwolą Ci pogłębić wiedzę z tej lekcji:</p><ol start="1"><li><p><a href="https://vitest.dev/guide/comparisons.html" target="_blank" rel="noopener noreferrer">https://vitest.dev/guide/comparisons.html</a></p></li><li><p><a href="https://martinfowler.com/articles/2021-test-shapes.html" target="_blank" rel="noopener noreferrer">https://martinfowler.com/articles/2021-test-shapes.html</a></p></li></ol><h2>🧑‍💻 Ćwiczenia</h2><ul><li><p>Dodaj nowe testy jednostkowe do projektu w folderze <strong>examples/module2/lesson1/discount-validator:</strong></p><ul><li><p>Dodaj scenariusz zakładający przekazanie poprawnych danych.</p></li><li><p>Rozwiń logikę modułu validator.ts. Zarówno <em>first name</em> jak i <em>last name </em>muszą mieć co najmniej jeden znak. Dodaj test jednostkowy, który potwierdzi działanie nowej reguły.</p></li><li><p>Jeśli parametr <em>age</em> nie jest liczbą, rzuć wyjątek. Dodaj test jednostkowy, który to zweryfikuje.</p></li></ul></li><li><p>Rozszerz testy w folderze <strong>examples/module2/lesson1/jsdom-example</strong></p><ul><li><p>Poza weryfikowaniem liczby list itemów, zweryfikuj ich zawartość po wyrenderowaniu danych.</p></li></ul></li><li><p>Korzystając z folderu <strong>practice</strong> i jednego z frameworków wspieranych przez <strong>Testing Library</strong>, przetestuj możliwości tej biblioteki:</p><ul><li><p>Utwórz prostą&nbsp;aplikację przechowującą stan lokalny, np. listę&nbsp;książek lub listę filmów (możesz wykorzystać projekty utworzone w poprzednich lekcjach).</p></li><li><p>Zbuduj funkcjonalności dodawania i usuwania elementów.</p></li><li><p>Dodaj testy komponentów weryfikujące poprawne działanie komponentów. Dodawanie i usuwanie pozycji powinno być odwzorowywane w interfejsie użytkownika.</p></li><li><p>Zamiast budowania nowej aplikacji, możesz wykorzystać projekty “<strong>prop-drilling-finish</strong>” oraz “<strong>signals-angular-finish</strong>” z lekcji o zarządzaniu stanem.</p></li></ul></li><li><p>Pamiętaj, że czekamy na twoje pytania na kanale <a class="entity" href="https://przeprogramowani.circle.so/c/praktyka" target="_blank" rel="noopener noreferrer">#Praktyka</a> - powodzenia!</p></li></ul><img loading="lazy" src="https://assets-v3.circle.so/l3vcyy4ms4c5snpiofq19080aenl" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 1800px; position: relative;"><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSflSG_SyXobICEqdenPBN9Zz-0UtCBKj5D2dD4mgyyZyDVFkA/viewform?usp=sf_link&amp;embedded=true&amp;usp=embed_googleplus" width="360" height="1800" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen=""></iframe></div></div><h2>🛟 Pomoc</h2><p>Jeśli potrzebujesz pomocy, skorzystaj z sekcji komentarzy do tej lekcji lub napisz wiadomość na ogólnym czacie dla uczestników kursu - <a class="entity" href="https://przeprogramowani.circle.so/c/czat-c4ffdc" target="_blank" rel="noopener noreferrer">#Czat - Opanuj Frontend</a></p><p>Pomożemy tak szybko, jak to możliwe - powodzenia!</p><img loading="lazy" src="https://assets-v3.circle.so/d06vv9tn9up8ibu1sjrex4b9ijit" style="width: 100%; max-width: 100%;"></div></body></html>

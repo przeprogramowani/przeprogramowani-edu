@@ -1,0 +1,131 @@
+---
+import { getCollection } from 'astro:content';
+import ExternalLessonLayout from '@/layouts/ExternalLessonLayout.astro';
+import MarkdownDownloadButton from '@/components/shared/MarkdownDownloadButton.astro';
+import ChecklistNavigation from '@/components/checklists/ChecklistNavigation.astro';
+import { slugify } from '@/utils/slugify';
+import { extractHeadingsFromMarkdown } from '@/utils/extractHeadingsFromMarkdown';
+import { buildCompleteToc } from '@/utils/buildTocHierarchy';
+import { verifyExternalAuth } from '@/server/externalAuth';
+import { getCourseStructure } from '@/server/circle/courseStructureCache';
+import { getChecklistsForCourse } from '@/server/checklistData';
+import { loadLessonProgressForCourse } from '@/server/progress/lessonProgressLoader';
+
+const COURSE_ID = '10xdevs-2';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/external/not-found');
+}
+
+const env = Astro.locals.runtime.env;
+
+// Auth check - verify external auth token and membership
+const authResult = await verifyExternalAuth(Astro.cookies, COURSE_ID, env);
+if (!authResult.isAuthenticated) {
+  const returnUrl = encodeURIComponent(Astro.url.pathname);
+  return Astro.redirect(`/external/${COURSE_ID}/login?returnUrl=${returnUrl}`);
+}
+
+// Get checklist entry
+const allChecklists = await getCollection('checklists');
+const entry = allChecklists.find((c) => c.id === slug);
+
+if (!entry) {
+  return Astro.redirect('/external/not-found');
+}
+
+// Sort checklists by order
+const sortedChecklists = allChecklists.sort(
+  (a, b) => (a.data.order || 99) - (b.data.order || 99)
+);
+
+// Find current position
+const currentIndex = sortedChecklists.findIndex((c) => c.id === entry.id);
+const currentPosition = currentIndex + 1;
+const totalCount = sortedChecklists.length;
+
+// Find prev/next checklists
+const prevChecklist =
+  currentIndex > 0
+    ? {
+        id: sortedChecklists[currentIndex - 1].id,
+        title: sortedChecklists[currentIndex - 1].data.title,
+      }
+    : null;
+
+const nextChecklist =
+  currentIndex < sortedChecklists.length - 1
+    ? {
+        id: sortedChecklists[currentIndex + 1].id,
+        title: sortedChecklists[currentIndex + 1].data.title,
+      }
+    : null;
+
+const { Content } = await entry.render();
+const { title } = entry.data;
+
+// Extract headings from markdown for TOC
+const flatHeadings = await extractHeadingsFromMarkdown(entry.body);
+const tocData = buildCompleteToc(flatHeadings);
+
+// Generate markdown download URL
+const markdownUrl = `/external/${COURSE_ID}/checklists/${entry.id}/markdown`;
+const slugifiedName = slugify(title);
+
+// Fetch course structure for sidebar navigation
+const structure = await getCourseStructure(COURSE_ID, env);
+
+// Fetch checklists for sidebar
+const checklists = await getChecklistsForCourse(COURSE_ID);
+
+const lessonProgress = await loadLessonProgressForCourse({
+  email: authResult.email,
+  courseSlug: COURSE_ID,
+  language: null,
+  env,
+});
+---
+
+<ExternalLessonLayout
+  courseId={COURSE_ID}
+  lessonName={title}
+  lessons={structure.lessons}
+  sections={structure.sections}
+  activeLessonId={0}
+  prevLessonId={null}
+  nextLessonId={null}
+  checklists={checklists}
+  activeChecklistId={entry.id}
+  tocHeadings={tocData.tree}
+  tocStorageKey="checklist-toc-widget-open"
+  lessonProgress={lessonProgress}
+  progressLanguage={null}
+>
+  <div class="p-4 md:p-8">
+    <div class="bg-gray-900 rounded-xl shadow max-w-7xl mx-auto">
+      <div class="prose prose-invert mx-auto max-w-[800px] space-y-8 py-6 md:py-8">
+        <h1 class="text-4xl font-bold">{title}</h1>
+
+        <div class="not-prose">
+          <MarkdownDownloadButton
+            markdownUrl={markdownUrl}
+            slugifiedName={slugifiedName}
+            buttonText="Pobierz Markdown"
+            ariaLabel="Pobierz checklistę w formacie Markdown"
+          />
+        </div>
+
+        <Content />
+      </div>
+    </div>
+
+    <ChecklistNavigation
+      prevChecklist={prevChecklist}
+      nextChecklist={nextChecklist}
+      currentPosition={currentPosition}
+      totalCount={totalCount}
+    />
+  </div>
+</ExternalLessonLayout>

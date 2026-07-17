@@ -1,0 +1,126 @@
+<meta name="lesson-id" content="useContext"><html><head></head><body><div><p>W tej lekcji omówimy, jak tworzyć i typować kontekst, jak bezpiecznie konsumować go w komponentach oraz jakie są najlepsze praktyki w zapewnieniu spójności typów w całej aplikacji.</p><h2>Jak bezpiecznie stosować Context API?</h2><p>Kontekst (Context API) pozwala na przesyłanie danych (np. aktualny motyw, dane użytkownika) przez strukturę komponentów bez konieczności jawnego przekazywania propsów na każdym poziomie. W tej lekcji zaprezentujemy dwie strategie pracy z Context API w React i TypeScript:</p><ul><li><p><strong>Zapewniona wartość domyślna</strong> – sytuacja, w której kontekst zawsze ma sensowną domyślną wartość, eliminując konieczność obsługi błędów.</p></li><li><p><strong>Jawny null jako wartość domyślna</strong> – strategia wymagająca obsługi pustego stanu, ale oferująca większą elastyczność i kontrolę nad typowaniem.</p></li></ul><h2><strong>Zarządzanie trybem ciemnym/jasnym z wartością domyślną</strong></h2><p>W tym przykładzie zaimplementujemy system przełączania między trybem jasnym a ciemnym, gdzie możemy zapewnić sensowną wartość domyślną.</p><p><strong>Definicja typu i kontekstu </strong></p><pre><code>type Theme = "light" | "dark";
+interface ThemeContextType {
+  theme: Theme;
+  toggleTheme: () =&gt; void;
+}
+const ThemeContext = createContext&lt;ThemeContextType&gt;({
+  theme: "dark", // Domyślny motyw
+  toggleTheme: () =&gt; {
+    console.warn("toggleTheme called outside of ThemeProvider");
+  },
+});</code></pre><ul><li><p><strong>Theme</strong>: Prosty unia typów reprezentujących dwa możliwe stany trybu: jasny i ciemny.</p></li><li><p><strong>ThemeContextType</strong>: Definiuje strukturę obiektu kontekstu, zawierającą bieżący motyw (theme) i funkcję (toggleTheme), która pozwala na zmianę motywu.</p></li><li><p><strong>createContext</strong>: Tworzymy kontekst z domyślną wartością “dark”. toggleTheme domyślnie loguje warning, ponieważ nie mamy mechanizmu zmiany stanu - zaimplementujemy go dopiero na poziomie providera. Dzięki temu mamy sensowną wartość domyślną na wypadek użycia kontekstu motywu poza providerem.</p></li></ul><p><strong>Tworzenie providera kontekstu</strong></p><pre><code>const ThemeProvider = ({ children }: { children: ReactNode }) =&gt; {
+  const [theme, setTheme] = useState&lt;Theme&gt;("light");
+
+  const toggleTheme = () =&gt; {
+    setTheme((prev) =&gt; (prev === "light" ? "dark" : "light"));
+  };
+
+  return (
+    &lt;ThemeContext.Provider value={{ theme, toggleTheme }}&gt;
+      {children}
+    &lt;/ThemeContext.Provider&gt;
+  );
+};</code></pre><ul><li><p><strong>ThemeContext.Provider</strong>: Dostarcza wartość kontekstu do komponentów podrzędnych, które jej potrzebują.</p><ul><li><p><strong>Stan zarządzany przez useState</strong>: Przechowujemy bieżący motyw w stanie komponentu <em>ThemeProvider</em>.</p></li><li><p><strong>toggleTheme</strong>: Funkcja zmienia wartość stanu na przeciwną (<em>light</em> → <em>dark</em> i odwrotnie).</p></li></ul></li></ul><p><strong>Konsumpcja kontekstu</strong></p><pre><code>const ThemedButton = () =&gt; {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
+  return (
+    &lt;button
+      onClick={toggleTheme}
+      style={{
+        backgroundColor: theme === "light" ? "#fff" : "#333",
+        color: theme === "light" ? "#000" : "#fff",
+      }}
+    &gt;
+      Switch to {theme === "light" ? "dark" : "light"} mode
+    &lt;/button&gt;
+  );
+};</code></pre><ul><li><p><strong>Komponent ThemedButton</strong>: Odczytuje wartość kontekstu i dynamicznie ustawia styl oraz działanie przycisku.</p></li></ul><p><strong>Zalety tego podejścia</strong></p><ol start="1"><li><p><strong>Brak undefined jako domyślnej wartości</strong>:</p><ul><li><p>Zapewnia, że komponenty zawsze mają dostęp do działającej wartości kontekstu.</p></li><li><p>Eliminuje potrzebę sprawdzania obecności Providera <em>(if (!context))</em>.</p></li></ul></li><li><p><strong>Bezpieczeństwo typu</strong>:</p><ul><li><p>Domyślna wartość kontekstu jest w pełni typowana (ThemeContextType).</p></li><li><p>Funkcja toggleTheme zawsze istnieje, co eliminuje potencjalne błędy runtime.</p></li></ul></li><li><p><strong>Elastyczność i ostrzeżenia</strong>:</p><ul><li><p>Wywołanie toggleTheme poza Providerem generuje ostrzeżenie, co pomaga w debugowaniu.</p></li></ul></li></ol><h2>Zarządzanie stanem użytkownika z wartością startową null</h2><p>Nie każda aplikacja może zagwarantować obecność danych w kontekście. W przypadku, gdy dane użytkownika są opcjonalne (np. użytkownik może być niezalogowany), stosujemy jawne użycie null jako wartości domyślnej w kontekście. </p><p>Taka strategia wymusza obsługę brakującej wartości, co zwiększa elastyczność i bezpieczeństwo aplikacji, szczególnie w bardziej złożonych przypadkach. W tej sekcji pokażemy, jak prawidłowo zaimplementować i używać takiego kontekstu z zachowaniem wygody typowania.</p><p><strong>Definicja typu i kontekstu</strong></p><pre><code>interface User {
+  id: string;
+  username: string;
+}
+
+interface UserContextType {
+  user: User | null;
+  login: (username: string, password: string) =&gt; Promise&lt;void&gt;;
+  logout: () =&gt; void;
+}
+
+const UserContext = createContext&lt;UserContextType | null&gt;(null);</code></pre><ul><li><p><strong>User</strong>: Definiuje strukturę danych użytkownika (id i nazwę).</p></li><li><p><strong>UserContext</strong>: Domyślna wartość to null, co oznacza brak użytkownika w domyślnym stanie aplikacji. Zapewnia to większą elastyczność w scenariuszach, gdzie użytkownik może być niezalogowany.</p></li></ul><p><strong>Provider: zarządzanie stanem użytkownika</strong></p><pre><code>const UserProvider = ({children}: {children: ReactNode}) =&gt; {
+  const [user, setUser] = useState&lt;User | null&gt;(null);
+
+  // Uproszczone logowanie na potrzeby przykładu
+  const login = async (username: string, password: string) =&gt; {
+    // Symulacja zapytania do API
+    const fetchedUser = await new Promise&lt;User&gt;((resolve) =&gt;
+      setTimeout(() =&gt; resolve({id: "1", username}), 1000)
+    );
+    setUser(fetchedUser);
+  };
+
+  const logout = () =&gt; {
+    setUser(null);
+  };
+
+  return (
+    &lt;UserContext.Provider value={{user, login, logout}}&gt;
+      {children}
+    &lt;/UserContext.Provider&gt;
+  );
+};
+
+const useUser = () =&gt; {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
+};</code></pre><ul><li><p><strong>Provider</strong>: Dostarcza aktualne dane użytkownika do komponentów podrzędnych.</p><ul><li><p><strong>login</strong>: Symuluje żądanie do API, które zwraca dane użytkownika. Po sukcesie ustawia stan użytkownika.</p></li><li><p><strong>logout</strong>: Ustawia user na null, symulując wylogowanie.</p></li></ul></li><li><p><strong>Hook useUser</strong>: Zapewnia bezpieczny dostęp do kontekstu użytkownika. Wyrzuca błąd, jeśli jest używany poza Providerem.</p></li></ul><p><strong>Konsumpcja kontekstu</strong></p><pre><code>import React, { useState } from "react";
+import { useUser } from "./UserContext";
+
+const UserInfo = () =&gt; {
+  const {user, login, logout} = useUser();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  if (user) {
+    return (
+      &lt;div&gt;
+        &lt;h1&gt;Welcome, {user.username}!&lt;/h1&gt;
+        &lt;button onClick={logout}&gt;Logout&lt;/button&gt;
+      &lt;/div&gt;
+    );
+  }
+
+  const handleLogin = async () =&gt; {
+    setLoading(true);
+    try {
+      await login(username, password);
+    } catch (err) {
+      console.error("Login failed", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Please log in&lt;/h1&gt;
+      &lt;input
+        type='text'
+        placeholder='Username'
+        value={username}
+        onChange={(e) =&gt; setUsername(e.target.value)}
+      /&gt;
+      &lt;input
+        type='password'
+        placeholder='Password'
+        value={password}
+        onChange={(e) =&gt; setPassword(e.target.value)}
+      /&gt;
+      &lt;button onClick={handleLogin} disabled={loading}&gt;
+        {loading ? "Logging in..." : "Login"}
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+};</code></pre><ul><li><p><strong>Obsługa stanu user</strong>: Wyświetla dane zalogowanego użytkownika lub formularz logowania, jeżeli user jeszcze się nie zalogował.</p></li><li><p><strong>handleLogin</strong>: Wywołuje metodę login z kontekstu i zarządza stanem ładowania.</p></li></ul><p>W ten sposób obsłużyliśmy bardziej złożony przypadek:</p><ul><li><p>customowy hook chroni nas przed użyciem kontekstu poza Providerem</p></li><li><p>warunkowy render w komponencie konsumującym pozwala obsłużyć wartość null w sposób bezpieczny, efektywny i dostosowany do potrzeb aplikacji.<br></p></li></ul><h3>Najlepsze praktyki</h3><ol start="1"><li><p><strong>Unikaj wartości domyślnych wrażliwych na błędy</strong><br>Jeśli kontekst może być używany bez dostawcy, zawsze sprawdzaj obecność wartości w runtime.</p></li><li><p><strong>Twórz dedykowane hooki</strong><br>Dedykowane hooki, takie jak useUser, pozwalają centralizować logikę weryfikacji kontekstu i upraszczają użycie w komponentach.</p></li><li><p><strong>Typowanie bez kompromisów</strong><br>Nigdy nie używaj any dla wartości kontekstu. Preferuj dobrze zdefiniowane interfejsy.</p></li></ol><h2>Podsumowanie</h2><ul><li><p><strong>Zapewniona wartość domyślna</strong> to świetny wybór w prostych scenariuszach, gdzie zawsze jest dostępna sensowna wartość, np. tryb motywu.</p></li><li><p><strong>Jawna wartość null</strong> oferuje elastyczność w bardziej złożonych aplikacjach, np. obsługa niezalogowanego użytkownika.</p></li></ul><p>Obie strategie mają swoje miejsce w kontekście aplikacji React, a wybór zależy od wymagań konkretnego projektu.</p></div></body></html>

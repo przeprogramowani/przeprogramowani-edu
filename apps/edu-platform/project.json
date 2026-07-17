@@ -1,0 +1,19 @@
+{
+  "name": "edu-platform",
+  "targets": {
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "wrangler pages deploy dist --project-name przeprogramowani-edu",
+        "cwd": "apps/edu-platform"
+      }
+    },
+    "deploy:preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "wrangler pages deploy dist --project-name przeprogramowani-edu --branch {args.branch}",
+        "cwd": "apps/edu-platform"
+      }
+    }
+  }
+}

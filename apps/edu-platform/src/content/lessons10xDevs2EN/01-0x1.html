@@ -1,0 +1,103 @@
+<meta name="lesson-id" content="[0x1] Generative AI - Introduction"><div><h2>Hello!</h2><p>Welcome to the 10xDevs training! In the coming weeks, you will learn how to leverage the potential of Generative Artificial Intelligence throughout the entire software development process. Ahead of us are four intensive modules, which include useful theory, work on your own project, LIVE meetings, additional materials, and experience exchange with the community.</p><p>To start, we invite you to three introductory lessons:</p><ul><li><p>Discussion of the most important aspects of Generative AI in the context of programming</p></li><li><p>Overview of Generative AI models in terms of quality, price, and availability</p></li><li><p>Setting up the work environment, including editors and plugins integrated with AI</p></li></ul><p>To begin with, a few words about what Generative AI actually is, how models differ from end-user services, and how to master the built-in unpredictability of these tools.</p><p>Let's get started!</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1069485378?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen scrolling="no" allow="encrypted-media;"></iframe></div></div><p>An extensive discussion of the issues behind services such as ChatGPT can be found <a href="https://youtu.be/7xTGNNLPyMI?si=wbSYsfR6X1CHpEhh" target="_blank" rel="noopener noreferrer">at this link</a>.</p><h2>Ask AI, or acquiring new knowledge</h2><p>At 10xDevs, we encourage contact with AI from the start to the finish of the entire training. Not only in the context of building your own projects, but also when learning topics that enable completion of the entire material.</p><img src="https://assets-v2.circle.so/2tbim5iuheabba2c5hnjlfx58u3p" title="Lesson Building a user interface with AI Explain to me" style="width: 100%; max-width: 100%;"><p>When during the training you encounter an unfamiliar term or a given exercise is too challenging, try treating AI as a lifeline - you can modify the prompt below according to your own experience and needs.</p><h3>Prompt for learning new topics</h3><p>For AI to be able to help you, you need to provide appropriate context in the instruction. These will be:</p><ul><li><p>the role and area of specialization of the “AI mentor”</p></li><li><p>your current level of knowledge and experience</p></li><li><p>the goal or problem to solve</p></li><li><p>preferred forms of learning</p></li><li><p>the expected response format</p></li></ul><p>The whole thing might look like the example below - you can adjust the details to your own needs:</p><pre><code>You are an experienced {{DevOps Engineer}} - with your help, I would like to understand a new topic.</code></pre><p><em>👉 You can find the prompt in the repository </em><a href="https://github.com/przeprogramowani/10x-warmup/tree/master/prompts" target="_blank" rel="noopener noreferrer"><em>10x-warmup - unblocker.md</em></a></p><p>This type of prompt will work as one of many tools you can use in a modern AI-driven dev workflow. Adjust selected constants, such as your experience and knowledge of technologies, and continuously modify variables, i.e., the knowledge you want to acquire.</p><hr><p>To better understand how such a prompt works, let's analyze its elements step by step:</p><p><strong>1) The assistant's role</strong></p><p>It serves to direct the AI model to a specific perspective from which it is to provide answers, which helps in obtaining more personalized and tailored support for your needs. It also helps minimize the AI hallucination effect<em>, </em>when one word has too broad a meaning, and the model does not fully understand the so-called problem space (e.g., “application” - desktop, web, or legal advisor?).</p><p>For example:</p><pre><code>You are an experienced [DevOps Engineer] - with your help, I would like to understand a new topic.</code></pre><p>Other variants include, among others:</p><ul><li><p>Act as a programming mentor specializing in React and TypeScript</p></li><li><p>Take on the role of an experienced software architect who has mastered design patterns</p></li><li><p>Be like a patient JavaScript teacher who guides me through the training step by step</p></li></ul><p><strong>2) Your experience</strong></p><p>This element provides context about your current level of knowledge, allowing the AI to adjust the level of detail and complexity of the answers. The listed technologies will enable the AI assistant to use more relevant metaphors and analogies to what you already know today.</p><p>For example:</p><pre><code>My knowledge level: [advanced] in the technology [JavaScript].</code></pre><p>Alternatives include:</p><ul><li><p>I have 2 years of experience programming in JavaScript, I know the basics of React</p></li><li><p>I am a beginner programmer with 3 months of experience in HTML and CSS</p></li><li><p>I have been working as a frontend developer for 4 years, I know Vue.js well and now I am learning backend from scratch</p></li></ul><p><strong>3) Your goal</strong></p><p>The goal allows you to specify what you want to learn and what you intend to use it for. This, in turn, helps AI focus on the aspects of the topic that are most relevant to you. It can also be the stage of training where you are temporarily stuck.</p><p>For example:</p><pre><code>Learning goal: I want to understand [GitHub Actions] to [build the first CI/CD scenario in a GitHub repository].</code></pre><p>Other suggestions include:</p><ul><li><p>I want to understand the architecture of Micro Frontends to be able to implement it in a company project</p></li><li><p>I need to learn state management in a large React application with the Zustand library</p></li><li><p>My goal is to understand the basic performance optimization techniques in Node.js applications</p></li></ul><p><strong>4) Problem</strong></p><p>Identifies a specific obstacle you have encountered, which enables AI to precisely address your blockage and provide a solution targeted exactly at your difficulties.</p><p>For example:</p><pre><code>I am facing the following blockage: [I do not understand the difference between a job and a workflow and on which system tasks should be run - Ubuntu or Windows?].</code></pre></code></pre><p><strong>5) Expectations and format</strong></p><p>Both elements communicate how you best absorb knowledge and in what form you would like to receive the response. This way, the AI will try to provide information in the most accessible and useful way for you.</p><p>For example:</p><pre><code>I learn best through [visualization of the problem and practical diagrams].</code></pre><p>Other options include:</p><ul><li><p>I need a step-by-step explanation with code examples that I can run locally</p></li></ul><ul><li><p>I prefer a response based on analogies and metaphors relating to my current experience</p></li><li><p>I would like to receive a detailed explanation with conceptual diagrams</p></li></ul><hr><h3>Prompt for carrying out exercises step by step</h3><p>During the course, you may encounter situations where the AI's behavior is less favorable than expected.</p><p>For example, your initial prompt for E2E tests might look like this:</p><pre><code>Introduce E2E tests in Playwright into the project.</code></pre><p>We keep our fingers crossed, but do not expect quality results. Much more often in the lessons you will see a recommendation for a multi-stage approach:</p><pre><code>Introduce E2E tests in Playwright into the project according to the following instructions:</code></pre><p>If you get an appropriate plan and then follow it step by step, the results will be much better.</p><p>Alright, but what if you don't know how to break any problem down into such stages? Then you can use an auxiliary prompt, used to decompose the problem, which you will then implement step-by-step (not necessarily through one, but several prompts):</p><pre><code>You are an experienced {{EngineeringRole}} specializing in breaking down complex problems into manageable steps.</code></pre><p><em>👉 You can find the prompt in the repository </em><a href="https://github.com/przeprogramowani/10x-warmup/tree/master/prompts" target="_blank" rel="noopener noreferrer"><em>10x-warmup - decomposer.md</em></a></p><h3>Visualizations and diagrams</h3><p>A popular format for visualizing information is ASCII ART:</p><pre><code>Use the ASCII ART format.</code></pre><img src="https://assets-v2.circle.so/iwtkh6vmb4w9wwqy2itnvly6etiv" title="Here is an ASCII diagram showing the architecture of a typical full-stack web application:
+
+-------------------------------------------------
+|                CLIENT LAYER                   |
+|  -------------      -------------              |
+|  | Frontend |      | Mobile App|              |
+|  | (UI/UX/HTML/|   | (React Native/|         |
+|  | CSS/JavaScript) | | Flutter)   |           |
+|  -------------      -------------              |
+-------------------------------------------------
+           |
+           | HTTP/HTTPS/WebSocket
+           v
+-------------------------------------------------
+|                SERVER LAYER                   |
+|  -------------      --------------            |
+|  |   API    |      | Application |            |
+|  | (REST/   |      |   Services  |            |
+|  | GraphQL) |      |             |            |
+|  -------------      --------------            |" style="width: 100%; max-width: 100%;"><p>Where you analyze or debug information flows, <a href="https://mermaid.js.org/" target="_blank" rel="noopener noreferrer">Mermaid</a> diagrams, an interactive Markdown addon, may prove useful:</p><pre><code>Present the lifecycle of an HTTP request from a form to a server, preserving production elements of a web application. Use the Mermaid format.</code></pre><img src="https://assets-v2.circle.so/01w60ooxrln9ose871yq1su3ng75" title="User
+Browser
+Frontend as Frontend (React/Svelte)
+CDN as CDN/Cache
+LoadBalancer as Load Balancer
+API as API Gateway
+Auth as Auth Service
+Server as Backend Server (Node.js)
+Cache as Cache (Redis)
+DB as Database
+Queue as Task Queue
+
+User to Browser: Fills out form
+Browser to Frontend: Calls onSubmit()
+Frontend to Frontend: Client-side validation
+Frontend to Frontend: Creating payload with data
+
+Note over Frontend: Adding headers (JWT, Content-Type, etc.)
+
+Frontend to LoadBalancer: POST /api/resource
+LoadBalancer to API: Routing request" style="width: 100%; max-width: 100%;"><p>You can view the AI-generated diagram <a href="https://mermaid.live/edit" target="_blank" rel="noopener noreferrer">at this link</a> or through plugins that render appropriate diagrams at the code editor level. For VS Code, for example, it will be <a href="https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid" target="_blank" rel="noopener noreferrer">Markdown Preview Mermaid</a> (mark the code snippet with “```mermaid”).</p><img src="https://assets-v2.circle.so/33aysiwjjx7v9azso7buah2n4tu3" title="User
+Fills out the form
+
+Browser
+Call onSubmit()
+Client-side validation
+Create payload with data
+Add headers (JWT, Content-Type, etc.)
+POST /api/resource
+
+CDN/Cache
+Routing request
+
+Load Balancer
+JWT verification
+Token OK/Authentication error
+[Invalid token]
+401 Unauthorized
+
+Display error
+Error message
+
+[Valid token]
+Request validation and rate limiting
+Forwarding request
+
+Auth Service
+
+Backend Server (Node.js)
+Cache (Redis)
+Database
+Task queue
+
+Check cache
+[Found in cache]
+Return data from cache
+[Cache miss]
+Database query
+Response with data
+Update cache
+Delegate asynchronous tasks
+Task receipt confirmation
+
+Update application status
+HTTP Response (200 OK + data)
+Response (JSON/XML)
+Forward response" style="width: 100%; max-width: 100%;"><p>These two formats – ASCII Art and Mermaid diagrams – can be a valuable extension of classic text-based AI conversations. We will return to them in future lessons, where we will encounter data flows between multiple modules.</p><h3>In Polish or English – in which language should models be prompted?</h3><p>The answer is... it depends 😎 The online common wisdom confidently says: the only right path is English! But is it really?</p><p>As indicated by the study <a href="https://arxiv.org/html/2503.01996v1" target="_blank" rel="noopener noreferrer">“One ruler to measure them all”</a>, in tasks requiring extracting information from long context (“needle-in-a-haystack”), Polish performs better than English:</p><img src="https://assets-v2.circle.so/zrwwa8vzlyzxoqqbbj7yvx1yy9sx" title="OneRuler accuracy per language for 64k and 128k
+
+Accuracy (%)
+
+Resource type
+English
+High-resource
+Low-resource
+
+Languages
+
+pl ru fr it es en uk sv pt de no hu nl da ja cs vi fi fa sr hi ko zh sw ta st" style="width: 100%; max-width: 100%;"><p>Polish achieved an average accuracy of 88% across all NIAH tasks, which was the <strong>best result</strong> among all tested languages.</p><p>Interestingly, this conclusion surprised even the authors of the study, who expected English and Chinese (most frequently represented in training data) to dominate. Chinese turned out to be the fourth worst-performing language.</p><p>Although the authors do not provide a definitive explanation for this phenomenon, we can speculate that:</p><ol start="1"><li><p>Polish may have structural features (e.g., morphological aspects) that help models process information in long contexts.</p></li><li><p>Polish is a language with rich morphology, which may help models maintain semantic coherence in long threads.</p></li><li><p>The results indicate that language models may more effectively store and retrieve information in Slavic languages, even though they were not specifically trained on them.</p></li></ol><p><br>However, humans do not live by long-context search alone, especially when focusing on work with code.</p><p>OpenAI, Anthropic, and other top model publishers use so-called tokenizers in their models, systems that convert natural language into tokens, which are the basic units of information for LLMs. Here, optimization for English is clearly visible to the naked eye:</p><img src="https://assets-v2.circle.so/1jy2ffxri0gxqx6amviriaa5eind" title="" style="width: 100%; max-width: 100%;"><p>The prompt from the beginning of the lesson in English, in the GPT-4o tokenizer, translates to 202 tokens, while in Polish it has 300 tokens, which is 48% more. <br><br>In the case of the Claude 3.5 Sonnet tokenizer, the situation is even worse: 211 tokens (English) vs. 354 tokens (Polish), which is 67% more.</p><img src="https://assets-v2.circle.so/47ddjomsrfw5vg5595ydhm557bce" title="You are an experienced DevOps Engineer - with your help I would like to understand a new topic.
+
+My knowledge level: advanced in JavaScript technology.
+
+I have 6 years of experience with React, Redux, and Jenkins.
+
+Learning goal: I want to understand GitHub Actions to build the first CI/CD scenario in a GitHub repository." style="width: 100%; max-width: 100%;"><p>If we use tools based on an API key, communication in Polish will be more expensive. Although not by the mentioned 48/67%, as much of the input and output in programming conversations is code rather than natural language, but we will still feel the impact on our wallet.</p><p>Secondly, as the number of tokens in the context window increases, the models’ ability to solve demanding tasks requiring deep understanding noticeably decreases – language here has secondary importance. This is indicated by the benchmark <a href="https://fiction.live/stories/Fiction-liveBench-Mar-25-2025/oQdzQvKHw8JyXbN87" target="_blank" rel="noopener noreferrer">Fiction.live</a>:</p><img src="https://assets-v2.circle.so/hjtfcmch155kbom54tyl4z0jn854" title="" style="width: 100%; max-width: 100%;"><p>For the same amount of text, the Polish language will fill the context window faster. However, once again, most conversations about programming usually consist of code rather than natural language, and throughout the course we encourage frequent creation of new threads for tasks.</p><p><strong>Recommendations? </strong><br>1. If you use subscriptions like Cursor, Windsurf, Github Copilot, Jetbrains AI Assistant, you can confidently prompt in Polish 🇵🇱 Why? Because you are billed for queries, not tokens. Prefer English 🇬🇧? Go ahead! For longer threads, it will positively affect performance, but it won't be a big difference.<br>2. If you are billed via API key for tokens (Aider, Cline, Cursor with key)? This depends on your personal preferences regarding language and expenses.</p><p>At 10xDevs, we mainly use prompts in Polish to provide maximum accessibility for a large group of participants. As you will see yourself: the quality of the prompt and the context we provide have a much bigger impact on results than the actual natural language we work with.</p><h2>Next step - choosing a model for programming</h2><p>In the next lesson, we will get acquainted with the technologies behind the entire Generative AI revolution. We're talking, of course, about models that we will then integrate with target work environments.</p><p>Which model to choose and why not just one? About that in the next lesson 🚀</p></div>

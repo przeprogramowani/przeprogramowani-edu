@@ -1,0 +1,47 @@
+<meta name="lesson-id" content="Konfiguracja tsconfig.json"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/c8u3e5ij7t3wdvi4iyeeqyu76qk7" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 52.5822%;"><iframe src="https://player.vimeo.com/video/1035544775?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="189" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2>Wprowadzenie</h2><h3>Kontekst historyczny</h3><p>Integracja TypeScript z React przeszła znaczną ewolucję na przestrzeni lat. Na początku, konfiguracja TSa w projektach React była skomplikowana i wymagała użycia wielu dodatkowych narzędzi oraz skomplikowanych ustawień. </p><p>Jednak wraz z wydaniem React 17 oraz wprowadzeniem nowego transformatora JSX, proces ten stał się znacznie prostszy i bardziej intuicyjny. Kolejne wersje TypeScript, takie jak 4.5 i 5.0, wprowadziły natywne wsparcie dla kluczowych funkcji React, co jeszcze bardziej ułatwiło integrację i poprawiło doświadczenie deweloperów.</p><h3>Dlaczego konfiguracja jest kluczowa?</h3><p>Optymalna konfiguracja TypeScript w projektach React jest niezwykle istotna, ponieważ wpływa na wydajność kompilacji, poprawność sprawdzania typów oraz integrację z innymi narzędziami. N</p><p>ieprawidłowo skonfigurowany tsconfig.json może prowadzić do spowolnienia procesu kompilacji nawet o 50-70% w dużych projektach, co znacznie utrudnia pracę. </p><p>Ponadto, błędna konfiguracja może skutkować nieprawidłowym sprawdzaniem typów, problemami z mechanizmem Hot Module Replacement (HMR), konfliktami z bibliotekami zewnętrznymi oraz nadmiernym zużyciem pamięci przez IDE. </p><p>Wszystkie te czynniki mogą negatywnie wpłynąć na efektywność pracy zespołu i jakość końcowego produktu.</p><h3>Współczesne wyzwania</h3><p>Współczesne projekty React z TypeScript stają przed szeregiem wyzwań, które wymagają odpowiedniej konfiguracji tsconfig.json. </p><p>Kluczowe jest znalezienie równowagi między bezpieczeństwem typów a komfortem pracy. Ponadto, optymalizacja konfiguracji pod kątem nowoczesnych bundlerów, takich jak Vite czy Turbopack, jest niezbędna dla zapewnienia szybkiego i efektywnego budowania aplikacji. </p><p>Wsparcie dla najnowszych funkcji React, takich jak Server Components czy Suspense, również wymaga odpowiednich ustawień TypeScript. </p><p>Integracja z ekosystemem narzędzi deweloperskich, takich jak ESLint, Prettier czy Jest, jest kolejnym aspektem, który powinniśmy uwzględnić w konfiguracji.</p><h4>Transformacja JSX</h4><p>Jednym z kluczowych elementów konfiguracji TypeScript w projektach React są ustawienia związane z obslugą JSX. Nowy transformator JSX wprowadzony w React 17 oraz nowszych wersjach TypeScript znacznie ułatwia pracę z JSX, eliminując konieczność ręcznego importowania React w każdym pliku JSX/TSX. </p><pre><code>{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "types": ["react/next", "react-dom/next"]
+  }
+}</code></pre><p>Porównanie wpływu dostępnych opcji “jsx” na transpilację:</p><pre><code>// 1. "jsx": "preserve"
+// Pozostawia JSX niezmieniony - przydatne dla innych narzędzi
+const Component = () =&gt; &lt;div&gt;Hello&lt;/div&gt;;
+// Wynik: const Component = () =&gt; &lt;div&gt;Hello&lt;/div&gt;;
+
+// 2. "jsx": "react"
+// Stary sposób - wymaga import React
+const Component = () =&gt; &lt;div&gt;Hello&lt;/div&gt;;
+// Wynik: const Component = React.createElement("div", null, "Hello");
+
+// 3. "jsx": "react-jsx"
+// Nowy sposób - automatyczna transformacja
+const Component = () =&gt; &lt;div&gt;Hello&lt;/div&gt;;
+// Wynik: import { jsx as _jsx } from "react/jsx-runtime";
+// const Component = () =&gt; _jsx("div", { children: "Hello" });</code></pre><p>Ustawienie <em>"jsx": "react-jsx"</em> korzysta z nowego transformatora JSX, co pozwala na automatyczną transformację kodu JSX bez konieczności importowania React w każdym komponencie. Dzięki temu, pliki wynikowe są mniejsze, a kod bardziej przejrzysty. Ponadto, takie ustawienie poprawia integrację z narzędziami deweloperskimi, co przekłada się na lepsze doświadczenie pracy z projektem.</p><h2><strong>Kluczowe opcje konfiguracji</strong></h2><p>Poniżej przedstawiam kluczowe fragmenty konfiguracji tsconfig.json, które promują nowoczesne podejście i są korzystne dla integracji z React:</p><pre><code>{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Vite React",
+  "_version": "3.0.0",
+
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  }
+}</code></pre><ul><li><p><strong>"jsx": "react-jsx"</strong>: Ustawienie to korzysta z nowego transformatora JSX wprowadzonego w React 17 i nowszych wersjach. Eliminując potrzebę ręcznego importowania React w każdym pliku JSX, upraszcza kod i zmniejsza rozmiar plików wynikowych. Ponadto, zapewnia lepszą integrację z narzędziami deweloperskimi.</p></li><li><p><strong>"target": "ES2020"</strong>: Określa docelową wersję ECMAScript na ES2020, co umożliwia korzystanie z nowoczesnych funkcji języka JavaScript. Dzięki temu, komponenty React mogą być pisane w bardziej zwięzły i efektywny sposób, wykorzystując takie konstrukcje jak opcjonalne łańcuchy (?.). Ponadto, nowoczesne przeglądarki zapewniają natywne wsparcie dla tych funkcji, co przekłada się na lepszą wydajność aplikacji.</p></li><li><p><strong>"module": "ESNext"</strong>: Użycie najnowszego standardu modułów ECMAScript pozwala na lepszą optymalizację podczas budowania aplikacji. Wsparcie dla dynamicznych importów i kodu asynchronicznego umożliwia tworzenie bardziej modularnych i responsywnych aplikacji React.</p></li><li><p><strong>"moduleResolution": "bundler"</strong>: Ta opcja dostosowuje sposób rozwiązywania modułów do nowoczesnych bundlerów, takich jak Vite. Dzięki temu, proces budowania aplikacji jest szybszy i bardziej efektywny, a obsługa aliasów oraz importów modułów jest usprawniona.</p></li><li><p><strong>"isolatedModules": true</strong>: Wymusza, aby każdy plik był traktowany jako oddzielny moduł, co jest zgodne z wymaganiami narzędzi takich jak Babel czy swc. Umożliwia to szybszą kompilację przy użyciu nowoczesnych bundlerów, takich jak Vite.</p></li><li><p><strong>"noEmit": true</strong>: Zapobiega generowaniu plików JavaScript przez kompilator TypeScript, co pozwala na poleganie na bundlerze (np. Vite) w kwestii kompilacji. Upraszcza to proces budowania i zmniejsza złożoność konfiguracji projektu.</p></li><li><p><strong>"lib": ["ES2020", "DOM", "DOM.Iterable"]</strong>: Udostępnia nowoczesne funkcje ECMAScript oraz typy związane z przeglądarką, co umożliwia korzystanie z nowoczesnych API przeglądarki w komponentach React. Zapewnia również lepszą obsługę typów dla operacji na kolekcjach iterowalnych.</p></li><li><p><strong>"useDefineForClassFields": true</strong>: Wymusza użycie składni define dla pól klasowych zgodnie z najnowszym standardem ECMAScript. Zapewnia to zgodność z nowoczesnym zachowaniem pól klasowych, co jest istotne w przypadku komponentów klasowych w React.</p></li><li><p><strong>"resolveJsonModule": true</strong>: Pozwala na importowanie plików JSON bezpośrednio w kodzie TypeScript, co ułatwia zarządzanie konfiguracjami i danymi statycznymi w aplikacjach React.</p></li></ul><h3><strong>Dlaczego warto korzystać z nowoczesnej konfiguracji?</strong></h3><p>Korzystanie z nowoczesnych ustawień w tsconfig.json przynosi nam liczne korzyści. Przede wszystkim, optymalizacja pod kątem wiodących narzędzi, takich jak Vite, pozwala na szybszą kompilację i lepszą wydajność aplikacji. </p><p>Dodatkowo, mniejsza złożoność konfiguracji wynika z polegania na bundlerze w kwestii kompilacji i transpilacji, co upraszcza proces budowania aplikacji. Targetowanie ES2020 pozwala na wykorzystanie nowoczesnych funkcji języka, co upraszcza kod komponentów i zwiększa jego czytelność. Transpilacja kodu do ES5 może prowadzić do zbędnego zwiększenia rozmiaru plików i obniżenia wydajności aplikacji. Transpiluj kod do ES5 tylko wtedy, gdy jest to absolutnie konieczne.</p><p>Wszystkie te aspekty przyczyniają się do tworzenia bardziej wydajnych, łatwiejszych w utrzymaniu i skalowalnych aplikacji React.</p><h2>Podsumowanie</h2><p>Implementując te rekomendacje, można znacząco poprawić jakość, wydajność i łatwość utrzymania projektów React z TypeScript, co przekłada się na lepsze doświadczenie zarówno dla devów, jak i użytkowników końcowych.</p></div></body></html>

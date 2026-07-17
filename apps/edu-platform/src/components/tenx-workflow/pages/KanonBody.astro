@@ -1,0 +1,491 @@
+---
+/**
+ * Tresc strony "Motyw sci-fi" (MOTYW SF // SKAD TEN KLIMAT).
+ * List milosny do ksiazek, z ktorych wyrosla kosmiczna tozsamosc kampanii:
+ * dziesiec uniwersow, kazde z kolorem, glifem i powodem (universes.ts).
+ * hud-top/footer/CSS/JS przejmuje TenxCosmicLayout.
+ * i18n: teksty w i18n/kanon.ts (pl+en), markup i SVG wspolne;
+ * zmiana tresci = zmiana obu jezykow w slowniku.
+ */
+import type { Lang } from '../i18n';
+import { KANON } from '../i18n/kanon';
+import { UNIVERSES, universeName, type UniverseId } from '../universes';
+import { pageHref } from '../pages';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+}
+
+const { base, lang = 'pl' } = Astro.props;
+const t = KANON[lang];
+
+/** Kolejnosc kanonu: kolejnosc chipow, kart skrotu i sekcji. */
+const ORDER: UniverseId[] = [
+  'ender',
+  'trzycia',
+  'hyperion',
+  'diuna',
+  'wh40k',
+  'expanse',
+  'starwars',
+  'fundacja',
+  'lem',
+  'redrising',
+];
+
+/** Wezly konstelacji w SVG hero: pozycja glifu + linia do wezla 10x. */
+const NODES: { id: UniverseId; x: number; y: number; link: string }[] = [
+  { id: 'ender', x: 110, y: 48, link: 'M134,58 L440,106' },
+  { id: 'trzycia', x: 295, y: 48, link: 'M307,68 L456,100' },
+  { id: 'hyperion', x: 480, y: 48, link: 'M480,72 L480,100' },
+  { id: 'diuna', x: 665, y: 48, link: 'M653,68 L504,100' },
+  { id: 'wh40k', x: 850, y: 48, link: 'M826,58 L520,106' },
+  { id: 'expanse', x: 110, y: 206, link: 'M134,196 L440,154' },
+  { id: 'starwars', x: 295, y: 206, link: 'M307,188 L456,160' },
+  { id: 'fundacja', x: 480, y: 206, link: 'M480,184 L480,160' },
+  { id: 'lem', x: 665, y: 206, link: 'M653,188 L504,160' },
+  { id: 'redrising', x: 850, y: 206, link: 'M826,196 L520,154' },
+];
+
+/** Glif uniwersum osadzony w duzym SVG (zagniezdzony <svg> z pozycja i rozmiarem). */
+const glyphAt = (id: UniverseId, x: number, y: number, s = 34) =>
+  UNIVERSES[id].glyph.replace('<svg ', `<svg x="${x}" y="${y}" width="${s}" height="${s}" `);
+
+/** Duza wizualizacja glifu uniwersum - prawa kolumna sec-top (dekoracja; opis niesie wiersz SYMBOL). */
+const uniVis = (id: UniverseId) => `
+  <div class="uni-vis" aria-hidden="true">
+    <div class="uv-glyph">${UNIVERSES[id].glyph}</div>
+    <span class="uv-tag">${t.sigil[id]}</span>
+  </div>`;
+---
+
+<header>
+  <p class="eyebrow" style="--acc:var(--indigo)"><span class="ico ico-star" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1 set:html={t.h1Html} />
+  <p class="sub" set:html={t.subHtml} />
+
+  <div class="chainwrap">
+    <svg class="chain" viewBox="0 0 960 260" role="img" aria-label={t.svgAria}>
+      <ellipse cx="480" cy="130" rx="340" ry="88" fill="none" stroke="#7c8cff" opacity=".18" stroke-dasharray="4 6"/>
+      {NODES.map((n) => (
+        <path d={n.link} stroke={UNIVERSES[n.id].color} fill="none" stroke-dasharray="4 5" opacity=".3" class="anim-dash"/>
+      ))}
+      <g style="color:var(--indigo)">
+        <rect class="kbox" x="428" y="102" width="104" height="56" stroke-width="1.4"/>
+        <text class="knum" x="480" y="124" text-anchor="middle">{t.svgTheme}</text>
+        <text class="klbl" x="480" y="146" text-anchor="middle">{t.svgThemeSub}</text>
+      </g>
+      {NODES.map((n) => (
+        <a href={`#u-${n.id}`} style={`color:${UNIVERSES[n.id].color}`} aria-label={t.nodeAria(universeName(UNIVERSES[n.id], lang))}>
+          <rect x={n.x - 55} y={n.y < 130 ? 14 : 176} width="110" height="84" fill="transparent"/>
+          <Fragment set:html={glyphAt(n.id, n.x - 17, n.y - 17)} />
+          <text x={n.x} y={n.y < 130 ? 90 : 244} text-anchor="middle">{t.short[n.id].toUpperCase()}</text>
+        </a>
+      ))}
+      <circle r="7" fill="#7c8cff" opacity=".25"><animateMotion dur="14s" repeatCount="indefinite" path="M140,130 a340,88 0 1,0 680,0 a340,88 0 1,0 -680,0"/></circle>
+      <circle r="3" fill="#dce2f5" class="anim-pulse"><animateMotion dur="14s" repeatCount="indefinite" path="M140,130 a340,88 0 1,0 680,0 a340,88 0 1,0 -680,0"/></circle>
+    </svg>
+    <p class="map-cap">{t.mapCap}</p>
+  </div>
+
+  <nav class="route" aria-label={t.routeAria}>
+    {ORDER.map((id) => (
+      <a href={`#u-${id}`} style={`--hov:${UNIVERSES[id].color}`}>{t.short[id]}</a>
+    ))}
+    <a href="#dalej">{t.routeNext}</a>
+  </nav>
+</header>
+
+<!-- ============ SKRÓT ============ -->
+<section id="skrot">
+  <div class="rv">
+    <p class="eyebrow" style="--acc:var(--indigo)"><span class="ico ico-star" aria-hidden="true"></span>{t.sumEyebrow}</p>
+  </div>
+  <div class="sum-grid rv">
+    {ORDER.map((id, i) => (
+      <a class="sum-card" href={`#u-${id}`} style={`--acc:${UNIVERSES[id].color}`}>
+        <Fragment set:html={UNIVERSES[id].glyph} />
+        <span class="num">SF-{String(i + 1).padStart(2, '0')}</span>
+        <h3>{universeName(UNIVERSES[id], lang)}</h3>
+        <p>{t.hook[id]}</p>
+      </a>
+    ))}
+  </div>
+  <div class="epigraph finis rv" style="--acc:var(--indigo)">
+    <p>{t.epigraph}</p>
+    <cite>{t.epigraphCite}</cite>
+  </div>
+</section>
+
+<!-- ============ ENDER ============ -->
+<section class="sector" id="u-ender" style={`--acc:${UNIVERSES.ender.color}`}>
+  <div class="sec-top rv">
+  <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.u.ender.num}</span>
+      <span class="sec-uni"><Fragment set:html={UNIVERSES.ender.glyph} />{t.u.ender.why}</span>
+    </div>
+    <h2>{t.u.ender.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.u.ender.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.u.ender.pHtml[1]} />
+  </div>
+  <Fragment set:html={uniVis('ender')} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-star" aria-hidden="true"></span>{t.mech.rating}</dt><dd class="v" style="margin:0" set:html={t.u.ender.ratingHtml} /></div>
+      <div><dt><span class="ico ico-eye" aria-hidden="true"></span>{t.mech.screen}</dt><dd class="v" style="margin:0" set:html={t.u.ender.screenHtml} /></div>
+      <div><dt><span class="ico ico-cube" aria-hidden="true"></span>{t.mech.symbol}</dt><dd class="v" style="margin:0"><span class="glyph-mini" aria-hidden="true"><Fragment set:html={UNIVERSES.ender.glyph} /></span>{t.u.ender.symbol}</dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mech.links}</dt><dd class="v" style="margin:0"><a href={`${pageHref(base, 'csc', lang)}#k-new`} style="color:var(--acc)">{t.u.ender.links[0]}</a> · <a href={`${pageHref(base, 'fundament', lang)}#l-04`} style="color:var(--acc)">{t.u.ender.links[1]}</a> · <a href={`${pageHref(base, 'teamwork', lang)}#t-02`} style="color:var(--acc)">{t.u.ender.links[2]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.u.ender.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ TRZY CIAŁA ============ -->
+<section class="sector" id="u-trzycia" style={`--acc:${UNIVERSES.trzycia.color}`}>
+  <div class="sec-top rv">
+  <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.u.trzycia.num}</span>
+      <span class="sec-uni"><Fragment set:html={UNIVERSES.trzycia.glyph} />{t.u.trzycia.why}</span>
+    </div>
+    <h2>{t.u.trzycia.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.u.trzycia.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.u.trzycia.pHtml[1]} />
+  </div>
+  <Fragment set:html={uniVis('trzycia')} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-star" aria-hidden="true"></span>{t.mech.rating}</dt><dd class="v" style="margin:0" set:html={t.u.trzycia.ratingHtml} /></div>
+      <div><dt><span class="ico ico-eye" aria-hidden="true"></span>{t.mech.screen}</dt><dd class="v" style="margin:0" set:html={t.u.trzycia.screenHtml} /></div>
+      <div><dt><span class="ico ico-cube" aria-hidden="true"></span>{t.mech.symbol}</dt><dd class="v" style="margin:0"><span class="glyph-mini" aria-hidden="true"><Fragment set:html={UNIVERSES.trzycia.glyph} /></span>{t.u.trzycia.symbol}</dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mech.links}</dt><dd class="v" style="margin:0"><a href={`${pageHref(base, 'csc', lang)}#k-research`} style="color:var(--acc)">{t.u.trzycia.links[0]}</a> · <a href={`${pageHref(base, 'jakosc', lang)}#q-02`} style="color:var(--acc)">{t.u.trzycia.links[1]}</a> · <a href={`${pageHref(base, 'top5', lang)}#n-04`} style="color:var(--acc)">{t.u.trzycia.links[2]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.u.trzycia.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ HYPERION ============ -->
+<section class="sector" id="u-hyperion" style={`--acc:${UNIVERSES.hyperion.color}`}>
+  <div class="sec-top rv">
+  <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.u.hyperion.num}</span>
+      <span class="sec-uni"><Fragment set:html={UNIVERSES.hyperion.glyph} />{t.u.hyperion.why}</span>
+    </div>
+    <h2>{t.u.hyperion.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.u.hyperion.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.u.hyperion.pHtml[1]} />
+  </div>
+  <Fragment set:html={uniVis('hyperion')} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-star" aria-hidden="true"></span>{t.mech.rating}</dt><dd class="v" style="margin:0" set:html={t.u.hyperion.ratingHtml} /></div>
+      <div><dt><span class="ico ico-eye" aria-hidden="true"></span>{t.mech.screen}</dt><dd class="v" style="margin:0" set:html={t.u.hyperion.screenHtml} /></div>
+      <div><dt><span class="ico ico-cube" aria-hidden="true"></span>{t.mech.symbol}</dt><dd class="v" style="margin:0"><span class="glyph-mini" aria-hidden="true"><Fragment set:html={UNIVERSES.hyperion.glyph} /></span>{t.u.hyperion.symbol}</dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mech.links}</dt><dd class="v" style="margin:0"><a href={`${pageHref(base, 'csc', lang)}#k-plan`} style="color:var(--acc)">{t.u.hyperion.links[0]}</a> · <a href={`${pageHref(base, 'jakosc', lang)}#q-05`} style="color:var(--acc)">{t.u.hyperion.links[1]}</a> · <a href={`${pageHref(base, 'top5', lang)}#n-05`} style="color:var(--acc)">{t.u.hyperion.links[2]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.u.hyperion.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ DIUNA ============ -->
+<section class="sector" id="u-diuna" style={`--acc:${UNIVERSES.diuna.color}`}>
+  <div class="sec-top rv">
+  <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.u.diuna.num}</span>
+      <span class="sec-uni"><Fragment set:html={UNIVERSES.diuna.glyph} />{t.u.diuna.why}</span>
+    </div>
+    <h2>{t.u.diuna.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.u.diuna.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.u.diuna.pHtml[1]} />
+  </div>
+  <Fragment set:html={uniVis('diuna')} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-star" aria-hidden="true"></span>{t.mech.rating}</dt><dd class="v" style="margin:0" set:html={t.u.diuna.ratingHtml} /></div>
+      <div><dt><span class="ico ico-eye" aria-hidden="true"></span>{t.mech.screen}</dt><dd class="v" style="margin:0" set:html={t.u.diuna.screenHtml} /></div>
+      <div><dt><span class="ico ico-cube" aria-hidden="true"></span>{t.mech.symbol}</dt><dd class="v" style="margin:0"><span class="glyph-mini" aria-hidden="true"><Fragment set:html={UNIVERSES.diuna.glyph} /></span>{t.u.diuna.symbol}</dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mech.links}</dt><dd class="v" style="margin:0"><a href={`${pageHref(base, 'fundament', lang)}#l-01`} style="color:var(--acc)">{t.u.diuna.links[0]}</a> · <a href={`${pageHref(base, 'skalowanie', lang)}#w-01`} style="color:var(--acc)">{t.u.diuna.links[1]}</a> · <a href={`${pageHref(base, 'jakosc', lang)}#q-01`} style="color:var(--acc)">{t.u.diuna.links[2]}</a> · <a href={`${pageHref(base, 'legacy', lang)}#a-01`} style="color:var(--acc)">{t.u.diuna.links[3]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.u.diuna.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ WH40K ============ -->
+<section class="sector" id="u-wh40k" style={`--acc:${UNIVERSES.wh40k.color}`}>
+  <div class="sec-top rv">
+  <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.u.wh40k.num}</span>
+      <span class="sec-uni"><Fragment set:html={UNIVERSES.wh40k.glyph} />{t.u.wh40k.why}</span>
+    </div>
+    <h2>{t.u.wh40k.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.u.wh40k.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.u.wh40k.pHtml[1]} />
+  </div>
+  <Fragment set:html={uniVis('wh40k')} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-star" aria-hidden="true"></span>{t.mech.rating}</dt><dd class="v" style="margin:0" set:html={t.u.wh40k.ratingHtml} /></div>
+      <div><dt><span class="ico ico-eye" aria-hidden="true"></span>{t.mech.screen}</dt><dd class="v" style="margin:0" set:html={t.u.wh40k.screenHtml} /></div>
+      <div><dt><span class="ico ico-cube" aria-hidden="true"></span>{t.mech.symbol}</dt><dd class="v" style="margin:0"><span class="glyph-mini" aria-hidden="true"><Fragment set:html={UNIVERSES.wh40k.glyph} /></span>{t.u.wh40k.symbol}</dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mech.links}</dt><dd class="v" style="margin:0"><a href={`${pageHref(base, 'csc', lang)}#k-review`} style="color:var(--acc)">{t.u.wh40k.links[0]}</a> · <a href={`${pageHref(base, 'legacy', lang)}#a-04`} style="color:var(--acc)">{t.u.wh40k.links[1]}</a> · <a href={`${pageHref(base, 'top5', lang)}#n-03`} style="color:var(--acc)">{t.u.wh40k.links[2]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.u.wh40k.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ EXPANSE ============ -->
+<section class="sector" id="u-expanse" style={`--acc:${UNIVERSES.expanse.color}`}>
+  <div class="sec-top rv">
+  <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.u.expanse.num}</span>
+      <span class="sec-uni"><Fragment set:html={UNIVERSES.expanse.glyph} />{t.u.expanse.why}</span>
+    </div>
+    <h2>{t.u.expanse.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.u.expanse.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.u.expanse.pHtml[1]} />
+  </div>
+  <Fragment set:html={uniVis('expanse')} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-star" aria-hidden="true"></span>{t.mech.rating}</dt><dd class="v" style="margin:0" set:html={t.u.expanse.ratingHtml} /></div>
+      <div><dt><span class="ico ico-eye" aria-hidden="true"></span>{t.mech.screen}</dt><dd class="v" style="margin:0" set:html={t.u.expanse.screenHtml} /></div>
+      <div><dt><span class="ico ico-cube" aria-hidden="true"></span>{t.mech.symbol}</dt><dd class="v" style="margin:0"><span class="glyph-mini" aria-hidden="true"><Fragment set:html={UNIVERSES.expanse.glyph} /></span>{t.u.expanse.symbol}</dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mech.links}</dt><dd class="v" style="margin:0"><a href={`${pageHref(base, 'csc', lang)}#k-implement`} style="color:var(--acc)">{t.u.expanse.links[0]}</a> · <a href={`${pageHref(base, 'fundament', lang)}#l-03`} style="color:var(--acc)">{t.u.expanse.links[1]}</a> · <a href={`${pageHref(base, 'jakosc', lang)}#q-04`} style="color:var(--acc)">{t.u.expanse.links[2]}</a> · <a href={`${pageHref(base, 'legacy', lang)}#a-03`} style="color:var(--acc)">{t.u.expanse.links[3]}</a> · <a href={`${pageHref(base, 'teamwork', lang)}#t-01`} style="color:var(--acc)">{t.u.expanse.links[4]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.u.expanse.targetHtml} />
+  </div>
+  <div class="strack rv">
+    <div class="strack-row">
+      <span class="k"><span class="ico ico-star" aria-hidden="true"></span>{t.strackK}</span>
+      <p set:html={t.strackHtml} />
+      <button class="strack-btn" id="strack-btn" type="button" aria-pressed="false" aria-controls="strack-player" data-on={t.strackOn} data-off={t.strackOff}>{t.strackOn}</button>
+    </div>
+    <div class="strack-player" id="strack-player" hidden></div>
+  </div>
+</section>
+
+<!-- ============ STAR WARS ============ -->
+<section class="sector" id="u-starwars" style={`--acc:${UNIVERSES.starwars.color}`}>
+  <div class="sec-top rv">
+  <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.u.starwars.num}</span>
+      <span class="sec-uni"><Fragment set:html={UNIVERSES.starwars.glyph} />{t.u.starwars.why}</span>
+    </div>
+    <h2>{t.u.starwars.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.u.starwars.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.u.starwars.pHtml[1]} />
+  </div>
+  <Fragment set:html={uniVis('starwars')} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-star" aria-hidden="true"></span>{t.mech.rating}</dt><dd class="v" style="margin:0" set:html={t.u.starwars.ratingHtml} /></div>
+      <div><dt><span class="ico ico-eye" aria-hidden="true"></span>{t.mech.screen}</dt><dd class="v" style="margin:0" set:html={t.u.starwars.screenHtml} /></div>
+      <div><dt><span class="ico ico-cube" aria-hidden="true"></span>{t.mech.symbol}</dt><dd class="v" style="margin:0"><span class="glyph-mini" aria-hidden="true"><Fragment set:html={UNIVERSES.starwars.glyph} /></span>{t.u.starwars.symbol}</dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mech.links}</dt><dd class="v" style="margin:0"><a href={`${pageHref(base, 'fundament', lang)}#l-05`} style="color:var(--acc)">{t.u.starwars.links[0]}</a> · <a href={`${pageHref(base, 'skalowanie', lang)}#w-03`} style="color:var(--acc)">{t.u.starwars.links[1]}</a> · <a href={`${pageHref(base, 'jakosc', lang)}#q-03`} style="color:var(--acc)">{t.u.starwars.links[2]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.u.starwars.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ FUNDACJA ============ -->
+<section class="sector" id="u-fundacja" style={`--acc:${UNIVERSES.fundacja.color}`}>
+  <div class="sec-top rv">
+  <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.u.fundacja.num}</span>
+      <span class="sec-uni"><Fragment set:html={UNIVERSES.fundacja.glyph} />{t.u.fundacja.why}</span>
+    </div>
+    <h2>{t.u.fundacja.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.u.fundacja.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.u.fundacja.pHtml[1]} />
+  </div>
+  <Fragment set:html={uniVis('fundacja')} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-star" aria-hidden="true"></span>{t.mech.rating}</dt><dd class="v" style="margin:0" set:html={t.u.fundacja.ratingHtml} /></div>
+      <div><dt><span class="ico ico-eye" aria-hidden="true"></span>{t.mech.screen}</dt><dd class="v" style="margin:0" set:html={t.u.fundacja.screenHtml} /></div>
+      <div><dt><span class="ico ico-cube" aria-hidden="true"></span>{t.mech.symbol}</dt><dd class="v" style="margin:0"><span class="glyph-mini" aria-hidden="true"><Fragment set:html={UNIVERSES.fundacja.glyph} /></span>{t.u.fundacja.symbol}</dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mech.links}</dt><dd class="v" style="margin:0"><a href={`${pageHref(base, 'skalowanie', lang)}#w-02`} style="color:var(--acc)">{t.u.fundacja.links[0]}</a> · <a href={`${pageHref(base, 'legacy', lang)}#a-05`} style="color:var(--acc)">{t.u.fundacja.links[1]}</a> · <a href={`${pageHref(base, 'teamwork', lang)}#t-04`} style="color:var(--acc)">{t.u.fundacja.links[2]}</a> · <a href={`${pageHref(base, 'top5', lang)}#n-01`} style="color:var(--acc)">{t.u.fundacja.links[3]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.u.fundacja.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ LEM ============ -->
+<section class="sector" id="u-lem" style={`--acc:${UNIVERSES.lem.color}`}>
+  <div class="sec-top rv">
+  <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.u.lem.num}</span>
+      <span class="sec-uni"><Fragment set:html={UNIVERSES.lem.glyph} />{t.u.lem.why}</span>
+    </div>
+    <h2>{t.u.lem.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.u.lem.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.u.lem.pHtml[1]} />
+  </div>
+  <Fragment set:html={uniVis('lem')} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-star" aria-hidden="true"></span>{t.mech.rating}</dt><dd class="v" style="margin:0" set:html={t.u.lem.ratingHtml} /></div>
+      <div><dt><span class="ico ico-eye" aria-hidden="true"></span>{t.mech.screen}</dt><dd class="v" style="margin:0" set:html={t.u.lem.screenHtml} /></div>
+      <div><dt><span class="ico ico-cube" aria-hidden="true"></span>{t.mech.symbol}</dt><dd class="v" style="margin:0"><span class="glyph-mini" aria-hidden="true"><Fragment set:html={UNIVERSES.lem.glyph} /></span>{t.u.lem.symbol}</dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mech.links}</dt><dd class="v" style="margin:0"><a href={`${pageHref(base, 'legacy', lang)}#a-02`} style="color:var(--acc)">{t.u.lem.links[0]}</a> · <a href={`${pageHref(base, 'teamwork', lang)}#t-03`} style="color:var(--acc)">{t.u.lem.links[1]}</a> · <a href={`${pageHref(base, 'top5', lang)}#n-02`} style="color:var(--acc)">{t.u.lem.links[2]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.u.lem.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ RED RISING ============ -->
+<section class="sector" id="u-redrising" style={`--acc:${UNIVERSES.redrising.color}`}>
+  <div class="sec-top rv">
+  <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.u.redrising.num}</span>
+      <span class="sec-uni"><Fragment set:html={UNIVERSES.redrising.glyph} />{t.u.redrising.why}</span>
+    </div>
+    <h2>{t.u.redrising.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.u.redrising.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.u.redrising.pHtml[1]} />
+  </div>
+  <Fragment set:html={uniVis('redrising')} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-star" aria-hidden="true"></span>{t.mech.rating}</dt><dd class="v" style="margin:0" set:html={t.u.redrising.ratingHtml} /></div>
+      <div><dt><span class="ico ico-eye" aria-hidden="true"></span>{t.mech.screen}</dt><dd class="v" style="margin:0" set:html={t.u.redrising.screenHtml} /></div>
+      <div><dt><span class="ico ico-cube" aria-hidden="true"></span>{t.mech.symbol}</dt><dd class="v" style="margin:0"><span class="glyph-mini" aria-hidden="true"><Fragment set:html={UNIVERSES.redrising.glyph} /></span>{t.u.redrising.symbol}</dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mech.links}</dt><dd class="v" style="margin:0"><a href={`${pageHref(base, 'fundament', lang)}#l-02`} style="color:var(--acc)">{t.u.redrising.links[0]}</a> · <a href={`${pageHref(base, 'teamwork', lang)}#t-05`} style="color:var(--acc)">{t.u.redrising.links[1]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.u.redrising.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ LISTA ROŚNIE ============ -->
+<section class="sector" id="dalej" style="--acc:var(--indigo)">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.orbit.num}</span>
+      <span class="sec-uni"><span class="ico ico-star" aria-hidden="true"></span>{t.orbit.uni}</span>
+    </div>
+    <h2>{t.orbit.h2}</h2>
+  </div>
+  <div class="solo rv">
+    <p class="lead">{t.orbit.lead}</p>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.orbit.nextK}</span>
+    <p>{t.orbit.nextPre}<a href={pageHref(base, 'docs', lang)} style="color:var(--indigo)">{t.orbit.nextLink}</a>{t.orbit.nextPost}</p>
+  </div>
+</section>
+
+<style is:global>
+/* Dodatek strony wzgledem wspolnego CSS layoutu:
+   1) glif uniwersum inline w wierszu SYMBOL (dl.mech),
+   2) pierwsza sekcja bez wymuszonego lamania strony w druku
+      (first-of-type layoutu nie matchuje, bo pierwsza sekcja to #skrot). */
+.mech .v .glyph-mini{display:inline-block;width:15px;height:15px;margin-right:8px;
+  vertical-align:-2px;color:var(--acc)}
+.mech .v .glyph-mini svg{display:block;width:100%;height:100%}
+
+/* duza wizualizacja glifu uniwersum - prawa kolumna sec-top */
+.uni-vis{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  align-self:stretch;margin-top:4px;padding:30px 20px;
+  border:1px dashed color-mix(in srgb,var(--acc) 42%,transparent)}
+.uni-vis .uv-glyph{width:148px;height:148px;color:var(--acc);
+  animation:uv-drift 7s ease-in-out infinite}
+.uni-vis .uv-glyph svg{display:block;width:100%;height:100%}
+.uni-vis .uv-tag{font-family:var(--mono);font-size:.7rem;letter-spacing:.22em;text-align:center;
+  color:color-mix(in srgb,var(--acc) 75%,var(--dim))}
+@keyframes uv-drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@media (prefers-reduced-motion:reduce){.uni-vis .uv-glyph{animation:none}}
+@media (max-width:820px){
+  .uni-vis{padding:24px 16px}
+  .uni-vis .uv-glyph{width:108px;height:108px}
+}
+
+/* karta soundtracku (sektor Expanse): odtwarzacz domyslnie wylaczony, opt-in */
+.strack{margin-top:14px;border:1px dashed color-mix(in srgb,var(--acc) 40%,transparent);
+  padding:15px 20px}
+.strack-row{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.strack-row .k{font-family:var(--disp);font-weight:700;font-size:.78rem;letter-spacing:.2em;color:var(--acc)}
+.strack-row p{font-size:.94rem;color:var(--muted);max-width:56ch;margin:0}
+.strack-row p b{color:var(--txt)}
+.strack-btn{margin-left:auto;font-family:var(--disp);font-weight:700;font-size:.72rem;
+  letter-spacing:.18em;color:var(--acc);background:transparent;cursor:pointer;
+  border:1px solid color-mix(in srgb,var(--acc) 55%,transparent);padding:8px 14px;
+  transition:background .2s,color .2s}
+.strack-btn:hover{background:color-mix(in srgb,var(--acc) 18%,transparent)}
+.strack-player{margin-top:14px}
+.strack-player iframe{display:block;width:100%;max-width:640px;aspect-ratio:16/9;border:0}
+@media print{
+  #u-ender{break-before:auto}
+  .strack{display:none}
+}
+</style>
+
+<script is:inline>
+(() => {
+  const btn = document.getElementById('strack-btn');
+  const box = document.getElementById('strack-player');
+  if (!btn || !box) return;
+  btn.addEventListener('click', () => {
+    const turnOn = box.hidden;
+    if (turnOn) {
+      box.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/Re105gKtOhs?autoplay=1" title="Footsteps of History - Clinton Shorter" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>';
+      box.hidden = false;
+      btn.textContent = btn.dataset.off || '';
+    } else {
+      box.innerHTML = '';
+      box.hidden = true;
+      btn.textContent = btn.dataset.on || '';
+    }
+    btn.setAttribute('aria-pressed', String(turnOn));
+  });
+})();
+</script>

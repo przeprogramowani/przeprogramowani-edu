@@ -1,0 +1,61 @@
+<meta name="lesson-id" content="Chain-of-Thought (CoT)"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/eh7c0ic6khu9o61t91q1bot1fi8y" style="width: 100%; max-width: 100%;"><p>Chain-of-Thought (CoT) to technika zaprojektowana w celu poprawy zdolności rozumowania dużych modeli językowych poprzez promptowanie ich do generowania procesu rozumowania krok po kroku przed uzyskaniem ostatecznej odpowiedzi. </p><p>Technika ta ma na celu naśladowanie sposobu, w jaki ludzie rozwiązują problemy, dzieląc złożone zadania na mniejsze, łatwiejsze do wykonania kroki.</p><h3>Jak używać?</h3><p>Pomyśl o CoT jako o prowadzeniu LLM do „pokazania swojej pracy” zamiast po prostu dostarczania ostatecznej odpowiedzi. Jest to szczególnie cenne w inżynierii oprogramowania, gdzie zrozumienie logiki stojącej za rozwiązaniem jest równie ważne jak samo rozwiązanie.</p><p>Oto jak CoT działa w praktyce:</p><ul><li><p><strong>Prompt</strong>: Kiedy stawiasz problem przed LLM, powinieneś dołączyć frazę lub instrukcję, która zachęci model do myślenia krok po kroku. Typowe przykłady takich zwrotów to: „Zastanówmy się krok po kroku”, „Rozważmy to krok po kroku, aby upewnić się, że mamy właściwą odpowiedź” lub „Najpierw zastanówmy się nad tym logicznie”.</p></li><li><p><strong>Proces rozumowania</strong>: W odpowiedzi na prompt, LLM wygeneruje serię pośrednich kroków rozumowania, które prowadzą do ostatecznej odpowiedzi. Kroki te zapewniają wgląd w proces myślowy modelu, ułatwiając zrozumienie, w jaki sposób doszedł on do konkretnego rozwiązania.●</p></li><li><p><strong>Zero-Shot CoT</strong>: Najprostsza forma CoT, Zero-Shot CoT, polega na dołączeniu do prompta frazy skłaniającej do myślenia bez podawania przykładów. Choć prosta w implementacji, może nie zawsze prowadzić do najdokładniejszych wyników, szczególnie w przypadku złożonych zadań.</p></li><li><p><strong>Few-Shot CoT</strong>: Aby jeszcze bardziej zwiększyć skuteczność CoT, można użyć Few-Shot CoT, który polega na dostarczeniu LLM kilku przykładów pytań w połączeniu z odpowiadającym im rozumowaniem łańcuchowym i odpowiedziami. Pozwala to modelowi lepiej zrozumieć pożądany proces rozumowania i potencjalnie wygenerować bardziej dokładne i logiczne wyniki.</p></li></ul><p>Rozważmy scenariusz, w którym budujesz witrynę e-commerce i musisz zaimplementować algorytm obliczania rabatów. Możesz użyć promptowania CoT, aby pomóc LLM wygenerować bardziej solidne i zrozumiałe rozwiązanie.</p><p>Podstawowy prompt: </p><pre><code>Napisz funkcję obliczającą ostateczną cenę produktu po zastosowaniu rabatu w języku JavaScript.</code></pre><p>Odpowiedź modelu:</p><pre><code>Rozumiem, że chcesz funkcję w JavaScript, która oblicza końcową cenę produktu po uwzględnieniu rabatu. Oto implementacja takiej funkcji:
+
+function calculateFinalPrice(originalPrice, discountPercentage) {
+  if (originalPrice &lt; 0 || discountPercentage &lt; 0 || discountPercentage &gt; 100) {
+    return "Invalid input";
+  }
+  
+  const discountAmount = originalPrice * (discountPercentage / 100);
+  const finalPrice = originalPrice - discountAmount;
+  
+  return finalPrice.toFixed(2);
+}
+
+Ta funkcja:
+1. Przyjmuje dwa argumenty: originalPrice (początkowa cena produktu) i discountPercentage (wartość rabatu w procentach).
+2. Sprawdza, czy dane wejściowe są prawidłowe (cena nie może być ujemna, rabat musi być między 0 a 100%).
+3. Oblicza kwotę rabatu.
+4. Odejmuje kwotę rabatu od ceny wyjściowej.
+5. Zwraca cenę końcową, zaokrągloną do dwóch miejsc po przecinku.
+
+Czy chciałbyś, żebym wyjaśnił kod bardziej szczegółowo lub pokazał przykład użycia tej funkcji?</code></pre><p>CoT Prompt:</p><pre><code>Pomyślmy krok po kroku. Napisz funkcję obliczającą ostateczną cenę produktu po zastosowaniu rabatu w języku JavaScript. Najpierw sprawdź, czy rabat jest wartością procentową czy stałą. Następnie...</code></pre><p>Odpowiedź modelu:</p><pre><code>Rozumiem. Napiszę funkcję w JavaScript, która oblicza ostateczną cenę produktu po zastosowaniu rabatu. Przejdźmy przez to krok po kroku:
+
+function calculateDiscountedPrice(originalPrice, discount) {
+  // Sprawdzenie, czy rabat jest wartością procentową
+  if (typeof discount === 'string' &amp;&amp; discount.endsWith('%')) {
+    // Konwersja rabatu procentowego na liczbę
+    const discountPercentage = parseFloat(discount) / 100;
+    
+    // Obliczenie ceny po rabacie procentowym
+    return originalPrice - (originalPrice * discountPercentage);
+  } else {
+    // Traktowanie rabatu jako wartości stałej
+    const discountAmount = parseFloat(discount);
+    
+    // Sprawdzenie, czy rabat nie jest większy niż cena oryginalna
+    if (discountAmount &gt; originalPrice) {
+      return 0; // Cena nie może być ujemna
+    }
+    
+    // Obliczenie ceny po rabacie stałym
+    return originalPrice - discountAmount;
+  }
+}
+
+// Przykłady użycia:
+console.log(calculateDiscountedPrice(100, '20%')); // Rabat procentowy
+console.log(calculateDiscountedPrice(100, 30));    // Rabat stały
+
+Oto wyjaśnienie krok po kroku:
+1. Definiujemy funkcję calculateDiscountedPrice, która przyjmuje dwa parametry: originalPrice (oryginalna cena) i discount (rabat).
+2. Sprawdzamy, czy rabat jest wartością procentową. Robimy to, sprawdzając, czy discount jest stringiem kończącym się znakiem '%'.
+3. Jeśli rabat jest procentowy:
+- Konwertujemy go na liczbę dziesiętną (np. 20% na 0.2).
+- Obliczamy cenę po rabacie, odejmując od ceny oryginalnej iloczyn ceny i rabatu procentowego.
+4. Jeśli rabat nie jest procentowy, traktujemy go jako wartość stałą:
+- Konwertujemy rabat na liczbę.
+- Sprawdzamy, czy rabat nie jest większy niż cena oryginalna. Jeśli jest, zwracamy 0 (cena nie może być ujemna).
+- Obliczamy cenę po rabacie, odejmując wartość rabatu od ceny oryginalnej.
+5. Na końcu dodałem przykłady użycia funkcji dla obu typów rabatów.
+
+Czy chciałbyś, żebym coś wyjaśnił lub rozwinął w tym kodzie?</code></pre><p>Używając promptu CoT, zachęcasz LLM do podzielenia obliczeń rabatu na mniejsze kroki, dzięki czemu wynikowy kod jest bardziej przejrzysty i łatwiejszy do zrozumienia. Dzięki temu lepiej zrozumiesz kod wygenerowany przez LLM i będziesz mógł wziąć za niego odpowiedzialność. Bardzo możliwe, że kod będzie również wyższej jakości: wzrośnie jego czytelność i spadnie ryzyko błędów.</p><h2>Przykładowe zastosowania</h2><p>Jako web developerzy możemy wykorzystać technikę Chain of Thought w różnych aspektach naszej pracy, szczególnie w zadaniach wymagających złożonego rozumowania i rozwiązywania problemów:</p><ul><li><p><strong>Debugowanie:</strong> Pomaga w systematycznym podejściu do identyfikacji i rozwiązywania błędów w kodzie.</p></li><li><p><strong>Optymalizacja wydajności:</strong> Wspiera proces analizy i poprawy wydajności aplikacji poprzez rozbicie problemu na mniejsze, bardziej zarządzalne kroki.</p></li><li><p><strong>Projektowanie architektury:</strong> Umożliwia bardziej strukturyzowane podejście do projektowania złożonych systemów i ich komponentów.</p></li><li><p><strong>Refaktoryzacja kodu:</strong> Wspomaga proces reorganizacji istniejącego kodu poprzez systematyczne rozważanie każdego kroku i jego konsekwencji.</p></li></ul><p>Zrozumienie i stosowanie CoT pozwala nam na bardziej efektywne wykorzystanie AI w procesie tworzenia oprogramowania, szczególnie w przypadku złożonych problemów.</p><p>🥳 <strong>Korzyści</strong></p><ul><li><p><strong>Lepsze zrozumienie procesu myślowego:</strong> Pozwala developerom lepiej zrozumieć, jak AI dochodzi do konkretnych rozwiązań.</p></li><li><p><strong>Wyższa jakość kodu:</strong> Prowadzi do generowania bardziej przemyślanych i lepiej ustrukturyzowanych rozwiązań.</p></li><li><p><strong>Łatwiejsze debugowanie:</strong> Ułatwia identyfikację potencjalnych błędów w logice poprzez analizę każdego kroku rozumowania.</p></li><li><p><strong>Edukacyjny aspekt:</strong> Może służyć jako narzędzie do nauki, pokazując krok po kroku, jak rozwiązywać złożone problemy programistyczne.</p></li></ul><p>🫣 <strong>Wyzwania</strong></p><ul><li><p><strong>Zwiększona złożoność promptów:</strong> Wymaga tworzenia bardziej rozbudowanych i precyzyjnych promptów.</p></li><li><p><strong>Dłuższy czas generowania odpowiedzi:</strong> Proces może być bardziej czasochłonny ze względu na generowanie szczegółowego procesu myślowego.</p></li><li><p><strong>Potencjalne przeciążenie informacjami:</strong> Istnieje ryzyko generowania zbyt szczegółowych wyjaśnień, które mogą być przytłaczające dla niektórych użytkowników.</p></li></ul><h3>🧠 Kluczowe wnioski</h3><ol start="1"><li><p><strong>Selektywne stosowanie:</strong> CoT jest najbardziej efektywne w złożonych scenariuszach, gdzie proces rozumowania jest równie ważny jak końcowy rezultat.</p></li><li><p><strong>Balans między szczegółowością a zwięzłością:</strong> Ważne jest znalezienie odpowiedniej równowagi między dostarczaniem szczegółowego procesu myślowego a utrzymaniem czytelności i użyteczności wygenerowanego kodu.</p></li><li><p><strong>Weryfikacja wyników:</strong> Mimo że CoT może prowadzić do bardziej przemyślanych rozwiązań, zawsze należy krytycznie oceniać i testować wygenerowany kod.</p></li><li><p><strong>Narzędzie wspomagające, nie zastępujące:</strong> CoT powinno być traktowane jako wsparcie dla procesu myślowego developera, a nie jako całkowite zastąpienie ludzkiego rozumowania i doświadczenia.</p></li></ol><p><strong>🧑🏻‍💻 Ćwiczenie</strong></p><p>Twoim zadaniem jest napisanie funkcji JavaScript, która waliduje i formatuje numer telefonu. Zamiast prosić AI o gotowe rozwiązanie, użyjesz techniki CoT, aby uzyskać szczegółowe wyjaśnienie procesu myślowego prowadzącego do rozwiązania.</p><p><strong>Kroki</strong></p><ol start="1"><li><p><strong>Sformułuj prompt CoT:</strong> Napisz prompt, który zachęci model AI do użycia techniki Chain of Thought przy tworzeniu funkcji walidującej i formatującej numer telefonu. Twój prompt powinien zawierać:</p><ul><li><p>Opis zadania</p></li><li><p>Prośbę o myślenie krok po kroku</p></li><li><p>Sugestię rozważenia różnych aspektów problemu (np. różne formaty numerów, obsługa błędów)</p></li></ul></li><li><p><strong>Analiza odpowiedzi:</strong> Po otrzymaniu odpowiedzi od AI, przeanalizuj ją pod kątem:</p><ul><li><p>Jasności procesu myślowego</p></li><li><p>Kompletności rozwiązania</p></li><li><p>Potencjalnych luk lub nieścisłości</p></li></ul></li><li><p><strong>Iteracja:</strong> Jeśli odpowiedź nie jest satysfakcjonująca, zmodyfikuj swój prompt i spróbuj ponownie. Skup się na aspektach, które wymagają dopracowania.</p></li><li><p><strong>Implementacja:</strong> Na podstawie otrzymanego wyjaśnienia, zaimplementuj funkcję samodzielnie. Porównaj swoją implementację z proponowanym rozwiązaniem.</p></li><li><p><strong>Refleksja:</strong> Zastanów się nad procesem i odpowiedz na następujące pytania:</p><ul><li><p>Jak technika CoT wpłynęła na jakość otrzymanego rozwiązania?</p></li><li><p>Jakie wyzwania napotkałeś podczas formułowania promptu CoT?</p></li><li><p>Jak możesz wykorzystać tę technikę w swojej codziennej pracy jako web developer?</p></li></ul></li></ol><p><strong>Wskazówki</strong></p><ul><li><p>Zachęć AI do rozważenia różnych scenariuszy i przypadków brzegowych.</p></li><li><p>Poproś o wyjaśnienie każdej decyzji projektowej.</p></li><li><p>Zwróć uwagę na to, jak AI radzi sobie z potencjalnymi wyzwaniami (np. różne formaty międzynarodowe).</p></li></ul><p><strong>Kryteria sukcesu</strong></p><ul><li><p>Twój prompt skutecznie zachęca AI do użycia techniki CoT.</p></li><li><p>Otrzymujesz szczegółowe, krok po kroku, wyjaśnienie procesu tworzenia funkcji.</p></li><li><p>Jesteś w stanie zaimplementować funkcję na podstawie otrzymanego wyjaśnienia.</p></li></ul></div></body></html>

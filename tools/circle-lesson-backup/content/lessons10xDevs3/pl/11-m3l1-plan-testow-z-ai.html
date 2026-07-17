@@ -1,0 +1,205 @@
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m3-l1/assets/cover.jpg">https://images.przeprogramowani.pl/lessons/m3-l1/assets/cover.jpg</a></p></blockquote>
+<p>W module drugim nauczyłeś się prowadzić agenta przez cały cykl zmiany: roadmapa, plan, implementacja, review i tak w kółko. Na końcu poprzedniej lekcji pojawiło się jednak niewygodne pytanie.</p>
+<p>Dowozisz szybciej. Ale skąd wiesz, że to nadal działa?</p>
+<p>To jest naturalny moment wejścia w moduł trzeci. Pierwszej lekcji nie zaczniemy jednak od <strong>npx vitest</strong>, konfiguracji testu jednostkowego ani od pierwszego <strong>playwright test</strong>. Najpierw potrzebujesz odpowiedzieć na pytanie, <strong>co w twoim projekcie naprawdę musi być chronione</strong>.</p>
+<p>Bez tej decyzji agent bardzo chętnie napisze testy tam, gdzie jest najłatwiej. Helpery, gettery, formatery, funkcje utility. Coverage rośnie, CI świeci na zielono, a krytyczny flow użytkownika dalej nie ma żadnej ochrony.</p>
+<p>Niby profesjonalnie, ale jednak trochę teatralnie.</p>
+<p>W tej lekcji zbudujemy coś trwalszego niż pojedyncze testy. Zaczniemy od <strong>test planu</strong>, czyli klasycznej praktyki QA, która będzie strategicznym kierunkowskazem dla całego procesu zapewniania jakości w projekcie.</p>
+<p>Ale uwaga - nie wymyślamy koła od nowa. Jeśli wiesz, co trzeba chronić i nie chcesz wprowadzać nowych wariacji w swoim workflow, znany ci z poprzedniego modułu cykl <strong>research-plan-implement</strong> w zupełności wystarczy.</p>
+<p>Nowy skill wchodzi po prostu o warstwę wyżej, jakby do twojego zespołu dołączył wirtualny inżynier jakości. Pomaga ustalić <strong>co</strong> testować najpierw, <strong>dlaczego</strong> właśnie to i <strong>w jakiej kolejności</strong> dowieźć brakujące elementy.</p>
+<h2>Test plan w epoce AI</h2>
+<p>Klasyczny plan testów kojarzy się z dokumentem, który powstaje obok pracy zespołu. Ktoś opisuje zakres, środowiska, typy testów, role i harmonogram. Z dobrym agentem ta sama strategiczna dokumentacja powstaje w kilka minut, w trakcie zwykłej sesji w terminalu.</p>
+<p>Do tego służy <strong>/10x-test-plan</strong>.</p>
+<p>To nowy skill, który tworzy i pielęgnuje <strong>context/foundation/test-plan.md</strong> - dokument, który łączy w sobie strategię testowania i bieżący stan jej wdrażania. Skill czyta go przy każdym uruchomieniu, sprawdza co już jest na dysku i podpowiada kolejny krok.</p>
+<p>Małe zastrzeżenie na start: jeśli twój projekt to dopiero PRD i kilka notatek bez kodu, skill zatrzyma się z komunikatem, że trzeba wrócić po <strong>/10x-shape</strong> i <strong>/10x-prd</strong>. Test plan żywi się tym, co już istnieje w repo.</p>
+<p>Teraz pobierz paczkę artefaktów dla tej lekcji:</p>
+<pre><code class="language-bash">npx @przeprogramowani/10x-cli@latest get m3l1
+</code></pre>
+<p>Ta paczka dostarcza workflow potrzebny w tej lekcji: <strong>/10x-test-plan</strong>.</p>
+<h3>Bramki przed produkcją</h3>
+<p>W tym planie pojawi się też pojęcie <strong>quality gates</strong>, czyli bramek jakościowych. Koncepcyjnie to są punkty kontrolne, przez które zmiana musi przejść, zanim uznamy ją za gotową do kolejnego etapu pracy.</p>
+<p>Taka bramka może być bardzo prosta: lint, typecheck, testy jednostkowe, test krytycznego flow, review w Pull Requeście, pre-commit albo check w CI. Chodzi o prostą zasadę - zmiana nie idzie dalej tylko dlatego, że agent skończył pisać kod i powiedział, że jest gotowe.</p>
+<p>W programowaniu z AI to szczególnie ważne, bo agent potrafi bardzo szybko wygenerować dużo sensownie wyglądającego kodu. Szybkość jest zaletą, ale zwiększa też ryzyko, że ominiesz moment zastanowienia: czy ta zmiana pasuje do kontraktu projektu, czy nie psuje krytycznego scenariusza, czy nie przykrywa problemu ładnym diffem.</p>
+<p>Bramki jakościowe celowo utrudniają bezpośrednią drogę z odpowiedzi agenta na produkcję. To mechanizm opóźniający zły odruch: "działa lokalnie, wygląda dobrze, shipujemy". Chcemy, żeby kod najpierw dostał sygnał z narzędzi, testów i review, a dopiero potem trafił do użytkowników.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l1-lesson-draft-1-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l1-lesson-draft-1-10x.png</a></p></blockquote>
+<p>Zwróć uwagę, że <strong>/10x-test-plan</strong> nie jest osobnym silnikiem do testów. To warstwa orkiestracji nad cyklem, który znasz już z modułu drugiego.</p>
+<p>Skill można ponawiać na różnych etapach pracy. Wpisujesz <strong>/10x-test-plan</strong> po raz pierwszy, agent przeprowadza analizę, wywiad i generuje pierwszy plan. Sugeruje wdrożenie pierwszej zmiany przekierowując flow do klasycznego <strong>/10x-new &lt;change-id&gt;</strong>. Możesz wyczyścić sesję przez <strong>/clear</strong> lub wejść w nowy wątek przez UI, wrócić po dwóch dniach, ponownie wpisać <strong>/10x-test-plan</strong> i kontynuować. Agent znów patrzy na dysk, widzi że masz już <strong>change.md</strong> ale brak <strong>research.md</strong>, i mówi: "czas na <strong>/10x-research</strong>".</p>
+<p>Nie musisz pamiętać, gdzie skończyłeś. Pliki są pamięcią rollout'u.</p>
+<p>Praca naszego asystenta nie polega więc na jednej długiej sesji, w której agent wymyśla strategię, robi research, planuje, pisze testy i po drodze gubi połowę ustaleń. Mamy trwały dokument, małe sprawdzalne kroki i czysty kontekst przy każdym kolejnym etapie.</p>
+<h2>Najpierw ryzyka</h2>
+<p>Najgorszy start pracy nad jakością brzmi tak:</p>
+<pre><code class="language-text">Write tests for this file.
+</code></pre>
+<p>Agent robi dokładnie to, o co prosisz. Szuka pliku, znajduje funkcje, dopisuje testy do widocznych ścieżek i często trafia tam, gdzie najprościej. Po godzinie masz kilkadziesiąt testów i wszystkie na zielono. Fałszywy spokój, a prawdziwe ryzyka mogą być zupełnie gdzie indziej.</p>
+<p>Inne podejście? Zacznij od ryzyk i wrażliwych obszarów projektu z punktu widzenia wartości biznesowej.</p>
+<p><strong>/10x-test-plan</strong> zaczyna właśnie od nich, bazując na dokumentach kontekstowych:</p>
+<ul>
+<li><strong>context/foundation/prd.md</strong> - użytkownik, flow, wymagania, non-goals,</li>
+<li><strong>context/foundation/roadmap.md</strong> - stan zmian funkcjonalnych,</li>
+<li><strong>context/archive/*/plan.md</strong> - stan archiwalnych inicjatyw,</li>
+<li><strong>context/foundation/tech-stack.md</strong> - stack i ograniczenia,</li>
+<li><strong>AGENTS.md</strong> albo <strong>CLAUDE.md</strong> - reguły pracy w repo,</li>
+<li>istniejącą konfigurację testów, jeśli projekt już ją ma.</li>
+</ul>
+<p>Całość pokazuje pełniejszy obraz projektu i to, na co naprawdę warto uważać:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l1-lesson-draft-2-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l1-lesson-draft-2-10x.png</a></p></blockquote>
+<p>Historia GITa to jeden z mocniejszych sygnałów - zmiany koncentrują się tam, gdzie projekt nadal żyje. Zanim jednak skill ruszy ze skanem, zaproponuje ci zakres: "wykryłem <strong>packages/api/src</strong>, <strong>packages/course-content/src</strong>, wykluczyłem <strong>dist</strong>, <strong>coverage</strong>, fixtures. Akceptujesz czy dorzucić workspace, który przegapiłem?". Warto się tu zatrzymać. Skan rozciągnięty na lockfile albo snapshoty zatopi prawdziwy sygnał churnem, którego nikt nie pisze ręcznie.</p>
+<p>Zwróć uwagę na ostatnie źródło danych.</p>
+<p>Skill prowadzi z tobą krótki wywiad, w którym odkrywa, co naprawdę boisz się zepsuć, gdzie wcześniej się sparzyłeś, które miejsce zmieniasz bez pewności i na co nie chcesz marnować budżetu testowego. To nie jest miękki dodatek do "prawdziwej" analizy. Twoje doświadczenie często jest najlepszym sygnałem codziennego ryzyka.</p>
+<p>Wywiad dostosuje się do twojego projektu. Pracujesz nad świeżym serwisem, gdzie nie ma jeszcze ani jednego testu? Agent pominie pytanie "co czujesz, że jest niedotestowane?" - bo odpowiedź "wszystko" niczego nie wnosi. Masz garść testów w jednej paczce, a reszta repo jest goła? Pytanie zmieni się na "gdzie jest największa dziura, która cię niepokoi?".</p>
+<p>Ostatnie pytanie wywiadu brzmi inaczej niż reszta: "na co NIE chciałbyś, żeby poszedł budżet testowy?". Odpowiedź trafia do osobnej sekcji wykluczeń w planie. Wygląda na banał, ale za pół roku, gdy ktoś nowy w zespole zapyta "a może dorzucamy snapshoty stron marketingowych?", masz spisaną decyzję z powodem.</p>
+<p>Efekt to mapa ryzyk - kilka scenariuszy ocenionych w dwóch wymiarach:</p>
+<ul>
+<li><strong>wpływ</strong>, czyli jak bolesna jest awaria dla użytkownika i biznesu,</li>
+<li><strong>prawdopodobieństwo</strong>, czyli jak realne jest, że ta awaria wystąpi.</li>
+</ul>
+<p>Żeby ta ocena nie była loterią, warto trzymać się prostej skali. W zupełności wystarczy trójstopniowy podział - wysoki, średni, niski - z jednozdaniową definicją, do której zawsze można wrócić:</p>
+
+<ul>
+<li><strong>Ocena</strong>: <strong>Wysoki</strong> | <strong>Wpływ</strong>: użytkownik traci dostęp, dane albo pieniądze; awaria widoczna publicznie | <strong>Prawdopodobieństwo</strong>: obszar zmienia się co tydzień albo już się tu kiedyś przejechaliśmy</li>
+<li><strong>Ocena</strong>: <strong>Średni</strong> | <strong>Wpływ</strong>: funkcja działa gorzej, istnieje obejście, skutek odczuwa część użytkowników | <strong>Prawdopodobieństwo</strong>: kod ruszany od czasu do czasu, bywał źródłem błędów</li>
+<li><strong>Ocena</strong>: <strong>Niski</strong> | <strong>Wpływ</strong>: kosmetyka, łatwo cofnąć, brak skutku dla danych | <strong>Prawdopodobieństwo</strong>: kod stabilny, rzadko dotykany</li>
+</ul>
+<p>Priorytet to po prostu kombinacja obu osi. Najpierw chronisz scenariusze <strong>wysoki wpływ × wysokie prawdopodobieństwo</strong>, na końcu (albo wcale) te <strong>niski × niski</strong>. Najciekawsze są skrajności: awaria o ogromnym wpływie, ale znikomym prawdopodobieństwie (np. globalna awaria dostawcy chmury) zwykle nie jest wartym testem - taniej obsłużyć ją obserwowalnością i alertem niż scenariuszem testowym. Z kolei drobny, ale codzienny błąd potrafi zjeść więcej zaufania niż jedna spektakularna katastrofa raz na rok.</p>
+<p>Skala jest celowo zgrubna. Nie chodzi o policzenie ryzyka z dokładnością do drugiego miejsca po przecinku, tylko o to, żeby dwie osoby patrzące na ten sam wiersz zgodziły się, czy to "góra" czy "dół" tabeli.</p>
+<h3>Oś, o której łatwo zapomnieć: bezpieczeństwo</h3>
+<p>Wywiad i dokumenty świetnie wyłapują ryzyka funkcjonalne - "płacący użytkownik dostaje 403", "import gubi rekordy". Dużo trudniej samoistnie wypływają ryzyka, których nikt nie zgłasza jako funkcję, bo to scenariusze nadużycia, a nie zwykłego użycia.</p>
+<p>Dlatego przy budowie mapy ryzyk dorzuć świadomie osobne pytanie: <strong>co się stanie, gdy ktoś użyje tego wbrew intencji?</strong> Kilka klas, które warto rozważyć niezależnie od tego, czy padły w wywiadzie:</p>
+<ul>
+<li><strong>Autoryzacja i dostęp</strong> - czy użytkownik A dosięgnie zasobu użytkownika B przez podmianę identyfikatora w URL (IDOR)? Czy endpoint sprawdza nie tylko "czy jesteś zalogowany", ale i "czy <em>to</em> należy do ciebie"?</li>
+<li><strong>Wejście od użytkownika</strong> - czy nieufne dane trafiają do zapytania, szablonu albo komendy bez walidacji (injection)? Czy serwer waliduje to samo co klient, czy ślepo ufa front-endowi?</li>
+<li><strong>Sekrety i dane wrażliwe</strong> - czy klucz, token albo dane osobowe nie wyciekają do logów, treści błędu albo bundla front-endu?</li>
+<li><strong>Nadużycie zasobów</strong> - czy ktoś może obejść rate-limit, zamówić kosztowną operację w pętli albo wysłać masowo magic-linki?</li>
+</ul>
+<p>To nadal są scenariusze awarii, więc trafiają na tę samą mapę i podlegają tej samej skali wpływ × prawdopodobieństwo. Różnica jest taka, że agent rzadko zaproponuje je sam - "happy path" nie obejmuje atakującego. Jeśli twój projekt ma autoryzację, płatności albo przyjmuje cokolwiek od użytkownika, brak choćby jednego wiersza bezpieczeństwa na mapie ryzyk to zwykle nie znak, że jest bezpiecznie. To znak, że nikt o to nie zapytał.</p>
+<h2>Sygnał, nie diagnoza</h2>
+<p>To najważniejsza granica nowego skilla.</p>
+<p><strong>/10x-test-plan</strong> czyta repozytorium dla wskazówek, a nie dla potwierdzenia konkretnego zagrożenia. Może powiedzieć: "ten obszar często się zmieniał", "PRD mówi, że ten flow jest krytyczny", "użytkownik boi się regresji w auth", "projekt ma zbyt mało testów".</p>
+<p>Nie powinien mówić: "błąd znajduje się w <strong>src/auth/session.ts:42</strong>".</p>
+<p>Co więcej - nie pozwoli (zwykle) na to nawet wtedy, gdy się prosisz. Wpisz ryzyko w stylu "brak retry w <strong>session.ts</strong>" i dostaniesz w odpowiedzi "to opisuje implementację, nie scenariusz awarii. Przeformułuj na to, co faktycznie poczuje użytkownik". Nazwa pliku w kolumnie źródła też zniknie - zostanie zastąpiona tym, co naprawdę podniosło ryzyko: numerem pytania z wywiadu, linią z PRD albo katalogiem z największym churnem.</p>
+<p>Na konkrety w kodzie patrzy dopiero <strong>/10x-research</strong>, już w konkretnej fazie rollout'u planu. Research prześledzi realny kod, znajdzie wejścia użytkownika, granice API, walidację i najtańszą warstwę testu, która złapie daną awarię. Inaczej agent udaje wiedzę, której nie ma.</p>
+<p>Właśnie dlatego nie musimy wymyślać nowej metody implementacji testów. Kiedy już wiesz, które ryzyko jest ważne, normalny cykl działa bardzo dobrze:</p>
+<ol>
+<li><strong>/10x-research</strong> sprawdza, gdzie ryzyko naprawdę występuje</li>
+<li><strong>/10x-plan</strong> zamienia research w małe fazy pracy.</li>
+<li><strong>/10x-implement</strong> dowozi jedną fazę naraz.</li>
+<li>Ostatnia faza aktualizuje <strong>test-plan.md</strong>, jak od teraz dodawać podobne testy.</li>
+</ol>
+<p><strong>/10x-test-plan</strong> nie zastępuje researchu, planowania ani implementacji. Ustawia im kolejność i pilnuje, żeby nie zaczynały od wygodnego pliku, tylko od ważnego ryzyka.</p>
+<p>Czasem zresztą research okazuje się mądrzejszy od planu i to też jest OK. Gdy <strong>/10x-research</strong> skończy analizę kodu i odkryje, że awaria mieszka w innym katalogu niż wskazywał hot-spot, przy kolejnym uruchomieniu <strong>/10x-test-plan</strong> zapyta cię: "research wskazał poprawkę do §2, dopisać teraz czy zostawić do następnej rewizji?". Plan może przyjąć korektę z warstwy, która zna kod lepiej.</p>
+<p>Zobacz teraz jak wygląda cała koncepcja posługiwania się tym skillem:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1195983726?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1195983726?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<h2>Zielony test, który niczego nie chroni</h2>
+<p>Jest jedna pułapka, w którą agent piszący testy wpada wyjątkowo łatwo, a która potrafi zniweczyć cały wysiłek włożony w mapę ryzyk. Warto ją znać, zanim zaczniesz dowozić pierwszą fazę (tym zajmiemy się w kolejnej lekcji).</p>
+<p>Wyobraź sobie, że prosisz agenta o test do funkcji liczącej rabat. Agent czyta kod, widzi, że funkcja zwraca <strong>0.15</strong>, i pisze:</p>
+<pre><code class="language-text">expect(calculateDiscount(order)).toBe(0.15)
+</code></pre>
+<p>Test przechodzi. CI świeci na zielono. Tylko że ten test nie sprawdza, czy rabat jest <em>poprawny</em> - sprawdza, czy kod robi to, co już robi. Jeśli w funkcji siedzi błąd, test właśnie ten błąd zabetonował. Od teraz każda próba naprawy będzie "psuła test", choć to test jest zły.</p>
+<p>To jest <strong>problem wyroczni</strong> (oracle problem): żeby napisać sensowny test, musisz znać oczekiwany wynik z <em>niezależnego</em> źródła - z wymagań, kontraktu, specyfikacji, zdrowego rozsądku - a nie z samej implementacji, którą testujesz. Człowiek pisząc test sięga po tę wiedzę z głowy. Agent domyślnie ma pod ręką głównie kod i bardzo chętnie uznaje go za wyrocznię.</p>
+<p>To najważniejsze ryzyko całego pomysłu "niech AI pisze testy". Test, który odbija implementację, jest gorszy niż brak testu - daje fałszywe poczucie ochrony i utrudnia późniejsze poprawki.</p>
+<p>Jak się przed tym bronić:</p>
+<ul>
+<li><strong>Daj agentowi przestrzeń do interpretacji założeń.</strong> Zamiast "napisz testy do tej funkcji" powiedz "rabat to 10% powyżej 200 zł i 15% powyżej 500 zł - napisz testy na te progi". Oczekiwany wynik pochodzi wtedy od ciebie, a nie z kodu.</li>
+<li><strong>Czytaj asercje, nie tylko pasek pokrycia.</strong> Przy przeglądaniu wygenerowanego testu pytaj o każdą asercję: "skąd wzięła się ta wartość?". Jeśli odpowiedź brzmi "bo tyle zwraca funkcja", to nie jest test.</li>
+<li><strong>Sprawdź, czy test potrafi zawieść.</strong> Zepsuj na chwilę kod produkcyjny i zobacz, czy test się wywala. Jeśli dalej jest zielony, asercja niczego nie pilnuje. Tę intuicję rozwiniemy w kolejnej lekcji.</li>
+<li><strong>Uważaj na pracę pod presją zielonego.</strong> Gdy każesz agentowi "popraw, aż testy przejdą", najprostszą drogą bywa dopasowanie testu do kodu, a nie kodu do wymagań. Pilnuj kierunku.</li>
+</ul>
+<p><strong>/10x-test-plan</strong> ustawia tę obronę systemowo. Mapa ryzyk opisuje <em>zachowanie</em>, które ma być chronione ("płacący użytkownik widzi swoją treść"), a nie "funkcja X zwraca Y". Dzięki temu, gdy w fazie planu i implementacji agent pisze już konkretny test, dostaje wyrocznię z poziomu wartości dla użytkownika - a nie z linijki kodu, którą akurat ogląda.</p>
+<h2>Cookbook zamiast pamięci w głowie</h2>
+<p><strong>test-plan.md</strong> ma jeszcze jedną cechę, która z czasem zaczyna się sama spłacać.</p>
+<p>Dokument rośnie wraz z realizacją kolejnych faz. Każda zakończona faza dopisuje do niego konkretne przepisy - gdzie trzymać testy, jak je nazywać, na jakich wzorcach się oprzeć. To jak osobisty notatnik tego, czego agent uczy się po drodze.</p>
+<p>Mowa o sekcji <strong>## 6. Cookbook Patterns</strong> , która na początku nie jest wypełniona żadnymi szczegółami:</p>
+<pre><code class="language-text">TBD — see §3 Phase 1.
+</code></pre>
+<p>Ale bez obaw - to jest celowe. Skill nie powinien udawać, że zna lokalne wzorce testów, zanim research i implementacja pokażą, jak projekt naprawdę działa.</p>
+<p>Jeśli przejdziesz <strong>/10x-test-plan</strong> do końca, ostatni krok każdej fazy ma zaktualizować cookbook. Po zakończeniu pierwszej fazy nasz TBD zamienia się w coś takiego:</p>
+<pre><code class="language-text">### 6.2 Adding an integration test
+
+- Lokalizacja: packages/api/test/integration/
+- Polityka mockowania: tylko na granicy sieci (MSW), nigdy modułów wewnętrznych
+- Referencyjny test: packages/api/test/integration/auth.test.ts
+- Komenda lokalna: npm run test:integration
+</code></pre>
+<p>Następny agent - twój albo z zespołu - nie musi już zgadywać, gdzie idą testy integracyjne w tym konkretnym projekcie. Otwiera cookbook i ma wzorzec, ścieżkę i komendę.</p>
+<p>To jest moment, w którym plan testów przestaje być abstrakcyjny. Staje się instrukcją dla kolejnych agentów i dla ciebie z przyszłości.</p>
+<p>Bez cookbooka każda nowa zmiana zaczyna się od zgadywania lokalnej kultury testów.</p>
+<h2>Powroty do test-planu nie bolą</h2>
+<p>Realizacja planu testów może wymagać wielokrotnego czyszczenia sesji, przechodzenia przez cykl researchu, planowania i wielofazowej implementacji. Jak nie zgubić z oczu postępów w zakresie QA?</p>
+<p>Wpisz <strong>/10x-test-plan --status</strong>. Zamiast pracy dostaniesz krótką tabelę: która faza jest zamknięta, która w toku, jaka jest następna komenda do uruchomienia. Tyle, ile potrzebujesz, żeby wrócić po dwóch tygodniach i nie zaczynać od czytania historii czatu.</p>
+<p>Plan z czasem się też zestarzeje. Stack się zmienia, narzędzia AI dostają nowe wersje, zespół orientuje się, że któreś ryzyko już nie jest problemem albo że pojawiło się nowe. Wtedy <strong>/10x-test-plan --refresh</strong> otworzy świeżą rundę analizy potrzeb. Zmiany przechodzą przez ten sam cykl co pierwszy rollout, więc masz audyt tego, co i kiedy się zmieniło.</p>
+<h2>Artefakty po tej lekcji</h2>
+<p>Po tej lekcji w repo powinien istnieć <strong>context/foundation/test-plan.md</strong>, który odpowiada na kilka pytań (w zależności od projektu, niektóre elementy mogą być puste lub pojawić się nieco później):</p>
+<ol>
+<li>Jakie ryzyka dotyczące projektu są najbardziej istotne?</li>
+<li>Z jakich źródeł wiemy, że to są ryzyka?</li>
+<li>Jaki jest profil istniejących testów?</li>
+<li>Jakie fazy procesu QA zaadresują ryzyka?</li>
+<li>Które typy testów będą przydatne w tym projekcie?</li>
+<li>Jak praca z agentem może dodatkowo podnieść jakość?</li>
+<li>Jak wygląda cookbook rozwijania istniejących testów?</li>
+</ol>
+<p>To jest kontrakt wejściowy dla całego modułu trzeciego. Kolejne lekcje nie startują od "napiszmy trochę testów" - startują od konkretnej fazy rollout'u, researchu i planu.</p>
+<h2>🧑🏻‍💻 Zadania praktyczne</h2>
+<h3>Uruchom pierwszy test-plan</h3>
+<p>Uruchom <strong>/10x-test-plan</strong> w repo swojego projektu.</p>
+<p>Po ukończeniu pierwszego przebiegu przejrzyj akcje agenta:</p>
+<ol>
+<li>Czy źródła kontekstu zostały poprawnie sklasyfikowane?</li>
+<li>Czy bazowy stan testów brzmi uczciwie (greenfield to zwykle po prostu brak testów)?</li>
+<li>Czy historia GITa okazała się użyteczna?</li>
+</ol>
+<p>Jeśli coś się nie zgadza, popraw to teraz, wprost wskazując agentowi co przeoczył lub nadinterpretował. Błędny zakres na starcie popsuje priorytety całego rollout'u.</p>
+<h3>Uzyskaj mapę ryzyk</h3>
+<p>Po wstępnej analizie, skill wygeneruje mapę ryzyk. Sprawdź kilka elementów:</p>
+<ol>
+<li>Czy te ryzyka są&nbsp;naprawdę istotne dla twojego projektu, a nie opisują nieprawdopodobnych scenariuszy (np. zamknięcie firmy GitHub)?</li>
+<li>Które dokumenty źródłowe najmocniej przełożyły się na finalny kształt całej mapy ryzyk?</li>
+<li>Czy opis ryzyk nie skupia się przesadnie na implementacji i opisywaniu kodu niskopoziomowo?</li>
+<li>Czy zgadzasz się z oceną wpływu i prawdopodobieństwa? Jeśli nie - zasugeruj agentowi niezbędne korekty.</li>
+<li>Czy na mapie jest choć jeden scenariusz nadużycia (dostęp, wejście użytkownika, sekrety, rate-limit), jeśli projekt ma autoryzację lub płatności?</li>
+</ol>
+<p>Pamiętaj - jeśli agent pominął krytyczną ścieżkę, dopisz ją ręcznie albo poproś o ponowną ocenę. Jeśli wiersz brzmi jak "brak testów dla modułu X", przerób go na scenariusz awarii użytkownika.</p>
+<p>Nie przechodź dalej tylko dlatego, że tabela wygląda elegancko.</p>
+<h3>Sprawdź dopasowanie do projektu</h3>
+<p>W <strong>context/foundation/test-plan.md</strong> znajdź sekcje <strong>Stack</strong> i <strong>Quality Gates</strong>. Przeanalizuj, czy test plan w akceptowalny sposób opisuje realia pracy w tym projekcie:</p>
+<ul>
+<li>czy proponowane typy testów są dobrze zmapowane na ryzyka</li>
+<li>czy wykorzystywanie AI wpłynie pozytywnie na jakość</li>
+<li>czy bramki jakości (hooki, triggery) nie są nadmiarowe</li>
+</ul>
+<p>To nie konkurs na największą liczbę nowoczesnych narzędzi - utworzony plan musi być dla ciebie zrozumiały i nie powodować obciążeń przy dalszej pracy. Po czasie możesz go edytować i korygować&nbsp;początkowe założenia.</p>
+<h2>Odbierz swoją odznakę</h2>
+<p>Po ukończeniu tej lekcji odbierz odznakę w sekcji <a href="https://platforma.przeprogramowani.pl/10xdevs-3/mission-log">10xDevs Mission Log</a> a następnie pochwal się swoim osiągnięciem!</p>
+<h2>🔎 Deep Dive</h2>
+<p>Ta sekcja zawiera dodatkowe pogłębienie wiedzy na temat wybranych zagadnień związanych z lekcją. W tym Deep Dive znajdziesz:</p>
+<ul>
+<li><strong>Testowanie oparte na ryzyku, bez AI</strong> — skąd bierze się zasada impact × likelihood i dlaczego nie wymyśliliśmy jej na potrzeby agentów.</li>
+<li><strong>Sygnał kontra wiedza</strong> — dlaczego <strong>test-plan.md</strong> nie powinien wskazywać konkretnych linii w kodzie i czemu <strong>/10x-research</strong> jest osobną fazą.</li>
+</ul>
+<p>Ta sekcja lekcji nie jest obowiązkowa, ale warto się z nią zapoznać jeżeli chcesz zostać ekspertem.</p>
+<h3>Testowanie oparte na ryzyku, bez AI</h3>
+<p>Priorytetyzacja oparta na ryzyku nie jest pomysłem z ery LLM-ów. W klasycznym QA od dawna istnieje pojęcie <em>risk-based testing</em>: najpierw chronisz obszary o największej kombinacji wpływu i prawdopodobieństwa awarii.</p>
+<p>AI zmienia sposób operacjonalizacji tej reguły, a nie samą zasadę.</p>
+<p>Wcześniej mapę ryzyk przygotowywał człowiek, tester albo zespół. Teraz agent może szybciej przeczytać PRD, roadmapę i archiwum zmian, a potem zaproponować kandydatów. Nadal jednak potrzebuje twojej korekty, bo nie zna pełnego kontekstu biznesowego.</p>
+<p>Największa korzyść z AI nie polega więc na "wygenerowaniu listy testów". Polega na tym, że szybciej przejdziesz od artefaktów projektowych do rozmowy o realnych scenariuszach awarii.</p>
+<p>To szczególnie ważne dla solo developera. Nie masz osobnego zespołu QA, więc musisz priorytetyzować. Mapa ryzyk jest twoim mechanizmem segregacji.</p>
+<h3>Sygnał kontra wiedza</h3>
+<p>W starym podejściu do testowania agent bardzo łatwo mieszał dwa poziomy pracy - analizę biznesową i skupienie na konkretnych przyczynach technicznych:</p>
+<ul>
+<li>"ten obszar wygląda ryzykownie",</li>
+<li>"ten konkretny plik jest miejscem awarii".</li>
+</ul>
+<p>Pierwsze może wynikać z PRD, roadmapy, historii gita albo twojej obawy. Drugie wymaga researchu w kodzie. Jedno wcale nie musi wynikać z drugiego.</p>
+<p><strong>/10x-test-plan</strong> celowo trzyma mapę ryzyk na poziomie sygnałów. Dzięki temu nie zamyka researchu w fałszywej hipotezie. Jeśli skan najczęściej zmienianych miejsc pokazuje <strong>src/lib/</strong>, to jest informacja o częstej zmianie. Nie dowód, że awaria mieszka w <strong>src/lib/something.ts</strong>.</p>
+<p>To rozróżnienie oszczędza czas w kolejnych fazach. <strong>/10x-research</strong> może wtedy zrobić swoją robotę: prześledzić przepływ danych, sprawdzić istniejące testy, znaleźć realną granicę systemu i zaproponować najtańszy test. Jeśli odkryje, że ryzyko było źle sformułowane, plan można poprawić zamiast brnąć w testowanie fikcyjnego problemu.</p>
+<p>Dobry test-plan nie udaje eksperta od kodu. Jest dobrym zleceniem dla researchu.</p>
+<h2>📚 Materiały dodatkowe</h2>
+<p>Nie musisz czytać tych materiałów przed wykonaniem ćwiczeń. Są tu po to, żeby pogłębić decyzje z planu i odświeżyć narzędzia.</p>
+<ul>
+<li><a href="https://glossary.istqb.org/en_US/term/risk-based-testing">ISTQB: Risk-Based Testing</a> — klasyczne źródło dla pojęcia testowania opartego na ryzyku; przydatne jako kotwica dla impact × likelihood.</li>
+<li><a href="https://repomix.com/">Repomix</a> — narzędzie do pakowania repo jako briefu dla LLM-a.</li>
+<li><a href="https://gitingest.com/">GitIngest</a> — lekka ścieżka do przygotowania repo jako tekstowego kontekstu.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/03">[1.3]</a> <em>Jak uczyć się i rozwijać z AI</em> — przypomnienie, dlaczego nie akceptujemy mapy ryzyk bez obrony decyzji.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/10">[3.2]</a> <em>Wzorce i antywzorce promptowania</em> — prompt jako kontrakt oraz hierarchia instrukcji, na której bazuje trwały plan jakości.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/11">[3.3]</a> <em>Cykl życia wątku i zarządzanie kontekstem</em> — strategia Write/Select/Compress/Isolate jako fundament pracy z handoffami i świeżymi sesjami.</li>
+</ul>

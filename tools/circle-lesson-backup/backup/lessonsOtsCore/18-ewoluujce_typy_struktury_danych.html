@@ -1,0 +1,52 @@
+<meta name="lesson-id" content="Ewoluujące typy, struktury danych"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><p>TypeScript łączy dynamiczność JavaScriptu ze statycznym typowaniem, co pozwala pisać bardziej przewidywalny kod. W tej lekcji skupimy się na zaawansowanych funkcjach języka, takich jak "ewoluujące any", dynamiczne typowanie struktur danych, zarządzanie nadmiarowymi właściwościami oraz różnice między otwartymi i zamkniętymi typami obiektów. Dzięki temu nauczysz się unikać typowych błędów i lepiej projektować typy w swoich aplikacjach.</p><h3>Mechanizm "ewoluującego any"</h3><p>TypeScript pozwala zmiennym zadeklarowanym z użyciem let przyjąć typ na podstawie przypisywanej wartości. Jeśli brak jest początkowej adnotacji typu, typowanie zmiennej ewoluuje w miarę przypisywania różnych wartości. Mechanizm ten bazuje na dynamicznej inferencji typu.</p><pre><code>let myVar; // Typ: any
+myVar = 42; 
+console.log(myVar.toExponential()); // Wywołuje metodę specyficzną dla liczby
+
+myVar = "tekst";
+console.log(myVar.toUpperCase()); // Wywołuje metodę specyficzną dla stringa</code></pre><p>Jest to zgodne z dynamicznym charakterem JavaScriptu, ale wymaga ostrożności, aby uniknąć nieprzewidywalnych błędów.</p><p>W powyższym przykładzie TypeScript automatycznie zmienia typ myVar na podstawie przypisanych wartości. </p><p>Mechanizm "ewoluującego any" ma także zastosowanie w tablicach. Jeśli tablica zostanie zadeklarowana bez przypisania jej typu, TypeScript automatycznie rozszerzy jej typ na podstawie zawartych w niej elementów. Początkowo taka tablica jest traktowana jako pusta i niezdefiniowana pod względem typu. W momencie dodawania elementów, TypeScript tworzy unie typów, które obejmują wszystkie przypisane wartości.</p><pre><code>const evolvingArray = [];
+evolvingArray.push(123);  // Typ tablicy: number[]
+evolvingArray.push("tekst"); // Typ tablicy: (number | string)[]</code></pre><p>Choć to zachowanie zapewnia dużą elastyczność, wprowadzenie bardziej precyzyjnego typowania w początkowej deklaracji może znacznie poprawić przewidywalność kodu.</p><p>Aby zachować bezpieczeństwo typów, warto zdefiniować typ tablicy od razu:</p><pre><code>const numberArray: number[] = [];
+numberArray.push(123); // Działa poprawnie
+numberArray.push("tekst"); // Błąd kompilacji: Typ 'string' nie jest przypisywalny do 'number'</code></pre><p>Deklarując typ tablicy na <em>number[]</em>, upewniasz się, że w tablicy znajdą się tylko liczby, co znacząco zwiększa czytelność i stabilność kodu.</p><h3>Ewoluujące tablice</h3><p>Podobnie jak w przypadku pojedynczych zmiennych, TypeScript potrafi dynamicznie określać typ tablic na podstawie jej zawartości. Jeśli na początku tablica nie ma określonego typu, jej typ ewoluuje w miarę dodawania nowych elementów.</p><p>Rozważmy tablicę, do której dodawane są różne typy elementów:</p><pre><code>const evolvingArray = []; // Typ: any[]
+evolvingArray.push(123);  // Typ: number[]
+evolvingArray.push("tekst"); // Typ: (number | string)[]</code></pre><p>Po dodaniu liczby do pustej tablicy, jej typ zmienia się na number[]. Gdy dodamy do niej tekst, TypeScript automatycznie rozszerza typ tablicy na number | string.</p><p>Aby uniknąć nieprzewidywalnych błędów, warto zdefiniować typ tablicy od razu:</p><pre><code>const numberArray: number[] = [];
+numberArray.push(123); // Działa poprawnie
+numberArray.push("tekst"); // Błąd kompilacji: Typ 'string' nie jest przypisywalny do 'number'</code></pre><p>Deklarując typ tablicy na <em>number[]</em>, upewniasz się, że w tablicy znajdą się tylko liczby, co znacząco zwiększa czytelność i stabilność kodu.</p><h2>Otwarte i zamknięte typy obiektów</h2><p>W TypeScript obiekty są domyślnie traktowane jako <strong>otwarte</strong> w kontekście ogólnej filozofii języka. Jednak w praktyce, kiedy definiujesz obiekt za pomocą literału, jego typ jest <strong>zamykany</strong> do dokładnie tych właściwości, które zostały zdefiniowane. Przykładowo:</p><pre><code>const user = { name: "Alice" }; // Typ: { name: string }
+user.age = 25; // Błąd: Property 'age' does not exist on type '{ name: string; }'.</code></pre><p>TypeScript przypisuje obiektowi dokładny typ <em>{ name: string }</em>, co oznacza, że próba dodania nowej właściwości, takiej jak age, skutkuje błędem. To zachowanie różni się od JavaScriptu, gdzie można swobodnie dodawać nowe właściwości do obiektów.</p><p><strong>Indeksowane typu obiektów</strong></p><p>Jednym z rozwiązań jest zadeklarowanie obiektu jako mapy klucz-wartość:</p><pre><code>type User = { [key: string]: unknown }; 
+
+const user: User = { name: "Alice" };
+user.age = 25; // Działa poprawnie, ponieważ typ User pozwala na dowolne klucze
+console.log(user); // { name: "Alice", age: 25 }</code></pre><p>W tym przypadku mówimy TypeScriptowi, że obiekt może zawierać dowolne klucze ([key: string]) i dowolne wartości (any). Jednak stosowanie any osłabia mechanizmy typowania, dlatego lepszym rozwiązaniem może być użycie bardziej precyzyjnych typów.</p><p><strong>Użycie Record</strong></p><p>Możesz również użyć typu Record, aby określić typ kluczy i wartości:</p><pre><code>const user: Record&lt;string, string | number&gt; = { name: "Alice" };
+user.age = 25; // Działa poprawnie
+console.log(user); // { name: "Alice", age: 25 }</code></pre><p>W tym przykładzie obiekt user akceptuje klucze typu string oraz wartości będące string lub number.</p><p><strong>Otwarte typy a iterowanie po kluczach</strong></p><p>Otwarte typy mogą prowadzić do problemów, kiedy iterujesz po kluczach obiektu, ponieważ TypeScript nie zakłada, że wszystkie klucze są zdefiniowane w typie.</p><pre><code>const album = { title: "Revolver", releaseYear: 1966 };
+for (const key in album) {
+  console.log(album[key]); // No index signature with a parameter of type 'string' was found on type '{ title: string; releaseYear: number; }'
+}</code></pre><p>Aby uniknąć błędów, możesz jawnie wskazać, że klucze odpowiadają właściwościom obiektu, na przykład za pomocą operatora keyof:</p><pre><code>for (const key in album) {
+  console.log(album[key as keyof typeof album]); // Bez błędu
+}</code></pre><h3><strong>Jak zamknąć typy w TypeScript</strong></h3><p>Aby uniemożliwić dodawanie nowych właściwości do obiektu, możesz zastosować operator <em>as const</em> lub wprowadzić bardziej restrykcyjny typ, który wymaga zgodności z dokładnym zestawem właściwości.</p><p><strong>Użycie as const</strong></p><p>Jeśli zależy ci na tym, aby obiekt był <strong>niemodyfikowalny</strong>, możesz oznaczyć go jako stały (const assertion):</p><pre><code>const user = { name: "Alice" } as const;
+user.name = "Bob"; // Error: Cannot assign to 'name' because it is a read-only property.</code></pre><p>Powyższe podejście nie tylko blokuje dodawanie nowych właściwości, ale również zmienia istniejące właściwości na tylko do odczytu (readonly).</p><h3>Nadmiarowe właściwości w obiektach</h3><p>TypeScript czasami ignoruje dodatkowe właściwości w obiektach, co może prowadzić do zaskakujących sytuacji. Rozważmy prosty interfejs Album, który definiuje dwa pola: title i releaseYear.</p><pre><code>interface Album {
+  title: string;
+  releaseYear: number;
+}</code></pre><p>Jeśli przypiszesz obiekt zawierający dodatkową właściwość do zmiennej, a następnie przekażesz tę zmienną do funkcji, TypeScript nie zgłosi błędu:</p><pre><code>function processAlbum(album: Album) {
+  // Do something with album
+}
+
+const album = {
+  title: "Rubber Soul",
+  releaseYear: 1965,
+  label: "Parlophone", // Nadmiarowa właściwość
+};
+
+processAlbum(album); // Wszystko w porządku</code></pre><p>Ale jeśli przekażesz ten sam obiekt bezpośrednio do funkcji, TypeScript zacznie protestować:</p><pre><code>processAlbum({
+  title: "Revolver",
+  releaseYear: 1966,
+  label: "EMI" // Błąd: "label" nie istnieje w typie Album
+});</code></pre><p>Dlaczego tak się dzieje? Kiedy obiekt jest przypisywany do zmiennej, TypeScript zakłada, że może być używany w innych miejscach, gdzie nadmiarowe właściwości są potrzebne. Ale w przypadku literałów obiektowych, które są używane tylko w jednym miejscu, TypeScript może sprawdzić, czy wszystkie właściwości pasują do zdefiniowanego interfejsu.</p><p>Jeśli chcesz wymusić sprawdzanie nadmiarowych właściwości, możesz użyć operatora satisfies:</p><pre><code>const album = {
+  title: "Abbey Road",
+  releaseYear: 1969,
+  label: "Apple",
+} satisfies Album; // Błąd: "label" nie istnieje w Album</code></pre><p>Alternatywnie, możesz użyć jawnej adnotacji typu:</p><pre><code>const album: Album = { 
+  title: "Help!", 
+  releaseYear: 1965, 
+  label: "EMI" // Błąd: "label" nie istnieje w typie Album
+};</code></pre><h3>Podsumowanie</h3><p>Podczas tej lekcji poznaliśmy zaawansowane aspekty TypeScript, takie jak "ewoluujące any", dynamiczne typowanie struktur danych oraz mechanizmy zarządzania nadmiarowymi właściwościami w obiektach. Dzięki tym technikom możesz pisać kod, który lepiej odzwierciedla dynamiczność JavaScriptu, ale jednocześnie jest bardziej przewidywalny. Warto stosować jawne typowanie wszędzie tam, gdzie to możliwe, aby uniknąć nieprzewidywalnych błędów. </p><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>621-key-loop - </strong>Wykorzystaj odpowiednie mechanizmy TypeScript, aby uzyskać szczegółowe informacje o kluczach obiektu wewnątrz pętli for...of.</p></li><li><p><strong>622-stable-config - </strong>Wykorzystaj odpowiedni mechanizm TypeScript, aby uniemożliwić zmianę jakichkolwiek wartości w obiekcie config po jego zdefiniowaniu.</p></li></ol><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

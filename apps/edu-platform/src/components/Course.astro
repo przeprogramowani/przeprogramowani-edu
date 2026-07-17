@@ -1,0 +1,126 @@
+---
+import {getCollection} from 'astro:content';
+import CourseLayout from '../layouts/CourseLayout.astro';
+import ContentTopBar from './ContentTopBar.svelte';
+import Lesson from './Lesson.astro';
+import LessonCompletionControls from './progress/LessonCompletionControls.astro';
+import LessonSidebar from './sidebar/LessonSidebar.svelte';
+import SidebarToggle from './sidebar/SidebarToggle.svelte';
+import logo from '../assets/images/generic/logo-white.png';
+import logoSmall from '../assets/images/generic/logo-white-mobile.png';
+import logoDark from '../assets/images/generic/logo-dark.png';
+import logoDarkSmall from '../assets/images/generic/logo-dark-mobile.png';
+import {LessonCollection} from '../models/LessonCollection';
+import {CourseSlug} from '../models/CollectionMappings';
+import {extractHeadingsFromHtml} from '../utils/extractHeadingsFromHtml';
+import {buildCompleteToc} from '../utils/buildTocHierarchy';
+import {
+  attachLessonProgress,
+  buildLessonProgressScope,
+  loadLessonProgressForCourse,
+} from '@/server/progress/lessonProgressLoader';
+import '@/styles/sidebar.css';
+
+interface Props {
+  courseSlug: CourseSlug;
+  collection: LessonCollection;
+  lessonId: string | null;
+  userEmail?: string;
+}
+
+const {courseSlug: courseSlug, collection, lessonId, userEmail}: Props = Astro.props;
+
+const lessons = await getCollection(collection);
+const lessonProgress = await loadLessonProgressForCourse({
+  email: userEmail,
+  courseSlug,
+  language: null,
+  env: Astro.locals.runtime.env,
+});
+
+const activeLesson = lessons.find((lesson) => lesson.id === lessonId)!;
+const activeLessonIndex = lessons.findIndex((lesson) => lesson.id === lessonId);
+const prefix = `/courses/${courseSlug}/lesson`;
+const prevLessonUrl = activeLessonIndex > 0 ? `${prefix}/${lessons[activeLessonIndex - 1].id}` : null;
+const nextLessonUrl = activeLessonIndex < lessons.length - 1 ? `${prefix}/${lessons[activeLessonIndex + 1].id}` : null;
+const {headings: flatHeadings, modifiedHtml} = extractHeadingsFromHtml(activeLesson.data.content);
+const tocData = buildCompleteToc(flatHeadings);
+const storageKey = `course-${courseSlug}-toc-open`;
+const hasToc = tocData.tree.length > 0;
+const lessonsWithProgress = attachLessonProgress(lessons, lessonProgress, (lesson) => lesson.id);
+const progressScope = buildLessonProgressScope({ courseSlug, language: null, lessonProgress });
+---
+
+<CourseLayout courseSlug={courseSlug} lessonName={activeLesson.data.name}>
+  <div class='flex h-screen flex-col overflow-hidden'>
+    {hasToc && (
+      <script is:inline>
+        document.documentElement.classList.add('toc-not-hydrated');
+      </script>
+    )}
+    <ContentTopBar
+      client:load
+      homeUrl="/"
+      logoUrl="/courses"
+      logoSrc={logo.src}
+      logoSmallSrc={logoSmall.src}
+      logoDarkSrc={logoDark.src}
+      logoDarkSmallSrc={logoDarkSmall.src}
+      prevUrl={prevLessonUrl}
+      nextUrl={nextLessonUrl}
+      lessons={lessons.map((lesson) => ({ id: lesson.id, name: lesson.data.name }))}
+      activeLessonId={activeLesson.id}
+      lessonUrlPrefix={`/courses/${courseSlug}/lesson`}
+      headings={hasToc ? tocData.tree : []}
+      tocStorageKey={storageKey}
+      contentSelector=".lesson-content"
+      showThemeToggle={true}
+    />
+    <div class='flex flex-1 overflow-hidden'>
+      <div class='sidebar-container hidden md:block border-r lesson-divider h-full'>
+        <div class='lesson-sidebar lesson-scrollbar h-full overflow-y-auto'>
+          <LessonSidebar
+            client:load
+            mode="flat"
+            lessons={lessonsWithProgress.map((l) => ({
+              id: l.id,
+              name: l.data.name,
+              progress: l.progress,
+            }))}
+            activeLessonId={activeLesson.id}
+            lessonUrlPrefix={`/courses/${courseSlug}/lesson`}
+            progressScope={progressScope}
+          />
+        </div>
+      </div>
+
+      <div class='lesson-shell lesson-scrollbar flex-1 h-full overflow-y-auto'>
+        <div class='p-4 md:p-8'>
+          <Lesson content={modifiedHtml} lessonName={activeLesson.data.name}>
+            <LessonCompletionControls
+              slot="topControls"
+              courseSlug={courseSlug}
+              language={null}
+              lessonId={activeLesson.id}
+              lessonName={activeLesson.data.name}
+              lessonProgress={lessonProgress}
+            />
+            <LessonCompletionControls
+              slot="bottomControls"
+              courseSlug={courseSlug}
+              language={null}
+              lessonId={activeLesson.id}
+              lessonName={activeLesson.data.name}
+              lessonProgress={lessonProgress}
+              class="not-prose border-t lesson-divider pt-6"
+            />
+          </Lesson>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body-level sibling of the .sidebar-container — MUST stay outside it
+       so that opacity:0 on the collapsed container does not hide the toggle. -->
+  <SidebarToggle client:load />
+</CourseLayout>

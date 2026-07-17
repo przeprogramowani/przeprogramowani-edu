@@ -1,0 +1,216 @@
+<meta name="lesson-id" content="[5x3] Agent AI w scenariuszach CI/CD"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/ufbqjbcbbbidwl4tc03kaz6fqmlz" style="width: 100%; max-width: 100%;"><p>Wersja Focus Mode (Markdown) <a href="https://platforma.przeprogramowani.pl/external/10xdevs-2/2580257" target="_blank" rel="noopener noreferrer">pod tym linkiem</a>.</p><h2>Wprowadzenie</h2><p>Przez większą część szkolenia 10xDevs byliśmy bezpośrednim przełożonym i opiekunem naszego Agenta AI. Wielokrotnie udowadniał on istotny wpływ na rozwój aplikacji, czy to poprzez przyśpieszanie implementacji, asystę w refaktoryzacji i modernizacji kodu, wspomaganie nas w nauce nowych konceptów czy dzielenie się opiniami, których oryginalnie nie braliśmy pod uwagę.</p><p>W tej lekcji poznasz jeden ze sposób na zapewnienie większego poziomu autonomii i automatyzacji naszego wirtualnego współpracownika. Będzie on mógł dzielić się feedbackiem i sugerować poprawki będąc bezpośrednio podłączonym do repozytorium. A jak to osiągniemy?</p><p>Wykorzystamy poznane w poprzednich lekcjach GitHub Actions. To nie tylko usługa do powtarzalnego budowania, testowania i wdrażania aplikacji, ale narzędzie otwierające nas na nowe scenariusze współpracy i integracji z AI.</p><p>W pierwszym etapie poznamy sposób na rozszerzanie dostępnych funkcji GHA, a w drugim wprowadzimy asystenta opartego o twój ulubiony model i dostawcę takiej usługi. Będziesz go mógł dodawać do dowolnego repozytorium, aby na bieżąco monitorował jakość i realizował dowolne, zdefiniowane przez ciebie zadanie (nawet, kiedy śpisz). Na końcu zobaczysz potencjał gotowej akcji wykorzystującej agenta Claude, która korzysta z poznanych wcześniej technik.</p><h2>Praca z Composite Actions</h2><p>Do zbudowania naszej integracji wykorzystamy tzw. “Composite Actions” czyli sposób na to, aby scenariusze GHA rozszerzać poprzez niezależne akcje (a’la pluginy).</p><p>W trybie Composite Action możemy wyciągnąć zestaw kroków danego scenariusza do osobnego pliku, a następnie wstrzykiwać go na żądanie w wiele miejsc. Co najważniejsze, taka akcja kompozytowa może być rozwijana w niezależnym repozytorium, a cała integrację załatwia za nas GitHub Actions.</p><p>Composite Action to jeden z dwóch sposobów na tworzenie modularnych, łatwiejszych w zarządzaniu scenariuszy CI/CD (drugi to <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows#creating-a-reusable-workflow" target="_blank" rel="noopener noreferrer">reusable workflows</a> - służący do niezależnych, złożonych scenariuszy).</p><h3>Tworzenie reużywalnej akcji</h3><p>Posługiwanie się&nbsp;Composite Actions składa się z dwóch elementów:</p><ol start="1"><li><p>Utworzenia niezależnego repozytorium z reużywalną akcją (np. github.com/john/ai-action)</p></li><li><p>Użycie akcji w repozytorium z twoim projektem (np. github.com/john/app)</p></li></ol><p><em>👉 Composite Action może też być&nbsp;rozwijana w podfolderze, w tym samym repo, ale taki format utrudni używanie akcji w innych projektach. Dlatego na start prezentujemy optymalny setup takiego rozwiązania, który ułatwi ci np. opublikowanie akcji w </em><a href="https://github.com/marketplace?type=actions" target="_blank" rel="noopener noreferrer"><em>GitHub Actions Marketplace</em></a><em>.</em></p><img loading="lazy" src="https://assets-v2.circle.so/e3fsbxvre5z4uhvc1fnsdyyffwmj" style="width: 100%; max-width: 100%;"><p>Aby całość zadziałała tak jak na schemacie, na głównym poziomie repozytorium z akcją musi znajdować się&nbsp;plik <strong>action.yml</strong> oznaczony jako “composite”. Sama akcja, poprzez terminal, może wykonywać inne skrypty rozwijane w ramach tego samego repozytorium - to sposób na to, aby akcję GHA zintegrować z dowolnym AI SDK i preferowanej przez ciebie technologii (nie tylko JS):</p><pre><code>/
+├── action.yml
+├── src
+│      └── use-ai.js
+└── dist
+          └── use-ai.js</code></pre><p>Samą akcję definiujemy jako zestaw kroków, który będzie uruchamiany w ramach głównego scenariusza:</p><pre><code># action.yml
+name: AI Reviewer
+description: Comment from AI
+
+# GitHub Marketplace - Branding (Opcjonalne)
+branding:
+  icon: "terminal"
+  color: "black"
+
+# Parametry wejściowe
+inputs:
+  GOOGLE_API_KEY:
+    description: "Google AI Studio API Key"
+
+# Kroki danej akcji - wykorzystywane w scenariuszu konsumenta
+runs:
+  using: "composite"
+  steps:
+    - name: Run action
+      run: node ${GITHUB_ACTION_PATH}/dist/use-ai.js
+      shell: bash
+      env:
+        GOOGLE_API_KEY: ${{ inputs.GOOGLE_API_KEY }}</code></pre><p>Zwracamy uwagę na kilka elementów:</p><ul><li><p>Definicja akcji musi zawierać klauzulę “<strong>using: 'composite'</strong>“ - oznacza to, że akcja będzie “wklejona” do nadrzędnego scenariusza (np. w osobnym repozytorium).</p></li><li><p>Zauważ, że akcja nie ma zdefiniowanego triggera ani systemu operacyjnego, na którym jest uruchomiona - <strong>decyduje o tym konsument akcji</strong>.</p></li><li><p>Z poziomu akcji możesz wykonać dowolny skrypt w danym repozytorium ale również wszystko to, co normalnie uruchomisz z poziomu terminala: <strong>“</strong><strong><em>run:</em></strong><strong> </strong><strong><em>node ${GITHUB_ACTION_PATH}/dist/use-ai.js</em></strong><strong>”</strong></p></li><li><p>Composite Action może być parametryzowana poprzez pola “<strong>inputs</strong>” - często będzie to np. tryb działania, klucz do danego API, itd. (🚨 Pamiętaj o zasadzie ograniczonego zaufania - konsumenci mogą tutaj wstrzykiwać potencjalnie niebezpieczne wartości)</p></li><li><p>Akcje <em>composite</em> muszą posiadać zdefiniowany <strong><em>shell</em></strong> do wywoływania poleceń.</p></li></ul><h3>Testowa integracja z AI</h3><p>Aby przetestować integrację, w repozytorium z testową akcją umieściłem prosty skrypt Node.js korzystający z klienta Google Generative AI. Wykorzystuję tutaj darmowy klucz z Google AI Studio (przekazywany jako zmienna środowiskowa) oraz model Gemini 2.5 Flash.</p><p>Na tym etapie integracja nie ma jeszcze świadomości repozytorium konsumenta, ale dzięki niej przetestujemy wywołanie Gemini z poziomu GHA.</p><pre><code>// src/use-ai.js
+import {GoogleGenAI} from "@google/genai";
+
+const ai = new GoogleGenAI({apiKey: process.env.GOOGLE_API_KEY});
+
+async function main() {
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents:
+      "Provide short example of a feedback to Pull Request - imagine that you are a reviewer.",
+  });
+  console.log(response.text);
+}
+
+main();</code></pre><p>Tego typu skrypt jest częścią&nbsp;standardowego projektu Node/npm - inicjalizuję go poprzez <em>npm init, </em>a następnie sam skrypt umieszczam w folderze src/use-ai.js.</p><h3>Uwaga na dodatkowe zależności</h3><p>Jeśli twoja akcja posiada dodatkowe zależności (np. dowolne AI SDK), których nie chcesz instalować na poziomie docelowego projektu, musisz je spakować już na etapie publikowania akcji.</p><p>W moim przypadku posługuję się narzędziem <a href="https://rolldown.rs/" target="_blank" rel="noopener noreferrer">rolldown</a>, które uruchamiam lokalnie, otrzymuję plik wynikowy folderze <em>dist</em> i wrzucam go na ten sam branch co akcja (również dodaję do GITa):</p><pre><code>"scripts": {
+    "build": "npx rolldown src/use-ai.js --file dist/use-ai.js"
+},</code></pre><p>Dzięki zbudowaniu skryptu i jego zależności do jednego pliku, na poziomie samej akcji nie muszę już wykonywać dodatkowej instalacji zależności ani oczekiwać, że w repozytorium konsumenta będzie taki sam setup projektu jak u mnie:</p><pre><code># action.yml
+# ...
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run action
+      run: node ${GITHUB_ACTION_PATH}/dist/use-ai.js
+      shell: bash
+      env:
+        GOOGLE_API_KEY: ${{ inputs.GOOGLE_API_KEY }}</code></pre><h3>Jak używać nowej akcji</h3><p>Po stronie konsumenta użycie akcji sprowadza się do rozbudowy scenariusza o nowy <em>step</em>. Poprzez klauzulę “uses” wskazujemy  w nim właściciela i nazwę repozytorium, a także branch (ew. tag lub commit SHA) z plikiem <em>action.yml</em>. Resztą zajmie się GitHub Actions:</p><pre><code># pull-request.yml
+name: Pull Request
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: przeprogramowani/ai-action@master
+        with:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}</code></pre><p>Zwróć uwagę na dodatkowe kroki przed wywołaniem nowej akcji. W trybie “Composite” sami musimy zadbać o konfigurację środowiska na potrzeby całego scenariusza. Dlatego:</p><ul><li><p>Zawsze upewnij się, że na poziomie <em>joba</em> używasz kompatybilnego OS-a (np. <em>ubuntu-latest</em>)</p></li><li><p>Zadbaj o instalację niezbędnych zależności zanim uruchomisz akcję (np. <em>setup-node</em>)</p></li><li><p>Wszystkie sekrety muszą być skonfigurowane w docelowym repozytorium projektu</p></li></ul><p>Komunikat z modelu Gemini potwierdza poprawne wykonanie akcji w moim scenariuszu - oczywiście na teraz ta odpowiedź nie ma większego sensu, bo akcja nie jest jeszcze świadoma kontekstu repozytorium:</p><img loading="lazy" src="https://assets-v2.circle.so/rqqaid1kbja0udy7yh84mbk6zubd" style="width: 100%; max-width: 100%;"><p>Wiedząc jak łączyć&nbsp;ze sobą scenariusze GHA, reużywalne akcje oraz integrację z AI z poziomu skryptów Node.js (stack możesz dobrać wg preferencji), przejdźmy teraz do dwóch przykładowych scenariuszy z dostępem do repozytorium, które przy pomocy AI zadbają o jakość projektu.</p><h2>Dwa pomysły dla Agenta AI w CI/CD</h2><p>Zobaczysz teraz dwa pomysły na to, jak AI może stać się realnym rozszerzeniem programistycznego workflow - solo i w zespole.</p><p>Pierwsze rozwiązanie to feedback do Pull Requestów - model językowy, na podstawie wprowadzanych zmian oraz określonego prompta, może wykonać precyzyjne <strong>Code Review</strong> wskazując na mocne i słabe strony danego rozwiązania. Prompt może być dopasowany do zespołowych wymagań, określonego stacku technicznego, a i sam model można zawsze aktualizować szukając optymalnego rozwiązania.</p><p>To znakomity sposób na pierwszą linię Code Review i zapewnienie minimalnego poziomu feedbacku do każdej zmiany, którą programiści chcą wdrożyć na główny branch:</p><pre><code>// github.com/przeprogramowani/ai-action/blob/git-diff/src/code-review.js
+
+export async function performAICodeReview(prDiff, apiKey) {
+  if (!prDiff) {
+    throw new Error("PR diff is empty or not provided");
+  }
+
+  if (!apiKey) {
+    throw new Error("Google API key is required");
+  }
+
+  const ai = new GoogleGenAI({apiKey});
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: `
+        You are a senior software engineer reviewing a pull request.
+        Conduct a thorough review of the PR based on provided diff.
+
+        The PR diff is:
+
+        &lt;diff&gt;
+        ${prDiff}
+        &lt;/diff&gt;
+
+        Focus on the following:
+        - Code readability - is the code easy to understand?
+        - Code performance - is the code efficient?
+        - Code style - is the code style consistent?
+        - Code duplication - is the code duplicated?
+        - Code quality - is the code of high quality?
+
+        You are allowed to use "N/A" for cases where the PR does not bring any changes in given area.
+        `,
+    });
+
+    return response.text;
+  } catch (error) {
+    console.error("Error during AI review:", error);
+    throw error;
+  }
+}</code></pre><p>Druga propozycja to kontynuacja lekcji o pracy z kodem zastanym - tutaj wykorzystujemy przykładowy prompt do wyrównania różnic pomiędzy implementacją danego modułu, a jego dokumentacją.</p><p>To przydatny scenariusz, który możesz uruchamiać cyklicznie, np. w każdy weekend, a jego efekty poprzez nowy Pull Request mogą ocenić programiści.</p><pre><code>// github.com/przeprogramowani/ai-action/blob/sync-docs/src/jsdoc-updater.js
+
+export async function updateJSDocs(fileContent, apiKey) {
+  if (!fileContent) {
+    // Consider returning original content or throwing a more specific error
+    console.warn(
+      "File content is empty or not provided. Skipping JSDoc update."
+    );
+    return fileContent;
+  }
+
+  if (!apiKey) {
+    throw new Error("Google API key is required");
+  }
+
+  // Initialize Google AI
+  const ai = new GoogleGenAI({apiKey});
+
+  // Updated prompt:
+  const prompt = `
+You are an AI assistant specialized in JavaScript documentation.
+Your task is to analyze the provided JavaScript code and ensure JSDoc comments are present and accurate for functions, classes, and complex logic blocks. Do not comment self-explanatory code or one-liners.
+
+**Instructions:**
+1.  **Add missing JSDocs:** If a function, class, or significant logic block lacks documentation, add a complete JSDoc comment.
+2.  **Fix broken JSDocs:** If an existing JSDoc comment is fundamentally incorrect (e.g., wrong parameter names, incorrect return type description, misleading description), update it to be accurate.
+3.  **Do NOT make minor changes:** If JSDoc comments exist and are generally correct, do *not* modify them for minor rewording, style adjustments, or typo fixes.
+4.  **Preserve Code:** Ensure the underlying JavaScript code logic remains completely unchanged.
+5.  **Output:** Return the *entire* file content. If you made changes according to rules 1 or 2, return the modified content. If no changes were needed according to rule 3, return the original, unmodified content.
+6.  **Format:** Output *only* the raw code content, without any markdown fences (like \`\`\`javascript) or explanations.
+
+JavaScript code:
+\`\`\`javascript
+${fileContent}
+\`\`\`
+`;
+
+  const response = await ai.models.generateContent({
+    model: "gemini-2.0-flash",
+    contents: prompt,
+  });
+  const updatedContent = response.text;</code></pre><p>Oba scenariusze, a także ich wpływ na jakość projektu, omawiamy w poniższym filmie:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1078088344?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Szczegóły akcji możesz podejrzeć tutaj: <a href="https://github.com/przeprogramowani/ai-action" target="_blank" rel="noopener noreferrer">https://github.com/przeprogramowani/ai-action</a> </p><p>Dla wszystkich tech leadów, managerów i programistów w platform teamach szczególnie interesujące powinny być akcje oparte na harmonogramach - GitHub Actions daje możliwość łatwej konfiguracji cyklu uruchamiania zadania, a w połączeniu z AI całość może dawać zaskakujące efekty.</p><p>Jak konfigurować harmonogramy:</p><pre><code>┌───────────── minute (0 - 59)
+│ ┌───────────── hour (0 - 23)
+│ │ ┌───────────── day of the month (1 - 31)
+│ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+│ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+│ │ │ │ │
+│ │ │ │ │
+│ │ │ │ │
+*    *   *   *   *</code></pre><p>Przykładowo, dla scenariusza uruchamianego codziennie o 4:15 i 5:15 możesz ustawić:</p><pre><code>on:
+  schedule:
+    - cron: "15 4,5 * * *"   # &lt;=== Change this value</code></pre><p>Pamiętaj też o trzech różnych gałęziach dla wariantów reużywalnej akcji opartej o ai:</p><ul><li><p>master (podstawowy przykład Composite Action)</p></li><li><p>git-diff (AI Code Review na poziomie Pull Requestów)</p></li><li><p>sync-docs (korygowanie dokumentacji)</p></li></ul><h2>Dodatkowe uprawnienia</h2><p>Budując bardziej zaawansowane scenariusze, szczególnie takie, które mogą wykonywać więcej akcji w obrębie twojego konta na GitHubie, warto poznać różnicę pomiędzy sposobami autentykacji wszystkich scenariuszy. Główna różnica dotyczy tzw. <strong>Github Tokena</strong> oraz <strong>Personal Access Tokena</strong>.</p><h3>GitHub Token (GITHUB_TOKEN)</h3><p>GitHub automatycznie tworzy sekret GITHUB_TOKEN dla każdego uruchomienia workflow. Ten token jest dostępny w kontekście ${{ secrets.GITHUB_TOKEN }} i umożliwia podstawowe operacje w ramach <strong>tego samego repozytorium</strong>, w którym działa workflow.</p><pre><code>jobs:
+  example_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Create Issue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Automatycznie utworzony issue',
+              body: 'Ten issue został utworzony przez workflow'
+            })</code></pre><p><strong>Główne cechy:</strong></p><ul><li><p>Generowany automatycznie dla każdego workflow</p></li><li><p>Wygasa po zakończeniu workflow</p></li><li><p>Ma dostęp <strong>tylko do repozytorium</strong>, w którym działa workflow</p></li><li><p>Ma ograniczone uprawnienia zgodnie z polityką repozytorium</p></li></ul><p>Nie musisz wykonywać żadnych dodatkowych akcji, aby dzięki niemu odczytywać dane. Jeśli jednak ma on służyć do modyfikacji danych, musisz włączyć taką możliwość w ustawieniach danego repozytorium (<strong>github.com/{owner}/{repo}/settings/actions</strong>):</p><img loading="lazy" src="https://assets-v2.circle.so/bwf00a2mb399v4sve27ps29zxa96" style="width: 100%; max-width: 100%;"><h2>Personal Access Token (PAT)</h2><p>Personal Access Token jest tokenem, który <strong>tworzysz ręcznie</strong> w swoich ustawieniach GitHuba.</p><p>Dla tego tokenu możesz wybrać dokładne uprawnienia do poszczególnych funkcji i elementów serwisu, a następnie używać go do zadań, które wykraczają poza możliwości domyślnego tokenu GHA.</p><pre><code>jobs:
+  cross_repo_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Create PR w innym repozytorium
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.MY_PERSONAL_TOKEN }}
+          script: |
+            github.rest.pulls.create({
+              owner: 'inna-organizacja',
+              repo: 'inne-repo',
+              title: 'Automatyczny PR',
+              head: 'feature-branch',
+              base: 'main',
+              body: 'Ten PR został utworzony z workflow'
+            })</code></pre><p><strong>Główne cechy:</strong></p><ul><li><p>Tworzony ręcznie przez użytkownika GitHuba</p></li><li><p>Możesz wybrać czas wygaśnięcia (np. 30 / 90 dni)</p></li><li><p>Może mieć dostęp do wielu repozytoriów i organizacji</p></li><li><p>Może mieć szerszy zakres uprawnień, np. do zarządzania kontem, zarządzania sekretami, itp.</p></li></ul><p><strong>👉 Ważne:</strong> Do zbudowania akcji <strong><em>sync-docs</em></strong>, z poziomu której mogę modyfikować pliki, tworzyć branche oraz Pull Requesty, wykorzystałem token z następującymi uprawnieniami:</p><img loading="lazy" src="https://assets-v2.circle.so/pbryndad03tp9cnqgzcoiks11gn7" style="width: 100%; max-width: 100%;"><p>Osobiste tokeny skonfigurujesz tutaj: <a href="https://github.com/settings/personal-access-tokens/" target="_blank" rel="noopener noreferrer">https://github.com/settings/personal-access-tokens/</a> </p><h2>🏁 Podsumowanie lekcji</h2><p>Mówiąc o automatycznych scenariuszach dla Agenta AI, spora część dyskusji skupia się na prototypach opartych o platformy low-code/no-code (np. Make, Bubble lub n8n). O ile takie rozwiązanie ma sens w przypadku zadań ogólnego zastosowania, to w przypadku akcji w obrębie repozytorium takie automatyzacje są trudne w utrzymaniu. Z jednej strony żyją z dala od kodu, a po drugie mogą wymagać dodatkowej integracji z docelowym serwisem.</p><p>Alternatywa w postaci GitHub Actions zapewnia odpowiedni balans pomiędzy łatwością tworzenia scenariuszy a korzystaniem z wszystkich narzędzi inżyniera - w tym repozytoriów, systemu kontroli wersji czy możliwości pisania standardowego kodu (choćby w JavaScript).</p><p>Scenariusze, które z poziomu GHA możesz delegować do AI, to przykładowo:</p><ol start="1"><li><p>Zautomatyzowane code review - AI może analizować pull requesty, identyfikować potencjalne błędy, problemy z wydajnością czy niezgodności ze standardami kodu.</p></li><li><p>Automatyczna dokumentacja - generowanie i aktualizowanie dokumentacji na podstawie zmian w kodzie źródłowym.</p></li><li><p>Refaktoryzacja kodu - identyfikacja i propozycje usprawnień istniejącego kodu, z możliwością&nbsp;generowania docelowych Pull Requestów.</p></li><li><p>Klasyfikacja i selekcja - możliwość wdrożenia reguł, które AI wykorzysta np. do powiadamiania odpowiedniego zespołu w zależności od zawartości Pull Requesta czy zmian w repozytorium.</p></li><li><p>Release notes - model może generować semantyczne notatki do kolejnych wersji projektu lub biblioteki, na podstawie serii commitów od ostatniego wdrożenia.</p></li></ol><p>To tylko kilka przykładowych scenariuszy, z którymi możesz eksperymentować aby automatyzować wybrane fragmenty programistycznego workflow korzystając z potencjału AI.</p><h2>Ćwiczenia praktyczne</h2><h3><strong>Zadanie 1: CHANGELOG.md z Gemini Flash</strong></h3><p><strong>Cel:</strong> Sprawdź możliwości Gemini Flash w kontekście tworzenia dokumentacji zmian projektowych</p><p><strong>Instrukcje:</strong></p><ol start="1"><li><p>Utwórz nowy scenariusz CI/CD w obrębie repozytorium.</p></li><li><p>Wykorzystaj integrację z AI do analizy ostatnich commitów (np. 10) od momentu wywołania scenariusza.</p></li><li><p>Z poziomu CI/CD utwórz lub zaktualizuj plik CHANGELOG.md zawierający tekstowe podsumowanie zmian z danego okresu, który analizowało AI.</p></li><li><p>W przypadku zmian, z poziomu CI/CD utwórz nowy Pull Request ze zmianami Changeloga</p></li></ol><hr><p>Przykład dokumentu:</p><pre><code>## 10xCMS - Changelog
+
+### 07.04.2025 - 14.04.2025
+
+- Wdrożono poprawki do styli na stronie głównej
+- Zaktualizowano zależności w package.json
+- Wykonano modernizację kodu client-side (jQuery -&gt; Svelte)
+
+### 01.04.2025 - 07.04.2025
+
+- Rozbudowano endpointy do zarządzania kontem użytkownika
+- Zmieniono sposób pobierania danych z CMS</code></pre><img loading="lazy" src="https://assets-v2.circle.so/ekrtcr8j44qd531ut1i2iwox5c9h" style="width: 100%; max-width: 100%;"></div></body></html>

@@ -1,0 +1,1 @@
+export const DEFAULT_MAGIC_LINK_TTL_MINUTES = 15;

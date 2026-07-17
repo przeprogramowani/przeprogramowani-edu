@@ -1,0 +1,58 @@
+---
+/**
+ * Dynamiczny wrapper stron skilli Core Skills Chain pod
+ * /10xdevs-3/workflow/skill/<slug>. Rejestr slugow: components/tenx-workflow/skills.ts.
+ * Auth i layout identyczne jak csc.astro; slug "csc" w nawigacji podswietla
+ * chip Lancucha (strony skilli sa rozwinieciami krokow CSC).
+ */
+import TenxCosmicLayout from '@/components/tenx-workflow/TenxCosmicLayout.astro';
+import { SKILL_PAGES } from '@/components/tenx-workflow/skills';
+import NewSkillBody from '@/components/tenx-workflow/skills/NewSkillBody.astro';
+import ResearchSkillBody from '@/components/tenx-workflow/skills/ResearchSkillBody.astro';
+import PlanSkillBody from '@/components/tenx-workflow/skills/PlanSkillBody.astro';
+import ImplementSkillBody from '@/components/tenx-workflow/skills/ImplementSkillBody.astro';
+import ImplReviewSkillBody from '@/components/tenx-workflow/skills/ImplReviewSkillBody.astro';
+import { INTERNAL_BASE } from '@/components/tenx-workflow/config';
+import { tenxWorkflowAccess } from '@/components/tenx-workflow/gate';
+import { pagesForGroups, workflowPage } from '@/components/tenx-workflow/pages';
+
+const BODIES: Record<string, any> = {
+  '10x-new': NewSkillBody,
+  '10x-research': ResearchSkillBody,
+  '10x-plan': PlanSkillBody,
+  '10x-implement': ImplementSkillBody,
+  '10x-impl-review': ImplReviewSkillBody,
+};
+
+// Walidacja sluga PRZED bramka auth: nieznany skill to 404 takze dla
+// anonimow (lista skilli jest publiczna, redirect na login bylby mylacy).
+const slug = Astro.params.skill ?? '';
+const page = SKILL_PAGES.find((p) => p.slug === slug);
+const Body = page ? BODIES[page.slug] : undefined;
+
+if (!page || !Body) {
+  return new Response('Not found', { status: 404 });
+}
+
+const access = await tenxWorkflowAccess(Astro);
+if (access.redirect) return access.redirect;
+
+// Access groups: strony skilli dziedzicza dostep po stronie csc.
+if (!workflowPage('csc').access.some((g) => access.groups.includes(g))) {
+  return new Response('Not found', { status: 404 });
+}
+
+const navPages = pagesForGroups(access.groups);
+---
+
+<TenxCosmicLayout
+  title={page.title}
+  slug="csc"
+  base={INTERNAL_BASE}
+  modeDefaults={{ tryb: 'sf', dd: '1' }}
+  breadcrumb={page.breadcrumb}
+  pages={navPages}
+>
+  <Body base={INTERNAL_BASE} />
+  <Fragment slot="footer-right">SKILL // {page.skill.toUpperCase()}</Fragment>
+</TenxCosmicLayout>

@@ -1,0 +1,587 @@
+---
+/**
+ * Tresc strony 10xTop5 - Golden Nuggets. Zrodlo: 10xdevs-4-golden-nuggets.md;
+ * piec kluczowych wartosci 10xDevs z dowodami i glosami uczestnikow.
+ * Strona publiczna - pisana dla czytelnika spoza kursu. Kolory sektorow wg
+ * kanonu uniwersow (universes.ts): n-01 Fundacja, n-02 Solaris, n-03 WH40k,
+ * n-04 Trzy ciala, n-05 Hyperion. Etykiety sektorow: SEKTOR 01..05
+ * (kotwice id="n-01".. zostaja - linkuje do nich kanon i CTA).
+ * Hero: piec samorodkow-glifow uniwersow na orbicie (patent glyphAt z KanonBody).
+ * Kazdy sektor: sec-top z figure.asset (schemat mechanizmu 440x300, wzorzec
+ * CscBody/JakoscBody), potem .cols (lead + transmisje), mech i target.
+ * hud-top, xnav, footer i wspolny CSS renderuje TenxCosmicLayout.
+ * i18n: teksty w i18n/top5.ts (pl+en), markup i SVG wspolne; nazwy uniwersow
+ * przez universeName(); zmiana tresci = zmiana obu jezykow w slowniku.
+ */
+import type { Lang } from '../i18n';
+import { TOP5 } from '../i18n/top5';
+import { pageHref } from '../pages';
+import { UNIVERSES, universeName, type UniverseId } from '../universes';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+}
+
+const { base, lang = 'pl' } = Astro.props;
+const t = TOP5[lang];
+
+/** Glif uniwersum osadzony w duzym SVG (zagniezdzony <svg> z pozycja i rozmiarem). */
+const glyphAt = (id: UniverseId, x: number, y: number, s = 24) =>
+  UNIVERSES[id].glyph.replace('<svg ', `<svg x="${x}" y="${y}" width="${s}" height="${s}" `);
+
+/** Wezly hero (geometria; teksty i aria w t.nodes wg tego samego indeksu). */
+const NODES: {
+  id: UniverseId;
+  href: string;
+  x: number;
+  y: number;
+  link: string;
+  labelY: number;
+  numY: number;
+  hitY: number;
+  hitH: number;
+}[] = [
+  { id: 'fundacja', href: '#n-01', x: 157, y: 133, link: 'M184,143 L424,156', labelY: 87, numY: 104, hitY: 72, hitH: 86 },
+  { id: 'lem', href: '#n-02', x: 480, y: 72, link: 'M480,100 V128', labelY: 26, numY: 43, hitY: 10, hitH: 88 },
+  { id: 'wh40k', href: '#n-03', x: 803, y: 133, link: 'M776,143 L536,156', labelY: 87, numY: 104, hitY: 72, hitH: 86 },
+  { id: 'trzycia', href: '#n-04', x: 280, y: 231, link: 'M303,222 L424,184', labelY: 291, numY: 272, hitY: 206, hitH: 92 },
+  { id: 'hyperion', href: '#n-05', x: 680, y: 231, link: 'M657,222 L536,184', labelY: 291, numY: 272, hitY: 206, hitH: 92 },
+];
+
+---
+
+<style is:global>
+/* Reguly specyficzne dla strony (diff vs CSS wspolny w TenxCosmicLayout) */
+@media print{
+  #n-01{break-before:auto}
+}
+</style>
+
+<header>
+  <p class="eyebrow" style="--acc:var(--indigo)"><span class="ico ico-star" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1 set:html={t.h1Html} />
+  <p class="sub"><Fragment set:html={t.subPreHtml} /><a href={pageHref(base, 'csc', lang)} style="color:var(--indigo)">{t.subLink}</a><Fragment set:html={t.subPostHtml} /></p>
+
+  <div class="chainwrap">
+    <svg class="chain" viewBox="0 0 960 300" role="img" aria-label={t.heroAria}>
+      <ellipse cx="480" cy="160" rx="340" ry="88" fill="none" stroke="#7c8cff" opacity=".18" stroke-dasharray="4 6"/>
+      <ellipse cx="480" cy="160" rx="250" ry="62" fill="none" stroke="#7c8cff" opacity=".08"/>
+      <g fill="#8a93b8" opacity=".35">
+        <circle cx="60" cy="42" r="1.4"/><circle cx="252" cy="26" r="1"/><circle cx="700" cy="30" r="1.3"/>
+        <circle cx="902" cy="62" r="1"/><circle cx="76" cy="252" r="1.2"/><circle cx="892" cy="242" r="1.4"/>
+        <circle cx="420" cy="272" r="1"/><circle cx="562" cy="286" r="1.2"/><circle cx="358" cy="118" r="1"/>
+        <circle cx="608" cy="204" r="1"/>
+      </g>
+      {NODES.map((n) => (
+        <path d={n.link} stroke={UNIVERSES[n.id].color} fill="none" stroke-dasharray="4 5" opacity=".3" class="anim-dash"/>
+      ))}
+      <g style="color:var(--indigo)">
+        <rect class="kbox" x="428" y="132" width="104" height="56" stroke-width="1.4"/>
+        <text class="knum" x="480" y="154" text-anchor="middle">{t.centerNum}</text>
+        <text class="klbl" x="480" y="176" text-anchor="middle">{t.centerLbl}</text>
+      </g>
+      {NODES.map((n, i) => (
+        <a href={n.href} style={`color:${UNIVERSES[n.id].color}`} aria-label={`${t.nodes[i].aria} (${universeName(UNIVERSES[n.id], lang)})`}>
+          <rect x={n.x - 58} y={n.hitY} width="116" height={n.hitH} fill="transparent"/>
+          <rect x={n.x - 13} y={n.y - 13} width="26" height="26" transform={`rotate(45 ${n.x} ${n.y})`} fill="none" stroke="currentColor" opacity=".35"/>
+          <circle cx={n.x} cy={n.y} r="21" fill="none" stroke="currentColor" stroke-dasharray="3 5" opacity=".5"/>
+          <Fragment set:html={glyphAt(n.id, n.x - 12, n.y - 12)} />
+          <text class="knum" x={n.x} y={n.numY} text-anchor="middle">{t.nodes[i].num}</text>
+          <text class="klbl" x={n.x} y={n.labelY} text-anchor="middle">{t.nodes[i].label}</text>
+        </a>
+      ))}
+      <circle r="7" fill="#7c8cff" opacity=".25"><animateMotion dur="12s" repeatCount="indefinite" path="M140,160 a340,88 0 1,0 680,0 a340,88 0 1,0 -680,0"/></circle>
+      <circle r="3" fill="#dce2f5" class="anim-pulse"><animateMotion dur="12s" repeatCount="indefinite" path="M140,160 a340,88 0 1,0 680,0 a340,88 0 1,0 -680,0"/></circle>
+      <circle r="2" fill="#7c8cff" opacity=".5"><animateMotion dur="18s" repeatCount="indefinite" path="M820,160 a340,88 0 1,1 -680,0 a340,88 0 1,1 680,0"/></circle>
+    </svg>
+    <p class="map-cap">{t.mapCapPre}<span class="sf-only">{t.mapCapSf}</span><span class="neutral-only">{t.mapCapNeutral}</span>{t.mapCapPost}</p>
+  </div>
+
+  <nav class="route" aria-label={t.routeAria}>
+    <a href="#n-01" style="--hov:#f472b6">{t.route[0]}</a>
+    <a href="#n-02" style="--hov:#7aa2ff">{t.route[1]}</a>
+    <a href="#n-03" style="--hov:#e2564a">{t.route[2]}</a>
+    <a href="#n-04" style="--hov:#4cc9f0">{t.route[3]}</a>
+    <a href="#n-05" style="--hov:#a78bfa">{t.route[4]}</a>
+    <a href="#dalej">{t.route[5]}</a>
+  </nav>
+</header>
+
+<!-- ============ SKRÓT ============ -->
+<section id="skrot">
+  <div class="rv">
+    <p class="eyebrow" style="--acc:var(--indigo)"><span class="ico ico-star" aria-hidden="true"></span>{t.skrotEyebrow}</p>
+  </div>
+  <div class="sum-grid rv">
+    <a class="sum-card" href="#n-01" style="--acc:#f472b6">
+      <Fragment set:html={UNIVERSES.fundacja.glyph} />
+      <span class="num">{t.cards[0].num}</span>
+      <h3>{t.cards[0].h3}</h3>
+      <p set:html={t.cards[0].pHtml} />
+    </a>
+    <a class="sum-card" href="#n-02" style="--acc:#7aa2ff">
+      <Fragment set:html={UNIVERSES.lem.glyph} />
+      <span class="num">{t.cards[1].num}</span>
+      <h3>{t.cards[1].h3}</h3>
+      <p set:html={t.cards[1].pHtml} />
+    </a>
+    <a class="sum-card" href="#n-03" style="--acc:#e2564a">
+      <Fragment set:html={UNIVERSES.wh40k.glyph} />
+      <span class="num">{t.cards[2].num}</span>
+      <h3>{t.cards[2].h3}</h3>
+      <p set:html={t.cards[2].pHtml} />
+    </a>
+    <a class="sum-card" href="#n-04" style="--acc:#4cc9f0">
+      <Fragment set:html={UNIVERSES.trzycia.glyph} />
+      <span class="num">{t.cards[3].num}</span>
+      <h3>{t.cards[3].h3}</h3>
+      <p set:html={t.cards[3].pHtml} />
+    </a>
+    <a class="sum-card" href="#n-05" style="--acc:#a78bfa">
+      <Fragment set:html={UNIVERSES.hyperion.glyph} />
+      <span class="num">{t.cards[4].num}</span>
+      <h3>{t.cards[4].h3}</h3>
+      <p set:html={t.cards[4].pHtml} />
+    </a>
+  </div>
+</section>
+
+<!-- ============ SEKTOR 01 SYSTEM ============ -->
+<section class="sector" id="n-01" style="--acc:#f472b6">
+  <div class="sec-top rv">
+    <div>
+      <div class="sec-head">
+        <span class="sec-num">{t.s1.num}</span>
+        <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.fundacja.glyph} />{universeName(UNIVERSES.fundacja, lang)} · {t.s1.uni}</span>
+      </div>
+      <h2>{t.s1.h2}</h2>
+      <div class="epigraph sf-only">
+        <p>{t.s1.epigraphSf}</p>
+        <cite>{t.s1.epigraphCiteSf}</cite>
+      </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.s1.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <circle cx="90" cy="150" r="15" stroke-dasharray="3 4" opacity=".45"/>
+            <circle cx="90" cy="146" r="4" opacity=".45"/>
+            <path d="M82,158 a8,8 0 0,1 16,0" opacity=".45"/>
+            <path d="M101,141 L134,102" stroke-dasharray="2 4" opacity=".35"/>
+            <path d="M113,117 l8,8 m0,-8 l-8,8" opacity=".5"/>
+            <rect x="140" y="66" width="44" height="30" stroke-width="1.2"/>
+            <rect x="196" y="98" width="44" height="30" stroke-width="1.2"/>
+            <rect x="252" y="130" width="44" height="30" stroke-width="1.5" class="anim-pulse"/>
+            <rect x="308" y="162" width="44" height="30" stroke-width="1.2"/>
+            <rect x="364" y="194" width="44" height="30" stroke-width="1.2"/>
+            <path d="M148,76 h20 M148,82 h14 M204,108 h20 M204,114 h14 M260,140 h20 M260,146 h14 M316,172 h20 M316,178 h14 M372,204 h20 M372,210 h14" opacity=".35"/>
+            <path d="M184,81 C191,81 189,113 196,113 M240,113 C247,113 245,145 252,145 M296,145 C303,145 301,177 308,177 M352,177 C359,177 357,209 364,209" stroke-dasharray="3 4" opacity=".55" class="anim-dash"/>
+          </g>
+          <g opacity=".4"><Fragment set:html={glyphAt('fundacja', 372, 28, 26)} /></g>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="7s" repeatCount="indefinite" path="M162,81 C196,81 184,113 218,113 C252,113 240,145 274,145 C308,145 296,177 330,177 C364,177 352,209 386,209"/></circle>
+          <text x="36" y="42">{t.s1.fig[0]}</text>
+          <text x="36" y="56" class="dim">{t.s1.fig[1]}</text>
+          <text x="136" y="84" text-anchor="end" class="dim">{t.s1.fig[2]}</text>
+          <text x="404" y="240" text-anchor="end" class="dim">{t.s1.fig[3]}</text>
+          <text x="90" y="186" text-anchor="middle" class="dim">{t.s1.fig[4]}</text>
+          <text x="220" y="252" text-anchor="middle" class="acc">{t.s1.fig[5]}</text>
+          <text x="404" y="268" text-anchor="end" class="dim">{t.s1.fig[6]}</text>
+        </svg>
+      </div>
+      <figcaption>{t.s1.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.s1.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.s1.leadNeutralHtml} />
+      <p class="lead" set:html={t.s1.leadHtml} />
+    </div>
+    <div class="trans">
+      <div class="tx">
+        <span class="mono"><span class="sf-only">{t.s1.tx[0].monoSf}</span><span class="neutral-only">{t.s1.tx[0].monoNeutral}</span>{t.s1.tx[0].monoPost}</span>
+        <blockquote>{t.s1.tx[0].quote}</blockquote>
+        <p class="who">{t.s1.tx[0].who}</p>
+      </div>
+      <div class="tx">
+        <span class="mono"><span class="sf-only">{t.s1.tx[1].monoSf}</span><span class="neutral-only">{t.s1.tx[1].monoNeutral}</span>{t.s1.tx[1].monoPost}</span>
+        <blockquote>{t.s1.tx[1].quote}</blockquote>
+        <p class="who">{t.s1.tx[1].who}</p>
+      </div>
+    </div>
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-chart" aria-hidden="true"></span>{t.s1.mechProofDt}</dt><dd class="v" style="margin:0" set:html={t.s1.mechProofHtml} /></div>
+      <div><dt><span class="ico ico-sig" aria-hidden="true"></span>{t.s1.mechVoiceDt}</dt><dd class="v" style="margin:0" set:html={t.s1.mechVoiceHtml} /></div>
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.s1.mechForDt}</dt><dd class="v" style="margin:0" set:html={t.s1.mechForHtml} /></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.s1.mechRelDt}</dt><dd class="v" style="margin:0"><a href={`${pageHref(base, 'csc', lang)}#skrot`} style="color:var(--acc)">{t.s1.relLabels[0]}</a> · <a href={pageHref(base, 'fundament', lang)} style="color:var(--acc)">{t.s1.relLabels[1]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.s1.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ SEKTOR 02 SPOKÓJ ============ -->
+<section class="sector" id="n-02" style="--acc:#7aa2ff">
+  <div class="sec-top rv">
+    <div>
+      <div class="sec-head">
+        <span class="sec-num">{t.s2.num}</span>
+        <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.lem.glyph} />{universeName(UNIVERSES.lem, lang)} · {t.s2.uni}</span>
+      </div>
+      <h2>{t.s2.h2}</h2>
+      <div class="epigraph sf-only">
+        <p>{t.s2.epigraphSf}</p>
+        <cite>{t.s2.epigraphCiteSf}</cite>
+      </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.s2.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <path d="M24,214 q32,-10 64,0 t64,0 t64,0 t64,0 t64,0 t64,0" opacity=".2"/>
+            <path d="M24,232 q32,-16 64,0 t64,0 t64,0 t64,0 t64,0 t64,0" stroke-width="1.5" stroke-dasharray="8 6" opacity=".7" class="anim-dash-slow"/>
+            <path d="M24,252 q32,-12 64,0 t64,0 t64,0 t64,0 t64,0 t64,0" opacity=".4"/>
+            <rect x="286" y="120" width="76" height="34" stroke-width="1.5"/>
+            <path d="M292,132 h20 M292,140 h12" opacity=".4"/>
+            <path d="M298,154 V226 M350,154 V232" opacity=".6"/>
+            <path d="M324,120 V98" opacity=".8"/>
+            <path d="M324,154 V236" stroke-dasharray="2 5" opacity=".5" class="anim-flicker"/>
+            <rect x="252" y="44" width="152" height="22"/>
+            <rect x="252" y="76" width="152" height="22"/>
+            <g stroke-dasharray="4 4" opacity=".5">
+              <rect x="60" y="160" width="84" height="16"/>
+              <rect x="52" y="138" width="84" height="16"/>
+              <rect x="66" y="116" width="84" height="16"/>
+              <rect x="58" y="94" width="84" height="16"/>
+            </g>
+            <path d="M160,176 V96 m-5,9 5,-9 5,9" stroke-dasharray="4 5" opacity=".5" class="anim-dash"/>
+          </g>
+          <circle r="2.4" fill="currentColor" opacity=".8"><animateMotion dur="10s" repeatCount="indefinite" path="M40,230 q28,-14 56,0 t56,0 t56,0 t56,0 t56,0 t56,0"/></circle>
+          <text x="36" y="42">{t.s2.fig[0]}</text>
+          <text x="252" y="38" class="dim">{t.s2.fig[1]}</text>
+          <text x="258" y="59" class="acc">{t.s2.fig[2]}</text>
+          <text x="258" y="91" class="acc">{t.s2.fig[3]}</text>
+          <text x="58" y="84" class="dim">{t.s2.fig[4]}</text>
+          <text x="58" y="196" class="dim">{t.s2.fig[5]}</text>
+          <text x="36" y="276" class="dim">{t.s2.fig[6]}</text>
+        </svg>
+      </div>
+      <figcaption>{t.s2.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.s2.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.s2.leadNeutralHtml} />
+      <p class="lead" set:html={t.s2.leadHtml} />
+    </div>
+    <div class="trans">
+      <div class="tx">
+        <span class="mono"><span class="sf-only">{t.s2.tx[0].monoSf}</span><span class="neutral-only">{t.s2.tx[0].monoNeutral}</span>{t.s2.tx[0].monoPost}</span>
+        <blockquote>{t.s2.tx[0].quote}</blockquote>
+        <p class="who">{t.s2.tx[0].who}</p>
+      </div>
+      <div class="tx">
+        <span class="mono"><span class="sf-only">{t.s2.tx[1].monoSf}</span><span class="neutral-only">{t.s2.tx[1].monoNeutral}</span>{t.s2.tx[1].monoPost}</span>
+        <blockquote>{t.s2.tx[1].quote}</blockquote>
+        <p class="who">{t.s2.tx[1].who}</p>
+      </div>
+    </div>
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-chart" aria-hidden="true"></span>{t.s2.mechProofDt}</dt><dd class="v" style="margin:0" set:html={t.s2.mechProofHtml} /></div>
+      <div><dt><span class="ico ico-sig" aria-hidden="true"></span>{t.s2.mechVoiceDt}</dt><dd class="v" style="margin:0" set:html={t.s2.mechVoiceHtml} /></div>
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.s2.mechForDt}</dt><dd class="v" style="margin:0" set:html={t.s2.mechForHtml} /></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.s2.mechRelDt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'jakosc', lang)} style="color:var(--acc)">{t.s2.relLabels[0]}</a> · <a href={`${pageHref(base, 'csc', lang)}#k-review`} style="color:var(--acc)">{t.s2.relLabels[1]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.s2.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ SEKTOR 03 LEGACY ============ -->
+<section class="sector" id="n-03" style="--acc:#e2564a">
+  <div class="sec-top rv">
+    <div>
+      <div class="sec-head">
+        <span class="sec-num">{t.s3.num}</span>
+        <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.wh40k.glyph} />{universeName(UNIVERSES.wh40k, lang)} · {t.s3.uni}</span>
+      </div>
+      <h2>{t.s3.h2}</h2>
+      <div class="epigraph sf-only">
+        <p>{t.s3.epigraphSf}</p>
+        <cite>{t.s3.epigraphCiteSf}</cite>
+      </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.s3.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <rect x="44" y="74" width="152" height="152" stroke-dasharray="5 5" opacity=".3"/>
+            <g class="anim-rot">
+              <g stroke-width="10" opacity=".85">
+                <path d="M120,102 v-14 M120,198 v14 M72,150 h-14 M168,150 h14"/>
+                <path d="M86.1,116.1 l-9.9,-9.9 M153.9,116.1 l9.9,-9.9 M86.1,183.9 l-9.9,9.9 M153.9,183.9 l9.9,9.9"/>
+              </g>
+              <circle cx="120" cy="150" r="44"/>
+              <circle cx="120" cy="150" r="32" opacity=".35" stroke-dasharray="3 6"/>
+            </g>
+            <path d="M120,132 l16,9 v18 l-16,9 -16,-9 v-18 z" stroke-width="1.5" class="anim-pulse"/>
+            <path d="M196,150 C224,150 228,120 252,110" stroke-dasharray="4 5" opacity=".65" class="anim-dash"/>
+            <g opacity=".5">
+              <path d="M272,86 L332,64 M332,64 L392,96 M272,86 L300,140 M300,140 L364,152 M392,96 L364,152 M300,140 L280,196 M364,152 L344,224 M280,196 L344,224 M344,224 L396,196 M364,152 L396,196"/>
+            </g>
+            <circle cx="364" cy="152" r="10" class="anim-pulse"/>
+          </g>
+          <g fill="currentColor">
+            <circle cx="272" cy="86" r="3.5"/><circle cx="332" cy="64" r="3.5"/><circle cx="392" cy="96" r="3.5"/>
+            <circle cx="300" cy="140" r="3.5"/><circle cx="364" cy="152" r="4.5"/><circle cx="280" cy="196" r="3.5"/>
+            <circle cx="344" cy="224" r="3.5"/><circle cx="396" cy="196" r="3.5"/>
+          </g>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="6s" repeatCount="indefinite" path="M196,150 C224,150 228,120 252,110 L272,86"/></circle>
+          <text x="36" y="42">{t.s3.fig[0]}</text>
+          <text x="36" y="56" class="dim">{t.s3.fig[1]}</text>
+          <text x="120" y="252" text-anchor="middle" class="dim">{t.s3.fig[2]}</text>
+          <text x="214" y="172" class="dim">{t.s3.fig[3]}</text>
+          <text x="364" y="178" text-anchor="middle" class="acc">{t.s3.fig[4]}</text>
+          <text x="404" y="266" text-anchor="end" class="acc">{t.s3.fig[5]}</text>
+        </svg>
+      </div>
+      <figcaption>{t.s3.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.s3.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.s3.leadNeutralHtml} />
+      <p class="lead" set:html={t.s3.leadHtml} />
+    </div>
+    <div class="trans">
+      <div class="tx">
+        <span class="mono"><span class="sf-only">{t.s3.tx[0].monoSf}</span><span class="neutral-only">{t.s3.tx[0].monoNeutral}</span>{t.s3.tx[0].monoPost}</span>
+        <blockquote>{t.s3.tx[0].quote}</blockquote>
+        <p class="who">{t.s3.tx[0].who}</p>
+      </div>
+      <div class="tx">
+        <span class="mono"><span class="sf-only">{t.s3.tx[1].monoSf}</span><span class="neutral-only">{t.s3.tx[1].monoNeutral}</span>{t.s3.tx[1].monoPost}</span>
+        <blockquote>{t.s3.tx[1].quote}</blockquote>
+        <p class="who">{t.s3.tx[1].who}</p>
+      </div>
+    </div>
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-chart" aria-hidden="true"></span>{t.s3.mechProofDt}</dt><dd class="v" style="margin:0" set:html={t.s3.mechProofHtml} /></div>
+      <div><dt><span class="ico ico-sig" aria-hidden="true"></span>{t.s3.mechVoiceDt}</dt><dd class="v" style="margin:0" set:html={t.s3.mechVoiceHtml} /></div>
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.s3.mechForDt}</dt><dd class="v" style="margin:0" set:html={t.s3.mechForHtml} /></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.s3.mechRelDt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'legacy', lang)} style="color:var(--acc)">{t.s3.relLabels[0]}</a> · <a href={`${pageHref(base, 'csc', lang)}#k-research`} style="color:var(--acc)">{t.s3.relLabels[1]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.s3.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ SEKTOR 04 KOSZTY ============ -->
+<section class="sector" id="n-04" style="--acc:#4cc9f0">
+  <div class="sec-top rv">
+    <div>
+      <div class="sec-head">
+        <span class="sec-num">{t.s4.num}</span>
+        <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.trzycia.glyph} />{universeName(UNIVERSES.trzycia, lang)} · {t.s4.uni}</span>
+      </div>
+      <h2>{t.s4.h2}</h2>
+      <div class="epigraph sf-only">
+        <p>{t.s4.epigraphSf}</p>
+        <cite>{t.s4.epigraphCiteSf}</cite>
+      </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.s4.figAria}>
+          <g stroke="currentColor" fill="none">
+            <circle cx="75" cy="135" r="24" stroke-width="1.5"/>
+            <circle cx="75" cy="135" r="10" stroke-dasharray="2 3" opacity=".6" class="anim-rot"/>
+            <path d="M96,124 180,62 M99,135 180,134 M96,146 180,206" opacity=".3"/>
+            <path d="M180,58 405,83 405,233 180,208 z" stroke-width="1.2" opacity=".8"/>
+            <path d="M180,95.5 405,120.5 M180,133 405,158 M180,170.5 405,195.5" opacity=".15"/>
+            <path d="M225,63 225,213 M270,68 270,218 M315,73 315,223 M360,78 360,228" opacity=".15"/>
+            <path d="M188,146 q14,-28 28,0 t28,0 t28,0 t28,0 t28,0 t28,0 t28,0" stroke-width="1.5" stroke-dasharray="7 5" class="anim-dash"/>
+            <rect x="40" y="242" width="160" height="50" opacity=".45"/>
+            <path d="M48,272 56,258 64,282 74,252 82,278 92,262 102,284 112,250 122,274 132,258 142,280 152,255 162,277 172,262 182,270 190,264" opacity=".8" class="anim-flicker"/>
+            <rect x="240" y="242" width="160" height="50" opacity=".45"/>
+            <path d="M248,268 q19,-22 38,0 t38,0 t38,0 t38,0" stroke-width="1.4" stroke-dasharray="6 5" class="anim-dash-slow"/>
+          </g>
+          <path id="fig8" d="M330,34 C343,20 362,20 362,34 C362,48 343,48 330,34 C317,20 298,20 298,34 C298,48 317,48 330,34" stroke="currentColor" fill="none" opacity=".3"/>
+          <g fill="currentColor">
+            <circle r="3"><animateMotion dur="9s" repeatCount="indefinite" begin="0s"><mpath href="#fig8"/></animateMotion></circle>
+            <circle r="3" opacity=".75"><animateMotion dur="9s" repeatCount="indefinite" begin="-3s"><mpath href="#fig8"/></animateMotion></circle>
+            <circle r="3" opacity=".55"><animateMotion dur="9s" repeatCount="indefinite" begin="-6s"><mpath href="#fig8"/></animateMotion></circle>
+          </g>
+          <text x="286" y="16" class="dim">{t.s4.fig[0]}</text>
+          <text x="36" y="42">{t.s4.fig[1]}</text>
+          <text x="52" y="188" class="dim">{t.s4.fig[2]}</text>
+          <text x="292" y="52" class="acc">{t.s4.fig[3]}</text>
+          <text x="40" y="236" class="dim">{t.s4.fig[4]}</text>
+          <text x="240" y="236" class="acc">{t.s4.fig[5]}</text>
+        </svg>
+      </div>
+      <figcaption>{t.s4.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.s4.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.s4.leadNeutralHtml} />
+      <p class="lead" set:html={t.s4.leadHtml} />
+    </div>
+    <div class="trans">
+      <div class="tx">
+        <span class="mono"><span class="sf-only">{t.s4.tx[0].monoSf}</span><span class="neutral-only">{t.s4.tx[0].monoNeutral}</span>{t.s4.tx[0].monoPost}</span>
+        <blockquote>{t.s4.tx[0].quote}</blockquote>
+        <p class="who">{t.s4.tx[0].who}</p>
+      </div>
+    </div>
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-chart" aria-hidden="true"></span>{t.s4.mechProofDt}</dt><dd class="v" style="margin:0" set:html={t.s4.mechProofHtml} /></div>
+      <div><dt><span class="ico ico-sig" aria-hidden="true"></span>{t.s4.mechVoiceDt}</dt><dd class="v" style="margin:0" set:html={t.s4.mechVoiceHtml} /></div>
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.s4.mechForDt}</dt><dd class="v" style="margin:0" set:html={t.s4.mechForHtml} /></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.s4.mechRelDt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'skalowanie', lang)} style="color:var(--acc)">{t.s4.relLabels[0]}</a> · <a href={pageHref(base, 'docs', lang)} style="color:var(--acc)">{t.s4.relLabels[1]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.s4.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ SEKTOR 05 PROJEKTY ============ -->
+<section class="sector" id="n-05" style="--acc:#a78bfa">
+  <div class="sec-top rv">
+    <div>
+      <div class="sec-head">
+        <span class="sec-num">{t.s5.num}</span>
+        <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.hyperion.glyph} />{universeName(UNIVERSES.hyperion, lang)} · {t.s5.uni}</span>
+      </div>
+      <h2>{t.s5.h2}</h2>
+      <div class="epigraph sf-only">
+        <p>{t.s5.epigraphSf}</p>
+        <cite>{t.s5.epigraphCiteSf}</cite>
+      </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.s5.figAria}>
+          <g stroke="currentColor" fill="none">
+            <path d="M28,266 C70,252 56,258 85,252 C120,244 142,228 175,222 C210,216 228,244 262,238 C296,232 314,232 330,222" stroke-dasharray="5 6" opacity=".7"/>
+            <path d="M85,244 l8,8 -8,8 -8,-8 z" stroke-width="1.5" class="anim-pulse"/>
+            <path d="M175,214 l8,8 -8,8 -8,-8 z" stroke-width="1.5" class="anim-pulse" style="animation-delay:-.6s"/>
+            <path d="M262,230 l8,8 -8,8 -8,-8 z" stroke-width="1.5" class="anim-pulse" style="animation-delay:-1.2s"/>
+            <path d="M332,252 348,252 345,96 335,96 z" stroke-width="1.5"/>
+            <path d="M362,252 372,252 370,150 364,150 z" opacity=".6"/>
+            <circle cx="340" cy="118" fill="none"><animate attributeName="r" values="60;8" dur="6s" repeatCount="indefinite" begin="0s"/><animate attributeName="opacity" values="0;.4;0" dur="6s" repeatCount="indefinite" begin="0s"/></circle>
+            <circle cx="340" cy="118" fill="none"><animate attributeName="r" values="60;8" dur="6s" repeatCount="indefinite" begin="-2s"/><animate attributeName="opacity" values="0;.4;0" dur="6s" repeatCount="indefinite" begin="-2s"/></circle>
+            <circle cx="340" cy="118" fill="none"><animate attributeName="r" values="60;8" dur="6s" repeatCount="indefinite" begin="-4s"/><animate attributeName="opacity" values="0;.4;0" dur="6s" repeatCount="indefinite" begin="-4s"/></circle>
+            <path d="M292,86 l-10,3 8,6" opacity=".5"/>
+          </g>
+          <g fill="currentColor">
+            <circle cx="28" cy="266" r="3"/>
+          </g>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="9s" repeatCount="indefinite" path="M28,266 C70,252 56,258 85,252 C120,244 142,228 175,222 C210,216 228,244 262,238 C296,232 314,232 330,222"/></circle>
+          <text x="36" y="42">{t.s5.fig[0]}</text>
+          <text x="85" y="280" text-anchor="middle" class="acc">{t.s5.fig[1]}</text>
+          <text x="175" y="206" text-anchor="middle" class="acc">{t.s5.fig[2]}</text>
+          <text x="262" y="272" text-anchor="middle" class="acc">{t.s5.fig[3]}</text>
+          <text x="352" y="284" text-anchor="middle">{t.s5.fig[4]}</text>
+          <text x="284" y="76" class="dim">{t.s5.fig[5]}</text>
+          <text x="30" y="246" class="dim">{t.s5.fig[6]}</text>
+        </svg>
+      </div>
+      <figcaption>{t.s5.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.s5.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.s5.leadNeutralHtml} />
+      <p class="lead" set:html={t.s5.leadHtml} />
+    </div>
+    <div class="trans">
+      <div class="tx">
+        <span class="mono"><span class="sf-only">{t.s5.tx[0].monoSf}</span><span class="neutral-only">{t.s5.tx[0].monoNeutral}</span>{t.s5.tx[0].monoPost}</span>
+        <blockquote>{t.s5.tx[0].quote}</blockquote>
+        <p class="who">{t.s5.tx[0].who}</p>
+      </div>
+      <div class="tx">
+        <span class="mono"><span class="sf-only">{t.s5.tx[1].monoSf}</span><span class="neutral-only">{t.s5.tx[1].monoNeutral}</span>{t.s5.tx[1].monoPost}</span>
+        <blockquote>{t.s5.tx[1].quote}</blockquote>
+        <p class="who">{t.s5.tx[1].who}</p>
+      </div>
+    </div>
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-chart" aria-hidden="true"></span>{t.s5.mechProofDt}</dt><dd class="v" style="margin:0" set:html={t.s5.mechProofHtml} /></div>
+      <div><dt><span class="ico ico-sig" aria-hidden="true"></span>{t.s5.mechVoiceDt}</dt><dd class="v" style="margin:0" set:html={t.s5.mechVoiceHtml} /></div>
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.s5.mechForDt}</dt><dd class="v" style="margin:0" set:html={t.s5.mechForHtml} /></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.s5.mechRelDt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'fundament', lang)} style="color:var(--acc)">{t.s5.relLabels[0]}</a> · <a href={pageHref(base, 'legacy', lang)} style="color:var(--acc)">{t.s5.relLabels[1]}</a> · <a href={pageHref(base, 'teamwork', lang)} style="color:var(--acc)">{t.s5.relLabels[2]}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.s5.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ DALEJ ============ -->
+<section class="sector" id="dalej" style="--acc:var(--indigo)">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num"><span class="sf-only">{t.next.numSf}</span><span class="neutral-only">{t.next.numNeutral}</span></span>
+      <span class="sec-uni sf-only"><span class="ico ico-star" aria-hidden="true"></span>{t.next.uni}</span>
+    </div>
+    <h2>{t.next.h2}</h2>
+  </div>
+  <div class="solo rv">
+    <p class="lead" set:html={t.next.leadHtml} />
+  </div>
+  <div class="epigraph finis rv" style="--acc:var(--indigo)">
+    <p>{t.next.finisQuote}</p>
+    <cite>{t.next.finisCite}</cite>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.next.targetK}</span>
+    <p set:html={t.next.targetHtml} />
+  </div>
+  <div class="solo rv">
+    <div class="tx">
+      <span class="mono"><span class="ico ico-link" aria-hidden="true"></span>{t.next.dirMono}</span>
+      <dl class="mech">
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>{t.next.dirs[0].dt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'csc', lang)} style="color:var(--indigo)">{t.next.dirs[0].link}</a>{t.next.dirs[0].rest}</dd></div>
+        <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.next.dirs[1].dt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'docs', lang)} style="color:var(--indigo)">{t.next.dirs[1].link}</a>{t.next.dirs[1].rest}</dd></div>
+        <div class="sf-only"><dt><span class="ico ico-star" aria-hidden="true"></span>{t.next.dirs[2].dt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'kanon', lang)} style="color:var(--indigo)">{t.next.dirs[2].link}</a>{t.next.dirs[2].rest}</dd></div>
+        <div><dt><span class="ico ico-radar" aria-hidden="true"></span>{t.next.dirs[3].dt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'legacy', lang)} style="color:var(--indigo)">{t.next.dirs[3].link}</a>{t.next.dirs[3].rest}</dd></div>
+        <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.next.dirs[4].dt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'jakosc', lang)} style="color:var(--indigo)">{t.next.dirs[4].link}</a>{t.next.dirs[4].rest}</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>

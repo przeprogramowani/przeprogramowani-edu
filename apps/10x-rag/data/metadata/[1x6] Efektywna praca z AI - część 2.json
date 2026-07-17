@@ -1,0 +1,6 @@
+{
+  "lessonId": "[1x6] Efektywna praca z AI - część 2",
+  "displayName": "[1x6] Efektywna praca z AI - część 2",
+  "summary": "1) Jak rozpocząć sesję eksploracyjną z AI, aby uzyskać systematyczny przegląd możliwych rozwiązań zamiast jednego szybkiego pomysłu?  \n2) Jak poprosić model o zmapowanie różnych strategii podejścia do problemu i wskazanie ich trade‑offów (np. ryzyko, szybkość dostarczenia, koszty, elastyczność)?  \n3) Jak wykorzystać AI do generowania perspektyw z punktu widzenia różnych ról (architekt, tester, specjalista ds. bezpieczeństwa, product manager, osoba odpowiedzialna za koszty)?  \n4) Jak prowadzić iteracyjną eksplorację — od szerokiego przeglądu opcji do coraz bardziej szczegółowych taktyk, narzędzi i bibliotek?  \n5) Jak dokumentować wyniki eksploracji i organizować zebrane pomysły (grupowanie, identyfikacja zależności) w pliku Markdown?  \n6) Jak unikać pułapek: przedwczesnego przechodzenia do szczegółów implementacji oraz przyjmowania pierwszego rozwiązania bez alternatyw i kontrargumentów?  \n7) Jak ustalić kryteria oceny i narzucić deadline (timebox) dla fazy eksploracyjnej, aby zapobiec nadmiernemu analizowaniu (overthinking)?  \n8) Jak włączać członków zespołu do eksploracji z AI, by uwzględnić nietechniczne ograniczenia i ograniczenia organizacyjne?",
+  "tokenEstimate": 173
+}

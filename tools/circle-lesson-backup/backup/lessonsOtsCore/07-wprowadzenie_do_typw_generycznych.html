@@ -1,0 +1,110 @@
+<meta name="lesson-id" content="Wprowadzenie do typów generycznych"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 52.5822%;"><iframe src="https://player.vimeo.com/video/1035131861?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="189" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2>Wprowadzenie</h2><p>W każdym nowoczesnym języku programowania pojawiają się różnorodne mechanizmy pozwalające na tworzenie elastycznego, bezpiecznego i łatwego w utrzymaniu kodu. Wśród nich szczególne miejsce zajmują typy generyczne. Możemy je znaleźć w takich językach jak Java, C#, C++, Swift czy Kotlin, oraz właśnie w TypeScript.</p><p>Dlaczego twórcy języków programowania decydują się na wdrażanie tej funkcjonalności?</p><p>W świecie typów, generyki dają nam podobne korzyści jak funkcje i komponenty w świecie logiki biznesowej i interfejsów użytkownika:</p><ul><li><p><strong>📈 Funkcje</strong>: Umożliwiają wyodrębnianie powtarzającej się logiki do jednego miejsca w projekcie. Dzięki temu, zamiast pisać ten sam kod wielokrotnie, możemy go zorganizować w jednej funkcji, którą można wywoływać w różnych miejscach. To zwiększa czytelność kodu i ułatwia jego utrzymanie.</p></li></ul><pre><code>function storeDetails(details: PersonalDetails) {
+  ...
+}
+
+storeDetails(user);
+storeDetails(admin);</code></pre><ul><li><p><strong>🌃 Komponenty</strong>: Umożliwiają wyodrębnianie reużywalnych elementów interfejsu użytkownika do wspólnego elementu, który można później parametryzować. Komponenty mogą być stosowane wielokrotnie w różnych częściach aplikacji, co upraszcza zarządzanie i rozwój UI.</p></li></ul><pre><code>function CallToAction({ onClick, label }: { onClick: () =&gt; void; label: string }) {
+  return &lt;button onClick={onClick}&gt;{label}&lt;/button&gt;;
+}
+
+// OtherComponent
+return (
+  &lt;CallToAction onClick={handleSubmit} label="Submit" /&gt;;
+  &lt;CallToAction onClick={handleCancel} label="Cancel" /&gt;;
+) </code></pre><ul><li><p><strong>🛠️ Generyki:</strong> Umożliwiają <strong>tworzenie określonych struktur (funkcji, klas i interfejsów), które są niezależne od konkretnego typu danych</strong>, z którym pracują. Dzięki temu możemy zdefiniować spójną logikę, która działa z różnymi typami. Takie podejście minimalizuje duplikację kodu i zwiększa jego elastyczność.</p></li></ul><pre><code>type AllFieldsRequired&lt;T&gt; = ...
+
+type RestrictiveDetails = AllFieldsRequired&lt;PersonalDetails&gt;;
+type RestrictiveMetadata = AllFieldsRequired&lt;LogMetadata&gt;;</code></pre><p>Przykładowa refaktoryzacja z użyciem typu generycznego została przedstawiona poniżej - w efekcie, zamiast dwóch funkcji różniących się detalem, mamy jeden uniwersalny sposób na logowanie tablic:</p><pre><code>// Przed - dwie funkcje realizujące ten sam cel, wspierające dwa typy argumentów
+function printStringArray(arr: string[]): void {
+    arr.forEach(item =&gt; console.log(item));
+}
+
+function printNumberArray(arr: number[]): void {
+    arr.forEach(item =&gt; console.log(item));
+}
+
+// Po - jedna funkcja do obsługi tablic bliżej nieokreślonego typu ("T")
+function printArray&lt;T&gt;(arr: T[]): void {
+    arr.forEach(item =&gt; console.log(item));
+}</code></pre><p>Dzięki wprowadzeniu funkcji z typem generycznym, operacja logowania elementów tablic może być zaimplementowana tylko raz (wcześniej każdy typ wymuszał tworzenie odrębnej funkcji).</p><h3>Konwencja nazewnicza</h3><p>Być może zastanawiasz się co oznacza typ <em>T</em>, który wprowadziliśmy jako alternatywę dla typów string i number - przecież w programowaniu nazewnictwo powinno być intuicyjne, a <em>T</em> to zupełne przeciwieństwo tej praktyki?</p><p>Konwencja nazywania typów generycznych pojedynczymi literami wywodzi się z tradycji matematycznej, gdzie często używa się pojedynczych liter do oznaczania zmiennych lub nieznanych wartości. W programowaniu przyjęła się ze względu na zwięzłość, abstrakcyjność i uniwersalność, co ułatwia czytelność kodu i podkreśla ogólny charakter typów generycznych.</p><p>Wprowadzając typ <em>T</em>, wprowadzamy pewien symbol zastępczy, którego znaczenie celowo zaciemniamy - w końcu generyki dają nam elastyczność&nbsp;i mniejsze przywiązanie do jednego ustalonego typu. Zdarzają się jednak sytuacje (o tym dalej), kiedy chcemy użyć bardziej znaczącej nazwy i na szczęście TypeScript nie nakłada w tej kwestii wymagań czy ograniczeń.</p><h2>Generyczne elementy języka</h2><p>Cztery główne obszary języka TypeScript, w których możemy stosować typy generyczne, to:</p><ul><li><p>aliasy typów</p></li><li><p>funkcje</p></li><li><p>klasy</p></li><li><p>interfejsy</p></li></ul><p>Zobacz jak typy generyczne wpływają na każdy z tych elementów.</p><h2>Aliasy typów</h2><p>Aliasy typów, definiowane poprzez słowo kluczowe <em>type</em>, umożliwiają tworzenie typów generycznych:</p><pre><code>type TypeName&lt;T1, T2, ...&gt; = ...</code></pre><p>Taka konstrukcja oznacza, że będziemy tworzyć nowy typ (<em>TypeName)</em> oparty o istniejące cechy dwóch innych typów - <em>T1 </em>i <em>T2</em> (podobnie jak gdybyśmy pisali funkcję z dwoma argumentami).</p><p>Typ <em>Binding</em> może przykładowo służyć do wprowadzenia pary klucz-wartość o dwóch dynamicznie określanych parametrach K i V:</p><pre><code>type Binding&lt;K, V&gt; = {
+  key: K;
+  value: V;
+};
+
+const stringToNumber: Binding&lt;string, number&gt; = {
+  key: 'foo',
+  value: 42,
+};
+
+const objectToBoolean: Binding&lt;object, boolean&gt; = {
+  key: { foo: 'bar' },
+  value: true,
+};</code></pre><p>Poprzez aliasy typów możemy tworzyć&nbsp;dowolnie złożone powiązania, takie jak chociażby “trójki” parametrów czy inne typy, które pasują&nbsp;do naszej domeny lub problemu, z którym pracujemy:</p><pre><code>type Three&lt;A, B, C&gt; = {
+  a: A;
+  b: B;
+  c: C;
+};
+
+const three: Three&lt;string, number, boolean&gt; = {
+  a: 'hello',
+  b: 42,
+  c: true,
+};</code></pre><p>Zauważ, że zarówno w typie <em>Binding </em>jak i <em>Three</em>, można zaobserwować podobną&nbsp;filozofię działania jak w przypadku klasycznych funkcji. Mamy określoną logikę (odpowiedzialność typu) i przekazywane parametry (parametry typów generycznych).</p><h2>Funkcje</h2><p>W przypadku funkcji, typ generyczny definiujemy poprzez umieszczenie go w ostrych nawiasach, zaraz za nazwą funkcji:</p><pre><code>function genericFn&lt;T&gt;() { ... }</code></pre><p>W przypadku funkcji strzałkowych, typ umieszczamy przed listą parametrów:</p><pre><code>const arrowFn = &lt;T,&gt;() =&gt; { ... }</code></pre><p><strong>👉 Dla ciekawskich:</strong> W przypadku funkcji strzałkowych znajdujących się w plikach .tsx, wymagany jest zapis &lt;T,&gt; - dzięki niemu kompilator TS rozpoznaje różnicę pomiędzy generykami a JSX.</p><h3><strong>Generyczne parametry i wartości zwracane</strong></h3><p>Korzystając z funkcji generycznych możemy zadecydować, czy typ generyczny:</p><ul><li><p>a) będzie dotyczył typu argumentów - w sytuacji, kiedy chcemy stworzyć uniwersalną funkcjonalność działającą w obrębie różnych typów danych (np. iterowanie po tablicach, filtrowanie, etc.)</p></li><li><p>b) typu danych wyjściowych - w sytuacji, kiedy typ argumentu jest stały (np. adres URL), a typ wartości zwracanej może się zmieniać na żądanie (np. pobieranie określonego formatu danych z API)</p></li><li><p>c) zarówno typu parametrów jak i danych wyjściowych - połączenie obu powyższych przypadków i wprowadzenie spójności pomiędzy argumentami a danymi wyjściowymi</p></li></ul><pre><code>// Funkcja generyczna dla typu argumentów
+function logEntries&lt;T&gt;(entries: T[]): void { ... }
+
+// Funkcja generyczna dla typu zwracanego obiektu
+function fetchData&lt;T&gt;(url: string): T { ... }
+
+// Funkcja generyczna wiążąca typ parametrów i wartości zwracanej
+function processData&lt;T&gt;(params: T[]): T[] { ... }</code></pre><h3>Wiele parametrów generycznych</h3><p>Korzystając z generyków możemy wprowadzić kilka parametrów typów, które określą relację pomiędzy poszczególnymi fragmentami takiej funkcji:</p><pre><code>function createGenericTransform&lt;T, K&gt;(transform: (input: T) =&gt; K) {
+  return (value: T): K =&gt; transform(value);
+}
+
+// Przykład użycia:
+const stringToNumber = createGenericTransform&lt;string, number&gt;((val) =&gt; parseInt(val, 10));
+const result1 = stringToNumber("123"); // Zwraca: 123, typ: number
+
+const numberToString = createGenericTransform&lt;number, string&gt;((val) =&gt; val.toString());
+const result2 = numberToString(42); // Zwraca: "42", typ: string
+
+const arrayToLength = createGenericTransform&lt;number[], number&gt;((arr) =&gt; arr.length);
+const result3 = arrayToLength([1, 2, 3, 4]); // Zwraca: 4, typ: number</code></pre><p>Funkcja createGenericTransform jest funkcją wyższego rzędu, która przyjmuje funkcję transform (służącą do konwersji typu T na K) i zwraca nową funkcję. Ta nowa funkcja przyjmuje wartość typu T i zwraca wynik konwersji jako typ K.</p><p>Takie podejście pozwala nam wygodnie tworzyć różne funkcje transformujące, bazując na tym samym schemacie, i ponownie używać ich w różnych miejscach w kodzie.</p><p>Inny przykład to funkcja łącząca dwa obiekty:</p><pre><code>function mergeObjects&lt;T, U&gt;(obj1: T, obj2: U): T &amp; U {
+    return { ...obj1, ...obj2 };
+}
+
+mergeObjects({
+  firstName: 'John'
+}, {
+  lastName: 'Doe'
+}); // { firstName: 'John', lastName: 'Doe' }
+
+mergeObjects({
+  id: 1,
+  type: 'config'
+}, {
+  variant: 'regular'
+}); // { id: 1, type: 'config', variant: 'regular' }</code></pre><p>W tym przypadku typy generyczne określają dwa dowolne rodzaje obiektów, które na wyjściu połączymy (co zostało przedstawione jako przecięcie typów - operator &amp;).</p><h2>Klasy</h2><p>Klasy, podobnie jak funkcje, również mogą zawierać odwołania do typów generycznych. Będą one wiązać określony typ na przestrzeni wybranych funkcji i pól w obrębie klasy:</p><pre><code>class PersistedCollection&lt;T&gt; {
+
+  async add(item: T) {
+    // ...
+  }
+
+  async getAll(): T[] {
+    // ...
+  }
+
+  async getById(id: string): T {
+    // ...
+  }
+  
+}</code></pre><p>Taką generyczną klasę możemy wykorzystać np. w sytuacji, kiedy zestaw danych przechowujemy w bazie, a wprowadzona klasa <em>PersistedCollection</em> ma ukrywać detale połączenia z bazą, pozwalając nam na wykorzystanie różnych typów danych w ten sam sposób.</p><h2>Interfejsy</h2><p>Interfejsy, to trzeci obok klas i funkcji element języka TypeScript, w którym mogą znajdować się typy generyczne.</p><p>Popularnym zastosowaniem generycznych interfejsów są sytuacje, gdzie obok pól o ściśle zdefiniowanym kształcie (np. status i error o typach <em>number</em> i <em>string</em>) dodajemy jeszcze pola możliwe do zdefiniowania przez konsumenta (w tym przypadku - data):</p><pre><code>interface ApiResponse&lt;T&gt; {
+    data: T;
+    status: number;
+    error?: string;
+}</code></pre><p>Interfejs <em>ApiResponse&lt;T&gt;</em> wykorzystamy do zamodelowania odpowiedzi z API, gdzie obok statusu i ewentualnego kodu błędu, znajdzie się oczekiwana porcja danych (o type T).</p><p>Dzięki temu, w naszym projekcie możemy implementować funkcje pobierające dane z różnych domen, przy jednoczesnym zachowaniu spójności odpowiedzi:</p><pre><code>function fetchUserData(id: number): ApiResponse&lt;User&gt; {
+  ...
+}
+
+function fetchArticleData(id: number): ApiResponse&lt;Article&gt; {
+  ...
+}</code></pre><h2>Podsumowanie</h2><p>Jeśli zauważysz w swoim kodzie powtórzoną logikę, identyczne funkcje lub zbieżne moduły, które różnią się wyłącznie typem przyjmowanego parametru, prawdopodobnie natrafiłeś na dobre miejsce do refaktoryzacji z użyciem typów generycznych.</p><p>Żeby przebiegła ona bezproblemowo, w kolejnych lekcjach pokażemy ci zaawansowane możliwości generyków a także przykłady ich wykorzystania w produkcyjnych bibliotekach Open Source.</p><h2>Ćwiczenia</h2><ul><li><p><strong>311-generics-swapbox - </strong>W firmie logistycznej opracowywany jest tajemniczy przedmiot do szybkiej zamiany miejsc dwóch elementów tego samego typu. Będzie on wykorzystywany w sortowni, w przypadku obsługi błędnie zaadresowanych paczek. Niestety, prace postępują powoli, a ty zostałeś poproszony o ich przyśpieszenie - zarząd oczekuje, że uniwersalna “magiczna skrzynka” pozwoli zredukować koszty i podniesie firmową efektywność. Czy ukończysz ten projekt?</p></li></ul><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

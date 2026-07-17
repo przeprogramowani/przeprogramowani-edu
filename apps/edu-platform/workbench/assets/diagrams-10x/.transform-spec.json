@@ -1,0 +1,16 @@
+{
+  "prompt": "Transform this mermaid diagram PNG into a cinematic sci-fi space HUD version. Keep ALL original nodes, edges, labels, and flow direction exactly as they appear. Use the Mermaid source below as the source of truth for the diagram structure.\n\nColor palette:\n- Background: deep dark space (#0f0f1a to #1a0a2e) with subtle purple nebula tint\n- Primary accent: orange #F68F09 (flow lines, headline, decision diamonds)\n- Secondary accent: purple #B14CF7 (nebula glow, HUD frame lines, secondary edges)\n- Node colors: preserve the original diagram colors (blue, green, cyan, teal, yellow, red) as holographic glowing panels — do NOT recolor nodes to orange/purple\n- Text: white or light gray, high contrast, clean sans-serif\n\nHUD frame:\n- Thin glowing orange and purple border lines with small corner bracket accents and subtle geometric decorations (dots, tiny squares, angular shapes)\n- Elegant and understated — NOT a cockpit dashboard with gauges or radar screens\n- NO readable text in the border — zero words, only visual shapes and lines\n\nBranding:\n- \"10xDevs\" in small text, top-left corner, once — the only non-diagram text besides the headline\n\nHeadline:\n- Short descriptive title at top-center (max 3-4 words, derived from diagram content)\n- Medium-sized italic orange #F68F09 text (smaller than the diagram node labels — the headline should NOT dominate the image) with a subtle glowing bloom effect\n- Integrate the headline into the top edge of the HUD border frame — the headline's decorative brackets or underline should flow seamlessly from the border lines, as if the title is part of the frame itself, not a separate floating element\n- Keep it cosmic and digital in feel, but compact — prioritize diagram readability over headline prominence\n\nDiagram rendering:\n- Nodes as holographic HUD panels with glowing borders and translucent fill\n- Edges as energy flow lines with subtle glow\n- Subgroup containers with faint force-field border effect\n- All labels must be legible at 1:1 zoom\n\nConstraints:\n- Do NOT add, remove, or rename any nodes or edges\n- Do NOT change flow direction\n- Do NOT crop any part of the diagram\n- Copy all Polish labels verbatim from the Mermaid source — do not translate or correct spelling\n- Output a single image, not a collage",
+  "negativePrompt": "No photorealistic humans, 3D characters, text watermarks, stock photos, blurry labels, cropped edges, extra nodes, changed flow direction, or readable text in the HUD border decorations.",
+  "styleReference": ".style-reference.png",
+  "modelPrimary": "openai/gpt-5.4-image-2",
+  "modelFallback": "google/gemini-3.1-flash-image-preview",
+  "imageConfig": {
+    "aspect_ratio": "16:9",
+    "image_size": "2K"
+  },
+  "modelsRequiringTextModality": [
+    "google/gemini-3.1-flash-image-preview",
+    "google/gemini-3-pro-image-preview",
+    "google/gemini-2.5-flash-image"
+  ]
+}

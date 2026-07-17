@@ -1,0 +1,212 @@
+---
+/**
+ * Dedykowana strona certyfikacji (slug certyfikacja, kontekst publiczny).
+ * Terminy zgloszen (z config CERTIFICATION_TERMS), zasady, szczegoly trzech
+ * blokow (Builder/Architect/Champion) z linkami do stron modulow, sekcja oceny
+ * oraz pelne zasady osadzone z Circle (prop certHtml).
+ *
+ * hud-top, xnav, footer i wspolny CSS renderuje TenxCosmicLayout; tutaj markup
+ * + scoped CSS (kafle terminow, panele blokow, prose posta Circle).
+ * i18n: teksty w i18n/cert.ts (pl; en odbija pl - strona poza EN_PAGES).
+ */
+import type { Lang } from '../i18n';
+import { CERT } from '../i18n/cert';
+import { CERTIFICATION_TERMS } from '../config';
+import { pageHref } from '../pages';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+  /** HTML pelnych zasad z Circle; null = fallback. */
+  certHtml?: string | null;
+  certUrl?: string;
+}
+
+const { base, lang = 'pl', certHtml = null, certUrl } = Astro.props;
+const t = CERT[lang];
+---
+
+<style is:global>
+/* Reguly specyficzne dla strony (diff vs CSS wspolny w TenxCosmicLayout) */
+header h1 .glow{color:#ffd166;text-shadow:0 0 24px rgba(255,209,102,.4)}
+
+/* kafle terminow */
+.cert-terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:18px}
+.cert-term{border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 55%,transparent);padding:16px 18px;position:relative}
+.cert-term .t-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+.cert-term .t-date{font-family:var(--disp);font-weight:700;font-size:1.25rem;color:var(--txt);margin-top:6px}
+.cert-term .t-high{margin-top:8px;font-size:.78rem;line-height:1.5;color:var(--muted)}
+.cert-term.is-high{border-color:color-mix(in srgb,#ffd166 55%,transparent);box-shadow:0 0 18px rgba(255,209,102,.14)}
+.cert-term.is-high .t-label{color:#ffd166}
+
+/* panele blokow */
+.cert-blocks{display:grid;gap:16px;margin-top:22px}
+.cert-block{border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 55%,transparent);padding:22px 24px}
+.cert-block .b-tag{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--acc)}
+.cert-block h3{font-family:var(--disp);font-weight:700;font-size:1.5rem;margin:6px 0 0;color:var(--txt)}
+.cert-block .b-lead{margin-top:10px;color:var(--muted);font-size:.95rem;line-height:1.6;max-width:70ch}
+.cert-block .b-lead b{color:var(--txt)}
+.cert-block .b-mod{display:inline-block;margin-top:12px;font-family:var(--disp);font-weight:600;font-size:.74rem;letter-spacing:.08em;color:var(--acc);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--acc) 45%,transparent)}
+.cert-block .b-mod:hover,.cert-block .b-mod:focus-visible{color:var(--txt);outline:none}
+.cert-block .b-reqlabel{margin-top:18px;font-family:var(--disp);font-weight:600;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--acc)}
+.cert-block ul{margin:10px 0 0;padding-left:20px;color:var(--muted);font-size:.9rem;line-height:1.6}
+.cert-block li{margin:6px 0}
+.cert-block li b{color:var(--txt)}
+.cert-block .b-note{margin-top:14px;padding:12px 16px;border-left:2px solid color-mix(in srgb,var(--acc) 60%,transparent);background:color-mix(in srgb,var(--surface) 62%,transparent);font-size:.86rem;line-height:1.6;color:var(--txt)}
+
+/* pelne zasady z Circle */
+.cert-panel{margin-top:26px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 55%,transparent);padding:24px 30px}
+.cert-panel .cert-src{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+.cert-doc{max-width:72ch}
+.cert-doc>*:first-child{margin-top:0}
+.cert-doc h2{font-family:var(--disp);font-size:1.15rem;line-height:1.3;margin:30px 0 10px;color:var(--txt)}
+.cert-doc h3{font-family:var(--disp);font-size:1rem;margin:24px 0 8px;color:var(--txt)}
+.cert-doc p{margin:12px 0;color:var(--muted);line-height:1.65}
+.cert-doc strong,.cert-doc b{color:var(--txt);font-weight:600}
+.cert-doc ul,.cert-doc ol{margin:12px 0;padding-left:22px;color:var(--muted)}
+.cert-doc li{margin:6px 0;line-height:1.6}
+.cert-doc a{color:var(--indigo);text-decoration:underline;overflow-wrap:anywhere}
+.cert-doc blockquote{margin:16px 0;padding:12px 18px;border-left:2px solid color-mix(in srgb,var(--acc) 70%,transparent);background:color-mix(in srgb,var(--surface) 62%,transparent);color:var(--txt)}
+.cert-doc blockquote p{color:var(--txt)}
+.cert-doc hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.cert-doc code{font-family:var(--mono);font-size:.85em;background:color-mix(in srgb,var(--surface) 72%,transparent);padding:1px 5px}
+.cert-doc img{max-width:100%;height:auto}
+.cert-doc table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.85rem}
+.cert-doc th,.cert-doc td{border:1px solid var(--line-soft);padding:8px 10px;text-align:left;color:var(--muted)}
+.cert-read{display:inline-block;margin-top:20px;font-family:var(--disp);font-weight:600;font-size:.78rem;letter-spacing:.1em;color:var(--acc);text-decoration:none;border:1px solid color-mix(in srgb,var(--acc) 55%,transparent);padding:9px 16px;transition:background .2s}
+.cert-read:hover,.cert-read:focus-visible{background:color-mix(in srgb,var(--acc) 12%,transparent);outline:none}
+@media(max-width:720px){.cert-panel{padding:18px 16px}.cert-block{padding:18px 16px}}
+</style>
+
+<header>
+  <p class="eyebrow" style="--acc:#ffd166"><span class="ico ico-trophy" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1 set:html={t.h1Html} />
+  <p class="sub" set:html={t.subHtml} />
+  <nav class="route" aria-label={t.routeAria}>
+    <a href="#terminy" style="--hov:#ffd166">{t.route[0]}</a>
+    <a href="#bloki" style="--hov:#7c8cff">{t.route[1]}</a>
+    <a href="#ocena" style="--hov:#3ddad0">{t.route[2]}</a>
+    <a href="#zasady">{t.route[3]}</a>
+  </nav>
+</header>
+
+<!-- ============ 01 TERMINY ============ -->
+<section class="sector" id="terminy" style="--acc:#ffd166">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.terms.num}</span>
+      <span class="sec-uni"><span class="ico ico-radar" aria-hidden="true"></span>{t.terms.kicker}</span>
+    </div>
+    <h2>{t.terms.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.terms.leadHtml} /></div>
+  <div class="rv">
+    <p class="eyebrow" style="--acc:#ffd166;margin-top:26px">{t.terms.termsCap}</p>
+    <div class="cert-terms">
+      {CERTIFICATION_TERMS.map((term) => (
+        <div class={`cert-term${term.highlight ? ' is-high' : ''}`}>
+          <span class="t-label">{term.label}</span>
+          <div class="t-date">{term.date}</div>
+          {term.highlight && <p class="t-high"><b>{t.terms.highlightLabel}:</b> {term.highlight}</p>}
+        </div>
+      ))}
+    </div>
+  </div>
+  <div class="rv">
+    <p class="eyebrow" style="--acc:#ffd166;margin-top:34px">{t.terms.rulesCap}</p>
+    <dl class="mech">
+      {t.terms.rules.map((r) => (
+        <div><dt><span class="ico ico-check" aria-hidden="true"></span>{r.dt}</dt><dd class="v" style="margin:0" set:html={r.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<!-- ============ 02 BLOKI ============ -->
+<section class="sector" id="bloki" style="--acc:#7c8cff">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.blocks.num}</span>
+      <span class="sec-uni"><span class="ico ico-trophy" aria-hidden="true"></span>{t.blocks.kicker}</span>
+    </div>
+    <h2>{t.blocks.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.blocks.leadHtml} /></div>
+  <div class="cert-blocks rv">
+    {t.blocks.items.map((b) => (
+      <div class="cert-block">
+        <span class="b-tag">{b.tag}</span>
+        <h3>{b.h3}</h3>
+        <p class="b-lead" set:html={b.leadHtml} />
+        <a class="b-mod" href={pageHref(base, b.moduleSlug, lang)}>{b.moduleLabel}</a>
+        <p class="b-reqlabel">{b.reqTitle}</p>
+        <ul>{b.reqs.map((r) => <li set:html={r} />)}</ul>
+        <p class="b-note" set:html={b.noteHtml} />
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- ============ 03 OCENA ============ -->
+<section class="sector" id="ocena" style="--acc:#3ddad0">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.evalSec.num}</span>
+      <span class="sec-uni"><span class="ico ico-eye" aria-hidden="true"></span>{t.evalSec.kicker}</span>
+    </div>
+    <h2>{t.evalSec.h2}</h2>
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      {t.evalSec.rows.map((r) => (
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{r.dt}</dt><dd class="v" style="margin:0" set:html={r.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<!-- ============ PEŁNE ZASADY (Z CIRCLE) ============ -->
+<section class="sector" id="zasady" style="--acc:#ffd166">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <span class="sec-uni"><span class="ico ico-doc" aria-hidden="true"></span>Pełne zasady</span>
+    </div>
+    <h2>Pełne zasady certyfikacji</h2>
+  </div>
+  <div class="target rv"><span class="k"><span class="ico ico-link" aria-hidden="true"></span>{t.source.k}</span><p set:html={t.source.html} /></div>
+  <div class="cert-panel rv">
+    <p class="cert-src">{t.source.docTitle}</p>
+    {certHtml ? (
+      <>
+        <div class="cert-doc" set:html={certHtml} />
+        {certUrl && <a class="cert-read" href={certUrl} target="_blank" rel="noopener">{t.source.readOnCircle}</a>}
+      </>
+    ) : (
+      <div class="cert-doc">
+        <p set:html={t.source.fallbackHtml} />
+        {certUrl && <a class="cert-read" href={certUrl} target="_blank" rel="noopener">{t.source.readOnCircle}</a>}
+      </div>
+    )}
+  </div>
+</section>
+
+<!-- ============ DALEJ ============ -->
+<section class="sector" id="dalej" style="--acc:#7c8cff">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.next.num}</span>
+      <span class="sec-uni"><span class="ico ico-star" aria-hidden="true"></span>{t.next.kicker}</span>
+    </div>
+    <h2>{t.next.h2}</h2>
+  </div>
+  <div class="solo rv">
+    <div class="tx">
+      <span class="mono"><span class="ico ico-link" aria-hidden="true"></span>Skróty</span>
+      <dl class="mech">
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Kurs</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'jak-dziala-kurs', lang)} style="color:var(--acc)">{t.next.kursLink}</a>{t.next.kursRest}</dd></div>
+        <div><dt><span class="ico ico-doc" aria-hidden="true"></span>FAQ</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'faq', lang)} style="color:var(--acc)">{t.next.faqLink}</a>{t.next.faqRest}</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>

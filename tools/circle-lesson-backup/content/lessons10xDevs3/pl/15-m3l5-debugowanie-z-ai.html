@@ -1,0 +1,272 @@
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m3-l5/assets/cover.jpg">https://images.przeprogramowani.pl/lessons/m3-l5/assets/cover.jpg</a></p></blockquote>
+<p>Test plan, testy jednostkowe, hooki, testy E2E. Przez cztery lekcje tego modułu zbudowałeś proaktywny pipeline jakości, który łapie znane ryzyka zanim trafią do repozytorium.</p>
+<p>A potem przychodzi ticket od użytkownika.</p>
+<p>"Oceniam fiszkę jako »Dobre«, ale wciąż wraca do powtórki — ciągle widzę te same karty."</p>
+<p>Żadnego stack trace'a. Żadnego kodu błędu. Żadnego screenshota. Jedno zdanie i diagnoza do wyciągnięcia.</p>
+<p>A pipeline z poprzednich lekcji? Tym razem mógł tego nie złapać. Akurat ta ścieżka aplikacji nie miała żadnego testu, który by ją uruchamiał. Dlaczego — rozłożymy na czynniki pierwsze pod koniec lekcji.</p>
+<p>To nie znaczy, że pipeline jest zły. Każdy taki mechanizm ma swoje martwe punkty. Proaktywne testy łapią ryzyka, które potrafisz przewidzieć. Produkcja ujawnia te, których nie przewidziałeś.</p>
+<p>Ta lekcja uczy reagowania. Zamiast agenta, który pisze testy "z góry" na podstawie ryzyk, poprowadzisz agenta, który zbiera dowody z wielu źródeł, formułuje hipotezę i potwierdza ją testem. Diagnostyka, która zamyka lukę po proaktywnych testach.</p>
+<p>Bug, którego będziemy diagnozować, został celowo wprowadzony do 10xCards na potrzeby lekcji. Na tym etapie aplikacja nie miała żadnych bugów, a nie chcieliśmy zmieniać kontekstu projektu na inny.</p>
+<p>Całe to dochodzenie prześledzimy poniżej krok po kroku, tak jak przebiegałoby przy prawdziwym tickecie: od parsowania zgłoszenia, przez dane z Sentry, logi runtime i reprodukcję lokalną, aż po test reprodukujący buga i zweryfikowany fix. Gotowe komendy i konfigurację każdego narzędzia zebraliśmy w sekcji 🔎 Deep Dive, a linki do oficjalnej dokumentacji znajdziesz w 📚 Materiałach dodatkowych. Wracaj do nich, kiedy będziesz odtwarzać ten proces u siebie.</p>
+<p>Jedna uwaga, zanim zaczniemy. Sentry, <strong>wrangler tail</strong> i Playwright to konkretny zestaw narzędzi dla stacka 10xCards (Astro na Cloudflare). W twoim projekcie mogą wyglądać inaczej: Datadog zamiast Sentry, <strong>vercel logs</strong> albo <strong>flyctl logs</strong> zamiast <strong>wrangler</strong>, Cypress zamiast Playwright. Tym, co się nie zmienia, jest struktura dochodzenia: skąd brać dowody, w jakiej kolejności i jak złożyć je w diagnozę. Przy każdym kroku nazywamy wzorzec, żebyś mógł przełożyć go na własne narzędzia.</p>
+<h2>Od ticketa do planu dochodzenia</h2>
+<h3>Parsowanie ticketa z agentem</h3>
+<p>Ticket od użytkownika to najtrudniejszy punkt wejścia w debugowanie. Kiedy unit test pada, masz asercję i stack trace. Kiedy Sentry łapie wyjątek, masz lokalizację w kodzie. Kiedy przychodzi ticket, masz zwykle jedno, nieprecyzyjne zdanie.</p>
+<p>Zamiast samodzielnie zgadywać przyczynę, daj agentowi ticket i poproś o ustrukturyzowanie go. To ta sama zasada, którą znasz z lekcji Testy jednostkowe i integracyjne z agentem (M3L2): im bardziej uporządkowany kontekst dajesz agentowi, tym lepszy wynik dostajesz.</p>
+<p>W testowaniu dawałeś agentowi konkretne, uporządkowane wejście powiązane z ryzykiem. W debugowaniu dajesz mu surowy ticket i prosisz o rozbicie go na konkretne pytania diagnostyczne.</p>
+<p>Agent parsuje "oceniam fiszkę, ale wciąż wraca do powtórki" na:</p>
+<ul>
+<li><strong>Kroki reprodukcji:</strong> otwórz powtórkę → oceń kartę jako „Dobre" → odśwież → ta sama karta nadal czeka</li>
+<li><strong>Zakres:</strong> ocena karty zwraca sukces, ale harmonogram się nie zmienia</li>
+<li><strong>Częstotliwość:</strong> za każdym razem</li>
+<li><strong>Możliwy obszar problemu:</strong> trasa oceniania → zapis do <strong>review_states</strong> (ocena działa, ale nowy termin powtórki się nie zapisuje)</li>
+</ul>
+<p>Teraz masz coś, z czym da się pracować. Agent nie zna jeszcze odpowiedzi, ale zna pytania.</p>
+<h3>Triage — gdzie szukać najpierw</h3>
+<p>Masz teraz konkrety: kroki reprodukcji, zakres problemu, częstotliwość, możliwy obszar. Pora zdecydować, gdzie szukać.</p>
+<p>"Ocena zwraca sukces, ale harmonogram się nie zmienia" to sygnał, że API nie zgłasza błędu, a mimo to coś po cichu nie działa. Pierwszym ruchem powinien być monitoring. Czy gdzieś w systemie pojawia się błąd, którego API nie propaguje na zewnątrz?</p>
+<p>Nie każdy symptom prowadzi do monitoringu. Różne sygnały sugerują różne źródła:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l5-lesson-draft-1-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l5-lesson-draft-1-10x.png</a></p></blockquote>
+<p>W naszym przypadku: API zwraca 200, ale ocena nie zmienia harmonogramu. Zaczynamy od Sentry.</p>
+<h2>Zbieranie dowodów</h2>
+<h3>Sentry MCP — dane z produkcji</h3>
+<p>Sentry to usługa do monitoringu błędów: SDK wpięty w aplikację przechwytuje wyjątki na produkcji i wysyła je razem ze stack trace'em, breadcrumbs (ślad zdarzeń poprzedzających błąd) i kontekstem requesta. Jeśli nie masz jeszcze Sentry na swoim projekcie, nie szkodzi — proces instalacji i darmowy plan opisujemy w Deep Dive tej lekcji. Tu zakładamy, że monitoring już zbiera dane z produkcji.</p>
+<p>Mając skonfigurowane Sentry, agent odpyta je przez MCP server: przeszuka issues, pobierze stack trace i breadcrumbs bez opuszczania terminala. Dlaczego MCP, a nie <strong>sentry-cli</strong>? CLI Sentry obsługuje zadania wydawnicze: upload source map, tworzenie release'ów, zarządzanie plikami debug i deploye. Nie ma w nim dedykowanej komendy do przeszukiwania issues. Robi to dopiero MCP server: wystawia issues, stack trace'y i breadcrumbs jako ustrukturyzowane dane, które agent odpytuje i od razu łączy w swojej pętli. Diagnoza zostaje po stronie agenta, zgodnie z tym, czego ta lekcja uczy.</p>
+<p>Ale skoro endpoint zwraca 200, to co właściwie Sentry ma tu zobaczyć? Decyduje jeden szczegół konfiguracji. Przy nieudanym zapisie handler wykonuje <strong>console.warn(...)</strong> (za chwilę zobaczymy to w kodzie), a projekt ma włączoną integrację <strong>captureConsoleIntegration</strong>, która przekazuje takie logi do Sentry jako zdarzenia. Dzięki temu cichy warning z produkcji trafia na listę issues, mimo że użytkownik dostał status 200. Konfigurację tej integracji pokazujemy w Deep Dive.</p>
+<p>Agent znajduje issue <strong>review/rate: update_failed</strong>. Stack trace wskazuje na <strong>rate.ts</strong>, na obsłudze wyniku zapisu do <strong>review_states</strong>: UPDATE harmonogramu zwraca błąd, ale handler go nie propaguje. Breadcrumbs pokazują kontekst oceniania karty, który bezpośrednio poprzedza błąd.</p>
+<p>To pierwsza warstwa dowodów. Wiemy teraz, że:</p>
+<ul>
+<li>Błąd istnieje — nieudany UPDATE do <strong>review_states</strong></li>
+<li>Lokalizacja — <strong>rate.ts</strong>, obsługa wyniku zapisu</li>
+<li>Kontekst — błąd pojawia się przy ocenie karty</li>
+</ul>
+<p>Bez monitoringu ta informacja byłaby zakopana gdzieś w logach serwera (o ile twój setup je przechowuje) albo najpewniej nigdzie.</p>
+<p>Ale nadal nie wiemy, jak często to się dzieje ani dlaczego zapis nie przechodzi. Do tego potrzebujemy kolejnych źródeł.</p>
+<h3>Runtime logs jako uzupełniający sygnał</h3>
+<p>Po Sentry agent sprawdza logi runtime. Dla Cloudflare to <strong>wrangler pages deployment tail</strong>:</p>
+<pre><code class="language-bash">npx wrangler pages deployment tail --project-name 10xcards-30 \
+  --format json --search "update_failed"
+</code></pre>
+<p>Logi potwierdzają: <strong>console.warn</strong> z komunikatem <strong>review/rate: update_failed</strong> pojawia się po każdej ocenie karty. To nie problem sporadyczny. To systematyczny błąd, który dotyka każdego użytkownika.</p>
+<p>Sentry dał lokalizację, logi dają skalę. Wystarczy, żeby przejść do reprodukcji.</p>
+<p>Konkretne narzędzie zależy od platformy. Wrangler to przykład dla Cloudflare, Fly.io ma <strong>flyctl logs</strong>, Vercel ma <strong>vercel logs</strong>, AWS ma CloudWatch.</p>
+<p>Wzorzec jest ten sam: odpytaj strumień logów platformy i filtruj po komunikacie powiązanym z symptomem.</p>
+<h3>Reprodukcja lokalna</h3>
+<p>Dowody z produkcji wskazują na <strong>rate.ts</strong> i nieudany zapis do <strong>review_states</strong>. Zanim agent zacznie czytać kod, potwierdźmy, że problem reprodukuje się lokalnie.</p>
+<p>Agent uruchamia aplikację, otwiera powtórkę, ocenia kartę jako „Dobre", odświeża. Ta sama karta nadal czeka w kolejce. Symptom potwierdzony.</p>
+<p>Tu z pomocą przychodzi Playwright CLI (lub Playwright MCP), czyli to samo narzędzie, które poznałeś w lekcji Testy E2E (M3L4). Tym razem nie służy do testowania, ale do zbierania informacji: daje agentowi dostęp do przeglądarki, w tym do komunikatów konsoli (<strong>browser_console_messages</strong>) i ruchu sieciowego (<strong>browser_network_requests</strong>). To dwa kanały, które pokazują, co dzieje się po stronie klienta, zanim zajrzymy w kod serwera.</p>
+<p>Konsola przeglądarki (<strong>browser_console_messages</strong>): brak błędów JavaScript. To wyklucza problem po stronie frontendu.</p>
+<p>Żądania sieciowe (<strong>browser_network_requests</strong>): <strong>POST</strong> na endpoint oceniania zwraca 200 z kartą, która wygląda na zaktualizowaną. Ale kolejne <strong>GET</strong> na endpoint powtórki zwraca 200 z tą samą kartą w kolejce. Serwer zgłasza sukces, ale nowy termin nigdy się nie zapisuje.</p>
+<p>Teraz wiemy: to problem po stronie serwera, w danych. Nie crash, nie błąd sieci, nie problem z renderowaniem. Zmiana harmonogramu po prostu nie trafia do <strong>review_states</strong>.</p>
+<p>Trzy źródła, trzy warstwy informacji. Teraz agent ma wystarczająco danych, żeby czytać kod z celem zamiast na ślepo.</p>
+<p>W tym miejscu można zapytać: skoro bug i tak siedzi w <strong>rate.ts</strong>, to czy nie szybciej było od razu otworzyć ten plik i przeczytać kod? Dla tego konkretnego buga być może. Ale czytanie kodu „w ciemno" zawodzi dokładnie tam, gdzie debugowanie boli najbardziej: przy błędach widocznych tylko na produkcji, niereprodukowalnych lokalnie, w nieznanym lub wielkim kodzie projektu albo pojawiających się losowo. Wtedy nie wiesz nawet, który plik otworzyć. Dlatego ćwiczymy metodę zbierania dowodów z wielu źródeł, a nie sztuczkę dla jednego przypadku. Zresztą i tutaj dowody zarobiły na swoje miejsce: Sentry dało lokalizację, logi pokazały skalę (każda ocena, nie pojedynczy incydent), a reprodukcja odcięła front od backendu, czego z samego <strong>rate.ts</strong> byś nie wyczytał.</p>
+<h3>Sygnał wizyjny: reprodukcja problemów UI</h3>
+<p>W tym bugu konsola i sieć wystarczyły — symptom był serwerowy, w danych. Ale część bugów żyje wyłącznie w wyrenderowanym interfejsie: nachodzące na siebie komponenty, zły z-index, ucięty tekst, zepsuta animacja. Tu <strong>browser_console_messages</strong> jest czyste, <strong>browser_network_requests</strong> zwraca 200, a użytkownik i tak widzi coś zepsutego. DOM i logi milczą, bo problem istnieje w pikselach, nie w strukturze.</p>
+<p>Wtedy reprodukcja lokalna ma jeszcze jeden kanał: screenshot podany modelowi wizyjnemu (VLM) z otwartym pytaniem diagnostycznym — „co tu jest nie tak?". Playwright MCP w trybie wizyjnym (<strong>--caps=vision</strong>) robi screenshot i operuje na współrzędnych zamiast na element refs, więc widzi to, czego drzewo dostępności nie wyraża. To nie to samo, co weryfikacja wizualna w lekcji Testy E2E (M3L4): tam vision potwierdzał wąską, znaną asercję (czy ten element wygląda, jak powinien); tu zadajesz pytanie otwarte, bo jeszcze nie wiesz, co się zepsuło, więc model ma ci pomóc nazwać objaw.</p>
+<p><strong>Który model?</strong> Potrzebujesz modelu z obsługą obrazów (VLM). Trzy kategorie:</p>
+<ul>
+<li><strong>Frontier</strong> (np. Claude Opus, GPT z obsługą wizji) — najwyższa jakość, najwyższy koszt.</li>
+<li><strong>Budżetowy</strong> (np. Gemini Flash) — dobra wizja, niski koszt, szybkie odpowiedzi. Rozsądny domyślny wybór do powtarzalnej diagnostyki.</li>
+<li><strong>Open-weight</strong> (np. Qwen-VL) — zero kosztów API na własnym sprzęcie, kosztem szybkości.</li>
+</ul>
+<p>Koszt jest realny, choć niewielki: jeden screenshot przez API to ułamek centa i kilka sekund, model lokalny jest darmowy, ale wolniejszy. Konkretne nazwy starzeją się szybko — trzymaj się kategorii i odświeżaj wybór co kilka miesięcy.</p>
+<p>Vision ma ograniczenia, o których trzeba pamiętać przy diagnozie:</p>
+<ul>
+<li><strong>Dokładność.</strong> Modele wizyjne przesuwają współrzędne w stronę środka ekranu; elementy przy krawędziach bywają źle lokalizowane. Pytanie musi być precyzyjne.</li>
+<li><strong>Halucynacje.</strong> Model może zgłosić problem, którego nie ma (fałszywy alarm — frustrujący), albo przeoczyć ten, który jest (fałszywy negatyw — groźniejszy). Traktuj jego odpowiedź jako hipotezę do potwierdzenia, nie twarde dowody.</li>
+</ul>
+<p>I granica względem testowania: do regresji na poziomie pikseli w <em>testach</em> używasz narzędzi deterministycznych (<strong>toMatchSnapshot</strong>, Argos, Lost Pixel) — to robota z lekcji Testy E2E (M3L4), tania i powtarzalna. Playwright MCP z wizją pomaga w czymś innym: w otwartym pytaniu diagnostycznym, którego deterministyczne narzędzie nie zada.</p>
+<h2>Diagnoza i fix</h2>
+<h3>Synteza — dowody się zbiegają</h3>
+<p>Agent czyta <strong>rate.ts</strong>. Handler liczy nowy stan karty w pamięci (<strong>updated</strong>), zapisuje go do <strong>review_states</strong>, a potem obsługuje wynik zapisu:</p>
+<pre><code class="language-typescript">if (updateError) {
+  console.warn(`review/rate: update_failed ...`);
+  return jsonResponse(200, { ok: true }); // ← błąd połknięty, zwracamy „sukces"
+}
+</code></pre>
+<p>Zestawiamy to z danymi z Sentry: błąd na UPDATE do <strong>review_states</strong>. Zapis pada (handler wpisuje do kolumny wartość, którą baza odrzuca przy każdej próbie), ale błąd nie leci dalej. Zamiast zwrócić 500, handler loguje <strong>console.warn</strong> i odpowiada <strong>200 { ok: true }</strong>. Frontend patrzy tylko na status odpowiedzi, więc przechodzi do następnej karty jak gdyby nigdy nic — a nowy termin nigdy nie trafił do bazy.</p>
+<p>Stąd 200 OK i karta, która wygląda na ocenioną. A ponieważ powtórka wybiera karty po <strong>due &lt;= teraz</strong>, niezmieniony termin oznacza, że ta sama karta wraca przy każdym kolejnym otwarciu powtórki.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l5-lesson-draft-2-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l5-lesson-draft-2-10x.png</a></p></blockquote>
+<p>Zwróć uwagę: żadne pojedyncze źródło nie wystarczyło do pełnej diagnozy.</p>
+<ul>
+<li><strong>Sentry</strong> dał lokalizację (<strong>rate.ts</strong>, nieudany UPDATE) i nazwę błędu (<strong>update_failed</strong>)</li>
+<li><strong>Logi</strong> dały skalę (każda ocena)</li>
+<li><strong>Reprodukcja z Playwright</strong> dała kontekst (ocena zwraca 200, ale karta wraca)</li>
+<li><strong>Kod</strong> dał root cause (połknięty błąd zapisu i zwrócony jako sukces)</li>
+</ul>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l5-lesson-draft-3-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l5-lesson-draft-3-10x.png</a></p></blockquote>
+<p>Agent połączył te sygnały w spójną diagnozę. To jest ta umiejętność, której się tu uczysz — nie czytanie kodu i nie konfiguracja narzędzi, ale prowadzenie dochodzenia, w którym każde źródło dodaje coś, czego inne nie miały.</p>
+<h3>Najpierw test, który reprodukuje buga</h3>
+<p>Zanim agent zacznie naprawiać, warto napisać test.</p>
+<p>W lekcji Testy jednostkowe i integracyjne z agentem (M3L2) test zaczynał od ryzyka i pracował "do przodu": zidentyfikuj ryzyko → napisz asercję → sprawdź, czy kod je pokrywa. Tutaj pracujemy w odwrotną stronę: masz symptom → piszesz test, który go potwierdza → test pada → naprawiasz → test przechodzi.</p>
+<p>Ta technika ma swoją nazwę: <strong>test-driven bugfixing</strong>. To ustalona praktyka w TDD — Kent Beck opisał ją dekady temu: kiedy znajdziesz buga, zanim go naprawisz, napisz test, który go reprodukuje, a potem doprowadź go do zielonego. Nowe jest to, że agent potrafi poprowadzić ten proces za ciebie, od symptomu do gotowej asercji.</p>
+<p>Agent pisze test integracyjny, który sprawdza zapisany stan, a nie odpowiedź API:</p>
+<pre><code class="language-typescript">test('rating a due card advances its persisted schedule', async () =&gt; {
+  // arrange: seed a review_states row that is already due
+  const { flashcardId } = await seedDueCard(accountId);
+
+  // act: rate it "Good" via the endpoint
+  await rateCard(flashcardId, 'Good');
+
+  // assert: the PERSISTED row moved into the future
+  const row = await getReviewState(flashcardId);
+  expect(new Date(row.due).getTime()).toBeGreaterThan(Date.now());
+  expect(row.reps).toBe(1);
+});
+</code></pre>
+<p>Jak doprowadzić agenta do takiego testu? Najpierw opisz mu objaw i zażądaj testu, który pada z właściwego powodu, czyli sprawdza trwały stan w bazie, a nie status odpowiedzi:</p>
+<pre><code class="language-text">Mamy buga: ocena fiszki zwraca 200, ale harmonogram się nie zapisuje i karta wraca do powtórki.
+Napisz test integracyjny dla endpointu oceniania (`rate`), który:
+- zaseeduje wiersz w `review_states` z terminem `due` w przeszłości (karta od razu „do powtórki"),
+- wywoła ocenę „Dobre" przez endpoint,
+- odczyta z bazy ZAPISANY wiersz (nie odpowiedź API) i sprawdzi, że `due` przesunęło się
+  w przyszłość, a `reps` wzrosło.
+Test ma na tym etapie padać — to reprodukcja buga, nie jego naprawa.
+</code></pre>
+<p>To jest pętla debug-as-test: czerwony test, zanim ruszysz fix. Po stronie skilli sięgnij po <strong>/10x-tdd</strong> — prowadzi cykl „najpierw padający test, potem minimalny kod" dla testów jednostkowych i integracyjnych, czyli dokładnie naszego przypadku. Gdyby reprodukcja musiała iść przez przeglądarkę (bug widoczny dopiero w wyrenderowanym UI), warstwę E2E obsługuje <strong>/10x-e2e</strong> z lekcji Testy E2E (M3L4).</p>
+<p>Ten test zostaje w repozytorium jako zabezpieczenie przed regresją. Co więcej, jest to pierwszy test poprawności przejść harmonogramu SRS — dokładnie ta warstwa, której w naszym testowym pipeline jeszcze nie było.</p>
+<h3>Fix i weryfikacja wielowarstwowa</h3>
+<p>Naprawa ma dwie części. Po pierwsze, przestajemy połykać błąd: zamiast zwracać 200 z kartą z pamięci, propagujemy awarię:</p>
+<pre><code class="language-typescript">// przed:
+if (updateError) {
+  console.warn(`review/rate: update_failed ...`);
+  return jsonResponse(200, { ok: true });
+}
+
+// po:
+if (updateError) {
+  console.warn(`review/rate: update_failed ...`);
+  return jsonResponse(500, { error: "rate_failed" });
+}
+</code></pre>
+<p>Po drugie, naprawiamy sam zapis, żeby UPDATE przechodził. Dopiero połączenie obu zmian daje kartę, która faktycznie znika z kolejki: samo odsłonięcie błędu (zamiast jego połykania) zamienia ciche 200 na widoczne 500, a poprawny zapis sprawia, że harmonogram naprawdę się przesuwa. To zresztą sedno tej klasy bugów. Najpierw przestajesz ukrywać, co dzieje się w systemie, a dopiero gdy błąd jest widoczny, możesz go porządnie obsłużyć i naprawić.</p>
+<p>Ale samo "działa lokalnie" to za mało. Każde źródło diagnostyczne, które pokazało problem, powinno teraz potwierdzić, że go nie ma:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l5-lesson-draft-4-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l5-lesson-draft-4-10x.png</a></p></blockquote>
+<p>Weryfikacja jest lustrzanym odbiciem dochodzenia. Diagnozowałeś czterema kanałami, weryfikujesz czterema. Jeśli pominiesz którąś warstwę, nie masz pewności, że fix jest kompleksowy.</p>
+<h2>Połknięte błędy — klasa problemów widoczna tylko w monitoringu</h2>
+<p>Zróbmy krok wstecz od tego konkretnego buga i zauważmy wzorzec.</p>
+<p>API zwraca 200 OK. Ocena karty wygląda na zapisaną. Ale efekt uboczny (zapis nowego harmonogramu do <strong>review_states</strong>) kończy się błędem po cichu.</p>
+<p>Try/catch łapie wyjątek, loguje warning i idzie dalej — oddając klientowi wartość policzoną w pamięci. Użytkownik widzi sukces, bo dostał ocenioną kartę. Trwały zapis przepadł w ciszy.</p>
+<p><strong>Połknięty błąd (ang. swallowed error)</strong> to błąd, który system połyka zamiast propagować. OWASP w edycji 2025 dodał tę klasę do Top 10 jako A10: Mishandling of Exceptional Conditions. To jeden z najczęstszych wzorców prowadzących do bugów, które użytkownicy zgłaszają tygodniami, zanim ktoś je namierzy.</p>
+<p>Dlaczego nasz pipeline, budowany od pierwszej do czwartej lekcji tego modułu, tego nie złapał?</p>
+<ul>
+<li><strong>Testy jednostkowe i integracyjne</strong> (M3L2) pokrywają inną trasę: zapis sesji i jego kontrakt. Trasa oceniania i logika SRS nie mają ani jednego testu — żaden nie uruchamia <strong>rate.ts</strong>. Nie dlatego, że o nich zapomniano, ale dlatego, że faza testów dla tego ryzyka po prostu jeszcze nie powstała (sam bug, jak pamiętasz z początku lekcji, wprowadziliśmy tu celowo).</li>
+<li><strong>Hooki</strong> (M3L3) sprawdzają kod źródłowy. TypeScript jest poprawny — wartość, którą wpisujemy do bazy, ma poprawny typ, a tylko jej zawartość w runtime jest odrzucana przez bazę.</li>
+<li><strong>Testy E2E</strong> (M3L4) chodzą po przepływie generowania i zapisu fiszek, a nie po ścieżce oceniania. Sprawdzają widoczny rezultat happy-path, nie trwały zapis nowego harmonogramu w <strong>rate</strong>.</li>
+<li><strong>Test plan</strong> (M3L1) tę warstwę przewidział: poprawność przejść harmonogramu SRS figuruje w nim jako osobne ryzyko. Tyle że nazwane ryzyko bez zbudowanej fazy testów nie jest jeszcze bramką. To dokładnie luka, którą domknął napisany przed chwilą test reprodukujący buga.</li>
+</ul>
+<p>Automatyczne bramki, które realnie odpalają się przy każdej zmianie, nie miały szansy złapać buga w kodzie, którego żadna z nich nie dotyka — i który API aktywnie ukrywa. Stałym sygnałem jest dopiero monitoring. Diagnostyka, którą tu przećwiczyłeś, to nie "dodatkowe narzędzie", ale siatka bezpieczeństwa pod twoimi proaktywnymi testami.</p>
+<h2>Jeden workflow, cztery punkty wejścia</h2>
+<p>Proces, który właśnie przeszedłeś, działa niezależnie od tego, skąd dostajesz pierwszy sygnał:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l5-lesson-draft-5-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l5-lesson-draft-5-10x.png</a></p></blockquote>
+<p>Co się zmienia? Punkt wejścia i ilość danych na starcie. Unit test daje ci asercję i stack trace od razu — szybciej decydujesz, gdzie szukać. Ticket od użytkownika zwykle daje ci jedno zdanie, sam musisz dotrzeć do błędu w systemie.</p>
+<p>Co się nie zmienia? Synteza z wielu źródeł, potwierdzenie hipotezy testem, weryfikacja na każdej warstwie.</p>
+<p>Jeśli twój stack używa innych narzędzi, proces jest ten sam: zmień źródło danych, zachowaj strukturę dochodzenia.</p>
+<p>Na tym kończymy moduł trzeci. Przez pięć lekcji zbudowałeś pełny obraz jakości w pracy z agentem: od test planu i testów jednostkowych, przez hooki i testy E2E, aż po diagnostykę produkcyjną, która łapie to, czego proaktywne warstwy nie przewidziały. Proaktywny pipeline i reaktywne dochodzenie to dwie strony tej samej dyscypliny — jedna chroni przed znanymi ryzykami, druga domyka lukę, kiedy produkcja pokaże coś nowego.</p>
+<p>Masz teraz wszystko, czego potrzeba, żeby pokryć swój projekt testami i zgłosić go po <strong>odznakę Builder</strong>. To naturalny moment, żeby to zrobić. Minimum do zgłoszenia to zrealizowana roadmapa MVP, czyli obsługa CRUD dla głównego zasobu i jedna funkcja z logiką biznesową, plus przynajmniej jeden zestaw testów dowolnego typu: jednostkowych, integracyjnych lub e2e. Szczegółowe warunki zgłoszenia znajdziesz w dedykowanym poście na kanale <a href="https://bravecourses.circle.so/c/informacje-i-ogloszenia-10x3/">Informacje i ogłoszenia [10X3]</a>.</p>
+<h2>🧑🏻‍💻 Zadania praktyczne</h2>
+<ol>
+<li>
+<p><strong>Zidentyfikuj połknięty błąd we własnym projekcie.</strong> Przeszukaj swój kod z agentem pod kątem wzorca try/catch, który łapie wyjątek i loguje go, ale nie propaguje do odpowiedzi API. Jeśli znajdziesz taki fragment, popraw go o poprawne propagowanie błędu i jego obsługę.</p>
+</li>
+<li>
+<p><strong>(Opcjonalnie) Skonfiguruj monitoring we własnym projekcie.</strong> Jeśli nie masz jeszcze Sentry ani innego narzędzia do monitoringu, możesz je skonfigurować korzystając ze ścieżki <strong>/10x-new</strong> → <strong>/10x-plan</strong> → <strong>/10x-implement</strong>, którą znasz z modułu 2. Darmowy plan Sentry wystarczy na projekt kursowy. Szczegóły konfiguracji w Deep Dive.</p>
+</li>
+</ol>
+<h2>Odbierz swoją odznakę</h2>
+<p>Po ukończeniu tej lekcji odbierz odznakę w sekcji <a href="https://platforma.przeprogramowani.pl/10xdevs-3/mission-log">10xDevs Mission Log</a> a następnie pochwal się swoim osiągnięciem!</p>
+<h2>🔎 Deep Dive</h2>
+<p>Ta sekcja zawiera dodatkowe pogłębienie wiedzy na temat wybranych zagadnień związanych z lekcją. W tym Deep Dive znajdziesz:</p>
+<ul>
+<li><strong>Sentry — konfiguracja i darmowy plan</strong> — jak postawić Sentry na projekcie Astro + Cloudflare i połączyć go z agentem przez MCP</li>
+<li><strong>Sentry MCP — szczegóły procesu diagnostycznego</strong> — dokładne kroki: <strong>search_issues</strong> → <strong>get_sentry_resource</strong>, setup i konfiguracja</li>
+<li><strong>Runtime logs poza Cloudflare</strong> — alternatywy wrangler tail na innych platformach, persistent logi</li>
+<li><strong>Playwright CLI/MCP — narzędzia diagnostyczne</strong> — <strong>browser_console_messages</strong>, <strong>browser_network_requests</strong>, <strong>browser_network_request</strong> w szczegółach</li>
+</ul>
+<p>Ta sekcja lekcji nie jest obowiązkowa, ale warto się z nią zapoznać jeżeli chcesz zostać ekspertem.</p>
+<h3>Sentry — konfiguracja i darmowy plan</h3>
+<p>Darmowy plan Sentry (Developer) daje 5000 błędów miesięcznie, 30 dni retencji i pełen dostęp do API. Dla projektu kursowego to więcej niż wystarczy. Aktualne limity i ceny sprawdzisz na <a href="https://sentry.io/pricing/">stronie cennika</a>.</p>
+<p>Do projektu Astro na Cloudflare potrzebujesz dwóch pakietów: <strong>@sentry/astro</strong> i <strong>@sentry/cloudflare</strong>. SDK automatycznie wykrywa adapter Cloudflare od wersji 10.40.0. W <strong>wrangler.toml</strong> trzeba włączyć <strong>nodejs_compat</strong>.</p>
+<blockquote>
+<p><strong>Uwaga — Astro 6 na Cloudflare:</strong> Astro 6 wymaga adaptera <strong>@astrojs/cloudflare</strong> w wersji 13+, który integruje się z Cloudflare przez custom entry point. Od <strong>@sentry/astro</strong> 10.44.0 (<a href="https://github.com/getsentry/sentry-javascript/issues/19762">issue #19762</a>) ta ścieżka jest wspierana — i to właśnie konfiguracja dla 10xCards (Astro 6.3.1, deploy na Workers). Zamiast domyślnego entry pointu adaptera wskazujesz w <strong>wrangler.toml</strong> własny plik, który owija handler Astro w Sentry:</p>
+<pre><code class="language-toml"># wrangler.toml
+main = "./sentry.server.config.ts"  # zamiast "@astrojs/cloudflare/entrypoints/server"
+</code></pre>
+<pre><code class="language-typescript">// sentry.server.config.ts
+import * as Sentry from "@sentry/cloudflare";
+import handler from "@astrojs/cloudflare/entrypoints/server";
+
+export default Sentry.withSentry(
+  (env: Env) =&gt; ({
+    dsn: env.SENTRY_DSN,
+    // przekaż console.warn / console.error do Sentry jako zdarzenia
+    integrations: [Sentry.captureConsoleIntegration({ levels: ["warn", "error"] })],
+  }),
+  handler,
+);
+</code></pre>
+<p>Czysto frontendowe Astro (bez adaptera Cloudflare) opiera się o issue <a href="https://github.com/getsentry/sentry-javascript/issues/19753">#19753</a> — tam przed wdrożeniem na Astro 6 sprawdź aktualny status.</p>
+</blockquote>
+<p>To właśnie <strong>captureConsoleIntegration</strong> sprawia, że połknięty <strong>console.warn</strong> z naszego buga w ogóle pojawia się w Sentry. Jest tu jednak haczyk kosztowy: przechwycone warningi i błędy lądują w tym samym strumieniu issues i zużywają ten sam limit błędów co nieobsłużone wyjątki (na darmowym planie 5000 zdarzeń miesięcznie). Na wczesnym etapie projektu, przy małym ruchu, łapanie wszystkich warningów i błędów jest rozsądnym domyślnym wyborem, bo zależy ci na maksymalnej widoczności. Wraz ze wzrostem ruchu to się nie skaluje: zawęź <strong>levels</strong> (np. do <strong>['error']</strong>) albo zgłaszaj wybrane przypadki ręcznie przez <strong>Sentry.captureException</strong>, żeby nie przepalać limitu i nie zalewać realnych awarii szumem.</p>
+<p>Jeśli nie podasz DSN (lub podasz pusty string), SDK inicjalizuje się w trybie no-op. Zdarzenia są przechwytywane, ale nie wysyłane. Dzięki temu możesz mieć ten sam kod na środowiskach z i bez Sentry.</p>
+<p>Nie musisz konfigurować tego ręcznie. Możesz skorzystać ze ścieżki <strong>/10x-new</strong> → <strong>/10x-plan</strong> → <strong>/10x-implement</strong> z modułu 2, żeby agent przeprowadził cię przez cały setup.</p>
+<h3>Sentry MCP — szczegóły procesu diagnostycznego</h3>
+<p>Sentry MCP server (<strong>@sentry/mcp-server</strong>) pozwala agentowi odpytywać Sentry bez opuszczania terminala.</p>
+<p>Konfiguracja w Claude Code:</p>
+<pre><code class="language-bash">npx @sentry/mcp-server@latest --access-token=&lt;TWOJ_TOKEN&gt;
+</code></pre>
+<p>Dwa główne narzędzia w procesie diagnostycznym:</p>
+<p><strong><strong>search_issues</strong></strong> szuka issues pasujących do zapytania. Bez klucza LLM (OpenAI/Anthropic) narzędzie działa w trybie pass-through: przekazujesz zapytanie w składni Sentry bezpośrednio, np. <strong>message:update_failed is:unresolved</strong>. Żaden dodatkowy klucz API nie jest potrzebny — wystarczy darmowe konto Sentry i access token.</p>
+<p><strong><strong>get_sentry_resource</strong></strong> to uniwersalne narzędzie do pobierania zasobów z dwoma trybami wywołania:</p>
+<ul>
+<li><strong>URL mode</strong> — podajesz <strong>url</strong> (np. link do issue), typ zasobu wykrywany automatycznie</li>
+<li><strong>Explicit mode</strong> — podajesz <strong>resourceType</strong> (np. <strong>"issue"</strong>), <strong>resourceId</strong> (short ID jak <strong>PROJECT-123</strong>) i <strong>organizationSlug</strong></li>
+</ul>
+<p>Przykładowy przebieg dla naszego buga:</p>
+<pre><code>search_issues(query="update_failed", organizationSlug="...", projectSlugOrId="...")
+→ znajduje issue z short ID
+
+get_sentry_resource(resourceType="issue", resourceId="PROJECT-123", organizationSlug="...")
+→ pełny stack trace, tagi, breadcrumbs w formacie Markdown
+</code></pre>
+<p>Sentry MCP jest pre-1.0. Nazwy narzędzi mogą się zmienić. Sprawdź <a href="https://github.com/getsentry/sentry-mcp">repozytorium</a> przed pierwszym użyciem.</p>
+<h3>Runtime logs poza Cloudflare</h3>
+<p>Wcześniej w lekcji użyliśmy <strong>wrangler pages deployment tail</strong> do logów w czasie rzeczywistym. Kilka rzeczy warto wiedzieć o tym narzędziu:</p>
+<ul>
+<li>W wynikach widać <strong>outcome</strong> (ok/error/canceled), <strong>logs[]</strong> i <strong>exceptions[]</strong>, ale <strong>nie</strong> HTTP status ani body odpowiedzi</li>
+<li>Maks. 10 równoczesnych klientów tail (dashboard + CLI razem)</li>
+<li>Streaming zatrzymuje się powyżej 100 req/s utrzymywanych przez 5 minut</li>
+</ul>
+<p>Cloudflare oferuje też persistent logi przez sekcję <strong>[observability]</strong> w <strong>wrangler.toml</strong> (200K events/dzień na darmowym planie, 3 dni retencji). Ta funkcja jest udokumentowana dla Workers. Jeśli twój projekt stoi na Cloudflare Pages, niestety nie masz do niej dostępu.</p>
+<p>Na innych platformach wzorzec jest ten sam, zmienia się narzędzie:</p>
+<ul>
+<li><strong>Fly.io:</strong> <strong>flyctl logs --app my-app</strong></li>
+<li><strong>Vercel:</strong> <strong>vercel logs my-project --follow</strong></li>
+<li><strong>AWS Lambda:</strong> CloudWatch Logs + <strong>aws logs tail</strong></li>
+<li><strong>Railway:</strong> <strong>railway logs --follow</strong></li>
+</ul>
+<h3>Playwright CLI/MCP — narzędzia diagnostyczne</h3>
+<p>W części głównej użyliśmy Playwright do diagnostyki przez nazwy narzędzi MCP. Tu masz ich odpowiedniki w CLI oraz trzecie narzędzie, które przydaje się, gdy chcesz zobaczyć dokładną odpowiedź serwera:</p>
+
+<ul>
+<li><strong>Narzędzie (MCP)</strong>: <strong>browser_console_messages</strong> | <strong>CLI</strong>: <strong>console [min-level]</strong> | <strong>Co daje</strong>: komunikaty konsoli filtrowane po poziomie (error, warning, info, debug)</li>
+<li><strong>Narzędzie (MCP)</strong>: <strong>browser_network_requests</strong> | <strong>CLI</strong>: <strong>requests</strong> | <strong>Co daje</strong>: lista requestów z metodą, URL i statusem</li>
+<li><strong>Narzędzie (MCP)</strong>: <strong>browser_network_request</strong> | <strong>CLI</strong>: <strong>request &lt;index&gt;</strong> | <strong>Co daje</strong>: pełne szczegóły jednego requestu: headers, body, status, czas trwania</li>
+</ul>
+<p>Wszystkie trzy to narzędzia <strong>core</strong> — nie wymagają flagi <strong>--caps</strong>. Łatwo się tu pomylić: <strong>--caps=network</strong> dotyczy mockowania route'ów (nie odczytu), a <strong>--caps=devtools</strong> dotyczy tracingu i nagrywania (nie diagnostyki konsoli). Do samego czytania konsoli i ruchu sieciowego żadna flaga nie jest potrzebna.</p>
+<p>W naszym przypadku <strong>browser_network_request</strong> przydaje się, żeby dokładnie obejrzeć odpowiedź <strong>POST /api/review/&lt;id&gt;/rate</strong> — zobaczyć, że status to 200, a body to karta wyglądająca na zaktualizowaną, mimo że baza jej nie przyjęła.</p>
+<p>Oprócz tych narzędzi Playwright CLI daje <strong>browser_navigate</strong>, <strong>browser_snapshot</strong> i inne komendy nawigacyjne przydatne przy odtwarzaniu kroków reprodukcji.</p>
+<h2>📚 Materiały dodatkowe</h2>
+<ul>
+<li><a href="https://github.com/getsentry/sentry-mcp">Sentry MCP Server</a> — repozytorium MCP servera Sentry: dostępne narzędzia, setup, konfiguracja z Claude Code</li>
+<li><a href="https://sentry.io/pricing/">Sentry Pricing</a> — aktualne plany i limity, w tym darmowy plan Developer</li>
+<li><a href="https://docs.sentry.io/platforms/javascript/guides/cloudflare/frameworks/astro/">Sentry Astro + Cloudflare SDK Guide</a> — oficjalny poradnik konfiguracji @sentry/astro z @sentry/cloudflare</li>
+<li><a href="https://developers.cloudflare.com/workers/wrangler/commands/#deployment-tail">Wrangler tail</a> — dokumentacja komendy tail: flagi, format JSON, ograniczenia</li>
+<li><a href="https://github.com/microsoft/playwright-mcp">Playwright MCP</a> — repozytorium MCP servera Playwright: narzędzia diagnostyczne, tryby, capabilities</li>
+<li><a href="https://zakelfassi.com/vlm-visual-testing-chrome-extension">VLM Visual Testing</a> — Zak El Fassi, praktyczny test wizualny z lokalnym modelem: koszt, ograniczenia (spatial bias, halucynacje), DSL do asercji</li>
+<li><a href="https://owasp.org/Top10/2025/A10_2025-Mishandling_of_Exceptional_Conditions/">OWASP A10:2025 — Mishandling of Exceptional Conditions</a> — klasyfikacja swallowed errors w OWASP Top 10</li>
+<li><a href="https://www.infoq.com/presentations/testing-production-2018/">Charity Majors — "I Test in Production"</a> — talk o komplementarności testowania i monitoringu: "tests can't catch what they don't know to look for"</li>
+<li><a href="https://evolveum.com/test-driven-bugfixing/">Test-Driven Bugfixing</a> — opis techniki test-driven bugfixing w praktyce TDD</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/06">[2.3]</a> <em>Claude Code — Podstawy operacyjne</em> — MCP servers jako narzędzia agenta, tutaj zastosowane do zbierania danych diagnostycznych</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/10">[3.2]</a> <em>Wzorce i antywzorce promptowania</em> — structured input jako kontrakt, tutaj analogicznie zastosowane do parsowania ticketa</li>
+</ul>

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lesson RC Review"
+  short_description: "Review lesson RC readiness"
+  default_prompt: "Use $lesson-rc-review to review lesson <lessonId> for production handoff readiness."
+
+policy:
+  allow_implicit_invocation: true

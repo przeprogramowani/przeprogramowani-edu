@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lesson Editor PL"
+  short_description: "Polish a lesson draft for RC"
+  default_prompt: "Use $lesson-editor-pl to polish lesson <lessonId> for release-candidate review."
+
+policy:
+  allow_implicit_invocation: true

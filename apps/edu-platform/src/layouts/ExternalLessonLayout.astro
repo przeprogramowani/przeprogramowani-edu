@@ -1,0 +1,330 @@
+---
+import ContentTopBar from '@/components/ContentTopBar.svelte';
+import LessonSidebar from '@/components/sidebar/LessonSidebar.svelte';
+import SidebarToggle from '@/components/sidebar/SidebarToggle.svelte';
+import LayoutScripts from './LayoutScripts.astro';
+import '@/styles/sidebar.css';
+import '@/styles/lesson-theme.css';
+import type { CourseSection } from '@/server/circle/courseStructureTypes';
+import type { ChecklistItem } from '@/server/checklistData';
+import type { TocItem } from '@/types/toc';
+import { getCourseDisplayName } from '@/server/circle/externalAuthConfig';
+import { buildLessonHref } from '@/lib/topBarHelpers';
+import {
+  getExternalLessonShellCopy,
+  type ExternalLessonShellLabels,
+  type ExternalLessonShellLanguage,
+} from '@/lib/externalLessonShellCopy';
+import type { LessonPersonalizationById } from '@/server/quiz/preworkSidebarPersonalization';
+import {
+  attachLessonProgress,
+  buildLessonProgressScope,
+  type LessonProgressById,
+} from '@/server/progress/lessonProgressLoader';
+import logo from '@/images/generic/logo-white.png';
+import logoSmall from '@/images/generic/logo-white-mobile.png';
+import logoDark from '@/images/generic/logo-dark.png';
+import logoDarkSmall from '@/images/generic/logo-dark-mobile.png';
+
+interface ExternalLessonListItem {
+  id: string | number;
+  name: string;
+  position?: number;
+  sectionId: number;
+  sectionName?: string;
+}
+
+interface Props {
+  courseId: string;
+  lessonName: string;
+  lessons: ExternalLessonListItem[];
+  sections: CourseSection[];
+  activeLessonId: string | number;
+  prevLessonId: string | number | null;
+  nextLessonId: string | number | null;
+  checklists?: ChecklistItem[];
+  activeChecklistId?: string | null;
+  tocHeadings?: TocItem[];
+  tocStorageKey?: string;
+  contentSelector?: string;
+  lessonUrlPrefix?: string;
+  courseHomeUrl?: string;
+  htmlLang?: ExternalLessonShellLanguage;
+  shellCopy?: ExternalLessonShellLabels;
+  lessonPersonalization?: LessonPersonalizationById;
+  lessonProgress?: LessonProgressById | null;
+  progressLanguage?: string | null;
+}
+
+const defaultShellCopy = getExternalLessonShellCopy();
+
+const {
+  courseId,
+  lessonName,
+  lessons,
+  sections,
+  activeLessonId,
+  prevLessonId,
+  nextLessonId,
+  checklists = [],
+  activeChecklistId = null,
+  tocHeadings = [],
+  tocStorageKey = 'toc-widget-open',
+  contentSelector = '.prose',
+  lessonUrlPrefix,
+  courseHomeUrl,
+  htmlLang,
+  shellCopy: providedShellCopy,
+  lessonPersonalization = {},
+  lessonProgress = null,
+  progressLanguage = null,
+}: Props = Astro.props;
+
+const shellCopy = providedShellCopy ?? defaultShellCopy;
+const resolvedHtmlLang = htmlLang ?? shellCopy.htmlLang;
+const courseName = getCourseDisplayName(courseId);
+const normalizedLessonUrlPrefix = lessonUrlPrefix ?? `/external/${courseId}`;
+const normalizedCourseHomeUrl = courseHomeUrl ?? `/external/${courseId}/`;
+const prevLessonUrl = prevLessonId ? buildLessonHref(normalizedLessonUrlPrefix, prevLessonId) : null;
+const nextLessonUrl = nextLessonId ? buildLessonHref(normalizedLessonUrlPrefix, nextLessonId) : null;
+const hasToc = tocHeadings.length > 0;
+const lessonsWithProgress = attachLessonProgress(lessons, lessonProgress, (lesson) => lesson.id);
+const personalizedLessons = lessonsWithProgress.map((lesson) => ({
+  ...lesson,
+  personalization: lessonPersonalization[String(lesson.id)],
+  progress: lesson.progress,
+}));
+const progressScope = buildLessonProgressScope({
+  courseSlug: courseId,
+  language: progressLanguage,
+  lessonProgress,
+});
+
+// Ensure UTF-8 charset in HTTP response
+Astro.response.headers.set('Content-Type', 'text/html; charset=utf-8');
+---
+
+<!doctype html>
+<html lang={resolvedHtmlLang} class="sidebar-not-hydrated" data-lesson-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{lessonName} - {courseName}</title>
+
+    <!-- Preload critical fonts for faster loading -->
+    <link rel="preload" href="/fonts/cocogoose/Cocogoose.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/cocogoose-light/Cocogoose-Pro-Light.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Critical CSS - Prevents FOUC by inlining essential styles -->
+    <style>
+      /* Base resets */
+      html {
+        line-height: 1.5;
+        -webkit-text-size-adjust: 100%;
+        tab-size: 4;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      /* Critical background colors - prevents white flash */
+      .bg-gray-900 {
+        background-color: rgb(17 24 39);
+      }
+      .bg-gray-800 {
+        background-color: rgb(31 41 55);
+      }
+      .bg-gray-700 {
+        background-color: rgb(55 65 81);
+      }
+
+      /* Critical text colors */
+      .text-gray-100 {
+        color: rgb(243 244 246);
+      }
+      .text-gray-300 {
+        color: rgb(209 213 219);
+      }
+      .text-gray-400 {
+        color: rgb(156 163 175);
+      }
+      .text-white {
+        color: rgb(255 255 255);
+      }
+
+      /* Layout utilities */
+      .min-h-screen {
+        min-height: 100vh;
+      }
+      .hidden {
+        display: none;
+      }
+      .block {
+        display: block;
+      }
+      .flex {
+        display: flex;
+      }
+
+      /* Flexbox utilities */
+      .flex-col {
+        flex-direction: column;
+      }
+
+      /* Responsive utilities for medium screens (768px+) */
+      @media (min-width: 768px) {
+        .md\:block {
+          display: block;
+        }
+        .md\:hidden {
+          display: none;
+        }
+      }
+
+      /* Prose base styles for content */
+      .prose {
+        color: rgb(209 213 219);
+        max-width: 65ch;
+        font-size: 1rem;
+        line-height: 1.75;
+      }
+      .prose-invert {
+        --tw-prose-body: rgb(209 213 219);
+        --tw-prose-headings: rgb(243 244 246);
+        --tw-prose-links: rgb(96 165 250);
+      }
+    </style>
+
+    <!-- Load font stylesheets -->
+    <link rel="stylesheet" href="/fonts/cocogoose/cocogoose.css" />
+    <link rel="stylesheet" href="/fonts/cocogoose-light/cocogoose-light.css" />
+
+    <!-- Self-hosted syntax highlighting CSS -->
+    <link rel="stylesheet" href="/styles/highlight-github-dark.min.css" />
+
+    <script is:inline>
+      (function () {
+        var theme = 'dark';
+        try {
+          var saved = localStorage.getItem('lesson-theme');
+          if (saved === 'light' || saved === 'dark') {
+            theme = saved;
+          }
+        } catch (e) {}
+        document.documentElement.dataset.lessonTheme = theme;
+      })();
+    </script>
+
+    <!-- Apply sidebar collapsed state immediately to prevent FOUC -->
+    <!-- Keep storage keys in sync with SIDEBAR_STORAGE_KEY / EXTERNAL_SIDEBAR_STORAGE_KEY in src/lib/topBarHelpers.ts -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem('sidebar-collapsed');
+          if (saved === null) {
+            saved = localStorage.getItem('external-sidebar-collapsed');
+          }
+          if (saved === 'true') {
+            document.body.classList.add('sidebar-collapsed');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="lesson-shell overflow-y-hidden">
+    {hasToc && (
+      <script is:inline>
+        document.documentElement.classList.add('toc-not-hydrated');
+      </script>
+    )}
+    <div class="flex flex-col h-screen">
+      <!-- Top navigation bar -->
+      <ContentTopBar
+        client:load
+        homeUrl={normalizedCourseHomeUrl}
+        logoUrl={normalizedCourseHomeUrl}
+        logoSrc={logo.src}
+        logoSmallSrc={logoSmall.src}
+        logoDarkSrc={logoDark.src}
+        logoDarkSmallSrc={logoDarkSmall.src}
+        prevUrl={prevLessonUrl}
+        nextUrl={nextLessonUrl}
+        sections={sections}
+        groupedLessons={personalizedLessons}
+        activeExternalLessonId={activeLessonId}
+        courseId={courseId}
+        lessonUrlPrefix={normalizedLessonUrlPrefix}
+        checklists={checklists}
+        activeChecklistId={activeChecklistId}
+        headings={tocHeadings}
+        tocStorageKey={tocStorageKey}
+        contentSelector={contentSelector}
+        shellCopy={shellCopy}
+        showThemeToggle={true}
+      />
+
+      <!-- Main content area with sidebar -->
+      <div class="flex flex-1 overflow-hidden">
+        <!-- Desktop sidebar -->
+        <div class="sidebar-container hidden md:block border-r lesson-divider h-full">
+          <div class="lesson-sidebar lesson-scrollbar h-full overflow-y-auto">
+            <LessonSidebar
+              client:load
+              mode="grouped"
+              courseId={courseId}
+              lessons={personalizedLessons.map((l) => ({
+                id: l.id,
+                name: l.name,
+                sectionId: l.sectionId,
+                personalization: l.personalization,
+                progress: l.progress,
+              }))}
+              sections={sections}
+              activeLessonId={activeLessonId}
+              lessonUrlPrefix={normalizedLessonUrlPrefix}
+              checklists={checklists.map((c) => ({ id: c.id, title: c.title }))}
+              activeChecklistId={activeChecklistId}
+              labels={shellCopy}
+              progressScope={progressScope}
+            />
+          </div>
+        </div>
+
+        <!-- Lesson content -->
+        <div class="lesson-shell lesson-scrollbar flex-1 h-full overflow-y-auto">
+          <slot />
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop sidebar toggle button — MUST remain a body-level sibling of
+         .sidebar-container so it is not hidden by opacity:0 when collapsed. -->
+    <SidebarToggle client:load labels={shellCopy} />
+
+    <!-- Remove sidebar-not-hydrated class after hydration -->
+    <script>
+      document.documentElement.classList.remove('sidebar-not-hydrated');
+    </script>
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<LayoutScripts />

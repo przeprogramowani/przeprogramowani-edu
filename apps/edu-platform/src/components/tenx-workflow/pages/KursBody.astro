@@ -1,0 +1,208 @@
+---
+/**
+ * Tresc strony "Jak dziala kurs 10xDevs" (slug jak-dziala-kurs, kontekst
+ * publiczny). Trzy etapy programu: prework (00), wlasciwa czesc - 5 tygodni,
+ * 5 live we wtorki, 5 dyzurow trenerskich w piatki (01), oraz certyfikacja (02).
+ *
+ * Zasady certyfikacji nie sa pisane recznie - przychodza propem `certHtml`,
+ * ktory wrapper [...slug].astro pobiera przez Circle API (getCirclePost) z
+ * posta w kanale "Informacje i ogloszenia [10X3]". Gdy pobranie zawiedzie,
+ * pokazujemy fallback z linkiem do oryginalu na Circle.
+ *
+ * hud-top, xnav, footer i wspolny CSS renderuje TenxCosmicLayout; tutaj tylko
+ * markup tresci + kilka regul scoped (kafle rytmu/filarow, prose posta Circle).
+ * i18n: teksty w i18n/kurs.ts (pl; en odbija pl - strona poza EN_PAGES).
+ */
+import type { Lang } from '../i18n';
+import { KURS } from '../i18n/kurs';
+import { CERTIFICATION_TERMS } from '../config';
+import { pageHref } from '../pages';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+}
+
+const { base, lang = 'pl' } = Astro.props;
+const t = KURS[lang];
+
+/** Strony modulow, do ktorych linkuja kafle "5 tygodni" (kolejnosc = tydzien 1..5). */
+const WEEK_SLUGS = ['fundament', 'csc', 'jakosc', 'legacy', 'teamwork'] as const;
+---
+
+<style is:global>
+/* Reguly specyficzne dla strony (diff vs CSS wspolny w TenxCosmicLayout) */
+header h1 .glow{color:#7c8cff;text-shadow:0 0 24px rgba(124,140,255,.45)}
+
+/* rytm tygodnia - dwa rowne kafle (wtorek/piatek) */
+.kurs-duo{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:26px}
+.kurs-duo h3{font-family:var(--disp);font-size:1rem;margin:2px 0 8px;color:var(--txt)}
+.kurs-duo p{font-size:.9rem;color:var(--muted);line-height:1.55}
+@media(max-width:720px){.kurs-duo{grid-template-columns:1fr}}
+
+/* filary certyfikacji - kafle bez linku */
+.kurs-tri{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:22px}
+.kurs-tri .tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+.kurs-tri h3{font-family:var(--disp);font-size:1.05rem;margin:8px 0 6px;color:var(--txt)}
+.kurs-tri p{font-size:.85rem;color:var(--muted);line-height:1.5}
+
+/* terminy certyfikacji - kompaktowe kafle na stronie kursu (pelne na /certyfikacja) */
+.kurs-terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:18px}
+.kurs-term{border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 55%,transparent);padding:12px 14px}
+.kurs-term .kt-l{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--acc)}
+.kurs-term .kt-d{font-family:var(--disp);font-weight:700;font-size:1.05rem;color:var(--txt);margin-top:4px}
+.kurs-term.is-high{border-color:color-mix(in srgb,#ffd166 55%,transparent)}
+.kurs-term.is-high .kt-l{color:#ffd166}
+</style>
+
+<header>
+  <p class="eyebrow" style="--acc:#7c8cff"><span class="ico ico-radar" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1 set:html={t.h1Html} />
+  <p class="sub" set:html={t.subHtml} />
+
+  <nav class="route" aria-label={t.routeAria}>
+    <a href="#prework" style="--hov:#3ddad0">{t.route[0]}</a>
+    <a href="#tydzien" style="--hov:#7c8cff">{t.route[1]}</a>
+    <a href="#certyfikacja" style="--hov:#ffd166">{t.route[2]}</a>
+    <a href="#dalej">{t.route[3]}</a>
+  </nav>
+</header>
+
+<!-- ============ ETAP 00 PREWORK ============ -->
+<section class="sector" id="prework" style="--acc:#3ddad0">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.prework.num}</span>
+      <span class="sec-uni"><span class="ico ico-cube" aria-hidden="true"></span>{t.prework.kicker}</span>
+    </div>
+    <h2>{t.prework.h2}</h2>
+  </div>
+  <div class="solo rv">
+    <p class="lead" set:html={t.prework.leadHtml} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      {t.prework.rows.map((r) => (
+        <div><dt><span class="ico ico-check" aria-hidden="true"></span>{r.dt}</dt><dd class="v" style="margin:0" set:html={r.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.prework.targetK}</span>
+    <p set:html={t.prework.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ ETAP 01 PIEC TYGODNI ============ -->
+<section class="sector" id="tydzien" style="--acc:#7c8cff">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.course.num}</span>
+      <span class="sec-uni"><span class="ico ico-fast" aria-hidden="true"></span>{t.course.kicker}</span>
+    </div>
+    <h2>{t.course.h2}</h2>
+  </div>
+  <div class="solo rv">
+    <p class="lead" set:html={t.course.leadHtml} />
+  </div>
+
+  <!-- rytm tygodnia: wtorek live / piatek dyzur -->
+  <div class="rv">
+    <p class="eyebrow" style="--acc:#7c8cff;margin-top:26px">{t.course.rhythmK}</p>
+    <div class="kurs-duo">
+      <div class="tx">
+        <span class="mono"><span class="ico ico-eye" aria-hidden="true"></span>{t.course.tuesdayK}</span>
+        <p set:html={t.course.tuesdayHtml} />
+      </div>
+      <div class="tx">
+        <span class="mono"><span class="ico ico-sig" aria-hidden="true"></span>{t.course.fridayK}</span>
+        <p set:html={t.course.fridayHtml} />
+      </div>
+    </div>
+  </div>
+
+  <!-- piec modulow - kafle linkujace do stron modulow -->
+  <div class="rv">
+    <p class="eyebrow" style="--acc:#7c8cff;margin-top:34px">{t.course.weeksCap}</p>
+    <div class="sum-grid">
+      {t.course.weeks.map((w, i) => (
+        <a class="sum-card" href={pageHref(base, WEEK_SLUGS[i], lang)} style="--acc:#7c8cff">
+          <span class="num">{w.tag}</span>
+          <h3>{w.h3}</h3>
+          <p>{w.p}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.course.targetK}</span>
+    <p set:html={t.course.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ ETAP 02 CERTYFIKACJA ============ -->
+<section class="sector" id="certyfikacja" style="--acc:#ffd166">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.cert.num}</span>
+      <span class="sec-uni"><span class="ico ico-trophy" aria-hidden="true"></span>{t.cert.kicker}</span>
+    </div>
+    <h2>{t.cert.h2}</h2>
+  </div>
+  <div class="solo rv">
+    <p class="lead" set:html={t.cert.leadHtml} />
+  </div>
+
+  <!-- trzy filary certyfikacji -->
+  <div class="rv">
+    <p class="eyebrow" style="--acc:#ffd166;margin-top:26px">{t.cert.pillarsCap}</p>
+    <div class="kurs-tri">
+      {t.cert.pillars.map((p) => (
+        <div class="tx">
+          <span class="tag">{p.tag}</span>
+          <h3>{p.h3}</h3>
+          <p>{p.p}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- terminy zgloszen (skrot; pelne zasady na dedykowanej stronie certyfikacji) -->
+  <div class="rv">
+    <p class="eyebrow" style="--acc:#ffd166;margin-top:34px">{t.cert.termsCap}</p>
+    <div class="kurs-terms">
+      {CERTIFICATION_TERMS.map((term) => (
+        <div class={`kurs-term${term.highlight ? ' is-high' : ''}`}>
+          <span class="kt-l">{term.label}</span>
+          <div class="kt-d">{term.date}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-link" aria-hidden="true"></span>{t.cert.ctaK}</span>
+    <p>{t.cert.ctaPre}<a href={pageHref(base, 'certyfikacja', lang)} style="color:var(--acc)"><b>{t.cert.ctaLink}</b></a>{t.cert.ctaRest}</p>
+  </div>
+</section>
+
+<!-- ============ DALEJ ============ -->
+<section class="sector" id="dalej" style="--acc:#7c8cff">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.next.num}</span>
+      <span class="sec-uni"><span class="ico ico-star" aria-hidden="true"></span>{t.next.kicker}</span>
+    </div>
+    <h2>{t.next.h2Pre}<span style="color:#ffd166;text-shadow:0 0 24px rgba(255,209,102,.4)">{t.next.h2Accent}</span></h2>
+  </div>
+  <div class="solo rv">
+    <div class="tx">
+      <span class="mono"><span class="ico ico-link" aria-hidden="true"></span>{t.next.targetK}</span>
+      <dl class="mech">
+        <div><dt><span class="ico ico-doc" aria-hidden="true"></span>FAQ</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'faq', lang)} style="color:var(--acc)">{t.next.faqLink}</a>{t.next.faqRest}</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>CSC</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'csc', lang)} style="color:var(--acc)">{t.next.cscLink}</a>{t.next.cscRest}</dd></div>
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>10xTop5</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'top5', lang)} style="color:var(--acc)">{t.next.top5Link}</a>{t.next.top5Rest}</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>

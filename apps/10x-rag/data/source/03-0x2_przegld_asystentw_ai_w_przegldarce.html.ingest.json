@@ -1,0 +1,594 @@
+{
+  "lessonId": "[0x2] Przegląd asystentów AI w przeglądarce",
+  "file": "03-0x2_przegld_asystentw_ai_w_przegldarce.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 1,
+      "order": 1
+    },
+    {
+      "slug": "kluczowe-mozliwosci-i-funkcje",
+      "title": "Kluczowe możliwości i funkcje",
+      "blocks": 7,
+      "order": 2
+    },
+    {
+      "slug": "kiedy-korzystac-z-usug-webowych",
+      "title": "Kiedy korzystać z usług webowych?",
+      "blocks": 2,
+      "order": 3
+    },
+    {
+      "slug": "porownanie-najpopularniejszych-rozwiazan",
+      "title": "Porównanie najpopularniejszych rozwiązań",
+      "blocks": 9,
+      "order": 4
+    },
+    {
+      "slug": "kiedy-co-wybrac",
+      "title": "Kiedy co wybrać",
+      "blocks": 1,
+      "order": 5
+    },
+    {
+      "slug": "chatgpt",
+      "title": "ChatGPT",
+      "blocks": 1,
+      "order": 6
+    },
+    {
+      "slug": "claudeai",
+      "title": "Claude.ai",
+      "blocks": 1,
+      "order": 7
+    },
+    {
+      "slug": "gemini",
+      "title": "Gemini",
+      "blocks": 1,
+      "order": 8
+    },
+    {
+      "slug": "perplexity",
+      "title": "Perplexity",
+      "blocks": 1,
+      "order": 9
+    },
+    {
+      "slug": "materiay-dodatkowe",
+      "title": "Materiały dodatkowe",
+      "blocks": 2,
+      "order": 10
+    },
+    {
+      "slug": "chatgpt-openai",
+      "title": "ChatGPT (OpenAI)",
+      "blocks": 1,
+      "order": 11
+    },
+    {
+      "slug": "claude-anthropic",
+      "title": "Claude (Anthropic)",
+      "blocks": 1,
+      "order": 12
+    },
+    {
+      "slug": "gemini-google",
+      "title": "Gemini (Google)",
+      "blocks": 1,
+      "order": 13
+    },
+    {
+      "slug": "perplexity",
+      "title": "Perplexity",
+      "blocks": 1,
+      "order": 14
+    },
+    {
+      "slug": "dodatkowe-materiay-przekrojowe-compliance-governance",
+      "title": "Dodatkowe materiały przekrojowe (compliance / governance)",
+      "blocks": 1,
+      "order": 15
+    },
+    {
+      "slug": "cwiczenia-praktyczne-opcjonalne",
+      "title": "Ćwiczenia praktyczne (opcjonalne)",
+      "blocks": 2,
+      "order": 16
+    },
+    {
+      "slug": "0-jak-zaczac-setup-w-5-minut",
+      "title": "0. Jak zacząć (setup w 5 minut)",
+      "blocks": 1,
+      "order": 17
+    },
+    {
+      "slug": "arkusz-do-twojej-ewaluacji",
+      "title": "Arkusz do Twojej ewaluacji",
+      "blocks": 5,
+      "order": 18
+    },
+    {
+      "slug": "use-casey-do-przecwiczenia",
+      "title": "Use case’y do przećwiczenia",
+      "blocks": 0,
+      "order": 19
+    },
+    {
+      "slug": "1-podsumowanie-pdf-2040-stron",
+      "title": "1) Podsumowanie PDF (20–40 stron)",
+      "blocks": 2,
+      "order": 20
+    },
+    {
+      "slug": "2-research-z-cytatami-aktualnosc",
+      "title": "2) Research z cytatami (aktualność)",
+      "blocks": 1,
+      "order": 21
+    },
+    {
+      "slug": "3-analiza-danych-z-csv-funnelwykres",
+      "title": "3) Analiza danych z CSV (funnel/wykres)",
+      "blocks": 2,
+      "order": 22
+    },
+    {
+      "slug": "4-wspopracaudostepnianie",
+      "title": "4) Współpraca/udostępnianie",
+      "blocks": 2,
+      "order": 23
+    },
+    {
+      "slug": "5-deep-research-raport-porownawczy",
+      "title": "5) Deep Research – raport porównawczy",
+      "blocks": 1,
+      "order": 24
+    },
+    {
+      "slug": "6-prd-z-opisu-mvp",
+      "title": "6) PRD z opisu MVP",
+      "blocks": 3,
+      "order": 25
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "Podsumowanie",
+      "blocks": 3,
+      "order": 26
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:506c1df9:43cc23fa",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:43cc23fa:0-1",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:506c1df9:24701484",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:24701484:0-0",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:e170b937",
+      "tokenEstimate": 178,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:e170b937:0-6",
+      "tokenEstimate": 355,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:506c1df9:b2143e16",
+      "tokenEstimate": 110,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:b2143e16:0-1",
+      "tokenEstimate": 380,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:506c1df9:b5f382a4",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:b5f382a4:0-8",
+      "tokenEstimate": 270,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:506c1df9:68832fa6",
+      "tokenEstimate": 78,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:68832fa6:0-0",
+      "tokenEstimate": 78,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:60965168",
+      "tokenEstimate": 71,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:60965168:0-0",
+      "tokenEstimate": 229,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:e69424ff",
+      "tokenEstimate": 78,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:e69424ff:0-0",
+      "tokenEstimate": 198,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:5d724362",
+      "tokenEstimate": 66,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:5d724362:0-0",
+      "tokenEstimate": 232,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:45d780f8",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:45d780f8:0-0",
+      "tokenEstimate": 150,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:58784905",
+      "tokenEstimate": 85,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:58784905:0-1",
+      "tokenEstimate": 85,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:506c1df9:6434b716",
+      "tokenEstimate": 60,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:6434b716:0-0",
+      "tokenEstimate": 142,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:b870f5bd",
+      "tokenEstimate": 65,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:b870f5bd:0-0",
+      "tokenEstimate": 138,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:41be5b34",
+      "tokenEstimate": 77,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:41be5b34:0-0",
+      "tokenEstimate": 166,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:45d780f8",
+      "tokenEstimate": 59,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:45d780f8:0-0",
+      "tokenEstimate": 121,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:babbf815",
+      "tokenEstimate": 73,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:babbf815:0-0",
+      "tokenEstimate": 139,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:01a758f9",
+      "tokenEstimate": 91,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:01a758f9:0-1",
+      "tokenEstimate": 91,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:506c1df9:c5b0b7d5",
+      "tokenEstimate": 148,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:c5b0b7d5:0-0",
+      "tokenEstimate": 148,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:9d5856a1",
+      "tokenEstimate": 112,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:9d5856a1:0-4",
+      "tokenEstimate": 172,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:506c1df9:359dd62f",
+      "tokenEstimate": 73,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:506c1df9:bcca2546",
+      "tokenEstimate": 115,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:bcca2546:0-1",
+      "tokenEstimate": 115,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:506c1df9:c7105ea1",
+      "tokenEstimate": 142,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:c7105ea1:0-0",
+      "tokenEstimate": 142,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:5a6b8351",
+      "tokenEstimate": 144,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:5a6b8351:0-1",
+      "tokenEstimate": 144,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:506c1df9:a4ffecd1",
+      "tokenEstimate": 80,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:a4ffecd1:0-1",
+      "tokenEstimate": 119,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:506c1df9:995b8cef",
+      "tokenEstimate": 139,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:506c1df9:995b8cef:0-0",
+      "tokenEstimate": 139,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:506c1df9:b60a9cc1",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:b60a9cc1:0-2",
+      "tokenEstimate": 156,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:506c1df9:33c7f0dd",
+      "tokenEstimate": 220,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:506c1df9:33c7f0dd:0-2",
+      "tokenEstimate": 220,
+      "span": [
+        0,
+        2
+      ]
+    }
+  ]
+}

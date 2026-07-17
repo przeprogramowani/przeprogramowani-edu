@@ -1,0 +1,236 @@
+{
+  "lessonId": "[3x2] Test Plan i testy jednostkowe z Vitest",
+  "file": "22-3x2_test_plan_i_testy_jednostkowe_z_vitest.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 3,
+      "order": 1
+    },
+    {
+      "slug": "test-plan",
+      "title": "Test Plan",
+      "blocks": 14,
+      "order": 2
+    },
+    {
+      "slug": "konfiguracja-srodowiska",
+      "title": "Konfiguracja środowiska",
+      "blocks": 5,
+      "order": 3
+    },
+    {
+      "slug": "testy-z-vitest",
+      "title": "Testy z Vitest",
+      "blocks": 20,
+      "order": 4
+    },
+    {
+      "slug": "tryb-watch-w-testach-z-agentem-ai",
+      "title": "Tryb watch w testach z Agentem AI",
+      "blocks": 6,
+      "order": 5
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 3,
+      "order": 6
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 0,
+      "order": 7
+    },
+    {
+      "slug": "zadanie-1-zbudowanie-test-planu",
+      "title": "Zadanie 1: Zbudowanie Test Planu",
+      "blocks": 3,
+      "order": 8
+    },
+    {
+      "slug": "zadanie-2-konfiguracja-srodowiska-i-implementacja-unit-testow",
+      "title": "Zadanie 2: Konfiguracja środowiska i implementacja Unit Testów",
+      "blocks": 4,
+      "order": 9
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:da30fe59:43cc23fa",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:da30fe59:43cc23fa:0-1",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:da30fe59:24701484",
+      "tokenEstimate": 179,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:da30fe59:24701484:0-2",
+      "tokenEstimate": 179,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:da30fe59:e45b0229",
+      "tokenEstimate": 196,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:da30fe59:e45b0229:0-10",
+      "tokenEstimate": 408,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "chk:da30fe59:e45b0229:10-13",
+      "tokenEstimate": 146,
+      "span": [
+        10,
+        13
+      ]
+    },
+    {
+      "id": "sec:da30fe59:4a19572f",
+      "tokenEstimate": 179,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:da30fe59:4a19572f:0-4",
+      "tokenEstimate": 181,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:da30fe59:947d1810",
+      "tokenEstimate": 164,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:da30fe59:947d1810:0-10",
+      "tokenEstimate": 404,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "chk:da30fe59:947d1810:10-19",
+      "tokenEstimate": 294,
+      "span": [
+        10,
+        19
+      ]
+    },
+    {
+      "id": "sec:da30fe59:739a06fd",
+      "tokenEstimate": 167,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:da30fe59:739a06fd:0-5",
+      "tokenEstimate": 167,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:da30fe59:7eabec50",
+      "tokenEstimate": 187,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:da30fe59:7eabec50:0-2",
+      "tokenEstimate": 187,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:da30fe59:dcc8ec86",
+      "tokenEstimate": 77,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:da30fe59:a6fec22b",
+      "tokenEstimate": 104,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:da30fe59:a6fec22b:0-2",
+      "tokenEstimate": 104,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:da30fe59:960e536e",
+      "tokenEstimate": 136,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:da30fe59:960e536e:0-3",
+      "tokenEstimate": 136,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "lessonId": "[1x7] Mindset 10xDeva",
+  "displayName": "[1x7] Mindset 10xDeva",
+  "summary": "1) Jak rozróżnić vibe coding od spec-driven development w programowaniu wspomaganym AI?  \n2) Jak definiować cele i weryfikować wyniki użycia AI, aby stosować podejście spec-driven?  \n3) Jakie konkretne ograniczenia mają modele językowe (zamknięte dane treningowe, brak uczenia po treningu, statystyczne generowanie odpowiedzi, halucynacje, ograniczone okno kontekstowe)?  \n4) Jak obejść brak dalszego uczenia modelu w locie — jakie rozwiązanie stosować praktycznie (in‑context learning)?  \n5) Jak przyjąć odpowiedzialność za kod częściowo wygenerowany przez AI i jak zarządzać pracą autonomicznych narzędzi jako programista?  \n6) Jak praktycznie radzić sobie z ograniczonym oknem kontekstowym modeli (jak traktować deklarowane przez dostawców wartości i jakie założenia przyjąć)?  \n7) Jak zmienić praktykę pracy z AI z chaotycznego kopiowania sugestii na systematyczne, weryfikowalne użycie wspierające innowacyjność i adaptacyjność?",
+  "tokenEstimate": 143
+}

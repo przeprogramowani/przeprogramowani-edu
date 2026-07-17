@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://przeprogramowani.pl/schemas/10xdevs-3-lessons-schema.schema.json",
+  "title": "10xDevs 3 Workbench Lessons Schema",
+  "description": "Structural contract for workbench/lessons-schema.json. The JSON data remains the curriculum source of truth; this schema documents and validates its shape.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "courseId",
+    "source",
+    "scope",
+    "language",
+    "version",
+    "modules"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional local JSON Schema pointer for editor and agent tooling."
+    },
+    "courseId": {
+      "type": "string",
+      "const": "10xdevs-3"
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "language": {
+      "type": "string",
+      "const": "pl"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/module"
+      }
+    }
+  },
+  "$defs": {
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "moduleId",
+        "order",
+        "title",
+        "lessons"
+      ],
+      "properties": {
+        "moduleId": {
+          "type": "string",
+          "pattern": "^m[0-9]+$"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lessons": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/lesson"
+          }
+        }
+      }
+    },
+    "lesson": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lessonId",
+        "globalOrder",
+        "moduleOrder",
+        "title",
+        "status",
+        "dependsOn",
+        "preparesFor",
+        "owns",
+        "referencesOnly",
+        "mustNotCover",
+        "learningOutcomes",
+        "requiredFragments",
+        "videoPlaceholders",
+        "requiredArtifacts",
+        "sideEffectLedger"
+      ],
+      "properties": {
+        "lessonId": {
+          "$ref": "#/$defs/lessonId"
+        },
+        "globalOrder": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "moduleOrder": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "titleEn": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "grounded",
+            "drafted"
+          ]
+        },
+        "dependsOn": {
+          "$ref": "#/$defs/lessonIdList"
+        },
+        "preparesFor": {
+          "$ref": "#/$defs/lessonIdList"
+        },
+        "owns": {
+          "$ref": "#/$defs/textList"
+        },
+        "referencesOnly": {
+          "$ref": "#/$defs/textList"
+        },
+        "mustNotCover": {
+          "$ref": "#/$defs/textList"
+        },
+        "learningOutcomes": {
+          "$ref": "#/$defs/textList"
+        },
+        "requiredFragments": {
+          "$ref": "#/$defs/textList"
+        },
+        "videoPlaceholders": {
+          "$ref": "#/$defs/textList"
+        },
+        "groundingSources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/groundingSource"
+          }
+        },
+        "requiredArtifacts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "lesson-spec",
+              "lesson-grounding",
+              "lesson-draft",
+              "video-scenario",
+              "rc-review"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "sideEffectLedger": {
+          "$ref": "#/$defs/sideEffectLedger"
+        }
+      }
+    },
+    "groundingSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "url",
+        "sourceType",
+        "publisherOrAuthor",
+        "checkedAt",
+        "relevance",
+        "claimsSupported",
+        "confidence",
+        "notes"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceType": {
+          "type": "string",
+          "enum": [
+            "official-docs",
+            "paper",
+            "repo",
+            "technical-post",
+            "practitioner-signal",
+            "community-discussion",
+            "internal-course-material"
+          ]
+        },
+        "publisherOrAuthor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "checkedAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "relevance": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claimsSupported": {
+          "$ref": "#/$defs/textList"
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium-high",
+            "medium",
+            "low"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "sideEffectLedger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "newClaimsIntroduced",
+        "claimsRemoved",
+        "neighboringLessonReferencesChanged",
+        "potentialDuplicates",
+        "unsupportedFacts",
+        "videoTextMismatches",
+        "needsHumanDecision"
+      ],
+      "properties": {
+        "newClaimsIntroduced": {
+          "$ref": "#/$defs/textList"
+        },
+        "claimsRemoved": {
+          "$ref": "#/$defs/textList"
+        },
+        "neighboringLessonReferencesChanged": {
+          "$ref": "#/$defs/textList"
+        },
+        "potentialDuplicates": {
+          "$ref": "#/$defs/textList"
+        },
+        "unsupportedFacts": {
+          "$ref": "#/$defs/textList"
+        },
+        "videoTextMismatches": {
+          "$ref": "#/$defs/textList"
+        },
+        "needsHumanDecision": {
+          "$ref": "#/$defs/textList"
+        }
+      }
+    },
+    "lessonId": {
+      "type": "string",
+      "pattern": "^m[0-9]+-l[0-9]+$"
+    },
+    "lessonIdList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/lessonId"
+      },
+      "uniqueItems": true
+    },
+    "textList": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

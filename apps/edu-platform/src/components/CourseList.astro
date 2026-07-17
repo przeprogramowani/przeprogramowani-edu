@@ -1,0 +1,257 @@
+---
+import thumbnailOfe from '@/images/courses/kurs-ofe.jpg';
+import thumbnailOts from '@/images/courses/kurs-ots.jpg';
+import thumbnailCursor from '@/images/courses/kurs-cursor.png';
+import thumbnailExplorers from '@/images/courses/game-explorers.png';
+import thumbnail10xDevs3 from '@/images/courses/kurs-10xdevs-3.jpg';
+import thumbnail10xDevs3Prework from '@/images/courses/kurs-10xdevs-3-prework.jpg';
+import thumbnailMissionLog from '@/images/courses/mission-log.png';
+import { type CourseSlug } from '@/models/CollectionMappings';
+interface Props {
+  accessibleCourseSlugs: CourseSlug[];
+  userEmail: string;
+}
+
+const { accessibleCourseSlugs }: Props = Astro.props;
+
+interface Course {
+  title: string;
+  description: string;
+  imageUrl?: string;
+  theme: string;
+  href: string;
+  isAvailable: boolean;
+  purchaseUrl: string;
+}
+
+const allCourses: Course[] = [
+  {
+    title: 'Opanuj Frontend',
+    description: 'Zostań kompletnym frontend developerem i buduj aplikacje wysokiej jakości.',
+    imageUrl: thumbnailOfe.src,
+    theme: 'bg-gradient-to-br from-rose-950 to-indigo-950',
+    href: '/courses/opanuj-frontend',
+    isAvailable: accessibleCourseSlugs.includes('opanuj-frontend'),
+    purchaseUrl: 'https://opanujfrontend.pl',
+  },
+  {
+    title: 'Opanuj Frontend: Nagrania spotkań z ekspertami',
+    description: 'Obejrzyj nagrania spotkań z ekspertami i zdobyj praktyczne wskazówki.',
+    imageUrl: thumbnailOfe.src,
+    theme: 'bg-gradient-to-br from-rose-950 to-indigo-950',
+    href: '/courses/opanuj-frontend-live',
+    isAvailable: accessibleCourseSlugs.includes('opanuj-frontend-live'),
+    purchaseUrl: 'https://opanujfrontend.pl',
+  },
+  {
+    title: 'Cursor: Programuj z AI',
+    description: 'Poznaj najpopularniejszy edytor z wbudowanym AI, oparty o ekosystem VS Code.',
+    imageUrl: thumbnailCursor.src,
+    theme: 'bg-gradient-to-br from-teal-950 to-cyan-950',
+    href: '/courses/cursor-ai',
+    isAvailable: accessibleCourseSlugs.includes('cursor-ai'),
+    purchaseUrl: 'https://opanuj.ai',
+  },
+  {
+    title: 'Opanuj TypeScript: Core Pro',
+    description: 'Poznaj tajniki języka TypeScript i wykorzystaj jego możliwości w praktyce.',
+    imageUrl: thumbnailOts.src,
+    theme: 'bg-gradient-to-br from-blue-950 to-sky-950',
+    href: '/courses/opanuj-typescript-core',
+    isAvailable: accessibleCourseSlugs.includes('opanuj-typescript-core'),
+    purchaseUrl: 'https://opanujtypescript.pl',
+  },
+  {
+    title: 'Opanuj TypeScript: React Pro',
+    description: 'Buduj nowoczesne i niezawodne aplikacje z TypeScriptem 5 i React 19.',
+    imageUrl: thumbnailOts.src,
+    theme: 'bg-gradient-to-br from-blue-950 to-sky-950',
+    href: '/courses/opanuj-typescript-react',
+    isAvailable: accessibleCourseSlugs.includes('opanuj-typescript-react'),
+    purchaseUrl: 'https://opanujtypescript.pl',
+  },
+  {
+    title: '10xDevs 3.0: Prework',
+    description: 'Przygotuj się do kursu 10xDevs 3.0 - fundamenty pracy z AI w developmencie.',
+    imageUrl: thumbnail10xDevs3Prework.src,
+    theme: 'bg-gradient-to-br from-indigo-950 to-violet-950',
+    href: '/external/10xdevs-3-prework',
+    isAvailable: accessibleCourseSlugs.includes('10xdevs-3-prework'),
+    purchaseUrl: 'https://10xdevs.pl',
+  },
+  {
+    title: '10xDevs 3.0',
+    description: 'Czas na AI-Native Software Engineering - produkcyjne wykorzystanie AI w codziennej pracy developera.',
+    imageUrl: thumbnail10xDevs3.src,
+    theme: 'bg-gradient-to-br from-indigo-950 to-violet-950',
+    href: '/external/10xdevs-3',
+    isAvailable: accessibleCourseSlugs.includes('10xdevs-3'),
+    purchaseUrl: 'https://10xdevs.pl',
+  },
+];
+
+const courses = allCourses.filter((c) => c.isAvailable);
+
+const SHOW_GAMES_SECTION = true;
+const SHOW_MISSION_LOG = accessibleCourseSlugs.includes('10xdevs-3');
+const SHOW_TENX_WORKFLOW = accessibleCourseSlugs.includes('10xdevs-3');
+---
+
+<div class="py-8">
+  <!-- Courses -->
+  <div class="mb-12">
+    <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-5">Twoje szkolenia</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {
+        courses.map((course) => (
+          <div
+            class={`group relative rounded-xl overflow-hidden flex flex-col border border-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 hover:border-white/20 ${course.theme}`}>
+            <!-- Thumbnail -->
+            <div class="relative aspect-video overflow-hidden">
+              {course.imageUrl ? (
+                <img
+                  src={course.imageUrl}
+                  alt={course.title}
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <div class={`w-full h-full flex items-center justify-center ${course.theme}`}>
+                  <span class="text-white/90 font-semibold text-base tracking-tight px-4 text-center line-clamp-2">
+                    {course.title}
+                  </span>
+                </div>
+              )}
+              <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full px-2.5 py-0.5 text-xs text-green-400 font-medium">
+                Dostępny
+              </span>
+            </div>
+            <!-- Content -->
+            <div class="p-5 flex flex-col flex-1">
+              <h3 class="font-semibold text-sm leading-snug mb-2 line-clamp-2 text-white">
+                {course.title}
+              </h3>
+              <p class="text-xs text-gray-500 leading-relaxed mb-4 flex-1 line-clamp-2">
+                {course.description}
+              </p>
+              <a
+                href={course.href}
+                class="flex items-center gap-1.5 text-xs font-medium text-white/80 hover:text-white transition-colors group/link">
+                Otwórz kurs
+                <svg
+                  class="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  {SHOW_GAMES_SECTION && <div>
+    <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-5">Dodatki do szkoleń</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        class="group relative rounded-xl overflow-hidden flex flex-col border border-white/10 bg-gradient-to-br from-violet-950 to-purple-950 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 hover:border-white/20">
+        <div class="relative aspect-video overflow-hidden">
+          <img
+            src={thumbnailExplorers.src}
+            alt="Space Explorers"
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-sm border border-violet-400/30 rounded-full px-2.5 py-0.5 text-xs text-violet-300 font-medium">
+            Gra
+          </span>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <h3 class="font-semibold text-sm leading-snug mb-2 text-white">Space Explorers</h3>
+          <p class="text-xs text-gray-500 leading-relaxed mb-4 flex-1 line-clamp-2">
+            Odkrywaj tajniki programowania z AI w interaktywnej przygodzie kosmicznej.
+          </p>
+          <a
+            href="/explorers"
+            class="flex items-center gap-1.5 text-xs font-medium text-white/80 hover:text-white transition-colors group/link">
+            Zagraj teraz
+            <svg
+              class="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+      {SHOW_MISSION_LOG && (
+        <div
+          class="group relative rounded-xl overflow-hidden flex flex-col border border-white/10 bg-gradient-to-br from-purple-950 via-indigo-950 to-cyan-950 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 hover:border-white/20">
+          <div class="relative aspect-video overflow-hidden">
+            <img
+              src={thumbnailMissionLog.src}
+              alt="10xDevs Mission Log"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-sm border border-cyan-400/30 rounded-full px-2.5 py-0.5 text-xs text-cyan-300 font-medium">
+              Mission Log
+            </span>
+          </div>
+          <div class="p-5 flex flex-col flex-1">
+            <h3 class="font-semibold text-sm leading-snug mb-2 text-white">10xDevs Mission Log</h3>
+            <p class="text-xs text-gray-500 leading-relaxed mb-4 flex-1 line-clamp-2">
+              Zdobądź odznaki za ukończone lekcje 10xDevs 3.0.
+            </p>
+            <a
+              href="/10xdevs-3/mission-log"
+              class="flex items-center gap-1.5 text-xs font-medium text-white/80 hover:text-white transition-colors group/link">
+              Otwórz
+              <svg
+                class="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      )}
+      {SHOW_TENX_WORKFLOW && (
+        <div
+          class="group relative rounded-xl overflow-hidden flex flex-col border border-white/10 bg-gradient-to-br from-indigo-950 via-violet-950 to-slate-950 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 hover:border-white/20">
+          <div class="relative aspect-video overflow-hidden">
+            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-950 via-violet-950 to-slate-950">
+              <span class="text-white/90 font-semibold text-base tracking-tight px-4 text-center line-clamp-2">
+                10x Workflow
+              </span>
+            </div>
+            <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-sm border border-indigo-400/30 rounded-full px-2.5 py-0.5 text-xs text-indigo-300 font-medium">
+              Mapa kursu
+            </span>
+          </div>
+          <div class="p-5 flex flex-col flex-1">
+            <h3 class="font-semibold text-sm leading-snug mb-2 text-white">10x Workflow - mapa kursu 10xDevs 3.0</h3>
+            <p class="text-xs text-gray-500 leading-relaxed mb-4 flex-1 line-clamp-2">
+              Interaktywne strony modułów i quick search po konceptach, technikach i flow - w klimacie sci-fi.
+            </p>
+            <a
+              href="/10xdevs-3/workflow"
+              class="flex items-center gap-1.5 text-xs font-medium text-white/80 hover:text-white transition-colors group/link">
+              Otwórz
+              <svg
+                class="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>}
+</div>

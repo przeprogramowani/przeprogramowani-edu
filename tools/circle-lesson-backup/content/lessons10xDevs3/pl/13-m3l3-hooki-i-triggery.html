@@ -1,0 +1,254 @@
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m3-l3/assets/cover.jpg">https://images.przeprogramowani.pl/lessons/m3-l3/assets/cover.jpg</a></p></blockquote>
+<p>W poprzedniej lekcji pisałeś testy z agentem. Pod koniec uruchamiałeś je ręcznie: odpalasz test runnera przez skrypt, czekasz na wynik, poprawiasz i odpalasz jeszcze raz.</p>
+<p>Działa? Tak. Ale pomyśl, ile razy w trakcie sesji z agentem sprawdzałeś lint, typy i testy ręcznie. Ile razy agent edytował plik, a ty po kilku minutach odkrywałeś, że coś nie działa.</p>
+<p>Przy pracy nad jednym taskiem w małym projekcie to nic wielkiego. Ale z czasem kumuluje się w godziny stracone na powtarzanie tego samego cyklu: edycja, manualna weryfikacja, poprawka, znowu manualna weryfikacja.</p>
+<p>A gdyby narzędzie mogło zrobić to za ciebie? Nie przy okazji w ramach pipeline'u CI/CD co jest kosztowne czasowo. Ale we właściwym momencie, lokalnie, po zakończeniu pracy przez agenta.</p>
+<p>Harnessy udostępniają nam hooki, które pozwolą poradzić sobie z tym problemem.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l3-lesson-draft-1-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l3-lesson-draft-1-10x.png</a></p></blockquote>
+<h3>Cykl życia hooka</h3>
+<p>Zanim skonfigurujesz pierwszy hook, warto zobaczyć wzorzec, który znajdziesz w każdym narzędziu do programowania z AI, które obsługuje hooki.</p>
+<p>Każdy hook składa się z czterech części:</p>
+<ol>
+<li><strong>Trigger</strong> — zdarzenie w narzędziu. Na przykład agent właśnie zapisał plik.</li>
+<li><strong>Matcher</strong> — filtr, który decyduje, czy ten konkretny hook powinien się uruchomić. Może reagować na konkretne narzędzia (<strong>Write</strong>, <strong>Edit</strong>), typy plików albo wzorce nazw.</li>
+<li><strong>Handler</strong> — komenda, skrypt albo inna akcja, która się wykonuje. Najczęściej to komenda shell.</li>
+<li><strong>Sygnał</strong> — wynik hooka wraca do narzędzia. Exit code mówi, czy wszystko jest OK, a stdout może trafić do kontekstu agenta jako feedback.</li>
+</ol>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l3-lesson-draft-2-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l3-lesson-draft-2-10x.png</a></p></blockquote>
+<p>Wzorzec jest uniwersalny: Claude Code, Cursor, Codex, Windsurf, Copilot - wszędzie spotkasz te same cztery kroki. Różnią się nazwy zdarzeń i głębokość konfiguracji, ale architektura jest ta sama.</p>
+<h3>Pierwszy hook w praktyce</h3>
+<p>Masz wzorzec. Czas podłączyć go do czegoś konkretnego.</p>
+<p>Zanim skonfigurujesz pierwszy hook, pobierz paczkę artefaktów dla tej lekcji:</p>
+<pre><code class="language-bash">npx @przeprogramowani/10x-cli@latest get m3l3
+</code></pre>
+<p>Ta paczka dostarcza regułę <strong>CLAUDE-m3l3</strong> (dopisaną do twojego <strong>CLAUDE.md</strong>). Reguła streszcza model hooków z tej lekcji — cykl życia hooka, trzy warstwy lokalnej jakości i wzorzec przenośny między narzędziami — żeby agent miał te zasady pod ręką, kiedy pomaga ci konfigurować hooki.</p>
+<p>Najczęstszy pierwszy hook to automatyczny lint po każdej edycji pliku. Konfiguracja w Claude Code wygląda tak:</p>
+<pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx eslint --fix . --quiet",
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<p>Hooki konfigurujemy w ustawieniach harnessu, dla Claude Code to <strong>settings.json</strong>, który może żyć w trzech miejscach:</p>
+<ul>
+<li><strong>~/.claude/settings.json</strong> — ustawienia globalne użytkownika,</li>
+<li><strong>.claude/settings.json</strong> — ustawienia projektu (commituj do repo),</li>
+<li><strong>.claude/settings.local.json</strong> — lokalne nadpisania (dodaj do <strong>.gitignore</strong>).</li>
+</ul>
+<p>Jak to działa? Agent edytuje plik narzędziem Write albo Edit. Hook <strong>PostToolUse</strong> odpala się po tej akcji.</p>
+<p>Matcher <strong>Write|Edit</strong> sprawdza, czy narzędzie pasuje. Jeśli tak, ESLint z <strong>--fix</strong> poprawia to, co potrafi naprawić automatycznie. Exit code 0 oznacza sukces.</p>
+<p>Zwróć uwagę, że ta komenda uruchamia ESLint na całym projekcie. W małych projektach to wystarczające i prostsze niż parsowanie ścieżki pliku. Bardziej precyzyjne dopasowanie per-file zobaczysz w sekcji o hookach do testów.</p>
+<h3>Typecheck i pytanie o szybkość</h3>
+<p>Skoro lint działa, naturalny następny krok to typecheck. Do listy hooków <strong>PostToolUse</strong> dodajesz kolejny:</p>
+<pre><code class="language-json">{
+  "type": "command",
+  "command": "npx tsc --noEmit",
+  "timeout": 30000
+}
+</code></pre>
+<p>I tu pojawia się pytanie, które wraca przy każdym nowym hooku: jak szybko to musi działać, żeby się opłacało?</p>
+<p>Hooki mają swoją cenę: blokują pętlę agenta. Dopóki hook się nie zakończy, agent czeka. To nie wada, to mechanizm: agent dostaje feedback przed kolejną iteracją.</p>
+<p>Ale jeśli hook zajmuje 30 sekund, te 30 sekund czekasz na każdą edycję. Mnożysz to przez kilkadziesiąt edycji w sesji i robi się poważnie.</p>
+<p>Praktyczna heurystyka: jeśli check trwa dłużej niż kilka sekund, rozważ przeniesienie go na moment commita albo pusha.</p>
+<p>Lint i format z wykrywaniem ścieżki? Idealne per-edit, szybkie. Typecheck? W małych projektach działa per-edit. W większych lepiej sprawdza się jako bramka commitowa. Pełny zestaw testów? Zdecydowanie moment commita albo pusha.</p>
+<p>Nie ma sztywnych progów. Obserwuj, jak hook wpływa na tempo pracy agenta, i dostosuj. Jeśli zaczyna cię irytować, to sygnał, że sprawdzenie powinno zmienić warstwę lub ulepszyć o uruchomienie na ograniczonym zestawie plików.</p>
+<h3>Testy tylko tam, gdzie trzeba</h3>
+<p>Lint i typecheck pilnują składni. Ale prawdziwe błędy łapią testy.</p>
+<p>Najcenniejszy hook to taki, który uruchamia testy powiązane z edytowanym plikiem. Nie cały zestaw. Tylko te, które importują zmieniony moduł.</p>
+<p>Większość narzędzi do uruchamiania testów obsługuje ten scenariusz. W Vitest wygląda to tak:</p>
+<pre><code class="language-bash">vitest related src/server/auth.ts --run
+</code></pre>
+<p>Uwaga na składnię: <strong>related</strong> to subkomenda, nie flaga <strong>--related</strong>. Vitest sprawdza statyczny graf importów i uruchamia tylko testy, które bezpośrednio lub pośrednio zależą od wskazanego pliku.</p>
+<p>Flaga <strong>--run</strong> zapobiega trybowi watch. Bez niej hook nie zakończy się i nie zwróci exit code.</p>
+<p>PostToolUse hooks dostają kontekst zdarzenia jako JSON na stdin. Żeby wyciągnąć ścieżkę edytowanego pliku, parsujesz <strong>tool_input.file_path</strong>. Ten przykład korzysta z <strong>jq</strong> — upewnij się, że masz go zainstalowanego (<strong>brew install jq</strong> na macOS, <strong>apt install jq</strong> na Ubuntu/Debian, <strong>winget install jqlang.jq</strong> lub <strong>choco install jq</strong> na Windows):</p>
+<pre><code class="language-json">{
+  "type": "command",
+  "command": "bash -c 'FILE=$(jq -r .tool_input.file_path) &amp;&amp; npx vitest related \"$FILE\" --run'",
+  "timeout": 30000
+}
+</code></pre>
+<p>Ale nie każda edycja wymaga uruchomienia testów. Utility helper, plik konfiguracyjny, komponent prezentacyjny — to nie muszą być pliki, dla których sensownie jest odpalać testy po każdej edycji.</p>
+<p>Tutaj wraca <strong>context/foundation/test-plan.md</strong> z M3L1. Opisane tam obszary ryzyka mówią ci, które fragmenty kodu są warte automatycznego sprawdzenia po edycji.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l3-lesson-draft-3-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l3-lesson-draft-3-10x.png</a></p></blockquote>
+<p>Jedno ograniczenie warto znać od razu: PostToolUse odpala się raz na jedno użycie narzędzia. Jeśli agent edytuje trzy pliki w jednej turze, hook odpali się trzy razy niezależnie. Jeżeli Twoje testy wykonują się szybko (a powinny), to nie będzie to problematyczne. W innym przypadku musisz dodać bardziej restrykcyjny Matcher, co już w dużym stopniu zależy od stacku technologicznego i architektury projektu - warto nad tym poiterować wspólnie z agentem.</p>
+<p>Jeśli używasz Vitest 4.1+, ustaw w środowisku hooka <strong>AI_AGENT=1</strong>. Vitest przełączy się na kompaktowy format wyjścia, który wypisuje tylko awarie. Mniej szumu w kontekście agenta, mniej zużytych tokenów:</p>
+<pre><code>"command": "AI_AGENT=1 bash -c 'FILE=$(jq -r .tool_input.file_path) &amp;&amp; npx vitest related \"$FILE\" --run'",
+</code></pre>
+<h3>Agent widzi i reaguje</h3>
+<p>Tu zaczyna się różnica między hookiem agentowym a klasycznym hookiem gitowym.</p>
+<p>Kiedy PostToolUse hook zwraca exit code 2, narzędzie traktuje to jako błąd blokujący. Agent widzi wynik hooka w swoim kontekście przy następnym zapytaniu do modelu.</p>
+<p>Trzy exit codes, które warto zapamiętać:</p>
+<ul>
+<li><strong>0</strong> — sukces, hook przeszedł, kontynuuj.</li>
+<li><strong>2</strong> — błąd blokujący, agent widzi feedback i powinien zareagować.</li>
+<li><strong>inny</strong> — błąd nieblokujący, logowany, ale nie przerywa pracy.</li>
+</ul>
+<p>Co to oznacza w praktyce? Jeśli lint albo typecheck zwróci błąd, agent nie tylko wie, że coś poszło nie tak. Widzi konkretny komunikat: brakujący typ, niezaimportowany moduł, źle sformatowana linia.</p>
+<p>I może to naprawić sam, w następnej iteracji, bez twojej interwencji.</p>
+<p>Jest jednak granica. Trywialne korekty (poprawienie formatowania, dodanie brakującego importu, naprawienie typu) agent ogarnie sam.</p>
+<p>Ale jeśli test pada z powodu złej logiki biznesowej? Hook to pokaże, ale agent niekoniecznie zdiagnozuje prawdziwą przyczynę. Mówi "coś jest nie tak" i próbuje naprawić "na chłopski rozum" (co może zakończyć się jedynie pozornym sukcesem).</p>
+<p>Przy bardziej złożonych problemach, gdy agent przyznaje się do porażki lub nie jesteś zadowolony z jego fixa, warto utworzyć dedykowane change z pełnym workflow: /10x-new → /10x-research (opcjonalnie) → /10x-plan → /10x-implement</p>
+<h3>Trzy warstwy lokalnej jakości</h3>
+<p>Do tej pory mówiliśmy o hookach per-edit. To dopiero pierwsza warstwa.</p>
+<p>Pełny model lokalnej jakości składa się z trzech warstw plus CI jako czwartej:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l3-lesson-draft-4-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l3-lesson-draft-4-10x.png</a></p></blockquote>
+<p>Każda warstwa łapie co innego i działa w innym momencie.</p>
+<p><strong>Per-edit (hooki agentowe)</strong> działają najszybciej. Łapią formatowanie, proste błędy typów i padające testy jednostkowe.</p>
+<p>Feedback wraca do agenta w sekundach. To jedyna warstwa, która może podać agentowi feedback w trakcie jego pracy.</p>
+<p><strong>Pre-commit (hooki gitowe)</strong> łapią to, co prześlizgnęło się przez per-edit: ręczne edycje bez agenta, pliki zmienione poza hookiem albo sprawdzenia zbyt wolne na per-edit. Operują na staged files, więc sprawdzają dokładnie to, co trafi do commita.</p>
+<p><strong>Pre-push</strong> uruchamia cięższe sprawdzenia przed wysłaniem kodu do remote'a. Dobre miejsce na pełny typecheck albo szerszy zestaw testów.</p>
+<p><strong>CI</strong> to ostatnia siatka bezpieczeństwa. Łapie problemy integracyjne, zależności między modułami i sprawdzenia wymagające infrastruktury niedostępnej lokalnie.</p>
+<p>Trzy warstwy lokalne nie zastępują CI. CI nadal jest kluczową weryfikacją dla współdzielonego stanu repozytorium i środowisk, których nie kontrolujesz. Ale każda warstwa lokalna, która łapie błąd, to jeden cykl mniej czekania na odpowiedź z CI.</p>
+<p>Brzmi jak dużo warstw? W praktyce każda to kilka linii konfiguracji.</p>
+<h3>Bramka na poziomie commita</h3>
+<p>Hooki agentowe działają, kiedy agent pracuje. Ale nie każda zmiana przechodzi przez agenta. Czasem edytujesz plik ręcznie, czasem kolega pushuje commit z laptopa bez hooków.</p>
+<p>Warstwa pre-commit wymaga narzędzia do zarządzania hookami gitowymi — i tu wybór zależy od twojego stacku. Zasada jest jedna i uniwersalna: uruchom sprawdzenia na staged files przed commitem. Samo narzędzie to detal implementacyjny, więc sięgnij po standard swojego ekosystemu:</p>
+<ul>
+<li><strong>Node/TypeScript</strong> — Husky z lint-staged. Jeśli masz je z 10x-astro-start, to masz tę warstwę gotową i nie musisz nic zmieniać.</li>
+<li><strong>Python</strong> — framework <strong>pre-commit</strong> (pre-commit.com) to de facto standard, z gotowym katalogiem hooków dla <strong>ruff</strong>, <strong>black</strong>, <strong>mypy</strong> i setek innych narzędzi.</li>
+<li><strong>Dowolny język</strong> — Lefthook jest agnostyczny stackowo: jedna konfiguracja YAML, równoległe uruchamianie komend, brak zależności od Node.js. Wpinasz w niego dowolne komendy — <strong>gofmt</strong> i <strong>golangci-lint</strong> w Go, <strong>cargo fmt</strong> i <strong>cargo clippy</strong> w Rust, <strong>rubocop</strong> w Ruby.</li>
+</ul>
+<p>Mechanika jest wszędzie taka sama, więc pokażę ją na Lefthook, bo działa niezależnie od języka. Minimalny <strong>lefthook.yml</strong> — tutaj z komendami dla projektu TypeScript, ale podmień je na narzędzia swojego stacku:</p>
+<pre><code class="language-yaml">pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{ts,tsx,js,jsx}"
+      run: npx eslint --fix {staged_files} &amp;&amp; git add {staged_files}
+    typecheck:
+      run: npx tsc --noEmit
+    test:
+      glob: "*.{ts,tsx}"
+      run: npx vitest related {staged_files} --run
+</code></pre>
+<p><strong>{staged_files}</strong> wstawia listę plików dodanych do staging area. Lint i testy operują na dokładnie tych zmianach, które zamierzasz commitować. <strong>pre-commit</strong> i lint-staged mają własne odpowiedniki tego mechanizmu.</p>
+<p><strong>parallel: true</strong> uruchamia komendy równolegle.</p>
+<p>Instalacja:</p>
+<pre><code class="language-bash">brew install lefthook   # albo: npm install lefthook
+lefthook install        # tworzy hooki gitowe w .git/hooks
+</code></pre>
+<p>Po <strong>lefthook install</strong> hooki gitowe uruchamiają się automatycznie przy <strong>git commit</strong>. Nie musisz o tym pamiętać, i o to właśnie chodzi. Automatyczna bramka, której nie ominiesz przez nieuwagę.</p>
+<h3>Ten sam wzorzec w każdym narzędziu</h3>
+<p>Pokazaliśmy szczegóły w Claude Code, ale wzorzec trigger → match → check → signal przenosi się na każde narzędzie. Różnice dotyczą głębokości, nie architektury.</p>
+
+<ul>
+<li><strong>Narzędzie</strong>: Claude Code | <strong>Zdarzenia</strong>: ~30 | <strong>Handlery</strong>: command, http, mcp_tool, prompt, agent | <strong>Context injection</strong>: tak | <strong>Konfiguracja</strong>: <strong>.claude/settings.json</strong></li>
+<li><strong>Narzędzie</strong>: Cursor | <strong>Zdarzenia</strong>: ~18 | <strong>Handlery</strong>: command, prompt | <strong>Context injection</strong>: tak | <strong>Konfiguracja</strong>: <strong>.cursor/hooks.json</strong></li>
+<li><strong>Narzędzie</strong>: Codex | <strong>Zdarzenia</strong>: 10 | <strong>Handlery</strong>: command | <strong>Context injection</strong>: tak | <strong>Konfiguracja</strong>: <strong>.codex/hooks.json</strong></li>
+<li><strong>Narzędzie</strong>: Windsurf | <strong>Zdarzenia</strong>: 12 | <strong>Handlery</strong>: command | <strong>Context injection</strong>: <strong>nie</strong> | <strong>Konfiguracja</strong>: <strong>.windsurf/hooks.json</strong></li>
+<li><strong>Narzędzie</strong>: Copilot | <strong>Zdarzenia</strong>: ~13 | <strong>Handlery</strong>: command, http, prompt | <strong>Context injection</strong>: tak (VS Code) | <strong>Konfiguracja</strong>: <strong>.github/hooks/*.json</strong></li>
+</ul>
+<p>Najważniejsza różnica: context injection. Claude Code, Cursor, Codex i Copilot (w VS Code) mogą podać wynik hooka agentowi. Windsurf nie ma tej możliwości. Linki do dokumentacji hooków każdego narzędzia znajdziesz w sekcji Materiały dodatkowe.</p>
+<p>Hooki Windsurfa mogą zablokować akcję (exit code 2), ale nie potrafią przekazać agentowi, co poszło nie tak. Agent wie, że coś się nie udało. Nie wie co. Dla automatycznej korekty to poważne ograniczenie.</p>
+<p>1Password opublikował repozytorium <strong>agent-hooks</strong>, które jednym skryptem instaluje te same hooki do <strong>.cursor/hooks.json</strong>, <strong>.claude/settings.json</strong> i <strong>.windsurf/hooks.json</strong>. Jedno źródło hooków, wiele narzędzi: to pokazuje duże podobieństwo na poziomie architektury. Może doczekamy się oficjalnego standardu, jak w przypadku Agent Skills.</p>
+<h3>Hooki a test-plan.md</h3>
+<p>Wróćmy do punktu wyjścia. W m3-l1 stworzyłeś <strong>context/foundation/test-plan.md</strong> ze strategią i bramkami jakości, w m3-l2 pisałeś testy na podstawie obszarów ryzyka.</p>
+<p>Hooki zamykają tę pętlę. Zamieniają bramki z deklaracji w automatyczną weryfikację.</p>
+<p>Pytanie, które warto sobie zadać przy każdej bramce z planu: czy to sprawdzenie jest wystarczająco szybkie na per-edit? Czy powinno czekać na commit? A może potrzebuje pełnego środowiska i należy do pre-push albo CI?</p>
+<p>Weźmy konkretny przykład. W projekcie 10xcards sekcja Quality Gates w <strong>test-plan.md</strong> definiuje bramki z oznaczeniem, kiedy stają się wymagane:</p>
+<ul>
+<li><strong>lint + typecheck</strong> — wymagane od początku. Szybkie, więc mogą działać per-edit albo jako bramka commitowa. Projekt wybrał pre-commit przez Husky.</li>
+<li><strong>unit + integration</strong> — wymagane po pierwszej fazie rollout'u. Testy na staged files w pre-commit.</li>
+<li><strong>e2e na krytycznych flow'ach</strong> — wymagane po szóstej fazie. Cięższe, więc pre-push (ręcznie, dopóki nie stanie CI).</li>
+<li><strong>CI gating</strong> — jawnie odroczone, nie w v1.</li>
+<li><strong>post-edit hooki / visual diff</strong> — jawnie odroczone, nie w v1.</li>
+</ul>
+<p>Zwróć uwagę: sam plan testów zdecydował, że hooki per-edit jeszcze się nie opłacają w tej fazie projektu. I to jest uprawniony wybór. Trzy warstwy to menu, nie nakaz. Zacznij tam, gdzie stosunek kosztu do sygnału jest najlepszy dla twojego projektu.</p>
+<p>Nie musisz konfigurować tego perfekcyjnie za pierwszym razem. Zacznij od jednego hooka per-edit (lint) i jednej bramki commitowej. Dodawaj kolejne warstwy, gdy zobaczysz, jakie problemy Ci uciekają.</p>
+<p>Hooki łapią błędy na poziomie kodu: format, typy, unit testy. Nie łapią tego, co widzi użytkownik: przesuwający się layout, zepsuta nawigacja, niedostępny formularz. Do tego potrzebujesz przeglądarki, Playwrighta i scenariuszy E2E, które postawimy w następnej lekcji.</p>
+<h2>🧑🏻‍💻 Zadania praktyczne</h2>
+<h3>Skonfiguruj hook lint + typecheck</h3>
+<p>W swoim projekcie kursowym skonfiguruj hook per-edit, który uruchamia linter po każdej edycji pliku przez agenta. Dodaj drugi hook z typecheckiem.</p>
+<p>W zależności od narzędzia:</p>
+<ul>
+<li><strong>Claude Code</strong>: <strong>PostToolUse</strong> z matcherem <strong>Write|Edit</strong> w <strong>.claude/settings.json</strong> (<a href="https://docs.anthropic.com/en/docs/claude-code/hooks">dokumentacja</a>)</li>
+<li><strong>Cursor</strong>: <strong>afterFileEdit</strong> w <strong>.cursor/hooks.json</strong> (<a href="https://docs.cursor.com/configuration/hooks">dokumentacja</a>)</li>
+<li><strong>Codex</strong>: <strong>PostToolUse</strong> w <strong>.codex/hooks.json</strong> (<a href="https://openai.com/codex/docs/hooks">dokumentacja</a>)</li>
+<li><strong>Copilot</strong>: hooki w <strong>.github/hooks/*.json</strong>; w VS Code Copilot jest kompatybilny z formatem <strong>.claude/settings.json</strong> (<a href="https://docs.github.com/en/copilot/customizing-copilot/extending-copilot-coding-agent/configuring-coding-agent-hooks">dokumentacja</a>)</li>
+</ul>
+<p>Wybierz swoje narzędzie, skonfiguruj oba hooki i przetestuj: poproś agenta o edycję pliku i sprawdź, czy hooki się odpalają.</p>
+<p>Jeśli hook odpala się, ale agent nie widzi feedbacku, sprawdź exit code. Pamiętaj: exit code 2 to sygnał blokujący, który trafia do kontekstu. Inne kody niż 0 i 2 są logowane, ale nie blokują pracy.</p>
+<p>Jeśli typecheck spowalnia agenta przy większym projekcie, przenieś go do pre-commit.</p>
+<h3>(Opcjonalne) Dodaj scoped test trigger</h3>
+<p>Wybierz najwyższy obszar ryzyka z <strong>context/foundation/test-plan.md</strong> i skonfiguruj hook, który uruchamia tylko testy powiązane z edytowanym plikiem. Większość test runnerów ma taką opcję — w Vitest to <strong>vitest related $FILE --run</strong>, w Jest <strong>jest --findRelatedTests $FILE</strong>.</p>
+<ul>
+<li>Sparsuj ścieżkę edytowanego pliku ze stdin hooka (np. przez <strong>jq -r .tool_input.file_path</strong>)</li>
+<li>Jeśli używasz Vitest 4.1+, ustaw <strong>AI_AGENT=1</strong> w środowisku hooka dla kompaktowego wyjścia</li>
+<li>Przetestuj: poproś agenta o edycję pliku w obszarze ryzyka i sprawdź, czy testy się uruchamiają</li>
+<li>Porównaj: edytuj plik poza obszarem ryzyka i upewnij się, że testy się nie odpalają (lub odpalają się szybko, bez fałszywych alarmów)</li>
+</ul>
+<p>Twój test runner prawdopodobnie ma podobną opcję — sprawdź dokumentację.</p>
+<h3>(Opcjonalne) Dodaj bramkę pre-commitową</h3>
+<p>Dodaj do projektu hook gitowy <strong>pre-commit</strong>, który uruchamia lint i testy na staged files przed commitem. Nie narzucamy narzędzia, sięgnij po standard swojego stacku - jeżeli nie masz tutaj doświadczenia/opinii, zrób research z agentem.</p>
+<p>Jeśli chcesz zrozumieć, na czym te narzędzia bazują, zajrzyj do <a href="https://git-scm.com/docs/githooks">dokumentacji git hooks</a> — opisuje hook <strong>pre-commit</strong> i pozostałe punkty zaczepienia gita, które te narzędzia tylko opakowują.</p>
+<h3>(Opcjonalne) Przetłumacz hook na drugie narzędzie</h3>
+<p>Weź jeden z hooków, które właśnie skonfigurowałeś, i zapisz jego odpowiednik dla drugiego narzędzia (Cursor, Codex lub Copilot). Nie musisz go wdrażać. Chodzi o przećwiczenie przenoszenia wzorca: trigger → match → check → signal działa tak samo, zmienia się format konfiguracji.</p>
+<h2>Odbierz swoją odznakę</h2>
+<p>Po ukończeniu tej lekcji odbierz odznakę w sekcji <a href="https://platforma.przeprogramowani.pl/10xdevs-3/mission-log">10xDevs Mission Log</a> a następnie pochwal się swoim osiągnięciem!</p>
+<h2>🔎 Deep Dive</h2>
+<p>Ta sekcja zawiera dodatkowe pogłębienie wiedzy na temat wybranych zagadnień związanych z lekcją. W tym Deep Dive znajdziesz:</p>
+<ul>
+<li><strong>Performance hooków</strong> — jak pogodzić dokładność sprawdzeń z szybkością pętli agenta i kiedy przenosić cięższe sprawdzenia na wyższe warstwy.</li>
+<li><strong>Inne typy handlerów</strong> — co jeszcze potrafią hooki poza komendami shell: HTTP, MCP i eksperymentalny handler agentowy.</li>
+<li><strong>Niezawodność hooków</strong> — kiedy hook może się nie odpalić i jak to zdiagnozować.</li>
+</ul>
+<p>Ta sekcja lekcji nie jest obowiązkowa, ale warto się z nią zapoznać jeżeli chcesz zostać ekspertem.</p>
+<h3>Performance hooków</h3>
+<p>W głównej części lekcji mówiliśmy o ogólnej heurystyce: jeśli sprawdzenie trwa dłużej niż kilka sekund, przenieś go wyżej. Tutaj trochę więcej szczegółów.</p>
+<p><strong>Per-edit (PostToolUse):</strong> formatter na jednym pliku to ułamek sekundy. Typecheck w małym projekcie to kilka sekund.</p>
+<p>Powiązane testy zależą od rozmiaru grafu importów. Kilka prostych testów jednostkowych to sekundy, rozbudowany zestaw to znacznie więcej.</p>
+<p><strong>Pre-commit (Lefthook / lint-staged):</strong> lint + format na staged files działają szybko. Typecheck sprawdza się dobrze jako bramka commitowa, nawet w większych projektach.</p>
+<p><strong>vitest --changed</strong> uruchamia testy powiązane z plikami zmodyfikowanymi w git, co ogranicza zakres do tego, co faktycznie się zmieniło.</p>
+<p>Claude Code wspiera <strong>async: true</strong> na hookach, które nie muszą blokować. Taki hook uruchamia się w tle i nie wstrzymuje agenta. Przydatne dla weryfikacji informacyjnych, na przykład logowania statystyk albo wysyłania notyfikacji.</p>
+<h3>Inne typy handlerów</h3>
+<p>Poza standardowym <strong>command</strong> Claude Code wspiera dodatkowe typy handlerów:</p>
+<ul>
+<li><strong><strong>http</strong></strong> — wysyła żądanie do zewnętrznego endpointu. Przydatny w zespołach, które centralizują logikę sprawdzeń na serwerze.</li>
+<li><strong><strong>mcp_tool</strong></strong> — wywołuje narzędzie MCP. Hook korzysta z tego samego ekosystemu narzędzi co agent.</li>
+<li><strong><strong>prompt</strong></strong> — instrukcja dla modelu oceniająca wynik hooka. Domyślny timeout 30 sekund.</li>
+<li><strong><strong>agent</strong></strong> — eksperymentalny handler, który uruchamia mini-agenta jako reakcję na zdarzenie. Domyślny timeout 60 sekund. Na ten moment traktuj jako ciekawostkę do obserwowania, nie jako produkcyjny mechanizm.</li>
+</ul>
+<p>Cursor i Copilot wspierają <strong>command</strong> i <strong>prompt</strong>. Codex parsuje inne typy, ale faktycznie wykonuje tylko <strong>command</strong>. Windsurf obsługuje wyłącznie komendy shell.</p>
+<p>PreToolUse hooki w Claude Code potrafią też modyfikować dane wejściowe narzędzia (przez <strong>updatedInput</strong>) i podejmować decyzje o uprawnieniach (<strong>allow</strong>, <strong>deny</strong>, <strong>ask</strong>). Otwiera to ciekawą możliwość: hook, który automatycznie dodaje kontekst do operacji agenta albo blokuje niebezpieczne akcje, zanim się wykonają.</p>
+<h3>Niezawodność hooków</h3>
+<p>Hooki to mechanizm deterministyczny: konfigurujesz, środowisko odpala. Tyle że środowisko musi ten hook faktycznie wyzwolić. A to nie zawsze jest oczywiste.</p>
+<p>Znane ograniczenia w połowie 2026:</p>
+<ul>
+<li>Stop hooki w Claude Code mają zgłoszone problemy w kontekście Skills i Plugins. PostToolUse hooki, na których opiera się ta lekcja, nie są dotknięte tymi problemami.</li>
+<li>Codex ma niekompletne przechwytywanie PreToolUse dla niektórych typów narzędzi.</li>
+<li>Copilot Cloud Agent (wersja chmurowa) ma najwęższy zestaw możliwości: krótkotrwały sandbox, <strong>ask</strong> traktowany jako <strong>deny</strong>.</li>
+</ul>
+<p>Praktyczna zasada: przetestuj swoje hooki po konfiguracji. Jeśli hook nie odpala się zgodnie z oczekiwaniami, sprawdź GitHub Issues swojego narzędzia. Hooki PostToolUse z handlerem <strong>command</strong> to najbardziej niezawodna kombinacja we wszystkich narzędziach.</p>
+<p>To warto podkreślić: hooki to warstwa deterministyczna. Przetrwają kompresję kontekstu, zmianę instrukcji systemowych, "zapomnienie" przez model.</p>
+<p>Instrukcja w <strong>CLAUDE.md</strong> może zostać skompresowana albo zignorowana w długim kontekście. Hook odpali się zawsze, bo działa poza modelem.</p>
+<h2>📚 Materiały dodatkowe</h2>
+<ul>
+<li><a href="https://docs.anthropic.com/en/docs/claude-code/hooks">Claude Code Hooks</a> — oficjalna dokumentacja: zdarzenia, handlery, matchery, exit codes, konfiguracja na trzech poziomach</li>
+<li><a href="https://docs.cursor.com/configuration/hooks">Cursor Hooks</a> — dokumentacja hooków: zdarzenia, <strong>afterFileEdit</strong>, opcja <strong>failClosed</strong></li>
+<li><a href="https://openai.com/codex/docs/hooks">Codex Hooks</a> — dokumentacja hooków: zdarzenia, hash-based trust model, ograniczenia</li>
+<li><a href="https://docs.windsurf.com/windsurf/cascade/hooks">Windsurf Cascade Hooks</a> — dokumentacja hooków: zdarzenia, brak context injection</li>
+<li><a href="https://docs.github.com/en/copilot/customizing-copilot/extending-copilot-coding-agent/configuring-coding-agent-hooks">Copilot Coding Agent Hooks</a> — dokumentacja hooków: runtime'y (cloud, VS Code, CLI), kompatybilność z <strong>.claude/settings.json</strong></li>
+<li><a href="https://vitest.dev/guide/cli.html">Vitest CLI</a> — dokumentacja CLI z subkomendą <strong>related</strong> i flagą <strong>--changed</strong> do uruchamiania testów powiązanych z plikiem</li>
+<li><a href="https://vitest.dev/blog/vitest-4-1.html">Vitest 4.1</a> — agent reporter, kompaktowe wyjście dla agentów AI, <strong>AI_AGENT=1</strong></li>
+<li><a href="https://github.com/evilmartians/lefthook">Lefthook</a> — git hook manager z jednym plikiem YAML, interpolacją <strong>{staged_files}</strong>, równoległym uruchamianiem i brakiem zależności od Node.js</li>
+<li><a href="https://pre-commit.com/">pre-commit</a> — wielojęzykowy framework do hooków gitowych, de facto standard w ekosystemie Pythona, z gotowym katalogiem hooków dla wielu narzędzi</li>
+<li><a href="https://git-scm.com/docs/githooks">Git Hooks</a> — oficjalna dokumentacja gita: hook <strong>pre-commit</strong> i pozostałe punkty zaczepienia, na których bazują Husky, Lefthook i pre-commit</li>
+<li><a href="https://github.com/1Password/agent-hooks">1Password agent-hooks</a> — skrypt instalujący te same hooki do wielu narzędzi naraz, praktyczny dowód konwergencji architektury hooków</li>
+<li><a href="https://stevekinney.com/courses/self-testing-ai-agents/git-hooks-with-lefthook">Git Hooks with Lefthook</a> — Steve Kinney, praktyczny setup Lefthook w kontekście AI agent workflows</li>
+<li><a href="https://www.speakeasy.com/resources/ai-agent-hooks">AI agent hooks</a> — Speakeasy, analiza hooków jako interfejsu kontroli agentów AI</li>
+<li><a href="https://egghead.io/commit-hooks-are-critical-with-ai-agents-in-cursor~jhoer">Commit Hooks with AI Agents</a> — Egghead.io, dlaczego pre-commit hooki są kluczowe przy pracy z agentami</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/07">[2.4]</a> <em>Agent-Native IDE</em> — dyscyplina bezpieczeństwa (czysty repo, testy, review, diffy), którą hooki automatyzują</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/03">[1.3]</a> <em>Jak uczyć się i rozwijać z AI</em> — tryb korepetytora, tutaj zastosowany do hooka, który uczy agenta reagować na błędy</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/05">[2.2]</a> <em>Cursor — Podstawy operacyjne</em> i <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/06">[2.3]</a> <em>Claude Code — Podstawy operacyjne</em> — podstawy konfiguracji narzędzi, na których opiera się konfiguracja hooków</li>
+</ul>

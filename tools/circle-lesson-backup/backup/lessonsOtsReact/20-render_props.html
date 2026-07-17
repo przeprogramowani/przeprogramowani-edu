@@ -1,0 +1,77 @@
+<meta name="lesson-id" content="Render props"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/odif7kk4i01n7po45h7p4270xnsb" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 52.5822%;"><iframe src="https://player.vimeo.com/video/1035544965?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="189" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>W tej lekcji skupimy się na wykorzystaniu TypeScript wraz ze wzorcem Render Props. </p><p>Render Props to technika, która polega na przekazywaniu funkcji jako props do komponentu w celu dynamicznego renderowania zawartości. Zamiast komponentu samodzielnie decydować, co ma zostać wyrenderowane, przekazuje kontrolę nad renderowaniem do komponentu nadrzędnego.</p><h3>Zalety stosowania Render Props</h3><ul><li><p><strong>Reużywalność</strong>: Umożliwia tworzenie komponentów, które mogą być wykorzystywane w różnych kontekstach bez modyfikacji ich logiki wewnętrznej.</p></li><li><p><strong>Inwersja kontroli</strong>: Komponent nadrzędny kontroluje sposób renderowania zawartości, co zwiększa elastyczność.</p></li></ul><h3>Podstawowa implementacja Render Props </h3><p>Zacznijmy od stworzenia generycznego komponentu, który może renderować dowolne elementy za pomocą Render Props.</p><pre><code>// List.tsx
+import React from "react";
+
+type Props&lt;Item&gt; = {
+  items: Item[];
+  renderItem: (item: Item) =&gt; React.ReactNode;
+};
+
+export function List&lt;Item&gt;({ items, renderItem }: Props&lt;Item&gt;) {
+  return &lt;ul&gt;{items.map(renderItem)}&lt;/ul&gt;;
+}</code></pre><p><strong>Wyjaśnienie typowania:</strong></p><ul><li><p><em>Props&lt;Item&gt;</em>: Generyczny typ props, gdzie <em>Item</em> reprezentuje typ pojedynczego elementu listy.</p></li><li><p><em>items</em>: <em>Item[]</em>: Tablica elementów do wyrenderowania.</p></li><li><p><em>renderItem: (item: Item) =&gt; React.ReactNode</em>: Funkcja renderująca pojedynczy element.</p></li></ul><pre><code>// App.tsx
+import React from "react";
+import { List } from "./List";
+import { Pokemon } from "./api/pokemon";
+
+function App() {
+  const pokemons: Pokemon[] = getPokemons(); // Funkcja zwracająca tablicę Pokemonów
+
+  return (
+    &lt;List
+      items={pokemons}
+      renderItem={(pokemon) =&gt; (
+        &lt;li key={pokemon.name}&gt;
+          &lt;a href={pokemon.url} target="_blank" rel="noreferrer"&gt;
+            {pokemon.name}
+          &lt;/a&gt;
+        &lt;/li&gt;
+      )}
+    /&gt;
+  );
+}
+
+export default App;</code></pre><p>Zastosowanie Render Props w oparciu o generyki daje nam następujących korzyści:</p><ul><li><p><strong>Bezpieczeństwo typów</strong>: TypeScript zapewnia, że <em>renderItem</em> otrzymuje odpowiedni typ <em>Item</em>.</p></li><li><p><strong>Reużywalność</strong>: Komponent może być używany z dowolnym typem danych, np. Pokemon, Trainer, itp.</p></li></ul><h2>Wykorzystanie as prop dla większej elastyczności</h2><p>Aby zwiększyć elastyczność naszego komponentu &lt;List /&gt;, dodamy opcjonalny prop <em>as</em>, który pozwoli na zmianę typu HTML-owego elementu otaczającego listę.</p><pre><code>// List.tsx
+import React from "react";
+
+interface BaseListProps&lt;Item, As extends React.ElementType&gt; {
+  items: Item[];
+  renderItem: (item: Item) =&gt; React.ReactNode;
+  as?: As;
+}
+
+type ListProps&lt;Item, As extends React.ElementType&gt; = BaseListProps&lt;Item, As&gt; &amp;
+  Omit&lt;React.ComponentPropsWithoutRef&lt;As&gt;, keyof BaseListProps&lt;Item, As&gt;&gt;;
+
+export function List&lt;Item, As extends React.ElementType = "ul"&gt;({
+  items,
+  renderItem,
+  as,
+  ...rest
+}: ListProps&lt;Item, As&gt;) {
+  const Component = as || "ul";
+  return &lt;Component {...rest}&gt;{items.map(renderItem)}&lt;/Component&gt;;
+}</code></pre><p><strong>Wyjaśnienie typowania:</strong></p><ul><li><p>As extends React.ElementType: Typ generyczny As musi być typem elementu React (np. 'div', 'ul', React.Fragment).</p></li><li><p>as?: As: Opcjonalny prop określający typ HTML-owego elementu otaczającego.</p></li><li><p>Omit&lt;React.ComponentPropsWithoutRef&lt;As&gt;, keyof Props&lt;Item, As&gt;&gt;: Usuwa z propsów &lt;List /&gt; te, które są już zdefiniowane w Props, aby uniknąć konfliktów.</p></li></ul><pre><code>// App.tsx
+import React from "react";
+import { List } from "./List";
+import { Pokemon } from "./api/pokemon";
+
+function App() {
+  const pokemons: Pokemon[] = getPokemons();
+
+  return (
+    &lt;List
+      as="div"
+      items={pokemons}
+      renderItem={(pokemon) =&gt; (
+        &lt;div key={pokemon.name}&gt;
+          &lt;a href={pokemon.url} target="_blank" rel="noreferrer"&gt;
+            {pokemon.name}
+          &lt;/a&gt;
+        &lt;/div&gt;
+      )}
+      className="pokemon-list"
+    /&gt;
+  );
+}
+
+export default App;</code></pre><p><strong>Korzyści ze stosowania Render Props:</strong></p><ul><li><p><strong>Elastyczność</strong>: Możemy zmienić element otaczający bez modyfikacji komponentu &lt;List /&gt;.</p></li><li><p><strong>Kompatybilność</strong>: Props specyficzne dla danego elementu (np. className, id) są automatycznie dostępne dzięki użyciu Omit.</p></li></ul><h3>Najlepsze praktyki</h3><ol start="1"><li><p><strong>Korzystaj z generyków:</strong> Umożliwia tworzenie elastycznych i wielokrotnego użytku komponentów.</p></li><li><p><strong>Używaj Omit i Partial:</strong> Pomagają w zarządzaniu propsami, eliminując konflikty i umożliwiając opcjonalne propsy.</p></li><li><p><strong>Unikaj nadmiernej złożoności:</strong> Wzorzec Render Props oferuje duże możliwości, ale może skomplikować strukturę komponentów. Rozważ alternatywy, takie jak hooki, gdy jest to możliwe.</p></li><li><p><strong>Zachowaj spójność API:</strong> Jeśli używasz Render Props, trzymaj się jednego sposobu przekazywania funkcji renderującej (np. zawsze przez children lub przez dedykowany prop jak renderItem).</p></li></ol><h3>Podsumowanie</h3><p>W tej lekcji omówiliśmy, jak stosować wzorzec Render Props z użyciu TypeScript. Zrozumieliśmy, jak tworzyć generyczne komponenty umożliwiające reużywanie logiki, jak precyzyjnie typować propsy oraz jak zwiększyć elastyczność komponentów poprzez dodanie propsów takich jak as. </p><h2>Ćwiczenia praktyczne</h2><ol start="1"><li><p><strong>611-grid-system</strong> - Wykorzystaj wzorzec <em>render props</em> aby wyświetlać dane o planetach z uniwersum Gwiezdnych Wojen na dwa różne sposoby. W projekcie znajdują się karty <em>SimpleCard.tsx </em>oraz <em>DetailedCard.tsx</em>, z których powinieneś móc skorzystać. Niestety, przy obecnej strukturze ich wykorzystywanie nie jest możliwe. Unikaj modyfikowania głównej struktury - <em>App.tsx.</em></p></li></ol></div></body></html>

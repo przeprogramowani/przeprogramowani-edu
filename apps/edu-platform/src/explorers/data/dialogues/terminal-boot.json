@@ -1,0 +1,15 @@
+{
+  "id": "terminal-boot",
+  "lines": [
+    "> Kod zaakceptowany.",
+    "> Inicjalizacja...",
+    "> ████████████████████ 100%",
+    "> UPLINK v2.1 — Kosmiczne Łącze Kwantowe",
+    "> Skanowanie sygnału... Połączenie z Ziemią NIESTABILNE",
+    "> Status CORE AI: NIEZNANY",
+    "> Identyfikacja operatora: Dexo",
+    ">",
+    "> Witaj na pokładzie, Dexo!",
+    "> Wpisz /me, aby odświeżyć dane witalne."
+  ]
+}

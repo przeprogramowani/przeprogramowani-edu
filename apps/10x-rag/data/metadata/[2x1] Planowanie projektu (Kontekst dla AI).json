@@ -1,0 +1,6 @@
+{
+  "lessonId": "[2x1] Planowanie projektu (Kontekst dla AI)",
+  "displayName": "[2x1] Planowanie projektu (Kontekst dla AI)",
+  "summary": "1) Jaki powinien być pierwszy krok przed generowaniem kodu z AI i dlaczego warto najpierw zaplanować projekt?  \n2) Jak rozłożyć proces planowania nowego produktu według workflow 10xDeva (wybór projektu, definicja MVP, wybór stacku)?  \n3) Jak precyzyjnie zdefiniować MVP i czym różni się ono od Proof of Concept (POC)?  \n4) Kiedy tworzyć POC zamiast od razu budować MVP i jakie cele realizuje POC?  \n5) Jak przygotować dokumentację projektową (PRD), która posłuży jako kontekst dla AI w dalszej pracy?  \n6) Jak sprawdzić i zweryfikować rekomendowany stack technologiczny do pracy nad MVP?  \n7) Jak precyzyjne definiowanie zakresu MVP redukuje halucynacje i poprawia wykorzystanie ograniczonego kontekstu modeli LLM?  \n8) Jak planowanie projektu pomaga zapobiegać scope creep i ogranicza liczbę czasochłonnych przeróbek?  \n9) W jaki sposób programista może wpływać na projekt na poziomie modułów i funkcji, nawet mając ograniczony wpływ na wybór projektów?",
+  "tokenEstimate": 166
+}

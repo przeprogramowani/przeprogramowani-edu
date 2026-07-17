@@ -1,0 +1,205 @@
+<meta name="lesson-id" content="Wprowadzenie do systemu typów"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 52.5822%;"><iframe src="https://player.vimeo.com/video/1035131797?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="189" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2>Wprowadzenie</h2><p>W nazwie “TypeScript” kryje się odpowiedź na pytanie o to, co stanowi o sile tego języka. System typów to w powszechnej świadomości główna korzyść wynikająca ze stosowania TypeScripta. Dzięki typom kod staje się bardziej przewidywalny, co zmniejsza ryzyko błędów wynikających z nieoczekiwanych wartości.</p><p>Jednak typy w TypeScript to coś więcej niż tylko dodanie “naklejek” do zmiennych, które informują, jakiego rodzaju danych się spodziewać. To rozbudowany system pozwalający modelować relacje między różnymi rodzajami danych w taki sposób, by wyraźnie i dokładnie określać, jakie operacje są możliwe i sensowne w danym kontekście.</p><p>W kolejnych lekcjach poznasz możliwości systemu typów. Zaczniemy od krótkiego omówienia tego co i w jaki sposób możemy typować, a następnie przejdziemy do bardziej zaawansowanych aspektów tego mechanizmu. Zaczynajmy!</p><h2>Typowy problem JavaScriptu</h2><p>Każdy, kto rozwijał duży projekt oparty o język JavaScript, prędzej czy później natknął się na problem wynikający ze stosowania niewłaściwego typu.</p><p>Konflikt typów mógł się&nbsp;pojawić nie tylko na styku integracji frontendu z backendem, ale również przy zbyt złożonej funkcji, którą zaczęto rozbudowywać o nowe przypadki brzegowe, albo w sytuacji, kiedy istniejący moduł zaczęto wykorzystywać w nieprzewidziany sposób. Żeby zaprezentować to na przykładzie, wystarczy nam jednak coś zdecydowanie prostszego:</p><pre><code>// tax.js
+function calculateTax(amount, taxRate) {
+  return amount * taxRate;
+}</code></pre><p>Ta prosta funkcja przyjmuje dwa argumenty - podstawę obliczania podatku oraz jego wartość (zazwyczaj wyrażanego w procentach). Nic nie stoi na przeszkodzie, żeby skorzystać z niej w następujący sposób:</p><pre><code>// calculator.js
+const result = calculateTax(100, "5%");
+
+console.log(result); // NaN</code></pre><p>Domyślnie, w środowisku JavaScript, które nie wykonuje dla nas dodatkowych operacji sprawdzania typów, taki problem odkryjemy dopiero w momencie uruchomienia aplikacji (w tzw. runtime). Co prawda dzisiaj istnieją narzędzia, przez które można takie problemy wykrywać&nbsp;wcześniej (np. deklaracje typów w js-doc), ale wciąż nie chroni nas to przed uruchomieniem niepoprawnego kodu:</p><pre><code>/**
+ * Calculates the tax amount based on the given amount and tax rate
+ * @param {number} amount - The base amount to calculate tax on
+ * @param {number} taxRate - The tax rate as a decimal (e.g. 0.05 for 5%)
+ * @returns {number} The calculated tax amount
+ */
+function calculateTax(amount, taxRate) {
+  return amount * taxRate;
+}
+
+const result = calculateTax(100, "5%");
+
+console.log(result); // NaN</code></pre><p>Z perspektywy programistów wykorzystujących języki takie jak C++, C#, Java, te problemy mogą się wydawać trywialne i wykrywalne jeszcze na poziomie kompilacji, ale w świecie JavaScriptu przez długi czas było to główne źródło problemów w projektach dużej skali.</p><p>Sytuację raz a dobrze postanowił rozwiązać TypeScript wprowadzając statyczny system typów.</p><h2>Pierwsze kroki z typami</h2><h3>Typy proste</h3><p>Trzy fundamentalne typy, które możesz wykorzystać w swoich projektach TypeScript, odpowiadają typom dostępnym w języku JavaScript:</p><ul><li><p>boolean - akceptuje dwie wartości, tj. true / false</p></li><li><p>string - akceptuje łańcuchy znaków, np. “dom”, “las”, “komputer”</p></li><li><p>number - akceptuje liczby, zarówno całkowite jak i zmiennoprzecinkowe, np. 10, 4.2, 0.002</p></li></ul><p>Oznaczenia typów możesz dodawać za nazwą zmiennej:</p><pre><code>let isComplete: boolean = true;  // Zmienna typu boolean
+let message: string = "Hello, TypeScript!";  // Zmienna typu string
+let count: number = 42;  // Zmienna typu number</code></pre><p>Typów prostych możesz również używać przy definiowaniu funkcji - zarówno do typowania argumentów i wartości zwracanej…</p><pre><code>// Funkcja greet przyjmuje argument typu string i zwraca wynik typu string
+function greet(name: string): string {
+  return "Hello, " + name + "!";
+}
+
+// Funkcja calculateSquare przyjmuje argument typu number i zwraca wynik typu number
+function calculateSquare(num: number): number {
+  return num * num;
+}
+
+// Funkcja strzałkowa przyjmuje argument typu number i zwraca wynik typu boolean
+const isEven = (num: number): boolean =&gt; num % 2 === 0;</code></pre><p>…a także przy tworzeniu tablic określonego typu:</p><pre><code>let scores: number[] = [10, 20, 30];  // Tablica liczb
+let answers: boolean[] = [true, false, true];  // Tablica wartości boolean
+let names: string[] = ["Alice", "Bob", "Charlie"];  // Tablica łańcuchów znaków
+
+names.push(10);
+     // ^ - Argument of type 'number' is not assignable to parameter of type 'string'.ts(2345)</code></pre><p>Ostatni fragment powyższego przykładu wygeneruje błąd - tablica names zawiera elementy typu "string", więc w cyklu życia tej zmiennej nie możemy do niej dodawać&nbsp;wartości innego typu.</p><h3>Mniej popularne typy proste</h3><p>W TypeScript możesz korzystać z dwóch innych typów prostych, które zostały wprowadzone w nowszych wersjach standardu ECMAScript - są&nbsp;to <em>bigint</em> i <em>symbol</em>:</p><pre><code>const largeNumber: bigint = BigInt(12345678901234567890);
+const symbol: symbol = Symbol("symbol");</code></pre><p><strong>BigInt</strong> to typ reprezentujący liczby całkowite o dowolnej wielkości. W przeciwieństwie do number, który ma ograniczony zakres (maksymalna wartość to 253−12^{53} - 1253−1), BigInt pozwala na operacje na dużo większych liczbach. Jest to przydatne w sytuacjach, gdzie wymagana jest bardzo wysoka precyzja, np. w kryptografii, obliczeniach naukowych czy przy pracy z dużymi zbiorami danych numerycznych.</p><p><strong>Symbol</strong> to unikalny i niemutowalny typ, który służy do tworzenia <strong>unikalnych identyfikatorów</strong>. Nawet jeśli dwa symbole mają tę samą nazwę, nadal będą unikalne i różne od siebie. Symbol jest często używany do definiowania unikalnych kluczy w obiektach, które mają być ukryte lub nie kolidować z innymi kluczami. To sprawia, że jest przydatny w implementacjach wymagających enkapsulacji, takich jak implementacja prywatnych właściwości w obiektach lub w ustandaryzowanych algorytmach.</p><p>W praktyce oba typy są stosowane w dość specyficznych przypadkach, więc dla zainteresowanych linkujemy konkretne fragmenty standardu ECMAScript opisujące ich cechy:</p><ul><li><p><a href="https://tc39.es/proposal-bigint/" target="_blank" rel="noopener noreferrer">ECMAScript - BigInt</a></p></li><li><p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol" target="_blank" rel="noopener noreferrer">ECMAScript - Symbol</a></p></li></ul><h3>Inferencja typów</h3><p>TypeScript posiada tzw. mechanizm <em>type</em> <em>inference</em> (wnioskowanie o typie), który pozwala mu automatycznie określać typ zmiennej na podstawie przypisanej do niej wartości. Dzięki temu nie musimy zawsze jawnie deklarować typu zmiennej – TypeScript sam go rozpozna na podstawie pierwszej przypisanej wartości.</p><pre><code>let age = 25;  // TypeScript wnioskuje, że `age` jest typu `number`
+let name = "Alice";  // TypeScript wnioskuje, że `name` jest typu `string`
+let isActive = true;  // TypeScript wnioskuje, że `isActive` jest typu `boolean`</code></pre><p>Podobny mechanizm działa w przypadku tablic i obiektów, które pozornie nie mają żadnego typu, ale w rzeczywistości jest on określany natychmiast po utworzeniu zmiennej:</p><pre><code>let scores = [10, 20, 30];  // TypeScript wnioskuje typ `number[]`
+let user = { name: "Alice", age: 30 };  // TypeScript wnioskuje typ `{ name: string; age: number }</code></pre><p>Wielu programistów nie jest świadomych działania tego mechanizmu, do momentu kiedy nie odkryją oni niepoprawnego posługiwania się wcześniej zadeklarowaną zmienną:</p><pre><code>let age = 25;
+age = "trzydzieści";
+// ^ - Type 'string' is not assignable to type 'number'.ts(2322)</code></pre><p>W porównaniu do JavaScriptu, gdzie typ i wartość zmiennej <em>age</em> może się zmieniać na przestrzeni działania programu, TypeScript jest bardziej restrykcyjny, ale w zamian za to daje nam więcej bezpieczeństwa i przewidywalności naszego kodu.</p><p>👉 Dla ciekawskich: Mechanizm inferencji generuje pewien narzut na wydajność kompilatora TypeScript. Jeśli zauważysz problemy z wydajnością kompilowania kodu, dodaj w formie eksperymentu jawne oznaczenia typów. Szybkość kompilacji powinna się zwiększyć. <a href="https://github.com/microsoft/Typescript/wiki/Performance#preferring-interfaces-over-intersections" target="_blank" rel="noopener noreferrer">(więcej)</a></p><p>Co ważne, inferencja, jak każdy autopilot, nie jest bez wad - zaawansowane scenariusze tego elementu TypeScriptu poznamy w kolejnych lekcjach. Wtedy też nauczymy się również kontrolować sytuacje, w których musimy mu zapewnić dodatkową&nbsp;asystę.</p><h3>Typowanie obiektów</h3><p>Dobrą praktyką typowania naszego kodu jest budowanie takich struktur, które odpowiadają złożoności świata rzeczywistego. W praktyce, logika biznesowa rzadko opiera się na typach prostych. W naszych aplikacjach przetwarzamy zamówienia, profile użytkowników, produkty czy notatki, a to wszystko zestaw ściśle powiązanych ze sobą informacji, które nie powinny istnieć bez kontekstu (np. “wiek” - ale czego, użytkownika czy samochodu?).</p><p>TypeScript pozwoli nam budować tego typu struktury z wykorzystaniem typów obiektów. Możemy rozpocząć od jawnej definicji typu obiektu, która zastąpi etykiety typów prostych:</p><pre><code>let details: { name: string; age: number } = { name: "John", age: 30 };
+
+details.age = 31;
+details.age = "thirty one";
+             // ^ - Type 'string' is not assignable to type 'number'.ts(2322)</code></pre><p>Podobną definicję&nbsp;typu możemy wykorzystać w parametrach funkcji - zarówno klasycznych i strzałkowych:</p><pre><code>function greet(details: {name: string; age: number}) {
+  console.log(`Hello, ${details.name}!`);
+}
+
+greet({name: "John", age: 30});
+greet({name: "John", age: "thirty"});
+                     // ^ - Type 'string' is not assignable to type 'number'.ts(2322)
+
+const isAdult = (person: {name: string; age : number}) =&gt; person.age &gt;= 18;
+
+isAdult({name: "John", age: 30}); // true</code></pre><p>Utworzona w ten sposób definicja sprawia, że w danej zmiennej, parametrze lub wartości zwracanej muszą się znaleźć wszystkie wymienione pola. Jeśli tego nie zagwarantujemy, otrzymamy błąd:</p><pre><code>greet({name: "John"});
+           // ^ - Argument of type '{ name: string; }' is not assignable to parameter of type '{ name: string; age: number; }'.</code></pre><p>Czasami chcemy jednak uczynić nasz obiekt bardziej elastycznym - aby wybrane pole oznaczyć jako opcjonalne, wykorzystaj symbol “?” dodawany do jego nazwy (tutaj: <em>age</em>):</p><pre><code>function greet(details: {name: string; age?: number}) {
+  let greeting = `Hello, ${details.name}!`;
+  if (details.age) {
+    greeting += ` You are ${details.age} years old.`;
+  }
+  console.log(greeting);
+}
+
+greet({name: "John", age: 30}); // Hello, John! You are 30 years old.
+greet({name: "Betty"}); // Hello, Betty!</code></pre><p>Od teraz do funkcji <em>greet </em>możemy przekazywać obiekty z dwoma lub jednym polem.</p><p><strong>Obiekty bez określonego kształtu</strong></p><p>A co z obiektami, w przypadku których nie interesuje nas konkretne nazewnictwo pól, a jedynie rodzaj zmiennej? Popularny błąd początkujących adeptów TypeScriptu polega na tym, że zamiar “posługiwania się obiektem” wyrażają poprzez puste nawiasy klamrowe. Szybko okazuje się jednak, że to zła decyzja:</p><pre><code>// Zamiar - someObj to będzie "jakiś obiekt", więc wykorzystam puste nawiasy:
+let someObj: {} = {};
+
+// Zgodnie z oczekiwaniami, mogę do niego przypisać inne obiekty:
+someObj = { name: 'John' };
+
+// Ale uwaga - to również poprawne przypisania:
+someObj = true;
+someObj = "hello";
+someObj = [];
+someObj = 0.12;
+
+console.log(someObj); // 0.12 (!)</code></pre><p>Dlaczego tak się dzieje? W tej lekcji przedstawiamy to jako zagadkę dla ambitnych i zwracamy uwagę na potencjalny błąd w typowaniu obiektów - wyjaśnienie tego mechanizmu znajdziesz w kolejnej lekcji.</p><h3>Aliasy typów</h3><p>W praktyce, przedstawiony format typowania obiektów szybko staje się niewygodny. Na szczęście możemy wprowadzić dedykowany alias na typ ze słowem kluczowym <em>type</em>, który z naszego typu stworzy niezależny byt:</p><pre><code>type Details = {
+  name: string;
+  age?: number
+};
+
+function greet(details: Details) {
+  let greeting = `Hello, ${details.name}!`;
+  if (details.age) {
+    greeting += ` You are ${details.age} years old.`;
+  }
+  console.log(greeting);
+}</code></pre><p>Taka praktyka znacznie upraszcza zarządzanie typami, poprawia ich czytelność oraz ułatwia modyfikacje. Definiując aliasy typów, tworzymy swego rodzaju „szablon wymagań względem obiektu”, który możemy ponownie użyć, nadając spójność i elastyczność danej funkcji czy modułowi.</p><p>Aliasy swoją nazwę zawdzięczają możliwości przykrywania istniejących typów dowolnego kształtu - nie tylko obiektów, ale również typów prostych, ułatwiając doprecyzowanie ich przeznaczenia:</p><pre><code>type Age = number;
+const age: Age = 30;</code></pre><p>Do tematu aliasów będziemy wielokrotnie wracać w dalszej części szkolenia gdzie przestawimy najbardziej użyteczne przykłady wykorzystania tego mechanizmu.</p><h3>Interfejsy</h3><p>Oprócz aliasów typów, TypeScript oferuje inny sposób definiowania struktur danych – interfejsy. </p><p>Interfejsy (<em>interfaces</em>) pozwalają na zdefiniowanie kształtu obiektu i są jednym z powszechnie wykorzystywanych elementów TypeScriptu, stosowanym do tworzenia bardziej opisowych oraz łatwiejszych w rozszerzaniu typów.</p><p><strong>Definiowanie interfejsów</strong></p><p>Interfejsy definiujemy przy użyciu słowa kluczowego interface. Podobnie jak w przypadku aliasów typów, możemy w nich określić nazwy pól i ich typy:</p><pre><code>interface Details {
+  name: string;
+  age?: number;
+}
+
+function greet(details: Details) {
+  let greeting = `Hello, ${details.name}!`;
+  if (details.age) {
+    greeting += ` You are ${details.age} years old.`;
+  }
+  console.log(greeting);
+}
+
+greet({ name: "John", age: 30 }); // Hello, John! You are 30 years old.
+greet({ name: "Betty" }); // Hello, Betty!</code></pre><p>Tak jak przy aliasach typów, możemy użyć interfejsu <em>Details</em> jako parametru funkcji <em>greet</em>. Każdy obiekt przekazany do <em>greet</em> musi spełniać wymagania interfejsu, czyli posiadać pole <em>name</em> typu string, a opcjonalnie również pole <em>age</em> typu number.</p><p>Tutaj pojawia się pytanie - skoro interfejs działa w tym przypadku podobnie do aliasu typu, to czy oba te elementy można stosować naprzemiennie? Na korzyść interfejsów przemawia jedna kwestia…</p><p><strong>Rozszerzanie interfejsów</strong></p><p>Jedną z największych zalet interfejsów jest możliwość rozszerzania ich w locie. Załóżmy, że w naszej aplikacji znajdują się następujące elementy:</p><ul><li><p>base-tool.ts - bazowy moduł do zarządzania “narzędziami”</p></li><li><p>users-plugin.ts - dodatkowy plugin rozszerzający możliwość narzędzi o kontekst użytkownika</p></li><li><p>index.ts - punkt startowy naszej aplikacji</p></li></ul><p>Nasz moduł bazowy wprowadza interfejs <em>Tool </em>z jednym polem - <em>isActive</em>.</p><pre><code>// base-tool.ts
+interface Tool {
+  isActive: boolean;
+}</code></pre><p>Architektura systemu zakłada, że możliwości narzędzi będą rozszerzane przez dynamicznie ładowane pluginy. Każdy z pluginów może rozszerzyć&nbsp;bazowy interfejs <em>Tool </em>dodając do niego nowe pola - na przykład sprawiać, że użycie narzędzia będzie zależne od uprawnień użytkownika:</p><pre><code>// users-plugin.ts
+interface User {
+  id: number;
+}
+
+interface Tool {
+  canUse: (user: User) =&gt; boolean;
+}</code></pre><p>Dzięki temu, w docelowej aplikacji interfejs <em>Tool </em>będzie posiadał rozszerzenia z wielu pluginów, a wciąż będzie to ten sam typ, którym możemy posługiwać się w wielu miejscach: </p><pre><code>// index.ts
+const tool: Tool = {
+  isActive: true,
+  canUse: (user: User) =&gt; user.id &gt; 0,
+};</code></pre><p>Jest to popularny mechanizm wykorzystywany w bibliotekach, które opierają się na architekturze pluginów (np. jQuery). Chociaż początkowo pracujemy z dość ograniczonym obiektem, kolejne wtyczki dynamicznie rozszerzają jego możliwości, nie łamiąc przy tym istniejących fragmentów kodu.</p><p>👉 Zapamiętaj: Tego typu dynamiczne rozszerzanie interfejsów jest tym, czego obecnie nie osiągniesz stosując aliasy typów.</p><h3>Klasy</h3><p>Podobnie jak w przypadku nowoczesnego JavaScriptu, TypeScript wspiera pracę z klasami. Klasy “enkapsulują” (zamykają) w sobie zarówno pola i metody, opisując bardziej złożone byty w systemie.</p><pre><code>class Robot { 
+
+    private _tier;
+
+    constructor(tier: number) {
+        this._tier = tier;
+    }
+
+    greet() {
+        console.log(`Hello world, I'm a tier-${this._tier} robot!`)
+    }
+}
+
+const r = new Robot(5);
+r.greet(); // "Hello world, I'm a tier-5 robot!"</code></pre><p>Jeśli korzystamy z konstruktorów, widoczność pól poza klasą (private / public + ew. readonly) możemy określać już na poziomie definiowania parametru - dzięki temu unikniemy nadmiarowych właściwości:</p><pre><code>class Robot { 
+    constructor(private readonly tier: number) { }
+
+    greet() {
+        console.log(`Hello world, I'm a tier-${this.tier} robot!`)
+    }
+}</code></pre><p>W kontekście klas, przedstawione wcześniej interfejsy połączone ze słowem kluczowym <em>implements</em> określają wymagania względem zawartości danej klasy (co ciekawe, i bez tego klasa jest możliwa do wywołania w funkcji callGreet - wyjaśnimy to w kolejnej lekcji):</p><pre><code>interface Greeter {
+    greet(): void;
+}
+
+const c1: Greeter = {
+    greet() {
+        console.log('Hello world!')
+    }
+}
+
+class Robot implements Greeter { 
+    constructor(private readonly tier: number) { }
+
+    greet() {
+        console.log(`Hello world, I'm a tier-${this.tier} robot!`)
+    }
+}
+
+function callGreet(g: Greeter) {
+    g.greet();
+}
+
+callGreet(c1); // 'Hello world!'
+callGreet(new Robot(5)); // `Hello world, I'm a tier-5 robot!`</code></pre><p>Warto wiedzieć, że od wersji TypeScriptu 3.9, klasy wspierają również tzw. pola “mocno prywatne”, czyli takie, których nawet po kompilacji “w świecie JavaScriptu” nie można modyfikować poza właściwą klasą (co nie dotyczy parametrów definiowanych w konstruktorze). </p><p>Są one tożsame z wprowadzonymi w ES2022 “private class fields”:</p><pre><code>class Robot { 
+
+    #truePrivate: number;
+
+    constructor(private almostPrivate: number) {
+        this.#truePrivate = 10
+    }
+}
+
+const r = new Robot();
+r.almostPrivate = 20; // Błąd w TS, akceptowalne w JS
+r.#..?  // Ukryte w TS i JS</code></pre><h3>Enumy</h3><p>Enumy są specjalnym typem danych, który pozwala na definiowanie zbioru nazwanych wartości.</p><p>W przeciwieństwie do JavaScriptu, który nie posiada natywnego wsparcia dla enumów, TypeScript dostarcza wbudowaną składnię, która upraszcza zarządzanie grupami stałych.</p><p>Przykład enuma w TypeScript:</p><pre><code>enum UserRole {
+  Admin,
+  User,
+  Guest,
+}</code></pre><p>Domyślnie, enum <strong>UserRole</strong> automatycznie przypisuje do swoich wartości liczby całkowite, tj. Admin = 0, User = 1, Guest = 2. W zależności od preferencji, do konkretnych wartości można przypisać również wartości tekstowe:</p><pre><code>enum UserRole {
+  Admin = 'ADMIN',
+  User = 'USER',
+  Guest = 'GUEST',
+}</code></pre><p>Jedną z największych korzyści stosowania enumów jest zwiększona czytelność&nbsp;kodu przy jednoczesnym zachowaniu bezpieczeństwa - posługujemy się wartościami z określonego zbioru, a jeśli użyjemy wartości nieznanej, to kompilator takiej operacji zabroni (częste sytuacje z literówkami):</p><pre><code>// Gorzej:
+if (user.role === 'Admin') { ... }
+
+// Lepiej (z podpowiadaniem dostępnych opcji na enumie UserRole):
+if (user.role === UserRole.Admin) { ... }
+</code></pre><p>W przypadku enumów interesujące jest również to, co powstaje po kompilacji takiej konstrukcji.</p><p>Na przykładzie enuma <em>Status</em>:</p><pre><code>// status.ts
+enum Status {
+  Active = 1,
+  Inactive = 2,
+}</code></pre><p>Kiedy podejrzymy efekt kompilacji takiego enuma, zobaczymy “dwukierunkową mapę”. Enumy są konwertowane do JavaScriptu w taki sposób, aby umożliwiały odczytanie wartości zarówno po kluczu, jak i odwrotnie (po wartości). To znaczy, że można odwoływać się zarówno do nazwy, aby uzyskać wartość, jak i do wartości, aby uzyskać nazwę:</p><pre><code>// status.js
+var Status;
+(function (Status) {
+    Status[Status["Active"] = 1] = "Active";
+    Status[Status["Inactive"] = 2] = "Inactive";
+})(Status || (Status = {}));</code></pre><p>Można to łatwo przetestować:</p><pre><code>console.log(Status['Active']); // 1
+console.log(Status[1]); // "Active"</code></pre><p>W zależności od konkretnego scenariusza, jest to oczekiwane lub… niebezpieczne. Jeśli chcemy uniknąć odwoływania się do enuma na dwa sposoby, możemy dodać do niego słowo kluczowe <em>const</em>:</p><pre><code>const enum Status {
+  Active = 1,
+  Inactive = 2,
+}
+
+console.log(Status['Active']);
+console.log(Status.Active);</code></pre><p>Po kompilacji takiego rodzaju enuma, TypeScript podmieni wszystkie użycia na konkretną wartość:</p><pre><code>"use strict";
+
+console.log(1 /* Status['Active'] */);
+console.log(1 /* Status.Active */);</code></pre><p>Jego używanie stanie się wtedy bardziej restrykcyjne, a indeksowanie zabronione:</p><pre><code>console.log(Status[1]); // ❌ Błąd - w "const enumach" nie można używać indeksów liczbowych</code></pre><p>Enumy to przydatna konstrukcja, która najlepiej sprawdza się tam, gdzie potrzebujesz jasno zdefiniowanego zbioru wartości i ich nazw, a czytelność kodu jest priorytetem.</p><h2>Podsumowanie</h2><p>W tej lekcji poznałeś podstawowe aspekty pracy z typami w języku TypeScript. Wciąż jednak ograniczają się one do dodawania “naklejek z typami” do poszczególnych zmiennych, co w przypadku bardziej złożonych aplikacji może nie wystarczyć. </p><p>W kolejnej lekcji przedstawimy ci bardziej zaawansowane aspekty typowania, w tym inne spojrzenie na to, czym system typów tak właściwie jest.</p><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>211-typed-training - </strong>Zapoznaj się z systemem typów TypeScript i wprowadź jawne typowanie do modułu zarządzania użytkownikiem, którego kompilacja jest aktualnie zablokowana.</p></li><li><p><strong>212-enum-roles </strong>- Wykorzystaj enumy do otypowania roli i uprawnień użytkownika. System obsługuje następujące role: “ADMIN”, “EDITOR” i “VIEWER” oraz następujące uprawnienia: “VIEW”, “READ”, “WRITE” oraz “DELETE”.</p></li></ol><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

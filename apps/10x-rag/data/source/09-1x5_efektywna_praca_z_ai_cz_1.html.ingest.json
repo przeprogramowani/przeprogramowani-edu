@@ -1,0 +1,576 @@
+{
+  "lessonId": "[1x5] Efektywna praca z AI - część 1",
+  "file": "09-1x5_efektywna_praca_z_ai_cz_1.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 4,
+      "order": 1
+    },
+    {
+      "slug": "1-jezyk-konwersacji",
+      "title": "1. Język konwersacji",
+      "blocks": 4,
+      "order": 2
+    },
+    {
+      "slug": "tokenizacja-a-koszt-ukryty-podatek-za-jezyk-polski",
+      "title": "Tokenizacja a koszt: ukryty “podatek” za język polski",
+      "blocks": 7,
+      "order": 3
+    },
+    {
+      "slug": "koszty-i-wydajnosc-jezykowy-podatek-za-polski",
+      "title": "Koszty i wydajność – “językowy podatek” za polski",
+      "blocks": 4,
+      "order": 4
+    },
+    {
+      "slug": "zmiany-w-pricingach---koniec-miesiaca-miodowego",
+      "title": "Zmiany w pricingach - koniec miesiąca miodowego",
+      "blocks": 5,
+      "order": 5
+    },
+    {
+      "slug": "rekomendacje-vs-092025",
+      "title": "Rekomendacje 🇵🇱 vs 🇬🇧 (09/2025)",
+      "blocks": 2,
+      "order": 6
+    },
+    {
+      "slug": "2-anatomia-prompta-czyli-prompt-engineering-w-piguce",
+      "title": "2. Anatomia prompta czyli prompt engineering w pigułce",
+      "blocks": 2,
+      "order": 7
+    },
+    {
+      "slug": "piec-fundamentalnych-elementow-prompta",
+      "title": "Pięć fundamentalnych elementów prompta",
+      "blocks": 31,
+      "order": 8
+    },
+    {
+      "slug": "najlepsze-praktyki",
+      "title": "Najlepsze praktyki",
+      "blocks": 5,
+      "order": 9
+    },
+    {
+      "slug": "najczestsze-bedy",
+      "title": "Najczęstsze błędy",
+      "blocks": 2,
+      "order": 10
+    },
+    {
+      "slug": "3-meta-prompting",
+      "title": "3. Meta-Prompting",
+      "blocks": 18,
+      "order": 11
+    },
+    {
+      "slug": "4-metoda-sokratejska",
+      "title": "4. Metoda Sokratejska",
+      "blocks": 18,
+      "order": 12
+    },
+    {
+      "slug": "5-pozyskiwanie-nowej-wiedzy",
+      "title": "5. Pozyskiwanie nowej wiedzy",
+      "blocks": 3,
+      "order": 13
+    },
+    {
+      "slug": "odblokuj-sie-w-nauce-z-ai",
+      "title": "Odblokuj się w nauce z AI",
+      "blocks": 3,
+      "order": 14
+    },
+    {
+      "slug": "uniwersalny-szablon-promptu",
+      "title": "Uniwersalny szablon promptu",
+      "blocks": 4,
+      "order": 15
+    },
+    {
+      "slug": "anatomia-skutecznego-promptu",
+      "title": "Anatomia skutecznego promptu",
+      "blocks": 32,
+      "order": 16
+    },
+    {
+      "slug": "pogebianie-zdobytej-wiedzy",
+      "title": "Pogłębianie zdobytej wiedzy",
+      "blocks": 3,
+      "order": 17
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "🧑🏻💻 Ćwiczenia praktyczne",
+      "blocks": 14,
+      "order": 18
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 8,
+      "order": 19
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:b23116ef:43cc23fa",
+      "tokenEstimate": 88,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:43cc23fa:0-1",
+      "tokenEstimate": 88,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:b23116ef:24701484",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:24701484:0-3",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:b23116ef:ceb36965",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:ceb36965:0-3",
+      "tokenEstimate": 332,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:b23116ef:47375667",
+      "tokenEstimate": 202,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:47375667:0-6",
+      "tokenEstimate": 407,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:b23116ef:99ca53fb",
+      "tokenEstimate": 211,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:99ca53fb:0-3",
+      "tokenEstimate": 372,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:b23116ef:0eb1c19f",
+      "tokenEstimate": 202,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:0eb1c19f:0-4",
+      "tokenEstimate": 361,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:b23116ef:e5bda178",
+      "tokenEstimate": 84,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:e5bda178:0-1",
+      "tokenEstimate": 402,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:b23116ef:759d3c34",
+      "tokenEstimate": 211,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:759d3c34:0-1",
+      "tokenEstimate": 211,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:b23116ef:dca1d687",
+      "tokenEstimate": 208,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:dca1d687:0-11",
+      "tokenEstimate": 420,
+      "span": [
+        0,
+        11
+      ]
+    },
+    {
+      "id": "chk:b23116ef:dca1d687:11-12",
+      "tokenEstimate": 433,
+      "span": [
+        11,
+        12
+      ]
+    },
+    {
+      "id": "chk:b23116ef:dca1d687:12-13",
+      "tokenEstimate": 382,
+      "span": [
+        12,
+        13
+      ]
+    },
+    {
+      "id": "chk:b23116ef:dca1d687:12-14",
+      "tokenEstimate": 421,
+      "span": [
+        12,
+        14
+      ]
+    },
+    {
+      "id": "chk:b23116ef:dca1d687:14-21",
+      "tokenEstimate": 391,
+      "span": [
+        14,
+        21
+      ]
+    },
+    {
+      "id": "chk:b23116ef:dca1d687:20-28",
+      "tokenEstimate": 415,
+      "span": [
+        20,
+        28
+      ]
+    },
+    {
+      "id": "chk:b23116ef:dca1d687:28-30",
+      "tokenEstimate": 240,
+      "span": [
+        28,
+        30
+      ]
+    },
+    {
+      "id": "sec:b23116ef:7ec566dd",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:7ec566dd:0-4",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:b23116ef:2e76aaf7",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:2e76aaf7:0-1",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:b23116ef:05f52609",
+      "tokenEstimate": 209,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:05f52609:0-8",
+      "tokenEstimate": 384,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "chk:b23116ef:05f52609:8-13",
+      "tokenEstimate": 358,
+      "span": [
+        8,
+        13
+      ]
+    },
+    {
+      "id": "chk:b23116ef:05f52609:9-14",
+      "tokenEstimate": 616,
+      "span": [
+        9,
+        14
+      ]
+    },
+    {
+      "id": "chk:b23116ef:05f52609:14-15",
+      "tokenEstimate": 398,
+      "span": [
+        14,
+        15
+      ]
+    },
+    {
+      "id": "chk:b23116ef:05f52609:14-16",
+      "tokenEstimate": 431,
+      "span": [
+        14,
+        16
+      ]
+    },
+    {
+      "id": "chk:b23116ef:05f52609:15-17",
+      "tokenEstimate": 130,
+      "span": [
+        15,
+        17
+      ]
+    },
+    {
+      "id": "sec:b23116ef:b82f0a55",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:b82f0a55:0-10",
+      "tokenEstimate": 371,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "chk:b23116ef:b82f0a55:9-15",
+      "tokenEstimate": 367,
+      "span": [
+        9,
+        15
+      ]
+    },
+    {
+      "id": "chk:b23116ef:b82f0a55:14-17",
+      "tokenEstimate": 322,
+      "span": [
+        14,
+        17
+      ]
+    },
+    {
+      "id": "sec:b23116ef:83f26823",
+      "tokenEstimate": 192,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:83f26823:0-2",
+      "tokenEstimate": 234,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:b23116ef:99d346e7",
+      "tokenEstimate": 164,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:99d346e7:0-2",
+      "tokenEstimate": 164,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:b23116ef:eed0096b",
+      "tokenEstimate": 220,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:eed0096b:0-3",
+      "tokenEstimate": 330,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:b23116ef:42139782",
+      "tokenEstimate": 222,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:42139782:0-15",
+      "tokenEstimate": 384,
+      "span": [
+        0,
+        15
+      ]
+    },
+    {
+      "id": "chk:b23116ef:42139782:15-31",
+      "tokenEstimate": 378,
+      "span": [
+        15,
+        31
+      ]
+    },
+    {
+      "id": "sec:b23116ef:aaa4d15b",
+      "tokenEstimate": 88,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:aaa4d15b:0-2",
+      "tokenEstimate": 282,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:b23116ef:dcc8ec86",
+      "tokenEstimate": 148,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:dcc8ec86:0-6",
+      "tokenEstimate": 382,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "chk:b23116ef:dcc8ec86:6-13",
+      "tokenEstimate": 446,
+      "span": [
+        6,
+        13
+      ]
+    },
+    {
+      "id": "sec:b23116ef:33c7f0dd",
+      "tokenEstimate": 182,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:b23116ef:33c7f0dd:0-6",
+      "tokenEstimate": 370,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "chk:b23116ef:33c7f0dd:5-7",
+      "tokenEstimate": 157,
+      "span": [
+        5,
+        7
+      ]
+    }
+  ]
+}

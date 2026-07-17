@@ -1,0 +1,22 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description }: Props = Astro.props;
+---
+
+<section class="flex min-h-screen items-center justify-center bg-gray-900 px-4 py-12 text-white">
+  <div class="w-full max-w-xl rounded-3xl border border-gray-800 bg-gray-950/80 p-8 text-center shadow-2xl">
+    <p class="text-sm uppercase tracking-[0.3em] text-gray-500">Przeprogramowani</p>
+    <h1 class="mt-4 font-['Cocogoose'] text-3xl leading-tight">{title}</h1>
+    <p class="mt-4 text-base leading-7 text-gray-300">{description}</p>
+    <a
+      href="/courses"
+      class="mt-8 inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white hover:text-gray-950"
+    >
+      Wróć do listy kursów
+    </a>
+  </div>
+</section>

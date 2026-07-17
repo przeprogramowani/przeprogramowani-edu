@@ -1,0 +1,99 @@
+---
+import SharedLessonLayout from '@/layouts/SharedLessonLayout.astro';
+import ContentTopBar from '@/components/ContentTopBar.svelte';
+import logo from '@/images/generic/logo-white.png';
+import logoSmall from '@/images/generic/logo-white-mobile.png';
+import { buildCompleteToc } from '@/utils/buildTocHierarchy';
+import { slugify } from '@/utils/slugify';
+import { Content, getHeadings } from '@/content/resources/10xdevs3-ebook.md';
+import type { TocItem } from '@/types/toc';
+
+const EBOOK_TITLE =
+  'Rankingi modeli AI kłamią. Kompletny przewodnik po wyborze modelu i narzędzia do kodowania z AI';
+
+const flatHeadings: TocItem[] = getHeadings().map((heading) => ({
+  id: heading.slug,
+  text: heading.text,
+  level: heading.depth,
+  children: [],
+  parentId: null,
+}));
+const tocData = buildCompleteToc(flatHeadings);
+const slugifiedName = slugify(EBOOK_TITLE);
+---
+
+<script is:inline>
+  // Hide TOC until Svelte hydration completes and state is settled
+  document.documentElement.classList.add('toc-not-hydrated');
+</script>
+
+<SharedLessonLayout title={EBOOK_TITLE}>
+  <ContentTopBar
+    client:load
+    homeUrl="/courses"
+    logoUrl="/courses"
+    logoSrc={logo.src}
+    logoSmallSrc={logoSmall.src}
+    breadcrumb={{ primary: '10xDevs 3.0', secondary: 'Ebook' }}
+    headings={tocData.tree}
+    tocStorageKey="10xdevs3-ebook-toc-open"
+    contentSelector=".ebook-content"
+    downloadUrl="/10xdevs-3/ebook/markdown"
+    downloadName={slugifiedName}
+    downloadLabel="Pobierz Markdown"
+    sticky={true}
+  />
+
+  <div class="bg-gray-900 rounded-xl shadow max-w-7xl mx-auto">
+    <article
+      class="ebook-content prose prose-invert mx-auto max-w-[800px] space-y-8 py-6 md:py-8"
+    >
+      <Content />
+    </article>
+  </div>
+</SharedLessonLayout>
+
+<style is:global>
+  .ebook-content.prose :where(p, ul, ol):not(:where([class~='not-prose'] *)) {
+    margin-top: 1em !important;
+    margin-bottom: 1em !important;
+  }
+
+  .ebook-content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .ebook-content.prose :where(table):not(:where([class~='not-prose'] *)) {
+    display: block;
+    width: max-content !important;
+    max-width: 100%;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (max-width: 767px) {
+    .ebook-content.prose :where(table):not(:where([class~='not-prose'] *)) {
+      box-shadow: inset -18px 0 14px -14px rgb(17 24 39 / 0.9);
+    }
+
+    .ebook-content.prose :where(blockquote ul, blockquote ol):not(:where([class~='not-prose'] *)) {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .ebook-content.prose
+      :where(blockquote ul > li, blockquote ol > li):not(:where([class~='not-prose'] *))::marker {
+      content: '';
+    }
+  }
+
+  @media (min-width: 768px) {
+    .ebook-content {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+</style>

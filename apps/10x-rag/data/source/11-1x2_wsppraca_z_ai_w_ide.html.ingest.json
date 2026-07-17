@@ -1,0 +1,412 @@
+{
+  "lessonId": "[1x2] Współpraca z AI w IDE",
+  "file": "11-1x2_wsppraca_z_ai_w_ide.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 5,
+      "order": 1
+    },
+    {
+      "slug": "wstepna-konfiguracja",
+      "title": "Wstępna konfiguracja",
+      "blocks": 7,
+      "order": 2
+    },
+    {
+      "slug": "ukrywanie-plikow-wrazliwych",
+      "title": "🔐 Ukrywanie plików wrażliwych",
+      "blocks": 15,
+      "order": 3
+    },
+    {
+      "slug": "pierwsze-zapytania-do-ai",
+      "title": "Pierwsze zapytania do AI",
+      "blocks": 7,
+      "order": 4
+    },
+    {
+      "slug": "kontekst-i-formatowanie-promptow",
+      "title": "Kontekst i formatowanie promptów",
+      "blocks": 6,
+      "order": 5
+    },
+    {
+      "slug": "chat---konwersacje-o-projekcie",
+      "title": "Chat - konwersacje o projekcie",
+      "blocks": 7,
+      "order": 6
+    },
+    {
+      "slug": "custom-commands---sposob-na-reuzywalne-prompty",
+      "title": "Custom Commands - sposób na reużywalne prompty",
+      "blocks": 5,
+      "order": 7
+    },
+    {
+      "slug": "prompt-files-w-github-copilot",
+      "title": "Prompt Files w Github Copilot",
+      "blocks": 3,
+      "order": 8
+    },
+    {
+      "slug": "jetbrains-prompt-library",
+      "title": "JetBrains Prompt Library",
+      "blocks": 3,
+      "order": 9
+    },
+    {
+      "slug": "instrukcje-dla-ai",
+      "title": "Instrukcje dla AI",
+      "blocks": 7,
+      "order": 10
+    },
+    {
+      "slug": "jak-to-dziaa-u-innych",
+      "title": "Jak to działa u innych?",
+      "blocks": 3,
+      "order": 11
+    },
+    {
+      "slug": "standard-agentsmd",
+      "title": "Standard AGENTS.md",
+      "blocks": 5,
+      "order": 12
+    },
+    {
+      "slug": "ai-w-jetbrains",
+      "title": "AI w JetBrains",
+      "blocks": 7,
+      "order": 13
+    },
+    {
+      "slug": "rekomendowana-konfiguracja",
+      "title": "✅ Rekomendowana konfiguracja",
+      "blocks": 3,
+      "order": 14
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 3,
+      "order": 15
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻Ćwiczenia praktyczne",
+      "blocks": 8,
+      "order": 16
+    },
+    {
+      "slug": "nastepny-krok---wspopraca-z-ai-w-terminalu",
+      "title": "Następny krok - współpraca z AI w Terminalu",
+      "blocks": 3,
+      "order": 17
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:a28bba48:43cc23fa",
+      "tokenEstimate": 77,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:43cc23fa:0-1",
+      "tokenEstimate": 77,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:a28bba48:24701484",
+      "tokenEstimate": 190,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:24701484:0-4",
+      "tokenEstimate": 258,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:a28bba48:6846b26b",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:6846b26b:0-6",
+      "tokenEstimate": 211,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:a28bba48:55c8a80b",
+      "tokenEstimate": 211,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:55c8a80b:0-10",
+      "tokenEstimate": 425,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "chk:a28bba48:55c8a80b:10-14",
+      "tokenEstimate": 240,
+      "span": [
+        10,
+        14
+      ]
+    },
+    {
+      "id": "sec:a28bba48:d4a11f34",
+      "tokenEstimate": 116,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:d4a11f34:0-6",
+      "tokenEstimate": 136,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:a28bba48:990cca71",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:990cca71:0-5",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:a28bba48:5e11ae33",
+      "tokenEstimate": 205,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:5e11ae33:0-6",
+      "tokenEstimate": 233,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:a28bba48:33256b29",
+      "tokenEstimate": 188,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:33256b29:0-4",
+      "tokenEstimate": 188,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:a28bba48:36f16eb1",
+      "tokenEstimate": 158,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:36f16eb1:0-2",
+      "tokenEstimate": 158,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:a28bba48:9fd92164",
+      "tokenEstimate": 112,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:9fd92164:0-2",
+      "tokenEstimate": 112,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:a28bba48:ceb3fd52",
+      "tokenEstimate": 192,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:ceb3fd52:0-6",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:a28bba48:e7a3baa8",
+      "tokenEstimate": 122,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:e7a3baa8:0-2",
+      "tokenEstimate": 132,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:a28bba48:236e1b2e",
+      "tokenEstimate": 188,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:236e1b2e:0-4",
+      "tokenEstimate": 229,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:a28bba48:d366d40d",
+      "tokenEstimate": 142,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:d366d40d:0-6",
+      "tokenEstimate": 281,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:a28bba48:72e4ab14",
+      "tokenEstimate": 145,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:72e4ab14:0-2",
+      "tokenEstimate": 145,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:a28bba48:7eabec50",
+      "tokenEstimate": 198,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:7eabec50:0-2",
+      "tokenEstimate": 216,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:a28bba48:dcc8ec86",
+      "tokenEstimate": 223,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:dcc8ec86:0-7",
+      "tokenEstimate": 330,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:a28bba48:cd5f4971",
+      "tokenEstimate": 121,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a28bba48:cd5f4971:0-2",
+      "tokenEstimate": 121,
+      "span": [
+        0,
+        2
+      ]
+    }
+  ]
+}

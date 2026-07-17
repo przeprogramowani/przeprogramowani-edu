@@ -1,0 +1,5 @@
+- wychodzimy od astro startera
+- prezentacja skilli - do czego służą, jak można je wykorzystywać
+  - skill jakościowy: uruchamia build, lint, testy, astro check, szybkie code review,
+  - skill ficzerowy: jak zbudować dobry formularz
+- landing 10xShoe z formularzem kontaktowym

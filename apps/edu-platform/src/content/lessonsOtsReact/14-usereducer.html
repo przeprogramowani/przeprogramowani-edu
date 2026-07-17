@@ -1,0 +1,66 @@
+<meta name="lesson-id" content="useReducer"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/5zxfv49tfk4qkaupie3xhtqzk8yh" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 52.5822%;"><iframe src="https://player.vimeo.com/video/1035544889?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="189" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2>useReducer</h2><p>Hook <em>useReducer</em> to alternatywa dla <em>useState</em>, przydatna szczególnie w przypadkach, gdy logika zarządzania stanem jest bardziej skomplikowana lub wymaga odniesienia do poprzedniego stanu. </p><p><em>useReducer</em> przyjmuje funkcję reducera (<em>state</em>, <em>action</em>) =&gt; <em>newState</em>, początkowy stan <em>initialState</em>, a opcjonalnie także funkcję inicjalizującą. Zwraca tablicę złożoną z bieżącego stanu oraz metody dispatch do aktualizacji stanu.</p><pre><code>const [state, dispatch] = useReducer(reducerFunction, initialState, initializerFunction);</code></pre><p>Kluczowe elementy <em>useReducer</em> to:</p><ol start="1"><li><p><strong>Stan</strong> (<em>state</em>): Obiekt zawierający bieżący stan aplikacji.</p></li><li><p><strong>Akcja</strong> (action): Obiekt definiujący typ zmiany statu i ewentualne dane do modyfikacji stanu (payload).</p></li><li><p><strong>Dispatch: </strong>Funkcja, dzięki której dostarczamy akcje do reducera.</p></li><li><p><strong>Reducer</strong>: Funkcja aktualizująca stan na podstawie dostarczonej akcji.</p></li><li><p><strong>Funkcja inicjalizująca (opcjonalna)</strong>: Funkcja, która inicjalizuje stan w oparciu o wartości zewnętrzne.</p></li></ol><p>Więcej o działaniu reducerów dowiesz się z naszego szkolenia <a href="https://opanujfrontend.pl/" target="_blank" rel="noopener noreferrer">Opanuj Frontend: AI Edition</a>.</p><h3>Przykład typowania useReducer</h3><p>TypeScript udostępnia wbudowany typ Reducer w pakiecie React, który ułatwia typowanie funkcji redukującej i zwiększa bezpieczeństwo typów. Możemy go zastosować dla przejrzystości i uniknięcia błędów.</p><p>Załóżmy, że mamy licznik, który można zwiększać lub zmniejszać o podaną wartość. Użyjemy do tego akcji <em>increment</em> i <em>decrement</em>, które będą wymagały payloadu określającego wartość zmiany.<br></p><ol start="1"><li><p><strong>Definiowanie stanu</strong>: Stan jest definiowany jako obiekt reprezentujący wszystkie elementy wymagane w aplikacji:</p></li></ol><pre><code>interface CounterState {
+  count: number;
+}</code></pre><ol start="2"><li><p><strong>Definiowanie akcji</strong>: Akcje są rozróżniane przy pomocy unii typów, co umożliwia różne struktury dla różnych akcji:</p></li></ol><pre><code>type CounterAction =
+  | { type: 'increment'; payload: number }
+  | { type: 'decrement'; payload: number };</code></pre><p>W tym przypadku <em>increment</em> i <em>decrement</em> są akcjami, które wymagają payload o typie number.</p><ol start="3"><li><p><strong>Funkcja reducera</strong>: W pakiecie React znajdziesz wbudowany typ <em>Reducer</em> , który ułatwia typowanie reducera i zwiększa bezpieczeństwo typów. Możemy go zastosować dla przejrzystości i uniknięcia błędów:</p></li></ol><pre><code>import { Reducer } from 'react';
+
+const counterReducer: Reducer&lt;CounterState, CounterAction&gt; = (state, action) =&gt; {
+  switch (action.type) {
+    case 'increment':
+      return { ...state, count: state.count + action.payload };
+    case 'decrement':
+      return { ...state, count: state.count - action.payload };
+    default:
+      throw new Error(`Unhandled action type: ${action.type}`);
+  }
+};</code></pre><ol start="4"><li><p><strong>Implementacja komponentu</strong>: Komponent z wykorzystaniem useReducer i zdefiniowanych typów:</p></li></ol><pre><code>import React, { useReducer } from 'react';
+
+const initialState: CounterState = { count: 0 };
+
+const Counter = () =&gt; {
+  const [state, dispatch] = useReducer(counterReducer, initialState);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Count: {state.count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'increment', payload: 1 })}&gt;+&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'decrement', payload: 1 })}&gt;-&lt;/button&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default Counter;</code></pre><h3>Obsługa akcji bez wymogu payload</h3><p>W przypadku useReducer często występują akcje, które nie wymagają przekazywania dodatkowych danych (payload). Na przykład akcja <em>reset</em> może przywrócić stan do wartości początkowej bez konieczności użycia dodatkowych danych. Aby umożliwić różne struktury akcji, można zastosować <strong>discriminated unions</strong>, które pozwalają jasno określić, które akcje wymagają payload, a które nie.</p><p>Załóżmy, że rozwijamy licznik o funkcję resetowania. Akcja reset nie będzie wymagała payloadu.</p><ol start="1"><li><p><strong>Definiowanie typu stanu i akcji</strong>:</p><pre><code>interface CounterState {
+  count: number;
+}
+
+type CounterAction =
+  | { type: 'increment'; payload: number }  // Wymaga payload
+  | { type: 'decrement'; payload: number }  // Wymaga payload
+  | { type: 'reset' };                      // Brak payload</code></pre><p>Dzięki zastosowaniu discriminated union w CounterAction każda akcja ma swoją określoną strukturę.</p></li><li><p><strong>Implementacja funkcji reducera</strong>: Reducer jest odpowiedzialny za przetwarzanie różnych typów akcji. Dzięki <em>discriminated unions</em>, TypeScript automatycznie rozpoznaje, które akcje wymagają payload, co minimalizuje ryzyko błędów.</p><pre><code>import { Reducer } from 'react';
+
+const counterReducer: Reducer&lt;CounterState, CounterAction&gt; = (state, action) =&gt; {
+  switch (action.type) {
+    case 'increment':
+      return { ...state, count: state.count + action.payload };
+    case 'decrement':
+      return { ...state, count: state.count - action.payload };
+    case 'reset':
+      return { count: 0 }; // Jeżeli skorzystamy tutaj z action.payload, kompilator zgłosi błąd: "Property 'payload' does not exist on type '{ type: "reset"; }'"
+    default:
+      throw new Error(`Unhandled action type: ${action.type}`);
+  }
+};</code></pre></li><li><p><strong>Implementacja komponentu</strong>: W komponencie Counter możemy bezpiecznie wywoływać różne akcje z lub bez payload, ponieważ TypeScript wymusza poprawność typów dla każdej z nich. </p></li></ol><pre><code>const initialState: CounterState = { count: 0 };
+
+const Counter = () =&gt; {
+  const [state, dispatch] = useReducer(counterReducer, initialState);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Count: {state.count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'increment', payload: 1 })}&gt;+&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'decrement', payload: 1 })}&gt;-&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'reset' })}&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+  );
+};
+export default Counter;</code></pre><p>Korzyści wynikające z tego podejścia:</p><ul><li><p><strong>Bezpieczeństwo typów</strong>: Dzięki <em>discriminated unions</em>, TypeScript jednoznacznie wymaga payload tylko wtedy, gdy jest on potrzebny, a pomija go, gdy akcja go nie potrzebuje.</p></li><li><p><strong>Czytelność kodu</strong>: Każda akcja jest jasno określona, co ułatwia zrozumienie logiki reduktora.</p></li><li><p><strong>Minimalizacja błędów</strong>: W przypadku dodania nowych akcji bez payload, TypeScript automatycznie zgłosi błąd, jeśli przypadkowo spróbujemy użyć payload tam, gdzie nie jest to wymagane.</p></li></ul><p>Dzięki temu podejściu useReducer jest elastyczny i bezpieczny dla typów, umożliwiając tworzenie złożonych aplikacji React z bardziej szczegółowym kontrolowaniem struktury akcji.</p><h2>Podsumowanie </h2><p>W tej lekcji omówiliśmy wykorzystanie hooka useReducer jako alternatywy dla useState, szczególnie w kontekście zarządzania bardziej złożonym stanem aplikacji, który wymaga precyzyjnego śledzenia i modyfikacji. Omówiliśmy:</p><ol start="1"><li><p><strong>Typowanie stanu i akcji</strong>: Nauczyliśmy się definiować struktury dla stanu (state) i akcji (action) z użyciem TypeScript, zapewniając jednoznaczność i bezpieczeństwo typów. </p></li><li><p><strong>Tworzenie reducera z typem Reducer</strong>: Poznaliśmy sposób użycia wbudowanego typu Reducer z paczki React, co ułatwia typowanie funkcji redukującej oraz minimalizuje ryzyko błędów wynikających z nieobsłużonych akcji.</p></li><li><p><strong>Obsługa akcji bez payloadu</strong>: Omówiliśmy, jak efektywnie typować akcje, które nie wymagają przekazywania danych (payload), takich jak akcja resetująca licznik, dzięki czemu reducer automatycznie rozpoznaje brakujące elementy tam, gdzie nie są one potrzebne. Dzięki użyciu unii dyskryminowanych każda akcja jest precyzyjnie określona, a wymagane elementy są jasno wskazane.</p></li></ol><p>Dzięki tej lekcji masz solidną podstawę do korzystania z useReducer w aplikacjach React z TypeScriptem.</p><h2>Ćwiczenia</h2><ul><li><p><strong>411-task-reducer</strong> - Dodaj brakujące typy do reducera (encja Task, stan i akcje) oraz komponentu TaskList. Wywnioskuj typy z zastanego kodu.</p></li></ul></div></body></html>

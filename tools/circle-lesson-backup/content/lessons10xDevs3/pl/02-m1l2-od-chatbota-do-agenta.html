@@ -1,0 +1,245 @@
+<p>W poprzedniej lekcji twój pomysł na projekt przeszedł sesję sokratejską i wylądował na dysku jako <strong>prd.md</strong>: kontrakt opisujący <em>co</em> budujesz, dla kogo i po czym poznasz, że działa.</p>
+<p>Naturalny odruch: otworzyć nową sesję, wkleić PRD i napisać "ok, wybierz mi stack do tego projektu". Model odpowie. Pewnie nawet sensownie.</p>
+<p>Ale ta odpowiedź żyje głównie w tej jednej sesji. Możesz dopisać "zapisz to do pliku", jasne. Tylko wtedy za tydzień znowu musisz pamiętać, jaki plik, w jakim formacie i według jakich reguł.</p>
+<p>W preworku <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/10">[3.2]</a> <em>Wzorce i antywzorce promptowania</em> "skille" były jedną z pozycji w hierarchii instrukcji: system prompt → reguły projektowe → pamięć → <strong>skille</strong> → prompt. Teraz ta pozycja awansuje do pełnoprawnego mechanizmu pracy.</p>
+<p>Pod koniec tej lekcji uruchomisz <strong>/10x-tech-stack-selector</strong> na własnym PRD i dostaniesz <strong>tech-stack.md</strong>, plik, który lekcja AI-Powered Bootstrap (M1L3) przeczyta i zamieni w gotowy szkielet projektu. Masz istniejący projekt zamiast nowego? Czeka na ciebie <strong>/10x-stack-assess</strong>, który oceni twój stack pod kątem pracy z agentem. Zaczynamy.</p>
+<h3>Czym jest Agent Skill</h3>
+<p>Agent Skill to folder na dysku z jednym wymaganym plikiem: <strong>SKILL.md</strong>.</p>
+<p>W środku znajdziesz:</p>
+<ul>
+<li><strong>SKILL.md</strong> — instrukcje, które agent czyta po aktywacji. Zalecany limit to ~500 linii. Przekraczasz? Dodajesz kolejne pliki zamiast rozbudowywać główny dokument.</li>
+<li><strong>references/</strong> — dodatkowa dokumentacja, schematy, rejestry, przykłady. Agent ładuje je dopiero wtedy, kiedy potrzebuje.</li>
+<li><strong>scripts/</strong> — kod wykonywalny (walidator, generator, skrypt migracyjny). Agent uruchamia go przez bash; sam kod nie trafia w okno kontekstowe, tylko wynik wykonania.</li>
+<li><strong>assets/</strong> — szablony, ikony, fonty używane w plikach wyjściowych.</li>
+</ul>
+<p>Folder z markdownem i opcjonalnymi zasobami. Nic więcej.</p>
+<p>Struktura to dopiero początek. Ważniejsze jest to, <em>jak</em> agent z tych plików korzysta. W skrócie, agent odkrywa skille zgodnie z zasadą progresywnego ujawniania w trzech etapach:</p>
+<ol>
+<li><strong>Metadane</strong> (~100 tokenów) — nazwa i opis. Agent widzi je od startu sesji i na tej podstawie <em>decyduje</em>, czy skill jest potrzebny.</li>
+<li><strong>Instrukcje</strong> (do ~5000 tokenów) — treść <strong>SKILL.md</strong>. Ładują się dopiero po aktywacji. Jeśli skill się nie uruchomi, te tokeny nie istnieją w oknie kontekstowym.</li>
+<li><strong>Zasoby</strong> (bez limitu) — pliki z <strong>references/</strong>, <strong>scripts/</strong>, <strong>assets/</strong>. Agent sięga po nie w trakcie pracy, kiedy potrzebuje konkretnej informacji.</li>
+</ol>
+<p>Okno kontekstowe to budżet (wiesz to z preworku <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/09">[3.1]</a> i <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/11">[3.3]</a>). Progresywne ujawnianie to sposób, w jaki skille ten budżet szanują.</p>
+<p>Dwadzieścia zainstalowanych skilli kosztuje cię ~2000 tokenów metadanych, nie ~100 000 tokenów pełnych instrukcji. Agent wie <em>o</em> nich wszystkich, ale <em>czyta</em> tylko te, które uruchamia.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l2-lesson-draft-1-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l2-lesson-draft-1-10x.png</a></p></blockquote>
+<h3>Skill vs jednorazowy prompt</h3>
+<p>Kiedy wpisujesz prompt w czat, tworzysz jednorazową instrukcję. Działa tu i teraz, w kontekście tej konkretnej sesji. Możesz poprosić agenta o zapisanie pliku, możesz wymusić JSON, możesz opisać wejście i wyjście.</p>
+<p>Różnica nie polega więc na tym, że prompt <em>nie potrafi</em> wytworzyć artefaktu. Polega na tym, że sam prompt nie daje trwałego, wersjonowanego mechanizmu, do którego możesz wrócić w kolejnej sesji.</p>
+<p>Skill daje pięć gwarancji, których jednorazowy prompt zwykle nie daje sam z siebie:</p>
+<ol>
+<li><strong>Istnieje na dysku.</strong> Plik(i) w repozytorium, nie tekst w historii czatu. Możesz go otworzyć, audytować, zmienić i wersjonować.</li>
+<li><strong>Ładuje się progresywnie.</strong> Agent widzi opis (~100 tokenów) zawsze, ale pełne instrukcje czyta dopiero po aktywacji. Prompt wchodzi w kontekst natychmiast i w całości.</li>
+<li><strong>Ma kontrakt wejścia/wyjścia zapisany w procedurze.</strong> Czyta plik z dysku (np. <strong>prd.md</strong>), zapisuje wynik jako plik (np. <strong>tech-stack.md</strong>) i robi to według powtarzalnego schematu. Prompt też może poprosić o plik, ale za każdym razem musisz odtworzyć reguły.</li>
+<li><strong>Uruchamia się po nazwie.</strong> Piszesz <strong>/10x-tech-stack-selector</strong> i wiesz, co dostaniesz. Nie odtwarzasz pełnej instrukcji z głowy ani nie kopiujesz z notatnika za każdym razem.</li>
+<li><strong>Jest powtarzalny między sesjami.</strong> Zamykasz sesję, otwierasz nową za tydzień i wracasz do tej samej procedury. Wynik modelu nadal może się różnić (brak determinizmu), ale kontrakt pracy zostaje ten sam.</li>
+</ol>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l2-lesson-draft-2-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l2-lesson-draft-2-10x.png</a></p></blockquote>
+<p>Reguła decyzyjna jest prosta: <strong>powtarzalny proces</strong> - sięgaj po skill. <strong>Jednorazowa eksploracja, wyjaśnienie albo edycja</strong> - napisz prompt i ruszaj dalej.</p>
+<p>Heurystyka na co dzień: łapiesz się na pisaniu <em>trzeciego</em> podobnego promptu? To znak, że warto stworzyć skilla.</p>
+<p>Sprawdź się na pięciu scenariuszach:</p>
+
+<ul>
+<li><strong>Sytuacja</strong>: "Popraw literówkę w README" | <strong>Skill czy prompt?</strong>: Prompt — jednorazowa edycja.</li>
+<li><strong>Sytuacja</strong>: "Wytłumacz mi, co robi ta funkcja" | <strong>Skill czy prompt?</strong>: Prompt — jednorazowe wyjaśnienie.</li>
+<li><strong>Sytuacja</strong>: "Wybierz mi stack do tego PRD" | <strong>Skill czy prompt?</strong>: Skill — powtarzalny krok z nazwanym wejściem (<strong>prd.md</strong>) i wyjściem (<strong>tech-stack.md</strong>).</li>
+<li><strong>Sytuacja</strong>: "Wygeneruj plan implementacji logowania" | <strong>Skill czy prompt?</strong>: Skill — powtarzalny krok z nazwanym kontraktem (<strong>/10x-plan</strong>).</li>
+<li><strong>Sytuacja</strong>: "Podsumuj mi tę długą sesję czatu" | <strong>Skill czy prompt?</strong>: Prompt — jednorazowa analiza bieżącego kontekstu.</li>
+</ul>
+<p>Istnieją też inne warstwy konfiguracji agenta, np. reguły projektowe (<strong>AGENTS.md</strong>/<strong>CLAUDE.md</strong>). Tu zostajemy przy kontraście skill vs jednorazowy prompt, bo prompt to warstwa, którą aktywnie używasz od pierwszego dnia pracy z agentem.</p>
+<h3>Skąd brać skille</h3>
+<p>Wiesz już, czym skill jest i kiedy po niego sięgnąć. Pozostaje pytanie: skąd go wziąć?</p>
+<p>Nie musisz pisać wszystkiego od zera. Ekosystem ma gotowe rejestry:</p>
+<ul>
+<li><strong><a href="https://github.com/anthropics/skills">anthropics/skills</a></strong> — oficjalne skille Anthropica, w tym <strong>skill-creator</strong> (meta-skill do tworzenia nowych skilli).</li>
+<li><strong><a href="https://skills.sh/">skills.sh</a></strong> — publiczny rejestr z tysiącami skilli i dziesiątkami tysięcy instalacji. Obsługuje wiele agentów: Claude Code, Cursor, Codex, Gemini CLI i inne.</li>
+<li><strong>Skille producentów narzędzi</strong> — np. <strong><a href="https://github.com/supabase/agent-skills">supabase/agent-skills</a></strong> (best practices Postgresa, 8 kategorii reguł) czy <strong><a href="https://github.com/vercel-labs/agent-skills">vercel-labs/agent-skills</a></strong> (skill <strong>react-best-practices</strong>, 40+ reguł React/Next.js).</li>
+</ul>
+<p><strong>Audyt przed instalacją.</strong> Skille mogą zawierać kod wykonywalny w <strong>scripts/</strong>. Anthropic mówi wprost: traktuj instalację skilla jak instalację oprogramowania.</p>
+<p>Zanim dodasz skill:</p>
+<ul>
+<li>Otwórz <strong>SKILL.md</strong> — przeczytaj cel, zakres i <strong>allowed-tools</strong>.</li>
+<li>Sprawdź <strong>scripts/</strong> — co wykonuje? Czego dotyka?</li>
+<li>Sprawdź autora i źródło — znany producent, zweryfikowane repo, czy losowy fork?</li>
+</ul>
+<p>Nie instaluj niczego, czego nie przeczytałeś. Brzmi jak truizm, ale wiele osób traktuje skille jak zwykłe pliki tekstowe, a w połączeniu z agentem skill może wykonać niechciane operacje.</p>
+<h2>Dwa typy skilli</h2>
+<p>Są dwa typy skilli, które warto rozróżnić:</p>
+<ul>
+<li><strong>Procesowy</strong> (np. <strong>/10x-tech-stack-selector</strong>) — uruchamiasz go jawnie, czyta plik, produkuje plik. Ogniwo łańcucha.</li>
+<li><strong>Doradczy</strong> (np. <strong>react-best-practices</strong>) — ładuje się automatycznie, kiedy pracujesz w danej domenie, bo jego <strong>description</strong> nazywa konteksty aktywacji. Nie produkuje artefaktu, ale wpływa na każdą decyzję agenta w sesji.</li>
+</ul>
+<p>Oba mają tę samą specyfikację. Różni się to, jak skill opisuje swoją pracę i jak go uruchamiasz.</p>
+<h3>Aktywacja: jawna vs automatyczna</h3>
+<p>Skille doradcze obiecują automatyczną aktywację: agent czyta <strong>description</strong>, rozpoznaje kontekst i sam ładuje instrukcje. Brzmi świetnie, ale nie zawsze działa tak pewnie, jak sugeruje opis.</p>
+<p>Problem jest prosty: model nie wie, czego nie wie. Jeśli uważa, że zna odpowiedź, może nie poczuć potrzeby załadowania skilla, nawet gdy ten skill zawiera dokładnie te instrukcje, które byłyby potrzebne.</p>
+<p>To nie przekreśla skilli. To tylko przypomina, że automatyczna aktywacja zakłada trudną rzecz: model musi rozpoznać własną lukę w wiedzy. Szczegóły jednego z evali Vercela zostawiamy w Deep Dive.</p>
+<p><strong>Co z tego wynika w praktyce?</strong></p>
+<ul>
+<li><strong>Skille procesowe</strong> (<strong>/10x-tech-stack-selector</strong>, <strong>/10x-plan</strong>) — wywołujesz jawnie po nazwie. Decyzję podejmujesz ty, więc agent nie musi zgadywać, czy skill jest potrzebny.</li>
+<li><strong>Skille doradcze</strong> (<strong>react-best-practices</strong>, <strong>supabase-postgres-best-practices</strong>) — traktuj automatyczną aktywację jako pomoc, nie gwarancję. Jeśli wynik ma znaczenie, nazwij skill wprost albo wróć do niego w regułach projektowych, które omówimy w lekcji czwartej.</li>
+</ul>
+<p>Automatyczna aktywacja będzie się poprawiać razem z modelami i harnessami. Na dziś planuj workflow tak, żeby ważne kroki były jawne, a automatyczną aktywację traktuj jako bonus.</p>
+<h3>PRD → tech-stack.md w praktyce</h3>
+<p>Teoria za nami. Czas zobaczyć, jak skill pracuje na prawdziwym projekcie.</p>
+<p>Wróćmy do PRD z lekcji Od pomysłu do PRD (M1L1). Mamy <strong>prd.md</strong> projektu 10xCards, aplikacji do fiszek z AI.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l2-lesson-draft-3-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l2-lesson-draft-3-10x.png</a></p></blockquote>
+<p><strong>Najpierw: ad-hoc prompt.</strong></p>
+<p>Otwierasz nową sesję, dodajesz refrencję do @prd.md i piszesz: "ok, wybierz mi stack do tego projektu". Agent coś zaproponuje, pewnie nawet trafnie.</p>
+<p>Ale co właściwie dostajesz?</p>
+<ul>
+<li>Odpowiedź w sesji, zwykle bez pliku na dysku.</li>
+<li>Najpewniej nie dostaniesz żadnych pytań o swoje preferencje, tylko gotową propozycję.</li>
+<li>Brak informacji, czy starter powiązany z tech stackiem jest przetestowany i wspierany.</li>
+</ul>
+<p>Wynik mógłby być sensowny, ale <strong>/10x-bootstrapper</strong> w kolejnej lekcji AI-Powered Bootstrap (M1L3) nie będzie w stanie wygenerować szkieletu projektu na podstawie tych mętnych propozycji.</p>
+<p><strong>Teraz: ten sam PRD przez skill.</strong></p>
+<pre><code>/10x-tech-stack-selector @context/foundation/prd.md
+</code></pre>
+<p>Skill czyta przesłanki z PRD (typ projektu, timeline, wymagania funkcjonalne) i da Ci rekomendację opartą na wbudowanym rejestrze starterów. Jeśli PRD jest jednoznaczny, standardowa ścieżka zamyka się szybko.</p>
+<p>Wynikiem procesu będzie <strong>context/foundation/tech-stack.md</strong> z następującą strukturą:</p>
+<pre><code class="language-yaml">starter_id: 10x-astro-starter
+bootstrapper_confidence: first-class
+path_taken: standard
+has_auth: true
+has_ai: true
+has_payments: false
+has_realtime: false
+has_background_jobs: false
+</code></pre>
+<p>W dokumencie będzie również sekcja "Why this stack" wiążąca wymagania z PRD z możliwościami wybranego stacku technologicznego.</p>
+<p>To jest kontrakt. <strong>/10x-bootstrapper</strong> w lekcji AI-Powered Bootstrap (M1L3) przeczyta ten plik, zobaczy <strong>starter_id</strong>, <strong>bootstrapper_confidence: first-class</strong> i będzie wiedział, co robić dalej.</p>
+<p>Agent nie będzie musiał zgadywać ani improwizować.</p>
+<h3>Dlaczego skill zrobi to przewidywalnie?</h3>
+<p>Zajrzyjmy do <strong>SKILL.md</strong> w <strong>/10x-tech-stack-selector</strong>:</p>
+<ul>
+<li><strong>description</strong> — agent wie, kiedy po skill sięgnąć ("what stack should I use", "co wybrać do projektu").</li>
+<li><strong>allowed-tools</strong> — lista narzędzi, z których agent może korzystać w ramach tego skilla. Jawny kontrakt uprawnień.</li>
+<li><strong>references/starter-registry.yaml</strong> — rejestr sprawdzonych starterów z bramkami jakości. Ładuje się na żądanie, nie zajmuje okna z góry.</li>
+<li><strong>references/handoff-schema.md</strong> — schemat pliku wyjściowego, który <strong>/10x-bootstrapper</strong> umie odczytać. Kontrakt jest jawny.</li>
+<li><strong>references/agent-friendly-criteria.md</strong> — kryteria oceny, czy stack jest przyjazny agentowi. Ad-hoc prompt tego nie sprawdzi, jeśli nie podasz mu takich reguł.</li>
+</ul>
+<p>Skill robi z PRD-a powtarzalny krok procesu i zostawia na dysku artefakt, który następne ogniwo łańcucha umie przeczytać.</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1192850362?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1192850362?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<h3>Ocena istniejącego stacku</h3>
+<p>Jeśli będziesz pracował na projekcie typu brownfield (istniejący codebase), nie wybierasz stacku od zera. Oceniasz ten, z którym pracujesz.</p>
+<p><strong>/10x-stack-assess</strong> robi dokładnie to: wchodzi do katalogu projektu, wykrywa komponenty stacku (język, framework, build tool, test runner, package manager) i ocenia każdy przez cztery bramki jakości, te same, których <strong>/10x-tech-stack-selector</strong> używa do wyboru stacku greenfield:</p>
+<ol>
+<li><strong>Typed</strong> — czy język/framework ma system typów, który agent potrafi czytać?</li>
+<li><strong>Convention-based</strong> — czy są konwencje katalogowe i nazewnicze, z którymi agent się orientuje?</li>
+<li><strong>Popular in training data</strong> — czy narzędzie jest wystarczająco popularne, żeby agent miał o nim wiedzę?</li>
+<li><strong>Well-documented</strong> — czy dokumentacja jest dostępna i aktualna?</li>
+</ol>
+<p>Różnica jest w zastosowaniu. <strong>/10x-tech-stack-selector</strong> stosuje bramki jako <em>filtr wyboru</em>: odrzuca startery, które ich nie spełniają. <strong>/10x-stack-assess</strong> stosuje je jako <em>narzędzie diagnostyczne</em>. Nie odrzuca twojego stacku, tylko wskazuje, gdzie agent będzie miał tarcia, i daje plan kompensacji.</p>
+<p>Wynik: <strong>context/foundation/stack-assessment.md</strong> z oceną każdego komponentu osobno, zidentyfikowanymi lukami i planem kompensacji.</p>
+<p>Trzy możliwe werdykty:</p>
+<ul>
+<li><strong>ready</strong> — stack spełnia bramki, agent pracuje sprawnie.</li>
+<li><strong>ready-with-compensation</strong> — stack ma luki, ale plan kompensacji je łata. Większość istniejących projektów ląduje tutaj.</li>
+<li><strong>significant-friction</strong> — luki są poważne; rozważ migrację kluczowych komponentów (np. dodanie TypeScripta).</li>
+</ul>
+<p>Przykład: twój projekt używa Express.js bez TypeScripta.</p>
+<pre><code class="language-yaml">verdict: ready-with-compensation
+components_assessed:
+  - name: express
+    typed: fail
+    convention_based: fail
+    popular_in_training: pass
+    well_documented: pass
+  - name: node
+    typed: fail
+    convention_based: pass
+    popular_in_training: pass
+    well_documented: pass
+compensation:
+  - "Opisz konwencje nazewnicze i strukturę katalogów w regułach agenta"
+  - "Zdefiniuj wzorce middleware i error-handling w pliku konfiguracyjnym"
+  - "Wymuś JSDoc na publicznych interfejsach"
+</code></pre>
+<p>Express przechodzi bramki "popular" i "documented", ale nie "typed" (brak systemu typów) ani "convention-based" (brak narzuconej struktury katalogów). Bez kompensacji agent będzie generował kod, który <em>działa</em>, ale może łamać konwencje twojego projektu.</p>
+<p>Plan kompensacji to propozycje wpisów do plików konfiguracyjnych agenta (<strong>CLAUDE.md</strong>, <strong>AGENTS.md</strong>). Jak te pliki tworzyć, edytować i utrzymywać - to temat lekcji Agent Onboarding (M1L4).</p>
+<p>Obie ścieżki (greenfield i brownfield) zbiegną właśnie w tej lekcji, z równoważnym kontekstem. Różni się punkt wejścia, nie sposób pracy.</p>
+<h3>Skille jako budulec 10xWorkflow</h3>
+<p><strong>/10x-tech-stack-selector</strong> to pierwszy widoczny konsument PRD. Ale to dopiero pierwsze ogniwo; reszta kursu to kolejne ogniwa tego samego formatu.</p>
+<p>Cały moduł 1 przygotowuje środowisko do pracy z agentem: PRD jako kontrakt (M1L1), skille i wybór stacku (ta lekcja), bootstrap projektu (M1L3), konfiguracja agenta (M1L4) i od localhosta po produkcję (M1L5). Kiedy środowisko jest gotowe, moduł 2 wprowadza workflow implementacyjny, i tam te skille stają się codziennymi narzędziami.</p>
+<p>Łańcuch, który zobaczysz w działaniu od modułu 2:</p>
+<p><strong>/10x-research</strong> — eksploracja kodu równoległymi sub-agentami. Rozkładasz pytanie badawcze na obszary, skill odpala 2–4 agenty przeszukujące repozytorium jednocześnie, a potem scala ich wyniki w jeden dokument z referencjami <strong>plik:linia</strong>. Wejście: pytanie → Wyjście: <strong>research.md</strong>.</p>
+<p><strong>/10x-frame</strong> — kwestionowanie założeń problemu, zanim zaplanujesz rozwiązanie. Rozdziela obserwację od domniemanej przyczyny, buduje mapę wymiarów problemu, testuje hipotezy równoległymi agentami i zadaje pytania sokratejskie: nie o rozwiązanie, tylko o to, <em>gdzie w mapie leży prawdziwy problem</em>. Wejście: opis problemu lub ticket → Wyjście: <strong>frame.md</strong> z przeramowanym (lub potwierdzonym) sformułowaniem problemu.</p>
+<p><strong>/10x-plan</strong> — plan implementacji ze skalowanym pytaniem. Im więcej artefaktów dostaje na wejściu (research + frame), tym mniej pytań zadaje. Ocenia złożoność zadania, dopasowuje głębokość pytań (od 4 do 15), a każda opcja ma rekomendację z analizą kompromisów. Wejście: problem + research + frame → Wyjście: <strong>plan.md</strong> z fazami + <strong>plan-brief.md</strong> (krótkie podsumowanie).</p>
+<p><strong>/10x-implement</strong> — egzekucja planu faza po fazie z pełnym rytuałem weryfikacji. Śledzi dotknięte pliki, uruchamia testy, zatrzymuje się na bramce ręcznej weryfikacji, commituje wskazane pliki (nigdy <strong>git add -A</strong>), a po zamknięciu fazy wpisuje SHA commita do sekcji Progress. Wejście: <strong>plan.md</strong> → Wyjście: zaimplementowany kod z historią commitów.</p>
+<p><strong>/10x-impl-review</strong> — przegląd implementacji kontra plan. Dwa równoległe agenty: jeden szuka dryfu między planem a kodem (MATCH / DRIFT / MISSING / EXTRA), drugi skanuje bezpieczeństwo, wydajność i zgodność z wzorcami projektu. Sześć wymiarów oceny i interaktywna pętla decyzyjna: napraw, zaakceptuj ryzyko albo zapisz jako regułę na przyszłość. Wejście: <strong>plan.md</strong> + kod → Wyjście: <strong>impl-review.md</strong> z listą ustaleń i podjętych decyzji.</p>
+<p>Każdy z tych skilli ma ten sam format: <strong>SKILL.md</strong> + <strong>references/</strong> + opcjonalnie <strong>scripts/</strong>. Każdy czyta plik wyprodukowany przez wcześniejszy krok i zapisuje wynik jako wejście dla następnego.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l2-lesson-draft-4-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l2-lesson-draft-4-10x.png</a></p></blockquote>
+<p>Nie uczysz się nowej abstrakcji w każdym module. Uczysz się kolejnego ogniwa bazującego na tym samym fundamencie specyfikacji Agent Skills.</p>
+<p>Ten sposób pracy opanujesz raz, w module 1. W module 2, kiedy środowisko będzie przygotowane (projekt postawiony, agent skonfigurowany, deployment ustawiony), uruchomisz nowe skille na realnych zadaniach w swoim projekcie. Zobaczysz, że każdy z nich działa dokładnie tak samo jak <strong>/10x-tech-stack-selector</strong>: czyta plik, produkuje plik, następne ogniwo rusza dalej.</p>
+<p>To jest nasza definicja "AI-native software engineering": nie pojedyncze prompty, ale elastyczny zestaw skilli, który rośnie razem z tobą.</p>
+<h2>🧑🏻‍💻 Zadania praktyczne</h2>
+<p>Teraz twoja kolej. Pobierz paczkę lekcyjną:</p>
+<pre><code class="language-bash">npx @przeprogramowani/10x-cli@latest get m1l2
+</code></pre>
+<p>Kiedy masz paczkę:</p>
+<ul>
+<li><strong>Greenfield:</strong> Uruchom <strong>/10x-tech-stack-selector</strong> na swoim <strong>prd.md</strong> z lekcji Od pomysłu do PRD (M1L1). Przejdź przez proces wyboru stacku technologicznego. Sprawdź, czy dostałeś <strong>tech-stack.md</strong> z frontmatter; będziesz go potrzebować w lekcji AI-Powered Bootstrap (M1L3).</li>
+<li><strong>Brownfield:</strong> Uruchom <strong>/10x-stack-assess</strong> w katalogu istniejącego projektu. Przejrzyj <strong>stack-assessment.md</strong>: które quality gates twój stack spełnia, gdzie są luki, co skill proponuje jako kompensację. Ten plik będzie punktem wejścia dla <strong>/10x-health-check</strong> w lekcji AI-Powered Bootstrap (M1L3).</li>
+</ul>
+<h2>Odbierz swoją odznakę</h2>
+<p>Po ukończeniu tej lekcji odbierz odznakę w sekcji <a href="https://platforma.przeprogramowani.pl/10xdevs-3/mission-log">10xDevs Mission Log</a> a następnie pochwal się swoim osiągnięciem!</p>
+<h2>🔎 Deep Dive</h2>
+<p>Ta sekcja zawiera dodatkowe pogłębienie wiedzy na temat wybranych zagadnień związanych z lekcją. W tym Deep Dive znajdziesz:</p>
+<ul>
+<li><strong>Tworzenie własnych skilli</strong> — dwie ścieżki budowania skilli: rozmowa z modelem vs skill-creator z evalami</li>
+<li><strong>Gdy skill sam się nie aktywuje</strong> — co evale Vercela mówią o automatycznej aktywacji skilli i dlaczego ważne kroki warto wywoływać jawnie</li>
+</ul>
+<p>Ta sekcja lekcji nie jest obowiązkowa, ale warto się z nią zapoznać jeżeli chcesz zostać ekspertem.</p>
+<h3>Tworzenie własnych skilli</h3>
+<p>Konsumowanie gotowych skilli to punkt wejścia. Ale prawdziwa zmiana w pracy z agentem zaczyna się wtedy, kiedy tworzysz własne, dopasowane do twojego stacku, twojej domeny, twoich powtarzalnych zadań.</p>
+<p>To jest prostsze, niż się wydaje. Są dwie ścieżki. Różnią się kosztem, formalnością i przewidywalnością wyników.</p>
+<h3>Ścieżka 1: rozmowa z modelem</h3>
+<p>Najprostsza droga: otwierasz sesję z modelem typu architekt i opisujesz, co skill ma robić.</p>
+<p>Nie potrzebujesz do tego żadnego specjalnego narzędzia. Wystarczy agent (Claude Code, Cursor, Codex) i twój opis kontraktu:</p>
+<ul>
+<li>Co skill dostaje na wejściu? (np. plik <strong>prd.md</strong>)</li>
+<li>Co ma wyprodukować? (np. plik <strong>tech-stack.md</strong> z określonym frontmatter)</li>
+<li>Jakie kroki ma przejść?</li>
+<li>Czego <em>nie</em> powinien robić?</li>
+</ul>
+<p>Agent pisze <strong>SKILL.md</strong>. Ty go czytasz, uruchamiasz, widzisz co działa a co nie, wracasz do rozmowy i poprawiasz. Trzy-cztery iteracje i masz działający skill.</p>
+<p>Ta ścieżka jest szybka i tania. Nie wymaga żadnej infrastruktury, tylko twojej zdolności do oceny, czy wynik jest dobry. Dla większości skilli, które piszesz pod siebie, to wystarczy.</p>
+<h3>Ścieżka 2: <strong>skill-creator</strong> z evalami</h3>
+<p>Anthropic publikuje meta-skill <strong><a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator">skill-creator</a></strong>. Opisujesz kontrakt wejścia i wyjścia, a <strong>skill-creator</strong> generuje szkielet <strong>SKILL.md</strong> i opcjonalnie zestaw ewaluacji, które automatycznie sprawdzają, czy nowa wersja skilla produkuje poprawne wyniki.</p>
+<p>Evale automatyzują weryfikację: zamiast ręcznie testować każdą zmianę, uruchamiasz zestaw przypadków testowych i dostajesz raport. To daje bardziej przewidywalne wyniki, zwłaszcza kiedy skill ma wielu użytkowników albo jest częścią dłuższego łańcucha.</p>
+<p>Ale jest tradeoff.</p>
+<p>Evale kosztują czas i pieniądze: każdy eval to wywołanie modelu. A zaprojektowanie <em>dobrego</em> evalu wymaga zrozumienia, co właściwie weryfikujesz. Domyślne evale mogą być <strong>zbyt korzystne dla nowej wersji skilla</strong>: testują to, co nowa wersja robi dobrze, zamiast to, co powinna robić dobrze. Żeby eval naprawdę chronił jakość, musisz go zaprojektować pod <em>granice</em> i <em>edge case'y</em> twojego kontraktu, nie pod happy path.</p>
+<p>To nie jest wada <strong>skill-creator</strong>. To fundamentalna trudność automatycznej weryfikacji. Dobry eval jest trudniejszy od dobrego skilla.</p>
+<h3>Którą ścieżkę wybrać?</h3>
+<ul>
+<li><strong>Skill pod siebie, do własnego workflow</strong> — ścieżka 1. Rozmowa, iteracja, ręczne testy. Próg wejścia: zero.</li>
+<li><strong>Skill współdzielony z zespołem lub częścią łańcucha</strong> — ścieżka 2, kiedy zależy ci na powtarzalności i weryfikacji bez ręcznego testowania każdej zmiany.</li>
+<li><strong>Najpierw 1, potem 2</strong> — naturalna progresja. Zaczynasz od rozmowy, skill działa. Kiedy zaczynasz go zmieniać częściej albo przekazujesz innym, dorzucasz evale.</li>
+</ul>
+<p>Łapiesz się na pisaniu <em>trzeciego</em> promptu robiącego to samo? Otwórz sesję z agentem i powiedz mu, co wchodzi i co wychodzi. Nie potrzebujesz niczego więcej na start.</p>
+<h3>Problemy z automatyczną aktywacją</h3>
+<p>W lekcji zostawiliśmy praktyczny wniosek: ważne skille wywołuj jawnie, a automatyczną aktywację traktuj jak pomoc, nie gwarancję.</p>
+<p>Skąd ta ostrożność?</p>
+<p>Vercel zweryfikował <a href="https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals">skuteczność automatycznej aktywacji skilli</a> podczas ewaluacji zadań związanych z Next.js 16. Test dotyczył nowych API, takich jak <strong>connection()</strong>, <strong>'use cache'</strong> i <strong>forbidden()</strong>, czyli obszarów, w których model nie mógł wygrać samą wiedzą z treningu. Musiał sięgnąć po właściwą dokumentację.</p>
+<p>Wyniki były takie:</p>
+
+<ul>
+<li><strong>Konfiguracja</strong>: Baseline (brak dokumentacji) | <strong>Skuteczność</strong>: 53%</li>
+<li><strong>Konfiguracja</strong>: Skill (domyślne zachowanie) | <strong>Skuteczność</strong>: 53%</li>
+<li><strong>Konfiguracja</strong>: Skill z jawnymi instrukcjami aktywacji | <strong>Skuteczność</strong>: 79%</li>
+<li><strong>Konfiguracja</strong>: <strong>AGENTS.md</strong> z indeksowaną dokumentacją | <strong>Skuteczność</strong>: 100%</li>
+</ul>
+<p>Najważniejszy wniosek: skill z domyślnym zachowaniem dał taki sam wynik jak brak dokumentacji. W 56% przypadków agent w ogóle po niego nie sięgnął, mimo że miał do niego dostęp.</p>
+<p>To nie znaczy, że skille są wadliwe. Vercel sam pisze, że dobrze pasują do pionowych, konkretnych workflowów, zwłaszcza takich, które użytkownik wywołuje świadomie. To jest dokładnie to czego uczymy w 10xDevs, skilli procesowych które wywołujemy manualnie: <strong>/10x-tech-stack-selector</strong>, <strong>/10x-plan</strong>, <strong>/10x-implement</strong>.</p>
+<h2>📚 Materiały dodatkowe</h2>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview">Agent Skills — overview</a> — oficjalna dokumentacja Anthropica: anatomia, progresywne ujawnianie, model bezpieczeństwa.</li>
+<li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Equipping agents for the real world with Agent Skills</a> — post Anthropic Engineering o pozycjonowaniu skilli w ekosystemie agentów.</li>
+<li><a href="https://github.com/anthropics/skills">anthropics/skills</a> — oficjalne repozytorium skilli Anthropica (skille dokumentowe, testowe i inne).</li>
+<li><a href="https://skills.sh/">skills.sh</a> — publiczny rejestr skilli dla wielu agentów (Claude Code, Cursor, Codex, Gemini CLI i inne).</li>
+<li><a href="https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals">AGENTS.md outperforms skills in our agent evals</a> — analiza Vercela pokazująca, kiedy automatyczna aktywacja skilla bywa mniej niezawodna niż pasywny kontekst projektowy.</li>
+<li><a href="https://github.com/supabase/agent-skills">supabase/agent-skills</a> — skill Postgres best-practices: 8 kategorii reguł, od wydajności zapytań po bezpieczeństwo.</li>
+<li><a href="https://github.com/vercel-labs/agent-skills">vercel-labs/agent-skills</a> — skill <strong>react-best-practices</strong>: 40+ reguł React/Next.js.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/10">[3.2]</a> <em>Wzorce i antywzorce promptowania</em> — hierarchia instrukcji jako kontekst dla tej lekcji.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/11">[3.3]</a> <em>Cykl życia wątku i zarządzanie kontekstem</em> — budżetowanie okna kontekstowego, które uzasadnia progresywne ujawnianie.</li>
+</ul>

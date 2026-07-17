@@ -1,0 +1,34 @@
+{
+  "lessonPrefix": "12-3x4",
+  "updatedAt": "2026-04-28T15:54:23.995Z",
+  "entries": [
+    {
+      "key": "5445f3f4b4a5dc79916f5a3bc2c25827632dd0c35782c17d3680740171834a36",
+      "blockHash": "298d6bd819cc43559f3519db38871abb8d6901a1812c9dd16626c2dcb1b6e36f",
+      "promptVersion": "prework-mermaid-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "mermaid",
+      "ordinal": 0,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "flowchart LR\n    A[\"Słowo: zaimplementowaliśmy\"] --> B[\"Fragment tekstu: za\"]\n    A --> C[\"Fragment tekstu: implement\"]\n    A --> D[\"Fragment tekstu: owali\"]\n    A --> E[\"Fragment tekstu: śmy\"]\n    B --> B1[\"Token ID: liczba\"]\n    C --> C1[\"Token ID: liczba\"]\n    D --> D1[\"Token ID: liczba\"]\n    E --> E1[\"Token ID: liczba\"]\n",
+      "translatedText": "flowchart LR\n    A[\"Word: zaimplementowaliśmy\"] --> B[\"Text fragment: za\"]\n    A --> C[\"Text fragment: implement\"]\n    A --> D[\"Text fragment: owali\"]\n    A --> E[\"Text fragment: śmy\"]\n    B --> B1[\"Token ID: number\"]\n    C --> C1[\"Token ID: number\"]\n    D --> D1[\"Token ID: number\"]\n    E --> E1[\"Token ID: number\"]",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:54:23.995Z"
+    },
+    {
+      "key": "96854aea22be228163b3bb8152c508b3a91444df75d886600dcdfabfe9620096",
+      "blockHash": "298d6bd819cc43559f3519db38871abb8d6901a1812c9dd16626c2dcb1b6e36f",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "mermaid",
+      "ordinal": 0,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "flowchart LR\n    A[\"Słowo: zaimplementowaliśmy\"] --> B[\"Fragment tekstu: za\"]\n    A --> C[\"Fragment tekstu: implement\"]\n    A --> D[\"Fragment tekstu: owali\"]\n    A --> E[\"Fragment tekstu: śmy\"]\n    B --> B1[\"Token ID: liczba\"]\n    C --> C1[\"Token ID: liczba\"]\n    D --> D1[\"Token ID: liczba\"]\n    E --> E1[\"Token ID: liczba\"]\n",
+      "translatedText": "flowchart LR\n    A[\"Słowo: zaimplementowaliśmy\"] --> B[\"Fragment tekstu: za\"]\n    A --> C[\"Fragment tekstu: implement\"]\n    A --> D[\"Fragment tekstu: owali\"]\n    A --> E[\"Fragment tekstu: śmy\"]\n    B --> B1[\"Token ID: liczba\"]\n    C --> C1[\"Token ID: liczba\"]\n    D --> D1[\"Token ID: liczba\"]\n    E --> E1[\"Token ID: liczba\"]\n",
+      "status": "manual-translation-required",
+      "createdAt": "2026-04-28T15:48:36.152Z"
+    }
+  ]
+}

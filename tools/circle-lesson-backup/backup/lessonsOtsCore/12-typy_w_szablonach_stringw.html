@@ -1,0 +1,138 @@
+<meta name="lesson-id" content="Typy w szablonach stringów"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>W tej lekcji wcielimy się w programistę, który tworzy nową bibliotekę do zarządzania danymi. Jednym z wymagań jest utworzenie nowego typu, który pozwoli na zarządzanie tabelami w bazie z wykorzystaniem łatwych do zrozumienia funkcji. Przykładowo:</p><pre><code>interface User { ... }
+interface Product { ... }
+interface Order { ... }
+
+// Nasz wymagany typ - Table
+type Table&lt;Model, TableName&gt; = ?
+
+// Oczekiwane działanie
+const usersTable: Table&lt;User, "user"&gt;;
+usersTable.createUser(...);
+
+const productsTable: Table&lt;Product, "product"&gt;;
+productsTable.deleteProduct(...);
+
+const ordersTable: Table&lt;Order, "order"&gt;;
+ordersTable.getOrder(...);</code></pre><p>Czy takie zadanie można zrealizować wyłącznie jednym typem Table? Wydaje się, że obsługa wszystkich modeli danych powinna skutkować:</p><ul><li><p>1) jednym ogromnym interfejsem z obsługą wszystkich możliwych funkcji LUB</p></li><li><p>2) tworzeniem odrębnych typów na każdy model</p></li></ul><p>Innej opcji nie ma. A jednak - TypeScript ma na to sposób, a polega on na połączeniu typów mapowanych z typami opartymi o szablony stringów. Zobaczmy jak to działa.</p><h2>Pierwsze kroki</h2><p>Podobnie jak w przypadku standardowych stringów, w języku TypeScript typy można łączyć poprzez szablony. Nie dotyczy to jednak dowolnych typów, a literałów stringów:</p><pre><code>type Model = "user";
+type Identifier = "id";
+
+type ModelID = `${Model}_${Identifier}`;
+
+const userID: ModelID = "user_id";
+const productID: ModelID = "product_id"; // ❌ Błąd - jedyna akceptowalna wartość to user_id</code></pre><p>Jak widzisz, do typu <em>ModelID</em> przypiszemy wyłącznie stringi formatowane w jeden konkretny sposób.</p><p>Co ciekawe, ten mechanizm działa też dla wielu wartości tworzonych poprzez unie - wtedy dostępne wartości są wynikiem “mnożenia” obu składowych:</p><pre><code>type Model = "user" | "product" | "order";
+type IdField = "id";
+
+type ModelID = `${Model}_${IdField}`; // 'user_id' | 'product_id' | 'order_id'</code></pre><p>Utworzony w ten sposób typ (<em>ModelID</em>) może przyjąć trzy opisane powyżej wartości, które będą dynamicznie rozszerzane - wprowadźmy nowy model (feature) aby to sprawdzić:</p><pre><code>type Model = "user" | "product" | "order" | "feature";
+type IDField = "id";
+
+type ModelID = `${Model}_${IDField}`; // 'user_id' | 'product_id' | 'order_id' | 'feature_id'</code></pre><p>Po wprowadzeniu nowej wartości w typie <em>Model</em>, <em>ModelID </em>został automatycznie zaktualizowany.</p><p>Wspomniane mnożenie dobrze widać na kolejnym przykładzie - typ <em>Model</em> zawiera trzy wartości, <em>Field</em> zawiera dwie wartości, więc <em>FieldModel</em> aż sześć - to połączenie każdego z akceptowanych typów:</p><pre><code>type Model = "user" | "product" | "order";
+type Field = "id" | 'createdAt';
+
+// user_id | product_id | order_id | user_createdAt | product_createdAt | order_createdAt
+type FieldModel = `${Model}_${Field}`;</code></pre><p>Gdzie taki mechanizm może się przydać? </p><p>Wyobraźmy sobie, że tworzymy system do rekrutacji, który procesuje specjalne kody, z których można wydedukować informację o dziale firmy i doświadczeniu kandydata. Na końcu nadawany jest numer otwartej pozycji (wykorzystamy typ prosty <em>number</em> jako <em>symbol wieloznaczny, tzw. wildcard</em>).</p><pre><code>type Department = "sales" | "marketing" | "engineering";
+type Seniority = "junior" | "mid" | "senior";
+
+type HiringCode = `${Department}_${Seniority}_${number}`;
+
+const juniorSalesRole: HiringCode = "sales_junior_021"; // ✅ OK
+const midEngineeringRole: HiringCode = "engineering_mid_554"; // ✅ OK
+const seniorMarketingRole: HiringCode = "marketing_senior_228"; // ✅ OK</code></pre><p>Wykorzystując ten specjalistyczny typ możemy się zabezpieczyć przed sytuacjami, kiedy inny moduł w tym samym systemie zacznie procesować identyfikatory złego formatu (odwrócony dział i seniority):</p><pre><code>function resolveHiringCode(code: HiringCode) {
+  const [department, seniority, id] = code.split("_");
+  // ...
+  // Dodatkowe procesowanie wykrytych wartości
+}
+
+resolveHiringCode("junior_sales_15"); 
+// ❌ Błąd - Argument of type '"junior_sales_15"' is not assignable</code></pre><p>👉 Co ważne - mówimy tutaj o zgodności typów, a nie wartości przekazywanych w trakcie działania aplikacji. Tam, niestety bez naszej wiedzy, wciąż może się&nbsp;zdarzyć użycie niewłaściwego formatu. Przed tym powinny nas przestrzegać dodatkowe funkcje walidacyjne.</p><h3>Operacje na literałach stringów</h3><p>Korzystając z typów opartych o literały stringów, do dyspozycji mamy cztery wbudowane funkcje, które wykonują dla nas modyfikację poszczególnych znaków:</p><pre><code>type Model = "User";
+
+type UpperModel = Uppercase&lt;Model&gt;; // "USER" (Wszystko z wielkiej litery)
+type LowerModel = Lowercase&lt;Model&gt;; // "user" (Wszystko z małej litery)
+type CapitalizeModel = Capitalize&lt;Model&gt;; // "User" (Pierwszy znak z wielkiej litery)
+type UncapitalizeModel = Uncapitalize&lt;Model&gt;; // "user" (Pierwszy znak z małej litery)</code></pre><p>Będziemy z nich korzystać budując docelowe API naszej biblioteki do zarządzania danymi.</p><h3>Literały i typy mapowane</h3><p>Opisywane w tej lekcji typy pokazują cały potencjał w momencie kiedy połączymy je z typami mapowanymi - to szczególnie interesująca możliwość dla twórców wszelkiego rodzaju bibliotek i narzędzi, którzy mogą dynamicznie kształtować API swoich rozwiązań (a właściwie - dają przepis, z którego korzystają później użytkownicy).</p><p>Przykładowo - wprowadźmy typ, który wprowadza zestaw getterów dla bazowego typu <em>Type:</em></p><pre><code>// Wszystkie klucze z Type zamieniamy na funkcje
+type Getters&lt;Type&gt; = {
+  [Key in keyof Type as `get${Capitalize&lt;string &amp; Key&gt;}`]: () =&gt; Type[Key];
+};</code></pre><p>Powyższy typ będzie opisywał obiekty, w których znajdują się wyłącznie funkcje o nazwach dopasowanych do pól typu bazowego.</p><p><strong>Rozłóżmy to na czynniki pierwsze:</strong></p><ul><li><p>Key in keyof Type - Dla wszystkich pól w obiekcie o typie <em>Type</em></p></li><li><p>as - przeprowadź mapowanie</p></li><li><p>`get${Capitalize&lt;…&gt;} - wprowadź pola o nowej nazwie - get&lt;Nazwa&gt;</p></li><li><p>string &amp; Key - zagwarantuję Ci, że klucze będą stringami</p></li><li><p>[ … ]: () =&gt; Type[Key]; - każde pole to od teraz funkcja zwracająca ten sam typ co pole bazowe</p></li></ul><p>Dzięki takiej konstrukcji uzyskamy dynamicznie formatowane nazwy, które będą tworzone zgodnie z tym samym wzorcem:</p><ul><li><p>id =&gt; getId()</p></li><li><p>name =&gt; getName()</p></li><li><p>age =&gt; getAge();</p></li></ul><p>Dodatkowo mamy gwarancję, że zwracany typ będzie taki sam jak typ pola bazowego. A w praktyce:</p><pre><code>interface Person {
+  id: number;
+  name: string;
+}
+
+const personGetters: Getters&lt;Person&gt; = {
+  getName: () =&gt; "John",
+  getId: () =&gt; 1,
+};
+
+interface Product {
+  quantity: number;
+}
+
+const productGetters: Getters&lt;Product&gt; = {
+  getQuantity: () =&gt; 10,
+};</code></pre><p>Robi się ciekawie!</p><h2>Zarządzanie tabelami</h2><p>W tym momencie mamy do dyspozycji trzy narzędzia:</p><ul><li><p>typy mapowane</p></li><li><p>typy oparte o szablony stringów</p></li><li><p>wbudowane typy pomocnicze </p></li></ul><p>Możemy je wykorzystać do zbudowania docelowej struktury:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1034912368?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Kod z filmu znajdziesz poniżej:</p><pre><code>type Entities = "user" | "product" | "order";
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+}
+
+interface Order {
+  id: number;
+  productId: number;
+  quantity: number;
+}
+
+type CreateMethod&lt;TModel, TName extends Entities&gt; = {
+  [Prop in `create${Capitalize&lt;TName&gt;}`]: (data: Partial&lt;TModel&gt;) =&gt; void;
+};
+
+type ReadMethod&lt;TModel, TName extends Entities&gt; = {
+  [Prop in `get${Capitalize&lt;TName&gt;}`]: (id: number) =&gt; TModel | null;
+};
+
+type UpdateMethod&lt;TModel, TName extends Entities&gt; = {
+  [Prop in `update${Capitalize&lt;TName&gt;}`]: (
+    id: number,
+    data: Partial&lt;TModel&gt;
+  ) =&gt; void;
+};
+
+type DeleteMethod&lt;_, TName extends Entities&gt; = {
+  [Prop in `delete${Capitalize&lt;TName&gt;}`]: (id: number) =&gt; void;
+};
+
+type Table&lt;TModel, TName extends Entities&gt; = 
+  CreateMethod&lt;TModel, TName&gt; &amp;
+  ReadMethod&lt;TModel, TName&gt; &amp;
+  UpdateMethod&lt;TModel, TName&gt; &amp;
+  DeleteMethod&lt;TModel, TName&gt;;
+
+declare const usersTable: Table&lt;User, "user"&gt;;
+declare const productsTable: Table&lt;Product, "product"&gt;;
+declare const ordersTable: Table&lt;Order, "order"&gt;;
+
+productsTable.deleteProduct(1);
+ordersTable.getOrder(1);
+usersTable.updateUser(1, { name: "John" });</code></pre><h2>Indeksy o ściśle określonym formacie</h2><p>Jeszcze inny, wykorzystywany w praktyce scenariusz dla typów opartych o szablony, dotyczy typowania komponentów lub węzłów drzewa DOM, których atrybuty powinny być dopasowane do ściśle określonych standardów.</p><p>Przyjęło się, że rozszerzanie elementów DOM o niestandardowe atrybuty powinno być realizowane prefixem data- (tzw. <em>data attributes</em>):</p><pre><code>&lt;div data-access="false" data-priority="high"&gt;&lt;/div&gt;</code></pre><p>Takich atrybutów na każdym elemencie może być więcej. Dzięki przedstawionym w tej lekcji szablonom możemy sprawić, żeby typowana reprezentacja każdego węzła trzymała się właśnie takiego standardu.</p><p>Jak to zrobić? Używając indeksów:</p><pre><code>type HTMLNode = {
+    id: number;
+    name: string;
+    [key: `data-${string}`]: string;
+    [key: `x-marker-${string}`]: number;
+}</code></pre><p>Tym sposobem wskazujemy, że obiekty typu <em>HTMLNode</em> wspierają indeksy zaczynające się od dwóch prefixów - standardowego <em>data-</em>, oraz wprowadzonego przeze mnie <em>x-marker-</em>. Możemy ich użyć w momencie tworzenia obiektu, a także już po tym fakcie:</p><pre><code>const MyComponent: HTMLNode = {
+    id: 12,
+    name: 'div',
+    ['data-testid']: 'topbar',
+    ['data-priority']: 'high',
+    ['x-marker-loadtime']: 21124
+}
+
+MyComponent['data-access'] = 'false';</code></pre><p>Na poziomie indeksów mamy pełne wsparcie dla weryfikacji typów i wartości, jakie do nich przypisujemy.</p><pre><code>const loadtime: number = MyComponent['x-marker-loadtime'];
+console.log(loadtime); //21124 </code></pre><p>Jeśli wypiszemy teraz na konsolę wszystkie pola takiego obiektu, to otrzymamy:</p><pre><code>for (let prop in MyComponent) { 
+    console.log(prop); // id, name, data-testid, data-priority, x-marker-loadtime, data-access
+}</code></pre><p>Dodatkowo, TypeScript zabezpieczy nas przed indeksowaniem nieznanymi nazwami:</p><pre><code>MyComponent['does-not-exist'] = 15;
+// ❌ Expression of type '"does-not-exist"' can't be used to index type 'HTMLNode'</code></pre><p>Szablony to potężny mechanizm, który może nam pomóc tworzyć bezpieczne typy, przy jednoczesnym zachowaniu elastyczności dla ich konsumenta.</p><h2>Podsumowanie</h2><p>W tej lekcji poznałeś kolejny rodzaj typu, dzięki któremu możesz budować elastyczne, dopasowujące się do potrzeb konsumentów narzędzia. Jeśli już teraz wykorzystujesz w swojej pracy popularne biblioteki TypeScript, to być może zauważysz jego działanie w praktyce.</p><p>Czekamy na Twoje spostrzeżenia i w międzyczasie przechodzimy do kolejnej lekcji!</p><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>421-literals-code</strong> - Rządowa agencja szpiegowska rekrutuje specjalistów TypeScript! Zadanie rekrutacyjne składa się z dwóch części. Pierwsza to implementacja typu <em>Code</em>, który będzie przyjmował “trójki” cyfr 0 i 1 połączone w formacie “{group}-{group}-{group}”, np. “110-001-101”. Po ukończeniu implementacji, drugim krokiem jest naprawa funkcji <em>codeToDecimal</em>, która konwertuje każdą z trójek na liczbę w formacie dziesiętnym, a następnie zwraca trzyznakowy kod dostępu. Zapoznaj się z testami i przygotuj niezbędne zmiany.</p></li><li><p><strong>422-literals-table </strong>- Wprowadzony w trakcie lekcji typ <em>Table</em> przyjmuje obecnie dwa parametry - model danych oraz nazwę tabeli w postaci <em>stringa</em>. Zaproponuj własny format typów, które umożliwiają wykorzystywanie jednego parametru - modelu danych. Zastanów się jak definiować mapowanie między modelem a nazwą tabeli w taki sposób, żeby istniejąca funkcjonalność pozostała bez zmian.</p></li></ol><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

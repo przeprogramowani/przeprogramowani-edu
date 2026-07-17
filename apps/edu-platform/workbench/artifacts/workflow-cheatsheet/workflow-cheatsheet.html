@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>10x Workflow — ściąga skilli (M0–M3)</title>
+  <!--
+    Self-contained editorial artifact. The CHEATSHEET dataset (script
+    #cheatsheet-data) is the source of truth; the renderer (script #cheatsheet-render)
+    iterates over it to build the page, so fixing a cell stays a one-line data
+    edit. Source of truth: context/changes/workflow-cheatsheet/research.md
+    (§2 net-new table, §3 chain topology, §5 capsules, §6 prompts, §7 voice).
+    Zero build: Tailwind via Play CDN (needs network at page-open time).
+  -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Mono for commands/filenames; keeps EN tokens crisp against PL prose. */
+    .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; }
+    /* Arrow glyph between chain nodes. */
+    .arrow { color: #94a3b8; font-weight: 700; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased">
+  <main id="app" class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"></main>
+
+  <script id="cheatsheet-data">
+    "use strict";
+
+    /**
+     * Single source of truth for the cheatsheet.
+     * Learner-facing copy is Polish (house voice); commands and artifact
+     * filenames stay English. Shapes color-code three skill kinds:
+     *   - generator: writes a foundation/change artifact and STOPs
+     *   - driver:    mutates the plan's ## Progress block
+     *   - register:  scores/appends, does not drive the chain
+     */
+    const CHEATSHEET = {
+      // Module lanes (M0 only carries the prework prompt; skills live in M1–M3).
+      modules: [
+        { id: "M0", title: "Prework", subtitle: "10xDevs 3.0 - Prework" },
+        { id: "M1", title: "Agentic Environment", subtitle: "Środowisko dla agenta" },
+        { id: "M2", title: "10xDevs Workflow", subtitle: "Pętla budowania" },
+        { id: "M3", title: "AI Development Quality & Maintenance", subtitle: "Jakość i utrzymanie" },
+      ],
+
+      // Legend: the three skill "shapes" worth color-coding.
+      shapes: {
+        generator: {
+          label: "Generator dokumentu",
+          desc: "zapisuje artefakt i kończy (STOP)",
+        },
+        driver: {
+          label: "Silnik wykonania",
+          desc: "mutuje plan.md → ## Progress",
+        },
+        register: {
+          label: "Rejestr (read-only)",
+          desc: "ocenia lub dopisuje, nie napędza łańcucha",
+        },
+      },
+
+      // 23 in-scope skills (net-new per lesson; M1–M3). research.md §2 + §5.
+      skills: [
+        // --- M1 · Agentic Environment ---
+        {
+          command: "/10x-init",
+          purpose: "Tworzy szkielet katalogu context/ (changes, archive, foundation + README).",
+          whenToUse: "Na starcie pracy z workflow — raz na projekt.",
+          inputArtifact: "—",
+          outputArtifact: "context/{changes,archive,foundation}/",
+          firstTaught: "m1l1",
+          shape: "generator",
+          module: "M1",
+          lesson: "m1l1",
+          note: "idempotentny; nie chainuje dalej",
+        },
+        {
+          command: "/10x-shape",
+          purpose: "Zamienia pomysł lub zmianę w ustrukturyzowane notatki (facylituje, nie zmyśla).",
+          whenToUse: "Greenfield albo istotna zmiana w istniejącym projekcie.",
+          inputArtifact: "context/foundation/",
+          outputArtifact: "shape-notes.md",
+          firstTaught: "m1l1",
+          shape: "generator",
+          module: "M1",
+          lesson: "m1l1",
+        },
+        {
+          command: "/10x-prd",
+          purpose: "Przekuwa notatki w PRD zgodny ze schematem; luki trafiają do ## Open Questions.",
+          whenToUse: "Gdy masz już shape-notes.md.",
+          inputArtifact: "shape-notes.md",
+          outputArtifact: "prd.md",
+          firstTaught: "m1l1",
+          shape: "generator",
+          module: "M1",
+          lesson: "m1l1",
+        },
+        {
+          command: "/10x-tech-stack-selector",
+          purpose: "Z PRD wybiera sprawdzony starter i pisze hand-off dla maszyny.",
+          whenToUse: "Greenfield, po PRD — czas wybrać stack.",
+          inputArtifact: "prd.md",
+          outputArtifact: "tech-stack.md",
+          firstTaught: "m1l2",
+          shape: "generator",
+          module: "M1",
+          lesson: "m1l2",
+          note: "ścieżka greenfield",
+        },
+        {
+          command: "/10x-stack-assess",
+          purpose: "Ocenia istniejący stack względem 4 bramek agent-friendly; daje ścieżkę kompensacji.",
+          whenToUse: "Brownfield — masz już kod i stack do oceny.",
+          inputArtifact: "prd.md (opcjonalnie)",
+          outputArtifact: "stack-assessment.md",
+          firstTaught: "m1l2",
+          shape: "generator",
+          module: "M1",
+          lesson: "m1l2",
+          note: "ścieżka brownfield",
+        },
+        {
+          command: "/10x-bootstrapper",
+          purpose: "Z hand-offu scaffolduje projekt w bieżącym katalogu (zachowuje context/).",
+          whenToUse: "Greenfield, po wyborze stacku.",
+          inputArtifact: "tech-stack.md",
+          outputArtifact: "scaffold + bootstrap-verification/verification.md",
+          firstTaught: "m1l3",
+          shape: "generator",
+          module: "M1",
+          lesson: "m1l3",
+          note: "ścieżka greenfield",
+        },
+        {
+          command: "/10x-health-check",
+          purpose: "Audytuje zależności, security, test-runner i CI pod kątem gotowości dla agenta.",
+          whenToUse: "Brownfield, po ocenie stacku.",
+          inputArtifact: "stack-assessment.md (opcjonalnie)",
+          outputArtifact: "health-check.md",
+          firstTaught: "m1l3",
+          shape: "generator",
+          module: "M1",
+          lesson: "m1l3",
+          note: "ścieżka brownfield",
+        },
+        {
+          command: "/10x-agents-md",
+          purpose: "Generuje krótki, odsyłający AGENTS.md — najpierw reguły krytyczne.",
+          whenToUse: "Onboarding agenta. Greenfield i brownfield zbiegają się tutaj.",
+          inputArtifact: "inspekcja repo",
+          outputArtifact: "AGENTS.md / CLAUDE.md",
+          firstTaught: "m1l4",
+          shape: "generator",
+          module: "M1",
+          lesson: "m1l4",
+          note: "punkt zbiegu obu gałęzi",
+        },
+        {
+          command: "/10x-rule-review",
+          purpose: "Ocenia plik reguł dla AI na 5 osiach — tylko scorecard, nie edytuje.",
+          whenToUse: "Gdy chcesz sprawdzić jakość reguł (np. AGENTS.md).",
+          inputArtifact: "ścieżka do pliku .md",
+          outputArtifact: "scorecard (nie zapisuje pliku)",
+          firstTaught: "m1l4",
+          shape: "register",
+          module: "M1",
+          lesson: "m1l4",
+        },
+        {
+          command: "/10x-lesson",
+          purpose: "Dopisuje powracającą regułę lub pułapkę do pamięci projektu.",
+          whenToUse: "Gdy wyłapiesz klasę błędu wartą zapamiętania na przyszłość.",
+          inputArtifact: "4-polowy wywiad",
+          outputArtifact: "foundation/lessons.md (append)",
+          firstTaught: "m1l4",
+          shape: "register",
+          module: "M1",
+          lesson: "m1l4",
+          note: "czytany jako priory przez frame/research/plan/implement/review",
+        },
+        {
+          command: "/10x-infra-research",
+          purpose: "Wybiera platformę MVP: research + 5 kryteriów + 3 soczewki anty-bias.",
+          whenToUse: "Przed pierwszym deployem — gdzie hostować.",
+          inputArtifact: "tech-stack.md (+ prd.md)",
+          outputArtifact: "infrastructure.md",
+          firstTaught: "m1l5",
+          shape: "generator",
+          module: "M1",
+          lesson: "m1l5",
+        },
+
+        // --- M2 · 10xDevs Workflow ---
+        {
+          command: "/10x-roadmap",
+          purpose: "Z PRD układa pionowe plasterki (F-NN/S-NN) w kolejności zależności.",
+          whenToUse: "Po PRD — rozbicie MVP na kolejność dowożenia.",
+          inputArtifact: "prd.md (+ tech-stack.md)",
+          outputArtifact: "roadmap.md",
+          firstTaught: "m2l1",
+          shape: "generator",
+          module: "M2",
+          lesson: "m2l1",
+          note: "każdy plasterek → /10x-plan <id>",
+        },
+        {
+          command: "/10x-new",
+          purpose: "Zakłada folder jednej zmiany z plikiem tożsamości.",
+          whenToUse: "Nowa jednostka pracy.",
+          inputArtifact: "context/changes/",
+          outputArtifact: "changes/<id>/change.md",
+          firstTaught: "m2l2",
+          shape: "generator",
+          module: "M2",
+          lesson: "m2l2",
+          note: "start pętli per-change",
+        },
+        {
+          command: "/10x-plan",
+          purpose: "Szczegółowy, sceptyczny, iterowany plan z kanonicznym ## Progress.",
+          whenToUse: "Przed kodem — gdy wiesz, co budować.",
+          inputArtifact: "research.md / frame.md (opcjonalnie)",
+          outputArtifact: "plan.md + plan-brief.md",
+          firstTaught: "m2l2",
+          shape: "generator",
+          module: "M2",
+          lesson: "m2l2",
+          note: "więcej kontekstu wyżej = mniej pytań",
+        },
+        {
+          command: "/10x-plan-review",
+          purpose: "Pyta „czy ten plan zadziała?” zanim powstanie kod.",
+          whenToUse: "Bramka po planie, przed implementacją.",
+          inputArtifact: "plan.md",
+          outputArtifact: "reviews/plan-review.md (SOUND/REVISE/RETHINK)",
+          firstTaught: "m2l2",
+          shape: "generator",
+          module: "M2",
+          lesson: "m2l2",
+          note: "bramka",
+        },
+        {
+          command: "/10x-implement",
+          purpose: "Wykonuje zatwierdzony plan faza po fazie.",
+          whenToUse: "Plan gotowy — czas na kod.",
+          inputArtifact: "plan.md",
+          outputArtifact: "kod + flipuje ## Progress",
+          firstTaught: "m2l2",
+          shape: "driver",
+          module: "M2",
+          lesson: "m2l2",
+          note: "współdzieli plan.md + ## Progress z /10x-tdd i /10x-e2e",
+        },
+        {
+          command: "/10x-archive",
+          purpose: "Zamyka zmianę: git mv do archive/, odhacza pozycję w roadmapie.",
+          whenToUse: "Zmiana zaimplementowana / zreviewowana.",
+          inputArtifact: "change.md",
+          outputArtifact: "archive/<date>-<id>/",
+          firstTaught: "m2l2",
+          shape: "generator",
+          module: "M2",
+          lesson: "m2l2",
+          note: "wired, ale nie pada w prozie draftów (draft-silent)",
+        },
+        {
+          command: "/10x-impl-review",
+          purpose: "Pyta „czy zbudowaliśmy to, co zaplanowaliśmy?” — drift / safety / wzorce.",
+          whenToUse: "Bramka po implementacji.",
+          inputArtifact: "plan.md ## Progress + git diff",
+          outputArtifact: "reviews/impl-review.md (APPROVED/NEEDS ATTENTION/REJECTED)",
+          firstTaught: "m2l3",
+          shape: "generator",
+          module: "M2",
+          lesson: "m2l3",
+          note: "bramka",
+        },
+        {
+          command: "/10x-frame",
+          purpose: "Oddziela obserwację od przyczyny / problem od rozwiązania przed planowaniem.",
+          whenToUse: "„bug + fix”, pytania o scope/design/założenia.",
+          inputArtifact: "research.md (opcjonalnie)",
+          outputArtifact: "frame.md",
+          firstTaught: "m2l4",
+          shape: "generator",
+          module: "M2",
+          lesson: "m2l4",
+          note: "sytuacyjne koło ratunkowe, nie liniowy krok",
+        },
+        {
+          command: "/10x-research",
+          purpose: "Research kodu równoległymi subagentami.",
+          whenToUse: "how / where / why przed planowaniem.",
+          inputArtifact: "lessons.md (opcjonalnie)",
+          outputArtifact: "research.md",
+          firstTaught: "m2l4",
+          shape: "generator",
+          module: "M2",
+          lesson: "m2l4",
+          note: "sytuacyjny krok przed planem",
+        },
+
+        // --- M3 · AI Development Quality & Maintenance ---
+        {
+          command: "/10x-test-plan",
+          purpose: "Risk-first orkiestrator fazowego roll-outu testów.",
+          whenToUse: "Brownfield — ustawić kolejność testów wg ryzyka, nie wygody.",
+          inputArtifact: "prd.md + roadmap.md",
+          outputArtifact: "test-plan.md",
+          firstTaught: "m3l1",
+          shape: "generator",
+          module: "M3",
+          lesson: "m3l1",
+        },
+        {
+          command: "/10x-tdd",
+          purpose: "Siostra test-first (RED→GREEN→REFACTOR); wymaga gotowej infry testowej.",
+          whenToUse: "Gdy umiesz nazwać pierwszy czerwony test jednym zdaniem.",
+          inputArtifact: "plan.md",
+          outputArtifact: "testy + kod, flipuje ## Progress",
+          firstTaught: "m3l2",
+          shape: "driver",
+          module: "M3",
+          lesson: "m3l2",
+          note: "współdzieli plan.md + ## Progress z /10x-implement i /10x-e2e",
+        },
+        {
+          command: "/10x-e2e",
+          purpose: "Siostra przeglądarkowa (PLAN→GENERATE→REVIEW→VERIFY); start od seed testu.",
+          whenToUse: "Ryzyka tylko w przeglądarce; resztę oddaje do tdd/implement.",
+          inputArtifact: "plan.md",
+          outputArtifact: "testy E2E, flipuje ## Progress",
+          firstTaught: "m3l4",
+          shape: "driver",
+          module: "M3",
+          lesson: "m3l4",
+          note: "współdzieli plan.md + ## Progress z /10x-implement i /10x-tdd",
+        },
+      ],
+
+      // 7 prompts as secondary per-lesson footnotes. research.md §2 + §6.
+      // The four m1l5-* share a group: one 4-step deploy sub-sequence.
+      prompts: [
+        {
+          name: "m0l1-prework",
+          lesson: "m0l1",
+          module: "M0",
+          description: "Tekst powitalny kursu / onboarding preworku.",
+        },
+        {
+          name: "skill-explainer",
+          lesson: "m1l2",
+          module: "M1",
+          description: "Meta-prompt: analizuje źródło skilla → 7-sekcyjny raport o mechanice i jak zbudować podobny.",
+        },
+        {
+          name: "m1l5-1-plan-integration",
+          lesson: "m1l5",
+          module: "M1",
+          group: "m1l5-deploy",
+          step: 1,
+          description: "Krok 1: rozpocznij planowanie integracji {{platform}} + deploy wg infrastructure.md.",
+        },
+        {
+          name: "m1l5-2-constrain-approach",
+          lesson: "m1l5",
+          module: "M1",
+          group: "m1l5-deploy",
+          step: 2,
+          description: "Krok 2: ogranicz plan do auto-deployu natywnego dla platformy, nie zewnętrznego CI.",
+        },
+        {
+          name: "m1l5-3-extend-prerequisites",
+          lesson: "m1l5",
+          module: "M1",
+          group: "m1l5-deploy",
+          step: 3,
+          description: "Krok 3: dodaj prerekwizyty konfiguracji CLI.",
+        },
+        {
+          name: "m1l5-4-store-plan",
+          lesson: "m1l5",
+          module: "M1",
+          group: "m1l5-deploy",
+          step: 4,
+          description: "Krok 4: zapisz plan w context/changes/deployment/deployment-plan.md.",
+        },
+        {
+          name: "m3l2-ad-hoc-testing",
+          lesson: "m3l2",
+          module: "M3",
+          description: "Ad-hoc test jednostkowy oparty o @TECH_STACK + @PRD; 3 etapy; stop przy niejednoznacznym oracle.",
+        },
+      ],
+
+      // Chain-strip topology (research.md §3). Nodes reference skill commands;
+      // edges express order; branches express the only real "choices".
+      chain: {
+        // A. Foundation bootstrap — runs once, forks at PRD, converges at agents-md.
+        foundation: {
+          head: ["/10x-init", "/10x-shape", "/10x-prd"],
+          forks: {
+            greenfield: {
+              label: "Greenfield",
+              steps: ["/10x-tech-stack-selector", "/10x-bootstrapper"],
+            },
+            brownfield: {
+              label: "Brownfield",
+              steps: ["/10x-stack-assess", "/10x-health-check"],
+            },
+          },
+          convergesAt: "/10x-agents-md",
+          // Situational foundation branches off the PRD (not strictly linear).
+          sideBranches: ["/10x-roadmap", "/10x-infra-research", "/10x-test-plan"],
+        },
+
+        // B. Per-change loop — repeated per unit of work.
+        perChange: {
+          start: "/10x-new",
+          situationalPrePlan: ["/10x-frame", "/10x-research"], // either/both, optional
+          plan: "/10x-plan",
+          planGate: "/10x-plan-review",
+          // Three execution siblings, interleavable per phase, ONE plan.md + ## Progress.
+          execution: {
+            siblings: ["/10x-implement", "/10x-tdd", "/10x-e2e"],
+            sharedState: "plan.md + ## Progress",
+            note: "interleavable per fazę; współdzielą jeden plan i jeden ## Progress",
+          },
+          implGate: "/10x-impl-review",
+          close: "/10x-archive",
+        },
+
+        // change.md status lifecycle (record-only frontmatter).
+        statusLifecycle: [
+          "new", "preparing", "planned", "plan_reviewed",
+          "implementing", "implemented", "impl_reviewed", "archived",
+        ],
+      },
+
+      // Supporting cast — advisory skills mentioned in drafts, NOT part of the
+      // workflow chain. research.md §1.
+      supportingCast: [
+        {
+          command: "/10x-cli-setup",
+          firstTaught: "m1l1",
+          description: "Instalacja i konfiguracja 10x-cli (Cursor / Copilot / Claude Code).",
+        },
+        {
+          command: "/10x-cli-guide",
+          firstTaught: "m1l1",
+          description: "Codzienne użycie 10x-cli: get, list, doctor, auth.",
+        },
+        {
+          command: "/skill-creator",
+          firstTaught: "m1l2",
+          description: "Tworzenie i ulepszanie własnych skilli (też m3l4).",
+        },
+      ],
+    };
+
+    // --- Phase 1 automated check: dataset shape + counts (no console error). ---
+    (function verifyDataset() {
+      const skillCount = CHEATSHEET.skills.length;
+      const promptCount = CHEATSHEET.prompts.length;
+      console.assert(skillCount === 23, "expected 23 skills, got " + skillCount);
+      console.assert(promptCount === 7, "expected 7 prompts, got " + promptCount);
+
+      // Every skill carries the required fields and a known shape.
+      const shapes = Object.keys(CHEATSHEET.shapes);
+      for (const s of CHEATSHEET.skills) {
+        console.assert(typeof s.command === "string" && s.command.startsWith("/"),
+          "skill missing command: " + JSON.stringify(s));
+        console.assert(shapes.includes(s.shape),
+          "skill has unknown shape: " + s.command + " → " + s.shape);
+        for (const field of ["purpose", "whenToUse", "inputArtifact", "outputArtifact", "firstTaught", "module", "lesson"]) {
+          console.assert(s[field], "skill " + s.command + " missing field: " + field);
+        }
+      }
+
+      console.log("cheatsheet dataset OK — " + skillCount + " skills, " + promptCount + " prompts");
+    })();
+
+    // Expose for the renderer.
+    window.CHEATSHEET = CHEATSHEET;
+  </script>
+
+  <script id="cheatsheet-render">
+    "use strict";
+    (function render() {
+      const C = window.CHEATSHEET;
+      const app = document.getElementById("app");
+
+      // Presentational-only lesson titles (research.md §2). Not part of the
+      // dataset contract — labels for lane sub-headings.
+      const LESSON_TITLES = {
+        m0l1: "Prework",
+        m1l1: "Od pomysłu do PRD",
+        m1l2: "Wybór stacku",
+        m1l3: "Bootstrap z AI",
+        m1l4: "Onboarding agenta",
+        m1l5: "Localhost → produkcja",
+        m2l1: "Roadmapa MVP",
+        m2l2: "Implementacja z agentami",
+        m2l3: "Solo code review",
+        m2l4: "AI research toolkit",
+        m2l5: "Praca wieloagentowa",
+        m3l1: "Plan testów z AI",
+        m3l2: "Od planu do testów",
+        m3l3: "Hooki i triggery",
+        m3l4: "Testy E2E",
+        m3l5: "Debugging z AI",
+      };
+
+      // Shape → Tailwind tint classes (cell + legend swatch), keyed off the
+      // three shapes in the dataset.
+      const SHAPE_STYLE = {
+        generator: { cell: "bg-sky-50 border-sky-300", bar: "bg-sky-400", badge: "bg-sky-100 text-sky-800", swatch: "bg-sky-100 border-sky-300" },
+        driver:    { cell: "bg-amber-50 border-amber-300", bar: "bg-amber-400", badge: "bg-amber-100 text-amber-800", swatch: "bg-amber-100 border-amber-300" },
+        register:  { cell: "bg-emerald-50 border-emerald-300", bar: "bg-emerald-400", badge: "bg-emerald-100 text-emerald-800", swatch: "bg-emerald-100 border-emerald-300" },
+      };
+
+      const el = (tag, cls, html) => {
+        const n = document.createElement(tag);
+        if (cls) n.className = cls;
+        if (html != null) n.innerHTML = html;
+        return n;
+      };
+      const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+      const shapeByCommand = Object.fromEntries(C.skills.map((s) => [s.command, s.shape]));
+
+      // ---- Header + legend ---------------------------------------------------
+      const header = el("header", "mb-8");
+      header.appendChild(el("h1", "text-3xl font-bold tracking-tight text-slate-900",
+        "10x Workflow — ściąga skilli"));
+      header.appendChild(el("p", "mt-2 max-w-3xl text-slate-600",
+        "Co robi każdy skill, kiedy po niego sięgnąć i jaki plik czyta → zapisuje. " +
+        "Pogrupowane po module (M0→M3); pokazane są tylko skille <em>nowe</em> w danej lekcji. " +
+        "Łańcuch na dole pokazuje, jak się spinają w całość."));
+
+      const legend = el("div", "mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg border border-slate-200 bg-white p-3 text-sm");
+      legend.appendChild(el("span", "font-semibold text-slate-700", "Kształt skilla:"));
+      for (const key of Object.keys(C.shapes)) {
+        const s = C.shapes[key];
+        const item = el("span", "inline-flex items-center gap-2");
+        item.appendChild(el("span", "inline-block h-4 w-4 rounded border " + SHAPE_STYLE[key].swatch));
+        item.appendChild(el("span", "text-slate-700", "<strong>" + esc(s.label) + "</strong> — " + esc(s.desc)));
+        legend.appendChild(item);
+      }
+      header.appendChild(legend);
+      app.appendChild(header);
+
+      // ---- Module lanes ------------------------------------------------------
+      for (const mod of C.modules) {
+        const lane = el("section", "mb-8 rounded-xl border border-slate-200 bg-white shadow-sm");
+        const band = el("div", "flex items-baseline gap-3 rounded-t-xl border-b border-slate-200 bg-slate-800 px-4 py-3 text-white");
+        band.appendChild(el("span", "rounded bg-white/15 px-2 py-0.5 text-sm font-bold", esc(mod.id)));
+        band.appendChild(el("span", "text-lg font-semibold", esc(mod.title)));
+        band.appendChild(el("span", "text-sm text-slate-300", esc(mod.subtitle)));
+        lane.appendChild(band);
+
+        const body = el("div", "p-4");
+        const modSkills = C.skills.filter((s) => s.module === mod.id);
+
+        if (modSkills.length === 0) {
+          // M0 carries only the prework prompt — no skills.
+          const modPrompts = C.prompts.filter((p) => p.module === mod.id);
+          const note = el("p", "text-sm text-slate-500");
+          note.innerHTML = "Brak skilli — tylko materiały preworku" +
+            (modPrompts.length ? " (prompt <span class='mono'>" + esc(modPrompts[0].name) + "</span>)." : ".");
+          body.appendChild(note);
+        } else {
+          // Lessons in first-appearance order (dataset is already in lesson order).
+          const lessons = [];
+          for (const s of modSkills) if (!lessons.includes(s.lesson)) lessons.push(s.lesson);
+
+          for (const lesson of lessons) {
+            const group = el("div", "mb-5 last:mb-0");
+            const sub = el("h3", "mb-2 flex items-center gap-2 text-sm font-semibold text-slate-500");
+            sub.appendChild(el("span", "mono rounded bg-slate-100 px-1.5 py-0.5 text-slate-700", esc(lesson)));
+            sub.appendChild(el("span", "", esc(LESSON_TITLES[lesson] || "")));
+            group.appendChild(sub);
+
+            const grid = el("div", "grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3");
+            for (const s of modSkills.filter((x) => x.lesson === lesson)) {
+              grid.appendChild(skillCell(s));
+            }
+            group.appendChild(grid);
+            body.appendChild(group);
+          }
+        }
+        lane.appendChild(body);
+        app.appendChild(lane);
+      }
+
+      function skillCell(s) {
+        const st = SHAPE_STYLE[s.shape];
+        const cell = el("article", "relative overflow-hidden rounded-lg border " + st.cell + " p-3 pl-4");
+        cell.appendChild(el("span", "absolute left-0 top-0 h-full w-1.5 " + st.bar));
+
+        const top = el("div", "flex items-center justify-between gap-2");
+        top.appendChild(el("span", "mono text-base font-bold text-slate-900", esc(s.command)));
+        top.appendChild(el("span", "rounded px-1.5 py-0.5 text-[11px] font-semibold " + st.badge, esc(C.shapes[s.shape].label)));
+        cell.appendChild(top);
+
+        cell.appendChild(el("p", "mt-1.5 text-sm text-slate-700", esc(s.purpose)));
+
+        const when = el("p", "mt-1.5 text-sm text-slate-600");
+        when.innerHTML = "<span class='font-semibold text-slate-500'>Kiedy:</span> " + esc(s.whenToUse);
+        cell.appendChild(when);
+
+        const io = el("div", "mt-2 rounded bg-white/70 px-2 py-1.5 text-xs");
+        io.innerHTML = "<span class='mono text-slate-700'>" + esc(s.inputArtifact) + "</span>" +
+          " <span class='arrow'>→</span> " +
+          "<span class='mono font-semibold text-slate-900'>" + esc(s.outputArtifact) + "</span>";
+        cell.appendChild(io);
+
+        const foot = el("div", "mt-2 flex flex-wrap items-center gap-2 text-[11px]");
+        foot.appendChild(el("span", "text-slate-500", "pierwszy raz: <span class='mono font-semibold text-slate-700'>" + esc(s.firstTaught) + "</span>"));
+        if (s.note) foot.appendChild(el("span", "rounded bg-slate-200 px-1.5 py-0.5 text-slate-600", esc(s.note)));
+        cell.appendChild(foot);
+
+        return cell;
+      }
+
+      // ---- Chain strip -------------------------------------------------------
+      const chainNode = (cmd, kind) => {
+        // kind: undefined (skill, tinted by shape), "gate", "branch"
+        const shape = shapeByCommand[cmd];
+        let cls = "mono inline-block rounded-md border px-2 py-1 text-xs font-semibold ";
+        if (kind === "gate") cls += "border-dashed border-slate-400 bg-white text-slate-700";
+        else if (shape && SHAPE_STYLE[shape]) cls += SHAPE_STYLE[shape].cell + " text-slate-900";
+        else cls += "border-slate-300 bg-white text-slate-700";
+        return el("span", cls, esc(cmd));
+      };
+      const arrow = () => el("span", "arrow px-0.5", "→");
+      const flowRow = () => el("div", "flex flex-wrap items-center gap-1.5");
+      const seq = (cmds, kinds) => {
+        const row = flowRow();
+        cmds.forEach((cmd, i) => {
+          if (i) row.appendChild(arrow());
+          row.appendChild(chainNode(cmd, kinds && kinds[cmd]));
+        });
+        return row;
+      };
+
+      const chainSec = el("section", "mb-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm");
+      chainSec.appendChild(el("h2", "mb-1 text-xl font-bold text-slate-900", "Jak się to spina (łańcuch)"));
+      chainSec.appendChild(el("p", "mb-4 text-sm text-slate-600",
+        "Każdy skill czyta plik z poprzedniego kroku i zapisuje wejście dla następnego. " +
+        "Skille nie chainują się same — to ty jesteś dyspozytorem."));
+
+      const fnd = C.chain.foundation;
+      // Foundation block
+      const fBlock = el("div", "mb-5");
+      fBlock.appendChild(el("h3", "mb-2 text-sm font-bold uppercase tracking-wide text-slate-500", "Fundament — raz na projekt"));
+      const fHead = flowRow();
+      fnd.head.forEach((cmd, i) => { if (i) fHead.appendChild(arrow()); fHead.appendChild(chainNode(cmd)); });
+      fHead.appendChild(arrow());
+      fHead.appendChild(el("span", "text-xs font-semibold text-slate-500", "rozwidlenie:"));
+      fBlock.appendChild(fHead);
+
+      const forkWrap = el("div", "mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2");
+      for (const key of ["greenfield", "brownfield"]) {
+        const fork = fnd.forks[key];
+        const box = el("div", "rounded-lg border border-slate-200 bg-slate-50 p-2.5");
+        box.appendChild(el("div", "mb-1.5 text-xs font-bold text-slate-600", esc(fork.label)));
+        box.appendChild(seq(fork.steps));
+        forkWrap.appendChild(box);
+      }
+      fBlock.appendChild(forkWrap);
+
+      const conv = flowRow();
+      conv.className += " mt-2";
+      conv.appendChild(el("span", "text-xs font-semibold text-slate-500", "obie gałęzie zbiegają się →"));
+      conv.appendChild(chainNode(fnd.convergesAt));
+      fBlock.appendChild(conv);
+
+      const side = el("p", "mt-2 text-xs text-slate-500");
+      side.innerHTML = "Po PRD (sytuacyjnie, nieliniowo): " +
+        fnd.sideBranches.map((c) => "<span class='mono font-semibold text-slate-700'>" + esc(c) + "</span>").join(" · ");
+      fBlock.appendChild(side);
+      chainSec.appendChild(fBlock);
+
+      // Per-change loop
+      const pc = C.chain.perChange;
+      const pBlock = el("div", "mb-5 border-t border-slate-200 pt-4");
+      pBlock.appendChild(el("h3", "mb-2 text-sm font-bold uppercase tracking-wide text-slate-500", "Pętla per-change — powtarzasz dla każdej zmiany"));
+
+      const loop = flowRow();
+      loop.appendChild(chainNode(pc.start));
+      loop.appendChild(arrow());
+      loop.appendChild(el("span", "rounded-md border border-dashed border-slate-400 bg-white px-2 py-1 text-xs text-slate-600",
+        "[ " + pc.situationalPrePlan.map((c) => "<span class='mono font-semibold'>" + esc(c) + "</span>").join(" / ") + " ] — sytuacyjnie"));
+      loop.appendChild(arrow());
+      loop.appendChild(chainNode(pc.plan));
+      loop.appendChild(arrow());
+      loop.appendChild(chainNode(pc.planGate, "gate"));
+      pBlock.appendChild(loop);
+
+      // Execution siblings box
+      const exec = C.chain.perChange.execution;
+      const execBox = el("div", "mt-2 rounded-lg border border-amber-300 bg-amber-50 p-3");
+      execBox.appendChild(el("div", "mb-2 text-xs font-bold uppercase tracking-wide text-amber-800", "Wykonanie — 3 siostry, przeplatane per fazę"));
+      const execRow = el("div", "flex flex-wrap items-center gap-1.5");
+      exec.siblings.forEach((cmd, i) => {
+        if (i) execRow.appendChild(el("span", "text-amber-500 font-bold", "|"));
+        execRow.appendChild(chainNode(cmd));
+      });
+      execBox.appendChild(execRow);
+      const shared = el("p", "mt-2 text-xs text-amber-800");
+      shared.innerHTML = "↕ wspólny <span class='mono font-semibold'>" + esc(exec.sharedState) + "</span> — " + esc(exec.note);
+      execBox.appendChild(shared);
+      pBlock.appendChild(execBox);
+
+      const tail = flowRow();
+      tail.className += " mt-2";
+      tail.appendChild(el("span", "text-xs font-semibold text-slate-500", "potem →"));
+      tail.appendChild(chainNode(pc.implGate, "gate"));
+      tail.appendChild(arrow());
+      tail.appendChild(chainNode(pc.close));
+      pBlock.appendChild(tail);
+      chainSec.appendChild(pBlock);
+
+      // Status lifecycle ribbon
+      const life = el("div", "border-t border-slate-200 pt-4");
+      life.appendChild(el("h3", "mb-2 text-sm font-bold uppercase tracking-wide text-slate-500", "Cykl życia change.md (frontmatter)"));
+      const ribbon = flowRow();
+      C.chain.statusLifecycle.forEach((st, i) => {
+        if (i) ribbon.appendChild(arrow());
+        ribbon.appendChild(el("span", "mono rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600", esc(st)));
+      });
+      life.appendChild(ribbon);
+      chainSec.appendChild(life);
+      app.appendChild(chainSec);
+
+      // ---- Prompts footnotes -------------------------------------------------
+      const pr = el("section", "mb-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm");
+      pr.appendChild(el("h2", "mb-1 text-xl font-bold text-slate-900", "Prompty (drugorzędne, per lekcja)"));
+      pr.appendChild(el("p", "mb-4 text-sm text-slate-600",
+        "Prostsze niż skille — jednorazowa eksploracja albo edycja. Cztery <span class='mono'>m1l5-*</span> to jedna 4-krokowa sekwencja deployu."));
+
+      const grouped = {};   // group key -> prompts
+      const singles = [];
+      for (const p of C.prompts) {
+        if (p.group) (grouped[p.group] = grouped[p.group] || []).push(p);
+        else singles.push(p);
+      }
+      const plist = el("div", "grid grid-cols-1 gap-3 sm:grid-cols-2");
+      for (const p of singles) {
+        const item = el("div", "rounded-lg border border-slate-200 bg-slate-50 p-3");
+        const h = el("div", "flex items-center gap-2");
+        h.appendChild(el("span", "mono text-sm font-bold text-slate-900", esc(p.name)));
+        h.appendChild(el("span", "mono rounded bg-slate-200 px-1 text-[11px] text-slate-600", esc(p.lesson)));
+        item.appendChild(h);
+        item.appendChild(el("p", "mt-1 text-sm text-slate-600", esc(p.description)));
+        plist.appendChild(item);
+      }
+      for (const key of Object.keys(grouped)) {
+        const steps = grouped[key].slice().sort((a, b) => (a.step || 0) - (b.step || 0));
+        const item = el("div", "rounded-lg border border-slate-300 bg-slate-50 p-3 sm:col-span-2");
+        const h = el("div", "mb-1.5 flex items-center gap-2");
+        h.appendChild(el("span", "text-sm font-bold text-slate-900", "Sekwencja deployu"));
+        h.appendChild(el("span", "mono rounded bg-slate-200 px-1 text-[11px] text-slate-600", esc(steps[0].lesson)));
+        item.appendChild(h);
+        const ol = el("ol", "space-y-1");
+        for (const p of steps) {
+          const li = el("li", "text-sm text-slate-600");
+          li.innerHTML = "<span class='mono font-semibold text-slate-800'>" + esc(p.name) + "</span> — " + esc(p.description);
+          ol.appendChild(li);
+        }
+        item.appendChild(ol);
+        plist.appendChild(item);
+      }
+      pr.appendChild(plist);
+      app.appendChild(pr);
+
+      // ---- Supporting cast ---------------------------------------------------
+      const sc = el("section", "mb-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm");
+      sc.appendChild(el("h2", "mb-1 text-xl font-bold text-slate-900", "Obsada drugoplanowa"));
+      sc.appendChild(el("p", "mb-4 text-sm text-slate-600",
+        "Skille pomocnicze wspominane w lekcjach — doradcze, poza głównym łańcuchem workflow."));
+      const scGrid = el("div", "grid grid-cols-1 gap-3 sm:grid-cols-3");
+      for (const item of C.supportingCast) {
+        const card = el("div", "rounded-lg border border-slate-200 bg-slate-50 p-3");
+        const h = el("div", "flex items-center gap-2");
+        h.appendChild(el("span", "mono text-sm font-bold text-slate-900", esc(item.command)));
+        h.appendChild(el("span", "mono rounded bg-slate-200 px-1 text-[11px] text-slate-600", esc(item.firstTaught)));
+        card.appendChild(h);
+        card.appendChild(el("p", "mt-1 text-sm text-slate-600", esc(item.description)));
+        scGrid.appendChild(card);
+      }
+      sc.appendChild(scGrid);
+      app.appendChild(sc);
+
+      // ---- Footer ------------------------------------------------------------
+      const ft = el("footer", "pb-6 pt-2 text-center text-xs text-slate-400");
+      ft.innerHTML = C.skills.length + " skilli · " + C.prompts.length +
+        " promptów · M0–M3 · artefakt edytorski (nie treść platformy)";
+      app.appendChild(ft);
+    })();
+  </script>
+</body>
+</html>

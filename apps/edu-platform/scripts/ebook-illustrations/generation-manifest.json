@@ -1,0 +1,721 @@
+{
+  "ebook": "10xdevs3-ebook",
+  "assetBasePath": "/assets/10xdevs/ebook-evals",
+  "updatedAt": "2026-03-28T11:23:50.384Z",
+  "entries": [
+    {
+      "assetId": "hero-overview",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "25999048e0182497",
+      "outputPath": "/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "status": "error",
+      "error": "Error: Can't write format: org.webmproject.webp\nError 13: an unknown error occurred\nTry 'sips --help' for help using this tool",
+      "mimeType": null,
+      "fileSizeBytes": null,
+      "createdAt": "2026-03-28T08:59:22.553Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "hero-overview",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "25999048e0182497",
+      "outputPath": "/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 341478,
+      "createdAt": "2026-03-28T09:00:02.282Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "hero-overview",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "3aaade5e5c0d9e0d",
+      "outputPath": "/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 272524,
+      "createdAt": "2026-03-28T09:06:50.096Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "hero-overview",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "3aaade5e5c0d9e0d",
+      "outputPath": "/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 320878,
+      "createdAt": "2026-03-28T09:13:27.002Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "ch1-benchmark-cycle",
+      "attempt": 1,
+      "model": "openai/gpt-5-image",
+      "promptHash": "c105bdbf3d9aa790",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch1-benchmark-cycle.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch1-benchmark-cycle.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 74346,
+      "createdAt": "2026-03-28T09:14:47.312Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch1-metric-reductionism",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "85c256746410e595",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch1-metric-reductionism.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch1-metric-reductionism.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 160692,
+      "createdAt": "2026-03-28T09:15:10.115Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch2-maturity-spectrum",
+      "attempt": 1,
+      "model": "openai/gpt-5-image",
+      "promptHash": "4691e4a8e8f8f4ad",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch2-maturity-spectrum.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch2-maturity-spectrum.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 95982,
+      "createdAt": "2026-03-28T09:17:03.411Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch2-benchmark-landscape",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "0466064c1dd689f2",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch2-benchmark-landscape.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch2-benchmark-landscape.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 255314,
+      "createdAt": "2026-03-28T09:17:24.987Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch3-passk-vs-passpowk",
+      "attempt": 1,
+      "model": "openai/gpt-5-image",
+      "promptHash": "106b83c19cb15042",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch3-passk-vs-passpowk.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch3-passk-vs-passpowk.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 74100,
+      "createdAt": "2026-03-28T09:19:21.875Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch3-cost-per-correct",
+      "attempt": 1,
+      "model": "openai/gpt-5-image",
+      "promptHash": "b1a254b5af6857bd",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch3-cost-per-correct.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch3-cost-per-correct.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 59984,
+      "createdAt": "2026-03-28T09:21:04.240Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch4-harness-system-model",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "3d83627158968a18",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch4-harness-system-model.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch4-harness-system-model.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 181058,
+      "createdAt": "2026-03-28T09:21:23.864Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch4-agent-paradigms",
+      "attempt": 1,
+      "model": "openai/gpt-5-image",
+      "promptHash": "1e0f23fafd49ae31",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch4-agent-paradigms.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch4-agent-paradigms.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 91268,
+      "createdAt": "2026-03-28T09:22:57.045Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch3-agent-vs-inline",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "670bfef2b6ae13c7",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch3-agent-vs-inline.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch3-agent-vs-inline.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 164588,
+      "createdAt": "2026-03-28T09:42:54.180Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch5-technique-spectrum",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "0be0ef4f2995a126",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch5-technique-spectrum.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch5-technique-spectrum.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 222738,
+      "createdAt": "2026-03-28T09:43:18.952Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch6-hybrid-eval-stack",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "077a54a992abc16b",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch6-hybrid-eval-stack.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch6-hybrid-eval-stack.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 203964,
+      "createdAt": "2026-03-28T09:43:41.954Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch7-10xbench-criteria",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "b4a9cb0ee46e1ec2",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch7-10xbench-criteria.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch7-10xbench-criteria.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 185318,
+      "createdAt": "2026-03-28T09:44:04.379Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch8-price-frontier",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "858463da47995076",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch8-price-frontier.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch8-price-frontier.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 145906,
+      "createdAt": "2026-03-28T09:44:29.973Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch9-decision-scorecard",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "1ac7c16f4d50a251",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch9-decision-scorecard.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch9-decision-scorecard.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 160228,
+      "createdAt": "2026-03-28T09:44:53.004Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch10-rollout-mission",
+      "attempt": 1,
+      "model": "black-forest-labs/flux.2-pro",
+      "promptHash": "541944b61a3272bd",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch10-rollout-mission.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch10-rollout-mission.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 181714,
+      "createdAt": "2026-03-28T09:45:13.869Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "hero-overview",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "0d1babef4929338c",
+      "outputPath": "/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 476986,
+      "createdAt": "2026-03-28T09:52:05.699Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "ch1-metric-reductionism",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "b0c4d8761ffa3ea0",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch1-metric-reductionism.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch1-metric-reductionism.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 103770,
+      "createdAt": "2026-03-28T09:52:22.389Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch2-maturity-spectrum",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "967c4e487591bdae",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch2-maturity-spectrum.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch2-maturity-spectrum.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 161650,
+      "createdAt": "2026-03-28T09:52:40.932Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch2-benchmark-landscape",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "72ab650e7611ae58",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch2-benchmark-landscape.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch2-benchmark-landscape.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 163380,
+      "createdAt": "2026-03-28T09:53:00.160Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch3-agent-vs-inline",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "e886a737d7627d6b",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch3-agent-vs-inline.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch3-agent-vs-inline.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 113116,
+      "createdAt": "2026-03-28T09:59:24.748Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch4-harness-system-model",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "ca0d623e2a0c476b",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch4-harness-system-model.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch4-harness-system-model.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 181290,
+      "createdAt": "2026-03-28T09:59:44.265Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch5-technique-spectrum",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "b88f3bef3d6dad7d",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch5-technique-spectrum.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch5-technique-spectrum.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 114042,
+      "createdAt": "2026-03-28T09:59:59.434Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch6-hybrid-eval-stack",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "628e66d40589d2cb",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch6-hybrid-eval-stack.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch6-hybrid-eval-stack.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 206120,
+      "createdAt": "2026-03-28T10:00:17.384Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch7-10xbench-criteria",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "2b3d854c6f00bb01",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch7-10xbench-criteria.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch7-10xbench-criteria.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 165748,
+      "createdAt": "2026-03-28T10:00:40.993Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch8-price-frontier",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "ee93abfe10326b83",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch8-price-frontier.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch8-price-frontier.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 61582,
+      "createdAt": "2026-03-28T10:00:56.603Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch9-decision-scorecard",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "84fa0efa7d914b5e",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch9-decision-scorecard.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch9-decision-scorecard.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 187828,
+      "createdAt": "2026-03-28T10:01:12.487Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch10-rollout-mission",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "7b65abf0f011d382",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch10-rollout-mission.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch10-rollout-mission.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 57146,
+      "createdAt": "2026-03-28T10:01:28.567Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch1-benchmark-lifecycle-orbit",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "130bbc0e76dde1f7",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch1-benchmark-lifecycle-orbit.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch1-benchmark-lifecycle-orbit.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 98212,
+      "createdAt": "2026-03-28T10:09:48.659Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch3-cost-vs-value",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "f56bbdd094174761",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch3-cost-vs-value.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch3-cost-vs-value.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 115738,
+      "createdAt": "2026-03-28T10:10:01.561Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch4-architecture-paradigms",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "5c567b16380b26da",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch4-architecture-paradigms.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch4-architecture-paradigms.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 220912,
+      "createdAt": "2026-03-28T10:10:15.462Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch5-perception-gap",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "e89d69898f595f67",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch5-perception-gap.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch5-perception-gap.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 120330,
+      "createdAt": "2026-03-28T10:10:32.841Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch6-framework-selector",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "511331a772f4b0d3",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch6-framework-selector.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch6-framework-selector.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 128944,
+      "createdAt": "2026-03-28T10:10:45.798Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch7-quality-gate",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "f1f2c4521fe578ca",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch7-quality-gate.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch7-quality-gate.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 99492,
+      "createdAt": "2026-03-28T10:11:05.179Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch8-tier-routing",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "fb97fa67f4d978d0",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch8-tier-routing.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch8-tier-routing.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 162798,
+      "createdAt": "2026-03-28T10:11:23.547Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch9-decision-tree",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "066962fb2261a200",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch9-decision-tree.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch9-decision-tree.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 95162,
+      "createdAt": "2026-03-28T10:11:43.163Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch10-daily-quality-workflow",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "697e73631ecb5bf2",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch10-daily-quality-workflow.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch10-daily-quality-workflow.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 115052,
+      "createdAt": "2026-03-28T10:11:59.456Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch6-framework-selector",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "623ec3e5190a0e42",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch6-framework-selector.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch6-framework-selector.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 93606,
+      "createdAt": "2026-03-28T11:16:02.960Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    },
+    {
+      "assetId": "ch6-hybrid-eval-stack",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "9b613fb6f93e5f70",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch6-hybrid-eval-stack.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch6-hybrid-eval-stack.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 140730,
+      "createdAt": "2026-03-28T11:23:50.382Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      }
+    }
+  ]
+}

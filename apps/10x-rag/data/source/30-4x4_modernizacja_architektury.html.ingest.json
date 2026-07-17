@@ -1,0 +1,396 @@
+{
+  "lessonId": "[4x4] Modernizacja architektury",
+  "file": "30-4x4_modernizacja_architektury.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 5,
+      "order": 1
+    },
+    {
+      "slug": "event-storming-workshop-z-ai",
+      "title": "Event Storming Workshop z AI",
+      "blocks": 3,
+      "order": 2
+    },
+    {
+      "slug": "dlaczego-event-storming-odbywa-sie-na-zywo",
+      "title": "Dlaczego Event Storming odbywa się \"na żywo\"?",
+      "blocks": 2,
+      "order": 3
+    },
+    {
+      "slug": "ai-jako-moderator-event-stormingu",
+      "title": "AI jako moderator Event Stormingu",
+      "blocks": 1,
+      "order": 4
+    },
+    {
+      "slug": "jak-dziaa-event-storming-z-moderatorem-ai",
+      "title": "Jak działa Event Storming z moderatorem AI?",
+      "blocks": 2,
+      "order": 5
+    },
+    {
+      "slug": "zalety-podejscia-opartego-na-ai",
+      "title": "Zalety podejścia opartego na AI",
+      "blocks": 7,
+      "order": 6
+    },
+    {
+      "slug": "od-event-stormingu-do-migracji-systemu-z-ai",
+      "title": "Od Event Stormingu do migracji systemu z AI",
+      "blocks": 2,
+      "order": 7
+    },
+    {
+      "slug": "ai-jako-partner-w-planowaniu-migracji",
+      "title": "AI jako partner w planowaniu migracji",
+      "blocks": 3,
+      "order": 8
+    },
+    {
+      "slug": "od-modelu-domeny-do-planu-transformacji",
+      "title": "Od modelu domeny do planu transformacji",
+      "blocks": 3,
+      "order": 9
+    },
+    {
+      "slug": "praktyczne-zastosowanie",
+      "title": "Praktyczne zastosowanie",
+      "blocks": 3,
+      "order": 10
+    },
+    {
+      "slug": "asynchroniczna-obsuga-webhookow",
+      "title": "Asynchroniczna obsługa webhooków",
+      "blocks": 5,
+      "order": 11
+    },
+    {
+      "slug": "co-zyskalismy-dzieki-wspopracy-z-ai",
+      "title": "Co zyskaliśmy dzięki współpracy z AI?",
+      "blocks": 5,
+      "order": 12
+    },
+    {
+      "slug": "co-dalej",
+      "title": "Co dalej?",
+      "blocks": 4,
+      "order": 13
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 2,
+      "order": 14
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 0,
+      "order": 15
+    },
+    {
+      "slug": "zadanie-1-przeprowadz-warsztat-modelowania-procesu-z-ai-event-storming",
+      "title": "Zadanie 1: Przeprowadź warsztat modelowania procesu z AI (Event Storming)",
+      "blocks": 3,
+      "order": 16
+    },
+    {
+      "slug": "zadanie-2-refaktoryzacja-webhookow",
+      "title": "Zadanie 2: Refaktoryzacja webhooków",
+      "blocks": 4,
+      "order": 17
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:e7ee23bc:43cc23fa",
+      "tokenEstimate": 67,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:43cc23fa:0-1",
+      "tokenEstimate": 67,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:24701484",
+      "tokenEstimate": 168,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:24701484:0-4",
+      "tokenEstimate": 235,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:e3cb1a55",
+      "tokenEstimate": 167,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:e3cb1a55:0-2",
+      "tokenEstimate": 229,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:0edcbee2",
+      "tokenEstimate": 150,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:0edcbee2:0-1",
+      "tokenEstimate": 150,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:466ac27a",
+      "tokenEstimate": 114,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:466ac27a:0-0",
+      "tokenEstimate": 114,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:76b5cd6e",
+      "tokenEstimate": 180,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:76b5cd6e:0-1",
+      "tokenEstimate": 180,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:21806e2c",
+      "tokenEstimate": 216,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:21806e2c:0-6",
+      "tokenEstimate": 302,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:08030d58",
+      "tokenEstimate": 125,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:08030d58:0-1",
+      "tokenEstimate": 125,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:f8f39740",
+      "tokenEstimate": 156,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:f8f39740:0-2",
+      "tokenEstimate": 198,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:d94f917a",
+      "tokenEstimate": 142,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:d94f917a:0-2",
+      "tokenEstimate": 169,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:4780014b",
+      "tokenEstimate": 115,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:4780014b:0-2",
+      "tokenEstimate": 115,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:6ca4f67d",
+      "tokenEstimate": 148,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:6ca4f67d:0-4",
+      "tokenEstimate": 148,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:82e119dd",
+      "tokenEstimate": 184,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:82e119dd:0-4",
+      "tokenEstimate": 211,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:9ab168d0",
+      "tokenEstimate": 131,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:9ab168d0:0-3",
+      "tokenEstimate": 157,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:7eabec50",
+      "tokenEstimate": 158,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:7eabec50:0-1",
+      "tokenEstimate": 158,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:dcc8ec86",
+      "tokenEstimate": 62,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:92fc7f41",
+      "tokenEstimate": 156,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:92fc7f41:0-2",
+      "tokenEstimate": 156,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:e7ee23bc:6044a21d",
+      "tokenEstimate": 73,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e7ee23bc:6044a21d:0-3",
+      "tokenEstimate": 109,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

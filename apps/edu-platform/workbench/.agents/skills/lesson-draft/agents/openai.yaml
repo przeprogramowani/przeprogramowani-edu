@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lesson Draft"
+  short_description: "Draft a Polish workbench lesson"
+  default_prompt: "Use $lesson-draft to write or revise the draft for lesson <lessonId>."
+
+policy:
+  allow_implicit_invocation: true

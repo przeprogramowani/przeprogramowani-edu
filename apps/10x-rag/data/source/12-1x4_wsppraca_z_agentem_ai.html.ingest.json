@@ -1,0 +1,266 @@
+{
+  "lessonId": "[1x4] Współpraca z Agentem AI",
+  "file": "12-1x4_wsppraca_z_agentem_ai.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 4,
+      "order": 1
+    },
+    {
+      "slug": "agent-vs-chatbot",
+      "title": "Agent vs Chatbot",
+      "blocks": 5,
+      "order": 2
+    },
+    {
+      "slug": "pierwsze-cwiczenia-z-narzedziami",
+      "title": "Pierwsze ćwiczenia z narzędziami",
+      "blocks": 7,
+      "order": 3
+    },
+    {
+      "slug": "dla-ciekawskich---jak-dziaa-wywoywanie-narzedzi-i-czym-jest-agent-loop",
+      "title": "Dla ciekawskich - jak działa wywoływanie narzędzi i czym jest Agent Loop?",
+      "blocks": 4,
+      "order": 4
+    },
+    {
+      "slug": "mcp-czyli-zupenie-nowe-narzedzia",
+      "title": "MCP, czyli zupełnie nowe narzędzia",
+      "blocks": 5,
+      "order": 5
+    },
+    {
+      "slug": "integracja-serwerow-niestandardowych",
+      "title": "Integracja serwerów niestandardowych",
+      "blocks": 7,
+      "order": 6
+    },
+    {
+      "slug": "poznaj-usuge-context7",
+      "title": "Poznaj usługę Context7",
+      "blocks": 9,
+      "order": 7
+    },
+    {
+      "slug": "materiay-dodatkowe",
+      "title": "📚 Materiały dodatkowe",
+      "blocks": 2,
+      "order": 8
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 3,
+      "order": 9
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 18,
+      "order": 10
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:d1e74724:43cc23fa",
+      "tokenEstimate": 73,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1e74724:43cc23fa:0-1",
+      "tokenEstimate": 73,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d1e74724:24701484",
+      "tokenEstimate": 205,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1e74724:24701484:0-3",
+      "tokenEstimate": 305,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:d1e74724:ec5cb4f6",
+      "tokenEstimate": 209,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1e74724:ec5cb4f6:0-4",
+      "tokenEstimate": 283,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:d1e74724:6e5ceaa0",
+      "tokenEstimate": 181,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1e74724:6e5ceaa0:0-6",
+      "tokenEstimate": 193,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:d1e74724:433a4f10",
+      "tokenEstimate": 155,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1e74724:433a4f10:0-3",
+      "tokenEstimate": 280,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:d1e74724:3018d7af",
+      "tokenEstimate": 169,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1e74724:3018d7af:0-4",
+      "tokenEstimate": 254,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:d1e74724:1d9280dc",
+      "tokenEstimate": 188,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1e74724:1d9280dc:0-6",
+      "tokenEstimate": 204,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:d1e74724:eda6dc2d",
+      "tokenEstimate": 181,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1e74724:eda6dc2d:0-7",
+      "tokenEstimate": 438,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "chk:d1e74724:eda6dc2d:7-8",
+      "tokenEstimate": 215,
+      "span": [
+        7,
+        8
+      ]
+    },
+    {
+      "id": "sec:d1e74724:58784905",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1e74724:58784905:0-1",
+      "tokenEstimate": 101,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d1e74724:33c7f0dd",
+      "tokenEstimate": 216,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1e74724:33c7f0dd:0-2",
+      "tokenEstimate": 270,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:d1e74724:dcc8ec86",
+      "tokenEstimate": 174,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1e74724:dcc8ec86:0-16",
+      "tokenEstimate": 413,
+      "span": [
+        0,
+        16
+      ]
+    },
+    {
+      "id": "chk:d1e74724:dcc8ec86:16-17",
+      "tokenEstimate": 121,
+      "span": [
+        16,
+        17
+      ]
+    }
+  ]
+}

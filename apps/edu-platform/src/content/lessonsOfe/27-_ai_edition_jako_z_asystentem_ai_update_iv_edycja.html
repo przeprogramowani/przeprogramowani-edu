@@ -1,0 +1,119 @@
+<meta name="lesson-id" content="⚡️ AI Edition - Jakość z asystentem AI (Update - IV Edycja)"><html><head></head><body><div><img loading="lazy" src="https://assets-v3.circle.so/qf1kv1spbyt5kp1uez40mjja5kp7" style="width: 100%; max-width: 100%;"><p>Jednym z najbardziej obiecujących zastosowań LLMów w kontekście programowania jest wsparcie w testowaniu aplikacji. Modele nie tylko potrafią one analizować i opisywać zachowania aplikacji na podstawie zrzutów ekranu, ale również generować scenariusze testów jednostkowych i end-to-end (e2e), a także identyfikować potencjalne problemy z dostępnością (a11y).</p><p>Nasza dzisiejsza lekcja skupi się na eksploracji tych możliwości, demonstrując, jak narzędzia AI mogą być użyteczne w znaczącym ulepszeniu jakości oprogramowania i efektywności procesów testowych. Zaczniemy od analizy screenów aplikacji, co pozwoli nam zrozumieć, jak AI interpretuje interfejs użytkownika i jakie scenariusze testowe może zasugerować. Następnie przejdziemy do praktycznego aspektu – generowania testów jednostkowych dla komponentu podpowiedzi i scenariuszy e2e, bazując na informacjach uzyskanych z analizy oraz opisów aplikacji.</p><p>Oprócz tego, skupimy się na testach dostępności (a11y), sprawdzając, jak modele Gen AI mogą pomóc w identyfikowaniu i rozwiązywaniu problemów z dostępnością. Wykorzystamy również narzędzie SuperDescribe GPT do generowania opisów alternatywnych (alt) dla obrazów, co jest kluczowym elementem w tworzeniu dostępnych treści webowych.</p><p>Przez całą lekcję będziemy korzystać z praktycznych przykładów i ćwiczeń, które pomogą zrozumieć, jak te nowe narzędzia mogą być zintegrowane w codziennej pracy programisty frontendowego. </p><p>Punktem wyjścia jest przykład <strong><em>examples/module2/lesson6-ai/guess-password-start</em></strong>. Możesz samodzielnie współpracować z AI w podobny sposób jak robimy to na filmach - praktyczna czyni mistrza również w przypadku korzystania z narzędzi AI.</p><p>👉 Lekcja zaktualizowana w lutym 2025r. - dodaliśmy nowe sekcje o rozbudowie aplikacji z Claude 3.7 Sonnet a także o meta-promptingu, czyli sposobie na podnoszenie jakości poleceń. Pierwszy fragment pozostaje bez zmian. Pomimo tego, że dzisiaj na rynku znajdują się lepsze modele niż przedstawiany na filmie GPT-4, cały proces i ogólny koncept pozostaje bez zmian (w ChatGPT, Groku czy Claude.ai) 🎉</p><h2>Cóż to za ogórek?</h2><p>Zacznijmy od materiału wprowadzającego do projektu “Guess Pickle Rick”, który będzie nam towarzyszył w tym projekcie. W tym materiale zobaczysz jak istotne jest przekazywanie do GPT-4 odpowiedniej ilości kontekstu. Dzięki temu otrzymamy rezultaty, które są dostosowane do potrzeb projektu zamiast przypominać wyniki z pierwszej strony Googla, które były pisane typowo pod SEO.</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1050820917?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>PS. Moją spłaszczoną twarz sponsoruje Screenflow, pozdrawiam!</p><h2>Generowanie testów jednostkowych</h2><p>Nie taki był pierwotny zamiar ale na filmie zobaczysz porównanie możliwosci Github Copilot (Inline oraz Chat) vs ChatGPT-4. Które rozwiązanie jest bardziej solidne i gwarantuje lepsze pokrycie edge case’ów w komponencie GuessPassword? Zobacz sam.</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1050820662?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2>Generowanie scenariuszy e2e</h2><p>Zobaczmy jak Copilot i ChatGPT-4 radzą sobie z generowaniem testów end-to-end. Czy tym razem będziemy mieli innego zwycięzcę? (spoiler alert: nie). </p><p>Tutaj celowo stawiałem sztuczną inteligencję w trudnej sytuacji, żeby zobaczyć jak sobie poradzą operując głównie na kodzie, aby zasymulować warunki pracy przy stosunkowo restrykcyjnych politykach prywatności. Ważne: zakładam, że masz wyłączone trenowanie na podstawie konwersacji - ułatwia to <a href="https://openai.com/chatgpt/team" target="_blank" rel="noopener noreferrer">plan Team</a>, z którego korzystamy jako Przeprogramowani. </p><p>Generując scenariusze do aplikacji produkcyjnych warto poświęcić dodatkowy czas na dopieszczenie prompta przekazując maksymalną ilość kontekstu, na którą pozwalają nam polityki prywatności firmy.</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1050820825?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p><strong>Friendly reminder</strong>: uruchamiając testy e2e pamiętaj o zmianie <em>PROJECT_DIR</em> w <em>playwright.config.t</em>s oraz uruchomienie example w osobnej sesji terminala.</p><h2>Wsparcie przy testowaniu dostępności</h2><p>Automatyczne testowanie dostępności z Playwright i @axe-core/playwright jest bajecznie proste, ale sztuczna inteligencja może nas wspomóc przy obróbce raportu błędów oraz generowaniu wysokiej jakości opisów obrazów dla atrybutu ALT.</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1050820747?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Kod po działaniach z powyższych filmów znajdziesz w folderze <strong><em>examples/module2/lesson6-ai/guess-password-finish</em></strong>.</p><p>Podsumowując: jeżeli masz budżet 35 dolarów miesięcznie na AI, to warto korzystać zarówno z ChatGPT Plus/Team oraz Github Copilot.</p><p>Jeżeli szukasz oszczędności to rekomendujemy subskrypcję ChatGPT Plus za 20 dolarów miesięcznie, która da Ci kompleksowe możliwości i najwyższą jakość, zarówno w zadaniach technicznych, jak i tych związanych z zarządzaniem projektu (co prezentujemy poniżej).</p><h2>Rozbudowa aplikacji z Claude 3.7 Sonnet</h2><p>Gra “Guess Pickle Rick” jest na wczesnym etapie rozwoju, ale wystarczy krótka rozmowa z AI wzbogacona o odpowiedni kontekst, aby wpaść na wiele pomysłów jak można ją rozbudować. </p><p>Wykorzystałem do tego model Claude 3.7 Sonnet w wersji webowej (<a href="https://claude.ai/" target="_blank" rel="noopener noreferrer">https://claude.ai/</a>), a kontekst został poszerzony przez screenshot aplikacji oraz zestaw testów wygenerowanych w poprzednich krokach:</p><img loading="lazy" src="https://assets-v2.circle.so/8rzqf4wsku8xm3mq53ws0dr8clhb" style="width: 100%; max-width: 100%;"><p>Model poznał również dwa główne cele, które chciałbym osiągnąć:</p><ul><li><p>zwiększenie czasu sesji w aplikacji</p></li><li><p>“viralowość” aplikacji i udostępnianie jej znajomym</p></li></ul><p>W odpowiedzi otrzymałem:</p><pre><code>Na podstawie screenshota i testów, widzę że tworzysz grę zgadywania hasła z motywem Pickle Ricka z serialu Rick and Morty. Oto kreatywne rozszerzenia, które mogą zwiększyć czas sesji i zachęcić do polecania gry:
+
+## 1. System poziomów z postaciami Rick and Morty
+
+Stwórz serię haseł opartych na różnych postaciach z serialu, z coraz trudniejszymi zagadkami:
+- Poziom 1: Pickle Rick (obecny)
+- Poziom 2: Mr. Meeseeks
+- Poziom 3: Evil Morty
+- Poziom 4: Bird Person
+
+## 2. System oceny i nagradzania
+
+- **System punktów**: Dodaj punktację opartą na czasie odpowiedzi i liczbie użytych podpowiedzi
+- **Tabela wyników**: Pokaż najlepsze wyniki użytkowników
+- **Osiągnięcia**: "Wubba Lubba Dub Dub!" (odgadnij 3 hasła z rzędu), "Pickle Genius" (odgadnij hasło bez podpowiedzi)
+
+## 3. Tryby rozgrywki
+
+- **Tryb czasowy**: 60 sekund na odgadnięcie jak największej liczby haseł
+- **Tryb trudny**: Bez podpowiedzi, tylko jedna szansa
+- **Tryb wiedzy o serialu**: Pytania dotyczące faktów z serialu
+
+## 4. Elementy społecznościowe
+
+- **Udostępnianie wyników**: Przyciski do dzielenia się wynikami na mediach społecznościowych
+- **Generator memów**: Twórz spersonalizowane memy z Pickle Rickiem i Twoim wynikiem
+- **Wyzwania dla znajomych**: Wyślij znajomemu konkretne hasło do odgadnięcia
+
+## 5. Ulepszenia interfejsu
+
+- **Animowane tło**: Dodaj portale w stylu Rick and Morty
+- **Efekty dźwiękowe**: Charakterystyczne dźwięki z serialu przy odgadnięciu lub błędzie
+- **Tryb ciemny/jasny**: Opcja zmiany motywu kolorystycznego
+
+## 6. Ulepszenia techniczne
+
+- **Progresywna aplikacja webowa (PWA)**: Możliwość instalacji na urządzeniach mobilnych
+- **Offline mode**: Granie bez połączenia z internetem
+- **Synchronizacja postępów**: Zachowywanie wyników między urządzeniami
+
+## 7. Edukacyjne rozszerzenia (nawiązując do Twojego profilu edukatora)
+
+- **Easter eggi dla programistów**: Ukryte funkcje dostępne przez konsolę deweloperską
+- **Quizy kodowania**: Dodaj mini-zagadki związane z programowaniem w stylu Rick and Morty
+- **Koncepcje TypeScript**: Pokaż, jak zaimplementować typy dla różnych elementów gry
+
+Zastosowanie tych rozszerzeń znacząco zwiększy zaangażowanie użytkowników i zachęci ich do dzielenia się grą ze znajomymi, szczególnie fanami serialu Rick and Morty i osobami zainteresowanymi programowaniem.</code></pre><p>Zdecydowałem się na dalszą eksplorację pomysłu “Tryby rozgrywki” i poprosiłem, aby Claude przygotował Project Requirement Document (skrót: PRD, czyli specyfikacja projektu, jakiej możesz się spodziewać od kompetentnego Product Managera w firmach produktowych):</p><img loading="lazy" src="https://assets-v2.circle.so/9s6y1hqxjmyjqknb33reury683gt" style="width: 100%; max-width: 100%;"><p>W dokumencie pojawiły się naprawdę sensowne rozszerzenia - tryb czasowy, tryb wiedzy o serialu oraz tryb trudny, dla prawdziwych fanów serialu:</p><img loading="lazy" src="https://assets-v2.circle.so/bllxuht1xi873ts74e1vu6qksmvx" style="width: 100%; max-width: 100%;"><p>W kolejnym kroku zleciłem dwie korekty - po pierwsze, rozszerzenie PRD o sekcję Pre-Mortem ze strukturą opartą o trzy kluczowe pytania przedstawione w lekcji <a class="entity" href="https://przeprogramowani.circle.so/c/opanuj-frontend/sections/273909/lessons/668427" target="_blank" rel="noopener noreferrer">#Praktyki inżynierii jakości</a>. Po drugie, dokument zawierał techniczne detale implementacji, co na tym etapie jest zbędne:</p><pre><code>Do przedstawionego dokumentu mam dwie uwagi - zrezygnuj z technicznych fragmentów kodu, gdyż w naszej firmie to programiści są odpowiedzialni za optymalną implementację projektów. Po drugie, w formie "Pre-Mortem" wskaż główne ryzyka, które należałoby wykluczyć na wczesnym etapie projektu wraz z opisem trzech składowych:
+
+(Akcja) Co zrobimy aby nie dopuścić do wystąpienia tego problemu w przyszłości
+(Owner) Kto jest odpowiedzialny za realizację Akcji
+(Termin) Do kiedy Owner planuje tę Akcję wykonać</code></pre><p>Jedno z ryzyk, które wskazał model, dotyczyło braku zbalansowanego poziomu trudności - moim zdaniem to całkiem sensowna uwaga, którą należałoby wziąć pod uwagę (czy to na etapie planowania, czy samej implementacji, gdzie konfiguracja gry powinna być łatwa do zmiany w stylu “Open-Closed Principle”).</p><pre><code>Ryzyko 2: Niezbalansowana trudność trybów gry
+
+Zbyt łatwa lub zbyt trudna gra zniechęci użytkowników - pierwsza przez brak wyzwania, druga przez frustrację.
+
+Akcja: Zorganizowanie sesji testowych z różnymi grupami użytkowników (zarówno fanów serialu jak i casual graczy) i dostosowanie poziomów trudności w oparciu o dane z sesji.
+
+Owner: Zespół QA, koordynacja - Anna W.
+
+Termin: 2 tygodnie przed wydaniem produkcyjnym</code></pre><p>Cały dokument z wygenerowanym PRD znajdziesz poniżej:</p><a class="file" href="https://assets-v2.circle.so/rd6n5i9bg99vwz9y83bges4k4wzd" target="_blank" rel="noopener noreferrer">rick-and-morty-prd.md</a><h2>Meta-prompty - szablony Post Mortems</h2><p>Po udanym wdrożeniu dowolnej funkcjonalności czas na jej produkcyjne utrzymanie. Tutaj niestety zdarza się, że poza sukcesem, od czasu do czasu pojawią się&nbsp;incydenty. Wraz z AI moglibyśmy przeprowadzić śledztwo skutkujące dogłębnym zrozumieniem źródła problemu, ale wykorzystamy tę sytuację do kolejnego ćwiczenia - stosowania <a href="https://cookbook.openai.com/examples/enhance_your_prompts_with_meta_prompting" target="_blank" rel="noopener noreferrer">meta-promptów (promptów do tworzenia promptów)</a>.</p><p>Jak wskazuje OpenAI:</p><blockquote><p>Meta prompting is a powerful technique that can significantly enhance the quality of outputs from language models. Our exploration showed that starting with a simple prompt and refining it using o1-preview led to summaries that were more informative, better organized, and richer in content—improving across key criteria like categorization, keywords and tags, sentiment analysis, and completeness.</p></blockquote><p>Spróbujmy więc utworzyć docelowy prompt z modelem Claude 3.7 Sonnet (warto testować kilka alternatyw w trybie Reasoning / Extended Thinking - o1, o3-mini, DeepSeek R1):</p><pre><code>Jako ekspert prompt engineeringu, twoim zadaniem jest ulepszenie polecenia do usług takich jak ChatGPT lub Claude.AI - polecenie powinno służyć do generowania spójnych i logicznych raportów Post Mortem wykorzystywanych w aplikacji webowej. W odpowiedzi zwróć wyłącznie ulepszony prompt.
+
+&lt;PROMPT&gt;
+Wygeneruj realistyczny i zwięzły dokument PostMortem, który pozwoli podsumowywać incydenty występujące w aplikacji webowej.
+
+Szczegóły incydentu: {{DETAILS}}
+
+Kontekst firmy:
+
+Nazwa - ThePicklesOrg
+Aplikacja - GuessPickleRick
+Technologie - Next, TypeScript, React 19, PostgreSQL, Google Cloud
+Infrastruktura - Docker, Github Actions
+&lt;/PROMPT&gt;</code></pre><p>Najnowsza generacja modeli rozumujących naprawdę dobrze radzi sobie z budowanie poleceń “dla samych siebie” - wygenerowany prompt może być&nbsp;z powodzeniem wykorzystany do tworzenia raportów (zwróć uwagę na logiczną strukturę, utrzymany kontekst firmy i placeholdery, które można wypełnić budując raporty):</p><pre><code>
+# Post Mortem Generator
+
+Wygeneruj profesjonalny, techniczny raport Post Mortem incydentu w aplikacji webowej, zachowując format Markdown. Raport powinien być faktyczny, rzeczowy i pozbawiony emocji, ale jednocześnie transparentny w kwestii problemów.
+
+## Kontekst organizacji
+- Firma: ThePicklesOrg
+- Produkt: GuessPickleRick
+- Stack: Next, TypeScript, React 19, PostgreSQL, Google Cloud
+- Infrastruktura: Docker, Github Actions
+- Środowisko: {{ENVIRONMENT}}
+
+## Dane incydentu
+{{DETAILS}}
+
+## Struktura raportu (zachowaj wszystkie sekcje)
+
+### 1. Podsumowanie incydentu [max 150 słów]
+- Krótki opis problemu
+- Wpływ na użytkowników i systemy (w liczbach)
+- Czas trwania incydentu (dokładne daty i godziny)
+
+### 2. Oś czasu [tabela wydarzeń]
+- Moment wykrycia (data, godzina, metoda wykrycia)
+- Kluczowe etapy diagnozy
+- Moment wdrożenia łatki/naprawy
+- Czas pełnego przywrócenia funkcjonalności
+
+### 3. Analiza przyczyn
+- Bezpośrednia przyczyna techniczna
+- Przyczyny podstawowe (root causes)
+- Czynniki, które umożliwiły wystąpienie problemu
+- Kod lub konfiguracje odpowiedzialne za incydent (fragmenty kodu w blokach ```code```)
+
+### 4. Rozwiązanie
+- Zastosowane natychmiastowe działania naprawcze
+- Techniczna analiza rozwiązania
+- Potencjalne alternatywne rozwiązania, które rozważano
+
+### 5. Zapobieganie powtórzeniu się problemu
+- Konkretne testy, które mogłyby wcześniej wykryć problem
+- Zmiany w procesach CI/CD lub monitoringu
+- Sugerowane usprawnienia w architekturze lub kodzie
+
+### 6. Wnioski i kolejne kroki
+- 3-5 konkretnych, mierzalnych zadań do wykonania (w formacie issue)
+- Osoby odpowiedzialne za ich realizację
+- Proponowane terminy realizacji</code></pre><p>Bazując na własnym doświadczeniu, taki prompt rozbudowałem o jeden element - w przypadku braku odpowiedniej liczby detali, model powinien zapytać o uszczegółowienie wszystkiego, czego nie przekazałem w oryginalnej wiadomości:</p><pre><code>Zanim rozpoczniesz generowanie raportu, upewnij się, że wszystkie detale są dostarczone przez użytkownika. W razie braków informacji zadaj dodatkowe pytania pogłębiające.</code></pre><p>Przetestujmy możliwości naszego prompta z symulowanym opisem incydentu tworzonym w pośpiechu:</p><pre><code>11 lutego 2025, ok. 11 zauważyliśmy szybko rosnącą liczbę alertów z produkcji - alerty dotyczyły rosnącej liczby błędów z przeglądarek użytkowników. Okazało się, że nowa wersja strony głównej - dashboardu - ukryta wcześniej za feature flagą, została przez pomyłkę włączona bez odpowiednich testów. Tam zabrakło polyfili, które dla klientów enterprise zapewniłyby zgodność z Internet Explorerem. Wszyscy klienci na starszych wersjach przeglądarek otrzymywali stronę, która nie była dla nich poprawnie skompilowana. Po ok 30 min. udało się zidentyfikować źródło problemów przywracając stan feature toggli, wycofując stronę i publikując komunikat z przeprosinami dla użytkowników. </code></pre><img loading="lazy" src="https://assets-v2.circle.so/6lwlyzq39yxs8jgd1k3ofmni0psm" style="width: 100%; max-width: 100%;"><p>Jak widać - Claude dopytał o brakujące informacje o skali problemu i konkretnych źródłach błędów, a następnie przygotował przekonujący dokument.</p><p>Całe ćwiczenie nie tylko pokazuje sposób dojścia do raportu, ale powinno zwrócić twoją uwagę na korzyści meta-promptingu. Jeśli twoje polecenia nie przynoszą jakościowych odpowiedzi z modelu, warto zrobić krok wstecz i popracować nad samym poleceniem. To dobry sposób na uzyskanie promptów, które będą wykorzystywać nawet najwięksi sceptycy możliwości AI.</p><p>Innym sposobem na poprawę jakości poleceń jest wykorzystywanie wprowadzanych “ulepszaczy” takich jak narzędzie z konsoli Anthropica - dostępne <a href="https://console.anthropic.com/dashboard" target="_blank" rel="noopener noreferrer">w tym miejscu</a>:</p><img loading="lazy" src="https://assets-v2.circle.so/vk4391x3z8ypduuda0j3tli9z02f" style="width: 100%; max-width: 100%;"><h2>⚠️ Ważne: pamiętaj o prywatności</h2><p>Zanim w twojej konwersacji z AI znajdą się&nbsp;szczegóły biznesów i projektów, w których bierzesz udział, upewnij się, że przekazywanie tych informacji jest zgodne z polityką prywatności Twojej firmy oraz umową z klientem, dla którego pracujesz (jeżeli jesteś pracownikiem software house lub agencji).</p><p>Jeśli to możliwe, poszukaj opcji “ulepszania modelu” lub “udostępniania konwersacji” i ustawę tę opcję na WYŁĄCZONĄ (W ChatGPT to Ustawienia → Kontrolki danych → Ulepszanie modelu):</p><img loading="lazy" src="https://assets-v2.circle.so/0w73p0it12x4ktc9p9hh98oc54h0" style="width: 100%; max-width: 100%;"><p>W ustawieniach Copilota i Cursora możesz dodatkowo włączyć wsparcie dla trybu prywatnego. Usługa, która w tym względzie zrobiła na nas dobre wrażenie, to Grok od xAI - tutaj udostępnianie konwersacji jest domyślnie włączone (co warto potwierdzić na własne oczy).</p><h2><strong>🧑🏻‍💻 Ćwiczenia praktyczne</strong></h2><ol start="1"><li><p>Zadbaj o najwyższy standard jakości w grze “Guess Pickle Rick”. Jako punkt wyjścia wykorzystaj <strong><em>examples/module2/lesson6-ai/guess-password-finish</em></strong>.</p><ol start="1"><li><p>Wygeneruj brakujące testy jednostkowe:</p><ol start="1"><li><p>Pokryj dodatkowe edge case’y w GuessPassword.test.tsx</p></li><li><p>Wraz z AI stwórz plik z testami Hints.test.tsx</p></li></ol></li><li><p>Popraw błędy z dostępnością:</p><ol start="1"><li><p>Wykryte przez axe-core</p></li><li><p>Wykryte przez GPT-4</p></li><li><p>Wykryte podczas testów manualnych z klawiaturę i czytnikiem ekranowym (opisane w <a class="entity" href="https://przeprogramowani.circle.so/c/opanuj-frontend/sections/273909/lessons/668423" target="_blank" rel="noopener noreferrer">#Czym jest dostępność (a11y)?</a>)</p></li></ol></li></ol></li><li><p>Zainwestuj 2h w rozbudowę “Guess Pickle Rick” o funkcję wyznaczoną wspólnie z wybranym modelem AI:</p><ol start="1"><li><p>Po wybraniu interesującej funkcji wygeneruj PRD oraz czynniki ryzyka w formie pre-mortem</p></li><li><p>Zaimplementuj nową funkcję i dodaj odpowiednie testy z pomocą AI</p></li><li><p>Jeżeli natrafisz na jakieś problemy, opisz je wraz z AI w post mortem</p></li><li><p>Opisz proces pracy nad powyższymi punktami na kanale <a class="entity" href="https://przeprogramowani.circle.so/c/praktyka" target="_blank" rel="noopener noreferrer">#Praktyka</a> </p></li></ol></li></ol><h2><strong>📚 Materiały dodatkowe</strong></h2><ol start="1"><li><p><a href="https://www.oneusefulthing.org/i/138388046/structured-prompting" target="_blank" rel="noopener noreferrer">Rozbudowany prompt do generowania pre mortem z publikacji naukowej prof. Ethana Mollicka</a></p></li></ol><p><strong>Twój feedback jest dla nas na wagę złota! </strong>Zanim przejdziesz dalej, będziemy wdzięczni za poświęcenie 10 minut na podzielenie się Twoją opinią o II module w <a href="https://przeprogramowani.typeform.com/to/cyCUYGB0" target="_blank" rel="noopener noreferrer">ankiecie badania satysfakcji</a> 👈</p><img loading="lazy" src="https://assets-v3.circle.so/xe98fgah925q2m935kv9vnyo6yib" style="width: 100%; max-width: 100%;"></div></body></html>

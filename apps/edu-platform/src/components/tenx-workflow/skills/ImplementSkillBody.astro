@@ -1,0 +1,195 @@
+---
+/**
+ * Strona referencyjna skilla /10x-implement (krok 04 CSC).
+ * Zrodlo tresci: ~/.claude/skills/10x-implement/SKILL.md
+ * + ~/.claude/skills/10x-plan/references/progress-format.md.
+ * hud-top, xnav, footer i wspolny CSS renderuje TenxCosmicLayout.
+ * i18n: teksty w i18n/skill-10x-implement.ts (pl+en), markup i SVG wspolne;
+ * zmiana tresci = zmiana obu jezykow w slowniku.
+ */
+import type { Lang } from '../i18n';
+import { SKILL_IMPLEMENT } from '../i18n/skill-10x-implement';
+import { pageHref } from '../pages';
+import CliHint from '../CliHint.astro';
+import { UNIVERSES, universeName } from '../universes';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+}
+
+const { base, lang = 'pl' } = Astro.props;
+const t = SKILL_IMPLEMENT[lang];
+const ACC = UNIVERSES.expanse.color;
+---
+
+<header>
+  <p class="eyebrow" style={`--acc:${ACC}`}><span class="ico ico-fast" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1 set:html={t.h1Html} />
+  <p class="sub"><span class="sf-only">{t.subSf}</span><span class="neutral-only">{t.subNeutral}</span> <Fragment set:html={t.subRestHtml} /></p>
+
+  <div class="chainwrap">
+    <svg class="chain" viewBox="0 0 960 250" role="img" aria-label={t.svgAria} style={`color:${ACC}`}>
+      <g stroke="currentColor" fill="none">
+        <path d="M24,125 H936" opacity=".15"/>
+        <rect class="kbox" x="24" y="95" width="130" height="60" stroke-width="1.4"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M154,125 H206"/>
+        <rect x="210" y="99" width="118" height="52"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M328,125 H380"/>
+        <path d="M384,101 v48 M424,101 v48" stroke-width="1.5"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M428,125 H480"/>
+        <path d="M484,125 l20,-20 20,20 -20,20 z" stroke-width="1.5"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M528,125 H580"/>
+        <rect class="kbox" x="584" y="95" width="130" height="60" stroke-width="1.4"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M714,125 H766"/>
+        <path d="M770,125 l20,-20 20,20 -20,20 z" stroke-width="1.5"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M810,125 H854"/>
+        <circle cx="884" cy="125" r="12" stroke-width="1.5"/>
+        <circle cx="884" cy="125" r="22" opacity=".4" class="anim-pulse"/>
+      </g>
+      <circle r="3" fill="currentColor"><animateMotion dur="8s" repeatCount="indefinite" path="M160,125 H860"/></circle>
+      <text class="knum" x="40" y="118">{t.svg.phase1}</text>
+      <text class="klbl" x="40" y="140">{t.svg.start}</text>
+      <text x="222" y="120">{t.svg.crit1}</text>
+      <text x="222" y="134">{t.svg.crit2}</text>
+      <text x="404" y="80" text-anchor="middle" class="acc">{t.svg.gate}</text>
+      <text x="404" y="176" text-anchor="middle" class="dim">{t.svg.gateSub1}</text>
+      <text x="404" y="190" text-anchor="middle" class="dim">{t.svg.gateSub2}</text>
+      <text x="504" y="80" text-anchor="middle" class="acc">{t.svg.commit}</text>
+      <text x="504" y="170" text-anchor="middle" class="dim">{t.svg.commitSub}</text>
+      <text class="knum" x="600" y="118">{t.svg.phase2}</text>
+      <text class="klbl" x="600" y="140">{t.svg.next}</text>
+      <text x="790" y="80" text-anchor="middle" class="acc">{t.svg.commit2}</text>
+      <text x="884" y="165" text-anchor="middle" class="acc">{t.svg.epilog}</text>
+      <text x="884" y="180" text-anchor="middle" class="dim">{t.svg.epilogSub}</text>
+      <text x="24" y="222" class="dim">{t.svg.resume}</text>
+    </svg>
+    <p class="map-cap">{t.mapCap}</p>
+  </div>
+
+  <nav class="route" aria-label={t.routeAria}>
+    <a href="#po-co" style={`--hov:${ACC}`}>{t.route[0]}</a>
+    <a href="#wejscie-wyjscie" style={`--hov:${ACC}`}>{t.route[1]}</a>
+    <a href="#mechanizm" style={`--hov:${ACC}`}>{t.route[2]}</a>
+    <a href="#anatomia" style={`--hov:${ACC}`}>{t.route[3]}</a>
+    <a href="#granice" style={`--hov:${ACC}`}>{t.route[4]}</a>
+  </nav>
+</header>
+
+<CliHint base={base} lang={lang} skill="10x-implement" />
+
+<!-- ============ PO CO ============ -->
+<section class="sector" id="po-co" style={`--acc:${ACC}`}>
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.poco.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.expanse.glyph} />{universeName(UNIVERSES.expanse, lang)}{t.poco.uniSuffix}</span>
+    </div>
+    <h2>{t.poco.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.poco.epigraph}</p>
+      <cite>{t.poco.epigraphCite}</cite>
+    </div>
+    <p class="lead" style="margin-top:26px" set:html={t.poco.p1Html} />
+    <p class="lead" style="margin-top:14px" set:html={t.poco.p2Html} />
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.poco.targetK}</span>
+    <p set:html={t.poco.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ WEJŚCIE → WYJŚCIE ============ -->
+<section class="sector" id="wejscie-wyjscie" style={`--acc:${ACC}`}>
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.io.num}</span>
+    </div>
+    <h2>{t.io.h2}</h2>
+  </div>
+  <div class="cols rv">
+    <div>
+      <p class="lead" set:html={t.io.p1Html} />
+      <p class="lead" style="margin-top:14px" set:html={t.io.p2Html} />
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-cli" aria-hidden="true"></span>{t.io.rows[0].dt}</dt><dd class="v" style="margin:0" set:html={t.io.rows[0].ddHtml} /></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.io.rows[1].dt}</dt><dd class="v" style="margin:0" set:html={t.io.rows[1].ddHtml} /></div>
+      <div><dt><span class="ico ico-up" aria-hidden="true"></span>{t.io.rows[2].dt}</dt><dd class="v" style="margin:0" set:html={t.io.rows[2].ddHtml} /></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ============ MECHANIZM ============ -->
+<section class="sector" id="mechanizm" style={`--acc:${ACC}`}>
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.mech.num}</span>
+    </div>
+    <h2>{t.mech.h2}</h2>
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt>{t.mech.rows[0].dt}</dt><dd class="v" style="margin:0" set:html={t.mech.rows[0].ddHtml} /></div>
+      <div><dt>{t.mech.rows[1].dt}</dt><dd class="v" style="margin:0" set:html={t.mech.rows[1].ddHtml} /></div>
+      <div><dt>{t.mech.rows[2].dt}</dt><dd class="v" style="margin:0" set:html={t.mech.rows[2].ddHtml} /></div>
+      <div><dt>{t.mech.rows[3].dt}</dt><dd class="v" style="margin:0" set:html={t.mech.rows[3].ddHtml} /></div>
+      <div><dt>{t.mech.rows[4].dt}</dt><dd class="v" style="margin:0" set:html={t.mech.rows[4].ddHtml} /></div>
+      <div><dt>{t.mech.rows[5].dt}</dt><dd class="v" style="margin:0" set:html={t.mech.rows[5].ddHtml} /></div>
+      <div><dt>{t.mech.rows[6].dt}</dt><dd class="v" style="margin:0" set:html={t.mech.rows[6].ddHtml} /></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-check" aria-hidden="true"></span>{t.mech.targetK}</span>
+    <p set:html={t.mech.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ ANATOMIA ============ -->
+<section class="sector" id="anatomia" style={`--acc:${ACC}`}>
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.anat.num}</span>
+    </div>
+    <h2>{t.anat.h2}</h2>
+  </div>
+  <div class="cols rv">
+    <div>
+      <p class="lead" set:html={t.anat.p1Html} />
+      <p class="lead" style="margin-top:14px" set:html={t.anat.p2Html} />
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.anat.rows[0].dt}</dt><dd class="v" style="margin:0" set:html={t.anat.rows[0].ddHtml} /></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.anat.rows[1].dt}</dt><dd class="v" style="margin:0" set:html={t.anat.rows[1].ddHtml} /></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.anat.rows[2].dt}</dt><dd class="v" style="margin:0" set:html={t.anat.rows[2].ddHtml} /></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.anat.rows[3].dt}</dt><dd class="v" style="margin:0" set:html={t.anat.rows[3].ddHtml} /></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.anat.targetK}</span>
+    <p set:html={t.anat.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ GRANICE ============ -->
+<section class="sector" id="granice" style={`--acc:${ACC}`}>
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.granice.num}</span>
+    </div>
+    <h2>{t.granice.h2}</h2>
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.granice.rows[0].dt}</dt><dd class="v" style="margin:0" set:html={t.granice.rows[0].ddHtml} /></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.granice.rows[1].dt}</dt><dd class="v" style="margin:0" set:html={t.granice.rows[1].ddHtml} /></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.granice.rows[2].dt}</dt><dd class="v" style="margin:0" set:html={t.granice.rows[2].ddHtml} /></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.granice.rows[3].dt}</dt><dd class="v" style="margin:0" set:html={t.granice.rows[3].ddHtml} /></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.granice.rows[4].dt}</dt><dd class="v" style="margin:0" set:html={t.granice.rows[4].ddHtml} /></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-link" aria-hidden="true"></span>{t.granice.chainK}</span>
+    <p><a href={`${pageHref(base, 'csc', lang)}#k-implement`} style="color:var(--acc)">{t.granice.chainLink}</a>{t.granice.chainRest}</p>
+  </div>
+</section>

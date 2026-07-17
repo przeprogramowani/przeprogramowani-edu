@@ -1,0 +1,262 @@
+<meta name="lesson-id" content="Czysty kod na frontendzie"><html><head></head><body><div><img loading="lazy" src="https://assets-v3.circle.so/ddho6wx6ottiniqv9smz5i3bf5zj" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>Witaj w pierwszej lekcji pierwszego modułu Opanuj Frontend! Na początku skupimy się na tematyce wzorców i praktyk podnoszących jakość budowanego przez ciebie frontendu. Przejdziemy przez wzorce ułatwiające zarządzanie stanem aplikacji, wzorce usprawniające przepływ danych i komunikację pomiędzy komponentami, wzorce profesjonalnej komunikacji z API oraz techniki, które poprawią wydajność twoich aplikacji.</p><p>W sekcji "Dobre praktyki i wzorce" poznasz fundamentalne zasady tworzenia wysokiej jakości kodu na frontendzie. Zdobędziesz wiedzę, która pozwoli Ci pisać aplikacje łatwiejsze w utrzymaniu, bardziej przewidywalne i gotowe na rozbudowę. Nauczysz się rozpoznawać typowe problemy ("code smells") występujące w kodzie frontendowym i skutecznie je eliminować. Przejdziesz przez klasyczne zasady czystego kodu jak DRY, SOLID i CUPID, odkryjesz najpopularniejsze wzorce projektowe stosowane w nowoczesnych aplikacjach webowych i zrozumiesz, jak stosować je w praktyce. Ta sekcja jest niezbędna dla każdego programisty frontendowego, który chce przejść z etapu pisania działającego kodu do tworzenia profesjonalnych, skalowalnych rozwiązań. Zdobyta wiedza pozwoli Ci podejmować świadome decyzje podczas pisania kodu.</p><p>Zanim zagłębimy się w zaawansowane wzorce projektowe, musimy zbudować solidny fundament. W tej lekcji poznasz podstawowe zasady tworzenia czystego kodu na frontendzie - dowiesz się, jak pisać kod, który nie tylko działa, ale jest też czytelny i łatwy do modyfikacji. Zrozumiesz, dlaczego jakość ma kluczowe znaczenie w długoterminowych projektach i jak drobne decyzje podejmowane podczas kodowania wpływają na całościową strukturę aplikacji.</p><h2>Jakość w programowaniu</h2><p>Duża część&nbsp;komunikacji wokół naszego kursu dotyczy tematyki jakości i budowania profesjonalnych (w domyśle - stabilnych, skalowalnych, zrozumiałych) aplikacji frontendowych. Struktura naszego kursu wygląda tak, a nie inaczej, ponieważ jakość w programowaniu wpływa w dużym stopniu na ostateczny sukces projektu, w którym bierzesz udział.</p><ul><li><p>Po pierwsze, <strong>jakość, przejrzystość&nbsp;i niska złożoność kodu w bezpośredni sposób wpływają na tempo rozwoju projektu</strong>. Jeśli architektura jest otwarta na rozszerzenia, a na etapie planowania zapewniono możliwość rozbudowy projektu o nowe możliwości, to zespół nie będzie tracił czasu rozmyślając gdzie dodać nowy komponent, jak zintegrować go z istniejącym interfejsem, jak zdebugować nową&nbsp;funkcję, albo co stanie się, kiedy usuniemy pozornie zbędne linijki kodu.</p></li><li><p>Po drugie, <strong>wiele realizowanych przez nas projektów rozpoczynało się i kończyło w zupełnie innym stanie zespołów</strong> programistycznych. Pojawiały się nowe osoby, niektóre odchodziły, a projekt ciągle pozostawał na firmowej roadmapie. Kierunek rozwoju projektu często pozostawał na barkach najbardziej doświadczonych programistów, ale osiąganie kolejnych milestonów decydowało się w momentach, kiedy ich zabrakło bo np. przeszli do innego zespołu, dostali inne zadania lub po prostu wypadli z przyczyn losowych. Wyjście z trudnej sytuacji ułatwiało nic innego jak łatwy do zrozumienia, udokumentowany kod.</p></li><li><p>Po trzecie, <strong>korzyści płynące z utrzymywania kodu wysokiej jakości widać szczególnie mocno wtedy, kiedy tej jakości zaczyna brakować</strong>. Objawia się&nbsp;to nie tylko regularnymi bugami, o których informują nas klienci, ale również&nbsp;spadkiem morale w zespole, cyklicznie pojawiającymi się przerwami w dostępie do aplikacji i negatywnymi komentarzami, które mogą pojawiać się na portalach recenzujących nasze rozwiązania. Finalnie mówimy tutaj o utracie pieniędzy (czy, jak to się&nbsp;ładnie określa - wartości biznesowej), a od tego już krótka droga do odczucia spadku jakości w dniu wypłaty lub podczas rozmów z szefem.</p></li></ul><img loading="lazy" src="https://assets-v2.circle.so/my7xpdh0fnynsmt93ydljzcfpdki" style="width: 100%; max-width: 100%;"><h2>Wpływ świata rzeczywistego</h2><p>Mówiąc o jakości, nie można zapominać o realnych warunkach, w jakich często realizujemy nasze projekty.</p><p>Pierwszy często pojawiający się&nbsp;warunek dotyczy <strong>presji czasu</strong>. Za rogiem nowy release, obietnice dla klienta już dawno złożone, kontrakt podpisany, a strona nadal nie działa tak, jak powinna. Mało który developer zdecyduje się w tym momencie na szczerą rozmowę z managerem - zmieni się prawdopodobnie akceptowalna jakość kolejnych Pull Requestów, przymykanie oka na code review czy pomarańczowe testy.</p><p>Dodatkowo, różne projekty cechują się różnym poziomem trudności. Tzw. <strong>greenfield</strong>, czyli projekt budowany od zera, to szansa na wdrożenie wszystkich ostatnio poznanych metod i technik zapewniania wysokiej jakości (np. tych poznanych w Opanuj Frontend). Poza greenfieldami zdarzy się też <strong>brownfield</strong>, czyli projekt zastany, przez którego przeszło kilka pokoleń developerów i który mógł być przerzucany z jednego końca organizacji na drugi. Jakość w obu przypadkach będzie radykalnie inna, ale i tu i tu musimy umieć się odnaleźć jako programiści.</p><p>Mówiąc o programistach, nie możemy też zignorować naszych własnych ograniczeń wiedzy i doświadczenia. Tak jak media społecznościowe zbudowały wokół nas bańki opinii, tak nasza własna przygoda z programowaniem również może się odbywać w tego rodzaju bańce jednego frameworka lub biblioteki. Nawet wtedy, kiedy na rynku będą już&nbsp;dostępne lepsze i łatwiejsze rozwiązania danego problemu, niektórzy z nas będą nieświadomie wybierać ścieżkę trudniejszą, bo innej po prostu nie znają (albo co gorsza - czasami nie chcą jej poznać).</p><p>Jeśli temat jakości nie wydaje ci się jeszcze wystarczająco skomplikowany, to na dokładkę porozmawiajmy o tym, jak sam frontend całą tę dyskusję utrudnia.</p><h2>🤔 Zanim przejdziesz dalej</h2><p>Zastanów się&nbsp;co sprawia, że tworzenie frontendowych aplikacji wysokiej jakości jest trudnym zadaniem. Co może być powodem nie zawsze pozytywnych opinii na temat programowania na frontendzie - zarówno na poziomie technologii jak i praktyk programowania?</p><p>Porównaj swoje spostrzeżenia z dalszą częścią tej lekcji ⬇️</p><h2>Prosty język do złożonych aplikacji</h2><p>JavaScript został stworzony przez Brendana Eicha w 1995 roku z zamiarem umożliwienia dodawania prostych interakcji do statycznych stron internetowych. Jak przyznaje sam autor, cały <a href="https://youtu.be/S0ZWtsYyX8E" target="_blank" rel="noopener noreferrer">proces tworzenia pierwszej wersji tego języka zajął mu zaledwie… 10 dni</a>!</p><p>Początkowo był to język o <strong>bardzo ograniczonych możliwościach</strong>, pasujących jednak do prostych stron i możliwości sprzętu, na którym te strony wczytywano. Z biegiem czasu rola tego języka zaczęła stopniowo rosnąć. Na dzisiaj to fundament tworzenia złożonych, wielowarstwowych, interaktywnych aplikacji internetowych, który zajmuje najwyższe miejsca w rankingach popularności.</p><p>O ile popularność języka i jego elastyczność&nbsp;wpłynęły pozytywnie na szybki rozwój frontendowego ekosystemu, to wspomniany <strong>rozjazd oryginalnych założeń i rosnących oczekiwań</strong> stał się wyzwaniem dla wszystkich, którzy do JavaScriptu podchodzili bez odpowiedniego przygotowania.</p><p>Jedną z głównych trudności w pracy z JavaScriptem jest jego stosunkowo <strong>uboga biblioteka standardowa</strong>, zwłaszcza w porównaniu do języków takich jak Python czy Java. Różnice widać w takich obszarach jak obsługa bardziej złożonych typów danych, zarządzanie datą&nbsp;i czasem, praca na systemie plików czy debugowanie i profilowanie kodu. Ta ograniczona funkcjonalność oznacza, że programiści muszą polegać na zewnętrznych środowiskach uruchomieniowych takich jak Node, a także mnożących się zależnościach na biblioteki i narzędzia, które nie zawsze rozwijane są w profesjonalny sposób.</p><p>Dodatkową komplikację stanowią też <strong>zróżnicowane środowiska uruchomieniowe</strong> (przeglądarki, serwery, systemy wbudowane, etc.) oraz warstwy aplikacji, w których ten sam JavaScript próbujemy uruchomić. Wielokrotnie zdarzało nam się brać udział w dyskusjach, gdzie tłumaczyliśmy komuś&nbsp;innemu dlaczego ta sama funkcja języka działa w Chrome, a nie działa w Safari (nie mówiąc o Internet Explorerze, ale ten temat przemilczymy).</p><p>Mało? Dodajmy do tego fragmentu sam charakter aplikacji, jakie tworzymy z wykorzystaniem JavaScriptu. Frontend jest warstwą, gdzie odbywa się&nbsp;interakcja użytkownika z aplikacją, co wiąże się z obsługą <strong>zdarzeń, animacji, aktualizacji stanu, asynchronicznych zapytań po dane i obsługi renderowania</strong>. Zarządzanie tymi aspektami w sposób, który jest zarówno wydajny, jak i łatwo utrzymywalny, jest niebanalnym zadaniem.</p><p>Wszystko to sprawia, że na frontendzie stosunkowo łatwo spotkać tzw. “code smells”, czyli fragmenty kodu niskiej jakości i praktyki, które komplikują złożoność budowanych rozwiązań. </p><h3>Code Smells, czyli powszechne problemy na frontendzie</h3><p><strong>1. Nadmierne poleganie na zewnętrznych zależnościach ❌</strong></p><p>W aplikacjach frontendowych często napotykamy problem nieuzasadnionego rozrostu zależności zewnętrznych. Nadmierne poleganie na bibliotekach, często dla prostych funkcjonalności, prowadzi do zwiększenia rozmiaru finalnego bundla, spowalnia ładowanie aplikacji, wprowadza potencjalne zagrożenia bezpieczeństwa i generuje trudności w utrzymaniu stabilności projektu. Ten "dependency hell" to pierwsza oznaka technicznego długu, który będzie narastał wraz z rozwojem aplikacji.</p><pre><code>// package.json
+{
+  "dependencies": {
+    "date-fns": "^2.30.0",      // Operacje na datach
+    "luxon": "^3.4.3",          // Również operacje na datach
+    "moment": "^2.29.4",        // I jeszcze jeden do dat
+    "lodash": "^4.17.21",       // Cała biblioteka dla kilku funkcji
+    "react-table": "^7.8.0",    // Kompletne rozwiązanie dla tabel
+    "react-select": "^5.7.4",   // Dropdown
+    "react-datepicker": "^4.16.0", // Datepicker
+    // ... dziesiątki innych paczek
+  }
+}</code></pre><p>Wraz ze wzrostem doświadczenia i praktyki, zależnościami należy zarządzać w bardziej świadomy sposób - pamiętaj, że dodawanie narzędzi do package.json dzisiaj daje ci korzyści i pozwala oszczędzaj czas, ale jutro może generować problemy z kompatybilnością i kosztami utrzymania. Zawsze zwracaj uwagę na wersję i datę ostatniej aktualizacji nowej zależności, co pozwoli ci zrozumieć poziom wsparcia i dojrzałość danego rozwiązania.</p><img loading="lazy" src="https://assets-v2.circle.so/30iajny7bt0rfgejchwlyysceqv3" style="width: 100%; max-width: 100%;"><p>Dodatkowo, buduj wiedzę na temat możliwości nowoczesnych przeglądarek oraz nowych natywnych API (np. Temporal). Jeśli z danej paczki chcesz wykorzystać zaledwie kilka procent funkcjonalności, rozważ alternatywne podejścia takie jak napisanie własnego modułu lub funkcji, którą w przyszłości możesz podmienić.</p><p><strong>2. Brak separacji pomiędzy warstwami widoku i logiki aplikacji ❌</strong></p><p>Jednym z najczęstszych błędów architektonicznych w aplikacjach frontendowych jest mieszanie logiki biznesowej, zarządzania stanem i komunikacji z API bezpośrednio w komponentach. Prowadzi to do nieczytelnego, trudnego w testowaniu kodu oraz ogranicza możliwość ponownego wykorzystania zarówno logiki jak i komponentów widoku. Komponenty stają się zbyt złożone i odpowiedzialne za zbyt wiele zadań, a to utrudnia rozwój i refaktoryzację aplikacji.</p><pre><code>// Component z wymieszaną logiką biznesową i widokiem
+function UserList() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    setLoading(true);
+    fetch('/api/users')
+      .then(res =&gt; {
+        if (!res.ok) throw new Error('Failed to fetch');
+        return res.json();
+      })
+      .then(data =&gt; {
+        // Transformacja danych biznesowych wewnątrz komponentu UI
+        const processedUsers = data.map(user =&gt; ({
+          ...user,
+          fullName: `${user.firstName} ${user.lastName}`,
+          isActive: user.lastLogin &gt; Date.now() - 86400000,
+          role: user.permissions.includes('admin') ? 'Administrator' : 'User'
+        }));
+        setUsers(processedUsers);
+      })
+      .catch(err =&gt; setError(err.message))
+      .finally(() =&gt; setLoading(false));
+  }, []);
+
+  return (
+    &lt;div&gt;
+      {loading &amp;&amp; &lt;Spinner /&gt;}
+      {error &amp;&amp; &lt;ErrorAlert message={error} /&gt;}
+      &lt;table&gt;
+        {/* ... więcej logiki i renderowania */}
+      &lt;/table&gt;
+    &lt;/div&gt;
+  );
+}
+</code></pre><p>Aby temu zapobiec, wdrażaj separację warstw poprzez wyodrębnienie logiki biznesowej do dedykowanych hooków, serwisów i adapterów. Praktykuj architekturę warstwową, w której komponenty UI skupiają się wyłącznie na prezentacji, a logika biznesowa, pobieranie i przetwarzanie danych są wydzielone do osobnych modułów. Wykorzystuj wzorce takie jak custom hooks (useUsers), serwisy API, mappery do transformacji danych oraz zarządzanie stanem poza komponentami (React Query, SWR). Takie podejście znacząco poprawia testowalność, utrzymywalność kodu i umożliwia jego efektywne ponowne wykorzystanie. W kolejnych lekcjach będziesz poznawał wszystkie te elementy.</p><p><strong>3. Nadużywanie globalnych zmiennych i obiektów konfiguracyjnych ❌</strong></p><p>Globalny, zmienny stan jest podatny na przypadkowe modyfikacje z różnych miejsc aplikacji, co prowadzi do nieprzewidywalnego zachowania całego rozwiązania, trudnych do zdiagnozowania błędów i problemów z równoległym działaniem kodu.</p><pre><code>// globals.js - plik z globalnym stanem
+window.APP_CONFIG = {
+  apiUrl: 'https://api.example.com',
+  theme: 'dark',
+  features: {
+    newDashboard: true,
+    betaFeatures: false
+  }
+};
+
+window.currentUser = null;
+window.isAuthenticated = false;
+window.notifications = [];
+
+// Gdzieś w aplikacji
+function checkAuth() {
+  if (window.isAuthenticated) {
+    renderDashboard();
+  } else {
+    redirectToLogin();
+  }
+}
+
+// Gdzieś indziej
+function handleLogin(user) {
+  window.currentUser = user;
+  window.isAuthenticated = true;
+  // Mutacja globalnych obiektów
+}
+</code></pre><p>W kolejnych lekcjach przedstawimy ci najlepsze sposoby na zarządzanie stanem aplikacji, które nie polegają na zmiennych globalnych. Kluczowa jest implementacja struktury zapewniającej typowanie, niemutowalność i jednokierunkowy przepływ danych, gdzie każda zmiana stanu jest przewidywalna i możliwa do prześledzenia. Dodatkowo, poznasz różne rodzaje stanu, którym należy zarządzać w nieco inny sposób.</p><p><strong>4. Trudny w debugowaniu stan aplikacji i przepływ danych ❌</strong></p><p>Budując kolejne projekty zauważysz, że zarządzanie stanem aplikacji to jedno z największych wyzwań współczesnego frontendu (szczególnie w aplikacjach typu Single Page Apps). Bez odpowiedniej wiedzy o modelowaniu danych możesz skończyć&nbsp;z obiektami, które powodują ból głowy:</p><pre><code>// Komponent z głęboko zagnieżdżonym stanem
+function App() {
+  const [state, setState] = useState({
+    user: {
+      profile: {
+        details: {
+          name: '',
+          email: '',
+          preferences: {
+            theme: 'light',
+            notifications: {
+              email: true,
+              push: false
+            }
+          }
+        }
+      },
+      cart: {
+        items: [],
+        totals: {
+          subtotal: 0,
+          tax: 0,
+          shipping: 0,
+          total: 0
+        }
+      }
+    }
+  });
+
+  // Funkcja aktualizująca głęboko zagnieżdżony stan
+  const updateNotificationPreference = (type, value) =&gt; {
+    setState(prevState =&gt; ({
+      ...prevState,
+      user: {
+        ...prevState.user,
+        profile: {
+          ...prevState.user.profile,
+          details: {
+            ...prevState.user.profile.details,
+            preferences: {
+              ...prevState.user.profile.details.preferences,
+              notifications: {
+                ...prevState.user.profile.details.preferences.notifications,
+                [type]: value
+              }
+            }
+          }
+        }
+      }
+    }));
+  };
+
+  // Przekazywanie props przez wiele poziomów (prop drilling)
+  return (
+    &lt;div&gt;
+      &lt;Header 
+        user={state.user} 
+        updatePreferences={updateNotificationPreference} 
+      /&gt;
+      &lt;MainContent 
+        user={state.user}
+        updatePreferences={updateNotificationPreference}
+      /&gt;
+    &lt;/div&gt;
+  );
+} </code></pre><p>Lekcje o zarządzaniu stanem globalnym i lokalnym pozwolą ci unikać budowania komponentów wyglądających tak jak powyżej - zobaczysz to na przykładach kilku najpopularniejszych frameworków frontendowych (nie tylko Reacta).</p><p><strong>5. Niedostateczna modularyzacja kodu w obrębie domen biznesowych ❌</strong></p><p>Tradycyjne podejście do struktury projektu frontendowego, polegające na grupowaniu plików według typu (components, pages, utils) zamiast według funkcjonalności biznesowej, prowadzi do rozproszonej logiki i utrudnionej nawigacji w kodzie. Taka struktura wymusza ciągłe przełączanie się między folderami podczas pracy nad jedną funkcjonalnością, fragmentuje powiązane elementy i sprawia, że trudno jest zrozumieć zakres każdej funkcjonalności.</p><pre><code>src/
+  ├── components/
+  │   ├── Button
+  │   ├── Card
+  │   ├── Form
+  │   ├── Table
+  │   ├── UserTable
+  │   ├── ProductTable
+  │   ├── OrderTable
+  │   └── ...
+  ├── pages/
+  │   ├── Home
+  │   ├── Users
+  │   ├── Products
+  │   ├── Orders
+  │   └── ...
+  ├── utils/
+  │   ├── api
+  │   ├── helpers
+  │   ├── formatters
+  │   └── ...
+  └── App.jsx</code></pre><p>Jeśli chcesz poznać lepsze podejście do organizacji kodu, obejrzyj jedno z archiwalnych nagrań&nbsp;LIVE z Tomaszem Ducinem, który opowiada o wpływie biznesu na kształt projektu i struktur danych:</p><p><a class="entity" href="https://przeprogramowani.circle.so/c/archiwum-spotkan-live/tomasz-ducin-domain-driven-design-na-froncie" target="_blank" rel="noopener noreferrer">#Tomasz Ducin - Domain-Driven Design na froncie</a> </p><p>Dodatkowo, moduł o architekturze frontendu pokaże ci jak wykorzystać tzw. Feature-Sliced Design, czyli jedno z lekarstw na problem utrzymania złożonych projektów.</p><p><strong>6. Brak kontroli nad obsługą błędów i zapytań do serwera ❌</strong></p><p>Nieefektywne zarządzanie zapytaniami HTTP bezpośrednio w komponentach prowadzi do duplikacji kodu, niespójnej obsługi błędów w obrębie aplikacji i wzrostu złożoności całej warstwy widoku.</p><pre><code>// Bezpośrednie zapytania w komponentach
+function ProductList() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
+  useEffect(() =&gt; {
+    setLoading(true);
+    fetch('/api/products')
+      .then(res =&gt; res.json())
+      .then(data =&gt; {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch(err =&gt; {
+        console.error('Error fetching products:', err);
+        setLoading(false);
+      });
+  }, []);
+  
+  // Podobny kod powtarzany w innych komponentach
+  // Brak obsługi retry, abort controller, cache, tokenów, itp.
+}
+</code></pre><p>W kolejnych lekcjach poznasz sposoby na centralizację komunikacji z API wykorzystujące nowoczesne biblioteki do zarządzania zapytaniami (React Query, SWR, RTK Query). Dodatkowo, pokażemy ci jak przygotować aplikację nie tylko na serię tzw. “happy path”, ale i sytuacje (nie)przewidziane, w tym niedostępny lub wolno działający backend i użytkownika, który nieświadomie generuje zbyt wiele zapytań jednocześnie.</p><p><strong>7. Nadmierne i niekontrolowane aktualizowanie widoków aplikacji ❌</strong></p><p>Ostatni problem w dużym stopniu zależy od preferowanego stacku technicznego - frameworki frontendowe, w zależności od decyzji architektonicznych, nieco inaczej podchodzą do aktualizowania widoku. Zdarza się, że na skutek niepotrzebne lub nieoptymalnego aktualizowania stanu, aplikacje frontendowe zaczynają zwalniać - powodem są nadmierne re-rendery komponentów i zbyt “ogólna” konfiguracja tego, co ma być&nbsp;śledzone na bieżąco.</p><pre><code>function Dashboard() {
+  const [data, setData] = useState({ 
+    users: [], 
+    products: [], 
+    orders: [] 
+  });
+  
+  // Niepotrzebne re-rendery przy każdej zmianie danych
+  useEffect(() =&gt; {
+    fetchUsers().then(users =&gt; {
+      // Niepotrzebnie aktualizuje cały stan (i komponent)
+      setData(prev =&gt; ({ ...prev, users }));
+    });
+    
+    fetchProducts().then(products =&gt; {
+      setData(prev =&gt; ({ ...prev, products }));
+    });
+    
+    fetchOrders().then(orders =&gt; {
+      setData(prev =&gt; ({ ...prev, orders }));
+    });
+  }, []);
+  
+  // Wszystkie komponenty potomne renderują się ponownie
+  // nawet jeśli używają tylko części danych
+  return (
+    &lt;div&gt;
+      &lt;UserStats users={data.users} /&gt;
+      &lt;ProductList products={data.products} /&gt;
+      &lt;RecentOrders orders={data.orders} /&gt;
+    &lt;/div&gt;
+  );
+} </code></pre><p>Strategie optymalizowania widoku będziesz poznawał na przestrzeni całego kursu - można tutaj mówić zarówno o zmianach na poziomie stanu czy indywidualnych komponentów, ale również ogólnego podejścia do trybu działania aplikacji i tego, gdzie i kiedy renderują się&nbsp;dane (client-side vs server-side). </p><p>Pozostań z nami do końca, a frontend opanujesz jak zawodowiec 🚀</p><h3>Zmiany na lepsze</h3><p>Całej społeczności projektującej standard ECMA Script (więcej na ten temat w materiałach dodatkowych) trzeba jednak oddać, że wysiłki ostatnich lat znacznie zwiększyły możliwości najważniejszego z języków nowoczesnego frontendu. JavaScript, mający swoje korzenie w programowaniu przeglądarkowym, ewoluował w kierunku obsługi dużych aplikacji internetowych, z naciskiem na asynchroniczność i interaktywność interfejsów użytkownika.</p><p>Z biegiem czasu w języku zaczęły się pojawiać nowe rodzaje obiektów wbudowanych (Set, Map), metody pracy z kolekcjami (some, every, includes), łatwiejsza obsługa asynchroniczności (Promise, async/await) czy natywne wsparcie dla modułów (ES Modules). </p><p>Dzięki tym zmianom programiści zaczęli stopniowo otrzymywać kolejne narzędzia podnoszące jakość tworzonych projektów. <strong>W kolejnych lekcjach zobaczysz to w praktyce.</strong></p><p>Zanim wskoczymy w konkretne obszary aplikacji frontendowych, pozostańmy jeszcze przez chwilę na poziomie fundamentów i upewnijmy się, że mamy je opanowane do perfekcji.</p><h2>Fundamenty kodu wysokiej jakości</h2><h3>Zadbaj o czytelność</h3><p>Pierwszym z fundamentów, który przychodzi na myśl mówiąc o dobrych praktykach w programowaniu, jest <strong>czytelność. </strong>Szczególnie mocno zwracaliśmy na to uwagę przeprowadzając setki Code Review w kursie Opanuj JavaScript. Kiedy uczestnicy dzielili się&nbsp;z nami rozwiązaniami kursowych ćwiczeń, często problemem okazywało się niestaranne formatowanie kodu, mało intuicyjne nazewnictwo zmiennych i funkcji, a także nieoptymalna organizacja poszczególnych wyrażeń.</p><p>Wystarczy tylko porównać dwa fragmenty kodu. Co robi funkcja poniżej?</p><pre><code>var successMessage = "musisz mieć więcej niż 18 lat";
+
+function f(entry) {
+    var n = entry.firstName, s = entry.lastName, a = entry.age;
+    
+    if (a &lt; 18) {
+        return successMessage;
+    }
+
+    var result = '';
+    var map = { firstName: 'Imię: ', lastName: 'Nazwisko: ', age: 'Wiek: ' };
+    for (const key in map) {
+        result += map[key] + entry[key] + ', ';
+    }
+
+    return result.slice(0, -2);
+}</code></pre><p>A co robi ta funkcja?</p><pre><code>// User.ts
+interface User {
+  firstName: string;
+  lastName: string;
+  age: number;
+}
+
+// index.ts
+function formatUserInfo(user: User): string {
+    const { firstName, lastName, age } = user;
+    const AGE_LIMIT = 18;
+    const WARNING_MESSAGE = "Musisz mieć więcej niż 18 lat";
+
+    if (age &lt; AGE_LIMIT) {
+        return WARNING_MESSAGE;
+    }
+
+    return `Imię: ${firstName}, Nazwisko: ${lastName}, Wiek: ${age}`;
+}</code></pre><p>Jak pewnie zauważyłeś&nbsp;- obie funkcje realizują dokładnie to samo zadanie. Przyjmują obiekt z danymi użytkownika, pobierają niezbędne informacje, wykonują dodatkowe sprawdzenie wieku i - w przypadku obejścia limitu - zwracają poprawną wiadomość.</p><p>Różnica w trudności zrozumienia każdej z nich jest radykalnie inna, oczywiście na korzyść tej drugiej, gdzie czytelność stoi na wyższym poziomie. Co o tym decyduje?</p><ul><li><p>nazwa funkcji mówi, jakie zadanie możesz dzięki niej zrealizować (<em>formatUserInfo</em>)</p></li><li><p>nazwa parametru wskazuje na domenę i rodzaj obiektu, z którym pracujesz (<em>user</em>)</p></li><li><p>wartości stałe są łatwe do zidentyfikowania dzięki konwencji o wykorzystaniu wielkich liter (<em>AGE_LIMIT</em>)</p></li><li><p>funkcja ma stosunkowo niską złożoność i nie korzysta ze zbędnych pętli i obiektów</p></li><li><p>parametr i wartość zwracana z funkcji mają jasno zdefiniowane typy danych</p></li></ul><p><strong>Czytelność</strong> kodu można porównać do czytania dobrze napisanej książki. Kiedy każde zdanie płynnie przechodzi w następne, a rozdziały są logicznie uporządkowane, lektura staje się przyjemna i zrozumiała. Podobnie, czysty i dobrze zorganizowany kod pozwala szybko zrozumieć jego intencje i strukturę, co sprawia, że praca z nim jest efektywna i satysfakcjonująca. Przekłada się to również na nawigację w projekcie, kiedy zamiast jednego modułu, pracujemy z dziesiątkami lub setkami na raz.</p><h3>Ustal zasady</h3><p>Pisząc o czytelności trudno nie wspomnieć o standardach, regułach i narzędziach do formatowania kodu, które pozwalają nam kontrolować kształt projektu, i - co równie ważne - wprowadzać bardziej obiektywne standardy formatowania i organizacji kodu na poziomie całego zespołu (np. gdzie dawać spacje, czym robić wcięcia, jak powinna wyglądać destrukturyzacja).</p><p>Narzędzia, które pozwolą ci dbać o czytelny, dobrze sformatowany kod to m.in.:</p><ul><li><p><a href="https://eslint.org/" target="_blank" rel="noopener noreferrer">eslint</a> - najpopularniejsze obecnie narzędzie do statycznej analizy kodu z szeroką bazą reguł publikowanych w formie Open Source, np.:</p><ul><li><p><a href="https://www.npmjs.com/package/eslint-config-google" target="_blank" rel="noopener noreferrer">eslint-config-google</a> - konfiguracja używana przez Google</p></li><li><p><a href="https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb" target="_blank" rel="noopener noreferrer">eslint-config-airbnb</a> - konfiguracja używana przez AirBnb</p></li><li><p><a href="https://www.npmjs.com/package/@shopify/eslint-plugin" target="_blank" rel="noopener noreferrer">@shopify/eslint-plugin</a> - konfiguracja używana przez Shopify</p></li></ul></li><li><p><a href="https://prettier.io/" target="_blank" rel="noopener noreferrer">Prettier</a> - równie popularny formatter kodu z wbudowanymi regułami dla najważniejszych języków frontendu, w tym dla JavaScriptu, TypeScriptu, HTML i CSS</p></li><li><p><a href="https://biomejs.dev/" target="_blank" rel="noopener noreferrer">Biome</a> - zestaw narzędzi do utrzymywania spójności kodu oparty o język Rust (kiedyś <em>Rome</em>)</p></li></ul><p>W kolejnych lekcjach naszego kursu zobaczysz jak automatyzować wykorzystanie tych narzędzi na poziomie dużych projektów i całego zespołu.</p><h3>Wykorzystuj możliwości języka</h3><p>Na czytelność wpływa nie tylko <strong>nazewnictwo</strong>, ale sprawne posługiwanie się <strong>nowoczesnymi konstrukcjami</strong>, na które pozwala twój ulubiony język.</p><ul><li><p>Zamiast używania zbyt ogólnego słowa kluczowego <strong>var</strong>, możemy korzystać z bardziej precyzyjnych <strong>let</strong> i <strong>const</strong><em>, </em>określających przy okazji, czy zmienna może się… zmieniać ;)</p></li></ul><ul><li><p>Zamiast niepotrzebnego wyłuskiwania i przepisywania zmiennych, w powyższym przykładzie do pobierania danych wykorzystujemy <strong>destrukturyzację.</strong></p></li><li><p>Zamiast ręcznego budowania finalnej wiadomości, lub składania jej w przesadnie skomplikowany sposób, wykorzystujemy <strong>literały i szablony stringów</strong>.</p></li></ul><p>Dzięki refaktoryzacji w kierunku nowego standardu języka, możemy przejść&nbsp;z kodu takiego jak ten poniżej…</p><pre><code>var msg = "Musisz mieć więcej niż 18 lat";
+var fName = entry.firstName, lName = entry.lastName, a = entry.age;
+return "Imię: " + fName + ", Nazwisko: " + lName + ", Wiek: " + a;</code></pre><p>…do kodu zdecydowanie bardziej czytelnego:</p><pre><code>const message = "Musisz mieć więcej niż 18 lat";
+const { firstName, lastName, age } = user;
+return `Imię: ${firstName}, Nazwisko: ${lastName}, Wiek: ${age}`;</code></pre><p>Zdecydowanie rekomendujemy trzymanie ręki na pulsie zmian wokół JavaScriptu. Cały proces dokumentowany jest przez grupę roboczą <a href="https://tc39.es/#proposals" target="_blank" rel="noopener noreferrer">TC39</a>, która prowadzi regularne dyskusje na temat kolejnych usprawnień i tempa ich prowadzania.</p><p>Jeśli natomiast nie jesteś pewien, czy nowoczesne konstrukcje można wykorzystywać na produkcji, skorzystaj ze strony <a href="https://caniuse.com/" target="_blank" rel="noopener noreferrer">CanIUse.com</a>, która pokaże ci wsparcie przeglądarek w wybranym przez ciebie obszarze.</p><h3>Nie wprowadzaj niepotrzebnej złożoności</h3><p>Czy kod może wykorzystywać poprawne nazewnictwo, nowoczesne konstrukcje języka, a pomimo tego nadal być nieczytelnym? Oczywiście!</p><p>Kiedy do rozwiązywania określonych problemów stosujemy nieproporcjonalnie skomplikowane struktury danych, wyrażenia czy algorytmy, to złożoność kodu rośnie. To coś, co <strong>przekłada się negatywnie</strong> na długoterminowe utrzymanie projektu, efektywność współpracy zespołowej i skuteczne rozwiązywanie bugów na produkcji.</p><img loading="lazy" src="https://assets-v3.circle.so/37sshapusn77x0xasp163j9frx9n" style="width: 100%; max-width: 100%;"><p>W przypadku wcześniej zaprezentowanej funkcji, złożoność wzrasta tam, gdzie zamiast <em>string templates</em> decydujemy się na obiekty, pętle i dodatkowe, zupełnie zbędne operacje na danych:</p><pre><code>const map = { firstName: 'Imię: ', lastName: 'Nazwisko: ', age: 'Wiek: ' };
+for (const key in map) {
+    result += map[key] + entry[key] + ', ';
+}
+
+return result.slice(0, -2);</code></pre><p>Pierwszy rzut oka na ten fragment sugeruje, że służy on do czegoś znacznie bardziej skomplikowanego, niż w rzeczywistości jest. Kod o niskiej złożoności, który służy do tego samego celu (formatowanie stringa), wygląda następująco:</p><pre><code>return `Imię: ${firstName}, Nazwisko: ${lastName}, Wiek: ${age}`;</code></pre><p>Programista czytający ten kod nie musi utrzymywać w głowie kształtu dodatkowych obiektów, nie musi iterować po kolejnych wykonaniach pętli, no i (co istotne w kontekście bugów) nie musi zarządzać nieprzewidzianymi sytuacjami, takimi jak dodanie przecinka na końcu tekstu.</p><p>Wychodząc poza ten przykład, złożoność może również wzrosnąć na skutek:</p><ul><li><p>wprowadzania do kodu niestandardowych struktur danych</p></li><li><p>budowania złożonych algorytmów</p></li><li><p>nadużywania lub ignorowania wzorców projektowych</p></li></ul><ul><li><p>niewystarczającego lub przesadnego polegania na zewnętrznych bibliotekach</p></li><li><p>zmian wprowadzonych w ramach tzw. przedwczesnej optymalizacji</p></li></ul><blockquote><p>“If you make an optimization and don’t measure to confirm the performance increase, all you know for certain is that <strong>you’ve made your code harder to read</strong>.” - Martin Fowler <a href="https://www.martinfowler.com/ieeeSoftware/yetOptimization.pdf" target="_blank" rel="noopener noreferrer">(źródło)</a></p></blockquote><p>Zarządzanie złożonością jest <strong>o wiele bardziej wymagającym aspektem pracy programisty niż poprawne nazewnictwo czy wykorzystywanie nowych konstrukcji języka</strong>. To umiejętność, którą rozwijamy przez całą karierę, pracując w różnorodnych projektach i ucząc się nieznanych wcześniej podejść do pisania kodu. </p><p>Zauważ, że świadomie używamy też zwrotu “zarządzanie złożonością” a nie jej redukowanie, bo w przypadku szczególnie trudnych problemów, tej złożoności nie do końca można uniknąć. Wtedy warto natomiast zadbać o odpowiednią izolację szczególnie złożonych fragmentów kodu od reszty, aby w razie potrzeby łatwo je wymienić lub aktualizować.</p><p>Jeśli natomiast z takimi problemami szczególnej wagi nie pracujemy, to bezpiecznie jest korzystać z praktycznej zasady&nbsp;KISS, czyli “Keep It Simple, Stupid”.</p><h3>Organizacja większych fragmentów kodu</h3><p>Jeśli opanowaliśmy sztukę pisania kodu czytelnego, wykorzystującego nowoczesne konstrukcje języka oraz takiego, gdzie złożoność utrzymujemy pod kontrolą, to możemy wejść na poziom modułów i większych fragmentów projektu. O czym warto pamiętać w tym kontekście?</p><blockquote><p>“The primary feature for easy maintenance is <strong>locality</strong>: Locality is that characteristic of source code that enables a programmer to understand that source by looking at only a small portion of it.” - <a href="https://www.dreamsongs.com/Files/PatternsOfSoftware.pdf" target="_blank" rel="noopener noreferrer">Richard Gabriel</a></p></blockquote><p>Dwie bliskie sobie reguły, które warto stosować, to “Locality of Behavior” oraz “Proximity Principle”. Chociaż moglibyśmy je rozpatrywać osobno, to w uproszczeniu sprowadzają się one do dwóch punktów:</p><ul><li><p>utrzymuj <strong>możliwie blisko siebie</strong> te fragmenty projektu, które są ze sobą ściśle powiązane i zmieniają się w tym samym tempie</p></li></ul><ul><li><p><strong>redukuj do minimum</strong> akcje i działania potrzebne do zrozumienia danego fragmentu projektu</p></li></ul><p>Wyobraźmy sobie, że rozwijamy formularz do obsługi zamówień w sklepie internetowym. Kod utrzymywany w zgodzie z regułą bliskości powinien nam umożliwiać&nbsp;wprowadzanie zmian na maksymalnie małym obszarze projektu, często nawet w obrębie jednego folderu. W nim moglibyśmy znaleźć:</p><ul><li><p>komponent definiujący działanie formularza</p></li><li><p>style wpływające na wygląd formularza </p></li></ul><ul><li><p>testy weryfikujące najważniejsze aspekty działania formularza</p></li><li><p>interfejsy i typy danych, jakimi posługujemy się w formularzu</p></li><li><p>komunikację z backendem</p></li><li><p>logikę walidacji danych</p></li><li><p>obsługę błędów</p></li></ul><p>Taka organizacja projektu pozwala w łatwy sposób zrozumieć granice odpowiedzialności pomiędzy modułami, pozwala na łatwiejsze budowanie alternatywnych rozwiązań niemal obok siebie, no i pozwala na łatwiejsze usuwanie kodu, co w kontekście utrzymania niskiej złożoności bywa bardziej istotne, niż jego dodawanie.</p><img loading="lazy" src="https://assets-v2.circle.so/vasm8fmiup7xprmgq6ak84aqinw4" style="width: 100%; max-width: 100%;"><p>Gratulacje! Poznałeś fundamentalne zasady czystego kodu, które stanowią podstawę profesjonalnego programowania frontendowego. Teraz wiesz, jak dbać o czytelność, kontrolować złożoność i organizować kod zgodnie z zasadą bliskości. </p><p>Te umiejętności pozwolą Ci pisać kod, który jest zrozumiały dla Ciebie i innych członków zespołu. W następnej lekcji zagłębimy się w konkretne zasady i praktyki refaktoryzacji kodu. </p><p>Nauczysz się stosować reguły DRY, SOLID i CUPID, które pomogą Ci projektować elastyczne komponenty i moduły. Przygotuj się na przejście od ogólnych zasad do konkretnych wzorców, które zwiększą jakość Twoich rozwiązań frontendowych.</p><img loading="lazy" src="https://assets-v3.circle.so/h8kam2rxj8lxqffu5qqmcu1rdlue" style="width: 100%; max-width: 100%;"></div></body></html>

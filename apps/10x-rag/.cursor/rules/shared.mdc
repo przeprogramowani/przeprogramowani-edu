@@ -1,0 +1,21 @@
+---
+alwaysApply: true
+---
+
+This repository contains data processing pipeline for "10xDevs" course. We're working on HTML files that are pulled directly from external platform, that contain all the typical elements - headers, paragraphs, images, iframes, etc.
+
+The goal is to process these HTML files and split them into smaller chunks, that can be used in RAG pipeline.
+
+## Project Structure
+
+* `data/source` - contains raw HTML files that are pulled directly from external platform
+* `data/chunks` - contains cleaned up HTML files that are ready to be used in the RAG pipeline
+* `src/pipeline.ts` - main pipeline file that contains the logic for processing the HTML files and splitting them into smaller chunks (used Tech Stack listed below)
+* `src/strategies/*.ts` - contains different strategies for processing the HTML files and splitting them into smaller chunks
+* `src/helpers/*.ts` - contains helper functions for the pipeline (data cleanup, tag conversions, etc.)
+* `src/types.ts` - contains TypeScript types for core parts of the pipeline
+
+## Tech Stack
+
+* Node 22
+* TypeScript 5

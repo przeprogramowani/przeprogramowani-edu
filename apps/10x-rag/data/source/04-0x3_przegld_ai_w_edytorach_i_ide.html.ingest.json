@@ -1,0 +1,808 @@
+{
+  "lessonId": "[0x3] Przegląd AI w edytorach i IDE",
+  "file": "04-0x3_przegld_ai_w_edytorach_i_ide.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 1,
+      "order": 1
+    },
+    {
+      "slug": "definicja-i-zakres",
+      "title": "Definicja i zakres",
+      "blocks": 1,
+      "order": 2
+    },
+    {
+      "slug": "kiedy-co-z-komponentow",
+      "title": "Kiedy co z „komponentów”",
+      "blocks": 1,
+      "order": 3
+    },
+    {
+      "slug": "kluczowe-mozliwosci-i-funkcje",
+      "title": "Kluczowe możliwości i funkcje",
+      "blocks": 2,
+      "order": 4
+    },
+    {
+      "slug": "krotka-mapa-ewolucji-asystent-copilot-agent",
+      "title": "Krótka mapa ewolucji: asystent → copilot → agent",
+      "blocks": 1,
+      "order": 5
+    },
+    {
+      "slug": "gdy-przechodzisz-z-asysty-do-agentow",
+      "title": "Gdy przechodzisz z asysty do agentów",
+      "blocks": 1,
+      "order": 6
+    },
+    {
+      "slug": "integracje-i-ekosystem",
+      "title": "Integracje i ekosystem",
+      "blocks": 1,
+      "order": 7
+    },
+    {
+      "slug": "gdy-dobierasz-ekosystem",
+      "title": "Gdy dobierasz ekosystem",
+      "blocks": 1,
+      "order": 8
+    },
+    {
+      "slug": "wydajnosc-koszty-i-ograniczenia",
+      "title": "Wydajność, koszty i ograniczenia",
+      "blocks": 1,
+      "order": 9
+    },
+    {
+      "slug": "gdy-optymalizujesz-wydajnosc-i-koszty",
+      "title": "Gdy optymalizujesz wydajność i koszty",
+      "blocks": 1,
+      "order": 10
+    },
+    {
+      "slug": "bezpieczenstwo-zgodnosc-i-prywatnosc",
+      "title": "Bezpieczeństwo, zgodność i prywatność",
+      "blocks": 1,
+      "order": 11
+    },
+    {
+      "slug": "gdy-priorytetem-jest-bezpieczenstwocompliance",
+      "title": "Gdy priorytetem jest bezpieczeństwo/compliance",
+      "blocks": 1,
+      "order": 12
+    },
+    {
+      "slug": "dwie-szkoy-kontekstu-rag-nad-repo-vs-model-struktury-kodu",
+      "title": "Dwie szkoły „kontekstu”: RAG nad repo vs model struktury kodu",
+      "blocks": 1,
+      "order": 13
+    },
+    {
+      "slug": "gdy-wybierasz-podejscie-do-kontekstu",
+      "title": "Gdy wybierasz podejście do kontekstu",
+      "blocks": 1,
+      "order": 14
+    },
+    {
+      "slug": "kiedy-uzywac-tego-podejscianarzedzi",
+      "title": "Kiedy używać tego podejścia/narzędzi?",
+      "blocks": 1,
+      "order": 15
+    },
+    {
+      "slug": "gdy-chcesz-szybko-podniesc-efekt-pracy",
+      "title": "Gdy chcesz szybko podnieść efekt pracy",
+      "blocks": 1,
+      "order": 16
+    },
+    {
+      "slug": "porownanie-najpopularniejszych-opcji",
+      "title": "Porównanie najpopularniejszych opcji",
+      "blocks": 9,
+      "order": 17
+    },
+    {
+      "slug": "kiedy-co-wybrac",
+      "title": "Kiedy co wybrać",
+      "blocks": 1,
+      "order": 18
+    },
+    {
+      "slug": "vs-code-github-copilot",
+      "title": "VS Code + GitHub Copilot",
+      "blocks": 1,
+      "order": 19
+    },
+    {
+      "slug": "jetbrains-ai-assistant-junie",
+      "title": "JetBrains AI Assistant + Junie",
+      "blocks": 1,
+      "order": 20
+    },
+    {
+      "slug": "cursor",
+      "title": "Cursor",
+      "blocks": 1,
+      "order": 21
+    },
+    {
+      "slug": "windsurf",
+      "title": "Windsurf",
+      "blocks": 2,
+      "order": 22
+    },
+    {
+      "slug": "materiay-do-dodatkowe",
+      "title": "Materiały do dodatkowe",
+      "blocks": 1,
+      "order": 23
+    },
+    {
+      "slug": "github-copilot",
+      "title": "GitHub Copilot",
+      "blocks": 1,
+      "order": 24
+    },
+    {
+      "slug": "jetbrains-ai-assistant-junie-jetbrains",
+      "title": "JetBrains AI Assistant + Junie (JetBrains)",
+      "blocks": 1,
+      "order": 25
+    },
+    {
+      "slug": "cursor-ide",
+      "title": "Cursor (IDE)",
+      "blocks": 1,
+      "order": 26
+    },
+    {
+      "slug": "windsurf-ide",
+      "title": "Windsurf (IDE)",
+      "blocks": 1,
+      "order": 27
+    },
+    {
+      "slug": "cwiczenia-praktyczne-opcjonalne",
+      "title": "Ćwiczenia praktyczne (opcjonalne)",
+      "blocks": 2,
+      "order": 28
+    },
+    {
+      "slug": "0-jak-zaczac-setup-w-5-minut",
+      "title": "0. Jak zacząć (setup w 5 minut)",
+      "blocks": 1,
+      "order": 29
+    },
+    {
+      "slug": "arkusz-do-twojej-ewaluacji",
+      "title": "Arkusz do Twojej ewaluacji",
+      "blocks": 2,
+      "order": 30
+    },
+    {
+      "slug": "wskazowki-oceny",
+      "title": "Wskazówki oceny",
+      "blocks": 1,
+      "order": 31
+    },
+    {
+      "slug": "1-inline-sprint-autocomplete---timebox-1520-min",
+      "title": "1) Inline Sprint (autocomplete) - timebox 15–20 min",
+      "blocks": 2,
+      "order": 32
+    },
+    {
+      "slug": "2-nawigacja-po-repo---timebox-15-min",
+      "title": "2) Nawigacja po repo - timebox 15 min",
+      "blocks": 2,
+      "order": 33
+    },
+    {
+      "slug": "3-stacktrace-fix-debug-loop---timebox-2025-min",
+      "title": "3) Stacktrace → Fix (debug loop) - timebox 20–25 min",
+      "blocks": 3,
+      "order": 34
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "Podsumowanie",
+      "blocks": 3,
+      "order": 35
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:d5ad56b0:43cc23fa",
+      "tokenEstimate": 65,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:43cc23fa:0-1",
+      "tokenEstimate": 65,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:24701484",
+      "tokenEstimate": 128,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:24701484:0-0",
+      "tokenEstimate": 128,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:dbb822f8",
+      "tokenEstimate": 136,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:dbb822f8:0-0",
+      "tokenEstimate": 136,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:5d5e9225",
+      "tokenEstimate": 86,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:5d5e9225:0-0",
+      "tokenEstimate": 226,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:e170b937",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:e170b937:0-1",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:ddd54376",
+      "tokenEstimate": 128,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:ddd54376:0-0",
+      "tokenEstimate": 128,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:d3ddc7ae",
+      "tokenEstimate": 109,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:d3ddc7ae:0-0",
+      "tokenEstimate": 109,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:66f74530",
+      "tokenEstimate": 156,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:66f74530:0-0",
+      "tokenEstimate": 156,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:2f31b94f",
+      "tokenEstimate": 79,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:2f31b94f:0-0",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:185894ae",
+      "tokenEstimate": 166,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:185894ae:0-0",
+      "tokenEstimate": 166,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:74eb0e87",
+      "tokenEstimate": 73,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:74eb0e87:0-0",
+      "tokenEstimate": 148,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:0a0f8b98",
+      "tokenEstimate": 136,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:0a0f8b98:0-0",
+      "tokenEstimate": 136,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:be0b2b6b",
+      "tokenEstimate": 80,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:be0b2b6b:0-0",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:19398838",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:19398838:0-0",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:50e43a85",
+      "tokenEstimate": 139,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:50e43a85:0-0",
+      "tokenEstimate": 139,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:309dc828",
+      "tokenEstimate": 148,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:309dc828:0-0",
+      "tokenEstimate": 148,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:fafd9e6f",
+      "tokenEstimate": 85,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:fafd9e6f:0-0",
+      "tokenEstimate": 155,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:69de17ac",
+      "tokenEstimate": 188,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:69de17ac:0-5",
+      "tokenEstimate": 433,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:69de17ac:5-8",
+      "tokenEstimate": 332,
+      "span": [
+        5,
+        8
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:68832fa6",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:68832fa6:0-0",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:d08596b1",
+      "tokenEstimate": 65,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:d08596b1:0-0",
+      "tokenEstimate": 120,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:11084e98",
+      "tokenEstimate": 118,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:11084e98:0-0",
+      "tokenEstimate": 118,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:46a4eebd",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:46a4eebd:0-0",
+      "tokenEstimate": 115,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:5d0c0ab1",
+      "tokenEstimate": 113,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:5d0c0ab1:0-1",
+      "tokenEstimate": 216,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:db639b64",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:db639b64:0-0",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:2562cef0",
+      "tokenEstimate": 61,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:2562cef0:0-0",
+      "tokenEstimate": 109,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:5c83589a",
+      "tokenEstimate": 72,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:5c83589a:0-0",
+      "tokenEstimate": 125,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:1b2ab2e3",
+      "tokenEstimate": 72,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:1b2ab2e3:0-0",
+      "tokenEstimate": 100,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:07d3411a",
+      "tokenEstimate": 68,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:07d3411a:0-0",
+      "tokenEstimate": 92,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:01a758f9",
+      "tokenEstimate": 106,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:01a758f9:0-1",
+      "tokenEstimate": 106,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:c5b0b7d5",
+      "tokenEstimate": 89,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:c5b0b7d5:0-0",
+      "tokenEstimate": 160,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:9d5856a1",
+      "tokenEstimate": 116,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:9d5856a1:0-1",
+      "tokenEstimate": 116,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:02ea1a35",
+      "tokenEstimate": 72,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:02ea1a35:0-0",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:fd94a142",
+      "tokenEstimate": 127,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:fd94a142:0-1",
+      "tokenEstimate": 170,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:efbddea5",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:efbddea5:0-1",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:969b5b99",
+      "tokenEstimate": 174,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:969b5b99:0-2",
+      "tokenEstimate": 174,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:d5ad56b0:33c7f0dd",
+      "tokenEstimate": 150,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d5ad56b0:33c7f0dd:0-2",
+      "tokenEstimate": 229,
+      "span": [
+        0,
+        2
+      ]
+    }
+  ]
+}

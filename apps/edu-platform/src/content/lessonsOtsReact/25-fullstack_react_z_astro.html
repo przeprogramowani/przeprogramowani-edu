@@ -1,0 +1,269 @@
+<meta name="lesson-id" content="Full-stack React z Astro"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/f4v4l0w1ytkpi9y6j0je7gp3plwp" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>W ostatnich latach uwaga frontend developerów zaczęła się kierować w stronę serwera. Nowe środowisko dało więcej możliwości zarówno od strony czysto funkcjonalnej (np. łatwy kontakt z wieloma źródłami danych) jak i niefunkcjonalnej (np. optymalizacja renderowania). Frameworki takie jak Next.js, Remix czy OpenNext są odpowiedzią na te potrzeby, oferując narzędzia do skutecznego zarządzania danymi, renderowania oraz poprawy doświadczeń użytkownika.</p><img loading="lazy" src="https://assets-v2.circle.so/kl959xsmwtwqt1znnkicn1pgk7dk" style="width: 100%; max-width: 100%;"><p>Obecnie, w ekosystemie Reacta najwięcej uwagi skupiają na sobie:</p><ul><li><p><a href="https://vercel.com/frameworks/nextjs" target="_blank" rel="noopener noreferrer">Next.js</a> - to obecnie najpopularniejszy full-stackowy framework w ekosystemie Reacta. Wzbogaca Reacta funkcjami takimi jak routing server-side, możliwość generowania stron statycznych, częściowe i przerywane renderowanie fragmentów stron, a także cache’owanie danych. Agresywna taktyka wydawnicza sprawa, że często wykorzystuje nie do końca sprawdzone funkcje Reacta lub wprowadza tzw. breaking changes między kolejnymi wersjami. Mocno związany z chmurą Vercela.</p></li><li><p><a href="https://opennext.js.org/" target="_blank" rel="noopener noreferrer">OpenNext</a> - to otwarta inicjatywa wspierająca deployment Nexta na chmury inne niż Vercel. Kontrybutorzy starają się zachować ten sam zestaw funkcjonalności, które znajdziesz w oryginalnym imienniku, jednak z możliwością bardziej wszechstronnego wdrażania na dowolną infrastrukturę. Od niedawna z oficjalnym wsparciem Netlify i Cloudflare.</p></li><li><p><a href="https://remix.run/" target="_blank" rel="noopener noreferrer">Remix</a> / React Router v7 - to alternatywa Nexta budowana jako mało inwazyjny wrapper wokół React Routera. Remix ułatwia ładowanie i wstrzykiwanie danych po stronie serwera, prefetching, tzw. “optimistic UI” oraz lokalną obsługę błędów (error boundaries). Poza samym hostowaniem frontendu, podobnie jak w przypadku Nexta możesz tutaj wystawiać publiczne API dla twojej aplikacji oraz serwerowe metody do obsługi formularzy czy zmian na UI.</p></li><li><p><a href="https://tanstack.com/router/latest/docs/framework/react/start/overview" target="_blank" rel="noopener noreferrer">TanStack Start</a> - to lekkie podejście do budowy aplikacji z wykorzystaniem Reacta, które kładzie nacisk na minimalizm i modularność. Framework bazuje na ekosystemie TanStack (np. React Query, TanStack Router i inne), pozwalając tworzyć wydajne aplikacje dzięki prostocie konfiguracji i pełnej kontroli nad narzędziami. Na dzisiaj na dość wczesnym etapie rozwoju.</p></li><li><p><a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a> - to framework, który wyróżnia się możliwością budowy stron statycznych i hybrydowych z użyciem dowolnych bibliotek frontendowych, w tym Reacta. Astro stosuje technikę tzw. „zero JS by default”, co oznacza, że kod JavaScript dla komponentów Reacta jest ładowany tylko wtedy, gdy jest to konieczne. Dzięki temu aplikacje są wyjątkowo szybkie i zoptymalizowane.</p></li></ul><p>Tworząc tę lekcję, zastanawialiśmy się który punkt z tej listy będzie dla was najbardziej interesujący. W sieci znajdziecie mnóstwo materiałów na temat Nexta czy Remixa (ostatnio, szczególnie w przypadku Nexta 15, nie zawsze pozytywnych), więc postanowiliśmy poszerzyć waszą&nbsp;wiedzę o tym, jak React odnajduje się w środowisku Astro.</p><img loading="lazy" src="https://assets-v2.circle.so/u1dzp0ckbpaos6uk58aso26jrn65" style="width: 100%; max-width: 100%;"><p>Przed wami lekcja o fundamencie stacku Przeprogramowanych. Astro to framework, który w znakomity sposób balansuje możliwości i złożoność, oferuje użyteczne CLI i przede wszystkim nie wiąże rąk do jednej słusznej technologii. Jeśli pracujecie z Astro, będzie to dla was omówienie najnowszej wersji frameworka z premierą w grudniu 2024. Jeśli natomiast nie pracujecie, to będziecie mogli porównać jego możliwości z jego alternatywami (czekamy na wasz feedback!).</p><h2>Pierwsze kroki z Astro 5</h2><p>Nowy projekt w Astro możesz utworzyć w oparciu o wbudowane CLI - zacznijmy od komendy:</p><pre><code>npm create astro@latest</code></pre><p>Po jej wywołaniu pracę rozpocznie interaktywny przewodnik, który zapyta cię o konfigurację nowego projektu. W moim przypadku wybieram podstawowy starter, instalację zależności i nowe repozytorium GITa:</p><img loading="lazy" src="https://assets-v2.circle.so/1s0nj43iqj5x9i5nq9j9pj2tdv74" style="width: 100%; max-width: 100%;"><p>Struktura projektu sprowadza się do kilku plików statycznych:</p><pre><code>/
+├── .vscode/
+│   ├── extensions.json
+│   └── launch.json
+├── public/
+│   └── favicon.svg
+├── src/
+│   ├── assets/
+│   │   ├── astro.svg
+│   │   └── background.svg
+│   ├── components/
+│   │   └── Welcome.astro
+│   ├── layouts/
+│   │   └── Layout.astro
+│   └── pages/
+│       └── index.astro
+├── .gitignore
+├── astro.config.mjs
+├── package.json
+├── README.md
+└── tsconfig.json</code></pre><p>Zgodnie z konwencją, praca będzie głównie dotyczyć tych folderów:</p><ul><li><p><strong>public</strong> - służy do wystawiania zasobów publicznych (pliki, obrazki, raporty, etc.)</p></li><li><p><strong>src</strong> - kod źródłowy aplikacji</p><ul><li><p><strong>assets </strong>- statyczne pliki do importowania w komponentach</p></li><li><p><strong>components </strong>- komponenty server-side i client-side</p></li><li><p><strong>layout </strong>- layouty aplikacji</p></li><li><p><strong>pages - </strong>strony wpływające na globalny router (file-based) oraz endpointy API</p></li></ul></li><li><p><strong>astro.config.mjs</strong> - globalna konfiguracja projektu</p></li></ul><p>Do tego pełne wsparcie TypeScriptu z podstawowym configiem w <strong>tsconfig.json (</strong>zwróć uwagę na dziedziczenie konfiguracji z Astro).</p><p>Po utworzeniu projektu możesz podejrzeć projekt poprzez komendę:</p><pre><code>npm run dev</code></pre><p>W obecnej wersji (Astro 5) przywita nas prosta strona startowa oraz tzw. “Dev Toolbar”, czyli dodatkowe narzędzie do inspekcji zawartości strony. Będziemy z niego korzystać w dalszej części lekcji.</p><img loading="lazy" src="https://assets-v2.circle.so/5z5s55r5zh9hz9ttw1ahuzi8bm6y" style="width: 100%; max-width: 100%;"><h2>Astro CLI</h2><p>Integracje i konfiguracja narzędzi często spędzają sen z powiek developerów, którzy muszą pracować w niekompatybilnym ekosystemie. Na szczęście Astro opiera się o system pluginów, które w łatwy sposób dodamy do projektu poprzez CLI.</p><p>Zobaczmy, jak łatwo dodać do projektu Reacta i Tailwinda. Wykonajmy następną komendę:</p><pre><code>npx astro add tailwind react</code></pre><p>W jej efekcie, Astro zapyta, czy zgodzimy się na instalację następujących bibliotek:</p><pre><code>npm install @astrojs/tailwind@^5.1.3 tailwindcss@^3.4.16 @astrojs/react@^4.1.0 react@^19.0.0 react-dom@^19.0.0 @types/react@^19.0.1 @types/react-dom@^19.0.2</code></pre><p>Po zaakceptowaniu tego polecenia, narzędzie wykona dodatkową pracę na poziomie projektu - zostaną utworzone dedykowane pliki konfiguracyjne, które zminimalizują czas i energię potrzebną do rozpoczęcia pracy z tymi narzędziami:</p><img loading="lazy" src="https://assets-v2.circle.so/vynaoxbb9vouzthgmrc8t3t58rlt" style="width: 100%; max-width: 100%;"><p>Zaktualizowany zostanie m.in. tsconfig.json (wsparcie dla składni TSX), a w projekcie dodatkowo powstaną dodatkowe konfiguracje (np. Tailwinda):</p><pre><code>/** @type {import('tailwindcss').Config} */
+export default {
+	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+	theme: {
+		extend: {},
+	},
+	plugins: [],
+}</code></pre><p>Pluginy zostaną również dodane do głównego pliku <strong>astro.config.mjs </strong>(sekcja integrations) - tutaj, w zależności od preferencji, Reacta może zastąpić np. Vue, Svelte czy inne wspierane frameworki<strong>:</strong></p><pre><code>// @ts-check
+import { defineConfig } from 'astro/config';
+
+import tailwind from '@astrojs/tailwind';
+import react from '@astrojs/react';
+
+// https://astro.build/config
+export default defineConfig({
+  integrations: [tailwind(), react()]
+});</code></pre><p>Jeśli zajdzie potrzeba dalszej konfiguracji Astro, w samym obiekcie możesz się opierać o konwencje znane z bundlera Vite - możesz korzystać ze znanych pól “server”, oraz “vite” do nadpisania ukrytej w Astro konfiguracji:</p><pre><code>export default defineConfig({
+  integrations: [tailwind(), react()],
+  server: {
+    port: 3000,
+  },
+  vite: {
+    // ...
+  },
+});</code></pre><p>Po dodaniu Reacta, zobaczmy jak teraz jak zachowa się pierwszy dodany komponent.</p><h2>Pierwszy build z Reactem</h2><p>Instalacja pluginu Reacta oznacza, że w naszym projekcie mogą się pojawić komponenty budowane w twoim ulubionym frameworku. W folderze <strong>src/components </strong>dodaj teraz pierwszy komponent - Counter.tsx (poniżej wersja z Tailwindem):</p><pre><code>import {useState} from "react";
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;div className='flex flex-col items-center gap-4 p-4'&gt;
+      &lt;h2 className='text-2xl font-bold'&gt;Counter: {count}&lt;/h2&gt;
+      &lt;div className='flex gap-4'&gt;
+        &lt;button
+          onClick={() =&gt; setCount(count - 1)}
+          className='px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600'
+        &gt;
+          Decrease
+        &lt;/button&gt;
+        &lt;button
+          onClick={() =&gt; setCount(count + 1)}
+          className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600'
+        &gt;
+          Increase
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre><p><em>(👉 Z projektu możesz również usunąć istniejący plik src/components/Welcome.astro - na razie nie będziemy go potrzebować).</em></p><p>Następnie zmodyfikuj stronę <strong>src/pages/index.astro</strong> i uruchom projekt przez <strong>npm run dev:</strong></p><pre><code>---
+import Counter from "../components/Counter";
+import Layout from "../layouts/Layout.astro";
+---
+
+&lt;Layout&gt;
+  &lt;Counter /&gt;
+&lt;/Layout&gt;</code></pre><p><em>(Jak widzisz, komponenty .astro składają się z fragmentu klasycznego TypeScriptu oraz szablonu/widoku ze wsparciem dla JSX - to podejście przypominające Single-File Components w Vue i Svelte)</em></p><p>Efekt? Dość nietypowy. Komponent został wyrenderowany w statycznej wersji, a oba przyciski są nieaktywne. Podpowiedź co do stanu aplikacji znajduje się&nbsp;w Dev Toolbarze:</p><img loading="lazy" src="https://assets-v2.circle.so/xyaphe1630n4x7uztm15adq02oux" style="width: 100%; max-width: 100%;"><p>Odłóżmy na minutę sam komponent i sprawdźmy najpierw, jak wygląda docelowy bundle aplikacji, którą zbudujemy teraz w trybie produkcyjnym:</p><pre><code>npm run build</code></pre><p>Na skutek tej komendy, w projekcie został utworzony nowy folder <strong>dist, </strong>który - co ciekawe - nie zawiera aktywnej aplikacji Reactowej! Widzimy jej fragmenty w postaci statycznego HTMLa, ale nie ma on żadnego połączenia z JavaScriptem, który dodałby tutaj elementy interaktywne:</p><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en" data-astro-cid-sckkx6r4&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width" /&gt;
+    &lt;link rel="icon" type="image/svg+xml" href="/favicon.svg" /&gt;
+    &lt;meta name="generator" content="Astro v5.0.5" /&gt;
+    &lt;title&gt;Astro Basics&lt;/title&gt;
+    &lt;link rel="stylesheet" href="/_astro/index.CpRwO4fV.css" /&gt;
+  &lt;/head&gt;
+  &lt;body data-astro-cid-sckkx6r4&gt;
+    &lt;div&gt;
+      &lt;div class="flex flex-col items-center gap-4 p-4"&gt;
+        &lt;h2 class="text-2xl font-bold"&gt;
+          Counter:
+          &lt;!-- --&gt;0
+        &lt;/h2&gt;
+        &lt;div class="flex gap-4"&gt;
+          &lt;button
+            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          &gt;
+            Decrease&lt;/button
+          &gt;&lt;button
+            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+          &gt;
+            Increase
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>💡 Obecny stan aplikacji pokazuje podstawowe założenia Astro - to framework, którego priorytetem jest minimalizowanie dostarczanego do klienta JavaScriptu. Dopóki wprost nie zdecydujemy, że wybrany komponent powinien być renderowany w bardziej interaktywny sposób, Astro usunie z projektu wszystko to, co zbędne.</p><p>Kiedy może się to również okazać przydatne? W Astro, w naprawdę prosty sposób możesz tworzyć kod komponentu renderowany jednokrotnie, po stronie serwera - w momencie, kiedy utworzony zostanie sam HTML (np. zawierający informacje pobrane z bazy), Astro wyrenderuje go w sposób statyczny. Dzięki temu unikniemy zaśmiecania aplikacji np. runtime Reacta, który w niektórych typach aplikacji będzie zbędny.</p><p>W przypadku naszego Countera oczywiście tak nie jest - ten konkretny element powinien być&nbsp;interaktywny, więc zobaczmy, jak to osiągnąć.</p><h3>Dyrektywy komponentów</h3><p>Sposobem na to, aby w Astro poszczególne komponenty “wyciągać” ze świata serwera do przeglądarki, są tzw. dyrektywy client-side. Jedną z nich jest client:load - rozszerz plik <strong>index.astro</strong> o ten fragment:</p><pre><code>&lt;Layout&gt;
+  &lt;Counter client:load /&gt;
+&lt;/Layout&gt;</code></pre><p>Pisząc dyrektywę zauważysz, że strategii “ożywiania” komponentu jest jeszcze kilka. Szczegóły wszystkich dyrektyw znajdziesz <a href="https://docs.astro.build/en/reference/directives-reference/#client-directives" target="_blank" rel="noopener noreferrer">pod tym linkiem</a> - każda z nich wpływa na sposób ładowania zasobów do przeglądarki lub ogranicza je do momentu spełnienia konkretnych warunków.</p><img loading="lazy" src="https://assets-v2.circle.so/tcct4w9xomz889x4klxooyla3vza" style="width: 100%; max-width: 100%;"><p>A jak działa aplikacja po naszej zmianie? Counter zaczął być&nbsp;interaktywny, a wbudowany Dev Toolbar zaczął go zauważać i oznaczać. Dzięki dyrektywie rozbudowaliśmy aplikację w bardziej świadomy sposób - ten wymóg jawnych deklaracji dot. poszczególnych komponentów sprawia, że aplikacje Astro mogą działać naprawdę szybko.</p><img loading="lazy" src="https://assets-v2.circle.so/8de8iw6vj92gwl9yc4w1ebsnne20" style="width: 100%; max-width: 100%;"><p>W efekcie twojej zmiany, pliki tworzone w trakcie komendy <strong>npm run build</strong> również się zmienią - możesz porównać folder <strong>dist</strong> z tym, co widziałeś tam kilka chwil temu (więcej Reacta w przeglądarce).</p><h2>Wyspy client-side i server-side</h2><p>Astro określa swoje podejście do struktury aplikacji jako “island architecture” - to mechanizm separowania komponentów tworzonych w różnych technologiach, które mogą pochodzić z różnych źródeł i być integrowane niezależnie od pozostałych.</p><p>Jedną z wysp utworzyliśmy chwilę wcześniej - komponent Counter to wyspa izolująca fragment aplikacji Reactowej - w naszym przypadku to jeden prosty element interfejsu, ale mogłaby to być bardziej złożona część aplikacji (np. wykres).</p><p>Od wersji 5, Astro wspiera też tzw. “server islands” - są to dynamicznie przygotowywane fragmenty interfejsu, gdzie pracę delegujemy na serwer.</p><img loading="lazy" src="https://assets-v2.circle.so/uqd27yr6fej8jw6mc8yoqzs48i09" style="width: 100%; max-width: 100%;"><p>Zobaczmy, jak to działa.</p><h3><strong>Pierwsza wyspa serwerowa</strong></h3><p>Wyspą serwerową będzie <strong>komponent Astro (*.astro) </strong>działający i renderujący swoją zawartość po stronie serwera, oznaczony dodatkową dyrektywą&nbsp;<strong>server:defer</strong>.</p><p>Sprawdźmy ten mechanizm w akcji - najpierw utwórz komponent src/components/<strong>Episodes.astro.</strong></p><p>Będzie on służył do wyświetlenia określonej liczby odcinków <a href="https://opanuj.ai/podcast/" target="_blank" rel="noopener noreferrer">podcastu Opanuj.AI</a>:</p><pre><code>---
+const {count} = Astro.props as {count: number}; // Propsy + TypeScript!
+
+const PODCAST_URL = "https://anchor.fm/s/e2cb03d0/podcast/rss";
+const response = await fetch(PODCAST_URL); // Top-level Await!
+const feedXml = await response.text();
+
+const itemRegex = /&lt;item&gt;[\s\S]*?&lt;\/item&gt;/g;
+const items = [...feedXml.matchAll(itemRegex)];
+
+const titles = items.map((item) =&gt; {
+  const titleMatch = item[0].match(/&lt;title&gt;&lt;!\[CDATA\[(.*?)\]\]&gt;&lt;\/title&gt;/);
+  return titleMatch ? titleMatch[1] : "";
+});
+
+const links = items.map((item) =&gt; {
+  const linkMatch = item[0].match(/&lt;link&gt;(.*?)&lt;\/link&gt;/);
+  return linkMatch ? linkMatch[1] : "";
+});
+
+const episodes = titles
+  .map((title, i) =&gt; ({
+    title,
+    link: links[i],
+  }))
+  .slice(0, count);
+---
+
+&lt;ul class='list-disc p-4'&gt;
+  {
+    episodes.map((e) =&gt; (
+      &lt;li class='hover:underline hover:text-blue-400'&gt;
+        &lt;a href={e.link}&gt;{e.title}&lt;/a&gt;
+      &lt;/li&gt;
+    ))
+  }
+&lt;/ul&gt;
+</code></pre><p>Nasz nowy komponent wykona zapytanie z serwera po feed RSS, wybierze odpowiednie dane i przygotuje fragment widoku.</p><p>Dodajmy go do strony głównej, obok Countera - przy okazji, możesz od razu dodać tzw. fallback renderowany w momencie oczekiwania na dane (a’la Suspense w React):</p><pre><code>---
+import Counter from "../components/Counter";
+import Episodes from "../components/Episodes.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+&lt;Layout&gt;
+  &lt;Counter client:load /&gt;
+  &lt;Episodes count={5} server:defer&gt;
+    &lt;div slot='fallback'&gt;Loading episodes...&lt;/div&gt;
+  &lt;/Episodes&gt;
+&lt;/Layout&gt;</code></pre><p>Do uruchomienia naszej wyspy będziemy potrzebować jeszcze jednego mechanizmu - docelowego runtime backendowego, który wykona nasz kod.</p><p>W Astro zostało to uogólnione do tzw. “adapterów”, czyli modułów umożliwiających wykonywanie kodu backendowego na konkretnej infrastrukturze (<a href="https://docs.astro.build/en/reference/adapter-reference/" target="_blank" rel="noopener noreferrer">więcej tutaj</a>). W naszym przypadku mówimy o standardowym kodzie backendowym, więc wystarczy nam backend oparty o Node’a (alternatywy to np. Vercel, Cloudflare czy Netlify):</p><pre><code>npx astro add node</code></pre><p>Akceptujemy nową konfigurację, po czym możemy przeładować aplikację i przetestować nowy kod:</p><img loading="lazy" src="https://assets-v2.circle.so/0hxhx8t2zvytpwor27hhm899yakr" style="width: 100%; max-width: 100%;"><p>Po dodaniu adaptera, zaktualizujmy konfigurację naszej aplikacji:</p><pre><code>import {defineConfig} from "astro/config";
+
+import tailwind from "@astrojs/tailwind";
+import react from "@astrojs/react";
+import node from "@astrojs/node";
+
+// https://astro.build/config
+export default defineConfig({
+  integrations: [tailwind(), react()],
+  adapter: node({
+    mode: "standalone",
+  }),
+  server: {
+    port: 3000,
+  },
+});</code></pre><p>Efekt? Aplikacja z dwoma komponentami - jednym uruchamianym w przeglądarce (Counter), z dodatkowymi elementami interaktywnymi, a drugi (Episodes) przygotowywany i renderowany po stronie serwera (zwróć uwagę na zawartość odpowiedzi w Dev Toolsach):</p><img loading="lazy" src="https://assets-v2.circle.so/9f4kztqgdso79u6tcvcgtcegvbsa" style="width: 100%; max-width: 100%;"><p>Połączenie komponentów przeglądarkowych i serwerowych sprawia, że programista zyskuje potężne narzędzie do sterowania tym, gdzie i kiedy mają się wykonać poszczególne operacje. Te interaktywne będą zapewne delegowane do przeglądarki, a te złożone i wymagające obliczeń - na serwer.</p><p>💡 W ramach treningu możesz sprawdzić, jak zachowa się serwerowy komponent zawierający komponent kliencki tworzony np. w oparciu o Svelte czy Astro - to dopiero różnorodny stack technologiczny 😎</p><h2>Kolekcje treści</h2><p>Chociaż nasz serwerowy komponent spełnia swoje zadanie i wyświetla listę odcinków, w Astro tego typu zestawy danych jak odcinki zasługują na przeniesienie do tzw. kolekcji treści (content collection). Dzięki temu można ich używać w wielu miejscach - mogą chociażby służyć do dynamicznego budowania routingu czy pobierania w komponentach serwerowych.</p><p>Zacznijmy od utworzenia nowego pliku <strong>src/loaders/episode-loader.ts:</strong></p><pre><code>export interface Episode {
+  id: string;
+  title: string;
+  link: string;
+}
+
+export async function episodeLoader(): Promise&lt;Episode[]&gt; {
+  const PODCAST_URL = "https://anchor.fm/s/e2cb03d0/podcast/rss";
+  const response = await fetch(PODCAST_URL);
+  const feedXml = await response.text();
+
+  const itemRegex = /&lt;item&gt;[\s\S]*?&lt;\/item&gt;/g;
+  const items = [...feedXml.matchAll(itemRegex)];
+
+  const titles = items.map((item) =&gt; {
+    const titleMatch = item[0].match(/&lt;title&gt;&lt;!\[CDATA\[(.*?)\]\]&gt;&lt;\/title&gt;/);
+    return titleMatch ? titleMatch[1] : "";
+  });
+
+  const links = items.map((item) =&gt; {
+    const linkMatch = item[0].match(/&lt;link&gt;(.*?)&lt;\/link&gt;/);
+    return linkMatch ? linkMatch[1] : "";
+  });
+
+  return titles.map((title, i) =&gt; ({
+    id: `ep-${i}`,
+    title,
+    link: links[i],
+  }));
+}
+</code></pre><p>W kolejnym kroku utwórz główny katalog wszystkich kolekcji, czyli <strong>src/content.config.ts:</strong></p><pre><code>import {defineCollection, z} from "astro:content";
+import {episodeLoader} from "./loaders/episode-loader";
+
+const episodes = defineCollection({
+  loader: episodeLoader,
+  schema: z.object({
+    title: z.string(),
+    link: z.string(),
+  }),
+});
+
+export const collections = {episodes};</code></pre><p>Możesz teraz przebudować aplikację (npm run build) i sprawdzić, czy w projekcie pojawił się nowy folder o nazwie “.astro” - w środku powinny znajdować się typy i definicje nowej kolekcji.</p><p>Jeśli tak jest, to pozostało nam przeprowadzić refaktoryzację komponentu Episodes i skorzystać z wbudowanej funkcji “<em>getCollection</em>” do pobrania naszych danych. Zauważ, że całość działa tak jak wcześniej - propsy są akceptowane przez komponent, a dane zwracane do UI - zmienia się&nbsp;tylko źródło danych, które można teraz wykorzystywać w wielu innych miejscach aplikacji:</p><pre><code>---
+import {getCollection} from "astro:content";
+
+const {count} = Astro.props as {count: number};
+const episodes = await getCollection("episodes");
+
+const selectedEpisodes = episodes.slice(0, count);
+---
+
+&lt;ul class='list-disc p-4'&gt;
+  {
+    selectedEpisodes.map((e) =&gt; (
+      &lt;li class='hover:underline hover:text-blue-400'&gt;
+        &lt;a href={e.data.link}&gt;{e.data.title}&lt;/a&gt;
+      &lt;/li&gt;
+    ))
+  }
+&lt;/ul&gt;</code></pre><p>Ogromną zaletą kolekcji treści jest wsparcie dla systemu typów TypeScript. W momencie, kiedy zarejestrujemy nową kolekcję, Astro tworzy dla nas nowe typy, dzięki czemu pobieranie danych jest dodatkowo weryfikowane przez TypeScript:</p><img loading="lazy" src="https://assets-v2.circle.so/nabhyzr09un2bbzf154nlnvr0gmi" style="width: 100%; max-width: 100%;"><p>Pojedynczy element kolekcji jest dodatkowo definiowany przez Zoda, więc jeśli dostarczone dane nie pasują do oczekiwanego pola <em>schema</em> w loaderze, Astro nie zbuduje aplikacji!</p><p>Kolekcje treści to prawdziwy fundament nowoczesnego Astro - wczytamy je w oparciu o dwa domyślnie dostarczane <em>loadery</em> oparte o <em>glob</em> i system plików, ale nie ma przeszkód aby zbudować własne, pobierające dane z API, feedu RSS, endpointu GraphQL czy dowolnego innego źródła, do którego możemy się podłączyć z poziomu Node.js. Dzięki temu ładowanie bazy treści z silnym typowaniem jest intuicyjne i błyskawiczne.</p><h2>Ścieżki dynamiczne</h2><p>Nasza nowa kolekcja treści może zostać wykorzystana do generowania statycznych stron zasilanych danymi z serwera. To coś, co sprawia, że Astro znakomicie nada się do prezentowania wszelkiego rodzaju danych z CMSów, feedów czy publicznych API.</p><p>Aby przetestować ten element Astro utwórz nowy komponent: <strong>src/pages/blog/[...slug].astro</strong></p><p>Ta nietypowa nazwa komponentu oznacza, że tworzymy “szablon”, a nie jedną konkretną&nbsp;ścieżkę. Na podstawie konfiguracji, strony będą dostępne pod adresem:</p><ul><li><p>/blog/{id-1}</p></li><li><p>/blog/{id-2}</p></li><li><p>/blog/{id-3}</p></li><li><p>etc…</p></li></ul><p>Co zadecyduje o tym, ile stron zostanie utworzonych? Dane zwrócone z funkcji <em>getStaticPaths:</em></p><pre><code>---
+// Zawartość strony:
+import Layout from "../../layouts/Layout.astro";
+import type {GetStaticPaths} from "astro";
+import type {Episode} from "../../loaders/episode-loader";
+import {getCollection} from "astro:content";
+
+const {episode} = Astro.props as {episode: Episode};
+
+// Szablon danych:
+export const getStaticPaths = (async () =&gt; {
+  const episodes = await getCollection("episodes");
+  return episodes.map((episode) =&gt; ({
+    params: {slug: episode.id},
+    props: {episode: episode.data},
+  }));
+}) satisfies GetStaticPaths;
+
+// Layout strony:
+---
+
+&lt;Layout&gt;
+  &lt;div class='flex flex-col gap-4 p-4'&gt;
+    &lt;h1 class='text-2xl font-bold'&gt;{episode.title}&lt;/h1&gt;
+    &lt;a class='text-blue-500' href={episode.link}&gt;{episode.link}&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/Layout&gt;</code></pre><p>Funkcja <em>getStaticPaths</em> wskazuje Astro, ile stron ma zostać utworzonych wg szablonu /blog/[…slug]. Jak widzisz, wykorzystujemy w niej utworzoną wcześniej kolekcję odcinków, dzięki czemu Astro utworzy tyle stron, ile danych pobraliśmy z naszego feedu RSS.</p><p>Można to sprawdzić komendą “npm run build”, która wygeneruje statyczny zestaw stron HTML zgodnie z nazewnictwem ścieżek w folderze (src/pages):</p><img loading="lazy" src="https://assets-v2.circle.so/ko83vo3pzva2vluzromh6x36mrz7" style="width: 100%; max-width: 100%;"><p>Po uruchomieniu aplikacji (npm run dev) możesz wejść na <a href="http://localhost:3000/blog/ep-1" target="_blank" rel="noopener noreferrer">http://localhost:3000/blog/ep-1</a> i zobaczyć, jak to działa.</p><img loading="lazy" src="https://assets-v2.circle.so/de5dmk41h67uldi29qqm4jlajskr" style="width: 100%; max-width: 100%;"><p>Co ciekawe, generowanie ścieżek dynamicznych działa niemal identycznie w Next.js, tyle, że zamiast komponentów Astro mamy tam strony z rozszerzeniem .tsx (to kolejny dowód na to, żeby w nauce skupiać się na ogólnych konceptach, a nie nazwach czy detalach jak funkcje w Astro vs Next):</p><pre><code>export const getStaticPaths: GetStaticPaths = async () =&gt; {
+  const episodes = await getAllEpisodes("episodes");
+  return {
+    paths: episodes.map((episode) =&gt; ({
+      params: {slug: episode.id},
+    })),
+    fallback: false,
+  };
+};
+ 
+export default function Page() {
+  return &lt;h1&gt;Hello, Blog Post Page!&lt;/h1&gt;
+}</code></pre><h2>Podsumowanie</h2><p>Ta próbka możliwości Astro pokazuje, jak bardzo elastyczny i użyteczny jest to framework. W połączeniu z Reactem, otrzymujemy do ręki znakomite narzędzie do poruszania się w warstwie backendu, które dodatkowo może być napędzane interaktywnymi, renderowanymi na żądanie komponentami.</p><p>Poza prostym routingem i wyspami, znajdziesz tam m.in. natywne wsparcie dla renderowania Markdown, możliwość wystawiania endpointów w formie publicznego API a także ekosystem pluginów ułatwiających chociażby generowanie sitemap czy wsparcie dla podświetlania kodu na stronie. Wykorzystanie Vite jako domyślnego bundlera powoduje, że możemy korzystać z najnowszych osiągnięć frontendu i naprawdę szybkiego budowania złożonych projektów.</p><p>Zdecydowanie polecam przyjrzeć się bliżej temu rozwiązaniu. Jeśli chcesz, żebyśmy na temat Astro stworzyli więcej materiałów lub pogłębili tę lekcję, koniecznie daj znać - dzięki!</p><h2>Czas na Twój feedback!</h2><p>Gratulacje! To już ostatnia lekcja szkolenia Opanuj TypeScript - Frontend Pro. Za tobą ponad 40 lekcji o nowoczesnym frontendzie w oparciu o TypeScript 5 i React 19. </p><p>Wesprzyj nasze działania poprzez anonimową&nbsp;ankietę satysfakcji (poniżej) - Twoja opinia wpłynie na jakość tego szkolenia, a także przyszłych materiałów od Przeprogramowanych - dziękujemy!</p><div class="embed"><div style="left: 0; width: 100%; height: 600px; position: relative;"><iframe src="https://tally.so/embed/mJ8MYX?hideTitle=1&amp;alignLeft=1" width="360" height="600" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen=""></iframe></div></div><h2>Certyfikat</h2><p>Wypełnij i wyślij do nas poniższy formularz, a po weryfikacji otrzymasz certyfikat absolwenta szkolenia Opanuj TypeScript:</p><p><a href="https://airtable.com/appBN64leXIbQ1gDe/pag2ymUj0LJNnFWff/form" target="_blank" rel="noopener noreferrer">https://airtable.com/appBN64leXIbQ1gDe/pag2ymUj0LJNnFWff/form</a></p></div></body></html>

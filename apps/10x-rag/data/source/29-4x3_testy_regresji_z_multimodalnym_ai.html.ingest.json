@@ -1,0 +1,316 @@
+{
+  "lessonId": "[4x3] Testy regresji z multimodalnym AI",
+  "file": "29-4x3_testy_regresji_z_multimodalnym_ai.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 3,
+      "order": 1
+    },
+    {
+      "slug": "poznaj-10xcms",
+      "title": "Poznaj 10xCMS",
+      "blocks": 10,
+      "order": 2
+    },
+    {
+      "slug": "testy-regresji---bezpieczna-refaktoryzacja",
+      "title": "Testy regresji - bezpieczna refaktoryzacja",
+      "blocks": 3,
+      "order": 3
+    },
+    {
+      "slug": "1-implementacja-manualna",
+      "title": "1) Implementacja manualna",
+      "blocks": 5,
+      "order": 4
+    },
+    {
+      "slug": "2-test-generator",
+      "title": "2) Test Generator",
+      "blocks": 7,
+      "order": 5
+    },
+    {
+      "slug": "3-wspopraca-z-ai",
+      "title": "3) Współpraca z AI",
+      "blocks": 10,
+      "order": 6
+    },
+    {
+      "slug": "przygotowanie-klipu",
+      "title": "Przygotowanie klipu",
+      "blocks": 9,
+      "order": 7
+    },
+    {
+      "slug": "modele-multimodalne-i-analiza-video",
+      "title": "Modele multimodalne i analiza video",
+      "blocks": 6,
+      "order": 8
+    },
+    {
+      "slug": "testowanie-z-10x-test-plannerem",
+      "title": "Testowanie z 10x-test-plannerem 🎥",
+      "blocks": 11,
+      "order": 9
+    },
+    {
+      "slug": "jak-to-dziaa-i-do-czego-moze-sie-przydac",
+      "title": "Jak to działa i do czego może się przydać?",
+      "blocks": 10,
+      "order": 10
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 5,
+      "order": 11
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 0,
+      "order": 12
+    },
+    {
+      "slug": "zadanie-1-zaimplementuj-testy-regresji-w-10x-cms",
+      "title": "Zadanie 1: Zaimplementuj testy regresji w 10x-CMS",
+      "blocks": 4,
+      "order": 13
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:a99e70dd:43cc23fa",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:43cc23fa:0-1",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:24701484",
+      "tokenEstimate": 178,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:24701484:0-2",
+      "tokenEstimate": 220,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:7397f84f",
+      "tokenEstimate": 200,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:7397f84f:0-9",
+      "tokenEstimate": 300,
+      "span": [
+        0,
+        9
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:16cb10f8",
+      "tokenEstimate": 149,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:16cb10f8:0-2",
+      "tokenEstimate": 149,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:d50d34fc",
+      "tokenEstimate": 126,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:d50d34fc:0-4",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:013fc254",
+      "tokenEstimate": 174,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:013fc254:0-6",
+      "tokenEstimate": 212,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:e5d133d1",
+      "tokenEstimate": 218,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:e5d133d1:0-9",
+      "tokenEstimate": 310,
+      "span": [
+        0,
+        9
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:8059f885",
+      "tokenEstimate": 214,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:8059f885:0-8",
+      "tokenEstimate": 250,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:1462fdec",
+      "tokenEstimate": 119,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:1462fdec:0-5",
+      "tokenEstimate": 304,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:c57e9548",
+      "tokenEstimate": 223,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:c57e9548:0-10",
+      "tokenEstimate": 311,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:795de5d0",
+      "tokenEstimate": 210,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:795de5d0:0-6",
+      "tokenEstimate": 398,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:795de5d0:6-9",
+      "tokenEstimate": 271,
+      "span": [
+        6,
+        9
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:7eabec50",
+      "tokenEstimate": 202,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:7eabec50:0-4",
+      "tokenEstimate": 294,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:dcc8ec86",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:a99e70dd:1181c20c",
+      "tokenEstimate": 84,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a99e70dd:1181c20c:0-3",
+      "tokenEstimate": 143,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

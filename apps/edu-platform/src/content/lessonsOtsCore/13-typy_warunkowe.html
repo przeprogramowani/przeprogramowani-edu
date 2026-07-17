@@ -1,0 +1,83 @@
+<meta name="lesson-id" content="Typy warunkowe"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>W tej lekcji wracamy do wątku, który wstępnie pojawił się już&nbsp;przy okazji typów mapowanych. Mowa o typach warunkowych, czyli kolejnej użytecznej konstrukcji, która na poziomie systemu typów pozwala wprowadzić rozgałęzione scenariusze rodem z klasycznych algorytmów ze świata wartości.</p><h2>Typy warunkowe</h2><p>Jak sama nazwa wskazuje, typy warunkowe to element języka, który pozwala na dynamiczne tworzenie nowych typów w efekcie wykonania wyrażenia warunkowego:</p><pre><code>// Jeśli typ T rozszerza string, zwróć typ true - w przeciwnym razie typ false
+type IsString&lt;T&gt; = T extends string ? true : false;
+
+type A = IsString&lt;string&gt;; // true
+type B = IsString&lt;number&gt;; // false</code></pre><p>Po co nam taki mechanizm? To kolejny element języka (po typach generycznych i typach mapowanych), który pozwala rozwijać elastyczne, dopasowujące się do potrzeb użytkownika typy danych. </p><p>Zaprezentujemy to na kilku kolejnych przykładach.</p><h2>Selekcja fragmentów unii</h2><p>Załóżmy, że w naszym kodzie znajduje się reprezentacja wszystkich identyfikatorów obiektów, które wprowadzano na kolejnych etapach rozwoju systemu:</p><pre><code>type Identifier =
+  | `user-${string}`
+  | `user-v2-${string}`
+  | `product-${string}`
+  | `product-v2-${string}`
+  | `order-${string}`
+  | `order-v2-${string}`;</code></pre><p>Wykorzystywanie takiego typu jest niepraktyczne - chcielibyśmy sprawić, żeby poszczególne funkcje czy obiekty przyjmowały wyłącznie identyfikator dopasowane do jednego rodzaju obiektu (np. User, Product lub Order). Jak zbudować taki typ?</p><p>Rozumowanie jest takie:</p><blockquote><p>Zbuduj nowy typ, który pobiera wszystkie wartości unii rozpoczynające się do wzorca</p></blockquote><p>Pierwsze podejście może wyglądać tak:</p><pre><code>type Id&lt;Pattern extends string&gt; = `${Pattern}${string}` extends Identifier
+    ? Identifier
+    : never;</code></pre><p>Niestety wszystkie typy utworzone w ten sposób będą typu <em>never</em> - TypeScript weźmie pod uwagę całą unię <em>Identifier, </em>więc żaden pojedynczy wzorzec nie spełni warunku  “pattern extends Identifier”. My musimy się dostać do pojedynczych wartości, co możemy osiągnąć następująco:</p><pre><code>type Id&lt;Pattern extends string, Type = Identifier&gt; = 
+  Type extends `${Pattern}${string}` ? Type : never;
+
+const u1: Id&lt;"user"&gt; = "user-1"; // ✅ OK
+const u2: Id&lt;"user-"&gt; = "user-19"; // ✅ OK
+const u3: Id&lt;"user-"&gt; = "user-v2-84"; // ✅ OK
+const u4: Id&lt;"user-v2"&gt; = "user-19"; // ❌ Wartość musi się rozpoczynać od user-v2
+const u5: Id&lt;"user-v2"&gt; = "product-15"; // ❌ Wartość musi się rozpoczynać od user-v2</code></pre><p>Jak widać, przypisywane wartości są teraz porównywane do tych fragmentów unii, które pasują&nbsp;do wzorca.</p><p>Co więcej, nasz nowy typ może być wykorzystywany w wielu innych miejscach - może służyć do oznacza identyfikatorów innego typu, lub typować parametry funkcji:</p><pre><code>type User = {
+  id: Id&lt;"user"&gt;;
+  name: string;
+  createdAt: Date;
+};
+
+function processUserV2(id: Id&lt;"user-v2"&gt;) {
+  console.log(id); // Argument id zawsze rozpocznie się od wartości "user-v2..."
+}</code></pre><h2>Selekcja pól określonego typu</h2><p>W połączeniu z typami mapowanymi, typy warunkowe umożliwiają łatwe klonowanie istniejących typów z zachowaniem pól określonego rodzaju. Zacznijmy od istniejącego typu <em>Person, </em>który posiada właściwości o trzech różnych typach (number, string i boolean):</p><pre><code>type Person = {
+  id: number;
+  age: number;
+  name: string;
+  isActive: boolean;
+}</code></pre><p>Napiszmy nowy typ mapowany, który umożliwi doprecyzowanie typu Person do pól numerycznych:</p><pre><code>// Dla przypomnienia
+// type PropertyKey = string | number | symbol;
+
+type PickPropsOfType&lt;Type, PropType extends PropertyKey&gt; = {
+  [Prop in keyof Type as Type[Prop] extends PropType ? Prop : never]: Type[Prop];
+};</code></pre><p>Przeanalizujmy go krok po kroku:</p><ul><li><p><em>Prop in keyof Type</em> - przeiteruj po wszystkich polach danego typu</p></li><li><p><em>as</em> - wykonaj mapowanie</p></li><li><p><em>Type[Prop] extends PropType ?</em> - czy określone pole jest typu PropType?</p><ul><li><p>Jeśli tak - zachowaj je (zwróć Prop)</p></li><li><p>Jeśli nie - usuń je (zwróć never)</p></li></ul></li></ul><p>Wykorzystanie tego typu wygląda następująco:</p><pre><code>type NumericalProps = PickPropsOfType&lt;Person, number&gt;;
+
+// Tożsame z:
+
+type NumericalProps = {
+    id: number;
+    age: number;
+}</code></pre><p>Odwrotnością takiego typu byłoby pozbywanie się pól określonego rodzaju. Ten przypadek czeka na ciebie w sekcji ćwiczeń - powodzenia!</p><h2>Selekcja pól do modyfikacji</h2><p>W lekcji o typach wbudowanych poznaliśmy typy takie jak <em>Required</em> czy <em>Partial,</em> które na wszystkich polach danego obiektu stosują określone modyfikatory. A co, jeśli chcielibyśmy wybrać&nbsp;tylko pewną&nbsp;część obiektu, która ma się poddać takiej operacji? Bez typów warunkowych byłoby to niemożliwe - na szczęście Typescript daje nam taką&nbsp;możliwość.</p><p>Zacznijmy od początku - wprowadźmy typ, który wszystkie pola obiektu zamienia na <em>readonly</em>:</p><pre><code>type FreezeProps&lt;Type&gt; = {
+  readonly [Prop in keyof Type]: Type[Prop]
+};</code></pre><p>Co dalej? Potrzebujemy znaleźć sposób na to, aby wszystkie pola danego obiektu rozbić na dwa odrębne zestawy - jeden, gdzie <em>readonly</em> jest zastosowane i drugi, gdzie nie jest.</p><p>Możemy to osiągnąć dzięki poznanym wcześniej przecięciom:</p><pre><code>type Person = {
+  id: number;
+  name: string;
+};
+
+const p1: Person = {
+  id: 1,
+  name: "John",
+};
+
+// Przypisanie działa, bo obiekty p1 i p2 mają ten sam zestaw właściwości (id, name)
+const p2: {id: number} &amp; {name: string} = p1;</code></pre><p>Zbudujmy nasz typ <em>FreezeProps </em>w podobny sposób:</p><pre><code>type FreezeProps&lt;Type&gt; = 
+  { readonly [Prop in keyof Type]: Type[Prop]; } &amp;
+  {          [Prop in keyof Type]: Type[Prop]; };</code></pre><p>Stosując go na typie Product uzyskamy dość nietypową konstrukcję, gdzie wszystkie pola mają dwa różne modyfikatory (możesz przetestować sklejanie różnych zestawów pól i obserwować efekty):</p><pre><code>type Product = {
+  id: number;
+  name: string;
+  price: number;
+};
+
+type FrozenProduct = FreezeProps&lt;Product&gt;;
+
+type FrozenProduct = {
+    id: number;
+    name: string;
+    price: number;
+} &amp; {
+    readonly id: number;
+    readonly name: string;
+    readonly price: number;
+}</code></pre><p>Docelowo chcielibyśmy parametryzować zestaw pól, który ma zyskiwać określony modyfikator. W tym celu musimy rozszerzyć nasz typ <em>FreezeProps</em> o zestaw kluczy:</p><pre><code>type FreezeProps&lt;Type, Keys extends keyof Type&gt; = 
+  { readonly [Prop in keyof Type]: Type[Prop]; } &amp;
+  {          [Prop in keyof Type]: Type[Prop]; };
+
+// Oznacz "id" i "name" jako readonly
+type FrozenProduct = FreezeProps&lt;Product, "id" | "name"&gt;;</code></pre><p>Jak sprawić, aby dwa składowe obiekty zawierały odpowiednie pola? Tutaj do akcji wkraczają typy warunkowe, które sprawdzą, czy dane pole należy (lub nie) do naszego parametru:</p><pre><code>type FreezeProps&lt;Type, Keys extends keyof Type&gt; = 
+   { readonly [Prop in Keys as Prop extends Keys ? Prop : never]: Type[Prop]; } &amp;
+   {          [Prop in Exclude&lt;keyof Type, Keys&gt;]: Type[Prop]; };</code></pre><p>I gotowe! Przeanalizujmy ten typ - składa się on z dwóch części:</p><ul><li><p>Pola przekazywane jako parametr zyskują atrybut readonly</p><ul><li><p>Jeśli nie wchodzą w skład parametru, zostają “wyrzucone” przez <em>never</em></p></li></ul></li><li><p>Pola, których nie ma w parametrze, uzupełniają te wyrzucone w drugiej części typu</p><ul><li><p>Uzyskujemy to poprzez wbudowany typ <em>Exclude</em>, który z wszystkich typów usuwa podane <em>Keys</em></p></li></ul></li></ul><p>Co najlepsze, to jeden z wielu sposobów na zbudowanie typu <em>FreezeProps</em> - w sekcji ćwiczeń zmierzysz się z jego alternatywą bez użycia typów warunkowych.</p><h2>Podsumowanie</h2><p>Podobnie jak w przypadku typów opartych o szablony stringów, potencjał typów warunkowych odkryjesz łącząc je z innymi konstrukcjami języka TypeScript. W połączeniu z dynamicznym rozwiązywaniem typów i słowem kluczowym <em>infer</em>, które poznasz w kolejnej lekcji, będą one znakomitym sposobem na typowanie narzędzi, które przekazujesz innym programistom.</p><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>431-conditional-getters</strong> - Dokończ implementację typu <em>JustGetters&lt;T&gt;</em>, który powinien tworzyć typy zawierające pola z prefixem “get…”.</p></li><li><p><strong>432-conditional-cleaner - </strong>Dokończ implementację typu <em>FieldTypeCleaner&lt;T, K&gt;, </em>który z typu T usuwa wszystkie pola typu K.</p></li></ol><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

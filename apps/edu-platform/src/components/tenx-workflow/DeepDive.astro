@@ -1,0 +1,139 @@
+---
+/**
+ * DeepDive - panel progressive disclosure osadzany w sekcjach stron 10x Workflow.
+ * Zwiniety: monospace'owy pasek "[+] DEEP DIVE // <skill>". Rozwiniety: pionowa
+ * szyna postepu z numerowanymi krokami (01, 02, ...), kazdy krok to natywny
+ * <details>. Widocznosc calego panelu steruje html[data-dd] w layoucie
+ * (dd=0 chowa wszystko z klasa .deepdive).
+ */
+import type { Lang } from './i18n';
+
+interface Props {
+  skill: string;
+  /** Nadpisanie koloru akcentu; domyslnie dziedziczy --acc sekcji. */
+  accent?: string;
+  /** Link do pelnej strony skilla - renderuje przycisk pod krokami. */
+  href?: string;
+  items: { label: string; body: string }[];
+  /** Jezyk etykiet UI panelu (tresc krokow przychodzi juz w jezyku strony). */
+  lang?: Lang;
+}
+
+const { skill, accent, href, items, lang = 'pl' } = Astro.props;
+const moreLabel = lang === 'en' ? 'FULL SKILL PAGE →' : 'PEŁNA STRONA SKILLA →';
+---
+
+<details class="deepdive rv" style={accent ? `--acc:${accent}` : undefined}>
+  <summary class="dd-bar">
+    <span class="dd-toggle" aria-hidden="true"></span>
+    <span class="dd-skill">DEEP DIVE // {skill}</span>
+    {href && (
+      <a class="dd-more-link" href={href} onclick="event.stopPropagation()">
+        {moreLabel}
+      </a>
+    )}
+  </summary>
+  <ol class="dd-rail">
+    {items.map((item, i) => (
+      <li class="dd-item">
+        <details class="dd-step">
+          <summary>
+            <span class="dd-num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="dd-chip">{item.label}</span>
+          </summary>
+          <div class="dd-body" set:html={item.body} />
+        </details>
+      </li>
+    ))}
+  </ol>
+</details>
+
+<style is:global>
+/* ---------- deep dive (progressive disclosure) ---------- */
+.deepdive{position:relative;margin-top:34px;
+  border:1px solid var(--line);
+  background:color-mix(in srgb,var(--surface) 62%,transparent)}
+.deepdive::before,.deepdive::after{content:'';position:absolute;width:14px;height:14px;pointer-events:none}
+.deepdive::before{top:0;left:0;border-top:1px solid var(--acc);border-left:1px solid var(--acc)}
+.deepdive::after{bottom:0;right:0;border-bottom:1px solid var(--acc);border-right:1px solid var(--acc)}
+
+.deepdive>summary{list-style:none;cursor:pointer;user-select:none;
+  display:flex;align-items:baseline;gap:10px;padding:13px 18px}
+.deepdive>summary::-webkit-details-marker{display:none}
+.deepdive>summary:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.deepdive .dd-toggle,.deepdive .dd-skill{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}
+.deepdive .dd-toggle{color:var(--acc)}
+.deepdive .dd-toggle::before{content:'[+]'}
+.deepdive[open] .dd-toggle::before{content:'[-]'}
+.deepdive .dd-skill{color:color-mix(in srgb,var(--acc) 65%,var(--dim));
+  transition:color .2s}
+.deepdive>summary:hover .dd-skill{color:var(--acc)}
+
+/* szyna postepu: numerowane kroki polaczone kreskowana linia */
+.deepdive .dd-rail{list-style:none;margin:0;padding:8px 18px 22px;
+  display:grid;gap:16px;animation:ddReveal .45s ease both}
+.deepdive .dd-item{position:relative;padding-left:44px}
+.deepdive .dd-item::before{content:'';position:absolute;left:13px;top:32px;bottom:-16px;
+  border-left:1px dashed color-mix(in srgb,var(--acc) 45%,transparent)}
+.deepdive .dd-item:last-child::before{display:none}
+
+.deepdive .dd-num{position:absolute;left:0;top:0;width:27px;height:27px;
+  display:grid;place-items:center;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;color:var(--dim);
+  border:1px solid var(--line);
+  background:color-mix(in srgb,var(--surface2) 85%,transparent);
+  transition:color .2s,border-color .2s,box-shadow .2s}
+
+.deepdive .dd-step>summary{list-style:none;cursor:pointer;user-select:none;
+  display:flex;align-items:center;gap:10px;min-height:27px}
+.deepdive .dd-step>summary::-webkit-details-marker{display:none}
+.deepdive .dd-step>summary:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.deepdive .dd-chip{font-family:var(--disp);font-weight:600;font-size:.78rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);padding:4px 11px;
+  transition:color .2s,border-color .2s}
+.deepdive .dd-step>summary:hover .dd-chip,
+.deepdive .dd-step>summary:focus-visible .dd-chip{color:var(--acc);
+  border-color:color-mix(in srgb,var(--acc) 60%,transparent)}
+
+/* otwarty krok: numer podswietlony akcentem */
+.deepdive .dd-step[open] .dd-num{color:var(--acc);
+  border-color:color-mix(in srgb,var(--acc) 70%,transparent);
+  box-shadow:0 0 12px color-mix(in srgb,var(--acc) 28%,transparent)}
+.deepdive .dd-step[open]>summary .dd-chip{color:var(--txt);
+  border-color:color-mix(in srgb,var(--acc) 45%,transparent)}
+
+.deepdive .dd-body{margin-top:10px;font-size:.92rem;line-height:1.6;
+  color:var(--muted);max-width:64ch;animation:ddReveal .35s ease both}
+.deepdive .dd-body b,.deepdive .dd-body strong{color:var(--txt)}
+.deepdive .dd-body em{font-style:normal;color:var(--acc)}
+.deepdive .dd-body code{font-family:var(--mono);font-size:.85em;color:var(--txt)}
+
+/* przycisk do pelnej strony skilla - w pasku, widoczny bez rozwijania */
+.deepdive .dd-more-link{margin-left:auto;flex:none;
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--acc);border:1px solid color-mix(in srgb,var(--acc) 55%,transparent);
+  padding:6px 12px;text-decoration:none;transition:background .2s}
+.deepdive .dd-more-link:hover{background:color-mix(in srgb,var(--acc) 16%,transparent)}
+
+@keyframes ddReveal{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .deepdive .dd-rail,.deepdive .dd-body{animation:none}
+}
+
+/* ---------- mobile (<=720px): wieksze tap targety, cietsze wciecia ---------- */
+@media(max-width:720px){
+  .deepdive>summary{padding:15px 16px;min-height:48px;align-items:center}
+  .deepdive .dd-rail{padding:6px 14px 20px}
+  .deepdive .dd-item{padding-left:40px}
+  /* krok: caly wiersz min. 44px; numer wysrodkowany wzgledem chipa */
+  .deepdive .dd-step>summary{min-height:44px}
+  .deepdive .dd-num{top:8px}
+  .deepdive .dd-item::before{left:13px;top:44px}
+  .deepdive .dd-chip{padding:8px 12px;line-height:1.35}
+  .deepdive .dd-body{overflow-wrap:anywhere}
+  .deepdive>summary{flex-wrap:wrap;row-gap:8px}
+  .deepdive .dd-more-link{display:flex;align-items:center;min-height:36px;padding:4px 12px}
+}
+</style>

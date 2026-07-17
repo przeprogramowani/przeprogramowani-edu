@@ -1,0 +1,242 @@
+---
+/**
+ * Tresc strony FAQ (slug faq, kontekst publiczny). Pytania oparte o sekcje FAQ
+ * z 10xdevs.pl, pogrupowane tematycznie w dostepne akordeony <details>.
+ *
+ * Nad lista siedzi sticky pasek wyszukiwania z filtrem kategorii (chipy) - ten
+ * sam wzorzec UI co strona Quick search (DocsBody): pole "/" fokusuje, Escape
+ * czysci, chipy filtruja po kategorii, licznik pokazuje liczbe trafien.
+ * Wyszukiwarka jest progresywnym ulepszeniem - bez JS widac pelna liste (noscript).
+ *
+ * hud-top, xnav, footer i wspolny CSS renderuje TenxCosmicLayout; tutaj markup
+ * tresci + scoped CSS (pasek, chipy, akordeon) i inline skrypt filtrowania.
+ * i18n: teksty w i18n/faq.ts (pl; en odbija pl - strona poza EN_PAGES).
+ */
+import type { Lang } from '../i18n';
+import { FAQ } from '../i18n/faq';
+import { tenxDevsUrl } from '../config';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+}
+
+const { lang = 'pl' } = Astro.props;
+const t = FAQ[lang];
+
+const total = t.groups.reduce((n, g) => n + g.items.length, 0);
+/** Liczebnik PL (1 / 2-4 / reszta) - startowy tekst licznika renderowany SSR. */
+const plural = (n: number) => {
+  const r = n % 10;
+  const h = n % 100;
+  if (n === 1) return t.search.nounForms[0];
+  if (r >= 2 && r <= 4 && (h < 12 || h > 14)) return t.search.nounForms[1];
+  return t.search.nounForms[2];
+};
+/** Formy liczebnika i teksty pustego stanu przekazywane do skryptu przez data-*. */
+const nounFormsAttr = t.search.nounForms.join('|');
+---
+
+<style is:global>
+/* Reguly specyficzne dla strony (diff vs CSS wspolny w TenxCosmicLayout) */
+header h1 .glow{color:#7c8cff;text-shadow:0 0 24px rgba(124,140,255,.45)}
+
+/* pasek wyszukiwania (sticky) - wzorzec ze strony Quick search */
+.faq-searchbar{position:sticky;top:0;z-index:6;margin:24px -24px 0;padding:14px 24px 12px;
+  background:rgba(7,10,20,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line)}
+.faq-search-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.faq-search-box{position:relative;flex:1;min-width:250px}
+.faq-search-box .ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);background:var(--dim);width:14px;height:14px;pointer-events:none}
+#faq-q{width:100%;padding:11px 14px 11px 38px;background:color-mix(in srgb,var(--surface) 80%,transparent);
+  border:1px solid var(--line);color:var(--txt);font-family:var(--body);font-size:.95rem;border-radius:0;appearance:none}
+#faq-q::placeholder{color:var(--dim)}
+#faq-q:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 16px rgba(124,140,255,.25)}
+#faq-q::-webkit-search-cancel-button{display:none}
+#faq-count{white-space:nowrap;color:var(--muted)}
+.faq-chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.faq-chips .lbl{min-width:64px;color:var(--dim)}
+.faq-chip{font-family:var(--disp);font-weight:600;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);background:none;cursor:pointer;border:1px solid var(--line);padding:6px 12px;
+  transition:color .15s,border-color .15s,box-shadow .15s}
+.faq-chip:hover{color:var(--txt);border-color:var(--muted)}
+.faq-chip[aria-pressed="true"]{color:var(--indigo);border-color:var(--indigo);box-shadow:0 0 12px rgba(124,140,255,.3)}
+.faq-chip:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+.faq-noscript-note{margin-top:20px}
+
+/* grupy pytan */
+.faq-group{padding:30px 0 6px}
+.faq-group[hidden]{display:none}
+.faq-mod-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.faq-mod-head h2{font-family:var(--mono);font-size:.78rem;font-weight:400;letter-spacing:.2em;color:var(--indigo);white-space:nowrap;margin:0}
+.faq-mod-head::after{content:'';flex:1;height:1px;background:var(--line-soft)}
+
+.faq-list{border-top:1px solid var(--line)}
+.faq-item{border-bottom:1px solid var(--line-soft)}
+.faq-item[hidden]{display:none}
+.faq-item>summary{list-style:none;cursor:pointer;display:flex;gap:14px;align-items:baseline;padding:15px 2px;
+  font-family:var(--disp);font-weight:600;font-size:1rem;line-height:1.4;color:var(--txt);transition:color .2s}
+.faq-item>summary::-webkit-details-marker{display:none}
+.faq-item>summary::before{content:'+';font-family:var(--mono);color:var(--acc);font-size:1.15rem;line-height:1.2;flex:none;width:14px;text-align:center}
+.faq-item[open]>summary::before{content:'\2212'}
+.faq-item>summary:hover,.faq-item>summary:focus-visible{color:var(--acc);outline:none}
+.faq-a{padding:0 2px 18px 28px;color:var(--muted);font-size:.94rem;line-height:1.65;max-width:74ch}
+.faq-a a{color:var(--indigo);text-decoration:underline;overflow-wrap:anywhere}
+.faq-a b,.faq-a strong{color:var(--txt);font-weight:600}
+.faq-a code{font-family:var(--mono);font-size:.85em;background:color-mix(in srgb,var(--surface) 72%,transparent);padding:1px 5px}
+@media(max-width:520px){.faq-a{padding-left:0}}
+
+.faq-empty{padding:34px 2px;border-bottom:1px solid var(--line-soft)}
+.faq-empty[hidden]{display:none}
+.faq-empty .mono{color:var(--muted);letter-spacing:.1em}
+.faq-empty button{margin-left:12px;font-family:var(--disp);font-weight:600;font-size:.68rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--indigo);background:none;border:1px solid color-mix(in srgb,var(--indigo) 55%,transparent);
+  padding:6px 12px;cursor:pointer}
+.faq-empty button:hover{background:color-mix(in srgb,var(--indigo) 12%,transparent)}
+
+.faq-cta{display:inline-block;margin-top:8px;font-family:var(--disp);font-weight:700;font-size:.78rem;letter-spacing:.14em;
+  color:#ffd166;text-decoration:none;border:1px solid color-mix(in srgb,#ffd166 55%,transparent);padding:10px 18px;transition:background .2s}
+.faq-cta:hover,.faq-cta:focus-visible{background:color-mix(in srgb,#ffd166 12%,transparent);outline:none}
+
+/* mobile: pasek chipow przewijany poziomo (spojnie z Quick search) */
+@media(max-width:720px){
+  .faq-chips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -24px;padding:2px 24px;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 36px),transparent)}
+  .faq-chips::-webkit-scrollbar{display:none}
+  .faq-chip{flex:none;display:inline-flex;align-items:center;min-height:40px;padding:0 13px}
+  .faq-chips .lbl{flex:none}
+}
+@media print{.faq-searchbar{display:none}}
+</style>
+
+<header>
+  <p class="eyebrow" style="--acc:#7c8cff"><span class="ico ico-doc" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1 set:html={t.h1Html} />
+  <p class="sub" set:html={t.subHtml} />
+</header>
+
+<div class="faq-searchbar" id="faq-searchbar">
+  <div class="faq-search-row">
+    <div class="faq-search-box">
+      <span class="ico ico-lens" aria-hidden="true"></span>
+      <input id="faq-q" type="search" autocomplete="off" placeholder={t.search.placeholder} aria-label={t.search.inputAria} />
+    </div>
+    <span id="faq-count" class="mono" data-forms={nounFormsAttr} aria-live="polite" aria-label={t.search.countAria}>{total} {plural(total)}</span>
+  </div>
+  <div class="faq-chips" role="group" aria-label={t.search.catAria}>
+    <span class="lbl mono">{t.search.catLabel}</span>
+    <button type="button" class="faq-chip" data-cat="*" aria-pressed="true">{t.search.allChip}</button>
+    {t.groups.map((g) => (
+      <button type="button" class="faq-chip" data-cat={g.id} aria-pressed="false">{g.chip}</button>
+    ))}
+  </div>
+</div>
+<noscript>
+  <style is:inline>.faq-searchbar{display:none}</style>
+  <p class="mono faq-noscript-note">WYSZUKIWARKA WYMAGA JAVASCRIPT - PONIŻEJ PEŁNA LISTA PYTAŃ.</p>
+</noscript>
+
+<main id="faq-results">
+  {t.groups.map((g) => (
+    <section class="faq-group" id={g.id} data-cat={g.id}>
+      <div class="faq-mod-head"><h2>{g.num} // {g.h2}</h2></div>
+      <div class="faq-list">
+        {g.items.map((qa) => (
+          <details class="faq-item" data-cat={g.id}>
+            <summary>{qa.q}</summary>
+            <div class="faq-a" set:html={qa.aHtml} />
+          </details>
+        ))}
+      </div>
+    </section>
+  ))}
+  <div class="faq-empty" id="faq-empty" data-prefix={t.search.emptyPrefix} data-generic={t.search.emptyGeneric} hidden>
+    <span class="mono" id="faq-empty-msg"></span>
+    <button type="button" id="faq-empty-clear">{t.search.clear}</button>
+  </div>
+</main>
+
+<!-- ============ DALEJ ============ -->
+<section class="sector" id="dalej" style="--acc:#ffd166">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.next.num}</span>
+      <span class="sec-uni"><span class="ico ico-star" aria-hidden="true"></span>{t.next.kicker}</span>
+    </div>
+    <h2>{t.next.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.next.leadHtml} /></div>
+  <div class="target rv" style="--acc:#ffd166">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.next.ctaHint}</span>
+    <a class="faq-cta" href={tenxDevsUrl('faq-cta')} target="_blank" rel="noopener">{t.next.cta}</a>
+  </div>
+</section>
+
+<script is:inline>
+  // Filtrowanie FAQ: fraza + kategoria (chipy). Progresywne - lista jest w DOM
+  // i czytelna bez JS. "/" fokusuje pole, Escape czysci; licznik i pusty stan
+  // aktualizuja sie na zywo. Etykiety (formy liczebnika, teksty pustego stanu)
+  // przychodza przez data-* z SSR, wiec skrypt nie musi znac jezyka strony.
+  (function () {
+    var q = document.getElementById('faq-q');
+    if (!q) return;
+    var items = Array.prototype.slice.call(document.querySelectorAll('.faq-item'));
+    var groups = Array.prototype.slice.call(document.querySelectorAll('.faq-group'));
+    var count = document.getElementById('faq-count');
+    var empty = document.getElementById('faq-empty');
+    var emptyMsg = document.getElementById('faq-empty-msg');
+    var emptyClear = document.getElementById('faq-empty-clear');
+    var forms = (count.getAttribute('data-forms') || 'x|x|x').split('|');
+    var state = { q: '', cat: '*' };
+    function norm(s) {
+      return (s || '').toLowerCase().replace(/ł/g, 'l').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+    items.forEach(function (it) {
+      it._h = norm(it.textContent);
+      it._c = it.getAttribute('data-cat');
+    });
+    function plural(n) {
+      var r = n % 10, h = n % 100;
+      if (n === 1) return forms[0];
+      if (r >= 2 && r <= 4 && (h < 12 || h > 14)) return forms[1];
+      return forms[2];
+    }
+    function apply() {
+      var nq = norm(state.q), vis = 0;
+      items.forEach(function (it) {
+        var ok = (state.cat === '*' || it._c === state.cat) && (!nq || it._h.indexOf(nq) > -1);
+        it.hidden = !ok;
+        if (ok) vis++;
+      });
+      groups.forEach(function (g) {
+        g.hidden = !g.querySelector('.faq-item:not([hidden])');
+      });
+      count.textContent = vis + ' ' + plural(vis);
+      if (vis === 0 && emptyMsg) {
+        var pfx = empty.getAttribute('data-prefix'), gen = empty.getAttribute('data-generic');
+        emptyMsg.textContent = state.q ? pfx + ' „' + state.q.trim() + '”' : gen;
+      }
+      empty.hidden = vis !== 0;
+    }
+    var chips = document.querySelectorAll('.faq-chip[data-cat]');
+    chips.forEach(function (ch) {
+      ch.addEventListener('click', function () {
+        chips.forEach(function (o) { o.setAttribute('aria-pressed', o === ch ? 'true' : 'false'); });
+        state.cat = ch.getAttribute('data-cat');
+        apply();
+      });
+    });
+    function reset() {
+      q.value = ''; state.q = ''; state.cat = '*';
+      chips.forEach(function (ch) { ch.setAttribute('aria-pressed', ch.getAttribute('data-cat') === '*' ? 'true' : 'false'); });
+      apply(); q.focus();
+    }
+    if (emptyClear) emptyClear.addEventListener('click', reset);
+    q.addEventListener('input', function () { state.q = q.value; apply(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); }
+      else if (e.key === 'Escape' && (state.q || document.activeElement === q)) { q.value = ''; state.q = ''; apply(); }
+    });
+    apply();
+  })();
+</script>

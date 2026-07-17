@@ -1,0 +1,53 @@
+name: Refresh 10x RAG Data
+
+on:
+  workflow_dispatch:
+
+jobs:
+  refresh_rag_data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@przeprogramowani'
+
+      - name: Install 10x-rag dependencies
+        run: |
+          cd apps/10x-rag &&
+          npm ci --include=dev
+
+      - name: Run RAG pipeline
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CHROMA_TENANT: ${{ secrets.CHROMA_TENANT }}
+          CHROMA_DB_URL: ${{ secrets.CHROMA_DB_URL }}
+          CHROMA_API_KEY: ${{ secrets.CHROMA_API_KEY }}
+
+        run: |
+          cd apps/10x-rag && npm start
+
+      - name: Get timestamp
+        id: timestamp
+        run: echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Create a pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          title: 10x RAG - data refresh
+          delete-branch: true
+          branch: refresh-10x-rag-${{ steps.timestamp.outputs.timestamp }}
+          body: |
+            Automated refresh of 10x RAG pipeline data
+            - Processed HTML files from source
+            - Generated new chunks for RAG pipeline
+            - Updated embeddings and vector database
+          labels: |
+            automation
+            rag

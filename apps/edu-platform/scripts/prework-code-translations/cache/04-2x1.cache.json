@@ -1,0 +1,20 @@
+{
+  "lessonPrefix": "04-2x1",
+  "updatedAt": "2026-04-28T15:48:30.261Z",
+  "entries": [
+    {
+      "key": "9299906346cb635bdc8f110ea2bc90381d71701ab67b34162e04c9f6eef4c01d",
+      "blockHash": "74704cc988cc21c21bb1f870d3e22724307c03db9d1c07256a9c7f855fe62d1a",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 0,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "git diff main | claude -p \\\n  \"Review these changes for security issues and regressions\" \\\n  --allowedTools \"Read,Grep,Bash(npm run test:*)\" \\\n  --max-turns 6 \\\n  --output-format json > review.json\n",
+      "translatedText": "git diff main | claude -p \\\n  \"Review these changes for security issues and regressions\" \\\n  --allowedTools \"Read,Grep,Bash(npm run test:*)\" \\\n  --max-turns 6 \\\n  --output-format json > review.json",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:30.261Z"
+    }
+  ]
+}

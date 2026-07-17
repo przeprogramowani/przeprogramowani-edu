@@ -1,0 +1,310 @@
+{
+  "lessonId": "[0x4] Przegląd agentów AI w terminalu",
+  "file": "05-0x4_przegld_agentw_ai_w_terminalu.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 4,
+      "order": 1
+    },
+    {
+      "slug": "cli-vs-ideweb---po-co-to-komu",
+      "title": "CLI vs IDE/web - po co to komu?",
+      "blocks": 1,
+      "order": 2
+    },
+    {
+      "slug": "co-potrafi-agent-cli",
+      "title": "Co potrafi agent CLI",
+      "blocks": 4,
+      "order": 3
+    },
+    {
+      "slug": "kiedy-warto-stosowac",
+      "title": "Kiedy warto stosować?",
+      "blocks": 1,
+      "order": 4
+    },
+    {
+      "slug": "przeglad-narzedzi",
+      "title": "Przegląd narzędzi",
+      "blocks": 11,
+      "order": 5
+    },
+    {
+      "slug": "co-wybrac",
+      "title": "Co wybrać?",
+      "blocks": 3,
+      "order": 6
+    },
+    {
+      "slug": "codex-cli-openai",
+      "title": "Codex CLI (OpenAI)",
+      "blocks": 1,
+      "order": 7
+    },
+    {
+      "slug": "gemini-cli-google",
+      "title": "Gemini CLI (Google)",
+      "blocks": 1,
+      "order": 8
+    },
+    {
+      "slug": "opencode-oss",
+      "title": "OpenCode (OSS)",
+      "blocks": 1,
+      "order": 9
+    },
+    {
+      "slug": "aider-oss",
+      "title": "aider (OSS)",
+      "blocks": 1,
+      "order": 10
+    },
+    {
+      "slug": "materiay-dodatkowe-opcjonalne",
+      "title": "Materiały dodatkowe (opcjonalne)",
+      "blocks": 12,
+      "order": 11
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "Podsumowanie",
+      "blocks": 3,
+      "order": 12
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:607a2684:43cc23fa",
+      "tokenEstimate": 77,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:607a2684:43cc23fa:0-1",
+      "tokenEstimate": 77,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:607a2684:24701484",
+      "tokenEstimate": 179,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:607a2684:24701484:0-3",
+      "tokenEstimate": 191,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:607a2684:213b358f",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:607a2684:213b358f:0-0",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:607a2684:ce955c85",
+      "tokenEstimate": 176,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:607a2684:ce955c85:0-3",
+      "tokenEstimate": 176,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:607a2684:b4010023",
+      "tokenEstimate": 66,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:607a2684:b4010023:0-0",
+      "tokenEstimate": 217,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:607a2684:402f7f0d",
+      "tokenEstimate": 186,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:607a2684:402f7f0d:0-5",
+      "tokenEstimate": 377,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "chk:607a2684:402f7f0d:5-9",
+      "tokenEstimate": 390,
+      "span": [
+        5,
+        9
+      ]
+    },
+    {
+      "id": "chk:607a2684:402f7f0d:9-10",
+      "tokenEstimate": 181,
+      "span": [
+        9,
+        10
+      ]
+    },
+    {
+      "id": "sec:607a2684:ec474f58",
+      "tokenEstimate": 72,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:607a2684:ec474f58:0-2",
+      "tokenEstimate": 134,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:607a2684:b8ae0d76",
+      "tokenEstimate": 71,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:607a2684:b8ae0d76:0-0",
+      "tokenEstimate": 127,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:607a2684:7fad252e",
+      "tokenEstimate": 83,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:607a2684:7fad252e:0-0",
+      "tokenEstimate": 134,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:607a2684:db77e20e",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:607a2684:db77e20e:0-0",
+      "tokenEstimate": 124,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:607a2684:7ca38abe",
+      "tokenEstimate": 67,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:607a2684:7ca38abe:0-0",
+      "tokenEstimate": 125,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:607a2684:9a9e8eb6",
+      "tokenEstimate": 193,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:607a2684:9a9e8eb6:0-11",
+      "tokenEstimate": 319,
+      "span": [
+        0,
+        11
+      ]
+    },
+    {
+      "id": "sec:607a2684:33c7f0dd",
+      "tokenEstimate": 152,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:607a2684:33c7f0dd:0-2",
+      "tokenEstimate": 260,
+      "span": [
+        0,
+        2
+      ]
+    }
+  ]
+}

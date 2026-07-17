@@ -1,0 +1,1264 @@
+---
+/**
+ * Wspolny layout stron 10x Workflow ("kosmiczny" design system).
+ * Zrodlo: kampania 10xdevs-*.html; CSS przeniesiony 1:1, fonty Chakra Petch
+ * serwowane z /fonts/chakra-petch/ zamiast data-URI.
+ */
+import { NEWSLETTER_URL, TENX_DEVS_PROMO, tenxDevsUrl } from './config';
+import { DOCS } from './docs-data';
+import { LAYOUT_UI, type Lang } from './i18n';
+import {
+  EN_PAGES,
+  NAV_CATEGORY_LABEL,
+  NAV_CATEGORY_ORDER,
+  WORKFLOW_PAGES,
+  pageHref,
+  pageText,
+  type WorkflowPage,
+} from './pages';
+import { SKILL_PAGES } from './skills';
+
+interface Props {
+  title: string;
+  slug: string;
+  base: string;
+  pages?: WorkflowPage[];
+  breadcrumb?: string;
+  /** Domyslny tryb per kontekst strony; jawny query param (?tryb=, ?dd=) wygrywa. */
+  modeDefaults?: { tryb?: 'sf' | 'neutral'; dd?: '0' | '1' };
+  /** Jezyk strony (misja EN); domyslnie polski, EN tylko w kontekscie publicznym. */
+  lang?: Lang;
+  /**
+   * Tozsamosc strony dla EN_PAGES i linkow switchera - rozni sie od slug
+   * na stronach skilli (slug=csc dla stylu nawigacji, enSlug=skill/<nazwa>).
+   */
+  enSlug?: string;
+}
+
+const {
+  title,
+  slug,
+  base,
+  pages = WORKFLOW_PAGES,
+  breadcrumb = `10X WORKFLOW // ${title}`,
+  modeDefaults = {},
+  lang = 'pl',
+  enSlug = Astro.props.slug,
+} = Astro.props;
+
+// Teksty UI layoutu w jezyku strony (nawigacja, tryby, paleta, bannery, TOC).
+const ui = LAYOUT_UI[lang];
+
+// Switcher PL/EN i hreflang tylko tam, gdzie wersja EN realnie istnieje
+// (rollout progresywny przez EN_PAGES) i tylko w kontekscie publicznym.
+const hasEnVersion = base === '/10xdevs-4' && EN_PAGES.includes(enSlug);
+const langHrefFor = (l: Lang) => {
+  const href = pageHref(base, enSlug, l);
+  return carriedQs ? `${href}?${carriedQs}` : href;
+};
+
+// Banner przedsprzedazy 10xDevs 4.0 - tylko kontekst publiczny (marketing).
+// Dane oferty i adresy z UTM mieszkaja w config.ts (TENX_DEVS_PROMO).
+const promo = base === '/10xdevs-4';
+
+// Tytul dokumentu: opisowy tytul strony z rejestru + staly sufiks portalu
+// (bez dublowania, gdy tytul juz zawiera "10x Workflow").
+const docTitle = title.includes('10x Workflow') ? title : `${title} | 10x Workflow`;
+
+// Tryb narracji (sf/neutral) i deep dive: query param wygrywa, potem domyslne strony.
+const qTryb = Astro.url.searchParams.get('tryb');
+const qDd = Astro.url.searchParams.get('dd');
+const explicitTryb = qTryb === 'sf' || qTryb === 'neutral' ? qTryb : null;
+const explicitDd = qDd === '0' || qDd === '1' ? qDd : null;
+const tryb = explicitTryb ?? modeDefaults.tryb ?? 'sf';
+const dd = explicitDd ?? modeDefaults.dd ?? '1';
+
+// Linki nawigacji przenosza wylacznie parametry jawnie obecne w URL
+// (domyslnych nie materializujemy w linkach).
+const carried = new URLSearchParams();
+if (explicitTryb) carried.set('tryb', explicitTryb);
+if (explicitDd) carried.set('dd', explicitDd);
+const carriedQs = carried.toString();
+const navHref = (targetSlug: string) => {
+  const href = pageHref(base, targetSlug, lang);
+  return carriedQs ? `${href}?${carriedQs}` : href;
+};
+
+// Przelacznik trybu / deep dive: link do biezacej strony z nadpisanym jednym
+// parametrem; drugi parametr zachowany tylko, jesli byl jawny w URL.
+const modeHref = (key: 'tryb' | 'dd', value: string) => {
+  const params = new URLSearchParams();
+  if (key === 'tryb') {
+    params.set('tryb', value);
+    if (explicitDd) params.set('dd', explicitDd);
+  } else {
+    if (explicitTryb) params.set('tryb', explicitTryb);
+    params.set('dd', value);
+  }
+  return `${Astro.url.pathname}?${params.toString()}`;
+};
+
+// Strony oznaczone sfOnly istnieja tylko w trybie sci-fi.
+// Teksty wpisow (navLabel, title) w jezyku strony - pageText nie zmienia slugow.
+const navPages = pages
+  .filter((p) => tryb !== 'neutral' || !p.sfOnly)
+  .map((p) => pageText(p, lang));
+
+// ---------- kategorie nawigacji (rozwijane menu) ----------
+// Grupujemy widoczne strony w kategorie z NAV_CATEGORY_ORDER, zeby pasek
+// miescil sie mimo rosnacej liczby stron. Kategoria "skille" nie ma stron w
+// rejestrze - wypelniamy ja z SKILL_PAGES, gdy strona csc jest w nawigacji.
+// Aktywny wpis (aria-current) rozpoznajemy po enSlug (dokladna tozsamosc strony,
+// takze na stronach skilli, gdzie slug layoutu = csc).
+interface NavLink {
+  label: string;
+  href: string;
+  current: boolean;
+  ext: boolean;
+}
+const cscVisible = navPages.some((p) => p.slug === 'csc');
+const navCats: { id: string; label: string; links: NavLink[] }[] = NAV_CATEGORY_ORDER.map((id) => {
+  // Kategoria skille zyje tylko, gdy dostepna jest strona csc (strony skilli
+  // wymagaja jej kontekstu) - inaczej nie pokazujemy nawet Przegladu.
+  if (id === 'skille' && !cscVisible) return { id, label: NAV_CATEGORY_LABEL[lang][id], links: [] };
+
+  // Strona domowa kategorii (Przegald) trafia na gore rozwijanego menu jako
+  // osobna laczka; sama nie jest "elementem" listy podstron.
+  const home = navPages.find((p) => p.categoryHome === id);
+  const overviewLink: NavLink[] = home
+    ? [{ label: ui.navOverview, href: navHref(home.slug), current: enSlug === home.slug, ext: false }]
+    : [];
+
+  const memberLinks: NavLink[] =
+    id === 'skille'
+      ? SKILL_PAGES.map((sk) => ({
+          label: sk.skill,
+          href: carriedQs ? `${base}/skill/${sk.slug}?${carriedQs}` : `${base}/skill/${sk.slug}`,
+          current: enSlug === `skill/${sk.slug}`,
+          ext: false,
+        }))
+      : navPages
+          .filter((p) => p.category === id && !p.categoryHome && p.slug !== 'index')
+          .map((p) => ({
+            label: `${p.moduleLabel} · ${p.navLabel}`,
+            href: p.href ?? navHref(p.slug),
+            current: enSlug === p.slug,
+            ext: !!p.href,
+          }));
+
+  return { id, label: NAV_CATEGORY_LABEL[lang][id], links: [...overviewLink, ...memberLinks] };
+}).filter((c) => c.links.length > 0);
+
+// ---------- paleta wyszukiwania (Cmd/Ctrl+K) ----------
+// Indeks budowany SSR z propa pages (kontekst publiczny nie widzi stron
+// zamknietych), potem skille (tylko gdy strona csc jest dostepna), potem
+// wpisy docs z docs-data.ts. Kolejnosc tablicy = kolejnosc grup w wynikach.
+interface PaletteItem {
+  /** Grupa wyniku (badge): STRONA/PAGE / SKILL / DOCS; CSS koloruje po data-g. */
+  g: string;
+  label: string;
+  /** Dopisek po prawej stronie wyniku (tytul strony, modul, artefakt). */
+  hint: string;
+  href: string;
+  /** Tekst przeszukiwany (tytul + tagi + streszczenie). */
+  s: string;
+  /** Link zewnetrzny - otwierany w nowej karcie. */
+  ext?: boolean;
+}
+const hasDocsPage = navPages.some((p) => p.slug === 'docs');
+const paletteItems: PaletteItem[] = [
+  ...navPages.map(
+    (p): PaletteItem => ({
+      g: ui.paletteGroupPage,
+      label: `${p.moduleLabel} · ${p.navLabel}`,
+      hint: p.title,
+      href: p.href ?? navHref(p.slug),
+      s: `${p.moduleLabel} ${p.navLabel} ${p.title}`,
+      ...(p.href ? { ext: true } : {}),
+    })
+  ),
+  ...(navPages.some((p) => p.slug === 'csc')
+    ? SKILL_PAGES.map(
+        (sk): PaletteItem => ({
+          g: 'SKILL',
+          label: sk.skill,
+          hint: sk.title,
+          href: `${base}/skill/${sk.slug}`,
+          s: `${sk.skill} ${sk.title} skill`,
+        })
+      )
+    : []),
+  // Wpisy z url (lekcje na platformie) linkuja url; reszta prowadzi na strone
+  // docs (karty article.doc nie maja kotwic id) - tylko gdy docs sa dostepne.
+  ...DOCS.filter((d) => d.url || hasDocsPage).map(
+    (d): PaletteItem => ({
+      g: 'DOCS',
+      label: d.tytul,
+      hint: d.artefakt ?? d.modul,
+      href: d.url ?? navHref('docs'),
+      s: `${d.tytul} ${d.tagi.join(' ')} ${d.streszczenie}`,
+    })
+  ),
+];
+const paletteJson = JSON.stringify(paletteItems).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang={lang} data-mode={tryb} data-dd={dd}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{docTitle}</title>
+    {/* noindex do launchu misji EN (faza 4) - polprzetlumaczony portal nie indeksuje sie. */}
+    {lang === 'en' && <meta name="robots" content="noindex" />}
+    {hasEnVersion && <link rel="alternate" hreflang="pl" href={new URL(pageHref(base, enSlug, 'pl'), Astro.url).href} />}
+    {hasEnVersion && <link rel="alternate" hreflang="en" href={new URL(pageHref(base, enSlug, 'en'), Astro.url).href} />}
+    <link rel="preload" href="/fonts/chakra-petch/chakra-petch.css" as="style" />
+    <link rel="stylesheet" href="/fonts/chakra-petch/chakra-petch.css" />
+    <script is:inline>
+      // Persystencja trybu i deep dive (localStorage): jawny query param wygrywa
+      // i zapisuje wybor; bez parametru przywracamy zapamietany stan przed
+      // pierwszym renderem (skrypt w <head>, wiec bez migniecia trybu).
+      (function () {
+        try {
+          var q = new URLSearchParams(location.search);
+          var t = q.get('tryb');
+          var d = q.get('dd');
+          t = t === 'sf' || t === 'neutral' ? t : null;
+          d = d === '0' || d === '1' ? d : null;
+          if (t) localStorage.setItem('tenx-tryb', t);
+          if (d) localStorage.setItem('tenx-dd', d);
+          var h = document.documentElement;
+          var st = localStorage.getItem('tenx-tryb');
+          var sd = localStorage.getItem('tenx-dd');
+          if (!t && (st === 'sf' || st === 'neutral')) h.setAttribute('data-mode', st);
+          if (!d && (sd === '0' || sd === '1')) h.setAttribute('data-dd', sd);
+          // Przelaczniki w pasku akcji renderuja sie SSR wedlug URL - po
+          // przywroceniu stanu z localStorage doprowadzamy aria-current do zgody.
+          document.addEventListener('DOMContentLoaded', function () {
+            var want = {
+              'mode:sf': h.getAttribute('data-mode') !== 'neutral',
+              'mode:neutral': h.getAttribute('data-mode') === 'neutral',
+              'dd:1': h.getAttribute('data-dd') !== '0',
+              'dd:0': h.getAttribute('data-dd') === '0',
+            };
+            var links = document.querySelectorAll('nav.xnav [data-set]');
+            for (var i = 0; i < links.length; i++) {
+              var a = links[i];
+              if (want[a.getAttribute('data-set')]) a.setAttribute('aria-current', 'true');
+              else a.removeAttribute('aria-current');
+            }
+            // Switcher PL/EN: klik zapamietuje wybor jezyka (bez auto-redirectu -
+            // localStorage to pamiec preferencji, URL zawsze wygrywa).
+            var langLinks = document.querySelectorAll('nav.xnav [data-setlang]');
+            for (var j = 0; j < langLinks.length; j++) {
+              langLinks[j].addEventListener('click', function () {
+                try {
+                  localStorage.setItem('tenx-lang', this.getAttribute('data-setlang'));
+                } catch (err) {}
+              });
+            }
+          });
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <canvas id="stars" aria-hidden="true"></canvas>
+    <div class="nebula" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="hud">
+        <div class="hud-top">
+          <a class="brand" href={navHref('index')} aria-label={ui.brandAria}>
+            <svg width="160" height="42" viewBox="0 0 160 42" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo 10xDevs">
+              <path d="M10.8647 20.8935L0 27.9456L0.387456 32.6214L8.63025 27.1462L1.13148 41.7383L7.32094 40.8517L18.1107 19.8555L10.8647 20.8935Z" fill="currentColor"/>
+              <path d="M38.9733 17.621L38.9653 17.6172C37.8643 17.121 35.8451 17.1782 31.2508 17.8366C27.3557 18.3947 24.8761 18.9509 23.2107 19.6412C21.6314 20.2958 20.4021 21.1557 19.2257 22.4299C18.0717 23.6792 16.9543 25.3479 15.6005 27.8414C13.7924 31.1868 12.3497 34.2187 11.8355 35.7539C11.4925 36.7778 11.3877 37.5796 11.5154 38.2047C11.6502 38.8631 12.0311 39.3163 12.6806 39.5899L12.6918 39.5942C13.6211 39.9475 15.302 39.8472 20.1859 39.1476C24.249 38.5656 26.155 38.2 27.7361 37.7C30.0613 36.9793 32.1352 35.3692 33.7309 33.0467C35.6214 30.3147 38.7894 24.1759 39.6785 21.5227C40.3883 19.4031 40.1707 18.1993 38.9733 17.6201V17.621ZM32.7876 24.3001C32.4464 25.3184 30.5293 29.0874 29.629 30.5101C28.5948 32.1034 27.5822 32.6986 23.2837 33.3143C21.3192 33.5955 19.1957 33.8556 18.8677 33.3724C18.8055 33.281 18.7601 33.0997 18.9604 32.5022C19.4606 31.0097 21.6262 26.9529 22.5256 25.8245L22.5326 25.8151C23.388 24.7092 24.4559 24.1173 28.5232 23.5349C30.6668 23.2279 32.0084 23.1623 32.3907 23.234C32.9293 23.3507 33.022 23.6009 32.7876 24.3006V24.3001Z" fill="currentColor"/>
+              <path d="M60.8759 19.2548L53.4534 20.3181L49.2986 24.1518L48.8597 20.976L41.7395 21.9957L43.4966 28.239L33.4536 37.1089L40.6894 36.0723L45.9341 31.0802L46.4867 35.2419L53.365 34.2569L51.7188 27.1575L60.8759 19.2548Z" fill="currentColor"/>
+              <path d="M87.5429 10.9432C86.6543 10.3279 85.1447 10.2548 82.1593 10.6821L66.6699 12.901L55.8801 33.8971L72.4818 31.5189C74.4476 31.2373 75.3301 31.047 76.4125 30.6703C78.704 29.8985 81.2327 27.7461 82.8556 25.1866C84.6796 22.3201 87.381 16.9845 88.1105 14.8069C88.7352 12.9427 88.5448 11.6428 87.5434 10.9432H87.5429ZM73.5103 25.9537L65.2904 27.1313L69.9666 18.0403L78.6941 16.79C79.9 16.6171 80.5771 16.6668 80.7639 16.9414C80.8415 17.0557 80.9136 17.3013 80.6431 18.1082C80.4115 18.7999 79.9276 19.8388 79.1635 21.284C78.01 23.4668 77.3367 24.4017 76.4916 24.9902C75.7279 25.5287 75.2969 25.6983 73.5103 25.9542V25.9537Z" fill="currentColor"/>
+              <path d="M133.637 3.30818L119.526 18.6074L120.282 5.22152L113.627 6.17468L113.396 6.20795L93.1445 9.10865L82.3547 30.1048L103.049 27.1408L105.926 21.5315L91.5545 23.5901L92.7912 21.1791L106.189 19.2602L108.778 14.217L95.3832 16.1359L96.5853 13.8126L110.749 11.7839L113.375 6.66531L112.499 25.787L119.903 24.7265L140.947 2.26131L133.637 3.30818Z" fill="currentColor"/>
+              <path d="M158.852 0.23346C157.669 -0.158767 156.361 -0.085195 151.076 0.67208C147.381 1.20114 145.196 1.64164 143.536 2.19225C141.825 2.75927 140.603 3.47859 139.448 4.59763C137.961 6.03486 136.117 9.10145 135.335 11.4337C134.573 13.7102 135.567 14.4624 136.538 14.6929C137.348 14.8776 138.847 14.8026 141.253 14.4581L146.092 13.7651C147.888 13.5258 148.913 13.4416 149.169 13.5125L149.176 13.5144C149.325 13.5528 149.281 13.7862 149.218 13.9755C148.91 14.8925 148.41 15.5074 146.76 15.9343C146.124 16.102 143.932 16.4741 141.662 16.7989C140.207 17.0074 138.914 17.0988 138.546 17.0646C138.329 17.0397 138.322 16.9427 138.387 16.7482C138.469 16.5027 138.544 16.3349 138.8 15.7984L139.151 15.0594L132.898 15.9549L132.72 16.2838C131.876 17.8345 131.559 18.5149 131.246 19.4503C130.612 21.3416 131.17 22.402 132.903 22.6017L132.909 22.6026C134.24 22.7324 135.691 22.6026 140.299 21.9428C144.232 21.3795 146.53 20.9198 148.231 20.3561C149.986 19.7745 151.229 19.0276 152.389 17.8584C153.91 16.3246 155.586 13.5078 156.372 11.161C156.951 9.42995 156.702 8.33902 155.63 7.91868C154.925 7.58831 154.245 7.5958 152.291 7.79122C150.954 7.92899 150.032 8.03161 149.696 8.07988L144.727 8.7917L144.718 8.79264C142.759 9.02226 142.747 9.02319 142.52 8.85309C142.468 8.80951 142.471 8.67267 142.527 8.5035C142.819 7.63142 143.529 6.98099 144.424 6.76449C145.254 6.56627 147.616 6.14358 149.806 5.83008C150.955 5.6656 151.646 5.5939 152.117 5.59109C152.667 5.58781 152.762 5.68575 152.775 5.70543C152.783 5.71621 152.787 5.78837 152.72 5.988C152.678 6.115 152.562 6.3582 152.454 6.57892L152.089 7.32635L158.297 6.43693L158.476 6.11031C159.101 4.9744 159.448 4.219 159.717 3.41673C160.437 1.26722 159.644 0.499631 158.85 0.23346H158.852Z" fill="currentColor"/>
+            </svg>
+          </a>
+          <span class="mono">{breadcrumb}</span>
+        </div>
+        <nav class="xnav" aria-label={ui.navAria}>
+          <span class="xpages">
+            {navCats.map((cat) =>
+              cat.links.length === 1 ? (
+                <a
+                  href={cat.links[0].href}
+                  target={cat.links[0].ext ? '_blank' : undefined}
+                  rel={cat.links[0].ext ? 'noopener' : undefined}
+                  aria-current={cat.links[0].current ? 'page' : undefined}
+                >{cat.label}</a>
+              ) : (
+                <details class="xcat">
+                  <summary aria-current={cat.links.some((l) => l.current) ? 'true' : undefined}>
+                    {cat.label}<span class="xcat-c" aria-hidden="true">▾</span>
+                  </summary>
+                  <div class="xmenu">
+                    {cat.links.map((l) => (
+                      <a
+                        href={l.href}
+                        target={l.ext ? '_blank' : undefined}
+                        rel={l.ext ? 'noopener' : undefined}
+                        aria-current={l.current ? 'page' : undefined}
+                      >{l.label}</a>
+                    ))}
+                  </div>
+                </details>
+              )
+            )}
+          </span>
+          <span class="xmodes">
+            <span class="xmode" role="group" aria-label={ui.modeGroupAria}>
+              <span class="xmode-k">{ui.modeKey}</span>
+              <a href={modeHref('tryb', 'sf')} data-set="mode:sf" aria-current={tryb === 'sf' ? 'true' : undefined}>SF</a>
+              <a href={modeHref('tryb', 'neutral')} data-set="mode:neutral" aria-current={tryb === 'neutral' ? 'true' : undefined}>{ui.modeNeutral}</a>
+            </span>
+            <span class="xmode" role="group" aria-label="Deep dive">
+              <span class="xmode-k">{ui.ddKey}</span>
+              <a href={modeHref('dd', '1')} data-set="dd:1" aria-current={dd === '1' ? 'true' : undefined}>ON</a>
+              <a href={modeHref('dd', '0')} data-set="dd:0" aria-current={dd === '0' ? 'true' : undefined}>OFF</a>
+            </span>
+            {hasEnVersion && (
+              <span class="xmode" role="group" aria-label={ui.langGroupAria}>
+                <span class="xmode-k">{ui.langKey}</span>
+                <a href={langHrefFor('pl')} data-setlang="pl" aria-current={lang === 'pl' ? 'true' : undefined}>PL</a>
+                <a href={langHrefFor('en')} data-setlang="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+              </span>
+            )}
+            <button type="button" class="xsearch" id="cmdk-btn" aria-haspopup="dialog" aria-expanded="false">
+              {ui.searchBtn} <kbd aria-hidden="true">⌘K</kbd>
+            </button>
+          </span>
+        </nav>
+      </div>
+
+      <slot />
+
+      {promo && (
+        <aside class="promo" id="promo-src" aria-label={ui.promoAria}>
+          <div class="promo-in">
+            <p class="promo-k">{ui.promoK}</p>
+            <p class="promo-t" set:html={ui.promoT(TENX_DEVS_PROMO)} />
+            <a class="promo-cta" href={tenxDevsUrl('promo-banner')} target="_blank" rel="noopener">{ui.promoCta}</a>
+          </div>
+        </aside>
+      )}
+      {promo && (
+        <aside class="promo promo-nl" id="promo-nl-src" hidden aria-label={ui.nlAria}>
+          <div class="promo-in">
+            <p class="promo-k">{ui.nlK}</p>
+            <p class="promo-t" set:html={ui.nlT} />
+            <a class="promo-cta" href={NEWSLETTER_URL} target="_blank" rel="noopener">{ui.nlCta}</a>
+          </div>
+        </aside>
+      )}
+      {promo && (
+        <script is:inline>
+          // Rozsiewa bannery po stronie: klon po co trzecim sektorze,
+          // naprzemiennie newsletter i przedsprzedaz 4.0 (banner przed stopka
+          // to zawsze przedsprzedaz, wiec klony zaczynaja od newslettera).
+          (function () {
+            var src = document.getElementById('promo-src');
+            var nl = document.getElementById('promo-nl-src');
+            if (!src) return;
+            var templates = nl ? [nl, src] : [src];
+            var sectors = document.querySelectorAll('section.sector');
+            var slot = 0;
+            for (var i = 2; i < sectors.length - 1; i += 3) {
+              var c = templates[slot % templates.length].cloneNode(true);
+              c.removeAttribute('id');
+              c.removeAttribute('hidden');
+              sectors[i].parentNode.insertBefore(c, sectors[i].nextSibling);
+              slot++;
+            }
+          })();
+        </script>
+      )}
+
+      <footer>
+        <span class="mono">10XDEVS 4.0 // PRZEPROGRAMOWANI</span>
+        <span class="mono"><slot name="footer-right">{title.toUpperCase()}</slot></span>
+      </footer>
+    </div>
+
+    <nav class="toc" id="toc" aria-label={ui.tocAria} data-top-label={ui.tocTop} hidden>
+      <p class="toc-k"><span class="sf-only">{ui.tocKSf}</span><span class="neutral-only">{ui.tocKNeutral}</span></p>
+      <ul id="toc-list"></ul>
+    </nav>
+
+    <div class="cmdk" id="cmdk" hidden>
+      <div class="cmdk-tint" data-cmdk-close></div>
+      <div class="cmdk-panel" role="dialog" aria-modal="true" aria-label={ui.cmdkDialogAria}>
+        <div class="cmdk-row">
+          <span class="ico ico-lens" aria-hidden="true"></span>
+          <input
+            id="cmdk-q"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder={ui.cmdkPlaceholder}
+            aria-label={ui.cmdkInputAria}
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="cmdk-list"
+            aria-autocomplete="list"
+          />
+          <button type="button" class="cmdk-esc" id="cmdk-close" aria-label={ui.cmdkCloseAria}>
+            <span class="cmdk-esc-t">ESC</span><span class="cmdk-esc-x" aria-hidden="true">✕</span>
+          </button>
+        </div>
+        <ul id="cmdk-list" role="listbox" aria-label={ui.cmdkListAria}></ul>
+        <p id="cmdk-empty" class="mono" hidden>{ui.cmdkEmpty}</p>
+      </div>
+    </div>
+    <script is:inline>
+      // Spis tresci (sidebar): budowany z sekcji strony (section[id] z h2 lub
+      // eyebrow), scroll-spy podswietla biezaca sekcje. Widoczny tylko na
+      // szerokich ekranach (CSS) - nie zabiera miejsca tresci.
+      (function () {
+        var toc = document.getElementById('toc');
+        var listEl = document.getElementById('toc-list');
+        var wrap = document.querySelector('.wrap');
+        if (!toc || !listEl || !wrap) return;
+        var sections = Array.prototype.filter.call(wrap.children, function (el) {
+          return el.tagName === 'SECTION' && el.id;
+        });
+        function label(s) {
+          var el = s.querySelector('h2') || s.querySelector('.eyebrow');
+          if (!el) return '';
+          // innerText pomija spany ukryte przez tryb sf/neutral
+          return (el.innerText || '').replace(/\s+/g, ' ').trim();
+        }
+        var entries = [];
+        sections.forEach(function (s) {
+          var t = label(s);
+          if (t) entries.push({ id: s.id, t: t });
+        });
+        if (entries.length < 2) return;
+        var top = document.createElement('li');
+        var topA = document.createElement('a');
+        topA.href = '#';
+        topA.textContent = toc.getAttribute('data-top-label') || '↑ Początek';
+        topA.addEventListener('click', function (e) {
+          e.preventDefault();
+          window.scrollTo({ top: 0 });
+        });
+        top.appendChild(topA);
+        listEl.appendChild(top);
+        var links = {};
+        entries.forEach(function (en) {
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          a.href = '#' + en.id;
+          a.textContent = en.t;
+          li.appendChild(a);
+          listEl.appendChild(li);
+          links[en.id] = a;
+        });
+        toc.hidden = false;
+        var current = null;
+        function spy() {
+          var mark = window.innerHeight * 0.28;
+          var id = null;
+          for (var i = 0; i < entries.length; i++) {
+            var s = document.getElementById(entries[i].id);
+            if (s && s.getBoundingClientRect().top <= mark) id = entries[i].id;
+          }
+          if (id === current) return;
+          if (current && links[current]) links[current].classList.remove('on');
+          if (id && links[id]) links[id].classList.add('on');
+          current = id;
+        }
+        var raf = null;
+        window.addEventListener('scroll', function () {
+          if (raf) return;
+          raf = requestAnimationFrame(function () {
+            raf = null;
+            spy();
+          });
+        }, { passive: true });
+        spy();
+      })();
+    </script>
+    <script is:inline>
+      // Rozwijane kategorie nawigacji: otwarcie jednej zamyka pozostale, klik
+      // poza paskiem lub Escape zamyka wszystkie. Aktywna kategoria jest otwarta
+      // z SSR (atrybut open), wiec bez JS nawigacja dalej dziala.
+      (function () {
+        var cats = Array.prototype.slice.call(document.querySelectorAll('nav.xnav .xcat'));
+        if (!cats.length) return;
+        cats.forEach(function (d) {
+          d.addEventListener('toggle', function () {
+            if (d.open) cats.forEach(function (o) { if (o !== d) o.open = false; });
+          });
+        });
+        document.addEventListener('click', function (e) {
+          cats.forEach(function (d) { if (d.open && !d.contains(e.target)) d.open = false; });
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') cats.forEach(function (d) { d.open = false; });
+        });
+      })();
+    </script>
+    <script type="application/json" id="cmdk-data" set:html={paletteJson}></script>
+    <script is:inline>
+      // Paleta wyszukiwania (Cmd/Ctrl+K). Indeks SSR w #cmdk-data; klawiatura
+      // obslugiwana w fazie capture, zeby skrypty stron (np. "/" na stronie
+      // docs) nie przechwytywaly klawiszy, gdy paleta jest otwarta.
+      (function () {
+        var root = document.getElementById('cmdk');
+        var btn = document.getElementById('cmdk-btn');
+        var input = document.getElementById('cmdk-q');
+        var list = document.getElementById('cmdk-list');
+        var emptyEl = document.getElementById('cmdk-empty');
+        var dataEl = document.getElementById('cmdk-data');
+        if (!root || !btn || !input || !list || !emptyEl || !dataEl) return;
+        var ITEMS;
+        try {
+          ITEMS = JSON.parse(dataEl.textContent || '[]');
+        } catch (err) {
+          return;
+        }
+        function norm(s) {
+          return (s || '')
+            .toLowerCase()
+            .replace(/ł/g, 'l')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+        }
+        ITEMS.forEach(function (it) {
+          it._h = norm(it.s);
+        });
+        var MAX = 12;
+        var results = [];
+        var active = 0;
+        var isOpen = false;
+        function mark() {
+          var lis = list.children;
+          for (var i = 0; i < lis.length; i++) {
+            lis[i].classList.toggle('on', i === active);
+            lis[i].setAttribute('aria-selected', i === active ? 'true' : 'false');
+          }
+          input.setAttribute('aria-activedescendant', results.length ? 'cmdk-opt-' + active : '');
+          var el = lis[active];
+          if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+        }
+        function render() {
+          list.innerHTML = '';
+          results.forEach(function (it, i) {
+            var li = document.createElement('li');
+            li.id = 'cmdk-opt-' + i;
+            li.setAttribute('role', 'option');
+            var g = document.createElement('span');
+            g.className = 'cmdk-g';
+            g.setAttribute('data-g', it.g);
+            g.textContent = it.g;
+            var t = document.createElement('span');
+            t.className = 'cmdk-t';
+            t.textContent = it.label;
+            var h = document.createElement('span');
+            h.className = 'cmdk-h';
+            h.textContent = it.hint || '';
+            li.appendChild(g);
+            li.appendChild(t);
+            li.appendChild(h);
+            li.addEventListener('click', function () {
+              go(it);
+            });
+            li.addEventListener('mousemove', function () {
+              if (active !== i) {
+                active = i;
+                mark();
+              }
+            });
+            list.appendChild(li);
+          });
+          emptyEl.hidden = results.length !== 0;
+          mark();
+        }
+        function query(qs) {
+          var nq = norm(qs);
+          results = [];
+          for (var i = 0; i < ITEMS.length && results.length < MAX; i++) {
+            if (!nq || ITEMS[i]._h.indexOf(nq) > -1) results.push(ITEMS[i]);
+          }
+          active = 0;
+          render();
+        }
+        function go(it) {
+          if (!it) return;
+          if (it.ext) {
+            window.open(it.href, '_blank', 'noopener');
+            close();
+          } else {
+            location.href = it.href;
+          }
+        }
+        function open() {
+          if (isOpen) return;
+          isOpen = true;
+          root.hidden = false;
+          btn.setAttribute('aria-expanded', 'true');
+          document.documentElement.classList.add('cmdk-lock');
+          input.value = '';
+          query('');
+          input.focus();
+        }
+        function close() {
+          if (!isOpen) return;
+          isOpen = false;
+          root.hidden = true;
+          btn.setAttribute('aria-expanded', 'false');
+          document.documentElement.classList.remove('cmdk-lock');
+          btn.focus();
+        }
+        btn.addEventListener('click', function () {
+          if (isOpen) close();
+          else open();
+        });
+        // Przycisk ESC/✕ w polu palety: na mobile panel zakrywa tint i nie ma
+        // fizycznego Esc, wiec klik w przycisk to jedyna droga zamkniecia.
+        var closeBtn = document.getElementById('cmdk-close');
+        if (closeBtn) closeBtn.addEventListener('click', close);
+        root.addEventListener('mousedown', function (e) {
+          if (e.target === root || (e.target.hasAttribute && e.target.hasAttribute('data-cmdk-close'))) close();
+        });
+        document.addEventListener(
+          'keydown',
+          function (e) {
+            if ((e.metaKey || e.ctrlKey) && String(e.key).toLowerCase() === 'k') {
+              e.preventDefault();
+              e.stopPropagation();
+              if (isOpen) close();
+              else open();
+              return;
+            }
+            if (!isOpen) return;
+            e.stopPropagation();
+            if (e.key === 'Escape') {
+              e.preventDefault();
+              close();
+            } else if (e.key === 'ArrowDown') {
+              e.preventDefault();
+              if (results.length) {
+                active = (active + 1) % results.length;
+                mark();
+              }
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              if (results.length) {
+                active = (active - 1 + results.length) % results.length;
+                mark();
+              }
+            } else if (e.key === 'Enter') {
+              e.preventDefault();
+              go(results[active]);
+            } else if (e.key === 'Tab') {
+              // Focus trap: input jest jedynym fokusowalnym elementem dialogu.
+              e.preventDefault();
+              input.focus();
+            }
+          },
+          true
+        );
+        input.addEventListener('input', function () {
+          query(input.value);
+        });
+      })();
+    </script>
+
+    <script is:inline>
+      (function () {
+        var c = document.getElementById('stars'),
+          x = c.getContext('2d'),
+          stars = [],
+          DPR = Math.min(devicePixelRatio || 1, 2);
+        var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        function size() {
+          c.width = innerWidth * DPR;
+          c.height = innerHeight * DPR;
+          stars = [];
+          var n = Math.floor((innerWidth * innerHeight) / 5200);
+          for (var i = 0; i < n; i++) {
+            stars.push({
+              x: Math.random() * c.width,
+              y: Math.random() * c.height,
+              r: (Math.random() * 1.1 + 0.3) * DPR,
+              p: Math.random() * Math.PI * 2,
+              s: 0.4 + Math.random() * 1.2,
+              hue:
+                Math.random() < 0.12
+                  ? '156,163,255'
+                  : Math.random() < 0.5
+                    ? '220,226,245'
+                    : '173,196,255',
+            });
+          }
+        }
+        function draw(t) {
+          x.clearRect(0, 0, c.width, c.height);
+          for (var i = 0; i < stars.length; i++) {
+            var s = stars[i],
+              a = reduced ? 0.55 : 0.35 + 0.4 * (0.5 + 0.5 * Math.sin(s.p + t * 0.00045 * s.s));
+            x.beginPath();
+            x.arc(s.x, s.y, s.r, 0, 6.2832);
+            x.fillStyle = 'rgba(' + s.hue + ',' + a.toFixed(3) + ')';
+            x.fill();
+          }
+          if (!reduced) requestAnimationFrame(draw);
+        }
+        size();
+        addEventListener('resize', size);
+        if (reduced) {
+          draw(0);
+        } else {
+          requestAnimationFrame(draw);
+        }
+
+        var io = new IntersectionObserver(
+          function (es) {
+            es.forEach(function (e) {
+              if (e.isIntersecting) {
+                e.target.classList.add('vis');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.12 }
+        );
+        document.querySelectorAll('.rv').forEach(function (el) {
+          io.observe(el);
+        });
+        // Na mobile pasek stron scrolluje poziomo - dosun aktywna strone do widoku.
+        var cur = document.querySelector('nav.xnav .xpages a[aria-current="page"]');
+        var rail = document.querySelector('nav.xnav .xpages');
+        if (cur && rail && rail.scrollWidth > rail.clientWidth) {
+          var cr = cur.getBoundingClientRect(),
+            rr = rail.getBoundingClientRect();
+          rail.scrollLeft = Math.max(
+            0,
+            cr.left - rr.left + rail.scrollLeft - (rail.clientWidth - cr.width) / 2
+          );
+        }
+        if (reduced)
+          document.querySelectorAll('.chain,.asset svg').forEach(function (s) {
+            if (s.pauseAnimations) s.pauseAnimations();
+          });
+      })();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+:root{
+  --bg:#070a14;
+  --surface:#0c1122;
+  --surface2:#101731;
+  --line:rgba(148,163,255,.16);
+  --line-soft:rgba(148,163,255,.09);
+  --txt:#dce2f5;
+  --muted:#8a93b8;
+  --dim:#5b6488;
+  --indigo:#7c8cff;
+  --acc:#7c8cff; /* nadpisywane per krok */
+  --disp:'Chakra Petch',system-ui,sans-serif;
+  --body:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+/* Swiadomie jeden motyw: kosmos jest ciemny w obu trybach. */
+:root[data-theme="light"]{--bg:#070a14;}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--bg);color:var(--txt);
+  font-family:var(--body);font-size:17px;line-height:1.65;
+  overflow-x:hidden;
+}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.nebula{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60rem 40rem at 85% -10%, rgba(124,140,255,.10), transparent 60%),
+    radial-gradient(50rem 36rem at -10% 45%, rgba(167,139,250,.07), transparent 60%),
+    radial-gradient(46rem 32rem at 110% 90%, rgba(76,201,240,.05), transparent 60%);
+}
+.wrap{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:0 24px}
+
+/* ---------- typografia ---------- */
+h1,h2,h3{font-family:var(--disp);text-wrap:balance;margin:0}
+.eyebrow{
+  font-family:var(--disp);font-weight:600;font-size:.78rem;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--acc);
+}
+.mono{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;color:var(--dim)}
+p{margin:0}
+.lead{max-width:62ch;color:var(--txt)}
+.muted{color:var(--muted)}
+
+/* ---------- hero ---------- */
+header{padding:clamp(56px,9vh,104px) 0 56px;border-bottom:1px solid var(--line-soft)}
+.hud-top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:44px}
+.brand{display:inline-flex;color:#fff;filter:drop-shadow(0 0 14px rgba(124,140,255,.35))}
+.brand svg{display:block;height:30px;width:auto}
+h1{
+  font-size:clamp(2.1rem,5.4vw,3.6rem);font-weight:700;line-height:1.12;
+  letter-spacing:.01em;max-width:21ch;margin-top:14px;
+}
+h1 .glow{color:var(--indigo);text-shadow:0 0 24px rgba(124,140,255,.45)}
+.sub{margin-top:20px;max-width:58ch;color:var(--muted);font-size:1.06rem}
+.sub strong{color:var(--txt);font-weight:600}
+
+/* ---------- tryby narracji (sf/neutral) i deep dive ---------- */
+html[data-mode='neutral'] .sf-only{display:none!important}
+.neutral-only{display:none!important}
+html[data-mode='neutral'] .neutral-only{display:revert!important}
+html[data-dd='0'] .deepdive{display:none!important}
+
+/* ---------- globalny pasek nawigacji miedzy stronami ---------- */
+.hud{padding-top:clamp(28px,4.5vh,52px)}
+.hud .hud-top{margin-bottom:18px}
+nav.xnav{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:16px;
+  border-bottom:1px solid var(--line-soft)}
+/* na desktopie kontener stron jest przezroczysty dla flexboxa paska */
+nav.xnav .xpages{display:contents}
+nav.xnav a{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;
+  text-transform:uppercase;text-decoration:none;color:var(--muted);
+  border:1px solid var(--line);padding:6px 11px;white-space:nowrap;
+  transition:color .2s,border-color .2s,box-shadow .2s;
+}
+nav.xnav a:hover,nav.xnav a:focus-visible{color:var(--indigo);border-color:var(--indigo);
+  box-shadow:0 0 14px color-mix(in srgb,var(--indigo) 30%,transparent);outline:none}
+nav.xnav a[aria-current="page"]{color:var(--indigo);
+  border-color:color-mix(in srgb,var(--indigo) 75%,transparent);
+  box-shadow:0 0 16px color-mix(in srgb,var(--indigo) 32%,transparent)}
+
+/* ---------- kategorie nawigacji (rozwijane menu) ---------- */
+.xcat{position:relative}
+.xcat>summary{list-style:none;cursor:pointer;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line);padding:6px 11px;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:6px;
+  transition:color .2s,border-color .2s,box-shadow .2s}
+.xcat>summary::-webkit-details-marker{display:none}
+.xcat>summary::marker{content:''}
+.xcat>summary:hover,.xcat>summary:focus-visible{color:var(--indigo);border-color:var(--indigo);
+  box-shadow:0 0 14px color-mix(in srgb,var(--indigo) 30%,transparent);outline:none}
+.xcat>summary[aria-current="true"]{color:var(--indigo);
+  border-color:color-mix(in srgb,var(--indigo) 75%,transparent);
+  box-shadow:0 0 16px color-mix(in srgb,var(--indigo) 32%,transparent)}
+.xcat-c{font-size:.7em;line-height:1;transition:transform .2s}
+.xcat[open]>summary .xcat-c{transform:rotate(180deg)}
+.xmenu{position:absolute;top:calc(100% + 5px);left:0;z-index:30;
+  display:flex;flex-direction:column;min-width:210px;padding:5px;
+  border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 96%,transparent);
+  box-shadow:0 18px 46px rgba(0,0,0,.5)}
+.xmenu a{border:0!important;box-shadow:none!important;padding:8px 12px!important;
+  white-space:nowrap;color:var(--muted)}
+.xmenu a:hover,.xmenu a:focus-visible{color:var(--indigo)!important;
+  background:color-mix(in srgb,var(--indigo) 12%,transparent)}
+.xmenu a[aria-current="page"]{color:var(--indigo)!important;
+  background:color-mix(in srgb,var(--indigo) 10%,transparent)}
+
+/* pasek akcji (tryb, deep dive, szukaj) po lewej, tuz za linkami stron -
+   oddzielony od nawigacji pionowa kreska i wyraznym odstepem */
+.xmodes{margin-left:22px;padding-left:22px;border-left:1px solid var(--line);
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.xmode{display:inline-flex;align-items:center;gap:6px}
+.xmode-k{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;color:var(--dim)}
+nav.xnav .xmode a{font-size:.62rem;padding:4px 8px}
+nav.xnav .xmode a[aria-current="true"]{color:var(--indigo);
+  border-color:color-mix(in srgb,var(--indigo) 75%,transparent);
+  box-shadow:0 0 12px color-mix(in srgb,var(--indigo) 30%,transparent)}
+@media(max-width:720px){.xmodes{margin-left:0;padding-left:0;border-left:0}}
+
+/* ---------- paleta wyszukiwania (Cmd/Ctrl+K) ---------- */
+.xsearch{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);background:none;border:1px solid var(--line);padding:4px 8px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+  transition:color .2s,border-color .2s,box-shadow .2s;
+}
+.xsearch:hover,.xsearch:focus-visible{color:var(--indigo);border-color:var(--indigo);
+  box-shadow:0 0 12px color-mix(in srgb,var(--indigo) 30%,transparent);outline:none}
+.xsearch kbd{font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;color:var(--dim);
+  border:1px solid var(--line-soft);padding:1px 4px}
+
+.cmdk{position:fixed;inset:0;z-index:50;display:flex;justify-content:center;
+  align-items:flex-start;padding:12vh 24px 24px}
+.cmdk[hidden]{display:none}
+.cmdk-tint{position:absolute;inset:0;background:rgba(7,10,20,.72);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.cmdk-panel{position:relative;width:min(640px,100%);max-height:70vh;
+  display:flex;flex-direction:column;border:1px solid var(--line);
+  background:color-mix(in srgb,var(--surface) 94%,transparent);
+  box-shadow:0 24px 60px rgba(0,0,0,.5);animation:cmdkIn .18s ease}
+.cmdk-panel::before,.cmdk-panel::after{content:'';position:absolute;width:14px;height:14px;pointer-events:none}
+.cmdk-panel::before{top:0;left:0;border-top:1px solid var(--indigo);border-left:1px solid var(--indigo)}
+.cmdk-panel::after{bottom:0;right:0;border-bottom:1px solid var(--indigo);border-right:1px solid var(--indigo)}
+@keyframes cmdkIn{from{opacity:0;transform:translateY(-8px)}}
+@media (prefers-reduced-motion:reduce){.cmdk-panel{animation:none}}
+.cmdk-row{display:flex;align-items:center;gap:10px;padding:14px 16px;
+  border-bottom:1px solid var(--line-soft)}
+.cmdk-row .ico{width:14px;height:14px;background:var(--indigo)}
+#cmdk-q{flex:1;min-width:0;background:none;border:0;outline:none;color:var(--txt);
+  font-family:var(--mono);font-size:.92rem;letter-spacing:.02em}
+/* globalny ring formularzy (box-shadow) nie pasuje do kanciastej ramki palety */
+#cmdk-q,#cmdk-q:focus,#cmdk-q:focus-visible{box-shadow:none}
+#cmdk-q::placeholder{color:var(--dim)}
+/* zamkniecie palety: przycisk (ESC na desktopie, ✕ na dotyku) - na mobile
+   panel zakrywa tint i nie ma fizycznego Esc, wiec to jedyna droga wyjscia */
+.cmdk-esc{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--dim);
+  background:none;border:1px solid var(--line-soft);padding:2px 6px;flex:none;
+  cursor:pointer;transition:color .2s,border-color .2s}
+.cmdk-esc:hover,.cmdk-esc:focus-visible{color:var(--indigo);border-color:var(--indigo);outline:none}
+.cmdk-esc-x{display:none}
+#cmdk-list{list-style:none;margin:0;padding:6px 0;overflow-y:auto;flex:1;min-height:0}
+#cmdk-list li{display:flex;align-items:baseline;gap:12px;padding:9px 16px;
+  cursor:pointer;border-left:2px solid transparent}
+#cmdk-list li.on{background:color-mix(in srgb,var(--indigo) 12%,transparent);
+  border-left-color:var(--indigo)}
+.cmdk-g{flex:none;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;
+  color:var(--indigo);border:1px solid color-mix(in srgb,var(--indigo) 45%,transparent);
+  padding:1px 6px;min-width:56px;text-align:center}
+/* kolory kategorii palety: STRONA - indigo (domyslny), SKILL - roz Fundacji
+   (kolor CSC), DOCS - blekit Solaris (kolor dokumentacji) */
+.cmdk-g[data-g='SKILL']{color:#f472b6;border-color:color-mix(in srgb,#f472b6 45%,transparent)}
+.cmdk-g[data-g='DOCS']{color:#7aa2ff;border-color:color-mix(in srgb,#7aa2ff 45%,transparent)}
+.cmdk-t{font-size:.9rem;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmdk-h{margin-left:auto;flex:none;font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;
+  color:var(--dim);max-width:34%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#cmdk-empty{margin:0;padding:20px 16px 24px;letter-spacing:.14em}
+html.cmdk-lock{overflow:hidden}
+
+/* ---------- spis tresci (sidebar, tylko szerokie ekrany) ----------
+   wrap ma 1060px; sidebar zyje w wolnym marginesie po prawej - pokazujemy go
+   dopiero, gdy realnie jest na niego miejsce (>=1560px), zeby nie najezdzal
+   na tresc ani nie zwezal kolumny. */
+.toc{display:none;position:fixed;top:50%;transform:translateY(-50%);
+  left:calc(50% + 538px);width:clamp(150px,calc(50vw - 546px),224px);
+  max-height:72vh;overflow-y:auto;z-index:5;scrollbar-width:thin}
+@media(min-width:1440px){.toc:not([hidden]){display:block}}
+.toc-k{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;color:var(--dim);
+  margin:0 0 10px}
+.toc ul{list-style:none;margin:0;padding:0;border-left:1px solid var(--line-soft)}
+.toc a{display:block;padding:5px 8px 5px 14px;margin-left:-1px;
+  border-left:2px solid transparent;color:var(--dim);font-size:.74rem;line-height:1.35;
+  text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:color .2s,border-color .2s}
+.toc a:hover,.toc a:focus-visible{color:var(--txt);outline:none}
+.toc a.on{color:var(--indigo);border-left-color:var(--indigo)}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+@media(max-width:720px){
+  .cmdk{padding:0}
+  .cmdk-panel{width:100%;max-height:none;height:100dvh;border:0}
+  #cmdk-list li{min-height:44px;align-items:center}
+  .cmdk-h{display:none}
+  .cmdk-esc{min-width:44px;min-height:44px;display:inline-flex;align-items:center;
+    justify-content:center;font-size:.9rem;color:var(--muted)}
+  .cmdk-esc-t{display:none}
+  .cmdk-esc-x{display:inline}
+  nav.xnav .xsearch{min-height:44px;padding:0 12px}
+  .xsearch kbd{display:none}
+}
+@media print{.cmdk,.xsearch,.toc{display:none !important}}
+
+/* ---------- skrot lancucha ---------- */
+#skrot{padding:40px 0;border-bottom:1px solid var(--line-soft)}
+.sum-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px;margin-top:22px}
+a.sum-card{display:block;border:1px solid var(--line);padding:14px 14px 13px;text-decoration:none;color:var(--txt);
+  background:color-mix(in srgb,var(--surface) 55%,transparent);
+  transition:border-color .2s,box-shadow .2s,transform .2s}
+a.sum-card:hover,a.sum-card:focus-visible{border-color:var(--acc);
+  box-shadow:0 0 16px color-mix(in srgb,var(--acc) 28%,transparent);transform:translateY(-2px)}
+.sum-card svg{width:32px;height:32px;color:var(--acc);display:block;margin-bottom:8px}
+.sum-card .num{font-family:var(--mono);font-size:.64rem;color:var(--acc);letter-spacing:.16em}
+.sum-card h3{font-family:var(--disp);font-size:.92rem;margin:5px 0 6px;font-weight:700;line-height:1.3}
+.sum-card p{font-size:.8rem;color:var(--muted);line-height:1.5}
+
+/* ---------- diagram lancucha ---------- */
+.chainwrap{margin-top:52px}
+.chain{display:block;width:100%;height:auto}
+.chain text{font:600 9px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8a93b8;letter-spacing:.08em}
+.chain text.klbl{font:700 15px 'Chakra Petch',system-ui,sans-serif;fill:#dce2f5;letter-spacing:.14em}
+.chain text.knum{fill:currentColor}
+.chain .kbox{fill:color-mix(in srgb,var(--surface) 72%,transparent);stroke:currentColor}
+.chain a{outline:none}
+.chain a:hover,.chain a:focus-visible{filter:drop-shadow(0 0 7px currentColor)}
+.chain a:hover .klbl,.chain a:focus-visible .klbl{fill:currentColor}
+.chain a:hover .ann,.chain a:focus-visible .ann{fill:currentColor}
+.map-cap{margin-top:10px;text-align:center;font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;color:var(--dim)}
+
+nav.route{display:flex;flex-wrap:wrap;gap:10px;margin-top:36px}
+nav.route a{
+  font-family:var(--disp);font-weight:600;font-size:.78rem;letter-spacing:.14em;
+  text-transform:uppercase;text-decoration:none;color:var(--muted);
+  border:1px solid var(--line);padding:8px 14px;
+  transition:color .2s,border-color .2s,box-shadow .2s;
+}
+nav.route a:hover,nav.route a:focus-visible{color:var(--hov,var(--indigo));border-color:var(--hov,var(--indigo));
+  box-shadow:0 0 14px color-mix(in srgb,var(--hov,var(--indigo)) 30%,transparent);outline:none}
+
+/* ---------- sekcje krokow ---------- */
+section.sector{padding:88px 0 76px;border-bottom:1px solid var(--line-soft);position:relative}
+section.sector::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(52rem 30rem at 12% 0%, color-mix(in srgb,var(--acc) 7%,transparent), transparent 65%);
+}
+.sec-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.sec-num{
+  font-family:var(--disp);font-weight:700;font-size:.95rem;color:var(--acc);
+  border:1px solid color-mix(in srgb,var(--acc) 55%,transparent);padding:4px 10px;
+  letter-spacing:.18em;box-shadow:0 0 16px color-mix(in srgb,var(--acc) 22%,transparent);
+}
+.sec-uni{font-family:var(--disp);font-weight:600;font-size:.8rem;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--acc)}
+.sec-uni svg{width:15px;height:15px;margin-right:8px;vertical-align:-3px}
+section h2{font-size:clamp(1.5rem,3.2vw,2.15rem);font-weight:700;line-height:1.22;
+  margin-top:22px;max-width:26ch}
+
+.sec-top{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;align-items:start}
+.sec-top .asset{margin-top:4px}
+@media(max-width:820px){.sec-top{grid-template-columns:1fr;gap:30px}}
+
+.epigraph{margin:34px 0 0;max-width:56ch}
+.epigraph p{
+  font-family:var(--disp);font-weight:600;font-size:clamp(1.05rem,2vw,1.3rem);
+  line-height:1.45;color:color-mix(in srgb,var(--acc) 78%,white);
+}
+.epigraph cite{display:block;margin-top:10px;font-style:normal;
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;color:var(--dim)}
+
+.cols{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;margin-top:16px}
+@media(max-width:820px){.cols{grid-template-columns:1fr;gap:36px}}
+.cols .lead + .lead{margin-top:18px}
+.cols .lead strong{color:var(--txt)}
+.cols .lead em{font-style:normal;color:var(--acc)}
+
+/* fundament i skalowanie - dwie rowne kolumny */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:40px;align-items:start}
+@media(max-width:820px){.duo{grid-template-columns:1fr}}
+.duo .lead{margin-top:14px;font-size:.95rem;color:var(--muted)}
+.duo .lead b{color:var(--txt)}
+/* wariant jednokolumnowy .duo - ten sam styl leadu, pelna szerokosc */
+.solo{margin-top:40px}
+.solo .lead{margin-top:14px;font-size:.95rem;color:var(--muted);max-width:none}
+.solo .lead b{color:var(--txt)}
+.finis{margin-top:48px;border:1px dashed color-mix(in srgb,var(--acc) 40%,transparent);
+  padding:26px 30px;max-width:none}
+
+/* mechanika - wiersze */
+.mech{margin-top:26px;border-top:1px solid var(--line);display:grid}
+.mech>div{display:grid;grid-template-columns:132px 1fr;gap:16px;
+  padding:13px 0;border-bottom:1px solid var(--line-soft);align-items:baseline}
+.mech dt,.mech .k{font-family:var(--disp);font-weight:600;font-size:.78rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--acc)}
+.mech .v{font-size:.94rem;color:var(--muted)}
+.mech .v b{color:var(--txt);font-weight:600}
+@media(max-width:520px){.mech>div{grid-template-columns:1fr;gap:4px}}
+
+/* przechwycone transmisje (cytaty) */
+.trans{display:grid;gap:22px;align-content:start}
+.tx{position:relative;padding:20px 22px 18px;background:color-mix(in srgb,var(--surface) 72%,transparent)}
+.tx::before,.tx::after{content:'';position:absolute;width:14px;height:14px;pointer-events:none}
+.tx::before{top:0;left:0;border-top:1px solid var(--acc);border-left:1px solid var(--acc)}
+.tx::after{bottom:0;right:0;border-bottom:1px solid var(--acc);border-right:1px solid var(--acc)}
+.tx .mono{display:block;margin-bottom:10px;color:color-mix(in srgb,var(--acc) 65%,var(--dim))}
+.tx blockquote{margin:0;font-size:.95rem;line-height:1.6;color:var(--txt)}
+.tx .who{margin-top:10px;font-size:.78rem;color:var(--dim);letter-spacing:.05em}
+
+/* linia celu */
+.target{margin-top:40px;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;
+  border:1px dashed color-mix(in srgb,var(--acc) 40%,transparent);padding:15px 20px}
+.target .k{font-family:var(--disp);font-weight:700;font-size:.78rem;letter-spacing:.2em;color:var(--acc)}
+.target p{font-size:.94rem;color:var(--muted);max-width:70ch}
+.target p b{color:var(--txt)}
+
+/* banner przedsprzedazy 10xDevs 4.0 (tylko kontekst publiczny) */
+.promo{position:relative;margin:52px 0 0;border:1px solid color-mix(in srgb,#ffd166 40%,transparent);
+  background:color-mix(in srgb,var(--surface) 62%,transparent)}
+.promo::before,.promo::after{content:'';position:absolute;width:14px;height:14px;pointer-events:none}
+.promo::before{top:0;left:0;border-top:1px solid #ffd166;border-left:1px solid #ffd166}
+.promo::after{bottom:0;right:0;border-bottom:1px solid #ffd166;border-right:1px solid #ffd166}
+.promo-in{display:flex;align-items:center;gap:10px 22px;flex-wrap:wrap;padding:16px 22px}
+.promo-k{margin:0;font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;color:#ffd166}
+.promo-t{margin:0;font-size:.93rem;color:var(--muted);max-width:52ch}
+.promo-t b{color:var(--txt)}
+.promo-cta{margin-left:auto;font-family:var(--disp);font-weight:700;font-size:.72rem;
+  letter-spacing:.16em;color:#ffd166;text-decoration:none;padding:9px 16px;
+  border:1px solid color-mix(in srgb,#ffd166 55%,transparent);transition:background .2s}
+.promo-cta:hover{background:color-mix(in srgb,#ffd166 14%,transparent)}
+/* wariant newsletterowy: brandowy roz Przeprogramowanych */
+.promo-nl{border-color:color-mix(in srgb,#E00F53 50%,transparent)}
+.promo-nl::before{border-top-color:#E00F53;border-left-color:#E00F53}
+.promo-nl::after{border-bottom-color:#E00F53;border-right-color:#E00F53}
+.promo-nl .promo-k{color:#E00F53}
+.promo-nl .promo-cta{color:#E00F53;
+  border-color:color-mix(in srgb,#E00F53 60%,transparent)}
+.promo-nl .promo-cta:hover{background:color-mix(in srgb,#E00F53 14%,transparent)}
+@media print{.promo{display:none}}
+
+footer{padding:36px 0 64px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  border-top:1px solid var(--line-soft)}
+
+/* ---------- assety sekcji ---------- */
+.asset{margin:0;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 62%,transparent)}
+.a-vis{padding:12px}
+.asset svg{display:block;width:100%;height:auto;color:var(--acc)}
+.asset svg text{font:600 9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;fill:#8a93b8}
+.asset svg text.acc{fill:currentColor}
+.asset svg text.dim{fill:#5b6488}
+.asset figcaption{padding:9px 14px;border-top:1px solid var(--line-soft);
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;color:var(--dim)}
+/* animacje schematow */
+.anim-pulse{animation:aPulse 1.8s ease-in-out infinite}
+@keyframes aPulse{0%,100%{opacity:.3}50%{opacity:1}}
+.anim-dash{animation:aDash 1.1s linear infinite}
+.anim-dash-slow{animation:aDash 2.6s linear infinite}
+@keyframes aDash{to{stroke-dashoffset:-18}}
+.anim-rot{animation:aRot 28s linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes aRot{to{transform:rotate(360deg)}}
+.anim-flicker{animation:aFlick .5s steps(2) infinite}
+@keyframes aFlick{50%{opacity:.2}}
+.anim-wobble{animation:aWob 3.6s ease-in-out infinite}
+@keyframes aWob{50%{transform:translateY(3px)}}
+@media (prefers-reduced-motion:reduce){
+  .anim-pulse,.anim-dash,.anim-dash-slow,.anim-rot,.anim-flicker,.anim-wobble{animation:none}
+}
+
+/* ikony HUD (mask = kolor akcentu) */
+.ico{display:inline-block;flex:none;width:13px;height:13px;background:var(--acc);
+  vertical-align:-1px;
+  -webkit-mask:var(--i) center/contain no-repeat;mask:var(--i) center/contain no-repeat}
+.target .k .ico,.tx .mono .ico{margin-right:7px}
+.ico-aim{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4.6' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3Cpath d='M8 0v3.4M8 12.6V16M0 8h3.4M12.6 8H16' stroke='%23000' stroke-width='1.5'/%3E%3Ccircle cx='8' cy='8' r='1.5' fill='%23000'/%3E%3C/svg%3E")}
+.ico-sig{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='11' r='1.7' fill='%23000'/%3E%3Cpath d='M4.8 7.8a4.6 4.6 0 0 1 6.4 0M2.3 5.2a8.2 8.2 0 0 1 11.4 0' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E")}
+.ico-star{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 0l1.7 6.3L16 8l-6.3 1.7L8 16 6.3 9.7 0 8l6.3-1.7z' fill='%23000'/%3E%3C/svg%3E")}
+.sec-uni .ico,.eyebrow .ico{width:11px;height:11px;margin-right:8px}
+
+/* ikony feature'ow (wiersze mech) */
+.mech dt{display:flex;align-items:center;gap:7px}
+.mech dt .ico{width:12px;height:12px}
+.ico-link{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.6'%3E%3Cpath d='M6.2 9.8l3.6-3.6M5 8L3.6 9.4a2.7 2.7 0 1 0 3.8 3.8L8.8 11.8M8 5.2l1.4-1.4a2.7 2.7 0 1 1 3.8 3.8L11.8 8.8'/%3E%3C/svg%3E")}
+.ico-cli{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Crect x='1.5' y='2.5' width='13' height='11'/%3E%3Cpath d='M4 6l2.6 2L4 10M8.5 10.5H12'/%3E%3C/svg%3E")}
+.ico-check{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='2'%3E%3Cpath d='M2.5 8.6l3.6 3.6L13.5 4'/%3E%3C/svg%3E")}
+.ico-fast{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.8'%3E%3Cpath d='M3 3l5 5-5 5M8.5 3l5 5-5 5'/%3E%3C/svg%3E")}
+.ico-up{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.8'%3E%3Cpath d='M2 12.5l4.5-4.5 2.8 2.8L14 5'/%3E%3Cpath d='M14 9V5h-4'/%3E%3C/svg%3E")}
+.ico-calm{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.6'%3E%3Cpath d='M1.5 6c2.2-2.6 4.3-2.6 6.5 0s4.3 2.6 6.5 0M1.5 11c2.2-2.6 4.3-2.6 6.5 0s4.3 2.6 6.5 0'/%3E%3C/svg%3E")}
+.ico-eye{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M1.5 8C3.6 4.6 5.7 3.1 8 3.1S12.4 4.6 14.5 8C12.4 11.4 10.3 12.9 8 12.9S3.6 11.4 1.5 8z'/%3E%3Ccircle cx='8' cy='8' r='2.1' fill='%23000' stroke='none'/%3E%3C/svg%3E")}
+.ico-radar{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Ccircle cx='8' cy='8' r='6.2'/%3E%3Cpath d='M8 8l4.4-4.4'/%3E%3Ccircle cx='10.8' cy='10.4' r='1.5' fill='%23000' stroke='none'/%3E%3C/svg%3E")}
+.ico-lens{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.7'%3E%3Ccircle cx='6.8' cy='6.8' r='4.6'/%3E%3Cpath d='M10.3 10.3L14.2 14.2'/%3E%3C/svg%3E")}
+.ico-wrench{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3E%3Cpath d='M13.8 4.2a4.1 4.1 0 0 1-5.2 5.2l-4.5 4.5a1.9 1.9 0 0 1-2.7-2.7l4.5-4.5A4.1 4.1 0 0 1 11.1 1.5L8.6 4l3.4 3.4 2.5-2.5c.1.4-.3-.9-.7-.7z'/%3E%3C/svg%3E")}
+.ico-chart{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.9'%3E%3Cpath d='M1.5 14.5h13M4 14V9M8 14V4M12 14V6.5'/%3E%3C/svg%3E")}
+.ico-gauge{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.6'%3E%3Cpath d='M2 12.5a6.3 6.3 0 0 1 12 0'/%3E%3Cpath d='M8 12l3-4.6'/%3E%3Ccircle cx='8' cy='12.5' r='1.3' fill='%23000' stroke='none'/%3E%3C/svg%3E")}
+.ico-coin{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Ccircle cx='8' cy='8' r='6.3'/%3E%3Cpath d='M8 4.2v7.6M10 5.8c-.5-.7-1.2-1-2-1-1.1 0-2 .6-2 1.5 0 2 4 1.3 4 3.3 0 .9-.9 1.5-2 1.5-.8 0-1.5-.3-2-1'/%3E%3C/svg%3E")}
+.ico-cube{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M8 1.5l5.6 3.1v6.8L8 14.5l-5.6-3.1V4.6z'/%3E%3Cpath d='M2.4 4.6L8 7.7l5.6-3.1M8 7.7v6.8'/%3E%3C/svg%3E")}
+.ico-doc{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M3.5 1.5H10l3 3v10H3.5z'/%3E%3Cpath d='M5.5 7h5M5.5 9.5h5M5.5 12h3'/%3E%3C/svg%3E")}
+.ico-trophy{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M5 2h6v4.2a3 3 0 0 1-6 0z'/%3E%3Cpath d='M5 3H2.3A2.6 2.6 0 0 0 5 6M11 3h2.7A2.6 2.6 0 0 1 11 6'/%3E%3Cpath d='M8 9.2v3M5.3 13.7h5.4'/%3E%3C/svg%3E")}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.rv.vis{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+a:focus-visible{outline:2px solid var(--indigo);outline-offset:3px}
+
+/* ---------- druk / eksport do PDF ---------- */
+@media print{
+  @page{size:A4;margin:0}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{background:#070a14 !important}
+  body{font-size:13px}
+  #stars,.nebula{display:none !important}
+  .wrap{max-width:none;padding:12mm 14mm}
+  .rv{opacity:1 !important;transform:none !important;transition:none !important}
+  header{padding-top:6mm}
+  section.sector{padding:10mm 0 8mm;break-before:page}
+  section.sector::before{display:none}
+  section.sector:first-of-type{break-before:auto}
+  .tx,.asset,.target,.mech>div,.epigraph{break-inside:avoid}
+  .cols{gap:24px}
+  nav.route a{box-shadow:none}
+  nav.xnav{display:none}
+  .brand{filter:none}
+  .sec-num{box-shadow:none}
+}
+
+/* ---------- mobile (<=720px): dopieszczenie ukladu bez zmian na desktopie ---------- */
+@media(max-width:720px){
+  /* breadcrumb: jedna linia z wielokropkiem zamiast lamania */
+  .hud-top{gap:10px 16px;margin-bottom:30px}
+  .hud-top>.mono{flex:1 1 100%;min-width:0;white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis}
+
+  /* pasek stron: kategorie zawijaja sie do kolejnych wierszy (jest ich niewiele),
+     dzieki czemu rozwijane menu nie sa przycinane przez overflow */
+  nav.xnav{display:block}
+  nav.xnav .xpages{
+    display:flex;flex-wrap:wrap;gap:8px;overflow:visible;
+    margin:0;padding:2px 0 8px;
+  }
+  nav.xnav a{display:inline-flex;align-items:center;min-height:44px;
+    padding:0 14px;font-size:.7rem}
+  nav.xnav .xcat>summary{min-height:44px}
+  nav.xnav .xmenu a{min-height:40px}
+  .xmodes{display:flex;margin-top:6px;gap:8px 20px}
+  nav.xnav .xmode a{min-height:44px;padding:0 12px}
+
+  /* diagram lancucha: naturalna szerokosc + przewijanie poziome,
+     zeby podpisy w SVG pozostaly czytelne; przycieta ramka kolejnego
+     wezla na krawedzi jest naturalna wskazowka scrolla */
+  .chainwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .chain{min-width:720px}
+  /* podpis mapy nie scrolluje sie razem z diagramem */
+  .chainwrap .map-cap{position:sticky;left:0;width:min(100%,calc(100vw - 48px))}
+
+  /* nawigacja kroków: wygodne tap targety */
+  nav.route a{display:inline-flex;align-items:center;min-height:44px;padding:0 16px}
+
+  /* dlugie sciezki i nazwy plikow nie rozpychaja ukladu */
+  .mech .v,.tx blockquote,.lead,.doc-sum,.epigraph p{overflow-wrap:anywhere}
+
+  /* banner przedsprzedazy: CTA na pelna szerokosc */
+  .promo-cta{width:100%;display:flex;align-items:center;justify-content:center;min-height:46px}
+
+  /* mniejszy pion sekcji, cietsze ramki */
+  section.sector{padding:60px 0 52px}
+  .sec-head{gap:12px}
+  .target{padding:14px 16px;gap:8px 14px}
+  .tx{padding:18px 16px 16px}
+  .finis{padding:20px 18px}
+  footer{padding:28px 0 56px}
+}
+
+/* ---------- docs (Quick search): korekty mobilne ---------- */
+@media(max-width:720px){
+  /* rzedy chipow filtrow: przewijane poziomo zamiast wielu linii pod sticky search */
+  .searchbar .chips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    margin:0 -24px;padding:2px 24px;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 36px),transparent);
+    mask-image:linear-gradient(to right,#000 calc(100% - 36px),transparent)}
+  .searchbar .chips::-webkit-scrollbar{display:none}
+  .searchbar .chip{flex:none;display:inline-flex;align-items:center;
+    min-height:40px;padding:0 13px}
+  .searchbar .chips .lbl{flex:none}
+  /* przelacznik detalu wpisu: wiekszy tap target */
+  article.doc details.doc-detal summary{display:inline-block;padding:9px 12px 9px 0}
+}
+@media(max-width:560px){
+  /* artefakt w naglowku wpisu: pelny wiersz zamiast wypychania poza ekran */
+  article.doc .doc-head .art{margin-left:0;flex:1 1 100%;min-width:0;
+    white-space:normal;overflow-wrap:anywhere}
+}
+
+/* ---------- kanon: karta soundtracku na waskim ekranie ---------- */
+@media(max-width:560px){
+  .strack-row .strack-btn{margin-left:0;flex:1 1 100%;width:100%;
+    min-height:46px;padding:12px 14px;text-align:center}
+}
+</style>

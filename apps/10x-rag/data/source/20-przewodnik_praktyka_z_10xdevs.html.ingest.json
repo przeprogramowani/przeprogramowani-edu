@@ -1,0 +1,374 @@
+{
+  "lessonId": "Przewodnik - Praktyka z 10xDevs",
+  "file": "20-przewodnik_praktyka_z_10xdevs.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 3,
+      "order": 1
+    },
+    {
+      "slug": "nadchodzace-moduy-czyli-praktyka-praktyka-i-jeszcze-raz-praktyka",
+      "title": "Nadchodzące moduły, czyli praktyka, praktyka i jeszcze raz praktyka",
+      "blocks": 4,
+      "order": 2
+    },
+    {
+      "slug": "modu-2---ai-first-mvp-bootstrap",
+      "title": "👉 Moduł 2 - AI-First MVP Bootstrap",
+      "blocks": 2,
+      "order": 3
+    },
+    {
+      "slug": "modu-3---going-live-on-prod",
+      "title": "👉 Moduł 3 - Going LIVE on Prod",
+      "blocks": 2,
+      "order": 4
+    },
+    {
+      "slug": "modu-4---modernizacja-legacy-z-ai",
+      "title": "👉 Moduł 4 - Modernizacja legacy z AI",
+      "blocks": 2,
+      "order": 5
+    },
+    {
+      "slug": "modu-5---innowacje-techniczne-z-ai",
+      "title": "👉 Moduł 5 - Innowacje techniczne z AI",
+      "blocks": 3,
+      "order": 6
+    },
+    {
+      "slug": "rekomendacje-modeli-na-czesc-praktyczna-pazdziernik-2025",
+      "title": "Rekomendacje modeli na część praktyczną (Październik 2025)",
+      "blocks": 5,
+      "order": 7
+    },
+    {
+      "slug": "modele-do-sesji-planistycznych",
+      "title": "🧠 Modele do sesji planistycznych",
+      "blocks": 4,
+      "order": 8
+    },
+    {
+      "slug": "modele-do-kodowania",
+      "title": "👨💻 Modele do kodowania",
+      "blocks": 0,
+      "order": 9
+    },
+    {
+      "slug": "problemy-o-wysokiej-zozonosci",
+      "title": "Problemy o wysokiej złożoności",
+      "blocks": 4,
+      "order": 10
+    },
+    {
+      "slug": "problemy-o-niskiej-zozonosci",
+      "title": "Problemy o niskiej złożoności",
+      "blocks": 5,
+      "order": 11
+    },
+    {
+      "slug": "prompt-library-w-10xrulesai",
+      "title": "Prompt Library w 10xRules.ai",
+      "blocks": 9,
+      "order": 12
+    },
+    {
+      "slug": "tracker-statusu-projektu-zaliczeniowego",
+      "title": "Tracker statusu projektu zaliczeniowego",
+      "blocks": 5,
+      "order": 13
+    },
+    {
+      "slug": "certyfikacja-projektu---przewodnik",
+      "title": "Certyfikacja projektu - przewodnik",
+      "blocks": 3,
+      "order": 14
+    },
+    {
+      "slug": "terminy-certyfikacji",
+      "title": "📅 Terminy Certyfikacji",
+      "blocks": 4,
+      "order": 15
+    },
+    {
+      "slug": "startujemy",
+      "title": "Startujemy!",
+      "blocks": 2,
+      "order": 16
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:5afb37a5:43cc23fa",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:43cc23fa:0-1",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:24701484",
+      "tokenEstimate": 88,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:24701484:0-2",
+      "tokenEstimate": 144,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:55ec3a82",
+      "tokenEstimate": 143,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:55ec3a82:0-3",
+      "tokenEstimate": 143,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:18e32317",
+      "tokenEstimate": 229,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:18e32317:0-1",
+      "tokenEstimate": 229,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:a04a5971",
+      "tokenEstimate": 240,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:a04a5971:0-1",
+      "tokenEstimate": 240,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:64374f26",
+      "tokenEstimate": 220,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:64374f26:0-1",
+      "tokenEstimate": 220,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:463e29e6",
+      "tokenEstimate": 212,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:463e29e6:0-2",
+      "tokenEstimate": 244,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:ba5de54b",
+      "tokenEstimate": 191,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:ba5de54b:0-4",
+      "tokenEstimate": 252,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:5570bb79",
+      "tokenEstimate": 122,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:5570bb79:0-3",
+      "tokenEstimate": 122,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:78e4d389",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:0e16cd7c",
+      "tokenEstimate": 126,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:0e16cd7c:0-3",
+      "tokenEstimate": 126,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:f2e577db",
+      "tokenEstimate": 142,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:f2e577db:0-4",
+      "tokenEstimate": 142,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:d192e8dd",
+      "tokenEstimate": 208,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:d192e8dd:0-8",
+      "tokenEstimate": 217,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:e0793ae4",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:e0793ae4:0-4",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:90a78587",
+      "tokenEstimate": 106,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:90a78587:0-2",
+      "tokenEstimate": 106,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:5354456e",
+      "tokenEstimate": 124,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:5354456e:0-3",
+      "tokenEstimate": 149,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:5afb37a5:912bd3a6",
+      "tokenEstimate": 104,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5afb37a5:912bd3a6:0-1",
+      "tokenEstimate": 104,
+      "span": [
+        0,
+        1
+      ]
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+---
+/**
+ * ChecklistNavigation - Previous/Next navigation for checklists
+ *
+ * Displays navigation controls to move between checklists sequentially.
+ * Buttons are disabled when there's no previous/next checklist.
+ *
+ * @component
+ * @example
+ * ```astro
+ * <ChecklistNavigation
+ *   prevChecklist={{ id: "legacy", title: "Legacy Code" }}
+ *   nextChecklist={{ id: "going-prod", title: "Going Production" }}
+ *   currentPosition={2}
+ *   totalCount={4}
+ * />
+ * ```
+ */
+interface Props {
+  prevChecklist?: { id: string; title: string } | null;
+  nextChecklist?: { id: string; title: string } | null;
+  currentPosition: number;
+  totalCount: number;
+}
+
+const { prevChecklist, nextChecklist, currentPosition, totalCount } = Astro.props;
+---
+
+<nav class="bg-gray-800 border-t border-gray-700 py-6" aria-label="Checklist pagination">
+  <div class="max-w-[800px] mx-auto px-4">
+    <div class="flex items-center justify-between gap-4">
+      <!-- Previous -->
+      {prevChecklist ? (
+        <a
+          href={`/external/10xdevs-2/checklists/${prevChecklist.id}`}
+          class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group"
+          title={prevChecklist.title}
+          aria-label={`Poprzednia checklista: ${prevChecklist.title}`}
+        >
+          <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span class="hidden sm:inline">Poprzednia</span>
+        </a>
+      ) : (
+        <div class="text-gray-600 cursor-not-allowed" aria-disabled="true" aria-label="Brak poprzedniej checklisty">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </div>
+      )}
+
+      <!-- Progress -->
+      <div class="text-gray-500 text-sm" aria-label={`Pozycja ${currentPosition} z ${totalCount}`}>
+        {currentPosition} / {totalCount}
+      </div>
+
+      <!-- Next -->
+      {nextChecklist ? (
+        <a
+          href={`/external/10xdevs-2/checklists/${nextChecklist.id}`}
+          class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group"
+          title={nextChecklist.title}
+          aria-label={`Następna checklista: ${nextChecklist.title}`}
+        >
+          <span class="hidden sm:inline">Następna</span>
+          <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      ) : (
+        <div class="text-gray-600 cursor-not-allowed" aria-disabled="true" aria-label="Brak następnej checklisty">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      )}
+    </div>
+  </div>
+</nav>

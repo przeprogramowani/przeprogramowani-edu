@@ -1,0 +1,72 @@
+---
+import PreworkPathQuiz from '@/components/prework/PreworkPathQuiz.svelte';
+import ExternalLessonLayout from '@/layouts/ExternalLessonLayout.astro';
+import { verifyExternalAuth } from '@/server/externalAuth';
+import {
+  getPreworkCourseSections,
+  getPreworkLessonListItems,
+  getPreworkLessons,
+  isPreworkLanguage,
+  PREWORK_COURSE_ID,
+} from '@/server/content/preworkContent';
+import { buildExternalCourseLoginUrl } from '@/server/urlValidation';
+import { loadPreworkSidebarPersonalization } from '@/server/quiz/preworkSidebarPersonalization';
+import { hasCompletedPreworkPathQuiz } from '@/server/quiz/preworkQuizState';
+import { loadLessonProgressForCourse } from '@/server/progress/lessonProgressLoader';
+import { getExternalLessonShellCopy } from '@/lib/externalLessonShellCopy';
+
+const { courseId, lang } = Astro.params;
+const env = Astro.locals.runtime.env;
+
+if (courseId !== PREWORK_COURSE_ID || !isPreworkLanguage(lang)) {
+  return new Response(null, { status: 404 });
+}
+
+const authResult = await verifyExternalAuth(Astro.cookies, courseId, env);
+if (!authResult.isAuthenticated) {
+  return Astro.redirect(buildExternalCourseLoginUrl(courseId, Astro.url.pathname));
+}
+
+const [lessons, lessonPersonalization, hasCompletedQuiz, lessonProgress] = await Promise.all([
+  getPreworkLessons(lang),
+  loadPreworkSidebarPersonalization(authResult.email, lang, env),
+  hasCompletedPreworkPathQuiz(authResult.email, lang, env),
+  loadLessonProgressForCourse({
+    email: authResult.email,
+    courseSlug: courseId,
+    language: lang,
+    env,
+  }),
+]);
+const lessonItems = getPreworkLessonListItems(lessons);
+const sections = getPreworkCourseSections(lang);
+const prefix = `/external/${courseId}/${lang}`;
+const shellCopy = getExternalLessonShellCopy(lang);
+const title = hasCompletedQuiz
+  ? lang === 'pl'
+    ? 'Twoja agenda preworku'
+    : 'Your prework agenda'
+  : lang === 'pl'
+    ? 'Quiz: zbuduj swój prework'
+    : 'Quiz: build your prework path';
+---
+
+<ExternalLessonLayout
+  courseId={courseId}
+  lessonName={title}
+  lessons={lessonItems}
+  sections={sections}
+  activeLessonId="quiz"
+  prevLessonId="01"
+  nextLessonId="02"
+  tocStorageKey={`toc-widget-open-${courseId}-${lang}`}
+  lessonUrlPrefix={prefix}
+  courseHomeUrl={prefix}
+  htmlLang={lang}
+  shellCopy={shellCopy}
+  lessonPersonalization={lessonPersonalization}
+  lessonProgress={lessonProgress}
+  progressLanguage={lang}
+>
+  <PreworkPathQuiz client:load language={lang} />
+</ExternalLessonLayout>

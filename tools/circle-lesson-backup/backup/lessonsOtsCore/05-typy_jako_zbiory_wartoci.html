@@ -1,0 +1,221 @@
+<meta name="lesson-id" content="Typy jako zbiory wartości"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>W poprzedniej lekcji omówiliśmy tzw. typy proste (<em>primitive types)</em>, które wywodzą się wprost z typów dostępnych w języku JavaScript (<em>string</em>, <em>number</em>, <em>boolean)</em>. Wprowadziliśmy również pojęcie inferencji, czyli mechanizmu rozpoznającego typ bez jawnego oznaczenia go przez programistę, a także wstępnie omówiliśmy dwa nowe koncepty, których JS nie posiada - aliasy typów oraz interfejsy.</p><p>Przejście przez “typowy happy path” nie wymaga zbyt wiele wysiłku, ale schody zaczynają się&nbsp;w momencie wprowadzania niestandardowych scenariuszy, takich jak “zwykły obiekt”, błędnie deklarowany przez puste nawiasy klamrowe. Tego typu przypadków na puste, błędne lub “dziwne” typy i wartości TypeScript zawiera jeszcze kilka, ale do ich zrozumienia potrzebujemy lepszej teorii.</p><p>W tej lekcji przedstawimy ci uniwersalną&nbsp;“filozofię TypeScriptu”, która w praktyce odnosi się&nbsp;do matematycznych operacji na zbiorach danych. Bez obaw - nie będzie to wykład wprost z uczelni, a raczej praktyczne narzędzie do zrozumienia typów i ich transformacji.</p><h3>Problematyczny obiekt</h3><p>Celem tej lekcji będzie przedstawienie kluczowych informacji, które pomogą ci zrozumieć poniższy fragment kodu:</p><pre><code>// Zamiar - someObj to będzie "jakiś obiekt", więc wykorzystam puste nawiasy:
+let someObj: {} = {};
+
+// Zgodnie z oczekiwaniami, mogę do niego przypisać inne obiekty:
+someObj = {name: "John"};
+
+// Ale uwaga - to również poprawne przypisania:
+someObj = true;
+someObj = "hello";
+someObj = [];
+someObj = 0.12;
+
+console.log(someObj); // 0.12 (!)</code></pre><p>Dlaczego typ zdefiniowany jako pusty obiekt może pasować do liczb, tablic i stringów?</p><h2>Typy jako zbiory</h2><p>Na typy w języku TypeScript powinieneś patrzeć jak na <strong>zbiory akceptowalnych wartości.</strong></p><p>Trzy typy proste (string, <em>number i boolean) </em>to nic innego jak trzy zbiory:</p><ul><li><p><em>string</em> to zbiór, który zawiera nieskończenie wiele łańcuchów znaków</p></li><li><p><em>number</em> to zbiór, który zawiera nieskończenie wiele liczb</p></li><li><p><em>boolean</em> to zbiór, który zawiera dwie wartości - true lub false</p></li></ul><img loading="lazy" src="https://assets-v2.circle.so/hlr3s5hjjvcifs1oq07ubh1s86fg" style="width: 100%; max-width: 100%;"><p>👉 Zapamiętaj: Weryfikując typy, TypeScript “ocenia” dopasowanie określonej wartości do zbioru.</p><h2>Operacje na zbiorach</h2><p>W teorii zbiorów można wyróżnić kilka operacji, których odwzorowanie znajdziemy w konkretnych operatorach TypeScript.</p><h3><strong>Unie typów (sumy zbiorów)</strong></h3><p>TypeScript daje nam możliwość łączenia zbiorów po to, aby utworzony typ obejmował więcej akceptowalnych wartości. Przykładowo, możemy utworzyć sumę zbiorów <em>string i number. </em>W nowym typie zmieści się&nbsp;dowolny łańcuch znaków lub liczba, jaką akurat chcemy się posługiwać:</p><img loading="lazy" src="https://assets-v2.circle.so/pzvr4wmq9hw5tbyu7htmcxihxcea" style="width: 100%; max-width: 100%;"><p>W kodzie taka operacja realizowana jest przez <strong><em>pipe “|”</em></strong> i tworzy tzw. <strong>unię typów </strong>(<em>union type</em>):</p><pre><code>type StringOrNumber = string | number;
+
+const num: StringOrNumber = "25";
+const str: StringOrNumber = "John";</code></pre><p>Unia typów <strong>akceptuje wartości z obu zbiorów</strong>, które łączymy. Dotyczy to zarówno typów prostych, jak i typów złożonych, tworzonych przez aliasy:</p><pre><code>type Cat = {
+  kind: string;
+};
+
+type Dog = {
+  breed: string;
+};
+
+type Animal = Cat | Dog;
+
+const cat: Animal = {kind: "cat"}; // obiekt typu Cat
+const dog: Animal = {breed: "labrador"}; // obiekt typu Dog</code></pre><p>Taka operacja ma jednak swoje konsekwencje - o ile nowy typ akceptuje więcej wartości niż jego składowe, to w przypadku konkretnych operacji musimy doprecyzować, którym zbiorem wartości chcemy się posługiwać:</p><pre><code>// ❌ Błąd - value nie zostało sprowadzone do właściwego typu
+function processValue(value: StringOrNumber) {
+  return value.toUpperCase();
+         // ^ - Property 'toUpperCase' does not exist on type 'number'.ts(2339)
+}
+
+// ✅ Sukces - przed wywołaniem funkcji, wprowadzamy dodatkową weryfikację typu
+function processValue(value: StringOrNumber) {
+  if (typeof value === "string") {
+    return value.toUpperCase();
+  }
+  return value;
+}</code></pre><p>Tego typu konstrukcje to tzw. <strong>type guards </strong>- dodatkowe wyrażenia warunkowe, które zawężają typ zmiennej na podstawie sprawdzenia wartości. Dzięki temu TypeScript może bezpiecznie operować na wartościach połączonych typów bez ryzyka przepuszczania błędów w runtime.</p><p>Co ważne, strażnicy typów muszą weryfikować takie cechy zmiennych, które będą istnieć w momencie działania programu. Z tego powodu nie możemy odwoływać się&nbsp;do aliasów typów, ponieważ są to konstrukcje ze świata TypeScriptu - w docelowym kodzie JavaScript nie istnieją.</p><p>Aby uniknąć błędów z tym związanych, powinniśmy sprawdzić zawartość obiektu, z którym pracujemy:</p><pre><code>type Cat = {
+  kind: string;
+};
+
+type Dog = {
+  breed: string;
+};
+
+type Animal = Cat | Dog;
+
+const cat: Animal = {kind: "cat"}; // obiekt typu Cat
+const dog: Animal = {breed: "labrador"}; // obiekt typu Dog
+
+const sayHello = (animal: Animal) =&gt; {
+  
+  // ❌ Błąd - typ Cat należy do świata "TypeScriptu" - nie może być&nbsp;sprawdzany w runtime
+  // if (typeof animal === Cat) {
+                    // ^ - 'Cat' only refers to a type, but is being used as a value here.ts(2693)
+
+  // ✅ Sukces - zawartość&nbsp;obiektu będzie możliwa do sprawdzenia w runtime
+  if ("kind" in animal) {
+    console.log(`Hello, I am a ${animal.kind}`);
+  } else if ("breed" in animal) {
+    console.log(`Hello, I am a ${animal.breed}`);
+  }
+};</code></pre><h3><strong>Literały, czyli zbiory jednoelementowe</strong></h3><p>Częstym przypadkiem wykorzystywania unii są typy zawierające wyłącznie jeden element - to tzw. <strong>literal types</strong><strong><em>, </em></strong><strong>czyli typy zawierające wyłącznie jedną&nbsp;wartość </strong>(string, number lub boolean)<strong>.</strong></p><p>Poniższy typ - <em>ShowerState</em> - nie jest <em>stringiem</em>, a literałem - zbiorem z jednym elementem (hot):</p><pre><code>type ShowerState = "hot";</code></pre><p>Typowy <em>shower</em> powinien jednak obsługiwać więcej ustawień, więc rozszerzmy nasz typ o nowe wartości. Jak to zrobić, aby stan prysznica nie był nieskończony? Zastosujmy unię:</p><img loading="lazy" src="https://assets-v2.circle.so/6reonycsct4za0xdlhsipuzjv21d" style="width: 100%; max-width: 100%;"><p>To popularna praktyka służąca do budowania typów o kilku stałych wartościach, często wykorzystywana np. w maszynach stanu albo uproszczonych typach, które nie powinny akceptować&nbsp;nieskończonej liczby wartości:</p><pre><code>type ShowerState = "hot" | "cold"; // Nowy typ akceptuje wyłącznie dwie wartości
+
+const hotWater: ShowerState = "hot";
+const coldWater: ShowerState = "cold";
+const mildWater: ShowerState = "mild";
+                          // ^ - Type '"mild"' is not assignable to type 'ShowerState'.ts(2322)</code></pre><h3><strong>Przecięcia typów (iloczyny zbiorów)</strong></h3><p>TypeScript wspiera jeszcze jeden operator, którego zachowanie możemy wprost wydedukować&nbsp;z teorii zbiorów. Mowa o <strong>ampersand “&amp;”</strong> - którego efektem są <strong>przecięcia typów</strong> <strong><em>(intersection types)</em></strong>.<strong> </strong>Zostając w świecie zbiorów, wyjaśnienie jego działania jest stosunkowo proste - nowy typ powstaje poprzez wybranie części wspólnej obu zbiorów, czyli wartości pasujących do obu typów jednocześnie.</p><img loading="lazy" src="https://assets-v2.circle.so/qpokpg4c7uds7kzfmo01c6aytnk2" style="width: 100%; max-width: 100%;"><p>Wprowadzone do tej pory operatory można przetestować tworząc dwa nowe typy:</p><ul><li><p>Unia utworzy typ <em>string</em>, ponieważ <strong>oba łączone zbiory zawierają się w tym typie</strong></p></li><li><p>Przecięcie utworzy typ dwóch literałów, ponieważ <strong>to jedyne wartości pasujące do obu zbiorów</strong></p></li></ul><pre><code>type A = string;
+type B = "john" | "doe";
+
+type C = A | B; // string
+type D = A &amp; B; // "john" | "doe"</code></pre><p>Czy przecięcie może pozbawić nas zbioru akceptowalnych wartości? Tak - przykładowo, kiedy zastosujemy go na zbiorach rozłącznych, które nie mają części wspólnej, otrzymamy typ never:</p><pre><code>type F = string;
+type G = number;
+
+type H = F &amp; G; // never</code></pre><p>Nie ma w języku TypeScript wartości, która byłaby jednocześnie <em>stringiem</em> i <em>numberem</em>. Stąd… wynik oznaczający brak akceptowalnych wartości. Szczegóły typu <em>never</em> omówimy w kolejnej lekcji.</p><h3>Przecięcia typów złożonych</h3><p>Przecięcia typów prostych są stosunkowo łatwe do przewidzenia. W przypadku obiektów sprawa zaczyna się komplikować. Przecięcie zastosowane na dwóch typach złożonych, de facto <strong>łączy właściwości obu typów</strong>, zamiast wyszukiwania części wspólnej:</p><pre><code>type A = { name: string };
+type B = { age: number };
+
+type C = A &amp; B; // {name: string, age: number}
+
+// ✅ Sukces - poprawne przypisanie
+const c1: C = { name: "John", age: 20 };
+
+// ❌ Błąd - obiekt nie zawiera pola age
+const c2: C = { name: "John" };
+// ❌ Błąd - obiekt nie zawiera pola name
+const c3: C = { age: 20 };</code></pre><p>Dlaczego tak jest? </p><p>Musisz wiedzieć, że TypeScript wspiera tzw. <strong>strukturalny system typów</strong>. Oznacza to, że kompilator przymyka oko na pewne nieścisłości w definiowaniu typów tak długo, jak dany obiekt spełnia minimalny zestaw wymagań określonego typu.</p><p>Na poniższym przykładzie widać działanie tego mechanizmu:</p><pre><code>type A = {name: string};
+
+function foo(a: A) {
+  console.log(a.name);
+}
+
+const a1 = {name: "John"};
+const a2 = {name: "Mark", country: "UK", job: "clerk"};
+const a3 = {region: "EU"};
+
+foo(a1); // ✅ Pasuje
+foo(a2); // ✅ Pasuje
+foo(a3); // ❌ Property 'name' is missing in type '{ region: string; }'
+
+// UWAGA:
+foo({name: "Mark", country: "UK"}); // ❌ Object literal may only specify known properties, and 'country' does not exist in type 'A'
+
+
+// ---
+
+type B = {age: number};
+
+function bar(b: B) {
+  console.log(b.age);
+}
+
+const b1 = {age: 20};
+const b2 = {age: 21, role: "admin", skill: "drawing"};
+const b3 = {access: "full"};
+
+bar(b1); // ✅ Pasuje
+bar(b2); // ✅ Pasuje
+bar(b3); // ❌ Property 'age' is missing in type '{ access: string; }'
+
+// UWAGA:
+bar({age: 25, role: "admin"}); // ❌ Object literal may only specify known properties, and 'role' does not exist in type 'B'</code></pre><p>Chociaż&nbsp;typy <em>A</em> i <em>B </em>powinny być obiektami z jednym polem, to istnieją sytuacje, kiedy możemy posługiwać się “szerszą wersją” tych typów - tak długo, jak znane pola są w nich zawarte <em>(i nie są to literały obiektów)</em>.</p><p>Wróćmy do wcześniejszego pytania - dlaczego iloczyn typów łączy właściwości obu obiektów </p><p>Rozumowanie jest takie:</p><blockquote><p>Jaki typ muszę utworzyć, aby na końcu pasował do obu typów bazowych?</p></blockquote><p>Najprostsze rozwiązanie to <strong>połączenie obu obiektów</strong> - wtedy, przy ocenianiu struktury obiektu - finalny typ będzie “luźno dopasowany” do obu zbiorów określonych na początku:</p><img loading="lazy" src="https://assets-v2.circle.so/yciqdguph797ikv83705in65a8jq" style="width: 100%; max-width: 100%;"><p>To rozumowanie potwierdza się w kodzie:</p><pre><code>const person = {name: "John", age: 20};
+
+type A = {name: string};
+type B = {age: number};
+
+// Funkcja foo przyjmuje obiekty pasujące do zbioru A
+function foo(a: A) {
+  console.log(a.name);
+}
+
+foo(person); // =&gt; John ✅ Obiekt person tutaj pasuje - ma pole name!
+
+// Funkcja bar przyjmuje obiekty pasujące do zbioru B
+function bar(b: B) {
+  console.log(b.age);
+}
+
+bar(person); // =&gt; 20 ✅ Obiekt person nadal pasuje - ma pole age!</code></pre><p>Co ważne, takie zachowanie będzie wspierane wyłącznie w językach o <strong>strukturalnym systemie typów</strong>.</p><p>👉 <strong>Dla ciekawskich:</strong> Przeciwieństwem tego mechanizmu jest <strong>nominalny system typów </strong>(np. w języku Java), gdzie obiekt oceniany jest nie tylko pod kątem struktury, ale jego pochodzenia (nominału). Poniżej widać dwie klasy o identycznym kształcie, które w Javie <strong>nie mogą być</strong> stosowane naprzemiennie:</p><pre><code>class Person {
+    String name;
+    int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+class Employee {
+    String name;
+    int age;
+
+    public Employee(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Person person = new Person("John", 30);
+        Employee employee = new Employee("Jane", 25);
+
+        // Próba przypisania obiektu typu Employee do zmiennej typu Person
+        person = employee; // ❌ Błąd kompilacji: incompatible types
+    }
+}</code></pre><p>W TypeScript natomiast strukturalny system typów sprawia, że przypisanie obiektów zależy bardziej od <strong>zgodności kształtu</strong> niż od ich pochodzenia. W praktyce oznacza to, że jeżeli obiekt posiada wymagane właściwości, będzie traktowany jako zgodny z typem – nawet jeśli jest to zupełnie inny obiekt niż ten, który był pierwotnie przewidziany.</p><h3>Rozszerzanie typów</h3><p>Praktyczne zastosowanie operatora przecięcia to rozszerzanie istniejących typów:</p><pre><code>type Id = {
+  id: number;
+};
+
+type Name = {
+  firstName: string;
+  lastName: string;
+};
+
+type Greeter = {
+  greet: (name: string) =&gt; string;
+};
+
+type User = Id &amp; Name &amp; Greeter;
+
+const u1: User = {
+  id: 1,
+  firstName: "John",
+  lastName: "Doe",
+  greet: (name: string) =&gt; `Hello ${name}`,
+};</code></pre><p>Zwróć jednak uwagę, że w przeciwieństwie do rozszerzania interfejsów, których składowe mogą znajdować się w wielu plikach i wciąż dotyczyć tej samej struktury, aliasy typów zawsze tworzą nowy typ:</p><pre><code>type Car = {
+  brand: string
+};
+
+Car = Car &amp; { age: number; } // ❌ Błąd
+
+type AgedCar = Car &amp; { age: number; } // ✅ OK</code></pre><p>Jest to warty zapamiętania mechanizm, z którego będziemy korzystać w lekcjach o zaawansowanym typowaniu</p><h2>Rozwiązanie zagadki</h2><p>Czy teraz jesteś w stanie odpowiedzieć, dlaczego puste nawiasy klamrowe nie określają pustego obiektu, albo “zwykłego obiektu”, ale wiele różnych wartości?</p><pre><code>// Zamiar - someObj to będzie "jakiś obiekt", więc wykorzystam puste nawiasy:
+let someObj: {} = {};
+
+// Zgodnie z oczekiwaniami, mogę do niego przypisać inne obiekty:
+someObj = {name: "John"};
+
+// Ale uwaga - to również poprawne przypisania:
+someObj = true;
+someObj = "hello";
+someObj = [];
+someObj = 0.12;
+
+console.log(someObj); // 0.12 (!)</code></pre><p>Najłatwiej zrozumieć to na zbiorach - idąc “od ogółu do szczegółu”, puste nawiasy klamrowe określają wszystkie niepuste wartości, które mają <strong>pewne cechy obiektu</strong>. Wprowadzając kolejne pola, zawężamy obiekty, które pasują do naszego typu.</p><img loading="lazy" src="https://assets-v2.circle.so/51x3jl7nw1v4ud3zoruxitqaqr17" style="width: 100%; max-width: 100%;"><p>Nic jednak nie stoi na przeszkodzie, żeby na <em>string, number i boolean</em> również patrzeć jak na obiekty, w końcu mają konkretne właściwości, które możemy wywoływać i wywodzą się z “obiektowych” typów pisanych wielką literą. Poniżej przedstawiamy to w bardzo dosłowny sposób ;)</p><pre><code>const a: String = "John"; // String
+const b: Number = 20; // Number
+const c: Boolean = false; // Boolean
+
+a.toUpperCase();
+b.toFixed();
+c.valueOf();
+
+type KindaObjectIfYouLookClosely = {};
+
+function foo(maybeObject: KindaObjectIfYouLookClosely) {
+  console.log(maybeObject);
+}
+
+foo(a); // ✅ Pasuje
+foo(b); // ✅ Pasuje
+foo(c); // ✅ Pasuje</code></pre><h2>Typy jako zbiory</h2><p>Zaprezentowany w tej lekcji sposób myślenia o typach może się wydawać wymagający, ale często jest najlepszą odpowiedzią na najtrudniejsze zagadnienia typowania w TypeScript.</p><p>Jeśli w przyszłości zdarzy ci się zastanawiać, dlaczego określona wartość pasuje do dziwnego typu, najprawdopodobniej odpowiedź znajdziesz w teorii zbiorów. Możesz do tej lekcji wracać i przypominać sobie najważniejsze aspekty tego zagadnienia.</p><p>Żeby jednak omówić go do końca, musimy jeszcze porozmawiać o zbiorach… bez wartości. Ale o tym kolejna lekcja - zapraszamy!</p><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>221-type-guard - </strong>Twoim zdaniem jest poprawna obsługa różnego typu powiadomień za pomocą type guards. Dodaj typowanie dla “SystemNotification”, wyświetlaj odpowiednie powiadomienia dla każdego typu oraz przygotuj się na niepoprawne obiekty.</p></li></ol><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

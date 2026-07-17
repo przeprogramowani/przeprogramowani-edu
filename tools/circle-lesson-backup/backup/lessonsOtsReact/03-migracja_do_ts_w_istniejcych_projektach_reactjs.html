@@ -1,0 +1,67 @@
+<meta name="lesson-id" content="Migracja do TS w istniejących projektach React.js"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/5zsmm93gmqkllaphogv51r7ocg2h" style="width: 100%; max-width: 100%;"><p>Migracja istniejącego projektu React z JavaScript do TypeScript jest procesem wymagającym systematycznego podejścia i starannego planowania. </p><p>W tej lekcji przedstawimy sprawdzone strategie migracji na przykładzie rzeczywistych projektów, w tym studium przypadku firmy Sentry, która skutecznie przemigrowała codebase zawierający ponad 1100 plików. </p><p>Skupimy się na konfiguracji TypeScript w projektach React oraz omówimy kluczowe aspekty tego procesu.</p><h3><strong>Przygotowanie projektu do migracji</strong></h3><p>Pierwszym krokiem w migracji jest dokładna analiza obecnego stanu aplikacji. Należy przeprowadzić inwentaryzację wszystkich komponentów oraz zależności, co pozwoli zidentyfikować potencjalne wyzwania, takie jak użycie przestarzałych API. </p><p>Warto także przeprowadzić audyt zewnętrznych bibliotek, aby sprawdzić, czy są dostępne typy TypeScript dla używanych przez nas paczek.</p><p>Następnie należy skonfigurować środowisko pracy, instalując niezbędne pakiety TypeScript oraz typy dla React. Wykonuje się to za pomocą polecenia:</p><pre><code>npm install --save-dev typescript @types/react @types/react-dom</code></pre><p>Po instalacji TypeScript należy utworzyć podstawowy plik konfiguracyjny tsconfig.json. Przykładowa konfiguracja może wyglądać następująco:</p><pre><code>{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "isolatedModules": true,
+    "target": "ES2020"
+  },
+  "include": ["src/**/*"]
+}</code></pre><p>Ta konfiguracja pozwala na stopniowe dodawanie TypeScript do istniejącego kodu JavaScript, co jest kluczowe dla płynnej migracji.</p><h3>Strategie migracji</h3><p>Istnieją dwie główne strategie migracji: strategia inkrementalna oraz strategia big-bang.</p><p><strong>Strategia inkrementalna</strong>, którą polecamy dla większości projektów, polega na stopniowym dodawaniu TypeScript do istniejącego kodu. Pozwala to na współistnienie plików .js(x) i .ts(x) w tym samym projekcie, co ułatwia zarządzanie procesem migracji. Priorytetyzacja konwersji powinna opierać się na częstotliwości zmian w komponencie, jego krytyczności biznesowej oraz liczbie zależności.</p><p>Z drugiej strony, <strong>strategia big-bang</strong> polega na jednorazowej konwersji całego kodu. Jest to podejście ryzykowne, ponieważ zwiększa prawdopodobieństwo wystąpienia błędów i przestojów, a także jest trudniejsze do zarządzania w zespole.</p><h2>Proces migracji krok po kroku</h2><p>Migracja powinna być przeprowadzana etapami. Pierwszym krokiem jest identyfikacja "leaf components", czyli komponentów bez zależności, które można łatwo skonwertować na TypeScript. Na przykład, prosty komponent <em>Button</em> w JavaScript:</p><pre><code>const Button = ({ onClick, children }) =&gt; (
+  &lt;button onClick={onClick}&gt;{children}&lt;/button&gt;
+);</code></pre><p>Po migracji do TypeScript będzie on wyglądał następująco:</p><pre><code>interface ButtonProps {
+  onClick: () =&gt; void;
+  children: React.ReactNode;
+}
+
+const Button = ({ onClick, children }: ButtonProps) =&gt; (
+  &lt;button onClick={onClick}&gt;{children}&lt;/button&gt;
+);</code></pre><p>Kolejnym krokiem jest migracja współdzielonych typów. Przykładowo, w pliku <em>src/@types/common.ts </em>można zdefiniować interfejsy użytkownika oraz odpowiedzi API:</p><pre><code>export interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface ApiResponse&lt;T&gt; {
+  data: T;
+  status: number;
+  message: string;
+}</code></pre><p>Więcej o organizacji typów w projekcie dowiesz się z lekcji <a class="entity" href="https://przeprogramowani.circle.so/c/o-ts-core-pro/sections/402388/lessons/1500229" target="_blank" rel="noopener noreferrer">#Organizacja typów w projekcie</a>.</p><p>Typowanie hooków jest równie istotne. Przykład hooka useUser po migracji do TypeScript:</p><pre><code>const useUser = (id: string) =&gt; {
+  const [user, setUser] = useState&lt;User | null&gt;(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() =&gt; {
+    fetchUser(id)
+      .then(user =&gt; setUser(user))
+      .finally(() =&gt; setLoading(false));
+  }, [id]);
+
+  return { user, loading };
+};</code></pre><p>Więcej o typowaniu hooków dowiesz się z następnej sekcji.</p><h3><strong>Obsługa wyzwań technicznych</strong></h3><p>Podczas migracji mogą pojawić się różne wyzwania techniczne. Na przykład, problemy z defaultProps można rozwiązać za pomocą typu Partial. Rozważmy interfejs Props:</p><pre><code>interface Props {
+  value?: string;
+  onChange: (value: string) =&gt; void;
+}
+
+const defaultProps: Partial&lt;Props&gt; = {
+  value: ''
+};</code></pre><p>Innym wyzwaniem jest stosowanie generyków w Higher-Order Components (HOC). Przykładowa implementacja HOC z wykorzystaniem generyków:</p><pre><code>function withLoader&lt;P extends object&gt;(
+  WrappedComponent: React.ComponentType&lt;P&gt;
+) {
+  return function WithLoaderComponent(
+    props: P &amp; { loading?: boolean }
+  ) {
+    if (props.loading) {
+      return &lt;div&gt;Loading...&lt;/div&gt;;
+    }
+    return &lt;WrappedComponent {...props} /&gt;;
+  };
+}
+</code></pre><p>Więcej o typowaniu HOC dowiesz się z lekcji <a class="entity" href="https://przeprogramowani.circle.so/c/o-ts-react-pro/sections/415274/lessons/1568336" target="_blank" rel="noopener noreferrer">#Higher Order Components (HOC)</a>. </p><p>Typowanie ref w komponentach również wymaga uwagi. Przykład komponentu TextInput z typowanym refem:</p><pre><code>const TextInput = React.forwardRef&lt;
+  HTMLInputElement,
+  { placeholder: string }
+&gt;((props, ref) =&gt; (
+  &lt;input ref={ref} {...props} /&gt;
+));</code></pre><p>Więcej o typowaniu ref dowiesz się z lekcji <a class="entity" href="https://przeprogramowani.circle.so/c/o-ts-react-pro/sections/388740/lessons/1487361" target="_blank" rel="noopener noreferrer">#useRef</a>. </p><h3><strong>Rekomendowane narzędzia i materiały</strong></h3><p>Aby ułatwić proces migracji, warto korzystać z odpowiednich narzędzi i materiałów, które wspomogą zarówno konfigurację środowiska, jak i samą migrację.</p><p><strong>Rekomendowane narzędzia:</strong></p><ul><li><p><a href="https://cursor.com/" target="_blank" rel="noopener noreferrer"><strong>Edytor Cursor</strong></a><strong>:</strong> Zapewnia wsparcie TypeScript i analizę błędów w czasie rzeczywistym, ułatwiając pisanie i debugowanie błędów. Jeżeli chcesz poznać możliwości Cursora, możesz to zrobić z naszym kursem <a href="https://opanuj.ai/cursor" target="_blank" rel="noopener noreferrer">“Cursor: Programuj z AI”</a>.</p></li><li><p><a href="https://github.com/airbnb/ts-migrate" target="_blank" rel="noopener noreferrer">ts-migrate</a>: Narzędzie do automatycznej konwersji plików JavaScript do TypeScript, znacznie przyspieszające proces migracji.</p></li><li><p><a href="https://github.com/plantain-00/type-coverage" target="_blank" rel="noopener noreferrer"><strong>type-coverage</strong></a><strong>:</strong> Umożliwia śledzenie postępów migracji poprzez zbieranie i raportowanie błędów typów.</p></li><li><p><a href="https://typescript-eslint.io/" target="_blank" rel="noopener noreferrer">TypeScript ESLint</a><strong>:</strong> Pomaga w utrzymaniu spójności kodu poprzez analizę statyczną i wymuszanie standardów kodowania.</p></li><li><p><a href="https://prettier.io/" target="_blank" rel="noopener noreferrer"><strong>Prettier</strong></a><strong>:</strong> Dba o jednolite formatowanie kodu, co zwiększa jego czytelność i ułatwia współpracę w zespole.</p></li></ul><p><strong>Rekomendowane materiały dodatkowe:</strong></p><ul><li><p><a href="https://www.typescriptlang.org/docs/handbook/react.html" target="_blank" rel="noopener noreferrer"><strong>TypeScript Handbook - React</strong></a><strong>:</strong> Oficjalna dokumentacja TypeScript z sekcją poświęconą integracji z React.</p></li><li><p><a href="https://blog.sentry.io/slow-and-steady-converting-sentrys-entire-frontend-to-typescript/" target="_blank" rel="noopener noreferrer"><strong>Sentry's TypeScript Migration Story</strong></a><strong>:</strong> Studium przypadku firmy Sentry, które opisuje ich doświadczenia z migracją do TypeScript.</p></li></ul><h3><strong>Podsumowanie</strong></h3><p>Migracja projektu React.js do TypeScript przynosi wiele korzyści, ale często stanowi duże wyzwanie. Skupienie się na systematycznym podejściu, wykorzystaniu odpowiednich narzędzi oraz przestrzeganiu najlepszych praktyk jest bardzo ważne dla sukcesu inicjatywy.</p><p>Dzięki temu proces migracji stanie się mniej uciążliwy, a zespół programistów będzie mógł cieszyć się zaletami typowania statycznego, takimi jak lepsza czytelność kodu i wcześniejsze wykrywanie błędów.</p></div></body></html>

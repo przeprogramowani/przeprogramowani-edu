@@ -1,0 +1,39 @@
+/* latin */
+@font-face {
+  font-family: 'Chakra Petch';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('chakra-petch-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+2000-206F,U+2010-2027;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Chakra Petch';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('chakra-petch-600-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA,U+1E00-1EFF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Chakra Petch';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('chakra-petch-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+2000-206F,U+2010-2027;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Chakra Petch';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('chakra-petch-700-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA,U+1E00-1EFF;
+}

@@ -1,0 +1,85 @@
+<meta name="lesson-id" content="Ocena przez LLM - Panel of Experts"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/rlxo5wwc1f89b7oug5fozzb9gw34" style="width: 100%; max-width: 100%;"><p>Technika "Panel of Experts" polega na symulowaniu grupy ekspertów z różnych dziedzin, którzy oceniają dane rozwiązanie lub pomysł.</p><h3>Jak działa "Panel of Experts"?</h3><ol start="1"><li><p><strong>Definiowanie ekspertów</strong>: Określamy role ekspertów, którzy będą oceniać rozwiązanie (np. UX designer, backend developer, ekspert ds. bezpieczeństwa).</p></li><li><p><strong>Prezentacja rozwiązania</strong>: LLM otrzymuje opis ocenianego rozwiązania lub kodu.</p></li><li><p><strong>Ocena z różnych perspektyw</strong>: Model wciela się w role różnych ekspertów, dostarczając oceny z ich unikalnych punktów widzenia.</p></li><li><p><strong>Synteza opinii</strong>: LLM może również podsumować różne opinie, tworząc całościową ocenę.</p></li></ol><p><strong>Przykładowa konwersacja dla Panel of Experts</strong></p><p>Początkowy prompt:</p><pre><code>Oceniaj poniższy fragment kodu React z perspektywy trzech ekspertów:
+1. Frontend Developer (skupienie na jakości kodu i wydajności)
+2. UX Designer (skupienie na doświadczeniu użytkownika)
+3. Ekspert ds. Dostępności (skupienie na dostępności dla różnych grup użytkowników)
+
+import React from 'react';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+const DeviceUsageChart = ({ data }) =&gt; {
+  return (
+    &lt;div style={{ width: '100%', height: 300 }}&gt;
+      &lt;ResponsiveContainer&gt;
+        &lt;PieChart&gt;
+          &lt;Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            outerRadius={80}
+            fill="#8884d8"
+            dataKey="value"
+          &gt;
+            {data.map((entry, index) =&gt; (
+              &lt;Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} /&gt;
+            ))}
+          &lt;/Pie&gt;
+          &lt;Legend /&gt;
+        &lt;/PieChart&gt;
+      &lt;/ResponsiveContainer&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default DeviceUsageChart;
+
+Dostarcz ocenę od każdego eksperta, a następnie przedstaw ogólne podsumowanie.</code></pre><p>Odpowiedź modelu:</p><pre><code>Oto ocena kodu z perspektywy trzech ekspertów:
+
+Frontend Developer:
+Kod jest stosunkowo czysty i zwięzły. Wykorzystanie biblioteki Recharts do tworzenia wykresu kołowego jest dobrym wyborem, ponieważ zapewnia responsywność i łatwość implementacji. Pozytywne aspekty to:
+1. Użycie ResponsiveContainer zapewnia adaptację wykresu do różnych rozmiarów ekranu.
+2. Wykorzystanie map() do dynamicznego generowania komponentów Cell jest efektywne.
+3. Eksport komponentu jako default ułatwia jego import w innych częściach aplikacji.
+
+Obszary do poprawy:
+1. Brak propTypes lub TypeScript do walidacji props, co mogłoby zwiększyć niezawodność kodu.
+2. Można rozważyć wyodrębnienie COLORS do osobnego pliku konfiguracyjnego dla łatwiejszego zarządzania.
+3. Warto dodać obsługę błędów w przypadku braku danych lub nieprawidłowych danych.
+
+
+UX Designer:
+Wykres kołowy jest prostym i intuicyjnym sposobem prezentacji danych, ale ma pewne ograniczenia:
+1. Legenda jest automatycznie generowana, co jest dobre dla czytelności, ale jej położenie nie jest kontrolowane.
+2. Brak etykiet bezpośrednio na wykresie może utrudniać szybkie zrozumienie danych.
+3. Ograniczona liczba kolorów (4) może być problematyczna przy większej ilości kategorii.
+
+Sugestie:
+1. Dodanie procentowych lub liczbowych etykiet bezpośrednio na wykresie.
+2. Implementacja interaktywności, np. wyświetlanie dokładnych wartości po najechaniu myszką.
+3. Rozważenie alternatywnych typów wykresów dla większej ilości kategorii.
+
+
+Ekspert ds. Dostępności:
+Obecna implementacja ma kilka problemów z dostępnością:
+1. Brak tekstowej alternatywy dla wykresu, co utrudnia zrozumienie danych przez czytniki ekranu.
+2. Kolory są jedynym sposobem rozróżnienia kategorii, co może być problematyczne dla osób z daltonizmem.
+3. Brak możliwości nawigacji klawiaturą po elementach wykresu.
+
+Rekomendacje:
+1. Dodanie aria-label do głównego kontenera wykresu z krótkim opisem danych.
+2. Implementacja dostępnej tabeli jako alternatywy dla wykresu.
+3. Użycie wzorów lub tekstur oprócz kolorów do rozróżnienia segmentów.
+4. Dodanie możliwości focusowania i eksploracji danych za pomocą klawiatury.
+
+
+Ogólne podsumowanie:
+Komponent DeviceUsageChart jest solidną podstawą do prezentacji danych w formie wykresu kołowego. Wykorzystuje nowoczesne praktyki React i bibliotekę Recharts, co zapewnia dobrą wydajność i responsywność. Jednak aspekty UX i dostępności wymagają znacznej poprawy.
+
+Główne obszary do udoskonalenia to:
+1. Zwiększenie interaktywności i czytelności wykresu dla lepszego doświadczenia użytkownika.
+2. Implementacja rozwiązań zwiększających dostępność, szczególnie dla użytkowników korzystających z technologii asystujących.
+3. Dodanie zabezpieczeń i walidacji props dla zwiększenia niezawodności kodu.
+
+Wprowadzenie tych zmian znacząco podniesie jakość komponentu, czyniąc go bardziej uniwersalnym i przyjaznym dla szerszego grona użytkowników.</code></pre><p> <strong>🥳 Korzyści</strong></p><ul><li><p><strong>Wielowymiarowa ocena</strong>: Pozwala na analizę rozwiązania z różnych, często komplementarnych perspektyw.</p></li><li><p><strong>Symulacja współpracy</strong>: Odzwierciedla rzeczywiste środowisko pracy, gdzie projekty są oceniane przez zespoły o zróżnicowanych kompetencjach.</p></li><li><p><strong>Identyfikacja kompromisów</strong>: Pomaga w zrozumieniu potencjalnych konfliktów między różnymi aspektami projektu (np. wydajność vs. dostępność).</p></li></ul><p>🫣 <strong>Wyzwania</strong></p><ul><li><p><strong>Symulowana różnorodność</strong>: Mimo że LLM symuluje różne role, wszystkie "opinie" pochodzą z tego samego modelu, co może ograniczać rzeczywistą różnorodność perspektyw.</p></li><li><p><strong>Niekonsekwencja w rolach</strong>: Model może mieć trudności z utrzymaniem spójnej "osobowości" dla każdej roli eksperta w różnych sesjach lub kontekstach.</p></li><li><p><strong>Ograniczona specjalistyczna wiedza</strong>: LLM może nie posiadać głębokiej, specjalistycznej wiedzy charakterystycznej dla prawdziwych ekspertów w danych dziedzinach.</p></li><li><p><strong>Ryzyko stereotypizacji</strong>: Symulowane role ekspertów mogą opierać się na uproszczonych lub stereotypowych wyobrażeniach o danych specjalizacjach.</p></li><li><p><strong>Złożoność promptowania</strong>: Efektywne wykorzystanie tej techniki wymaga starannego konstruowania promptów, co może być czasochłonne i wymagać wielu iteracji.</p></li></ul><p><strong>🧑🏻‍💻 Ćwiczenie</strong></p><p>Jesteś głównym deweloperem w projekcie nowej aplikacji webowej do zarządzania zadaniami (todo app). Twój zespół właśnie zakończył prace nad prototypem głównego interfejsu użytkownika i implementacją kluczowych funkcjonalności. Przed przejściem do kolejnej fazy projektu, chcesz uzyskać wszechstronną ocenę dotychczasowej pracy.</p><p><strong>Zadanie</strong></p><p>Wykorzystaj technikę "Panel of Experts", aby uzyskać kompleksową ocenę prototypu aplikacji z perspektywy różnych ekspertów.</p><p><strong>Kroki</strong></p><ol start="1"><li><p><strong>Przygotuj opis projektu:</strong> Napisz krótki opis prototypu aplikacji, uwzględniając:</p><ul><li><p>Główne funkcjonalności (np. dodawanie zadań, kategoryzacja, przypomnienia)</p></li><li><p>Użyte technologie (np. React dla frontendu, Node.js dla backendu)</p></li><li><p>Kluczowe decyzje projektowe (np. architektura, podejście do przechowywania danych)</p></li></ul></li><li><p><strong>Zdefiniuj panel ekspertów:</strong> Wybierz 4-5 ról ekspertów, którzy będą oceniać projekt. Przykładowe role:</p><ul><li><p>Frontend Developer</p></li><li><p>UX Designer</p></li><li><p>Ekspert ds. Bezpieczeństwa</p></li><li><p>DevOps Engineer</p></li><li><p>Product Manager</p></li></ul></li><li><p><strong>Sformułuj prompt do oceny:</strong> Napisz prompt, który:</p><ul><li><p>Przedstawia opis projektu</p></li><li><p>Prosi LLM o wcielenie się w role wybranych ekspertów</p></li><li><p>Zachęca do oceny projektu z perspektywy każdego eksperta, skupiając się na ich obszarach specjalizacji</p></li><li><p>Prosi o wskazanie mocnych stron i obszarów do poprawy</p></li></ul></li><li><p><strong>Analiza odpowiedzi:</strong> Po otrzymaniu ocen od "panelu ekspertów", przeanalizuj je pod kątem:</p><ul><li><p>Trafności uwag w kontekście każdej roli</p></li><li><p>Spójności między różnymi perspektywami</p></li><li><p>Konkretnych i wykonalnych sugestii ulepszeń</p></li></ul></li><li><p><strong>Synteza i priorytetyzacja:</strong> Na podstawie otrzymanych ocen:</p><ul><li><p>Zidentyfikuj najważniejsze obszary do poprawy</p></li><li><p>Uszereguj sugestie pod względem priorytetu i wykonalności</p></li><li><p>Przygotuj krótki plan działania na kolejną fazę projektu</p></li></ul></li><li><p><strong>Refleksja:</strong> Zastanów się nad procesem i odpowiedz na następujące pytania:</p><ul><li><p>Jak technika "Panel of Experts" wpłynęła na twoje postrzeganie projektu?</p></li><li><p>Jakie korzyści i wyzwania napotkałeś podczas stosowania tej techniki?</p></li><li><p>Jak możesz wykorzystać tę metodę w przyszłych projektach?</p></li></ul></li></ol><p><strong>Wskazówki</strong></p><ul><li><p>Staraj się formułować konkretne pytania dla każdej roli eksperckiej</p></li><li><p>Zwróć uwagę na potencjalne konflikty między sugestiami różnych ekspertów</p></li><li><p>Pamiętaj, że celem jest uzyskanie wszechstronnej perspektywy, a nie tylko potwierdzenie własnych założeń</p></li></ul><p><strong>Kryteria sukcesu</strong></p><ul><li><p>Otrzymujesz zróżnicowane i wartościowe oceny od "panelu ekspertów"</p></li><li><p>Potrafisz zidentyfikować kluczowe obszary do poprawy w projekcie</p></li><li><p>Jesteś w stanie stworzyć konkretny plan działania na podstawie otrzymanych ocen</p></li></ul><p>—</p><p>Wykorzystanie technik oceny przez LLM może znacząco przyspieszyć proces developmentu i poprawić jakość końcowych produktów, dostarczając cennych insightów na wczesnych etapach projektowania i implementacji.</p><h3>🧠 Kluczowe wnioski</h3><ol start="1"><li><p><strong>Kompleksowa ocena</strong>: Połączenie self-criticism i "Panel of Experts" zapewnia wszechstronną ocenę rozwiązań w web developmencie.</p></li><li><p><strong>Iteracyjne udoskonalanie</strong>: Techniki te wspierają ciągłe doskonalenie kodu i projektów.</p></li><li><p><strong>Symulacja realnych scenariuszy</strong>: Ocena przez LLM może symulować procesy code review i analizy projektowej, przygotowując developerów na rzeczywiste sytuacje.</p></li><li><p><strong>Ograniczenia</strong>: Należy pamiętać, że oceny LLM mogą zawierać błędy lub być stronnicze. Zawsze powinny być traktowane jako dodatkowe narzędzie, a nie zastępstwo dla ludzkiej ekspertyzy i krytycznego myślenia.</p></li></ol></div></body></html>

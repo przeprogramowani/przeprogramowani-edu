@@ -1,0 +1,367 @@
+---
+import Layout from '@/layouts/BaseLayout.astro';
+import ExternalLessonLayout from '@/layouts/ExternalLessonLayout.astro';
+import MarkdownDownloadButton from '@/components/shared/MarkdownDownloadButton.astro';
+import LessonCompletionControls from '@/components/progress/LessonCompletionControls.astro';
+import AccountStrip from '@/components/AccountStrip.astro';
+import { CourseSlug } from '@/models/CollectionMappings';
+import { LessonEntry } from '@/models/LessonEntry';
+import { isAccessAllowed } from '@/server/circle/lessonPlan';
+import { verifyExternalAuth } from '@/server/externalAuth';
+import { getCourseStructure } from '@/server/circle/courseStructureCache';
+import { findAdjacentLessons, groupLessonsBySection } from '@/server/circle/courseStructureApi';
+import { getChecklistsForCourse } from '@/server/checklistData';
+import { getExternalAuthConfig, getCourseDisplayName } from '@/server/circle/externalAuthConfig';
+import {
+  getPreworkLessons,
+  isPreworkLanguage,
+  PREWORK_COURSE_ID,
+} from '@/server/content/preworkContent';
+import { isMainCourseLanguage, MAIN_COURSE_ID } from '@/server/content/mainCourseContent';
+import { formatPreworkLessonCount } from '@/server/content/preworkLessonList';
+import { getExternalCourseLessonContent, getExternalMarkdownCourseStructure } from '@/server/content/externalMarkdownContent';
+import { buildExternalCourseLoginUrl } from '@/server/urlValidation';
+import { hasCompletedPreworkPathQuiz } from '@/server/quiz/preworkQuizState';
+import { loadLessonProgressForCourse } from '@/server/progress/lessonProgressLoader';
+import type { TocItem } from '@/types/toc';
+import { slugify } from '@/utils/slugify';
+
+const { lessonId, courseId } = Astro.params as { lessonId: string; courseId: CourseSlug };
+const env = Astro.locals.runtime.env;
+
+if (!lessonId || !courseId) {
+  console.log('No lessonId or courseId provided');
+  return Astro.redirect('/external/not-found');
+}
+
+const isPreworkCourse = courseId === PREWORK_COURSE_ID;
+const isPreworkLanguageIndex = isPreworkCourse && isPreworkLanguage(lessonId);
+
+if (isPreworkCourse && !isPreworkLanguageIndex) {
+  return new Response(null, { status: 404 });
+}
+
+const isMainCourse = courseId === MAIN_COURSE_ID;
+const isMainCourseLanguageIndex = isMainCourse && isMainCourseLanguage(lessonId);
+
+if (isMainCourse && !isMainCourseLanguageIndex) {
+  return new Response(null, { status: 404 });
+}
+
+// Auth check - verify external auth token and membership
+const authResult = await verifyExternalAuth(Astro.cookies, courseId, env);
+if (!authResult.isAuthenticated) {
+  return Astro.redirect(buildExternalCourseLoginUrl(courseId, Astro.url.pathname));
+}
+
+let courseName = '';
+let preworkLessons: Awaited<ReturnType<typeof getPreworkLessons>> = [];
+let preworkCopy:
+  | {
+      title: string;
+      description: string;
+      lessonCount: string;
+      empty: string;
+      quizTitle: string;
+      quizDescription: string;
+      quizCta: string;
+      quizCompletedTitle: string;
+      quizCompletedDescription: string;
+      quizCompletedCta: string;
+    }
+  | null = null;
+let hasCompletedQuiz = false;
+
+let lesson: LessonEntry | null = null;
+let tocHeadings: TocItem[] = [];
+let structure: Awaited<ReturnType<typeof getCourseStructure>> | null = null;
+let prevLessonId: number | string | null = null;
+let nextLessonId: number | string | null = null;
+let checklists: Awaited<ReturnType<typeof getChecklistsForCourse>> = [];
+let slugifiedName = '';
+let lessonProgress: Awaited<ReturnType<typeof loadLessonProgressForCourse>> = null;
+
+let mainCourseStructure: Awaited<ReturnType<typeof getExternalMarkdownCourseStructure>> = null;
+let mainCourseLessonsBySection: ReturnType<typeof groupLessonsBySection> | null = null;
+
+if (isMainCourseLanguageIndex) {
+  courseName = getCourseDisplayName(courseId);
+  mainCourseStructure = await getExternalMarkdownCourseStructure(
+    courseId,
+    lessonId as 'pl' | 'en',
+  );
+  if (mainCourseStructure) {
+    mainCourseLessonsBySection = groupLessonsBySection(mainCourseStructure);
+  }
+} else if (isPreworkLanguageIndex) {
+  const config = getExternalAuthConfig(courseId);
+  if (!config) {
+    return Astro.redirect('/external/not-found');
+  }
+
+  courseName = getCourseDisplayName(courseId);
+  [preworkLessons, hasCompletedQuiz] = await Promise.all([
+    getPreworkLessons(lessonId),
+    hasCompletedPreworkPathQuiz(authResult.email, lessonId, env),
+  ]);
+  preworkCopy = {
+    pl: {
+      title: 'Prework',
+      description: formatPreworkLessonCount(preworkLessons.length, 'pl'),
+      lessonCount: formatPreworkLessonCount(preworkLessons.length, 'pl'),
+      empty: 'Brak lekcji w tej wersji jezykowej.',
+      quizTitle: 'Zbuduj swoją agendę preworku',
+      quizDescription: 'Rozwiąż krótki quiz i zobacz rekomendowane lekcje oraz sekcje.',
+      quizCta: 'Rozwiąż quiz',
+      quizCompletedTitle: 'Twoja agenda preworku',
+      quizCompletedDescription: 'Wróć do zapisanych rekomendacji albo rozwiąż quiz ponownie.',
+      quizCompletedCta: 'Zobacz agendę',
+    },
+    en: {
+      title: 'Prework',
+      description: formatPreworkLessonCount(preworkLessons.length, 'en'),
+      lessonCount: formatPreworkLessonCount(preworkLessons.length, 'en'),
+      empty: 'No lessons are available in this language yet.',
+      quizTitle: 'Build your prework agenda',
+      quizDescription: 'Take a short diagnostic quiz and see recommended lessons and sections.',
+      quizCta: 'Take the quiz',
+      quizCompletedTitle: 'Your prework agenda',
+      quizCompletedDescription: 'Return to your saved recommendations or take the quiz again.',
+      quizCompletedCta: 'View agenda',
+    },
+  }[lessonId];
+} else {
+  if (!isAccessAllowed(Number(lessonId))) {
+    return Astro.redirect('/external/locked');
+  }
+
+  try {
+    const lessonData = await getExternalCourseLessonContent(courseId, lessonId, env);
+    lesson = lessonData.lesson;
+    tocHeadings = lessonData.headings;
+    structure =
+      lessonData.source === 'circle'
+        ? await getCourseStructure(courseId, env)
+        : await getExternalMarkdownCourseStructure(courseId);
+  } catch (error) {
+    console.error('Failed to fetch lesson content:', error);
+    return Astro.redirect('/external/not-found');
+  }
+
+  if (!structure) {
+    return Astro.redirect('/external/not-found');
+  }
+
+  const adjacentLessons = findAdjacentLessons(structure, Number(lessonId));
+  prevLessonId = adjacentLessons.prevLessonId;
+  nextLessonId = adjacentLessons.nextLessonId;
+  checklists = await getChecklistsForCourse(courseId);
+  slugifiedName = slugify(lesson.data.name);
+  lessonProgress = await loadLessonProgressForCourse({
+    email: authResult.email,
+    courseSlug: courseId,
+    language: null,
+    env,
+  });
+}
+---
+
+{
+  isPreworkLanguageIndex && preworkCopy ? (
+    <Layout>
+      <div class="min-h-screen flex flex-col bg-gray-900">
+        <AccountStrip
+          email={authResult.email!}
+          firstName={authResult.firstName}
+          lastName={authResult.lastName}
+          avatarUrl={authResult.avatarUrl}
+          courseName={courseName}
+        />
+
+        <main class="flex-1 overflow-y-auto">
+          <div class="max-w-4xl mx-auto px-4 py-8">
+            <div class="mb-8">
+              <h1 class="text-3xl font-bold text-white mb-2">{courseName}</h1>
+              <p class="text-gray-400">{preworkCopy.lessonCount}</p>
+            </div>
+
+            <a
+              href={`/external/${courseId}/${lessonId}/quiz`}
+              class="mb-6 block rounded-lg border border-blue-500/40 bg-blue-950/30 p-5 transition hover:border-blue-400 hover:bg-blue-950/50"
+            >
+              <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h2 class="text-lg font-semibold text-white">
+                    {hasCompletedQuiz ? preworkCopy.quizCompletedTitle : preworkCopy.quizTitle}
+                  </h2>
+                  <p class="mt-1 text-sm text-blue-100/80">
+                    {hasCompletedQuiz ? preworkCopy.quizCompletedDescription : preworkCopy.quizDescription}
+                  </p>
+                </div>
+                <span class="w-fit rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
+                  {hasCompletedQuiz ? preworkCopy.quizCompletedCta : preworkCopy.quizCta}
+                </span>
+              </div>
+            </a>
+
+            <div class="bg-gray-800 rounded-lg overflow-hidden">
+              <div class="px-4 py-3 bg-gray-700/50 border-b border-gray-600">
+                <h2 class="text-lg font-semibold text-white">{preworkCopy.title}</h2>
+                <p class="text-sm text-gray-400">{preworkCopy.description}</p>
+              </div>
+
+              {preworkLessons.length > 0 ? (
+                <ul class="divide-y divide-gray-700">
+                  {preworkLessons.map((preworkLesson, index) => (
+                    <li>
+                      <a
+                        href={`/external/${courseId}/${lessonId}/${preworkLesson.id}`}
+                        class="flex items-center gap-4 px-4 py-3 hover:bg-gray-700/50 transition-colors group"
+                      >
+                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-700 text-gray-300 text-sm font-medium group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                          {index + 1}
+                        </span>
+                        <span class="text-gray-300 group-hover:text-white transition-colors">
+                          {preworkLesson.data.name}
+                        </span>
+                        <span class="text-gray-500 group-hover:text-white ml-auto transition-colors" aria-hidden="true">
+                          &gt;
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div class="px-4 py-6 text-sm text-gray-400">{preworkCopy.empty}</div>
+              )}
+            </div>
+          </div>
+        </main>
+      </div>
+    </Layout>
+  ) : isMainCourseLanguageIndex ? (
+    <Layout>
+      <div class="min-h-screen flex flex-col bg-gray-900">
+        <AccountStrip
+          email={authResult.email!}
+          firstName={authResult.firstName}
+          lastName={authResult.lastName}
+          avatarUrl={authResult.avatarUrl}
+          courseName={courseName}
+        />
+
+        <main class="flex-1 overflow-y-auto">
+          <div class="max-w-4xl mx-auto px-4 py-8">
+            <div class="mb-8">
+              <h1 class="text-3xl font-bold text-white mb-2">{courseName}</h1>
+              <p class="text-gray-400">
+                {mainCourseStructure?.lessons.length ?? 0}{' '}{lessonId === 'en' ? 'lessons' : 'lekcji'}
+              </p>
+            </div>
+
+            {mainCourseStructure && mainCourseLessonsBySection ? (
+              <div class="space-y-6">
+                {Array.from(mainCourseLessonsBySection.values()).map(({ section, lessons: sectionLessons }) => (
+                  <div class="bg-gray-800 rounded-lg overflow-hidden">
+                    <div class="px-4 py-3 bg-gray-700/50 border-b border-gray-600">
+                      <h2 class="text-lg font-semibold text-white">{section.name}</h2>
+                      <p class="text-sm text-gray-400">
+                        {sectionLessons.length}{' '}{lessonId === 'en' ? 'lessons' : 'lekcji'}
+                      </p>
+                    </div>
+                    <ul class="divide-y divide-gray-700">
+                      {sectionLessons.map((sectionLesson, index) => (
+                        <li>
+                          <a
+                            href={`/external/${courseId}/${lessonId}/${sectionLesson.id}`}
+                            class="flex items-center gap-4 px-4 py-3 hover:bg-gray-700/50 transition-colors group"
+                          >
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-700 text-gray-300 text-sm font-medium group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                              {index + 1}
+                            </span>
+                            <span class="text-gray-300 group-hover:text-white transition-colors">
+                              {sectionLesson.name}
+                            </span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 text-gray-500 group-hover:text-white ml-auto transition-colors"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div class="bg-gray-800 rounded-lg overflow-hidden px-4 py-6 text-sm text-gray-400">
+                {lessonId === 'en' ? 'No lessons are available in this language yet.' : 'Brak lekcji w tej wersji językowej.'}
+              </div>
+            )}
+          </div>
+        </main>
+      </div>
+    </Layout>
+  ) : lesson && structure ? (
+    <ExternalLessonLayout
+      courseId={courseId}
+      lessonName={lesson.data.name}
+      lessons={structure.lessons}
+      sections={structure.sections}
+      activeLessonId={Number(lessonId)}
+      prevLessonId={prevLessonId}
+      nextLessonId={nextLessonId}
+      checklists={checklists}
+      tocHeadings={tocHeadings}
+      tocStorageKey="toc-widget-open"
+      lessonProgress={lessonProgress}
+      progressLanguage={null}
+    >
+      <div class="p-4 md:p-8">
+        <div class="lesson-surface rounded-xl shadow max-w-7xl mx-auto">
+          <div class="lesson-prose prose prose-invert mx-auto max-w-[800px] space-y-8 py-6 md:py-8">
+            <h1 class="text-4xl font-bold">{lesson.data.name}</h1>
+
+            <div class="not-prose">
+              <MarkdownDownloadButton
+                markdownUrl={`/external/${courseId}/${lessonId}/markdown`}
+                slugifiedName={slugifiedName}
+                buttonText="Pobierz Markdown"
+                ariaLabel="Pobierz lekcję w formacie Markdown"
+              />
+            </div>
+
+            <LessonCompletionControls
+              courseSlug={courseId}
+              language={null}
+              lessonId={lessonId}
+              lessonName={lesson.data.name}
+              lessonProgress={lessonProgress}
+            />
+
+            <div set:html={lesson.data.content} />
+
+            <LessonCompletionControls
+              courseSlug={courseId}
+              language={null}
+              lessonId={lessonId}
+              lessonName={lesson.data.name}
+              lessonProgress={lessonProgress}
+              class="not-prose border-t lesson-divider pt-6"
+            />
+          </div>
+        </div>
+      </div>
+    </ExternalLessonLayout>
+  ) : null
+}

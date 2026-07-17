@@ -1,0 +1,6 @@
+{apps,libs}/**/dist
+{apps,libs}/**/.vercel
+apps/edu-platform/public/game/maps
+node_modules
+.github
+.vercel

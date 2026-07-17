@@ -1,0 +1,239 @@
+<meta name="lesson-id" content="Tajniki kompilatora TypeScript"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>W tej lekcji dowiesz się więcej o samym procesie transpilacji, czyli konwersji kodu TypeScript na JavaScript, czasami nazywanym <em>kompilacją.</em></p><blockquote><p><em>Transpilacja</em> to proces, w którym kod źródłowy napisany w jednym języku programowania jest przekształcany na kod źródłowy w innym języku, na podobnym poziomie abstrakcji. Jako, że narzędzia ekosystemu TypeScript, takie jak tsc, mają w sobie coś z kompilacji (np. analiza kodu, sprawdzanie typów), terminów <em>transpilacja i kompilacja </em>będziemy używać zamiennie.</p></blockquote><p>Zakładamy, że na tym etapie masz zainstalowanego TypeScriptu na jeden z opisywanych wcześniej sposobów. Jeśli korzystasz z instalacji globalnej, kompilator będzie dostępny bezpośrednio w konsoli:</p><pre><code>tsc</code></pre><p>W przypadku rekomendowanej przez nas instalacji lokalnej powinieneś utworzyć nowy projekt (<em>npm init</em>), zainstalować TypeScript jako <em>devDependency</em> i dodać&nbsp;pomocniczy skrypt w package.json:</p><pre><code>"scripts": {
+  "tsc": "tsc"
+}</code></pre><p>Zobacz jak rozpocząć pracę z kompilatorem:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1033902922?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2>Ważne aspekty konfiguracji</h2><p>Poniżej przedstawiamy najważniejsze elementy konfiguracji i to, jak poszczególne ustawienia przekładają się na rezultat w postaci kodu JavaScript. Pola, które wcześniej omówiliśmy na filmie, możesz pominąć na rzecz tych mniej popularnych, które również znajdują się w poniższej sekcji.</p><h3>Pliki wejściowe</h3><p>Dwa najważniejsze pola, które decydują o kompilowaniu właściwych plików, to <em>include</em> oraz <em>exclude - </em>umieszczamy je na głównym poziomie konfiguracji:</p><pre><code>{
+  "include": ["*.ts", "src/**/*.ts"],
+  "exclude": ["node_modules"]
+}</code></pre><p>W pierwszym z nich możemy podać listę ścieżek z tzw. <em>wildcardami</em>, do miejsc, gdzie znajdują się pliki TypeScript, a w drugim - jak łatwo się domyślić - możemy określić foldery wyłączone z całego procesu. </p><h3>Pliki wyjściowe</h3><p>Po wybraniu odpowiednich plików czas na decyzję o tym, gdzie umieścić efekt kompilacji projektu.</p><p>Docelowy JavaScript może być tworzony w kilku miejscach:</p><ul><li><p>obok źródłowych plików .ts (ustawienie domyślne)</p></li></ul><ul><li><p>we wskazanym folderze, gdzie każdy plik .ts ma odpowiednika w postaci pliku .js:</p></li></ul><pre><code>{
+  "compilerOptions": {
+    ...
+    "outDir": "./dist",
+    ...
+  }
+}</code></pre><ul><li><p>w jednym pliku, gdzie znajdzie się połączona zawartość plików źródłowych (po konwersji na JS):</p></li></ul><pre><code>{
+  "compilerOptions": {
+    ...
+    "outFile": "./dist/bundle.js",
+    ...
+  }
+}</code></pre><p><em>(Zwróć uwagę, że w przeciwieństwie do poprzedniej sekcji, oba ustawienia są zagnieżdżone w obiekcie compilerOptions)</em></p><p>Która opcja jest preferowana? Na potrzeby nauki języka i własnych eksperymentów, prawdopodobnie .js umieszczany obok .ts, jako odrębny plik, pozwoli ci łatwiej analizować proces kompilacji (a więc <em>outDir</em> lub zachowanie domyślne, bez tych pól).</p><p>W kontekście budowania całych aplikacji, ta kwestia wygląda nieco inaczej. W rozwiązaniach produkcyjnych, kiedy obok TypeScriptu korzystamy z bundlerów takich jak Vite, Parcel czy Webpack, ścieżki docelowej nie konfigurujemy na poziomie <em>tsconfig.json</em>. To nie sam kompilator tsc, a właśnie wspomniane bundlery umieszczają docelowe pliki w określonym miejscu i to ich konfiguracja jest w tym względzie priorytetowa.</p><h3>Ustawienia kompilacji</h3><p>Powyższe sekcje służą do zarządzania fizycznymi plikami i folderami biorącymi udział w kompilacji, ale nie wpływają na same transformacje kodu. Ten proces skonfigurujesz z wykorzystaniem sekcji “<strong>compilerOptions</strong>”.</p><p>Przejdźmy teraz przez najważniejsze pola wspomnianej sekcji żeby zrozumieć różne warianty ustawień procesu kompilacji i ich wpływ na wyprodukowany kod JavaScript. Na początku skupimy się na tych polach, które są niezależne od stylu czy nawyków programisty - w kolejnych lekcjach rozbudujemy konfigurację o nowe ustawienia, które możesz stosować zgodnie z twoimi preferencjami.</p><p><strong>👉 target</strong></p><p>Pole target decyduje o kompatybilności docelowego JavaScriptu z określoną wersją standardu ECMAScript (a tym samym - o zgodności z przeglądarkami użytkowników).</p><p>Zobaczmy, jak wygląda efekt kompilacji poniższej klasy:</p><pre><code>class Person {
+  constructor(public name: string, public age: number) {}
+}</code></pre><p>Bez ustawionego pola “target”, zastosowanie ma wartość domyślna, czyli ES3 - w obecnych czasach kod może być niepotrzebnie “uwsteczniony” względem dzisiejszych możliwości JavaScriptu, co najlepiej widać po konwersji klasy na funkcję oraz zastosowaniu IIFE:</p><pre><code>var Person = /** @class */ (function () {
+    function Person(name, age) {
+        this.name = name;
+        this.age = age;
+        this.id = Math.random();
+    }
+    return Person;
+}());</code></pre><p>Z wartością “ES2015/ES6” uzyskujemy m.in. natywne wsparcie dla klas - na dzisiaj <strong>jest to rekomendowane ustawienie</strong>, wspierane obecnie przez wszystkie nowoczesne przeglądarki. Kod jest bardziej czytelny i zdecydowanie prostszy w interpretacji, jednak w szczególnych warunkach (starsze środowiska) może nie być obsługiwany poprawnie:</p><pre><code>class Person {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+}</code></pre><p>Z wartością “ESNext” możemy obserwować brzegowe możliwości nowoczesnego JavaScriptu, w tym chociażby dedykowane pola w klasach wprowadzone w 2022r. Niestety, w tym wariancie kod wynikowy jest najmniej stabilny:</p><pre><code>class Person {
+    name;
+    age;
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+}</code></pre><p>👉 ESNext to ustawienie specjalne, które na przestrzeni kolejnych wersji TypeScriptu może dawać inne rezultaty kompilacji (na skutek ciągłej ewolucji ECMAScript). Jeśli nie korzystasz z dodatkowych narzędzi zapewniających kompatybilność kodu takich jak Vite, Rollup czy Babel, ustawienie “ESNext” nie jest rekomendowane i w wybranych przeglądarkach może generować błędy.</p><p>Co ciekawe, w niektórych sytuacjach “<strong>target</strong>” nie może być ustawiony zbyt nisko. Przykładowo, kiedy do naszej klasy wprowadzimy pola prywatne (w rozumieniu JavaScriptu), to kompilator nie pozwoli nam wygenerować kodu w standardzie bez tego elementu:</p><pre><code>class Person {
+  #id;
+  constructor(public name: string, public age: number) {
+    this.#id = Math.random();
+  }
+
+  identify() {
+    console.log(this.#id);
+  }
+}</code></pre><p>Dla ustawienia “ES5” otrzymamy błąd:</p><pre><code>TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher</code></pre><p>Skąd ten błąd? Kompilator, interpretując pole “mocno prywatne”, wg standardu ECMAScript (z hashem), musi wygenerować klasę o podobnej konfiguracji jak plik źródłowy. Aby w JavaScripcie otrzymać prawdziwie prywatne pole, możemy:</p><ul><li><p>stosować wyższy standard języka, gdzie ta opcja po prostu istnieje</p></li><li><p>lub wykorzystywać struktury pomocnicze, przez które otrzymamy podobny efekt. </p></li></ul><p>Kompilator TypeScript wykorzystuje do tego celu obiekt <em>WeakMap,</em> wprowadzony w ES2015, a na niższy standard po prostu nie zezwala (poniżej efekt kompilacji):</p><pre><code>var __classPrivateFieldSet = (this &amp;&amp; this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" &amp;&amp; !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+};
+var __classPrivateFieldGet = (this &amp;&amp; this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" &amp;&amp; !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+var _Person_id;
+class Person {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+        _Person_id.set(this, void 0);
+        __classPrivateFieldSet(this, _Person_id, Math.random(), "f");
+    }
+    identify() {
+        console.log(__classPrivateFieldGet(this, _Person_id, "f"));
+    }
+}
+_Person_id = new WeakMap();
+</code></pre><p><strong>👉 lib</strong></p><p>Pole “lib” wpływa na zestaw dostępnych deklaracji typów, z których możemy korzystać rozwijając kod TypeScript w naszym edytorze. Będzie ono wpływać na takie aspekty pracy z TypeScriptem jak podpowiadanie składni, informowanie o błędach lub sugerowanie bardziej precyzyjnego posługiwania się typami.</p><p>Domyślnie, wartość tego pola jest kopią ustawienia z pola “target” i nie musimy jej ustawiać ręcznie - w końcu chcemy widzieć podpowiedzi takich metod, funkcji czy obiektów, jakie finalnie wspiera docelowy JavaScript:</p><pre><code>{
+  "compilerOptions": {
+    "target": "ES2015",
+    "lib": ["ES2015"]
+  }
+}</code></pre><p>Kiedy w takiej konfiguracji spróbujemy skorzystać z funkcji <em>toSorted</em>, wprowadzonej w ECMAScript2023, w edytorze (jeszcze przed wykonaniem kompilacji) zobaczymy błąd - ta metoda nie jest dostępna:</p><pre><code>const names = ['John', 'Jane', 'Doe'];
+
+names.toSorted
+          // ^ Property 'toSorted' does not exist on type 'string[]'.ts(2339)</code></pre><p>Może się jednak zdarzyć, że takie nowoczesne funkcje chcemy dostarczyć w inny sposób - być może mamy polyfille, o których TypeScript nie wie, albo zestaw dodatkowych bibliotek, które w runtime rozszerzają obiekty wbudowane. Wtedy - na własną odpowiedzialność - możemy oba te pola zmodyfikować niezależnie:</p><pre><code>{
+  "compilerOptions": {
+    "target": "ES2015",
+    "lib": ["ES2023"]
+  }
+}</code></pre><p>Efektem kompilacji będzie nadal kod w standardzie ES2015, jednak TypeScript zacznie podpowiadać definicję nowej metody korzystając z typów standardu ES2023:</p><pre><code>const names = ['John', 'Jane', 'Doe'];
+
+names.toSorted()
+       // ^ Returns a copy of an array with its elements sorted.</code></pre><p>Co ważne - kod wynikowy nie będzie w żaden sposób zmodyfikowany i nie pojawią się&nbsp;w nim dodatkowe polyfille lub funkcje pomocnicze. TypeScript założy, że w tym momencie to my przejmujemy odpowiedzialność za dostarczenie tej funkcji do przeglądarki (lub innego środowiska):</p><pre><code>// index.js
+const names = ['John', 'Jane', 'Doe'];
+names.toSorted();</code></pre><p>W projektach, które używają dodatkowych bundlerów (np. webpack, Babel), możesz być bardziej odważny w ustawieniach pól “target” oraz "lib" - wspomniane narzędzia często zajmują się kompatybilnością z różnymi środowiskami i zapewnią ci dodatkowe polyfille.</p><p>Spostrzegawczy zauważą, że pole <em>lib</em> akceptuje tablicę wartości - obok standardu ECMAScript możemy tam dodać (lub świadomie pominąć - np. w projektach Node.js) wbudowane deklaracje typów, które opisują poszczególne obszary środowiska przeglądarki.</p><p>Przykładowo, aby zacząć pracę z obiektem <em>document</em> lub <em>window</em>, sekcja <em>lib</em> powinna zawierać “DOM”, zawierający typowania dla obiektów z Document Object Modelu:</p><pre><code>{
+  "compilerOptions": {
+    "target": "ES2015",
+    "lib": ["ES2023", "DOM"],
+  }
+}</code></pre><p>Jeśli z kolei pracujemy z kodem backendowym, to ten przykład można zinterpretować odwrotnie - o ile obiekty przeglądarkowe nie są nam potrzebne, to pozbycie się wpisu “DOM” może oszczędzić kilka cykli pracy kompilatora poprzez ignorowanie środowiska Document Object Modelu (wtedy pozostawiamy tylko wersję standardu ECMAScript).</p><p>Dostępne rozszerzenia znajdziesz na <a href="https://github.com/microsoft/TypeScript/tree/main/src/lib" target="_blank" rel="noopener noreferrer">repozytorium GitHub</a>.</p><p><strong>👉 module</strong></p><p>Pole "module" określa system modułów używany w wygenerowanym kodzie JavaScript. To ustawienie jest kluczowe dla określenia, w jaki sposób TypeScript przekształci importy i eksporty w twoim kodzie.</p><p>Zobaczmy, jak różne wartości tego pola wpływają na kompilację prostego modułu <em>utils.ts</em>:</p><pre><code>// utils.ts
+export const formatName = (name: string) =&gt; {
+  return name.trim().toLowerCase();
+};
+
+// index.ts
+import { formatName } from './utils';</code></pre><p>Z ustawieniem "CommonJS" (wartość domyślna dla Node.js) otrzymamy:</p><pre><code>// utils.ts
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.formatName = void 0;
+const formatName = (name) =&gt; {
+    return name.trim().toLowerCase();
+};
+exports.formatName = formatName;
+
+// index.js
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const utils_1 = require("./utils");
+console.log((0, utils_1.formatName)("John Doe"));</code></pre><p>Z kolei używając "ESNext" lub "ES2015", kod zostanie przekształcony w natywne moduły ES:</p><pre><code>// utils.js
+export const formatName = (name) =&gt; {
+    return name.trim().toLowerCase();
+};
+
+// index.js
+import { formatName } from "./utils";
+console.log(formatName("John Doe"));
+</code></pre><p>Wybór odpowiedniej wartości zależy od środowiska, w którym kod będzie uruchamiany:</p><ul><li><p>"CommonJS" - standardowy wybór dla aplikacji Node.js</p></li><li><p>"ES2015"/"ESNext" - dla nowoczesnych przeglądarek i narzędzi bundlujących</p></li><li><p>"UMD" - dla bibliotek, które mają działać zarówno w przeglądarce jak i Node.js</p></li><li><p>"AMD" - dla starszych aplikacji korzystających z RequireJS (na dziś rzadko spotykane)</p></li></ul><p>W kontekście posługiwania się modułami warto jeszcze wspomnieć o trzech ustawieniach, które starają się&nbsp;zapewniać maksymalną kompatybilność pomiędzy różnymi formatami importów, eksportów i wykorzystywanych zależności:</p><ul><li><p><strong>allowSyntheticDefaultImports - </strong>Umożliwia importowanie modułów w stylu ES6, nawet jeśli moduły te nie mają eksportów domyślnych. Może być przydatne w sytuacjach, kiedy zależności projektu nie są w pełni kompatybilne z ES6, ale chcemy korzystać z bardziej przejrzystej składni import x from 'module'.</p></li></ul><pre><code>// allowSyntheticDefaultImports: false
+import * as React from "react";
+
+// allowSyntheticDefaultImports: true
+import React from "react";</code></pre><ul><li><p><strong>esModuleInterop - </strong>To ustawienie rozszerza działanie pola <strong>allowSyntheticDefaultImports </strong>dodając tę&nbsp;samą funkcjonalność, a także kod, który zwiększa kompatybilność między modułami CJS i ES6.</p></li></ul><ul><li><p><strong>verbatimModuleSyntax - </strong>To pole wprowadzone w TypeScript 5.0, które wymusza na nas bardziej precyzyjne określanie zawartości modułów, którymi posługujemy się w kodzie. Zanim go włączymy, możemy przetestować kompilację dwóch plików, gdzie jeden z nich zawiera wyłącznie typ, bez dodatkowej logiki (Person), a drugi stosuje importowany typ na nowym obiekcie:</p></li></ul><pre><code>// utils.ts
+export type Person = {
+  name: string;
+  age: number;
+};
+
+// index.ts
+import {Person} from "./utils";
+
+const person: Person = {
+  name: "John Doe",
+  age: 20,
+};
+
+console.log(person);</code></pre><p>W trakcie kompilacji, TypeScript zastosuje tutaj tzw. mechanizm <em>module elision</em> - mechanizm ten optymalizuje zbędne importy/eksporty usuwając je z wynikowego JavaScriptu. Poniżej widać, że wynikowy <em>index.js </em>nie zawiera już&nbsp;referencji do modułu <em>utils (zawierał wyłącznie typ Person, więc został oceniony jako zbędny):</em></p><pre><code>// index.js
+const person = {
+    name: "John Doe",
+    age: 20,
+};
+console.log(person);
+export {};</code></pre><p>Pole “<strong>verbatimModuleSyntax” </strong>zostało wprowadzone aby ten mechanizm optymalizacji importów stał się jawny. Po jego włączeniu TypeScript informuje nas, że <em>Person </em>musimy zaimportować jako typ…</p><pre><code>import type {Person} from "./utils";</code></pre><p>…a typy - z definicji - będą usunięte z docelowego JavaScriptu. Wspomniane ustawienie sprawia, że moduły eksportujące typy będą optymalizowane w bardziej przejrzysty sposób.</p><p><strong>👉 strict</strong></p><p>Włączenie flagi <em>strict</em> skutkuje przejściem na bardziej rygorystyczne reguły sprawdzania typów i bardziej świadome posługiwanie się dostępnymi funkcjami, obiektami czy strukturami w projekcie. Jest to rodzina ustawień, które w łatwy sposób możemy aktywować jednym polem:</p><pre><code>{
+  "compilerOptions": {
+    "strict": true
+  }
+}</code></pre><p>Efektem włączenia trybu ścisłego jest rygorystyczna analiza kodu, która wychwytuje potencjalne błędy już na etapie kompilacji. Przykładowo, bez trybu <em>strict</em>, zmienna <em>shortName </em>będzie uznana za <em>string,</em> ale już w przypadku typu ścisłego, będzie to <em>“string | undefined”</em>:</p><pre><code>const names = ['John', 'Jane', 'Doe'];
+const shortName = names.find((name) =&gt; name.length === 2);</code></pre><p>W trybie ścisłym kompilator wymusi na nas obsługę przypadku, w którym funkcja <em>find</em> nie znajduje żadnego elementu - inaczej moglibyśmy ten błąd wykryć dopiero na etapie działania naszej aplikacji.</p><p>Włączenie opcji <em>strict</em> jest jednoznaczne z włączeniem zestawu niezależnych reguł, takich jak chociażby:</p><ul><li><p>noImplicitAny - zakaz posługiwania się niejawnym typem “any” (więcej o nim w kolejnych lekcjach)</p></li><li><p>strictNullChecks - obowiązek obsługi wartości <em>null</em> i <em>undefined </em>(np. przy wyszukiwaniu elementu)</p></li><li><p>strictBindCallApply - weryfikacja parametrów metod, które wywołujemy poprzez <em>bind</em>, <em>call</em> i <em>apply</em></p></li><li><p>useUnknownInCatchVariables - obowiązek jawnej obsługi typów przy obsłudze błędów</p></li></ul><p>Jeśli uznasz, że w trybie strict rozwijanie kodu jest problematyczne (np. przy złożonych integracjach czy migracji z JavaScript na TypeScript), to każdą z reguł możesz obsłużyć w niezależny sposób:</p><pre><code>{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": false
+  }
+}</code></pre><p>Podobnie jak w przypadu <em>“target”: ESNext</em>, zakres tego, co zawiera w sobie pole <em>strict,</em> w przyszłych wersjach języka może ewoluować. Ważne jest więc świadome aktualizowanie TypeScriptu i weryfikacja zmian wprowadzanych w kolejnych wersjach języka.</p><p><strong>👉 noEmit</strong></p><p>Może się&nbsp;zdarzyć, że działanie kompilatora TypeScript będziesz chciał ograniczyć tylko do wsparcia programisty w edytorze kodu, a część odpowiedzialności wydelegujesz do innych narzędzi:</p><pre><code>{
+  "compilerOptions": {
+    "noEmit": true
+  }
+}</code></pre><p>Pole <strong>noEmit</strong> można wykorzystać wtedy, kiedy za kompilowanie produkcyjnego TypeScriptu odpowiadają dodatkowe, zainstalowane niezależnie narzędzia, takie jak Vite, swc lub rspack. Korzystając z szablonów projektowych opartych właśnie o te narzędzia (<a href="https://github.com/vitejs/vite/blob/main/packages/create-vite/template-react-ts/tsconfig.app.json#L14" target="_blank" rel="noopener noreferrer">przykład z Vite</a>), <strong>noEmit</strong> będzie najczęściej włączone, a za produkcję JavaScriptu będzie odpowiedzialny dodatkowy bundler.</p><p>W projektach prywatnych, przy prostej konfiguracji i bez dodatkowego toolingu, tego pola nie włączamy.</p><p><strong>👉 noEmitOnError</strong></p><p>Pole <strong>noEmitOnError</strong>, przyda się w produkcyjnych scenariuszach CI/CD i wyłączy domyślne ustawienie kompilatora TypeScript, który - niezależnie od błędów - stara się nie blokować twojej pracy i zawsze produkować pewną formę kodu JavaScript.</p><p>Może to prowadzić do sytuacji, w których na poziomie TypeScriptu znajdują się ewidentne błędy w kodzie, mimo tego powstaje wynikowy JavaScript, a kolejne etapy procesu budowania aplikacji zaczynają przeprowadzać wdrożenie. Aby tego uniknąć, wyłączaj produkcję JavaScriptu z błędnego TS:</p><pre><code>{
+  "compilerOptions": {
+    "noEmitOnError": true
+  }
+}</code></pre><p>Korzystaj z tego pola w świadomy sposób - w procesie debugowania lub integracji zewnętrznych bibliotek może się zdarzyć, że pozornie błędny TypeScript chcesz jednak przetestować. Tymczasowe wyłączenie tego pola może ci w tym pomóc.</p><p><strong>👉 skipLibCheck</strong></p><p>Pole <em>skipLibCheck</em> wpływa na to, czy TypeScript powinien pomijać sprawdzanie typów w tzw. plikach deklaracji (.d.ts) - są to specjalne pliki, które zawierają tylko definicje typów i interfejsów dla modułów, bez ich implementacji. Są tworzone np. na potrzeby integracji bibliotek JavaScript z systemem typów TypeScript, pozwalając na zapewnienie typowania w projektach TypeScript przy korzystaniu z zewnętrznych zależności. Dzięki temu deweloperzy mogą korzystać z typowania dla bibliotek, które same w sobie mogą nie być napisane w TypeScript, co poprawia bezpieczeństwo typów i wygodę pracy z kodem.</p><p>Gdy wspomniane pole jest ustawione na <em>true</em>, kompilator TypeScript nie będzie wykonywał pełnego sprawdzania typów, a skupi się jedynie na kodzie, który bezpośrednio kontrolujemy.</p><p>Włączenie tego pola ma sens w dwóch sytuacjach:</p><ul><li><p><strong>Optymalizacja procesu kompilacji</strong> - dla dużych projektów, korzystających z rozbudowanej listy zależności, wyłączenie type-checkingu na poziomie bibliotek może w znaczący sposób skrócić czas kompilacji kodu</p></li><li><p><strong>Sprzeczne deklaracje typów</strong> - może się zdarzyć, że dwie lub więcej bibliotek opisują tę samą zależność w inny sposób - jeśli jesteśmy pewni tego, że konflikt dotyczy wyłącznie deklaracji, a nie samego kodu, możemy sobie pozwolić na wyłączenie powiadomień o błędach:</p></li></ul><pre><code>// node_modules/lib1/index.d.ts
+declare module "shared-module" {
+  export function configureService(p1: string, p2: string, p3: number): void;
+}
+
+// node_modules/lib2/index.d.ts
+declare module "shared-module" {
+  export function configureService(config: Configuration): void;
+}
+
+// Nasz kod
+import { configureService } from "shared-module";
+
+// Pomimo rozbieżności typów, sama biblioteka rozpoznaje parametry i nadal działa poprawnie
+doSomething({ ... });</code></pre><p>Mimo korzyści płynących z użycia "skipLibCheck", należy zachować ostrożność przy jego stosowaniu. </p><p>Włączenie tej opcji może maskować rzeczywiste problemy z typami w bibliotekach, prowadząc do trudnych do wykrycia błędów w czasie wykonania. Rekomenduje się, aby używać "skipLibCheck" selektywnie i w połączeniu z innymi rygorystycznymi opcjami sprawdzania typów, takimi jak "strict" czy "noImplicitAny".</p><p>Warto również rozważyć okresowe wyłączanie tej opcji podczas rozwoju projektu, aby wychwycić potencjalne problemy z typami. Pamiętaj, że najlepszym długoterminowym rozwiązaniem jest aktualizacja lub naprawa niespójnych definicji typów, zamiast ich pomijania.</p><p><strong>👉 allowJs / checkJs</strong></p><p>To dwa ważne pola, które umożliwiają stopniową integrację TypeScriptu z istniejącymi projektami JavaScript. Pierwsze z nich (<em>allowJs</em>) umożliwia importowanie kodu JS do istniejących modułów TS, a drugie (<em>checkJs</em>) pozwala kompilatorowi <em>tsc </em>na wykonywanie oceny jakości na poziomie plików JavaScript. Oba ustawienia mogą się okazać kluczowe w projektach legacy, gdzie nie ma mowy o przepisaniu całego projektu, ale stopniowe wprowadzanie TSa może podnosić ich jakość.</p><p>Do obu ustawień wrócimy w lekcji poświęconej migracji projektów do TypeScriptu.</p><h3>Łatwy sposób na domyślną konfigurację</h3><p>Aby utworzyć&nbsp;wstępnie wypełniony plik konfiguracyjny, a tym samym uzyskać standardowy zestaw reguł do kompilacji TypeScriptu, w projekcie możesz wywołać komendę:</p><pre><code>tsc --init</code></pre><p>W efekcie tego polecenia utworzony zostanie plik konfiguracyjny <strong><em>tsconfig.json</em></strong>, którego zawartość będzie wpływać na proces kompilacji, wybór plików źródłowych oraz docelową lokalizację JavaScriptu.</p><p>Ustawienia z tego pliku są nieco bliższe oczekiwaniom współczesnego programisty:</p><ul><li><p>target: es2016</p></li><li><p>module: commonjs</p></li><li><p>strict: true</p></li><li><p>esModuleInterop: true</p></li><li><p>skipLibCheck: true</p></li><li><p>forceConsistentCasingInFileNames: true</p></li></ul><p><strong>👉 Ważne:</strong> Kompilator TypeScript, uruchomiony z dodatkowymi parametrami (np. nazwą pliku wejściowego), traktuje te parametry z najwyższym priorytetem, <strong>a samą&nbsp;konfigurację ignoruje</strong>. </p><pre><code>tsc index.ts</code></pre><p>Warto o tym pamiętać - czasami pójście na skróty w postaci przekazania nazwy pliku skutkuje bólem głowy i pozornymi błędami kompilacji, która działa inaczej niż oczekujemy.</p><p>Jeśli chcemy skorzystać z ustawień pliku <em>tsconfig.json</em>, musimy wykonać polecenie:</p><pre><code>tsc
+
+# lub
+
+tsc --project {path_to_tsconfig}</code></pre><p>Przeprowadzenie kompilacji w ten sposób sprawi, że kompilator sam wyszuka plik tsconfig.json i wykona swoją pracę na jego podstawie.</p><h2>Dodatkowe rozszerzenia konfiguracji</h2><p>Oprócz podstawowych ustawień kompilacji, TypeScript oferuje zaawansowane możliwości konfiguracji, które pozwalają na lepsze dostosowanie środowiska pracy do potrzeb projektu. W tej sekcji omówimy trzy ważne rozszerzenia: łączenie konfiguracji, aliasy ścieżek oraz konfiguracje zewnętrzne.</p><h3>Dziedziczenie ustawień</h3><p>TypeScript umożliwia łączenie wielu plików konfiguracyjnych, co jest szczególnie przydatne w przypadku dużych projektów z różnymi wariantami ustawień. Typowymi scenariuszami dla rozszerzania konfiguracji są:</p><ul><li><p>oddzielne projekty frontendowe i backendowe rozwijane w ramach jednego repozytorium</p></li><li><p>oddzielne konfiguracje dla kodu aplikacji i kodu testowego</p></li><li><p>oddzielne konfiguracje dla kodu rozwijanego od zera oraz kodu migrowanego z JavaScript</p></li></ul><p>Aby dziedziczyć ustawienia z innego pliku konfiguracyjnego, wykorzystaj pole <em>extends</em> w pliku tsconfig.json:</p><pre><code>// tsconfig.base.json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "strict": true
+  }
+}
+
+// tsconfig.test.json
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noImplicitAny": false
+  },
+  "include": ["test/**/*.ts"]
+}</code></pre><p>W tym przypadku, konfiguracja testowa dziedziczy wszystkie ustawienia z pliku bazowego, ale wyłącza noImplicitAny dla większej elastyczności w pisaniu testów.</p><h3>Konfiguracje zewnętrzne</h3><p>Poza dziedziczeniem konfiguracji w obrębie projektu, pole <em>extends</em> można również wykorzystać do pobierania konfiguracji z zewnętrznych bibliotek i frameworków. Jednym z przykładów jest chociażby Astro, które oferuje nam własny <em>tsconfig.json </em>i stosuje go w projektach tworzonych z Astro CLI:</p><pre><code>{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": { ... }
+}</code></pre><p>Jeśli zajrzymy nieco głębiej, w folderze Astro znajdziemy aż trzy warianty konfiguracji:</p><pre><code>node_modules
+└── astro
+    └── tsconfigs
+        └── base.json
+        └── strict.json
+        └── strictest.json</code></pre><p>Każda z tych konfiguracji to inny poziom elastyczności i swobody korzystania z TypeScriptu.</p><p>Przykładowo, poza konfiguracją bazową, mamy jeszcze niezależny wariant z trybem <em>strict:</em></p><pre><code>{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "strict": true
+  }
+}</code></pre><p>…a także konfigurację rozbudowaną o dodatkowe reguły, jeszcze bardziej standaryzujące całe środowisko pracy:</p><pre><code>{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./strict.json",
+  "compilerOptions": {
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false
+  }
+}</code></pre><p>Jeśli zdarzyło ci się pracować w środowisku, gdzie zespoły zaczynają tracić kontrolę nad standardem rozwijania projektów TypeScript, jednolita konfiguracja może być rozwiązaniem tego problemu.</p><p>Możesz ją dostarczać chociażby poprzez współdzieloną bibliotekę, którą doda do swoich aplikacji każdy zespół i na żądanie będzie rozszerzał bazowe reguły ustalone na poziomie organizacji.</p><h3>Bezpieczne startery</h3><p>Jeśli chcesz korzystać z bazowych konfiguracji rozwijanych przez społeczność TypeScript, to zapoznaj się z bibliotekami z serii @tsconfig/bases:</p><p><a href="https://github.com/tsconfig/bases" target="_blank" rel="noopener noreferrer">https://github.com/tsconfig/bases</a></p><p>Konfigurację dopasowaną do twojego środowiska instalujesz tak jak bibliotekę, np.:</p><pre><code>npm install @tsconfig/node20 -DE</code></pre><p>Po instalacji możesz z niej korzystać dzięki właściwości “extends” (w razie potrzeby nadpisując poszczególne pola):</p><pre><code>{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  // Pozostałe pola
+}</code></pre><h3>Aliasy ścieżek</h3><p>Kolejne ustawienie, które poprawia doświadczenia programisty w rozbudowanych projektach, to aliasy ścieżek. Aliasy ścieżek pozwalają na tworzenie skrótów do często używanych ścieżek w projekcie, co ułatwia importowanie modułów i poprawia czytelność kodu.</p><p>Aby skorzystać z tej opcji, dodaj dwa nowe pola w sekcji compilerOptions:</p><ul><li><p><em>baseUrl </em>- bazowa lokalizacja procesu rozwiązywania ścieżek</p></li><li><p><em>paths</em> - aliasy na poszczególne obszary projektu:</p></li></ul><pre><code>{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@utils/*": ["src/utils/*"],
+      "@components/*": ["src/components/*"]
+    }
+  }
+}</code></pre><p><strong>Praktyczny przykład</strong></p><p>Zamiast używać długich, relatywnych ścieżek:</p><pre><code>import { formatDate } from '../../../utils/date-formatter';
+import { Button } from '../../../components/Button';</code></pre><p>Możemy teraz pisać:</p><pre><code>import { formatDate } from '@utils/date-formatter';
+import { Button } from '@components/Button';</code></pre><p>W naszych projektach często używamy tego ustawienia do aliasowania typowych zestawów plików, takich jak:</p><ul><li><p>obrazki</p></li><li><p>pliki publiczne (PDFy i inne)</p></li><li><p>komponenty</p></li></ul><h2>Udany początek</h2><p>Dzięki tej lekcji zyskałeś umiejętność konfigurowania i personalizacji pliku tsconfig.json pod kątem różnych wymagań projektowych.</p><p>Potrafisz już zarządzać ustawieniami, które poprawiają kompatybilność, wydajność i bezpieczeństwo kodu TypeScript. Wprowadzenie tzw. trybu ścisłego (strict mode) i lepsze zrozumienie opcji kompilatora pozwoli na pisanie bardziej niezawodnego, czytelnego i łatwiejszego do utrzymania kodu, a także zapobiegnie błędom, które mógłbyś nieświadomie wprowadzić do projektu.</p><p>Kolejne aspekty procesu kompilacji poznasz w dalszej części szkolenia - tym razem już od strony praktycznej, poprzez implementację kodu TypeScript. Zaczniemy od zrozumienia systemu typów, czyli tego, co realnie decyduje o potencjale omawianego języka.</p><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>121-compiler-strict</strong> - Zostałeś poproszony o naprawę modułu do zarządzania użytkownikami. W projekcie wdrożono ścisłą weryfikację typów i kod przestał się kompilować. Twoim zadaniem jest umożliwienie kompilacji bez wprowadzania funkcjonalnych zmian do systemu.</p></li><li><p><strong>122-compiler-misconfigured </strong>- pracujesz nad nowoczesnym projektem, który pozwala na wykorzystywanie najnowszych funkcji JavaScript i TypeScript. Niestety zastany plik konfiguracyjny 001-compiler-misconfigured/tsconfig.json nie jest dostosowany do potrzeb projektu i powoduje niepotrzebne błędy kompilacji. Dostosuj plik konfiguracyjny, aby pozbyć się błędów kompilacji.</p></li></ol><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

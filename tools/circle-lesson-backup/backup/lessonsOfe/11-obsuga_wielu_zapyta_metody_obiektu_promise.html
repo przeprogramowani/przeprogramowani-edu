@@ -1,0 +1,71 @@
+<meta name="lesson-id" content="Obsługa wielu zapytań - metody obiektu Promise"><html><head></head><body><div><img loading="lazy" src="https://assets-v3.circle.so/9zq7ryq3lavgamcg7exraivdpqsj" style="width: 100%; max-width: 100%;"><img loading="lazy" src="https://assets-v2.circle.so/279zq7sk20vd0dclap4bmi4r5br8" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>Często zdarza się, że aplikacja frontendowa będzie pobierać niezbędne dane z wielu różnych źródeł. O ile w mniejszych projektach takim źródłem będzie pojedyncze API, to w dużym zespole serwisów backendowych może być dwa lub więcej.</p><p>Jak w takich sytuacjach poradzić sobie z kontrolą asynchroniczności?</p><h2>Metody obiektu Promise</h2><p>JavaScript dostarcza szereg wbudowanych metod w obiekt Promise, które pozwalają zarządzać wieloma asynchronicznymi operacjami. W tym podrozdziale omówimy najważniejsze z tych metod, w tym:</p><ul><li><p>Promise.any</p></li><li><p>Promise.all</p></li><li><p>Promise.allSettled</p></li><li><p>Promise.race</p></li><li><p>Metody pomocnicze Promise.resolve i Promise.reject</p></li></ul><h3>Promise.any</h3><p><em>Promise.any</em> pozwala na wykonanie wielu równoległych zapytań i pobranie wyników tego, które ukończyło się w najkrótszym czasie.</p><p>Ta funkcja może być&nbsp;przydatna wtedy, kiedy tę samą porcję danych zwracają dwa lub więcej serwisów, a nam zależy na uzyskaniu odpowiedzi z dowolnego z nich, przy jednoczesnym zabezpieczeniu na ewentualne awarie lub niedostępność danych. </p><p>Promise zostanie odrzucony kiedy wszystkie przekazane funkcje zwrócą błąd.</p><pre><code>const articlesPrimary = fetch('https://api.primary.com/articles');
+const articlesSecondary = fetch('https://api.secondary.com/articles');
+
+Promise.any([articlesPrimary, articlesSecondary])
+  .then(response =&gt; response.json())
+  .then(data =&gt; {
+    // Źródło artykułów jest od teraz nieistotne
+    console.log('Artykuły:', data);
+  })
+  .catch(error =&gt; {
+    // Dwa zapytania ukończone błędem
+    console.error('Wystąpił błąd:', error);
+  });</code></pre><h3>Promise.all</h3><p><em>Promise.all</em>, podobnie jak <em>Promise.any</em>, pomoże nam wykonać kilka równoległych zapytań, ale tutaj Promise zostanie rozwiązany z tablicą wszystkich wyników, a nie jednym z nich.</p><p>Plusem tej metody jest łatwe synchronizowanie wielu zapytań i wykonanie dalszej części kodu wtedy, kiedy całość rozproszonych danych znajdzie się&nbsp;po stronie klienta. Znaczącym minusem jest zależność czasowa na najwolniejsze z zapytań - jeśli na trzy zapytania dwa są ukończone w sekundę, a na trzecie czekamy dziesięć sekund, <em>Promise.all</em> zostanie rozwiązany dopiero po dziesięciu sekundach.</p><p>Obsługa błędów sprowadza się do wyniku każdego z zapytań - jeśli dowolne zostanie odrzucone, wtedy całość <em>Promise.all</em> jest również odrzucana.</p><pre><code>const configData = fetch('https://api.example.com/config');
+const userData = fetch('https://api.example.com/user');
+const appData = fetch('https://api.example.com/appData');
+
+Promise.all([configData, userData, appData])
+  .then(responses =&gt; Promise.all(responses.map(response =&gt; response.json())))
+  .then(([config, user, app]) =&gt; {
+    // Inicjalizacja aplikacji z pobranymi danymi
+  })
+  .catch(error =&gt; {
+    // Obsługa błędów
+  });</code></pre><h3>Promise.allSettled</h3><p><em>Promise.allSettled</em> działa podobnie do <em>Promise.all</em>, ale zwraca wyniki wszystkich promise’ów, niezależnie od tego, czy zostały rozwiązane, czy odrzucone. Każdy wynik zawiera status oraz wartość lub powód odrzucenia.</p><pre><code>const userData = fetch('https://api.example.com/user');
+const configData = fetch('https://api.example.com/config');
+
+Promise.allSettled([userData, configData])
+  .then(results =&gt; {
+    results.forEach(result =&gt; {
+      if (result.status === 'fulfilled') {
+        console.log('Dane:', result.value);
+      } else {
+        console.error('Błąd:', result.reason);
+      }
+    });
+  });</code></pre><p>W przypadku <em>Promise.allSettled</em> na całość operacji wpłynie czas najwolniejszego z wszystkich zapytań, co również może powodować nieoczekiwane problemy z wydajnością aplikacji (np. blokowanie pierwszego ładowania danych).</p><h3>Promise.race</h3><p><em>Promise.race </em>uruchamia “wyścig” dwóch funkcji, które zwracają promise. W przypadku zapytań, które muszą być ograniczone czasowo, aby zapewnić dobrą responsywność aplikacji, <em>Promise.race</em> jest idealnym rozwiązaniem. Można użyć go do stworzenia opisywanego wcześniej mechanizmu timeoutu, gdzie zapytanie API musi zakończyć się w określonym czasie. W przeciwnym razie zostanie odrzucone i aplikacja będzie mogła podjąć inne działania.</p><pre><code>const fetchData = fetch('https://api.example.com/data');
+const timeout = new Promise((_, reject) =&gt; setTimeout(() =&gt; reject(new Error('Timeout')), 5000));
+
+Promise.race([fetchData, timeout])
+  .then(response =&gt; response.json())
+  .then(data =&gt; {
+    // Przetwarzanie danych
+  })
+  .catch(error =&gt; {
+    // Obsługa błędów, np. pokazanie komunikatu o przekroczeniu czasu
+  });</code></pre><h3>Promise.resolve i Promise.reject</h3><p>Czasami zdarza się, że obok zestawu asynchronicznych zapytań mamy statyczne dane, które chcielibyśmy przetwarzać w bardziej spójny sposób. W tym wypadku możemy się zdecydować. na <em>Promise.resolve </em>i <em>Promise.reject</em> czyli funkcje, które tworzą poprawny lub odrzucony promise z konkretną wartością.</p><pre><code>// Statyczne dane konfiguracyjne aplikacji (np. w osobnym module lub wyrenderowane server-side)
+const appConfig = {
+  theme: 'dark',
+  language: 'pl',
+  version: '1.0.0'
+};
+
+// Dopasowanie konfiguracji do procesowania asynchronicznego
+const configPromise = Promise.resolve(appConfig);
+
+// Asynchroniczne zapytanie do API
+const fetchUserData = fetch('https://api.example.com/user');
+
+Promise.all([configPromise, fetchUserData])
+  .then(responses =&gt; {
+    const [config, userResponse] = responses;
+    return Promise.all([config, userResponse.json()]);
+  })
+  .then(([config, userData]) =&gt; {
+    // Przetwarzanie wszystkich danych
+    appBootstrap(config, userData);
+  })
+  .catch(error =&gt; {
+    console.error('Wystąpił błąd:', error);
+  });
+</code></pre><p>Obie metody są też&nbsp;często wykorzystywane w testach serwisów, które możemy zastąpić poprzez symulowane wartości odpowiedzi.</p><h2>Podsumowanie</h2><p>Wykorzystanie metod obiektu Promise pozwoli ci kontrolować równoległe, asynchroniczne zapytania do twojego API.</p><p>Większa kontrola nad komunikacją client-side to lepsze doświadczenia dla użytkownika, którego przeglądarka będzie mogła pobierać dane w optymalny sposób.</p><p>Pamiętaj o przedstawionych tutaj metodach kiedy w twojej aplikacji zaczynają się pojawiać bardziej złożone scenariusze, wielokrotne zapytania i zróżnicowane czasy oczekiwania na odpowiedź.</p><img loading="lazy" src="https://assets-v3.circle.so/fq4c8abb28zn5ntd9tt8wxfxlbh0" style="width: 100%; max-width: 100%;"></div></body></html>

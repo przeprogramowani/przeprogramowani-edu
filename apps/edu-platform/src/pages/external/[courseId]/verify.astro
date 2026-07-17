@@ -1,0 +1,87 @@
+---
+import Layout from '@/layouts/BaseLayout.astro';
+import { verifyMagicLink } from '@/server/magicLinkManager';
+import { getExternalAuthConfig } from '@/server/circle/externalAuthConfig';
+import { generateToken, getSessionCookieOptions, normalizeEmail } from '@/server/auth';
+import { validateReturnUrl } from '@/server/urlValidation';
+import { upsertUser } from '@/server/supabase/userService';
+import { syncForCourse } from '@/server/supabase/circleSyncService';
+import { upsertGrant } from '@/server/supabase/accessService';
+import {
+  checkTenXDevs3ToolkitMembership,
+  syncTenXDevs3ToolkitGrant,
+} from '@/server/toolkit/tenXDevs3Membership';
+
+const { courseId } = Astro.params;
+
+if (!courseId) {
+  return Astro.redirect('/external/not-found');
+}
+
+const env = Astro.locals.runtime.env;
+const token = Astro.url.searchParams.get('token');
+const rawReturnUrl = Astro.url.searchParams.get('returnUrl');
+const returnUrl = validateReturnUrl(rawReturnUrl, courseId, env.SITE_URL);
+const buildLoginRedirect = (error: string) => {
+  const params = new URLSearchParams({ error, returnUrl });
+  return `/external/${courseId}/login?${params.toString()}`;
+};
+
+// Validate courseId exists in config
+const config = getExternalAuthConfig(courseId);
+if (!config) {
+  return Astro.redirect('/external/not-found');
+}
+
+if (!token) {
+  return Astro.redirect(buildLoginRedirect('MISSING_TOKEN'));
+}
+
+// Verify magic link and get email
+const magicLinkResult = await verifyMagicLink(token, env);
+
+if (!magicLinkResult) {
+  return Astro.redirect(buildLoginRedirect('MISSING_TOKEN'));
+}
+
+const { email: rawEmail, newsletterOptIn } = magicLinkResult;
+const email = normalizeEmail(rawEmail);
+
+// Temporary pre-broker toolkit KV bridge for 10xDevs 3.
+// Plan: thoughts/shared/plans/2026-04-26-10xdevs-3-toolkit-kv-external-auth.md
+const toolkitDecision = await checkTenXDevs3ToolkitMembership(email, courseId, env);
+if (toolkitDecision.applies && !toolkitDecision.allowed) {
+  return Astro.redirect(buildLoginRedirect('NO_ACCESS'));
+}
+
+// Generate unified JWT token (same as main platform)
+const jwtToken = await generateToken(email, env.JWT_SECRET);
+Astro.cookies.set('token', jwtToken, getSessionCookieOptions());
+
+// Supabase sync
+const syncPromise = upsertUser(email, env, { newsletterOptIn })
+  .then(async (userId) => {
+    await upsertGrant(userId, 'explorers', 'free', env);
+    const wrote = await syncTenXDevs3ToolkitGrant(userId, courseId, toolkitDecision, env);
+    if (!wrote) {
+      await syncForCourse(userId, email, courseId, env);
+    }
+  })
+  .catch((err) => console.error('[external/verify] Supabase sync failed:', err));
+
+if (env.ENV === 'PROD') {
+  Astro.locals.runtime.ctx.waitUntil(syncPromise);
+} else {
+  await syncPromise;
+}
+
+// Redirect to requested page
+return Astro.redirect(returnUrl);
+---
+
+<Layout>
+  <div class="min-h-screen flex flex-col items-center justify-center bg-gray-900">
+    <h1 class="text-white text-2xl font-bold">Zalogowano</h1>
+    <p class="text-gray-400 mt-2">Za chwilę nastąpi przekierowanie...</p>
+  </div>
+</Layout>

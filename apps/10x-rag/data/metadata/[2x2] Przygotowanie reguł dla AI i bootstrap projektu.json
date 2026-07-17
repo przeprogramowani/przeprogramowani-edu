@@ -1,0 +1,6 @@
+{
+  "lessonId": "[2x2] Przygotowanie reguł dla AI i bootstrap projektu",
+  "displayName": "[2x2] Przygotowanie reguł dla AI i bootstrap projektu",
+  "summary": "1) Z którego repozytorium/skąd sklonować szablon, jeśli chcesz pracować z rekomendowanym stackiem Astro+React+TypeScript (10x-Astro-Starter)?  \n2) Jakie kroki wykonać przy błędzie rollup na Windowsie (Cannot find module @rollup/rollup-win32-x64)?  \n3) Gdzie i jak ustawić wymaganą wersję Node.js dla projektu (jaką wersję wpisać w .nvmrc)?  \n4) Jakie narzędzia do statycznej analizy i formatowania kodu należy dodać do projektu (konkretne pakiety/konfiguracje wymienione w lekcji)?  \n5) Co zrobić zamiast konfigurować ESLint od zera dla projektu łączącego Astro, React i TypeScript?  \n6) Jakie źródła i konkretne zasoby (plugin/docs/GitHub Issue) wykorzystać przy konfiguracji ESLint dla Astro+React+TypeScript?  \n7) Jakie elementy dostarcza szablon 10x-astro-starter, by uniknąć ręcznej konfiguracji linterów i hooków (wymień gotowe konfiguracje wymienione w lekcji)?  \n8) Jak przygotować i spersonalizować „Rules for AI”, aby modele generowały kod zgodny z konwencjami projektu (jakie obszary projektu warto ująć w regułach)?",
+  "tokenEstimate": 157
+}

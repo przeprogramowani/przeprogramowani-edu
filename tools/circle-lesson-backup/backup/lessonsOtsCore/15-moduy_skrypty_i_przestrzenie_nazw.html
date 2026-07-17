@@ -1,0 +1,71 @@
+<meta name="lesson-id" content="Moduły, skrypty i przestrzenie nazw"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 52.5822%;"><iframe src="https://player.vimeo.com/video/1035136088?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="189" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2>Wprowadzenie</h2><p>Efektywna organizacja kodu to kluczowy element skalowalnych projektów TypeScript. Obejmuje ona nie tylko organizację typów, ale również świadome podejście do modułów i przestrzeni nazw. W tej lekcji przyjrzymy się kluczowym aspektom:</p><ol start="1"><li><p><strong>Przestrzeniom nazw</strong> – rozwiązanie historyczne dla organizacji kodu.</p></li><li><p><strong>Modułom TypeScript</strong> – nowoczesne podejście do izolacji i importowania kodu.</p></li></ol><h3><strong>Przestrzenie nazw (namespaces)</strong></h3><p>Przestrzenie nazw (ang. <strong>namespaces</strong>) zostały wprowadzone do TypeScript jako odpowiedź na problemy z organizacją kodu w języku JavaScript sprzed ery ES6 (2015). W tamtym czasie brakowało wbudowanego mechanizmu modułów, co prowadziło do częstych konfliktów nazw w dużych projektach. </p><p>Przestrzenie nazw pozwalają grupować powiązane ze sobą funkcje, klasy, zmienne czy typy w jeden logiczny obszar, unikając problemów z globalnymi zmiennymi.</p><pre><code>namespace Utils {
+  export function calculateTotal(a: number, b: number): number {
+    return a + b;
+  }
+
+  export const CONSTANT = 42;
+
+  export namespace Formatting {
+    export function formatUSD(value: number): string {
+      return `$${value.toFixed(2)}`;
+    }
+  }
+}
+
+console.log(Utils.calculateTotal(5, 10)); // 15
+console.log(Utils.Formatting.formatUSD(50)); // "$50.00"</code></pre><p>Z wykorzystaniem namespaces możemy budować zagnieżdżone struktury, co ułatwiało zarządzanie większymi projektami.</p><p><strong>Jak działają przestrzenie nazw?</strong></p><p>Przestrzenie nazw były transpilowane na zwykły kod JavaScript poprzez zamykanie deklaracji w natywnych funkcjach IIFE (ang. Immediately Invoked Function Expression). Dzięki temu zapewniały izolację nazw, zachowując zgodność z ówczesnym środowiskiem JavaScript.</p><pre><code>namespace MathUtils {
+  export const PI = 3.14;
+
+  export function calculateCircumference(radius: number): number {
+    return 2 * PI * radius;
+  }
+}</code></pre><p><strong>Transpilacja do JavaScript:</strong> </p><pre><code>var MathUtils;
+(function (MathUtils) {
+  MathUtils.PI = 3.14;
+  MathUtils.calculateCircumference = function (radius) {
+    return 2 * MathUtils.PI * radius;
+  };
+})(MathUtils || (MathUtils = {}));</code></pre><p><strong>Dlaczego przestrzenie nazw zostały zastąpione przez moduły?</strong></p><p>Przestrzenie nazw są dostępne tylko w TypeScript i wymagają transpilacji do JavaScript, co może prowadzić do problemów z debugowaniem. Ich użycie utrudnia współpracę z narzędziami opartymi na modułach ES6 (np. tree shaking w bundlerach takich jak Webpack).</p><h3><strong>Rekomendacja: stosuj moduły zamiast przestrzeni nazw</strong></h3><p>ES6 wprowadziło natywne moduły (import/export), które oferują lepszą izolację i bardziej elegancką składnię (import/export). ES Modules (ESM) działają w lokalnym zakresie, co dodatkowo minimalizuje ryzyko kolizji nazw. </p><p>Zamiast grupować funkcje w przestrzeni nazw, wystarczy używać oddzielnych modułów:</p><pre><code>// utils/calculations.ts
+export function calculateTotal(a: number, b: number): number {
+  return a + b;
+}
+
+// utils/formatting.ts
+export function formatCurrency(value: number): string {
+  return `$${value.toFixed(2)}`;
+}
+
+// main.ts
+import { calculateTotal } from './utils/calculateTotal';
+import { formatCurrency } from './utils/formatting';
+
+console.log(calculateTotal(5, 10)); // 15
+console.log(formatCurrency(50)); // "$50.00"</code></pre><p>Dodatkowo, ES modules pozwalają na dynamiczne ładowanie kodu (lazy loading), co może poprawić wydajność aplikacji.</p><pre><code>function exportToPDF() {
+    import("jspdf").then(({ jsPDF }) =&gt; {
+      const doc = new jsPDF();
+      doc.save();
+    }).catch(error =&gt; console.log(error));
+}</code></pre><p>Jest to szczególnie istotne, gdy do obsługi funkcjonalności potrzebujemy ciężkiego modułu, jak jspdf, a użytkownicy sporadycznie korzystają z tej opcji. Dzięki wykorzystaniu lazy loading, moduł jspdf zostanie załadowany w momencie wywołania funkcji “Eksportuj do PDF” a nie przy każdym załadowaniu strony.<br><br><strong>Kiedy jeszcze można używać przestrzeni nazw?</strong></p><p>Chociaż przestrzenie nazw są uważane za przestarzałe w nowych projektach, mogą być przydatne w specyficznych sytuacjach:</p><ol start="1"><li><p><strong>Starsze projekty:</strong> Projekty oparte na TypeScript przed sprzed ES6. Jednak od premiery ES6 minęło już prawie 10 lat, więc to naprawdę sporadyczne przypadki.</p></li><li><p><strong>Typowanie globalnych bibliotek:</strong> Przestrzenie nazw nadal sprawdzają się w definiowaniu globalnych API, np. w rozszerzeniach globalnych obiektów w d.ts.</p></li></ol><p>Namespaces wciąż znajdują zastosowanie w bibliotekach takich jak <strong>@types/react</strong>, szczególnie w przypadku definiowania i rozszerzania interfejsów globalnych, takich jak <em>JSX</em>. Ten konkretny przykład ilustruje, jak przestrzeń nazw JSX jest wykorzystywana do integracji JSX z Reactem w środowisku TypeScript.</p><p><strong>Dlaczego namespace JSX jest używane w React?</strong></p><p>Przestrzeń nazw JSX jest istotna, ponieważ TypeScript musi wiedzieć, jak obsługiwać składnię JSX (np. &lt;div&gt;&lt;/div&gt;). W ramach tej przestrzeni definiowane są typy, które TypeScript wykorzystuje do walidacji i rozpoznawania składni JSX w czasie kompilacji.</p><pre><code>export namespace JSX {
+    type ElementType = React.JSX.ElementType;
+    interface Element extends React.JSX.Element {}
+    interface ElementClass extends React.JSX.ElementClass {}
+    interface ElementAttributesProperty extends React.JSX.ElementAttributesProperty {}
+    interface ElementChildrenAttribute extends React.JSX.ElementChildrenAttribute {}
+    type LibraryManagedAttributes&lt;C, P&gt; = React.JSX.LibraryManagedAttributes&lt;C, P&gt;;
+    interface IntrinsicAttributes extends React.JSX.IntrinsicAttributes {}
+    interface IntrinsicClassAttributes&lt;T&gt; extends React.JSX.IntrinsicClassAttributes&lt;T&gt; {}
+    interface IntrinsicElements extends React.JSX.IntrinsicElements {}
+}</code></pre><p><strong>Jakie są korzyści stosowania namespaces w @types/react?</strong></p><ol start="1"><li><p><strong>Globalność:</strong><br>JSX działa globalnie, niezależnie od tego, czy jest używany w React, czy w innych frameworkach. Przestrzenie nazw pozwalają na definiowanie globalnych interfejsów bez kolizji z innymi elementami kodu.</p></li><li><p><strong>Rozszerzalność:</strong><br>Dzięki namespaces biblioteki i użytkownicy mogą rozszerzać istniejące typy lub dodawać nowe, bez modyfikacji kodu źródłowego @types/react.</p></li><li><p><strong>Wsteczna kompatybilność:</strong><br>Niektóre starsze mechanizmy JSX wciąż korzystają z przestrzeni nazw, co umożliwia współdziałanie z narzędziami używanymi przed popularyzacją ES6 modułów.</p></li></ol><p>W nowych projektach użycie przestrzeni nazw jest ograniczone do takich właśnie przypadków, jak JSX, które wymagają globalnych interfejsów lub integracji z zewnętrznymi narzędziami.</p><h2>Moduły i skrypty w TypeScript</h2><p><strong>Czym są moduły w TypeScript?</strong></p><p>Moduły w TypeScript (i szerzej w JavaScript) to odizolowane fragmenty kodu, które pozwalają nam organizować aplikacje w sposób modularny, kontrolując, które elementy kodu są dostępne w innych częściach projektu. Moduł definiuje własną przestrzeń nazw, co eliminuje ryzyko konfliktów nazw między różnymi częściami kodu.</p><p>Każdy plik w TypeScript, który zawiera przynajmniej jedną instrukcję import lub export, jest traktowany jako moduł. Moduły umożliwiają lepsze zarządzanie kodem, ułatwiają jego testowanie i ponowne wykorzystanie, a także pomagają w utrzymaniu czytelności dużych aplikacji.</p><pre><code>// math.ts
+export const add = (a: number, b: number): number =&gt; a + b;
+
+// app.ts
+import { add } from './math';
+console.log(add(2, 3)); // Output: 5</code></pre><p>W powyższym przykładzie math.ts definiuje moduł zawierający funkcję add, która jest eksportowana. Plik app.ts importuje tę funkcję i może ją użyć w swoim zakresie.</p><p><strong>Czym są skrypty w TypeScript?</strong></p><p>Skrypty to pliki TypeScript, które nie zawierają żadnych instrukcji <em>import</em> ani <em>export</em>. TypeScript traktuje je jako część globalnego kontekstu aplikacji, podobnie jak tradycyjne skrypty w JavaScript ładowane za pomocą &lt;script&gt; bez atrybutu <em>type=”module”</em>. W praktyce oznacza to, że wszystkie zmienne i funkcje zdefiniowane w takim skrypcie są automatycznie dostępne w innych częściach projektu, o ile również są skryptami.</p><pre><code>// globalScript.ts
+const globalVar = "Hello, World!";
+
+// app.ts
+console.log(globalVar); // Output: Hello, World!</code></pre><p>Tutaj zmienna globalVar jest dostępna w app.ts bez potrzeby importowania. Taka organizacja kodu może być wygodna w małych projektach, ale w większych prowadzi do problemów związanych z kolizją nazw.</p><h3>Dlaczego warto preferować moduły?</h3><p>Stosowanie modułów pozwala unikać typowych problemów, takich jak:</p><ul><li><p><strong>Kolizje nazw</strong>: Wszystkie zmienne w module są lokalne, o ile nie są eksportowane.</p></li><li><p><strong>Niejasność kodu</strong>: Eksporty i importy jasno wskazują zależności między plikami.</p></li><li><p><strong>Problemy z narzędziami</strong>: Moduły są zgodne z nowoczesnymi standardami ECMAScript, co zapewnia lepszą kompatybilność z narzędziami developerskimi (Vite, Webpack itd.)</p></li></ul><p><strong>Praktyczne wyjątki</strong></p><p>Skrypty mogą być odpowiednie w określonych sytuacjach, np.:</p><ol start="1"><li><p><strong>W prostych projektach lub prototypach</strong>: Gdy szybkość tworzenia kodu jest ważniejsza niż jego izolacja.</p></li><li><p><strong>W starszych aplikacjach</strong>: Aby uniknąć kosztownej migracji istniejącego kodu.</p></li><li><p><strong>Do definiowania globalnych zmiennych lub konfiguracji</strong>: W projektach, gdzie część kodu celowo działa w globalnym zakresie (np. pliki konfiguracyjne).</p></li></ol><p>W nowoczesnych aplikacjach rekomendujemy jednak konsekwentne stosowanie modułów jako domyślnej praktyki. Skrypty powinny być używane tylko w szczególnych przypadkach, kiedy ich zalety przeważają nad ryzykiem związanym z globalnym zakresem.</p><p>Mając to na uwadze, domyślnie warto wyeliminować mechanizm podziału na moduły i skrypty na poziomie tsconfig.json. Wystarczy skorzystać z <em>“moduleDetection: force”.</em></p><pre><code>{
+  "compilerOptions": {
+    "moduleDetection": "force" // Domyślnie "auto", które wprowadza opisany powyżej podział
+  }
+}</code></pre><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

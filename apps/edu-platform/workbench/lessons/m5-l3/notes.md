@@ -1,0 +1,25 @@
+- w poprzedniej lekcji poznaliśmy różnice między sdk z gotowymi agentami, a sdk dające nam pojedyncze składowe do budowania agentów
+- po sekcji ćwiczeń praktycznych powinieneś mieć jeden prosty skrypt do przeprowadzenia review na diffie jako parametrze - jeśli nie masz, zapoznaj sie z poprzednią lekcją
+- co robimy w tej lekcji - wyjdziemy od localhosta do agenta oceniającego nasze PRy
+- poznamy przy okazji podstawy CI/CD na github actions
+- poznamy przy okazji metody mierzenia promptów z promptfoo
+- na końcu w deep dive zastanowimy się nad skalowaniem tego systemu i tym, jak to może wyglądać docelowo
+- w lekcji chcemy wpiąć skill 10x-impl-review-ci z ~/dev/10x-toolkit
+- (do oceny przez nas w trakcie pisania lekcji) - czy kryteria z 10x-impl-review-ci trzeba przerzucic na zoda
+- (do oceny przez nas w trakcie pisania lekcji) - wazna uwaga jak budujesz z vercel ai sdk - nie ma auto-load skilli na ci, wiec albo system prompt, albo prompt z diffem jako parametr
+- workflow praktyczny w lekcji
+-- czym jest gha, jak to wpiac w projekt
+-- jak polaczyc gha z lokalnym utilem do code reivew (moze byc src/packages, src/utils, coś a'la dedykowany moduł)
+-- przekazywanie sekretów z gha (UI) do skryptu
+-- trigger na pull request, a) auto review albo b) review po nadaniu labelki
+-- code review result dodawane przez labelki na gha - threshold sukcesu, ai-cr:failed, ai-cr:passed
+- deep dive:
+-- założenie - sposob na ludzkie bottlenecki w masowym review przy kodzie generowanym agentami, programista tylko tam gdzie coś krytycznego (a po czasie może wcale, zamiast jego interwencji np. budowanie dokumentacji z pivotal changes, etc.)
+-- nie zrobimy tego one-shot, musimy mierzyć i optymalizować
+-- mozemy robić ai-triage na human i ai-first PRy (low i mid na AI, high complexity na human)
+-- by default ai może wrzucić wstępny osąd na high, programista dodaje swoje
+-- mozemy obserwować czy programista koryguje osądy ai (przy mergu np. ai-metrics, ai-review)
+-- minimalizujemy liczbe interwencji programisty
+-- możemy robić analize wsteczną, czy issuesy i bugi pojawiają się w tych obszarach, które ai puściło w code review na zielono
+(ogólnie zaprojektujmy to jakoś ciekawiej i bardziej metodycznie, wstepnie jako draft do pogłębienia w trakcie pisania lekcji)
+-- system do zbierania metryk - cokolwiek, do zaproponowania w lekcji, analiza w trakcie budowania secyfikacji i groundingu

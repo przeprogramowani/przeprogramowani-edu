@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lesson Spec"
+  short_description: "Plan a schema-grounded lesson spec"
+  default_prompt: "Use $lesson-spec to create or refine the spec for lesson <lessonId>."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,234 @@
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m2-l2/assets/cover.jpg">https://images.przeprogramowani.pl/lessons/m2-l2/assets/cover.jpg</a></p></blockquote>
+<p>W poprzedniej lekcji zbudowaliśmy roadmapę MVP - mapę pracy dla człowieka i agenta. Pozwala zrozumieć, co jest fundamentem projektu, co jest pionowym slice'em funkcjonalnym, co jest zablokowane, co można robić równolegle i co świadomie trafia na parking.</p>
+<p>To jest dobry moment, żeby popełnić bardzo ludzki błąd.</p>
+<p>Masz roadmapę, widzisz kilka pozycji w sekcji <strong>ready</strong>, więc odpalasz agenta i piszesz: "zrób teraz cały Stream A". Agent rusza. Czyta pliki. Buduje sobie plan w głowie. Modyfikuje kilkanaście miejsc naraz.</p>
+<p>Po chwili coś działa, coś wygląda na prawie gotowe, coś jest tylko obietnicą w komentarzu, a ty próbujesz zrekonstruować, co właściwie było celem tej sesji.</p>
+<p>Czyli wracamy do starego problemu, tylko na wyższym poziomie. Zamiast prompta "zbuduj MVP", mamy prompt "zbuduj stream". Brzmi profesjonalniej, ale nadal jest za szerokie.</p>
+<p>W tej lekcji robimy następny krok: bierzemy roadmapę i zamieniamy ją w pierwszy kontrolowany cykl pracy:</p>
+<pre><code>roadmap item -&gt; change-id -&gt; plan.md -&gt; plan review -&gt; implementacja fazy -&gt; Progress
+</code></pre>
+<p>Najważniejsza teza jest prosta: <strong>plan to mechanizm kontroli nad przyszłą pracą agenta</strong>.</p>
+<p>Nie chodzi o biurokrację ani o rytuał przed każdym zadaniem. Chodzi o to, żeby przed większą edycją kodu mieć miejsce, w którym agent zapisuje swoje założenia, fazy, modyfikacje kontraktu i warunki zakończenia pracy. Wtedy możesz powiedzieć: "tak, to ma sens" albo "nie, zatrzymajmy się tutaj".</p>
+<p>Najpierw plan. Potem kod.</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1193150555?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1193150555?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<h3>Roadmapa jako mapa streamów</h3>
+<p>Najpierw pobierz paczkę artefaktów dla tej lekcji:</p>
+<pre><code class="language-bash">npx @przeprogramowani/10x-cli@latest get m2l2
+</code></pre>
+<p>Ta paczka dostarcza workflow potrzebny w tej lekcji: <strong>/10x-new</strong>, <strong>/10x-plan</strong>, <strong>/10x-plan-review</strong> i <strong>/10x-implement</strong>.</p>
+<p>Punktem startowym jest <strong>context/foundation/roadmap.md</strong>, który utworzyliśmy w poprzedniej lekcji. Ten plik nie jest listą zakupów, którą odhaczasz od góry do dołu. To mapa zależności i strumieni pracy, nad którą warto się na chwilę pochylić.</p>
+<p>Dla naszego przykładowego projektu 10xCards najważniejszy jest teraz Stream A, czyli ścieżka od minimalnych zarysów produktu do pierwszego działającego przepływu generowania i zapisywania fiszek.</p>
+<p>W uproszczeniu wygląda to tak:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m2-l2-lesson-draft-1-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m2-l2-lesson-draft-1-10x.png</a></p></blockquote>
+<p>W tej lekcji interesuje nas główny tor generowania i zapisywania kart:</p>
+<ul>
+<li><strong>F-01</strong> jako podstawa techniczna, która porządkuje dostęp do produktu.</li>
+<li><strong>S-01</strong> jako pierwszy zabezpieczony cykl generowania kart.</li>
+<li><strong>S-02</strong> jako zapis zaakceptowanych kart do decku.</li>
+<li>opcjonalnie <strong>S-03</strong> jako kontynuacja, jeśli demo i czas na to pozwolą.</li>
+</ul>
+<p><strong>S-04</strong>, czyli sesja powtórek w stylu spaced repetition, czeka na swoją kolej. To nie jest przypadek. SRS wygląda jak "kolejny ekran", ale technicznie blokuje go wybór biblioteki, model <strong>ReviewState</strong>, skala ocen i polityka edycji kart. To osobny poziom złożoności.</p>
+<p><strong>S-05</strong> z obszaru compliance też świadomie pomijamy w głównym torze. Nie dlatego, że compliance jest nieważne, ale dlatego, że w tej lekcji uczymy przepływu od roadmapy do pierwszego działającego streamu, a nie wszystkich równoległych linii produktu.</p>
+<p>Brzmi jak ograniczenie? Tak. I o to chodzi.</p>
+<h3>Zakres tej lekcji</h3>
+<p>W tej lekcji chcemy zrobić jedną rzecz dobrze: przepuścić fragment roadmapy przez pierwszą praktyczną pętlę od planu do implementacji, z podziałem na fazy i weryfikacją wyniku.</p>
+<p>Nie budujemy całych fiszek w jednej lekcji. Nie wybieramy biblioteki SRS. Nie wchodzimy jeszcze w pełne review wygenerowanego kodu.</p>
+<p>Na tym etapie szukamy zadań, które możemy podjąć niskim kosztem i co do których mamy pewność, że dobrze rozumiemy, o co chodzi. To właśnie one będą przedmiotem workflow <strong>plan -&gt; implement</strong>.</p>
+
+<ul>
+<li><strong>Roadmap item</strong>: <strong>F-01</strong> | <strong>Rola w lekcji</strong>: podstawa techniczna | <strong>Co z nim robimy</strong>: szybki plan i do dzieła</li>
+<li><strong>Roadmap item</strong>: <strong>S-01</strong> | <strong>Rola w lekcji</strong>: slice funkcjonalny 1 | <strong>Co z nim robimy</strong>: planujemy i implementujemy</li>
+<li><strong>Roadmap item</strong>: <strong>S-02</strong> | <strong>Rola w lekcji</strong>: slice funkcjonalny 2 | <strong>Co z nim robimy</strong>: planujemy i implementujemy</li>
+<li><strong>Roadmap item</strong>: <strong>S-03</strong> | <strong>Rola w lekcji</strong>: slice funkcjonalny 3 | <strong>Co z nim robimy</strong>: planujemy i implementujemy</li>
+<li><strong>Roadmap item</strong>: <strong>S-04</strong> | <strong>Rola w lekcji</strong>: system SRS | <strong>Co z nim robimy</strong>: w lekcji o researchu</li>
+<li><strong>Roadmap item</strong>: <strong>S-05</strong> | <strong>Rola w lekcji</strong>: po etapie MVP | <strong>Co z nim robimy</strong>: zadanie domowe dla chętnych</li>
+</ul>
+<p>Rozbicie projektu marzeń na etapy ma zagwarantować, że krok po kroku zobaczymy mierzalny postęp. Pamiętajmy, żeby unikać dwóch skrajności.</p>
+<p>Pierwsza to vibe coding: "zróbmy wszystko, co jest w roadmapie". Zwykle kończy się to dużym diffem, w którym trudno oddzielić dobry postęp od przypadkowych decyzji agenta.</p>
+<p>Druga: "przed każdym krokiem zróbmy dokładnie ten sam obrządek - pięć kroków przygotowania, osiem researchu, dwanaście plików markdown, a potem dopiero kodujemy". Brzmi to dojrzale, ale szybko zamienia workflow w sztukę dla sztuki. Przestajesz wtedy pytać, po co właściwie wykonujesz dany krok.</p>
+<p>W tej lekcji uczymy się podejścia pośredniego: wybieramy te slice'y, które w miarę dobrze rozumiemy, planujemy ich implementację, w razie potrzeby korygujemy plan i ruszamy do pracy.</p>
+<h3>Change-id jako intencja pracy</h3>
+<p>Żeby precyzyjnie rozmawiać o wprowadzanej zmianie, agent potrzebuje operacyjnego identyfikatora - jednej nazwy, pod którą ta zmiana żyje.</p>
+<p>Tym identyfikatorem jest <strong>change-id</strong>, który określa "intencję" tego, co zamierzasz zrobić.</p>
+<p>Przykłady:</p>
+<pre><code class="language-text">gate-product-routes
+first-gated-generation
+atomic-save-to-deck
+</code></pre>
+<p><strong>change-id</strong> to nasza konwencja, która spina kilka rzeczy, które inaczej rozjechałyby się po rozmowie:</p>
+<ul>
+<li>pozycję z roadmapy,</li>
+<li>folder <strong>context/changes/&lt;change-id&gt;/</strong>,</li>
+<li>opis zmiany w <strong>change.md</strong>,</li>
+<li>plan implementacji w <strong>plan.md</strong>,</li>
+<li>skrót planu w <strong>plan-brief.md</strong>,</li>
+<li>późniejszą komendę <strong>/10x-implement &lt;change-id&gt; phase 1</strong>,</li>
+<li>sekcję <strong>## Progress</strong>, w której zapisujemy faktyczny stan pracy.</li>
+</ul>
+<p><strong>change-id</strong> ma odpowiedzieć na pytanie: "o której konkretnej zmianie rozmawiamy i gdzie jest jej pamięć?".</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m2-l2-lesson-draft-2-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m2-l2-lesson-draft-2-10x.png</a></p></blockquote>
+<p>To jest strategia <strong>Write</strong> z preworku o context engineeringu, tylko w wersji produkcyjnej. Wiedza nie żyje wyłącznie w rozmowie z agentem. Żyje w repozytorium.</p>
+<h3>Skąd się wziął ten workflow</h3>
+<p>Zanim wpiszesz pierwszą komendę, warto wiedzieć, co właściwie dostajesz w paczce.</p>
+<p>Workflow <strong>research -&gt; plan -&gt; implement</strong>, który przedstawiamy w tym module, nie wziął się z jednej książki ani z dokumentacji jednego narzędzia. To efekt wielu godzin obserwacji, jak agent zachowuje się w realnym kodzie, testowania różnych konfiguracji narzędzi i wymiany uwag o tym, co nam nie pasuje albo czego brakuje.</p>
+<p>W skrócie wygląda to mniej więcej tak.</p>
+<p>Dziś niemal każdy, kto pracuje z agentami, wie jedno: wskakiwanie do kodowania bez planu to zła decyzja. No dobra, bierzemy więc wbudowany Plan Mode. Działa - ale działa po swojemu. Plan ginie razem z sesją, trudno wrócić do niego za tydzień, nie da się go łatwo przekazać innej osobie, a kontrolę nad tym, co dokładnie ma się w nim znaleźć, mamy umiarkowaną.</p>
+<p>Tu pojawia się okazja na własną wersję. Robimy <strong>/10x-plan</strong>: plan ma trafiać do repo, ma mieć stałą strukturę i ma być czytelny zarówno dla człowieka, jak i dla <strong>/10x-implement</strong>.</p>
+<p>Mamy plan. Obserwujemy implementację. Agent biegnie za szybko, robi za dużo naraz i trudno go ocenić w trakcie. Chcemy to robić krokowo i stanowo. No dobra - robimy <strong>/10x-implement</strong>. Dodajemy etap testów automatycznych i manualnych, commit po każdej fazie i aktualizację <strong>## Progress</strong> jako trwały ślad pracy.</p>
+<p>I tak, kawałek po kawałku, powstaje to, co teraz dostajesz w paczce.</p>
+<p>Najważniejsze: pokazujemy ci efekt końcowy, ale tło to praca, którą - podobnie jak my - powinieneś wykonać u siebie. Twoje narzędzia, twój zespół i twój projekt mają swoje specyficzne kanty. Coś w naszym workflow może ci nie pasować, czegoś może brakować. Traktuj <strong>/10x-plan</strong>, <strong>/10x-plan-review</strong> i <strong>/10x-implement</strong> jak punkt wyjścia, a nie ostateczną konfigurację.</p>
+<p>My doszliśmy do tej wersji przez iterację. Ty pewnie też dojdziesz do swojej.</p>
+<p>Zobaczmy teraz cały proces w akcji.</p>
+<h3>F-01 jako fundament techniczny</h3>
+<p>W naszym projekcie roadmapa zaczyna się od <strong>F-01 gate-product-routes</strong>.</p>
+<p>To dobry przykład zadania, które nie wymaga osobnego researchu ani framingu. Zakres jest jasny: produktowe ścieżki mają być dostępne dopiero za bramką uwierzytelniania, a agent powinien ustalić, które pliki dotknąć i jak zweryfikować zmianę.</p>
+<p>Cykl pracy z takim zadaniem składa się z trzech głównych skilli:</p>
+<ul>
+<li><strong>10x-new</strong> do wygenerowania nowej zmiany (change-id),</li>
+<li><strong>10x-plan</strong> do utworzenia <strong>plan.md</strong> oraz <strong>plan-brief.md</strong>,</li>
+<li><strong>10x-implement</strong> do rozpoczęcia krokowej realizacji zadania.</li>
+</ul>
+<pre><code class="language-text">/10x-new gate-product-routes F-01 z @roadmap.md
+/10x-plan gate-product-routes
+/10x-implement gate-product-routes phase 1
+</code></pre>
+<p>To podstawowy workflow dla zadań o niskiej i średniej złożoności, w których mamy duże przekonanie, że agent poradzi sobie bez większego wsparcia.</p>
+<h3>S-01 i S-02 jako pierwsze slice'y funkcjonalne</h3>
+<p>Po rozgrzewce przechodzimy do właściwego slice'a: <strong>S-01 first-gated-generation</strong>, a dalej <strong>S-02 atomic-save-to-deck</strong>.</p>
+<p>Zobaczmy, jak przygotować się do niego przez <strong>10x-plan</strong> (pełen przebieg zobaczysz poniżej na filmie).</p>
+<p>Wywołanie skilla:</p>
+<pre><code class="language-text">/10x-plan atomic-save-to-deck
+</code></pre>
+<p>Plan powinien rozbić pracę na fazy, które da się wykonać i zweryfikować osobno. Nie chcemy jednej fazy pod tytułem "implement everything". Chcemy sekwencji, w której każdy krok ma sensowny kontrakt. To jedna z kluczowych różnic między 10xDevs workflow a tym, jak działają standardowe, wbudowane w agentów funkcje <strong>Plan Mode</strong>.</p>
+<p>Skill tworzy nie jeden, a dwa artefakty. To jedna z ewolucyjnych zmian, które wprowadziliśmy, gdy zobaczyliśmy, jak trudne do interpretacji dla człowieka bywają długie plany.</p>
+<p>Pierwszy artefakt to <strong>plan.md</strong>, który powinien zawierać przynajmniej:</p>
+<ul>
+<li><strong>end state</strong> - co ma być prawdą po zmianie,</li>
+<li><strong>phases</strong> - logiczne kroki wykonania,</li>
+<li><strong>Intent + Contract per file</strong> - po co dotykamy danego pliku i jakiego kontraktu nie wolno złamać,</li>
+<li><strong>Success Criteria</strong> - jak poznamy, że działa,</li>
+<li><strong>Risks / Open Questions</strong> - co nadal może zablokować pracę,</li>
+<li><strong><strong>## Progress</strong></strong> - jedno miejsce, w którym implementacja zapisuje status faz.</li>
+</ul>
+<p>Drugi artefakt, dodany przez nas już po pierwszych iteracjach, to <strong>plan-brief.md</strong>. To lekki dokument przekazania - szybka ocena zmiany, możliwość potwierdzenia lub korekty kierunku działania, a także kontekst dla osób, które będą robić review.</p>
+<p>Całość procesu planowania działa w ten sposób:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m2-l2-lesson-draft-3-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m2-l2-lesson-draft-3-10x.png</a></p></blockquote>
+<p>Zobaczmy to w akcji:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1193153481?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1193153481?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<h3>Plan review przed kodem</h3>
+<p>Jeśli chcesz oddelegować agentowi więcej pracy na etapie przygotowań, mamy do tego jeszcze jeden skill.</p>
+<pre><code class="language-text">/10x-plan-review atomic-save-to-deck
+</code></pre>
+<p><strong>/10x-plan-review</strong> traktujemy jako kontrolę gotowości planu. Chodzi o kilka pytań przed implementacją:</p>
+<ul>
+<li>Czy plan naprawdę odpowiada na zadanie z roadmapy?</li>
+<li>Czy end state jest konkretny?</li>
+<li>Czy fazy są wykonalne i nie przeskakują ważnych decyzji?</li>
+<li>Czy powierzchnie kontraktu są nazwane?</li>
+<li>Czy <strong>## Progress</strong> ma format, który <strong>/10x-implement</strong> będzie potrafił aktualizować?</li>
+<li>Czy success criteria sprawdzają zachowanie, a nie tylko istnienie plików?</li>
+</ul>
+<p>Jeżeli review zgłasza istotne uwagi, nie traktuj tego jak porażki. To najtańszy moment na poprawkę. Plan kosztuje kilka minut i trochę tokenów. Zły diff przez kilkanaście plików kosztuje dużo więcej energii.</p>
+<p>Właśnie dlatego planowanie stało się widocznym wzorcem w nowoczesnych agentach kodujących. Człowiek chce mieć moment kontroli, zanim agent zacznie modyfikować repozytorium.</p>
+<h3>Implementacja jednej fazy</h3>
+<p>Po zaakceptowaniu planu możesz uruchomić implementację:</p>
+<pre><code class="language-text">/10x-implement atomic-save-to-deck phase 1
+</code></pre>
+<p>Na tym etapie agent nie powinien wymyślać od nowa, co robić. Ma wziąć <strong>plan.md</strong>, wykonać konkretną fazę, zweryfikować wynik, poprosić o manualną decyzję tam, gdzie jest potrzebna, zrobić commit i zaktualizować <strong>## Progress</strong>.</p>
+<p>Minimalny loop wygląda tak:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m2-l2-lesson-draft-4-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m2-l2-lesson-draft-4-10x.png</a></p></blockquote>
+<p>Na razie wystarczy, że zobaczysz mechanikę:</p>
+<ul>
+<li>agent trzyma się jednej fazy,</li>
+<li>raportuje dotknięte pliki,</li>
+<li>uruchamia ustalone komendy weryfikacji,</li>
+<li>zatrzymuje się na manual gate, jeśli plan tego wymaga,</li>
+<li>zapisuje commit SHA albo status w <strong>## Progress</strong>.</li>
+</ul>
+<p>Pełniejszą dyscyplinę implementacji, ocenę kontekstu i radzenie sobie z halucynacjami rozwiniemy z researchem na trudniejszym streamie SRS. Tutaj zależy nam na pierwszym kontakcie z fazowym wykonaniem planu.</p>
+<p>Innymi słowy: uczysz się prowadzić agenta po torze, zanim ten tor zacznie mieć zakręty.</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1193154861?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1193154861?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<h3>Checkpoint progressu</h3>
+<p>Sukces tej lekcji nie oznacza, że całe 10xCards jest gotowe.</p>
+<p>Sukces oznacza, że masz:</p>
+<ul>
+<li>wybrany stream z roadmapy,</li>
+<li>change folder dla konkretnej zmiany,</li>
+<li><strong>plan.md</strong> i <strong>plan-brief.md</strong>,</li>
+<li>plan po szybkim review,</li>
+<li>przynajmniej jedną fazę zaimplementowaną albo gotowy checkpoint pokazujący, jak faza wygląda po wykonaniu,</li>
+<li>zaktualizowane <strong>## Progress</strong>.</li>
+</ul>
+<h2>🧑🏻‍💻 Zadania praktyczne</h2>
+<ul>
+<li><strong>Zaplanuj jeden slice z roadmapy.</strong> Wybierz z <strong>context/foundation/roadmap.md</strong> foundation lub mały slice na rozgrzewkę. Uruchom <strong>/10x-plan &lt;change-id&gt;</strong> i zaplanuj implementację danej funkcjonalności. Cel: plan implementacji danej zmiany z rozbiciem na fazy.</li>
+<li><strong>Zaimplementuj wybrany slice.</strong> Odpal <strong>/10x-implement &lt;change-id&gt;</strong>. W trakcie pracy obserwuj, jak agent trzyma się danej fazy, czy raportuje modyfikowane pliki, uruchamia komendy weryfikacji i zatrzymuje się na testach ręcznych. Cel: jeden slice roadmapy domknięty zgodnie z planem.</li>
+</ul>
+<p>Jeśli z powodzeniem przetestujesz cykl <strong>plan -&gt; implement</strong>, dodaj do niego kolejne elementy z lekcji modułu drugiego i spróbuj w tym tygodniu domknąć kluczowe obszary swojego MVP. Pamiętaj o North Star, czyli jednym kluczowym aspekcie, który decyduje o wartości projektu. Reszta powinna poczekać na swoją kolej. Nie pędź na oślep - jeśli potrzebujesz więcej czasu na ocenę planu i review kodu, pracuj swoim tempem.</p>
+<h2>Deep Dive</h2>
+<h3>Dlaczego plan nie jest biurokracją</h3>
+<p>Planowanie ma złą reputację, bo wielu z nas kojarzy je z dokumentem, który powstaje przed pracą, a potem nikt do niego nie wraca.</p>
+<p>W pracy z agentem plan pełni inną funkcję. To nie jest prognoza. To punkt synchronizacji, zanim agent zacznie modyfikować pliki.</p>
+<p>Agent potrafi szybko przeczytać repo, zaproponować kolejność, wskazać pliki i zbudować mentalny model zmiany. Problem w tym, że jeśli zrobi to tylko "w głowie" w ramach sesji, ty widzisz efekt dopiero po diffie. A diff po kilku minutach autonomicznej pracy może być już zbyt szeroki, żeby wygodnie ocenić, gdzie zaczęło się odchylenie (tzw. drift).</p>
+<p><strong>plan.md</strong> przesuwa kontrolę wcześniej (shift-left).</p>
+<p>Zamiast pytać po fakcie ("dlaczego zmieniłeś te pliki?"), pytasz wcześniej ("czy te pliki naprawdę są w scope tasku?"). Zamiast odkrywać po implementacji, że agent zinterpretował <strong>S-02</strong> jako przebudowę całego modelu kart, łapiesz to na etapie planowania.</p>
+<p>To bardzo praktyczna różnica.</p>
+<p>Cursor opisuje Plan Mode jako tryb, w którym agent najpierw bada kod, zadaje pytania i tworzy plan do review przed implementacją. Claude Code dokumentuje podobny workflow "plan before editing" i jednocześnie ostrzega, że planowanie ma swój koszt. OpenAI w materiałach o Codexie i planach wykonawczych również podkreśla wartość samowystarczalnych planów przy dłuższych zadaniach.</p>
+<p>Nie wyciągamy z tego wniosku "zawsze rób plan". Wyciągamy lepszy: <strong>im większe ryzyko i im więcej plików, tym ważniejszy czytelny plan przed kodem</strong>.</p>
+<h3>Plan Mode a <strong>/10x-plan</strong></h3>
+<p>Wbudowany Plan Mode w narzędziu i <strong>/10x-plan</strong> rozwiązują podobny problem, ale na innych poziomach trwałości.</p>
+
+<ul>
+<li><strong>Cecha</strong>: Gdzie żyje plan | <strong>Wbudowany Plan Mode</strong>: w UI narzędzia albo w rozmowie | <strong><strong>/10x-plan</strong> w 10xWorkflow</strong>: w <strong>context/changes/&lt;change-id&gt;/plan.md</strong></li>
+<li><strong>Cecha</strong>: Jak długo żyje | <strong>Wbudowany Plan Mode</strong>: zależnie od sesji | <strong><strong>/10x-plan</strong> w 10xWorkflow</strong>: tak długo jak repo</li>
+<li><strong>Cecha</strong>: Do czego służy | <strong>Wbudowany Plan Mode</strong>: kontrola przed edycją | <strong><strong>/10x-plan</strong> w 10xWorkflow</strong>: kontrola, hand-off, implementacja, review</li>
+<li><strong>Cecha</strong>: Jak wznowić pracę | <strong>Wbudowany Plan Mode</strong>: przez historię narzędzia | <strong><strong>/10x-plan</strong> w 10xWorkflow</strong>: przez pliki: <strong>change.md</strong>, <strong>plan.md</strong>, <strong>plan-brief.md</strong>, <strong>## Progress</strong></li>
+<li><strong>Cecha</strong>: Jak łączy się z roadmapą | <strong>Wbudowany Plan Mode</strong>: ręcznie, przez prompt | <strong><strong>/10x-plan</strong> w 10xWorkflow</strong>: przez change-id i folder zmiany</li>
+</ul>
+<p>Nie musisz wybierać jednego albo drugiego. Jeśli twoje narzędzie ma świetny Plan Mode, możesz go używać jako interfejsu pracy. W 10xWorkflow zależy nam jednak na tym, żeby finalny kontrakt trafiał do repozytorium.</p>
+<p>Historia rozmowy jest krucha. Plik w repo jest trwały.</p>
+<h3>Architekt i koder</h3>
+<p>Coraz częściej narzędzia agentowe rozdzielają role modelu: mocniejszy model do planowania, tańszy albo szybszy do egzekucji. Claude Code ma nawet konfiguracje (<strong>opusplan</strong>) - <a href="https://code.claude.com/docs/en/model-config">link</a>, które pokazują taki podział jako wzorzec - planowanie wymaga mocniejszego rozumowania, a wykonanie części zmian może być bardziej rutynowe.</p>
+<p>Nie traktuj tego jak obowiązkowej konfiguracji. Nazwy modeli, ceny i domyślne ustawienia zmieniają się zbyt szybko, żeby budować na nich metodę kursu.</p>
+<p>Traktuj to jako model mentalny:</p>
+<ul>
+<li><strong>architekt</strong> ustala zakres, ryzyka, kontrakty i fazy,</li>
+<li><strong>koder</strong> wykonuje fazę zgodnie z planem,</li>
+<li><strong>człowiek</strong> zatwierdza kierunek i pilnuje, czy plan nadal odpowiada produktowi.</li>
+</ul>
+<p>W prostych zadaniach te role mogą zmieścić się w jednej sesji i jednym modelu. W trudniejszych możesz świadomie rozdzielić planowanie i implementację: osobny wątek, mocniejszy model, subagent do researchu albo ręczne review planu.</p>
+<p>Najważniejszy nie jest branding modelu. Najważniejsza jest granica artefaktu: zanim zacznie się kod, mamy plan, który da się przeczytać.</p>
+<h3>Co robić z <strong>Unknowns</strong></h3>
+<p>Roadmapa często zawiera <strong>Unknowns</strong>, <strong>Blockers</strong> i <strong>Risk</strong>. Naturalny odruch to spróbować zamknąć je wszystkie przed planowaniem.</p>
+<p>Nie rób tego automatycznie.</p>
+<p>Część niewiadomych jest dokładnie tym, co <strong>/10x-plan</strong> ma rozstrzygnąć po przeczytaniu kodu. Jeśli roadmapa mówi "nie wiadomo, czy istnieje już komponent formularza", to plan może sprawdzić repo i zdecydować. Jeśli roadmapa mówi "nie wiadomo, czy biblioteka SRS wspiera wymagany rating scale", to prawdopodobnie potrzebujesz osobnego researchu, bo to nie jest lokalne pytanie o kod.</p>
+<p>Praktyczna reguła:</p>
+<ul>
+<li><strong>lokalne unknowns</strong> - pozwól <strong>/10x-plan</strong> je rozstrzygnąć,</li>
+<li><strong>zewnętrzne unknowns</strong> - sięgnij po research, jeśli wpływają na decyzję techniczną,</li>
+<li><strong>podejrzane założenia</strong> - użyj framingu, jeśli nie masz pewności, czy problem jest dobrze postawiony,</li>
+<li><strong>unknowns bez wpływu na obecny slice</strong> - zostaw w <strong>Open Questions</strong> albo <strong>Parked</strong>.</li>
+</ul>
+<p>To chroni cię przed "researchowaniem na zapas". Research jest świetny, gdy blokuje decyzję. Jest stratą czasu, gdy tylko poprawia samopoczucie.</p>
+<h3>Kiedy zatrzymać implementację</h3>
+<p>Ta lekcja nie jest jeszcze pełnym wykładem o drifcie, ale jeden sygnał musisz znać od razu.</p>
+<p>Jeśli w trakcie fazy agent odkryje fakt, który zmienia kontrakt planu, zatrzymaj implementację.</p>
+<p>Przykłady:</p>
+<ul>
+<li>plan zakładał istniejący model <strong>Deck</strong>, ale w repo nie ma nic podobnego,</li>
+<li>plan zakładał jedną ścieżkę auth, a projekt ma dwie niespójne ścieżki,</li>
+<li>plan zakładał prosty zapis kart, ale walidacja domenowa wymaga decyzji produktowej,</li>
+<li>plan zakładał dotknięcie trzech plików, a agent chce przebudować dziesięć modułów.</li>
+</ul>
+<p>Mały mismatch można zaadaptować w miejscu. Literówka w nazwie pliku, inny eksport, drobna różnica w strukturze komponentu - to normalne.</p>
+<p>Ale jeśli zmienia się end state albo powierzchnia kontraktu, nie "dokręcaj" kodu kolejnym promptem. Wróć do planu, popraw go i dopiero kontynuuj.</p>
+<p>W lekcji czwartej pogłębimy to na SRS, gdzie drift może wynikać z braku świeżej dokumentacji biblioteki. Tutaj wystarczy zapamiętać: plan nie jest więzieniem, ale każda jego zmiana powinna być jawna.</p>
+<h2>Materiały Dodatkowe</h2>
+<ul>
+<li><strong>Introducing Plan Mode</strong> / Cursor / <a href="https://cursor.com/blog/plan-mode">https://cursor.com/blog/plan-mode</a> - przykład productowego Plan Mode: research kodu, pytania doprecyzowujące i plan przed implementacją.</li>
+<li><strong>Best practices for Claude Code</strong> / Anthropic / <a href="https://code.claude.com/docs/en/best-practices">https://code.claude.com/docs/en/best-practices</a> - dobre źródło dla zasady, że planowanie pomaga przy niepewnych i wieloplikowych zmianach, ale ma overhead.</li>
+<li><strong>Common workflows</strong> / Anthropic / <a href="https://code.claude.com/docs/en/common-workflows">https://code.claude.com/docs/en/common-workflows</a> - opis workflowu planowania przed edycją i oddzielania researchu od implementacji.</li>
+<li><strong>Model configuration</strong> / Anthropic / <a href="https://code.claude.com/docs/en/model-config">https://code.claude.com/docs/en/model-config</a> - kontekst dla wzorca architekt/koder; traktuj jako przykład roli modelu, nie stałą rekomendację konkretnej konfiguracji.</li>
+<li><strong>Exec Plans for Complex Coding Tasks</strong> / OpenAI Cookbook / <a href="https://developers.openai.com/cookbook/articles/codex_exec_plans">https://developers.openai.com/cookbook/articles/codex_exec_plans</a> - szersze uzasadnienie dla samowystarczalnych planów jako artefaktów pracy przy dłuższych zadaniach.</li>
+<li><strong>How OpenAI uses Codex</strong> / OpenAI / <a href="https://cdn.openai.com/pdf/6a2631dc-783e-479b-b1a4-af0cfbd38630/how-openai-uses-codex.pdf">https://cdn.openai.com/pdf/6a2631dc-783e-479b-b1a4-af0cfbd38630/how-openai-uses-codex.pdf</a> - praktyczne wskazówki o pracy ze strukturą, kontekstem, zadaniami podobnymi do issue i planem przed większą implementacją.</li>
+</ul>

@@ -1,0 +1,77 @@
+---
+import { CourseSlug } from '@/models/CollectionMappings';
+import { LessonEntry } from '@/models/LessonEntry';
+import { htmlToMarkdown } from '@/utils/htmlToMarkdown';
+import { sanitizeForYaml } from '@/utils/decodeHtmlEntities';
+import { isAccessAllowed } from '@/server/circle/lessonPlan';
+import { verifyExternalAuth } from '@/server/externalAuth';
+import { buildAttachmentContentDisposition } from '@/utils/contentDisposition';
+import { getExternalCourseLessonContent } from '@/server/content/externalMarkdownContent';
+
+const { lessonId, courseId } = Astro.params as { lessonId: string; courseId: CourseSlug };
+const env = Astro.locals.runtime.env;
+
+if (courseId === '10xdevs-3-prework') {
+  return new Response(null, { status: 404 });
+}
+
+if (!lessonId || !courseId) {
+  console.log('No lessonId or courseId provided');
+  return Astro.redirect('/external/not-found');
+}
+
+// Auth check - verify external auth token and membership
+const authResult = await verifyExternalAuth(Astro.cookies, courseId, env);
+if (!authResult.isAuthenticated) {
+  const returnUrl = encodeURIComponent(`/external/${courseId}/${lessonId}`);
+  return Astro.redirect(`/external/${courseId}/login?returnUrl=${returnUrl}`);
+}
+
+if (!isAccessAllowed(Number(lessonId))) {
+  return Astro.redirect('/external/locked');
+}
+
+let lesson: LessonEntry;
+try {
+  const lessonData = await getExternalCourseLessonContent(courseId, lessonId, env);
+  lesson = lessonData.lesson;
+} catch (error) {
+  console.error('Failed to fetch lesson content:', error);
+  return Astro.redirect('/external/not-found');
+}
+
+let markdownContent = htmlToMarkdown(lesson.data.content);
+
+// Extra safety: ensure no DOCTYPE or HTML structure at the start
+markdownContent = markdownContent.replace(/^<!DOCTYPE[^>]*>/i, '').trim();
+markdownContent = markdownContent.replace(/^<html[^>]*>/i, '').trim();
+
+// Get filename from query parameter, default to 'lesson' if not provided
+const url = new URL(Astro.request.url);
+const filename = url.searchParams.get('filename') || 'lesson';
+
+// Clean lesson name from HTML entities for frontmatter
+const cleanTitle = sanitizeForYaml(lesson.data.name);
+
+// Add YAML frontmatter with metadata
+const frontmatter = `---
+title: "${cleanTitle}"
+course: "${courseId}"
+source: "Przeprogramowani.pl"
+exported: "${new Date().toISOString().split('T')[0]}"
+format: "markdown"
+---
+
+`;
+
+const finalContent = frontmatter + markdownContent;
+
+// Return raw Response to bypass Astro's HTML rendering
+// This prevents Astro from adding <!DOCTYPE html> and HTML-escaping quotes
+return new Response(finalContent, {
+  headers: {
+    'Content-Type': 'text/markdown; charset=utf-8',
+    'Content-Disposition': buildAttachmentContentDisposition(filename),
+  },
+});
+---

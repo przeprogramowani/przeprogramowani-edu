@@ -1,0 +1,50 @@
+<meta name="lesson-id" content="useMemo, useCallback"><html><head></head><body><div><p>W tej lekcji omówimy, jak efektywnie stosować TypeScript w projektach React, korzystając z hooków useMemo oraz useCallback. Zrozumienie tych hooków jest kluczowe dla optymalizacji wydajności aplikacji, zwłaszcza gdy pracujemy z kosztownymi obliczeniami lub przekazujemy funkcje do komponentów potomnych.</p><h2>Hook useMemo</h2><p>useMemo pozwala na memoizację (zapamiętywanie) wyniku kosztownych obliczeń. Polega to na tym, że funkcja przekaza do useMemo zostaje wykonana ponownie tylko wtedy, gdy zmienią się jej zależności. Jest to analogiczne do useEffect, który wykonuje efekt tylko wtedy, gdy zmieniają się określone zależności.</p><p>Rozważmy przykład, w którym chcemy obliczyć histogram kolorów obrazu. Obliczenie to jest kosztowne, dlatego chcemy je wykonać tylko wtedy, gdy dane obrazu (imageData) ulegną zmianie.</p><pre><code>import React, { useMemo } from 'react';
+
+interface ImageData {
+  // Definicja właściwości ImageData
+}
+
+function getHistogram(image: ImageData): number[] {
+  // Implementacja obliczania histogramu
+  const histogram: number[] = [];
+  // ... logika obliczania histogramu
+  return histogram;
+}
+
+const HistogramComponent: { imageData: ImageData } = ({ imageData }) =&gt; {
+  const histogram = useMemo&lt;number[]&gt;(() =&gt; getHistogram(imageData), [imageData]);
+
+  return (
+    &lt;div&gt;
+      {histogram.map((count, index) =&gt; (
+        &lt;div key={index} style={{ height: count }}&gt;&lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  );
+};</code></pre><ul><li><p>Funkcja getHistogram przyjmuje ImageData i zwraca tablicę liczb reprezentujących histogram.</p></li><li><p>Hook <em>useMemo</em> memoizuje wynik <em>getHistogram(imageData)</em> i przechowuje go w histogram.</p></li><li><p>Obliczenie histogramu zostanie wykonane tylko wtedy, gdy imageData ulegnie zmianie.</p></li></ul><h2>Hook useCallback</h2><p>useCallback to hook w React, który zwraca memoizowaną wersję funkcji. Jest to szczególnie przydatne, gdy przekazujemy funkcje do komponentów potomnych, ponieważ utrzymanie stabilną referencję funkcji między renderowaniami i zapobiega nadmiarowym rerenderom.</p><p>Przyjrzyjmy się przykładowi, w którym definiujemy funkcję, która wykonuje pewne działanie na podstawie przekazanych parametrów.</p><pre><code>import React, { useCallback } from 'react';
+
+const CallbackComponent = () =&gt; {
+  const memoizedCallback = useCallback((param1: string, param2: number) =&gt; {
+    console.log(param1, param2);
+    return { ok: true };
+  }, []);
+
+  // Użycie memoizedCallback
+  const handleClick = () =&gt; {
+    const result = memoizedCallback('test', 42);
+    console.log(result);
+  };
+
+  return &lt;button onClick={handleClick}&gt;Kliknij mnie&lt;/button&gt;;
+};</code></pre><ul><li><p>useCallback memoizuje funkcję, dzięki czemu jej referencja pozostaje stabilna między renderowaniami, o ile zależności się nie zmienią.</p></li><li><p>W przykładzie funkcja przyjmuje param1 typu string oraz param2 typu number i zwraca obiekt { ok: true }.</p></li><li><p>Dzięki TypeScript, typy parametrów i zwracany typ są jasno określone, co zwiększa bezpieczeństwo typów i ułatwia refaktoryzację.</p></li></ul><hr><h2>Typowanie w useMemo i useCallback</h2><h3>useMemo</h3><p>Kiedy korzystasz <em>useMemo</em>, warto upewnić się, że typ zwracany przez useMemo jest taki sam jak ten zwracany przez jego callbacka. React automatycznie inferuje typy, ale w razie potrzeby można je jawnie określić.</p><pre><code>const memoizedValue = useMemo&lt;number[]&gt;(() =&gt; computeExpensiveValue(a, b), [a, b]);</code></pre><h3>useCallback</h3><p>Podobnie jak useMemo, useCallback może być typowany jawnie lub polegać na inferencji TypeScript.</p><pre><code>const memoizedCallback = useCallback(
+  (param1: string, param2: number): { ok: boolean } =&gt; {
+    console.log(param1, param2);
+    return { ok: true };
+  },
+  [/* zależności */]
+);</code></pre><p><strong>Różnie pomiędzy wersjami:</strong></p><ul><li><p>W React &lt; 18, typowanie argumentów funkcji w useCallback domyślnie używa any[], co może prowadzić do błędów typów.</p></li><li><p>W React &gt;= 18, typowanie zostało zmienione, aby być bardziej restrykcyjne, co wymusza jawne określenie typów argumentów funkcji.</p></li></ul><p><strong>Przykład błędu w React &gt;= 18:</strong></p><pre><code>// @ts-expect-error Parameter 'e' implicitly has an 'any' type.
+const handleEvent = useCallback((e) =&gt; {
+  console.log(e);
+}, []);</code></pre><p><strong>Poprawne typowanie:</strong></p><pre><code>const handleEvent = useCallback((e: React.MouseEvent&lt;HTMLButtonElement&gt;) =&gt; {
+  console.log(e);
+}, []); </code></pre><hr><h2>Podsumowanie</h2><p>W tej lekcji omówiliśmy, jak używać hooków useMemo oraz useCallback w React z TypeScript, aby zoptymalizować wydajność aplikacji:</p><ul><li><p><strong>useMemo</strong> służy do memoizacji wyników kosztownych obliczeń, wykonując je tylko wtedy, gdy zmieniają się zależności.</p></li><li><p><strong>useCallback</strong> pozwala na memoizację funkcji, utrzymując ich referencje stabilne między renderowaniami, co jest szczególnie przydatne przy przekazywaniu funkcji do komponentów potomnych.</p></li><li><p><strong>Typowanie</strong> tych hooków z TypeScript jest proste dzięki typom wbudowanym i inferencji kompilatora.</p></li><li><p><strong>Różnice pomiędzy wersjami React</strong> wpływają na sposób typowania funkcji w useCallback, co warto mieć na uwadze przy migracji projektu do wersji &gt;= 18.</p></li></ul></div></body></html>

@@ -1,0 +1,128 @@
+<meta name="lesson-id" content="Typy mapowane"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 52.5822%;"><iframe src="https://player.vimeo.com/video/1035131827?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="189" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2>Wprowadzenie</h2><p>W poprzedniej lekcji poznałeś zestaw wbudowanych typów pomocniczych, które z wykorzystaniem mechanizmu generyków modyfikują tworzone przez nas typy bazowe.</p><p>W tej lekcji poznasz mechanizm, dzięki któremu twórcy TypeScriptu byli w stanie utworzyć opisywane wcześniej narzędzia. Rozpoczynamy pracę z typami mapowanymi (<em>mapped types)</em>.</p><h3>Typy mapowane - pierwsze kroki</h3><p>Obejrzyj kolejny film aby poznać typy mapowane:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1034488759?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Przedstawiony na filmie typ <em>Clone</em> prezentuje się następująco:</p><pre><code>type Person = {
+  firstName: string;
+  lastName: string;
+  age: number;
+};
+
+type Clone&lt;T&gt; = {
+  [Prop in keyof T]: T[Prop];
+};
+
+type PersonClone = Clone&lt;Person&gt;;</code></pre><p>Mechanizm typów mapowanych będziemy wykorzystać przez kilka kolejnych lekcji - pierwszym przykładem ich zastosowania będzie odtworzenie typów wbudowanych, które poznałeś&nbsp;we wcześniejszej wersji kursu.</p><p>Będzie to ćwiczenie które pozwoli nam uniknąć poczucia pracy z “magicznymi” typami wbudowanymi bo szybko okaże się, że ich odpowiedniki można z łatwością zbudować samemu.</p><h2>Odtwarzanie typów wbudowanych</h2><h3>Readonly - pola do odczytu</h3><p>Spróbujmy teraz odtworzyć wbudowany typ Readonly&lt;T&gt; - jego zachowanie opisujemy poniżej:</p><pre><code>type Person = {
+  firstName: string;
+};
+
+// Obiekt staje się zamknięty na modyfikacje
+const person: Readonly&lt;Person&gt; = {
+  firstName: "John",
+};
+
+person.firstName = "Mark";
+         // ❌ ^ - Cannot assign to 'firstName' because it is a read-only property.</code></pre><p>Odtworzenie tego mechanizmu z wykorzystaniem typu mapowanego wygląda następująco:</p><pre><code>type ReadonlyClone&lt;Type&gt; = {
+  readonly [Prop in keyof Type]: Type[Prop];
+};
+
+const person2: ReadonlyClone&lt;Person&gt; = {
+  firstName: "John",
+};
+
+person.firstName = "Mark";
+         // ❌ ^ - Cannot assign to 'firstName' because it is a read-only property.</code></pre><p>Nasz typ <em>ReadonlyClone</em> wykorzystuje słowo kluczowe <em>readonly</em> po to żeby “przepisać” wszystkie pola obiektu bazowego właśnie w trybie tylko do odczytu. Dzięki temu uzyskujemy blokadę dalszych modyfikacji pól obiektu z tym typem.</p><p>Żeby operację odwrócić, możemy również wprowadzić “usuwacza” trybu readonly - nowy typ wygląda niemal identycznie - <strong>różni się dodatkiem znaku minus</strong>, usuwającego modyfikator pola.</p><pre><code>type ReadonlyRemoval&lt;T&gt; = {
+  -readonly [P in keyof T]: T[P];
+};</code></pre><p>W ramach eksperymentu możemy połączyć go z poprzednio wprowadzonym typem ReadonlyClone aby “wyzerować” jego działanie:</p><pre><code>const justPerson: ReadonlyRemoval&lt;ReadonlyClone&lt;Person&gt;&gt; = {
+  firstName: "John",
+};
+
+justPerson.firstName = "Mark"; 
+console.log(justPerson); // { firstName: "Mark" }</code></pre><h3>Partial / Required - pola opcjonalne i wymagane</h3><p>Kolejny typ wbudowany, który spróbujemy odtworzyć, to <em>Required</em> - ustawia on wszystkie pola jako wymagane:</p><pre><code>type Account = {
+  nickname?: string;
+};
+
+const account: Required&lt;Account&gt; = {};
+   // ❌ ^ - Property 'nickname' is missing in type '{}' but required in type 'Required&lt;Account&gt;'</code></pre><p>Jego przeciwieństwem jest typ <em>Partial</em>, który pozwala na budowanie “częściowo gotowych” obiektów:</p><pre><code>type ProductDetails = {
+  name: string;
+};
+
+const product: Partial&lt;ProductDetails&gt; = {};
+
+product.name = "MacBook";</code></pre><p>Jak odtworzyć mechanizm dostępności wszystkich pól bez użycia typu wbudowanego? Wykorzystamy ten sam operator (?) co w przypadku standardowego typu - tyle, że w kontekście typu mapowanego:</p><pre><code>// Wszystkie pola stają się opcjonalne
+type OptionalClone&lt;Type&gt; = {
+  [Prop in keyof Type]?: Type[Prop];
+};
+
+// Wszystkie pola stają się wymagane
+type RequiredClone&lt;Type&gt; = {
+  [Prop in keyof Type]-?: Type[Prop];
+};</code></pre><p>Sprawdźmy najpierw pierwszy z nowych typów - istniejące pola staną się opcjonalne:</p><pre><code>type User = {
+  age: number;
+};
+
+const u1: OptionalClone&lt;User&gt; = {age: 25};
+const u2: OptionalClone&lt;User&gt; = {};</code></pre><p>A teraz drugi z nowych typów - istniejące pola staną się wymagane:</p><pre><code>type Cart = {
+  discount?: number;
+};
+
+const cart: RequiredClone&lt;Cart&gt; = {};
+ // ❌ ^ - Property 'discount' is missing in type '{}' but required in type 'RequiredClone&lt;Cart&gt;'</code></pre><h3>Pick i Omit - wybór i pomijanie określonych pól</h3><p>Dwa kolejne typy wbudowane, które możemy odtworzyć, dotyczą selekcji pól obiektu. Pierwszy z nich to <em>Pick</em>, który pozwala określić te pola, które powinny pozostać częścią nowego typu:</p><pre><code>type Book = {
+  title: string;
+  author: string;
+  pages: number;
+};
+
+const book: Pick&lt;Book, "title" | "author"&gt; = {
+  title: "1984",
+  author: "George Orwell",
+  // pages: 422
+  // ❌ ^ - (...) 'pages' does not exist in type 'Pick&lt;Book, "title" | "author"&gt;'
+};</code></pre><p><em>Omit</em> to jego przeciwieństwo - w jego przypadku wskazujemy pola do pominięcia:</p><pre><code>type BankAccount = {
+  id: number;
+  bankName: string;
+  balance: number;
+};
+
+const accountPreview: Omit&lt;BankAccount, "balance"&gt; = {
+  id: 133,
+  bankName: "Bank of TypeScript",
+  // balance: 1000,
+  // ❌ ^ - (...) 'balance' does not exist in type 'Omit&lt;BankAccount, "balance"&gt;'
+};</code></pre><p>Jak odtworzyć pierwszy z nich? Musimy wykorzystać generyk z dwoma parametrami, gdzie drugim parametrem będą klucze pierwszego.</p><p>Wykorzystajmy uwagę z początku lekcji o tym, jak określać dozwolone pola obiektu mapowanego:</p><pre><code>[Prop in /* POLA DOZWOLONE */]</code></pre><p>Stąd:</p><pre><code>type PickClone&lt;Type, AllowedKeys extends keyof Type&gt; = {
+  [Prop in AllowedKeys]: Type[Prop];
+};
+
+// lub w dwóch krokach:
+
+type TypeKeys&lt;Type&gt; = keyof Type;
+
+type PickClone&lt;Type, AllowedKeys extends TypeKeys&lt;Type&gt;&gt; = {
+  [Prop in AllowedKeys]: Type[Prop];
+};</code></pre><p>Dzięki temu uzyskamy możliwość wskazywania podzbioru pól wchodzących w skład typu bazowego:</p><pre><code>const book2: PickClone&lt;Book, "title" | "author"&gt; = {
+  title: "1984",
+  author: "George Orwell",
+};</code></pre><p>W przypadku typu <em>Omit </em>sytuacja jest nieco bardziej wymagająca - zacznijmy od ogólnego kształtu nowego typu. Znowu potrzebujemy dwóch parametrów - typu bazowego oraz listy kluczy niedozwolonych:</p><pre><code>type OmitClone&lt;Type, BannedKeys extends keyof Type&gt; = {
+  [Prop in /* ? */]: Type[Prop];
+};</code></pre><p>Jak sprawić, żeby nowy obiekt nie zawierał tych kluczy? Zróbmy krok wstecz i zobaczmy, jak mogłoby to wyglądać w standardowej funkcji:</p><pre><code>const keys = ['a', 'b', 'c'];
+const banned = ['b'];
+
+const filteredKeys = keys.filter(k =&gt; banned.includes(k) ? false : true); // ['a', 'c']</code></pre><p>W przypadku typów mapowanych, naszym filtrem staje się połączenie słowa kluczowego “as” oraz ewentualnego zwracania typu <em>never</em>:</p><pre><code>type OmitClone&lt;Type, BannedKeys extends keyof Type&gt; = {
+  [Prop in keyof Type as Prop extends BannedKeys ? never : Prop]: Type[Prop];
+};</code></pre><p>Można to interpretować w ten sposób:</p><ol start="1"><li><p>Prop in keyof Type - Iteruj przez wszystkie pola (<em>Prop</em>) z kluczy typu <em>Type (keyof Type),</em></p></li><li><p><em>as - </em>zmapuj pole na coś nowego:</p><ol start="1"><li><p>Jeśli pole należy do zestawu <em>BannedKeys</em>, zwróć typ <em>never</em> (pomiń to pole),</p></li><li><p>W przeciwnym razie zachowaj go.</p></li></ol></li></ol><p>Co ciekawe, podobnie jak w przypadku zwykłej funkcji, nasz “filtr” można wyodrębnić:</p><pre><code>type FilterType&lt;A, B&gt; = A extends B ? never : A;
+
+type OmitClone&lt;Type, BannedKeys extends keyof Type&gt; = {
+  [Prop in keyof Type as FilterType&lt;Prop, BannedKeys&gt;]: Type[Prop];
+};
+
+const acc: OmitClone&lt;BankAccount, "balance"&gt; = {
+  id: 23,
+  bankName: "Bank of TS",
+  // balance: 24,
+  // ❌ ^ 'balance' does not exist in type 'OmitClone&lt;BankAccount, "balance"&gt;'
+};</code></pre><h3>Typy warunkowe w akcji</h3><p>Powyższy przykład wymusił na nas zastosowanie tzw. typu warunkowego (<em>conditional type)</em> - to kolejny ważny element algebry typów, który będziemy poznawać w kolejnych lekcjach. Jego podstawowe założenia nie powinny być dla ciebie problemem.</p><p>Pamiętaj jednak, że wszystkie operacje odbywają się na <strong>typach, a nie wartościach:</strong></p><pre><code>interface User {
+  firstName: string;
+}
+
+type IsString&lt;T&gt; = T extends string ? true : false;
+
+type Result = IsString&lt;User["firstName"]&gt;; // true
+
+const t1: Result = true; // OK
+const t2: Result = false; // ❌ Type 'false' is not assignable to type 'true'</code></pre><h2>Podsumowanie</h2><p>Poznane w tej lekcji typy mapowane to niezwykle ważny element zaawansowanego systemu typów języka TypeScript. Być może od strony aplikacji nie będziesz go wykorzystywał aż tak często, ale budując reużywalne biblioteki i narzędzia, będzie on niezwykle ważny.</p><p>W kolejnych lekcjach połączymy go z nowymi rodzajami typów i zaprezentujemy przykłady operacji, w których to dynamiczne mapowanie pól i typów staje się niezbędne.</p><p>Co ważne, typy mapowane to również istotny wyróżnik w debacie “typy vs interfejsy” - na dzisiaj tę funkcjonalność można osiągnąć wyłącznie z poziomu typów.</p><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>411-mapped-access </strong>- Rozwijasz projekt, w którym typy mapowane wykorzystywane są do określania dostępu do poszczególnych stron w aplikacji. Zapewniają one, że żadna nowa strona nie zostanie pominięta, a dostęp do niej przypadkowo zablokowany. Twoim zadaniem jest zbudowanie mapowanego typu <em>PagesAccess</em> oraz implementacja funkcji <em>checkAccess</em>, które potwierdzą dostęp do każdej dostępnej strony. Działanie mechanizmu potwierdzą testy jednostkowe.</p></li><li><p><strong>412-mapped-extender</strong> - Zaimplementuj typ mapowany <em>type FieldExtender&lt;T, K&gt;, </em>który dla podanego typu T tworzy nowy typ rozszerzony - lista pól jest taka sama, ale zamiast typów prostych każde pole staje się typem złożonym z dodatkowym polem “value”. Dostępne testy i kod przedstawiają docelowy obiekt, którego kompilacja powinna zostać przez ciebie odblokowana.</p></li></ol><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

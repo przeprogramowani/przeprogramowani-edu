@@ -1,0 +1,18 @@
+project: m3-l4-playwright-agents-research
+question: "What is the current state (mid-2026) of using Playwright with AI agents for E2E testing, and what are the practical workflows, tools, and multimodal capabilities available?"
+status: bootstrap
+started: 2026-05-26
+phase: literature-survey
+
+focus_areas:
+  - playwright-mcp-server
+  - playwright-cli
+  - browser-bind-api
+  - multimodal-e2e-testing
+  - agent-assisted-test-generation
+  - workflow-patterns
+  - stagehand-alternative
+  - best-practices
+
+target_output: lesson-spec-input
+audience: intermediate-developers-learning-ai-agents

@@ -1,0 +1,31 @@
+---
+import TenxCosmicLayout from '@/components/tenx-workflow/TenxCosmicLayout.astro';
+import BackstoryBody from '@/components/tenx-workflow/pages/BackstoryBody.astro';
+import { INTERNAL_BASE } from '@/components/tenx-workflow/config';
+import { tenxWorkflowAccess } from '@/components/tenx-workflow/gate';
+import { pagesForGroups, workflowPage } from '@/components/tenx-workflow/pages';
+
+const access = await tenxWorkflowAccess(Astro);
+if (access.redirect) return access.redirect;
+
+const page = workflowPage('log');
+
+// Access groups: strona spoza grup widza nie istnieje w jego wersji portalu.
+if (!page.access.some((g) => access.groups.includes(g))) {
+  return new Response('Not found', { status: 404 });
+}
+
+const navPages = pagesForGroups(access.groups);
+---
+
+<TenxCosmicLayout
+  title={page.title}
+  slug={page.slug}
+  base={INTERNAL_BASE}
+  modeDefaults={{ tryb: 'sf', dd: '1' }}
+  breadcrumb={page.breadcrumb}
+  pages={navPages}
+>
+  <BackstoryBody base={INTERNAL_BASE} />
+  <Fragment slot="footer-right">{page.footerRight}</Fragment>
+</TenxCosmicLayout>

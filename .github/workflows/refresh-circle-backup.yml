@@ -1,0 +1,55 @@
+name: Refresh Circle Backup
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'  # Runs at 00:00 every Sunday
+
+jobs:
+  refresh_circle_backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@przeprogramowani'
+
+      - name: Install global dependencies
+        run: npm ci --include=dev
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PKG_TOKEN }}
+
+      - name: Regenerate backup
+        run: |
+          cd tools/circle-lesson-backup &&
+          npm ci --include=dev &&
+          npm run start
+
+      - name: Copy lessons to platform
+        run: |
+          rm -rf apps/edu-platform/src/content &&
+          mkdir apps/edu-platform/src/content &&
+          cp -r tools/circle-lesson-backup/backup/* apps/edu-platform/src/content
+
+      - name: Get timestamp
+        id: timestamp
+        run: echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Create a pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          title: Platform lessons - weekly refresh
+          delete-branch: true
+          branch: refresh-platform-lessons-${{ steps.timestamp.outputs.timestamp }}
+          body: |
+            Weekly refresh of platform lessons
+            - Pulled from Circle Admin API
+            - Includes all lessons from all spaces
+          labels: |
+            automation

@@ -1,0 +1,41 @@
+---
+import { Content } from '../../../content/resources/m0-study-notes.md';
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Notatki szkoleniowe</title>
+    <link rel="stylesheet" href="/styles/highlight-github-dark.min.css" />
+  </head>
+  <body class="bg-gray-950 text-gray-100 min-h-screen">
+    <div class="max-w-2xl mx-auto px-6 py-8">
+      <img
+        src="/game/headers/resources.png"
+        alt=""
+        class="w-full rounded-lg mb-8 object-cover"
+        style="image-rendering: pixelated;"
+      />
+      <article class="prose prose-invert prose-sm max-w-none">
+        <Content />
+      </article>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  html,
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+  .bg-gray-950 {
+    background-color: rgb(3 7 18);
+  }
+  code {
+    font-size: 0.85em;
+  }
+</style>

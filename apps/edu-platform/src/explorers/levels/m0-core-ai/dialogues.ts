@@ -1,0 +1,512 @@
+import type { DialogueSequence } from '../../systems/DialogueTypes';
+import { FLAGS } from '../../config/flags';
+
+export const dialogues: Record<string, DialogueSequence> = {
+  // === INTRO CINEMATIC — plays once on first entry ===
+
+  'm0-core-ai-intro': {
+    id: 'm0-core-ai-intro',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: 'Drzwi do modułu CORE AI otwierają się z ciężkim metalicznym jękiem.', en: 'The doors to the CORE AI module open with a heavy metallic groan.' },
+        mode: 'cinematic',
+        autoAdvance: 3000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Powietrze jest inne. Gęstsze. Pachnie ozonem i przegrzanymi obwodami.', en: 'The air is different. Thicker. It smells of ozone and overheated circuits.' },
+        mode: 'cinematic',
+        autoAdvance: 3500,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Mózg statku. Wszystko zależy od tego, co tu znajdę.', en: 'The ship\'s brain. Everything depends on what I find here.' },
+        mode: 'cinematic',
+        autoAdvance: 3000,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Ale to uczucie... jakbym tu już kiedyś był.', en: 'But this feeling... like I\'ve been here before.' },
+        mode: 'monologue',
+      },
+    ],
+    onComplete: { setFlags: [FLAGS.M0_CORE_AI_INTRO_SEEN] },
+  },
+
+  // === FIRMWARE UPGRADE CONSOLE — first interaction ===
+
+  'm0-firmware-upgrade': {
+    id: 'm0-firmware-upgrade',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: 'KONSOLA AKTUALIZACJI — SmartTerminal v2.1', en: 'UPDATE CONSOLE — SmartTerminal v2.1' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Dostępna aktualizacja firmware: v2.1 → v3.0', en: 'Firmware update available: v2.1 → v3.0' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Instalowanie...', en: 'Installing...' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '▓▓▓▓▓▓▓▓▓▓ 100% — AKTUALIZACJA ZAKOŃCZONA', en: '▓▓▓▓▓▓▓▓▓▓ 100% — UPDATE COMPLETE' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Nowe moduły zainstalowane:', en: 'New modules installed:' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '  ▸ /navi — Nawigacja misji', en: '  ▸ /navi — Mission navigation' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '  ▸ /support — Łączność z bazą HQ', en: '  ▸ /support — HQ base communications' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Nowe komendy... /navi i /support. Ktoś przewidział, że będę ich potrzebować.', en: 'New commands... /navi and /support. Someone anticipated I would need them.' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Ten statek kryje więcej tajemnic, niż pokazuje.', en: 'This ship is hiding more secrets than it shows.' },
+        mode: 'monologue',
+      },
+    ],
+    onComplete: { setFlags: [FLAGS.M0_FIRMWARE_UPGRADED, FLAGS.CMDS_NAVI, FLAGS.CMDS_SUPPORT] },
+  },
+
+  // Firmware console — revisit after upgrade
+  'm0-firmware-upgrade-done': {
+    id: 'm0-firmware-upgrade-done',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: 'KONSOLA AKTUALIZACJI — SmartTerminal v3.0', en: 'UPDATE CONSOLE — SmartTerminal v3.0' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Firmware aktualny. Brak nowych aktualizacji.', en: 'Firmware up to date. No new updates.' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+    ],
+  },
+
+  // === CORE AI MODULE — requires firmware upgrade ===
+
+  // Shown when player tries to interact before firmware upgrade
+  'm0-core-ai-no-firmware': {
+    id: 'm0-core-ai-no-firmware',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: 'CORE AI — DOSTĘP ZABLOKOWANY', en: 'CORE AI — ACCESS LOCKED' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'SmartTerminal wymaga aktualizacji, aby uruchomić diagnostykę.', en: 'SmartTerminal requires an update to run diagnostics.' },
+        mode: 'system',
+        autoAdvance: 3000,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Najpierw muszę zaktualizować terminal...', en: 'I need to update the terminal first...' },
+        mode: 'monologue',
+      },
+    ],
+  },
+
+  // Main CORE AI discovery — the dramatic reveal
+  'm0-core-ai-malfunction': {
+    id: 'm0-core-ai-malfunction',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: 'CORE AI — DIAGNOSTYKA SYSTEMU', en: 'CORE AI — SYSTEM DIAGNOSTICS' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '═════════════════════════════', en: '═════════════════════════════' },
+        mode: 'system',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Status rdzenia: ████ KRYTYCZNY ████', en: 'Core status: ████ CRITICAL ████' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Moduły sensoryczne:    OFFLINE', en: 'Sensor modules:      OFFLINE' },
+        mode: 'system',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Moduł planowania:       OFFLINE', en: 'Planning module:      OFFLINE' },
+        mode: 'system',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Autodiagnostyka:        OFFLINE', en: 'Self-diagnostics:     OFFLINE' },
+        mode: 'system',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Pamięć długoterminowa:  USZKODZONA', en: 'Long-term memory:     DAMAGED' },
+        mode: 'system',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Tablica komunikacyjna:  OFFLINE', en: 'Communication array:  OFFLINE' },
+        mode: 'system',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '═════════════════════════════', en: '═════════════════════════════' },
+        mode: 'system',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'BŁĄD KRYTYCZNY: Nie można uruchomić CORE AI.', en: 'CRITICAL ERROR: Cannot start CORE AI.' },
+        mode: 'system',
+        autoAdvance: 3000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'UWAGA: Wykryto nieautoryzowaną modyfikację sektorów pamięci.', en: 'WARNING: Unauthorised modification of memory sectors detected.' },
+        mode: 'system',
+        autoAdvance: 3000,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Nie... to niemożliwe.', en: 'No... that\'s impossible.' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'CORE AI nie jest po prostu uszkodzony. Ktoś... coś mu to zrobiło.', en: 'CORE AI is not simply damaged. Someone... something did this to it.' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: '„Nieautoryzowana modyfikacja"... To nie awaria. To sabotaż.', en: '"Unauthorised modification"... This is not a failure. This is sabotage.' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Muszę znaleźć instrukcję serwisową. Musi tu gdzieś być.', en: 'I need to find the service manual. It must be somewhere here.' },
+        mode: 'monologue',
+      },
+    ],
+    onComplete: { setFlags: [FLAGS.M0_CORE_AI_MALFUNCTION_SEEN] },
+  },
+
+  // CORE AI module — revisit after malfunction discovery
+  'm0-core-ai-malfunction-revisit': {
+    id: 'm0-core-ai-malfunction-revisit',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: 'CORE AI — STATUS: KRYTYCZNY', en: 'CORE AI — STATUS: CRITICAL' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Wszystkie moduły offline. Wymagana naprawa.', en: 'All modules offline. Repair required.' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Cokolwiek zaatakowało CORE AI, wciąż tu jest. Czuję to.', en: 'Whatever attacked CORE AI is still here. I can feel it.' },
+        mode: 'monologue',
+      },
+    ],
+  },
+
+  // === SUPPORT MANUAL — requires CORE AI malfunction discovery ===
+
+  // Shown when interacting before discovering malfunction
+  'm0-support-manual-early': {
+    id: 'm0-support-manual-early',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: 'INSTRUKCJA SERWISOWA — CORE AI', en: 'SERVICE MANUAL — CORE AI' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Instrukcja serwisowa... na razie nie widzę powodu, żeby ją czytać.', en: 'Service manual... I see no reason to read it right now.' },
+        mode: 'monologue',
+      },
+    ],
+  },
+
+  // Main support manual reading — calibrates the uplink
+  'm0-support-manual-read': {
+    id: 'm0-support-manual-read',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: 'INSTRUKCJA SERWISOWA — CORE AI', en: 'SERVICE MANUAL — CORE AI' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '═════════════════════════════', en: '═════════════════════════════' },
+        mode: 'system',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'W przypadku awarii krytycznej:', en: 'In the event of a critical failure:' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '  1. Upewnij się, że SmartTerminal jest aktualny', en: '  1. Ensure SmartTerminal is up to date' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '  2. Użyj komendy /support aby nawiązać łączność z bazą HQ', en: '  2. Use the /support command to establish contact with HQ base' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '  3. Podaj token identyfikacyjny zespołowi wsparcia', en: '  3. Provide your identification token to the support team' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '  4. Postępuj zgodnie z instrukcjami z centrum wsparcia', en: '  4. Follow the instructions from the support centre' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '═════════════════════════════', en: '═════════════════════════════' },
+        mode: 'system',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: '/support... próbowałem wcześniej, ale nie działało.', en: '/support... I tried earlier, but it did not work.' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Chwila... to ten patent na kalibrację uplinku!', en: 'Wait... this is that uplink calibration trick!' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'KALIBRACJA UPLINKU... ZAKOŃCZONA.', en: 'UPLINK CALIBRATION... COMPLETE.' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Teraz powinno działać.', en: 'It should work now.' },
+        mode: 'monologue',
+      },
+    ],
+    onComplete: { setFlags: [FLAGS.M0_SUPPORT_CALIBRATED] },
+  },
+
+  // Astronaut reaction after running /support — triggered via terminal command
+  'm0-support-github-reaction': {
+    id: 'm0-support-github-reaction',
+    lines: [
+      {
+        speaker: 'astronaut',
+        text: { pl: '„GitHub"...? To słowo brzmi znajomo, ale nie wiem skąd.', en: '"GitHub"...? That word sounds familiar, but I don\'t know why.' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Jakieś starożytne archiwum danych z Ziemi?', en: 'Some ancient data archive from Earth?' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Moduł wsparcia aktywowany. Stacja docelowa: ZIEMIA', en: 'Support module activated. Target station: EARTH' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Jeśli na Ziemi ktoś jeszcze odbiera... to może wyjaśni, co się stało z tym statkiem.', en: 'If anyone on Earth is still receiving... maybe they can explain what happened to this ship.' },
+        mode: 'monologue',
+      },
+    ],
+  },
+
+  // === EARTH SIGNAL COMPLETE — fires after q-earth-signal is resolved ===
+
+  'm0-earth-signal-complete': {
+    id: 'm0-earth-signal-complete',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: '═════════════════════════════', en: '═════════════════════════════' },
+        mode: 'system',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Łączność z Ziemią:        NAWIĄZANA', en: 'Connection to Earth:      ESTABLISHED' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Protokół awaryjny ZIEMIA-HQ aktywowany.', en: 'Emergency protocol EARTH-HQ activated.' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Koordynacja z centrum HQ umożliwi mitygację uszkodzeń CORE AI.', en: 'Coordination with HQ centre will enable CORE AI damage mitigation.' },
+        mode: 'system',
+        autoAdvance: 3000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Użyj /badges aby podejrzeć twoje dotychczasowe osiągnięcia', en: 'Use /badges to view your achievements so far' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: '═════════════════════════════', en: '═════════════════════════════' },
+        mode: 'system',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Ktoś celowo zainfekował CORE AI. Ale kto? I dlaczego?', en: 'Someone deliberately infected CORE AI. But who? And why?' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Odpowiedzi przyjdą z czasem... ale przynajmniej teraz mam wsparcie z Ziemi.', en: 'Answers will come in time... but at least I have support from Earth now.' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Wkrótce lądujemy... prawdziwa gra dopiero się zaczyna.', en: 'We\'re landing soon... the real game is just beginning.' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'system',
+        text: { pl: '═════════════════════════════', en: '═════════════════════════════' },
+        mode: 'cinematic',
+        autoAdvance: 1500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Twój stan gry został zapisany.', en: 'Your game state has been saved.' },
+        mode: 'cinematic',
+        autoAdvance: 5000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Przygotowania do misji zakończone! Ciąg dalszy 18 maja.', en: 'Mission preparations complete! Continued on 18 May.' },
+        mode: 'cinematic',
+        autoAdvance: 3000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Dołącz do 10xDevs 3.0 i uzyskaj dostęp do kolejnych rozdziałów!', en: 'Join 10xDevs 3.0 and unlock access to the next chapters!' },
+        mode: 'cinematic',
+        autoAdvance: 5000,
+      },
+    ]
+  },
+
+  // === MODULE 1 DOOR — locked until earth signal + sys:course-m1-available ===
+
+  'm0-prework-door-locked': {
+    id: 'm0-prework-door-locked',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: 'TUNEL DO KOMORY WYJŚCIA - ZABLOKOWANE', en: 'TUNNEL TO EXIT CHAMBER - LOCKED' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Te drzwi zostaną odblokowane wraz z pierwszym modułem misji. Upewnij się, że wszystkie dostępne misje są ukończone.', en: 'These doors will unlock with the first mission module. Make sure all available missions are complete.' },
+        mode: 'system',
+        autoAdvance: 3000,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Jeszcze nie czas na lądowanie.', en: 'Not yet time to land.' },
+        mode: 'monologue',
+      },
+    ],
+  },
+
+  // Support manual — revisit after reading
+  'm0-support-manual-revisit': {
+    id: 'm0-support-manual-revisit',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: 'INSTRUKCJA SERWISOWA — CORE AI', en: 'SERVICE MANUAL — CORE AI' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
+      {
+        speaker: 'system',
+        text: { pl: 'Wsparcie HQ: użyj komendy /support w terminalu.', en: 'HQ support: use the /support command in the terminal.' },
+        mode: 'system',
+        autoAdvance: 2500,
+      },
+    ],
+  },
+};

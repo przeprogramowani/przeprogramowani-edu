@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mermaid Diagrams"
+  short_description: "Render, audit, or generate lesson mermaid diagrams"
+  default_prompt: "Use $mermaid to render, audit, or generate diagrams for lesson <lessonId>."
+
+policy:
+  allow_implicit_invocation: true

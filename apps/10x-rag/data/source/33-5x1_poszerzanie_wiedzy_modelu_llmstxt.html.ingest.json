@@ -1,0 +1,164 @@
+{
+  "lessonId": "[5x1] Poszerzanie wiedzy modelu - LLMs.txt",
+  "file": "33-5x1_poszerzanie_wiedzy_modelu_llmstxt.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 4,
+      "order": 1
+    },
+    {
+      "slug": "nauka-modelu-za-pomoca-kontekstu",
+      "title": "Nauka modelu za pomocą kontekstu",
+      "blocks": 14,
+      "order": 2
+    },
+    {
+      "slug": "llmstxt-propozycja-standardu-od-jeremy-howarda",
+      "title": "llms.txt – propozycja standardu od Jeremy Howarda",
+      "blocks": 15,
+      "order": 3
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 3,
+      "order": 4
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 7,
+      "order": 5
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:83a63040:43cc23fa",
+      "tokenEstimate": 67,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:83a63040:43cc23fa:0-1",
+      "tokenEstimate": 67,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:83a63040:24701484",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:83a63040:24701484:0-3",
+      "tokenEstimate": 227,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:83a63040:704e7f97",
+      "tokenEstimate": 200,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:83a63040:704e7f97:0-7",
+      "tokenEstimate": 376,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "chk:83a63040:704e7f97:6-13",
+      "tokenEstimate": 359,
+      "span": [
+        6,
+        13
+      ]
+    },
+    {
+      "id": "sec:83a63040:918385d5",
+      "tokenEstimate": 227,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:83a63040:918385d5:0-9",
+      "tokenEstimate": 436,
+      "span": [
+        0,
+        9
+      ]
+    },
+    {
+      "id": "chk:83a63040:918385d5:9-13",
+      "tokenEstimate": 378,
+      "span": [
+        9,
+        13
+      ]
+    },
+    {
+      "id": "chk:83a63040:918385d5:13-14",
+      "tokenEstimate": 152,
+      "span": [
+        13,
+        14
+      ]
+    },
+    {
+      "id": "sec:83a63040:33c7f0dd",
+      "tokenEstimate": 209,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:83a63040:33c7f0dd:0-2",
+      "tokenEstimate": 256,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:83a63040:dcc8ec86",
+      "tokenEstimate": 120,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:83a63040:dcc8ec86:0-6",
+      "tokenEstimate": 284,
+      "span": [
+        0,
+        6
+      ]
+    }
+  ]
+}

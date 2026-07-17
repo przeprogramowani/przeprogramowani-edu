@@ -1,0 +1,720 @@
+{
+  "lessonId": "[5x2] Model Context Protocol (MCP)",
+  "file": "34-5x2_model_context_protocol_mcp.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 5,
+      "order": 1
+    },
+    {
+      "slug": "geneza-mcp-potrzeby-i-powstanie-protokou",
+      "title": "Geneza MCP – potrzeby i powstanie protokołu",
+      "blocks": 12,
+      "order": 2
+    },
+    {
+      "slug": "architektura-model-context-protocol",
+      "title": "Architektura Model Context Protocol",
+      "blocks": 16,
+      "order": 3
+    },
+    {
+      "slug": "kluczowe-przewagi-mcp-nad-openapi-i-lsp",
+      "title": "Kluczowe przewagi MCP nad OpenAPI i LSP",
+      "blocks": 28,
+      "order": 4
+    },
+    {
+      "slug": "adopcja-i-momentum-mcp-wsparcie-gigantow-i-spoecznosci",
+      "title": "Adopcja i momentum MCP – wsparcie gigantów i społeczności",
+      "blocks": 11,
+      "order": 5
+    },
+    {
+      "slug": "mcp-w-edytorach-ai",
+      "title": "MCP w edytorach AI",
+      "blocks": 6,
+      "order": 6
+    },
+    {
+      "slug": "ekosystem-serwerow-i-klientow-mcp-implementacje-i-narzedzia",
+      "title": "Ekosystem serwerów i klientów MCP – implementacje i narzędzia",
+      "blocks": 9,
+      "order": 7
+    },
+    {
+      "slug": "jak-zbudowac-wasny-serwer-mcp-w-typescript-z-cloudflare-workers",
+      "title": "Jak zbudować własny serwer MCP w TypeScript z Cloudflare Workers?",
+      "blocks": 20,
+      "order": 8
+    },
+    {
+      "slug": "wdrozenie-serwera-mcp",
+      "title": "Wdrożenie serwera MCP",
+      "blocks": 15,
+      "order": 9
+    },
+    {
+      "slug": "jak-stworzyc-wasny-serwer-mcp-z-10x-workflow",
+      "title": "Jak stworzyć własny serwer MCP z 10x workflow?",
+      "blocks": 11,
+      "order": 10
+    },
+    {
+      "slug": "najlepsze-praktyki-przy-tworzeniu-serwerow-mcp",
+      "title": "Najlepsze praktyki przy tworzeniu serwerów MCP",
+      "blocks": 4,
+      "order": 11
+    },
+    {
+      "slug": "ograniczenia-i-wyzwania-protokou-mcp",
+      "title": "Ograniczenia i wyzwania protokołu MCP",
+      "blocks": 16,
+      "order": 12
+    },
+    {
+      "slug": "rekomendacje-case-studies-i-dobre-praktyki",
+      "title": "Rekomendacje, case studies i dobre praktyki",
+      "blocks": 7,
+      "order": 13
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 3,
+      "order": 14
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 7,
+      "order": 15
+    }
+  ],
+  "chunks": [
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):document",
+      "tokenEstimate": 12,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):document:0-1",
+      "tokenEstimate": 12,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):wprowadzenie",
+      "tokenEstimate": 112,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):wprowadzenie:0-4",
+      "tokenEstimate": 284,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):geneza-mcp-potrzeby-i-powstanie-protokou",
+      "tokenEstimate": 128,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):geneza-mcp-potrzeby-i-powstanie-protokou:0-6",
+      "tokenEstimate": 355,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):geneza-mcp-potrzeby-i-powstanie-protokou:6-11",
+      "tokenEstimate": 272,
+      "span": [
+        6,
+        11
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):architektura-model-context-protocol",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):architektura-model-context-protocol:0-10",
+      "tokenEstimate": 318,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):architektura-model-context-protocol:9-15",
+      "tokenEstimate": 199,
+      "span": [
+        9,
+        15
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):kluczowe-przewagi-mcp-nad-openapi-i-lsp",
+      "tokenEstimate": 121,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):kluczowe-przewagi-mcp-nad-openapi-i-lsp:0-5",
+      "tokenEstimate": 293,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):kluczowe-przewagi-mcp-nad-openapi-i-lsp:4-6",
+      "tokenEstimate": 395,
+      "span": [
+        4,
+        6
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):kluczowe-przewagi-mcp-nad-openapi-i-lsp:6-7",
+      "tokenEstimate": 319,
+      "span": [
+        6,
+        7
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):kluczowe-przewagi-mcp-nad-openapi-i-lsp:6-8",
+      "tokenEstimate": 326,
+      "span": [
+        6,
+        8
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):kluczowe-przewagi-mcp-nad-openapi-i-lsp:6-9",
+      "tokenEstimate": 398,
+      "span": [
+        6,
+        9
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):kluczowe-przewagi-mcp-nad-openapi-i-lsp:9-13",
+      "tokenEstimate": 323,
+      "span": [
+        9,
+        13
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):kluczowe-przewagi-mcp-nad-openapi-i-lsp:13-19",
+      "tokenEstimate": 320,
+      "span": [
+        13,
+        19
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):kluczowe-przewagi-mcp-nad-openapi-i-lsp:19-25",
+      "tokenEstimate": 312,
+      "span": [
+        19,
+        25
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):kluczowe-przewagi-mcp-nad-openapi-i-lsp:25-27",
+      "tokenEstimate": 163,
+      "span": [
+        25,
+        27
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):adopcja-i-momentum-mcp-wsparcie-gigantow-i-spoecznosci",
+      "tokenEstimate": 125,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):adopcja-i-momentum-mcp-wsparcie-gigantow-i-spoecznosci:0-4",
+      "tokenEstimate": 328,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):adopcja-i-momentum-mcp-wsparcie-gigantow-i-spoecznosci:3-8",
+      "tokenEstimate": 319,
+      "span": [
+        3,
+        8
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):adopcja-i-momentum-mcp-wsparcie-gigantow-i-spoecznosci:7-10",
+      "tokenEstimate": 202,
+      "span": [
+        7,
+        10
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):mcp-w-edytorach-ai",
+      "tokenEstimate": 82,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):mcp-w-edytorach-ai:0-2",
+      "tokenEstimate": 485,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):mcp-w-edytorach-ai:2-3",
+      "tokenEstimate": 481,
+      "span": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):mcp-w-edytorach-ai:3-5",
+      "tokenEstimate": 174,
+      "span": [
+        3,
+        5
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):ekosystem-serwerow-i-klientow-mcp-implementacje-i-narzedzia",
+      "tokenEstimate": 91,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ekosystem-serwerow-i-klientow-mcp-implementacje-i-narzedzia:0-2",
+      "tokenEstimate": 407,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ekosystem-serwerow-i-klientow-mcp-implementacje-i-narzedzia:2-3",
+      "tokenEstimate": 342,
+      "span": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ekosystem-serwerow-i-klientow-mcp-implementacje-i-narzedzia:2-4",
+      "tokenEstimate": 343,
+      "span": [
+        2,
+        4
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ekosystem-serwerow-i-klientow-mcp-implementacje-i-narzedzia:2-5",
+      "tokenEstimate": 372,
+      "span": [
+        2,
+        5
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ekosystem-serwerow-i-klientow-mcp-implementacje-i-narzedzia:3-8",
+      "tokenEstimate": 233,
+      "span": [
+        3,
+        8
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):jak-zbudowac-wasny-serwer-mcp-w-typescript-z-cloudflare-workers",
+      "tokenEstimate": 166,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-zbudowac-wasny-serwer-mcp-w-typescript-z-cloudflare-workers:0-10",
+      "tokenEstimate": 408,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-zbudowac-wasny-serwer-mcp-w-typescript-z-cloudflare-workers:10-14",
+      "tokenEstimate": 335,
+      "span": [
+        10,
+        14
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-zbudowac-wasny-serwer-mcp-w-typescript-z-cloudflare-workers:14-19",
+      "tokenEstimate": 174,
+      "span": [
+        14,
+        19
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):wdrozenie-serwera-mcp",
+      "tokenEstimate": 166,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):wdrozenie-serwera-mcp:0-12",
+      "tokenEstimate": 352,
+      "span": [
+        0,
+        12
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):wdrozenie-serwera-mcp:12-14",
+      "tokenEstimate": 114,
+      "span": [
+        12,
+        14
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):jak-stworzyc-wasny-serwer-mcp-z-10x-workflow",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-stworzyc-wasny-serwer-mcp-z-10x-workflow:0-1",
+      "tokenEstimate": 50,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-stworzyc-wasny-serwer-mcp-z-10x-workflow:0-2",
+      "tokenEstimate": 596,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-stworzyc-wasny-serwer-mcp-z-10x-workflow:2-3",
+      "tokenEstimate": 576,
+      "span": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-stworzyc-wasny-serwer-mcp-z-10x-workflow:2-4",
+      "tokenEstimate": 881,
+      "span": [
+        2,
+        4
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-stworzyc-wasny-serwer-mcp-z-10x-workflow:4-5",
+      "tokenEstimate": 337,
+      "span": [
+        4,
+        5
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-stworzyc-wasny-serwer-mcp-z-10x-workflow:4-6",
+      "tokenEstimate": 1061,
+      "span": [
+        4,
+        6
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-stworzyc-wasny-serwer-mcp-z-10x-workflow:6-7",
+      "tokenEstimate": 755,
+      "span": [
+        6,
+        7
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-stworzyc-wasny-serwer-mcp-z-10x-workflow:6-8",
+      "tokenEstimate": 1433,
+      "span": [
+        6,
+        8
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-stworzyc-wasny-serwer-mcp-z-10x-workflow:8-9",
+      "tokenEstimate": 725,
+      "span": [
+        8,
+        9
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):jak-stworzyc-wasny-serwer-mcp-z-10x-workflow:8-10",
+      "tokenEstimate": 750,
+      "span": [
+        8,
+        10
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):najlepsze-praktyki-przy-tworzeniu-serwerow-mcp",
+      "tokenEstimate": 35,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):najlepsze-praktyki-przy-tworzeniu-serwerow-mcp:0-1",
+      "tokenEstimate": 457,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):najlepsze-praktyki-przy-tworzeniu-serwerow-mcp:1-2",
+      "tokenEstimate": 526,
+      "span": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):najlepsze-praktyki-przy-tworzeniu-serwerow-mcp:2-3",
+      "tokenEstimate": 142,
+      "span": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):ograniczenia-i-wyzwania-protokou-mcp",
+      "tokenEstimate": 90,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ograniczenia-i-wyzwania-protokou-mcp:0-3",
+      "tokenEstimate": 284,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ograniczenia-i-wyzwania-protokou-mcp:3-4",
+      "tokenEstimate": 450,
+      "span": [
+        3,
+        4
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ograniczenia-i-wyzwania-protokou-mcp:4-5",
+      "tokenEstimate": 316,
+      "span": [
+        4,
+        5
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ograniczenia-i-wyzwania-protokou-mcp:5-6",
+      "tokenEstimate": 430,
+      "span": [
+        5,
+        6
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ograniczenia-i-wyzwania-protokou-mcp:6-7",
+      "tokenEstimate": 397,
+      "span": [
+        6,
+        7
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ograniczenia-i-wyzwania-protokou-mcp:6-8",
+      "tokenEstimate": 440,
+      "span": [
+        6,
+        8
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ograniczenia-i-wyzwania-protokou-mcp:8-11",
+      "tokenEstimate": 314,
+      "span": [
+        8,
+        11
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ograniczenia-i-wyzwania-protokou-mcp:11-12",
+      "tokenEstimate": 323,
+      "span": [
+        11,
+        12
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):ograniczenia-i-wyzwania-protokou-mcp:12-15",
+      "tokenEstimate": 354,
+      "span": [
+        12,
+        15
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):rekomendacje-case-studies-i-dobre-praktyki",
+      "tokenEstimate": 61,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):rekomendacje-case-studies-i-dobre-praktyki:0-1",
+      "tokenEstimate": 61,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):rekomendacje-case-studies-i-dobre-praktyki:0-2",
+      "tokenEstimate": 546,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):rekomendacje-case-studies-i-dobre-praktyki:2-3",
+      "tokenEstimate": 528,
+      "span": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):rekomendacje-case-studies-i-dobre-praktyki:2-4",
+      "tokenEstimate": 713,
+      "span": [
+        2,
+        4
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):rekomendacje-case-studies-i-dobre-praktyki:4-5",
+      "tokenEstimate": 204,
+      "span": [
+        4,
+        5
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):rekomendacje-case-studies-i-dobre-praktyki:4-6",
+      "tokenEstimate": 620,
+      "span": [
+        4,
+        6
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):podsumowanie",
+      "tokenEstimate": 29,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):podsumowanie:0-2",
+      "tokenEstimate": 289,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "section:[5x2] Model Context Protocol (MCP):cwiczenia-praktyczne",
+      "tokenEstimate": 86,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x2] Model Context Protocol (MCP):cwiczenia-praktyczne:0-6",
+      "tokenEstimate": 131,
+      "span": [
+        0,
+        6
+      ]
+    }
+  ]
+}

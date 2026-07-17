@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lesson Grounding"
+  short_description: "Ground lesson claims in sources"
+  default_prompt: "Use $lesson-grounding to research and source lesson <lessonId>."
+
+policy:
+  allow_implicit_invocation: true

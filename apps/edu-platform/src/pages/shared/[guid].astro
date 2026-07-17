@@ -1,0 +1,35 @@
+---
+import { getEntry } from 'astro:content';
+import { getLessonByGuid } from '@/models/GuidMappings';
+import { LessonGuidMapping } from '@/models/LessonGuidMappingsData';
+import SharedLesson from '@/components/SharedLesson.astro';
+
+const guid = Astro.params.guid as string;
+
+if (!guid) {
+  console.log('No GUID provided');
+  return Astro.redirect('/shared/not-found');
+}
+
+const lessonMapping: LessonGuidMapping | null = getLessonByGuid(guid);
+
+if (!lessonMapping) {
+  return Astro.redirect('/shared/not-found');
+}
+
+const { courseCollection, courseSlug, lessonId } = lessonMapping;
+
+const lesson = await getEntry(courseCollection, lessonId);
+
+if (!lesson) {
+  console.log('Lesson not found:', { courseCollection, lessonId });
+  return Astro.redirect('/shared/not-found');
+}
+---
+
+<SharedLesson
+  courseSlug={courseSlug}
+  lessonName={lesson.data.name}
+  lessonContent={lesson.data.content}
+  markdownUrl={`/shared/${guid}/markdown`}
+/>

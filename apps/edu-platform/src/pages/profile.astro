@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/BaseLayout.astro';
+import AccountStrip from '../components/AccountStrip.astro';
+import ProfileForm from '../components/ProfileForm.svelte';
+import { verifyAuth } from '@/server/verifyAuth';
+
+const authResult = await verifyAuth(Astro);
+
+if (!authResult.isAuthenticated) {
+  return Astro.redirect('/login');
+}
+
+function sanitizeNext(raw: string | null): string | null {
+  if (!raw) return null;
+  if (!raw.startsWith('/')) return null;
+  if (raw.startsWith('//')) return null;
+  if (raw.includes('://')) return null;
+  return raw;
+}
+
+const nextPath = sanitizeNext(Astro.url.searchParams.get('next'));
+---
+
+<Layout>
+  <AccountStrip
+    email={authResult.email!}
+    firstName={authResult.firstName}
+    lastName={authResult.lastName}
+    avatarUrl={authResult.avatarUrl}
+  />
+  <main class="max-w-2xl mx-auto p-4 md:p-6">
+    <h1 class="text-2xl md:text-3xl font-main text-white mb-6">Twoje konto</h1>
+    <ProfileForm
+      client:load
+      email={authResult.email!}
+      firstName={authResult.firstName ?? null}
+      lastName={authResult.lastName ?? null}
+      avatarUrl={authResult.avatarUrl ?? null}
+      nextPath={nextPath}
+    />
+  </main>
+</Layout>

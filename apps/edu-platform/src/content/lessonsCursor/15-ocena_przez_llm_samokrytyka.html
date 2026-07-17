@@ -1,0 +1,66 @@
+<meta name="lesson-id" content="Ocena przez LLM - Samokrytyka"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/l977hnrsixajvd123mnvsu2lw8k7" style="width: 100%; max-width: 100%;"><p>Ocena przez LLM (Large Language Models) to potężna technika w prompt engineeringu, która wykorzystuje zdolność modeli językowych do analizy, rozumienia i oceny różnorodnych treści, w tym kodu, pomysłów i decyzji. Ta sekcja skupi się na dwóch kluczowych technikach: self-criticism (samokrytyka) oraz "Panel of Experts" (panel ekspertów).</p><h3>Przykładowe zastosowania</h3><p>LLM-y, dzięki swojej zdolności do rozumienia kontekstu i wyciągania wniosków, mogą służyć jako wartościowe narzędzie do oceny kodu, projektów interfejsu użytkownika czy decyzji architektonicznych w web developmencie. Ocena przez LLM może:</p><ul><li><p>Dostarczyć szybkiej, wstępnej analizy jakości kodu</p></li><li><p>Zidentyfikować potencjalne problemy z użytecznością interfejsu</p></li><li><p>Ocenić zgodność rozwiązań z najlepszymi praktykami branżowymi</p></li><li><p>Symulować różne perspektywy przy ocenie decyzji projektowych</p></li></ul><p>Poniżej znajdziesz dwie popularne techniki oceny przez LLM: samokrytyka oraz panel ekspertów.</p><h2>Self-criticism (Samokrytyka)</h2><p>Self-criticism to technika, w której LLM jest proszony o ocenę i krytykę własnych wcześniejszych odpowiedzi lub wygenerowanych treści.</p><h3>Jak działa self-criticism?</h3><ol start="1"><li><p><strong>Generowanie początkowej odpowiedzi</strong>: LLM tworzy pierwszą wersję kodu, projektu lub rozwiązania.</p></li><li><p><strong>Prompt do samokrytyki</strong>: Model otrzymuje instrukcję do oceny swojej własnej odpowiedzi.</p></li><li><p><strong>Analiza i feedback</strong>: LLM analizuje swoją pracę, identyfikując mocne strony i obszary do poprawy.</p></li><li><p><strong>Iteracyjne udoskonalanie</strong>: Na podstawie samokrytyki, model może zaproponować ulepszenia lub alternatywne rozwiązania.</p></li></ol><p><strong>Przykładowa konwersacja z Self-criticism</strong></p><p>Początkowy prompt:</p><pre><code>Wygeneruj funkcję JavaScript do walidacji adresu email. </code></pre><p>Model generuje funkcje, na co my odpowiadamy:</p><pre><code>Dokonaj krytycznej analizy swojego kodu, wskazując jego mocne strony i potencjalne obszary do poprawy.</code></pre><p>Model odpowiada:</p><pre><code>Naturalnie. Przeprowadzę krytyczną analizę ulepszonej wersji funkcji walidacji adresu email.
+
+Mocne strony:
+1. Kompleksowość: Funkcja teraz obejmuje więcej aspektów walidacji, co czyni ją bardziej niezawodną.
+2. Obsługa błędów: Dodano sprawdzanie typu wejściowego, co zapobiega nieoczekiwanym błędom przy nieprawidłowych danych wejściowych.
+3. Walidacja długości: Wprowadzono sprawdzanie minimalnej i maksymalnej długości adresu email, co eliminuje oczywiste przypadki nieprawidłowych adresów.
+4. Ulepszone wyrażenie regularne: Nowe wyrażenie regularne jest bardziej precyzyjne i obsługuje szerszy zakres poprawnych formatów adresów email.
+5. Przykłady użycia: Dodano więcej przykładów testowych, co pomaga w zrozumieniu działania funkcji i ułatwia testowanie.
+
+Obszary do poprawy:
+1. Złożoność wyrażenia regularnego: Chociaż nowe wyrażenie regularne jest bardziej dokładne, jest też trudniejsze do zrozumienia i utrzymania.
+2. Brak modularności: Funkcja wykonuje kilka zadań (sprawdzanie typu, długości, dopasowanie do wzorca). Można by rozważyć podzielenie jej na mniejsze, bardziej specyficzne funkcje.
+3. Ograniczona informacja zwrotna: Funkcja zwraca tylko wartość boolean, co nie daje szczegółowych informacji o tym, dlaczego walidacja się nie powiodła.
+4. Brak walidacji specyficznych dla domeny: Funkcja nie sprawdza, czy domena najwyższego poziomu jest prawidłowa lub czy istnieje.
+5. Statyczne limity długości: Obecne limity długości są sztywno zakodowane i mogą nie być odpowiednie dla wszystkich przypadków użycia.
+
+Propozycje dalszych ulepszeń:
+
+1. Modularyzacja:
+function isString(input) {
+  return typeof input === 'string';
+}
+
+function isValidLength(email, minLength = 3, maxLength = 320) {
+  return email.length &gt;= minLength &amp;&amp; email.length &lt;= maxLength;
+}
+
+function matchesEmailPattern(email) {
+  const emailRegex = /^[a-zA-Z0-9.!#$%&amp;'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  return emailRegex.test(email);
+}
+
+function validateEmail(email) {
+  if (!isString(email)) {
+    throw new Error('Email must be a string');
+  }
+  return isValidLength(email) &amp;&amp; matchesEmailPattern(email);
+}
+
+2. Bardziej szczegółowa informacja zwrotna:
+function validateEmail(email) {
+  if (!isString(email)) {
+    return { isValid: false, reason: 'Email must be a string' };
+  }
+  if (!isValidLength(email)) {
+    return { isValid: false, reason: 'Email length is invalid' };
+  }
+  if (!matchesEmailPattern(email)) {
+    return { isValid: false, reason: 'Email format is invalid' };
+  }
+  return { isValid: true };
+}
+
+3. Konfigurowalność:
+function validateEmail(email, options = {}) {
+  const {
+    minLength = 3,
+    maxLength = 320,
+    allowedDomains = null
+  } = options;
+
+  // Implementacja z użyciem konfigurowalnych opcji
+}
+
+
+Podsumowując, ulepszona wersja funkcji jest znacznie lepsza od oryginalnej, ale nadal istnieje przestrzeń do dalszych udoskonaleń, szczególnie w zakresie modularności, elastyczności i szczegółowości informacji zwrotnej. Wybór konkretnych ulepszeń zależałby od specyficznych wymagań projektu, w którym funkcja miałaby być używana.</code></pre><p> <strong>🥳 Korzyści</strong></p><ul><li><p><strong>Zwiększona dokładność</strong>: Poprzez krytyczną analizę własnych odpowiedzi, LLM może dostarczyć bardziej przemyślane i dopracowane rozwiązania.</p></li><li><p><strong>Identyfikacja słabych punktów</strong>: Samokrytyka pomaga w wykrywaniu potencjalnych problemów, które mogły zostać przeoczone w początkowej odpowiedzi.</p></li><li><p><strong>Uczenie się na błędach</strong>: Proces ten symuluje iteracyjny charakter developmentu, gdzie kod jest stale analizowany i udoskonalany.</p></li></ul><p>🫣 <strong>Wyzwania</strong></p><ul><li><p><strong>Potencjalna stronniczość</strong>: LLM może być stronniczy wobec własnych odpowiedzi, co może prowadzić do niedostatecznej krytyki lub nadmiernej pewności siebie.</p></li><li><p><strong>Ograniczenia wiedzy</strong>: Model może nie być świadomy najnowszych praktyk lub specyficznych dla danego projektu wymagań, co może prowadzić do niepełnej lub nieodpowiedniej krytyki.</p></li><li><p><strong>Brak kontekstu zewnętrznego</strong>: Self-criticism opiera się wyłącznie na wiedzy modelu, bez uwzględnienia szerszego kontekstu projektu czy specyficznych wymagań klienta.</p></li><li><p><strong>Ryzyko nadmiernej iteracji</strong>: Ciągłe stosowanie self-criticism może prowadzić do zbyt wielu iteracji i potencjalnego odejścia od pierwotnych celów zadania.</p></li></ul><p><strong>🧑🏻‍💻 Ćwiczenie</strong></p><p>Jesteś senior web developerem pracującym nad nowym projektem e-commerce. Twoim zadaniem jest stworzenie funkcji JavaScript do walidacji formularza zamówienia.</p><p>Wykorzystaj technikę self-criticism, aby wygenerować, przeanalizować i udoskonalić funkcję walidacji formularza zamówienia.</p><p><strong>Kroki</strong></p><ol start="1"><li><p><strong>Sformułuj początkowy prompt:</strong> Napisz prompt, który poprosi LLM o stworzenie funkcji JavaScript do walidacji formularza zamówienia. Twój prompt powinien zawierać:</p><ul><li><p>Krótki opis formularza (np. pola: imię, nazwisko, adres email, adres dostawy, numer telefonu)</p></li><li><p>Prośbę o uwzględnienie podstawowych zasad walidacji</p></li><li><p>Sugestię użycia komentarzy wyjaśniających logikę</p></li></ul></li><li><p><strong>Analiza wygenerowanego kodu:</strong> Po otrzymaniu kodu od LLM, przeanalizuj go pod kątem:</p><ul><li><p>Kompletności (czy wszystkie pola są walidowane?)</p></li><li><p>Czytelności i struktury kodu</p></li><li><p>Potencjalnych luk w bezpieczeństwie</p></li></ul></li><li><p><strong>Prompt do self-criticism:</strong> Napisz prompt, który poprosi LLM o krytyczną analizę wygenerowanego kodu. Prompt powinien zachęcać do:</p><ul><li><p>Wskazania mocnych stron kodu</p></li><li><p>Identyfikacji obszarów wymagających poprawy</p></li><li><p>Sugestii konkretnych ulepszeń</p></li></ul></li><li><p><strong>Ocena self-criticism:</strong> Przeanalizuj odpowiedź LLM zawierającą samokrytykę. Zwróć uwagę na:</p><ul><li><p>Trafność zidentyfikowanych problemów</p></li><li><p>Jakość i wykonalność proponowanych ulepszeń</p></li><li><p>Aspekty, które mogły zostać pominięte</p></li></ul></li><li><p><strong>Iteracja (opcjonalnie):</strong> Na podstawie self-criticism, możesz poprosić LLM o wygenerowanie ulepszonej wersji funkcji.</p></li><li><p><strong>Refleksja:</strong> Zastanów się nad procesem i odpowiedz na następujące pytania:</p><ul><li><p>Jak technika self-criticism wpłynęła na jakość końcowego rozwiązania?</p></li><li><p>Jakie korzyści i wyzwania napotkałeś podczas stosowania tej techniki?</p></li><li><p>Jak możesz wykorzystać self-criticism w swojej codziennej pracy jako web developer?</p></li></ul></li></ol><p><strong>Wskazówki</strong></p><ul><li><p>Zwróć szczególną uwagę na bezpieczeństwo i obsługę różnych przypadków brzegowych</p></li><li><p>Pamiętaj o zasadach czystego kodu i najlepszych praktykach JavaScript</p></li><li><p>Rozważ, jak funkcja mogłaby być rozszerzona lub zmodyfikowana w przyszłości</p></li></ul><p><strong>Kryteria sukcesu</strong></p><ul><li><p>Wygenerowany kod jest funkcjonalny i spełnia podstawowe wymagania</p></li><li><p>Self-criticism LLM identyfikuje rzeczywiste problemy i proponuje sensowne ulepszenia</p></li><li><p>Jesteś w stanie krytycznie ocenić zarówno wygenerowany kod, jak i samokrytykę LLM</p></li></ul></div></body></html>

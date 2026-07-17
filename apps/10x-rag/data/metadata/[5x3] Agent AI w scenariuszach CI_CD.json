@@ -1,0 +1,6 @@
+{
+  "lessonId": "[5x3] Agent AI w scenariuszach CI/CD",
+  "displayName": "[5x3] Agent AI w scenariuszach CI/CD",
+  "summary": "1) Gdzie powinien znajdować się plik action.yml dla Composite Action i jak go oznaczyć (typ akcji)?\n2) Jak zdefiniować w action.yml, że akcja jest \"composite\" oraz jak zdefiniować kroki wykonujące skrypt Node (przykład użycia ${GITHUB_ACTION_PATH}/dist/use-ai.js)?\n3) Jak parametryzować Composite Action przez sekcję inputs i jak przekazać do niej sekret (np. GOOGLE_API_KEY) z repozytorium konsumenta?\n4) Jak przygotować i spakować zależności Node.js do jednego pliku (np. używając rolldown) żeby akcja nie wymagała instalacji zależności w repozytorium konsumenta?\n5) Jak dodać Composite Action w scenariuszu konsumenta za pomocą klauzuli uses (owner/repo@branch) i jakie przykładowe kroki powinny poprzedzać jej wywołanie?\n6) Jak zapewnić kompatybilne środowisko przed uruchomieniem Composite Action (wybór runs-on, instalacja Node.js i inne niezbędne kroki)?\n7) Jak określić shell w Composite Action i dlaczego jest to wymagane?\n8) Jak przetestować integrację AI w Composite Action na przykładzie wywołania Google Generative AI (Gemini) z poziomu skryptu Node i logowania odpowiedzi?",
+  "tokenEstimate": 178
+}

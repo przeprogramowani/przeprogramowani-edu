@@ -1,0 +1,65 @@
+---
+import logo from '@/images/generic/logo-white.png';
+import Layout from '@/layouts/BaseLayout.astro';
+import LoginForm from '@/components/Login.svelte';
+import { resolveRedirect } from '@/server/redirects';
+import { CF_CAPTCHA_SITE_KEY } from 'astro:env/server';
+
+const CF_SITE_KEY = CF_CAPTCHA_SITE_KEY || '1x00000000000000000000AA';
+
+const errorMappings = {
+  MISSING_TOKEN:
+    'Token wygasł lub nie istnieje. Zaloguj się ponownie. W razie dalszych problemów, skontaktuj się z nami: kontakt@przeprogramowani.pl.',
+  MISSING_USER: 'W bazie użytkowników nie odnaleziono Twojego adresu email. Sprawdź, na jaki email kupiłeś kurs.',
+  MISSING_COURSES:
+    'Brak zakupionych kursów dla podanego adresu email. Sprawdź, na jaki email kupiłeś kurs i uwzględnij czy dokonywałeś zwrotów.',
+  INVALID_OAUTH: 'Nieprawidłowy token uwierzytelniający. Spróbuj zalogować się ponownie.',
+  OAUTH_FAILED: 'Niepowodzenie uwierzytelniania. Spróbuj ponownie lub użyj innej metody logowania.',
+  NO_VERIFIED_EMAIL: 'Nie znaleziono zweryfikowanego adresu email. Upewnij się, że Twoje konto ma zweryfikowany email.',
+  OAUTH_ERROR: 'Wystąpił błąd podczas logowania przez serwis zewnętrzny. Spróbuj ponownie później.',
+  EMAIL_FAILED: 'Nie udało się wysłać wiadomości email. Spróbuj ponownie lub skontaktuj się z nami.',
+  AUTH_FAILED: 'Nie udało się zalogować przez serwis zewnętrzny. Spróbuj ponownie lub skontaktuj się z nami.',
+};
+
+const successMappings = {
+  EMAIL_SENT: 'Na Twój adres email wysłaliśmy link do logowania. Sprawdź swoją skrzynkę.',
+  LOGGED_IN: 'Zostałeś pomyślnie zalogowany. Za chwilę nastąpi przekierowanie...',
+};
+
+let errorMsg = '';
+let successMsg = '';
+
+if (Astro.url.searchParams.get('error')) {
+  const error = Astro.url.searchParams.get('error');
+  errorMsg = errorMappings[error as keyof typeof errorMappings] || 'Wystąpił nieznany błąd. Spróbuj ponownie.';
+}
+
+if (Astro.url.searchParams.get('success')) {
+  const success = Astro.url.searchParams.get('success');
+  successMsg = successMappings[success as keyof typeof successMappings] || 'Operacja zakończona pomyślnie.';
+}
+
+// Read redirect param (e.g., "explorers")
+const redirectParam = Astro.url.searchParams.get('redirect');
+
+// If user has an active token, redirect to intended destination
+if (Astro.cookies.has('token')) {
+  return Astro.redirect(resolveRedirect(redirectParam));
+}
+
+---
+
+<Layout>
+  <div class="min-h-screen flex flex-col items-center justify-center bg-gray-900">
+    <img src={logo.src} alt="Logo" class="w-64 mx-auto mb-4 pb-4" />
+    <div class="max-w-md w-full space-y-8 p-8 bg-gray-800 rounded-lg">
+
+
+      <LoginForm cfSiteKey={CF_SITE_KEY} redirect={redirectParam} client:only="svelte" />
+      {errorMsg && <p class="text-red-500 text-sm text-center mt-4">{errorMsg}</p>}
+      {successMsg && <p class="text-green-500 text-sm text-center mt-4">{successMsg}</p>}
+    </div>
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback"
+    ></script>
+  </div>
+</Layout>

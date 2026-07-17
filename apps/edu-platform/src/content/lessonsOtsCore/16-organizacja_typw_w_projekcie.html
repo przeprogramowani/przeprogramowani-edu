@@ -1,0 +1,60 @@
+<meta name="lesson-id" content="Organizacja typów w projekcie"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><p>W projektach TypeScriptowych liczba typów i interfejsów szybko rośnie w miarę rozwoju aplikacji. Chaos w organizacji tych elementów może prowadzić do:</p><ul><li><p><strong>Trudności w nawigacji</strong>: Odszukanie konkretnego typu w rozbudowanym projekcie staje się czasochłonne.</p></li><li><p><strong>Duplikacji</strong>: Wielokrotnego definiowania tych samych struktur danych.</p></li><li><p><strong>Błędów komunikacyjnych</strong>: Szczególnie w zespołach wieloosobowych, gdy różne osoby mają różne konwencje.</p></li></ul><p>Organizacja typów w projekcie TypeScript wymaga przemyślanego podejścia, które uwzględnia zarówno specyfikę aplikacji, jak i sposób, w jaki zespół programistyczny będzie z niej korzystał. Odpowiednia struktura, dobrana do kontekstu, pozwala zredukować złożoność projektu, umożliwić łatwą nawigację po kodzie i wspierać jego skalowalność. </p><p>Poniżej przedstawiamy różne techniki organizacji typów, szczegółowo omawiając ich koncepcje oraz zastosowanie.</p><h2>Organizacja domenowa (Domain-based organization)</h2><p>W podejściu domenowym, typy i interfejsy są organizowane w sposób odzwierciedlający logikę biznesową aplikacji. Kluczowym celem jest podział kodu na moduły, które odpowiadają specyficznym funkcjom lub domenom biznesowym. Na przykład, w aplikacji e-commerce, domeny mogą obejmować zarządzanie użytkownikami, obsługę zamówień czy katalog produktów.</p><p><strong>Przykład struktury folderów</strong>:</p><pre><code>src/
+├── user-management/
+│   ├── models/
+│   │   └── User.ts
+│   ├── types/
+│   │   └── User.types.ts
+│   └── services/
+│       └── UserService.ts
+├── product-management/
+│   ├── models/
+│   │   └── Product.ts
+│   ├── types/
+│   │   └── Product.types.ts
+│   └── services/
+│       └── ProductService.ts
+└── shared/
+    ├── types/
+    │   ├── Common.types.ts
+    │   └── ApiResponse.types.ts</code></pre><p><strong>Jak to działa?</strong> W każdym module umieszczamy typy związane tylko z danym obszarem funkcjonalnym. Typy te mogą obejmować modele danych (np. interfejs User w module zarządzania użytkownikami), specyfikacje parametrów wejściowych dla funkcji lub serwisów oraz dodatkowe typy pomocnicze, takie jak enumy.</p><p>Dzięki takiemu podziałowi możemy logicznie oddzielić odpowiedzialności, co zwiększa czytelność i modularność kodu.</p><p><strong>Zalety</strong></p><ul><li><p><strong>Czytelność: </strong>łatwo zidentyfikować, gdzie znajdują się typy i modele dla konkretnej funkcjonalności.</p></li><li><p><strong>Łatwość refaktoryzacji:</strong> dodanie nowej funkcjonalności w obrębie jednej domeny nie wymaga zmian w innych modułach.</p></li><li><p><strong>Wspiera pracę zespołową</strong>: poszczególne osoby mogą pracować niezależnie nad różnymi domenami.</p></li></ul><p><strong>Wyzwania</strong></p><ul><li><p><strong>Powtarzalność:</strong> Typy mogą się dublować, jeśli nie zostaną odpowiednio wydzielone (np. wspólne struktury dla całej aplikacji, takie jak ApiResponse).</p></li><li><p><strong>Potrzeba spójnych standardów:</strong> Bez jasnych wytycznych różne domeny mogą być organizowane w różny sposób. Trzeba również dbać o utrzymanie standardów na przestrzeni czasu, co przy rotacji w zespole może być trudniejsze niż się początkowo wydaje.</p></li></ul><p><strong>Kiedy warto stosować?</strong></p><ol start="1"><li><p><strong>Dla małych zespołów:</strong> Organizacja per domena świetnie sprawdza się w zespołach, gdzie każda osoba pracuje nad jedną domeną. Dzięki temu unika się konfliktów w systemie kontroli wersji.</p></li><li><p><strong>Dla aplikacji o złożonej logice biznesowej:</strong> Jeśli projekt posiada wiele niezależnych modułów, np. e-commerce z wieloma funkcjami, organizacja per domena pozwala na łatwe dodawanie nowych funkcjonalności bez ingerowania w istniejące moduły.</p></li><li><p><strong>Dla aplikacji z silnie izolowanymi domenami:</strong> Gdy domeny nie wymagają współdzielenia złożonych typów (np. oddzielne moduły dla frontendu i backendu z minimalną interakcją), ten model działa idealnie.</p></li></ol><h2>Organizacja globalna (Global-based Organization)</h2><p>Podejście globalne opiera się na centralizacji wszystkich typów i interfejsów w jednym miejscu. </p><p>W podstawowym modelu organizacji globalnej wszystkie typy są definiowane w jednym pliku, zazwyczaj nazwanym <em>types.ts</em>. Taki plik staje się „single source of truth” dla typów, co jest szczególnie przydatne w małych i średnich projektach. Na przykład:</p><pre><code>// src/global/types.ts
+export interface ApiResponse&lt;T&gt; {
+  status: 'success' | 'error';
+  data: T;
+}
+
+export type ID = string | number;
+</code></pre><p>Tego rodzaju struktura sprawdza się dobrze na początkowych etapach projektu lub w małych zespołach, gdy typy są stosunkowo proste, a potrzeba ich rozdzielania nie jest jeszcze wyraźna.</p><p>Jednak w miarę wzrostu projektu jeden plik globalny może stać się trudny do utrzymania:</p><ul><li><p><strong>Złożoność</strong>: Plik rośnie w sposób niekontrolowany, utrudniając nawigację.</p></li><li><p><strong>Kolidujące zmiany</strong>: W zespole wielu programistów zmiany w jednym pliku mogą prowadzić do konfliktów w systemie kontroli wersji.</p></li><li><p><strong>Brak modularności</strong>: Trudno wyodrębnić konkretne typy bez zaciągania dużej liczby niepotrzebnych zależności.</p></li></ul><h3>Rozszerzenie globalnej organizacji: Wprowadzenie folderów @</h3><p>Foldery z prefiksem @ są rozszerzeniem organizacji globalnej, które wprowadza hierarchię i podział tematyczny w obrębie globalnych typów. Każdy folder odpowiada specyficznej grupie typów lub struktur danych, na przykład mockom, DTO czy enumy. To podejście pozwala zorganizować projekt w sposób czytelny i łatwy do zarządzania, jednocześnie zachowując korzyści z centralizacji typów.</p><pre><code>src/
+├── @enums/                 &lt;- Enumeracje globalne
+│   └── HttpStatusCodes.ts
+├── @types/                 &lt;- Typy i interfejsy globalne
+│   └── ApiResponse.types.ts
+├── @dtos/                  &lt;- Data Transfer Objects (DTO)
+│   └── UserDTO.ts
+├── @mocks/                 &lt;- Mocki danych do testów
+│   └── UserMock.ts</code></pre><p><strong>Folder @enums - </strong>zawiera enumeracje, które reprezentują stałe wartości używane w całej aplikacji.</p><pre><code>// @enums/HttpStatusCodes.ts
+export enum HttpStatusCodes {
+  OK = 200,
+  BAD_REQUEST = 400,
+  NOT_FOUND = 404,
+}</code></pre><p><strong>Folder @types - </strong>zawiera typy i interfejsy o szerokim zakresie użycia, np. struktury odpowiedzi API, błędy lub wspólne typy użytkowe.</p><pre><code>// @types/ApiResponse.types.ts
+export interface ApiResponse&lt;T&gt; {
+  status: 'success' | 'error';
+  data: T;
+}
+
+export interface ValidationError {
+  field: string;
+  message: string;
+}</code></pre><p><strong>Folder @dtos - z</strong>awiera definicje obiektów transferu danych (DTO), które są używane do przenoszenia danych między różnymi warstwami aplikacji, np. między frontendem a backendem.</p><pre><code>// @dtos/UserDTO.ts
+export interface UserDTO {
+  id: number;
+  name: string;
+  email: string;
+}</code></pre><p><strong>Folder @mocks - p</strong>rzechowuje mocki danych, które można wykorzystać podczas testowania lub prototypowania funkcjonalności.</p><pre><code>// @mocks/UserMock.ts
+import { UserDTO } from "../@dtos/UserDTO";
+
+export const mockUser: UserDTO = {
+  id: 1,
+  name: "John Doe",
+  email: "john.doe@example.com",
+};</code></pre><p><strong>Zalety wprowadzenia folderów @</strong></p><ol start="1"><li><p><strong>Tematyczna segregacja</strong>: Każdy folder @ odpowiada określonemu typowi danych (np. enumeracje, DTO, mocki), co ułatwia nawigację.</p></li><li><p><strong>Modularność</strong>: Możliwość pracy nad jednym typem lub grupą typów bez ingerencji w inne części projektu.</p></li><li><p><strong>Skalowalność</strong>: Dodawanie nowych elementów (np. kolejnych DTO czy mocków) nie wymaga restrukturyzacji całego projektu.</p></li><li><p><strong>Czytelność</strong>: Projekt staje się bardziej przejrzysty, szczególnie w dużych aplikacjach.</p></li></ol><p>W małych projektach foldery @ mogą być nadmiarowe, ale w średnich i dużych aplikacjach przynoszą istotne korzyści, szczególnie w kontekście pracy zespołowej i utrzymania kodu. Połączenie obu podejść to najlepsze z dwóch światów – centralizacja z jednoczesnym logicznym podziałem na tematyczne obszary.</p><p><strong>Zalety</strong></p><ul><li><p><strong>Centralizacja:</strong> Wszystkie typy są zorganizowane w jednym miejscu, co ułatwia ich wyszukiwanie i zarządzanie.</p></li><li><p><strong>Podział tematyczny:</strong> Foldery takie jak @mocks czy @dtos jasno wskazują, jakie typy znajdują się w środku.</p></li><li><p><strong>Minimalizacja duplikacji:</strong> Wspólne typy są używane w całej aplikacji, eliminując potrzebę ich ponownego definiowania.</p></li></ul><p><strong>Wyzwania</strong></p><ul><li><p><strong>Skalowanie:</strong> W bardzo dużych projektach foldery mogą wymagać dalszego podziału na podkategorie (np. @dtos/auth czy @dtos/product).</p></li></ul><p><strong>Kiedy warto stosować?</strong></p><ol start="1"><li><p><strong>Dla małych projektów</strong>: podstawowa organizacja globalna świetnie sprawdza się w prostych projektach, gdzie nie ma potrzeby podziału na domeny.</p></li><li><p><strong>Dla średnich i dużych projektów:</strong> Foldery @ pomagają zachować porządek w kodzie, gdy liczba typów rośnie i są one używane w różnych miejscach aplikacji.</p></li><li><p><strong>Dla projektów wielozespołowych:</strong> W aplikacjach rozwijanych przez wiele zespołów (np. frontend, backend, DevOps), organizacja @ minimalizuje konflikty i promuje spójność.</p></li><li><p><strong>Dla projektów typu monorepo:</strong> Jeśli wiele aplikacji dzieli wspólne typy, foldery @ zapewniają łatwe zarządzanie współdzielonym kodem.</p></li></ol><h2>Jaką organizację wybrać?</h2><p>Obie metody, organizacja domenowa i globalna, mają swoje miejsce w ekosystemie TypeScript. Organizacja per domena promuje modularność i izolację, co jest idealne w złożonych aplikacjach o wielu niezależnych modułach. Z kolei organizacja globalna z folderami @ wspiera centralizację i czytelność w projektach, w których typy są współdzielone w różnych częściach aplikacji.</p><p><strong>Organizacja per domena:</strong></p><ul><li><p><strong>Zalecana dla</strong>: Aplikacji o złożonej logice biznesowej, w których każdy moduł jest niezależny.</p></li><li><p><strong>Typowy przykład</strong>: System zarządzania użytkownikami, gdzie każda domena (użytkownicy, role, dostęp) ma swoje własne typy i logikę.</p></li></ul><p><strong>Organizacja globalna z folderami @:</strong></p><ul><li><p><strong>Zalecana dla</strong>: Projektów wymagających współdzielenia dużej liczby typów i struktur danych w różnych modułach.</p></li><li><p><strong>Typowy przykład</strong>: Aplikacje typu monorepo, gdzie frontend i backend dzielą wspólne struktury, takie jak DTO czy enumy.</p></li></ul><p>W praktyce wiele zespołów stosuje podejście hybrydowe, organizację per domena dla lokalnych typów i logiki oraz organizację @ dla elementów globalnych. Jeżeli szukasz podejścia “silver bullet”, to rekomendujemy organizację globalną z folderami </p><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

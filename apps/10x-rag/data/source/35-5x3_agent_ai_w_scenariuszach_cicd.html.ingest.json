@@ -1,0 +1,364 @@
+{
+  "lessonId": "[5x3] Agent AI w scenariuszach CI/CD",
+  "file": "35-5x3_agent_ai_w_scenariuszach_cicd.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 4,
+      "order": 1
+    },
+    {
+      "slug": "praca-z-composite-actions",
+      "title": "Praca z Composite Actions",
+      "blocks": 3,
+      "order": 2
+    },
+    {
+      "slug": "tworzenie-reuzywalnej-akcji",
+      "title": "Tworzenie reużywalnej akcji",
+      "blocks": 10,
+      "order": 3
+    },
+    {
+      "slug": "testowa-integracja-z-ai",
+      "title": "Testowa integracja z AI",
+      "blocks": 4,
+      "order": 4
+    },
+    {
+      "slug": "uwaga-na-dodatkowe-zaleznosci",
+      "title": "Uwaga na dodatkowe zależności",
+      "blocks": 5,
+      "order": 5
+    },
+    {
+      "slug": "jak-uzywac-nowej-akcji",
+      "title": "Jak używać nowej akcji",
+      "blocks": 7,
+      "order": 6
+    },
+    {
+      "slug": "dwa-pomysy-dla-agenta-ai-w-cicd",
+      "title": "Dwa pomysły dla Agenta AI w CI/CD",
+      "blocks": 17,
+      "order": 7
+    },
+    {
+      "slug": "dodatkowe-uprawnienia",
+      "title": "Dodatkowe uprawnienia",
+      "blocks": 1,
+      "order": 8
+    },
+    {
+      "slug": "github-token-github_token",
+      "title": "GitHub Token (GITHUB_TOKEN)",
+      "blocks": 6,
+      "order": 9
+    },
+    {
+      "slug": "personal-access-token-pat",
+      "title": "Personal Access Token (PAT)",
+      "blocks": 8,
+      "order": 10
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 5,
+      "order": 11
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "Ćwiczenia praktyczne",
+      "blocks": 0,
+      "order": 12
+    },
+    {
+      "slug": "zadanie-1-changelogmd-z-gemini-flash",
+      "title": "Zadanie 1: CHANGELOG.md z Gemini Flash",
+      "blocks": 6,
+      "order": 13
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:9904287f:43cc23fa",
+      "tokenEstimate": 72,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:43cc23fa:0-1",
+      "tokenEstimate": 72,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:9904287f:24701484",
+      "tokenEstimate": 198,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:24701484:0-3",
+      "tokenEstimate": 271,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:9904287f:31fa3076",
+      "tokenEstimate": 173,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:31fa3076:0-2",
+      "tokenEstimate": 173,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:9904287f:fc7ebe72",
+      "tokenEstimate": 226,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:fc7ebe72:0-9",
+      "tokenEstimate": 470,
+      "span": [
+        0,
+        9
+      ]
+    },
+    {
+      "id": "sec:9904287f:c7804249",
+      "tokenEstimate": 220,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:c7804249:0-3",
+      "tokenEstimate": 220,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:9904287f:4e864026",
+      "tokenEstimate": 222,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:4e864026:0-4",
+      "tokenEstimate": 222,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:9904287f:7fdd6d7f",
+      "tokenEstimate": 191,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:7fdd6d7f:0-6",
+      "tokenEstimate": 316,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:9904287f:0bcbd8f9",
+      "tokenEstimate": 210,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:0bcbd8f9:0-3",
+      "tokenEstimate": 379,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "chk:9904287f:0bcbd8f9:3-5",
+      "tokenEstimate": 323,
+      "span": [
+        3,
+        5
+      ]
+    },
+    {
+      "id": "chk:9904287f:0bcbd8f9:4-6",
+      "tokenEstimate": 442,
+      "span": [
+        4,
+        6
+      ]
+    },
+    {
+      "id": "chk:9904287f:0bcbd8f9:6-7",
+      "tokenEstimate": 402,
+      "span": [
+        6,
+        7
+      ]
+    },
+    {
+      "id": "chk:9904287f:0bcbd8f9:6-8",
+      "tokenEstimate": 404,
+      "span": [
+        6,
+        8
+      ]
+    },
+    {
+      "id": "chk:9904287f:0bcbd8f9:6-9",
+      "tokenEstimate": 412,
+      "span": [
+        6,
+        9
+      ]
+    },
+    {
+      "id": "chk:9904287f:0bcbd8f9:6-10",
+      "tokenEstimate": 457,
+      "span": [
+        6,
+        10
+      ]
+    },
+    {
+      "id": "chk:9904287f:0bcbd8f9:10-16",
+      "tokenEstimate": 272,
+      "span": [
+        10,
+        16
+      ]
+    },
+    {
+      "id": "sec:9904287f:1959e1e8",
+      "tokenEstimate": 103,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:9904287f:1959e1e8:0-0",
+      "tokenEstimate": 103,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:9904287f:9ae10882",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:9ae10882:0-5",
+      "tokenEstimate": 232,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:9904287f:85b34396",
+      "tokenEstimate": 185,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:85b34396:0-7",
+      "tokenEstimate": 264,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:9904287f:7eabec50",
+      "tokenEstimate": 208,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:7eabec50:0-4",
+      "tokenEstimate": 349,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:9904287f:dcc8ec86",
+      "tokenEstimate": 65,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:9904287f:c0ca631b",
+      "tokenEstimate": 190,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9904287f:c0ca631b:0-5",
+      "tokenEstimate": 209,
+      "span": [
+        0,
+        5
+      ]
+    }
+  ]
+}

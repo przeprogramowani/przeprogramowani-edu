@@ -1,0 +1,976 @@
+{
+  "ebook": "wdi-presentation-v2",
+  "assetBasePath": "/assets/10xdevs/wdi-slides",
+  "updatedAt": "2026-04-06T08:19:42.799Z",
+  "entries": [
+    {
+      "assetId": "m12a-linux-kernel-vulnerability",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "d3ddd51bae08f9d0",
+      "outputPath": "/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 378568,
+      "createdAt": "2026-04-05T23:11:40.925Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m19-rankings-lie",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "138942304fd2673c",
+      "outputPath": "/assets/10xdevs/wdi-slides/m19-rankings-lie.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m19-rankings-lie.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 379518,
+      "createdAt": "2026-04-05T23:12:08.688Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m19-rankings-lie",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "c39c1e3d0d8c1904",
+      "outputPath": "/assets/10xdevs/wdi-slides/m19-rankings-lie.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m19-rankings-lie.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 309270,
+      "createdAt": "2026-04-05T23:26:59.912Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m12a-linux-kernel-vulnerability",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "fed6436b5d7372c7",
+      "outputPath": "/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "status": "error",
+      "error": "OpenRouter response did not include message.images[0].image_url.url",
+      "mimeType": null,
+      "fileSizeBytes": null,
+      "createdAt": "2026-04-05T23:28:19.906Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m12a-linux-kernel-vulnerability",
+      "attempt": 2,
+      "model": "openai/gpt-5-image",
+      "promptHash": "fed6436b5d7372c7",
+      "outputPath": "/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "status": "error",
+      "error": "OpenRouter request failed (402): {\"error\":{\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 65536 tokens, but can only afford 40770. To increase, visit https://openrouter.ai/settings/credits and add more credits\",\"code\":402,\"metadata\":{\"provider_name\":null}},\"user_id\":\"user_2fG8duGzXN0moZfIpNrNZAtANqn\"}",
+      "mimeType": null,
+      "fileSizeBytes": null,
+      "createdAt": "2026-04-05T23:28:20.137Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m12a-linux-kernel-vulnerability",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "fed6436b5d7372c7",
+      "outputPath": "/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 480132,
+      "createdAt": "2026-04-05T23:29:02.852Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m02-big-project",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "e4786b1cafdf4d6f",
+      "outputPath": "/assets/10xdevs/wdi-slides/m02-big-project.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m02-big-project.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 358896,
+      "createdAt": "2026-04-05T23:38:08.894Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m02a-research",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "990d1e5c6b77da75",
+      "outputPath": "/assets/10xdevs/wdi-slides/m02a-research.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m02a-research.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 347252,
+      "createdAt": "2026-04-05T23:38:46.631Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m04-agents",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "907b28964214270b",
+      "outputPath": "/assets/10xdevs/wdi-slides/m04-agents.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m04-agents.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 262938,
+      "createdAt": "2026-04-05T23:39:08.220Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m03-strategic-tactical",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "3a03876eaf9043f4",
+      "outputPath": "/assets/10xdevs/wdi-slides/m03-strategic-tactical.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m03-strategic-tactical.webp",
+      "status": "error",
+      "error": "OpenRouter request failed (402): {\"error\":{\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 58638 tokens, but can only afford 7151. To increase, visit https://openrouter.ai/settings/credits and add more credits\",\"code\":402,\"metadata\":{\"provider_name\":null}},\"user_id\":\"user_2fG8duGzXN0moZfIpNrNZAtANqn\"}",
+      "mimeType": null,
+      "fileSizeBytes": null,
+      "createdAt": "2026-04-05T23:39:08.505Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m03-strategic-tactical",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "3a03876eaf9043f4",
+      "outputPath": "/assets/10xdevs/wdi-slides/m03-strategic-tactical.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m03-strategic-tactical.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 436826,
+      "createdAt": "2026-04-06T05:48:22.303Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m09-challenge-accepted",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "c1c7f063989d9fbb",
+      "outputPath": "/assets/10xdevs/wdi-slides/m09-challenge-accepted.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m09-challenge-accepted.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 516046,
+      "createdAt": "2026-04-06T05:49:01.445Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m10-quality-gates",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "88709ce098908f16",
+      "outputPath": "/assets/10xdevs/wdi-slides/m10-quality-gates.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m10-quality-gates.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 328746,
+      "createdAt": "2026-04-06T05:49:30.247Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m12-code-review",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "3c01012ea76a39e1",
+      "outputPath": "/assets/10xdevs/wdi-slides/m12-code-review.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m12-code-review.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 376344,
+      "createdAt": "2026-04-06T05:50:01.540Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m13-fifty-devs",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "fe7a5ec3ce418c4b",
+      "outputPath": "/assets/10xdevs/wdi-slides/m13-fifty-devs.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m13-fifty-devs.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 604202,
+      "createdAt": "2026-04-06T05:50:24.283Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m14-artifacts",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "171c31e6e7700f23",
+      "outputPath": "/assets/10xdevs/wdi-slides/m14-artifacts.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m14-artifacts.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 263972,
+      "createdAt": "2026-04-06T05:50:45.317Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m15-chaos-to-infra",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "ae282226649dceed",
+      "outputPath": "/assets/10xdevs/wdi-slides/m15-chaos-to-infra.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m15-chaos-to-infra.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 380596,
+      "createdAt": "2026-04-06T05:51:08.246Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m16-registry",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "6f53d8db23053c17",
+      "outputPath": "/assets/10xdevs/wdi-slides/m16-registry.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m16-registry.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 498520,
+      "createdAt": "2026-04-06T05:51:30.241Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m17-shared-infra",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "47ac0477ebeeb657",
+      "outputPath": "/assets/10xdevs/wdi-slides/m17-shared-infra.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m17-shared-infra.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 411906,
+      "createdAt": "2026-04-06T05:51:49.104Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m18-four-steps",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "c924499edfc8053b",
+      "outputPath": "/assets/10xdevs/wdi-slides/m18-four-steps.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m18-four-steps.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 349956,
+      "createdAt": "2026-04-06T05:52:29.185Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m20-l1-l4-continuum",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "a0530f3074adb1b2",
+      "outputPath": "/assets/10xdevs/wdi-slides/m20-l1-l4-continuum.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m20-l1-l4-continuum.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 428764,
+      "createdAt": "2026-04-06T05:53:13.872Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m21-karpathy",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "5251e9e317d2d06f",
+      "outputPath": "/assets/10xdevs/wdi-slides/m21-karpathy.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m21-karpathy.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 362926,
+      "createdAt": "2026-04-06T05:53:33.381Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m22-final-message",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "5d6669ddee85fe13",
+      "outputPath": "/assets/10xdevs/wdi-slides/m22-final-message.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m22-final-message.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 453888,
+      "createdAt": "2026-04-06T05:54:05.311Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m11-three-sins",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "dabbeb202720ce97",
+      "outputPath": "/assets/10xdevs/wdi-slides/m11-three-sins.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m11-three-sins.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 426620,
+      "createdAt": "2026-04-06T06:47:54.449Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m11-three-sins",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "6446d4159acfc54a",
+      "outputPath": "/assets/10xdevs/wdi-slides/m11-three-sins.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m11-three-sins.webp",
+      "status": "error",
+      "error": "terminated",
+      "mimeType": null,
+      "fileSizeBytes": null,
+      "createdAt": "2026-04-06T07:15:04.617Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m11-three-sins",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "6446d4159acfc54a",
+      "outputPath": "/assets/10xdevs/wdi-slides/m11-three-sins.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m11-three-sins.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 348100,
+      "createdAt": "2026-04-06T07:16:14.481Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m11-three-sins",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "a04749127366b710",
+      "outputPath": "/assets/10xdevs/wdi-slides/m11-three-sins.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m11-three-sins.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 606976,
+      "createdAt": "2026-04-06T07:19:55.616Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m02-big-project",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "f9090bc531a24a4e",
+      "outputPath": "/assets/10xdevs/wdi-slides/m02-big-project.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m02-big-project.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 392812,
+      "createdAt": "2026-04-06T07:30:32.449Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m16-registry",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "c6e17e7e851ed134",
+      "outputPath": "/assets/10xdevs/wdi-slides/m16-registry.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m16-registry.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 465360,
+      "createdAt": "2026-04-06T07:30:54.837Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m02a-research",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "e69e7d91c3428d47",
+      "outputPath": "/assets/10xdevs/wdi-slides/m02a-research.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m02a-research.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 383734,
+      "createdAt": "2026-04-06T07:44:32.332Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m04-agents",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "e747bc8b94b2218d",
+      "outputPath": "/assets/10xdevs/wdi-slides/m04-agents.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m04-agents.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 334262,
+      "createdAt": "2026-04-06T07:45:03.799Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m03-strategic-tactical",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "bf59bd5ef2b75e9d",
+      "outputPath": "/assets/10xdevs/wdi-slides/m03-strategic-tactical.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m03-strategic-tactical.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 590100,
+      "createdAt": "2026-04-06T07:45:31.114Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m12-code-review",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "99ec9640dfb2b8f4",
+      "outputPath": "/assets/10xdevs/wdi-slides/m12-code-review.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m12-code-review.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 376488,
+      "createdAt": "2026-04-06T07:46:07.813Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m14-artifacts",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "c7c8c95c838015b9",
+      "outputPath": "/assets/10xdevs/wdi-slides/m14-artifacts.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m14-artifacts.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 237846,
+      "createdAt": "2026-04-06T07:46:43.681Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m17-shared-infra",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "bf65c8d5324bc8f3",
+      "outputPath": "/assets/10xdevs/wdi-slides/m17-shared-infra.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m17-shared-infra.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 530912,
+      "createdAt": "2026-04-06T07:47:19.385Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m22-final-message",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "56985581ce7a0753",
+      "outputPath": "/assets/10xdevs/wdi-slides/m22-final-message.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m22-final-message.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 355460,
+      "createdAt": "2026-04-06T07:47:42.683Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "2K"
+      }
+    },
+    {
+      "assetId": "m02-big-project",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "f9090bc531a24a4e",
+      "outputPath": "/assets/10xdevs/wdi-slides/m02-big-project.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m02-big-project.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 569612,
+      "createdAt": "2026-04-06T08:01:33.204Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m02a-research",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "e69e7d91c3428d47",
+      "outputPath": "/assets/10xdevs/wdi-slides/m02a-research.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m02a-research.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 630362,
+      "createdAt": "2026-04-06T08:02:31.607Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m04-agents",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "e747bc8b94b2218d",
+      "outputPath": "/assets/10xdevs/wdi-slides/m04-agents.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m04-agents.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 455376,
+      "createdAt": "2026-04-06T08:03:33.756Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m03-strategic-tactical",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "bf59bd5ef2b75e9d",
+      "outputPath": "/assets/10xdevs/wdi-slides/m03-strategic-tactical.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m03-strategic-tactical.webp",
+      "status": "error",
+      "error": "OpenRouter response did not include message.images[0].image_url.url",
+      "mimeType": null,
+      "fileSizeBytes": null,
+      "createdAt": "2026-04-06T08:03:35.242Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m03-strategic-tactical",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "bf59bd5ef2b75e9d",
+      "outputPath": "/assets/10xdevs/wdi-slides/m03-strategic-tactical.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m03-strategic-tactical.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 466872,
+      "createdAt": "2026-04-06T08:04:59.788Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m09-challenge-accepted",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "c1c7f063989d9fbb",
+      "outputPath": "/assets/10xdevs/wdi-slides/m09-challenge-accepted.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m09-challenge-accepted.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 652544,
+      "createdAt": "2026-04-06T08:06:00.238Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m10-quality-gates",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "88709ce098908f16",
+      "outputPath": "/assets/10xdevs/wdi-slides/m10-quality-gates.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m10-quality-gates.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 360808,
+      "createdAt": "2026-04-06T08:06:49.153Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m12a-linux-kernel-vulnerability",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "fed6436b5d7372c7",
+      "outputPath": "/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "status": "error",
+      "error": "OpenRouter response did not include message.images[0].image_url.url",
+      "mimeType": null,
+      "fileSizeBytes": null,
+      "createdAt": "2026-04-06T08:06:52.929Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m12-code-review",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "99ec9640dfb2b8f4",
+      "outputPath": "/assets/10xdevs/wdi-slides/m12-code-review.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m12-code-review.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 519506,
+      "createdAt": "2026-04-06T08:07:55.546Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m13-fifty-devs",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "fe7a5ec3ce418c4b",
+      "outputPath": "/assets/10xdevs/wdi-slides/m13-fifty-devs.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m13-fifty-devs.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 899106,
+      "createdAt": "2026-04-06T08:08:40.582Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m14-artifacts",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "c7c8c95c838015b9",
+      "outputPath": "/assets/10xdevs/wdi-slides/m14-artifacts.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m14-artifacts.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 446602,
+      "createdAt": "2026-04-06T08:09:38.171Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m15-chaos-to-infra",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "ae282226649dceed",
+      "outputPath": "/assets/10xdevs/wdi-slides/m15-chaos-to-infra.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m15-chaos-to-infra.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 677370,
+      "createdAt": "2026-04-06T08:10:24.000Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m16-registry",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "c6e17e7e851ed134",
+      "outputPath": "/assets/10xdevs/wdi-slides/m16-registry.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m16-registry.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 554736,
+      "createdAt": "2026-04-06T08:11:45.691Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m17-shared-infra",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "bf65c8d5324bc8f3",
+      "outputPath": "/assets/10xdevs/wdi-slides/m17-shared-infra.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m17-shared-infra.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 598630,
+      "createdAt": "2026-04-06T08:13:01.601Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m18-four-steps",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "c924499edfc8053b",
+      "outputPath": "/assets/10xdevs/wdi-slides/m18-four-steps.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m18-four-steps.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 479058,
+      "createdAt": "2026-04-06T08:13:47.214Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m19-rankings-lie",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "c39c1e3d0d8c1904",
+      "outputPath": "/assets/10xdevs/wdi-slides/m19-rankings-lie.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m19-rankings-lie.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 483028,
+      "createdAt": "2026-04-06T08:14:50.841Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m20-l1-l4-continuum",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "a0530f3074adb1b2",
+      "outputPath": "/assets/10xdevs/wdi-slides/m20-l1-l4-continuum.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m20-l1-l4-continuum.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 758214,
+      "createdAt": "2026-04-06T08:15:36.036Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m21-karpathy",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "5251e9e317d2d06f",
+      "outputPath": "/assets/10xdevs/wdi-slides/m21-karpathy.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m21-karpathy.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 600368,
+      "createdAt": "2026-04-06T08:16:22.458Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m22-final-message",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "56985581ce7a0753",
+      "outputPath": "/assets/10xdevs/wdi-slides/m22-final-message.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m22-final-message.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 591028,
+      "createdAt": "2026-04-06T08:17:07.202Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m11-three-sins",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "a04749127366b710",
+      "outputPath": "/assets/10xdevs/wdi-slides/m11-three-sins.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m11-three-sins.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 951178,
+      "createdAt": "2026-04-06T08:17:56.820Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    },
+    {
+      "assetId": "m12a-linux-kernel-vulnerability",
+      "attempt": 1,
+      "model": "google/gemini-3.1-flash-image-preview",
+      "promptHash": "fed6436b5d7372c7",
+      "outputPath": "/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/wdi-slides/m12a-linux-kernel-vulnerability.webp",
+      "status": "success",
+      "error": null,
+      "mimeType": "image/png",
+      "fileSizeBytes": 491420,
+      "createdAt": "2026-04-06T08:19:42.799Z",
+      "imageConfig": {
+        "aspect_ratio": "16:9",
+        "image_size": "4K"
+      }
+    }
+  ]
+}

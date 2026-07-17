@@ -1,0 +1,201 @@
+---
+/**
+ * Strona gry Space Explorers (slug space-explorers, kontekst publiczny).
+ * Zasada gry (co-op Nawigator + Dexo), fabula (Odyssey, VOID, Synaptit),
+ * darmowy prolog, pelna wersja (5 ksiezycow = moduly) i rangi. Tresc w
+ * i18n/space-explorers.ts; gra zyje pod /explorers (ten sam origin).
+ *
+ * hud-top, xnav, footer i wspolny CSS renderuje TenxCosmicLayout; tutaj markup
+ * + scoped CSS (przycisk CTA, siatka ksiezycow, lista rang).
+ */
+import type { Lang } from '../i18n';
+import { SPACE_EXPLORERS } from '../i18n/space-explorers';
+import { tenxDevsUrl } from '../config';
+import { pageHref } from '../pages';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+}
+
+const { base, lang = 'pl' } = Astro.props;
+const t = SPACE_EXPLORERS[lang];
+
+/** Adres darmowej gry (ten sam origin co portal - platforma.przeprogramowani.pl). */
+const PLAY_URL = '/explorers';
+
+/** Glif ksiezyca z kraterami dla kart pelnej wersji (kolor dziedziczy z --acc). */
+const MOON_GLYPH =
+  '<svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="20" r="14"/><circle cx="15" cy="15" r="2.5" opacity=".7"/><circle cx="25" cy="23" r="3.5" opacity=".7"/><circle cx="17" cy="26" r="1.8" opacity=".7"/></g></svg>';
+---
+
+<style is:global>
+/* Reguly specyficzne dla strony (diff vs CSS wspolny w TenxCosmicLayout) */
+header h1 .glow{color:#7c8cff;text-shadow:0 0 24px rgba(124,140,255,.45)}
+
+/* przycisk CTA (start gry / program) */
+.se-cta{display:inline-flex;align-items:center;gap:9px;margin-top:24px;padding:13px 22px;
+  border:1px solid var(--acc);color:var(--acc);font-family:var(--disp);font-weight:700;font-size:.82rem;
+  letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
+  background:color-mix(in srgb,var(--acc) 10%,transparent);transition:background .15s,color .15s,box-shadow .15s}
+.se-cta:hover,.se-cta:focus-visible{background:var(--acc);color:var(--bg);
+  box-shadow:0 0 26px color-mix(in srgb,var(--acc) 42%,transparent);outline:none}
+.se-cta .ico{width:13px;height:13px}
+
+/* lista rang - numerowana progresja XP */
+.se-ranks{margin-top:22px;list-style:none;padding:0;display:grid;gap:10px;counter-reset:rank}
+.se-ranks li{display:flex;align-items:baseline;gap:14px;padding:11px 16px;
+  border:1px solid var(--line-soft);background:color-mix(in srgb,var(--surface) 45%,transparent)}
+.se-ranks li::before{counter-increment:rank;content:counter(rank);font-family:var(--disp);font-weight:700;
+  font-size:.78rem;color:var(--acc);border:1px solid color-mix(in srgb,var(--acc) 55%,transparent);
+  width:24px;height:24px;flex:none;display:flex;align-items:center;justify-content:center}
+.se-ranks .rn{font-family:var(--disp);font-weight:600;font-size:.94rem;color:var(--txt)}
+.se-ranks .rx{margin-left:auto;font-family:var(--mono);font-size:.82rem;color:var(--muted);letter-spacing:.04em}
+.se-feats code,.se-ranks code,.mech .v code,.prolog-note code{font-family:var(--mono);font-size:.85em;
+  background:color-mix(in srgb,var(--surface) 82%,transparent);padding:1px 5px;color:var(--txt)}
+.prolog-note{margin-top:18px}
+</style>
+
+<header>
+  <p class="eyebrow" style="--acc:#7c8cff"><span class="ico ico-star" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1 set:html={t.h1Html} />
+  <p class="sub" set:html={t.subHtml} />
+  <nav class="route" aria-label={t.routeAria}>
+    <a href="#jak-grac" style="--hov:#7c8cff">{t.route[0]}</a>
+    <a href="#fabula" style="--hov:#a78bfa">{t.route[1]}</a>
+    <a href="#prolog" style="--hov:#3ddad0">{t.route[2]}</a>
+    <a href="#pelna-wersja" style="--hov:#f4b942">{t.route[3]}</a>
+    <a href="#rangi">{t.route[4]}</a>
+  </nav>
+</header>
+
+<!-- ============ 01 JAK GRAĆ ============ -->
+<section class="sector" id="jak-grac" style="--acc:#7c8cff">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.how.num}</span>
+      <span class="sec-uni"><span class="ico ico-radar" aria-hidden="true"></span>{t.how.kicker}</span>
+    </div>
+    <h2>{t.how.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.how.leadHtml} /></div>
+  <div class="rv">
+    <dl class="mech">
+      {t.how.rows.map((r) => (
+        <div><dt><span class="ico ico-sig" aria-hidden="true"></span>{r.dt}</dt><dd class="v" style="margin:0" set:html={r.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<!-- ============ 02 FABUŁA ============ -->
+<section class="sector" id="fabula" style="--acc:#a78bfa">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.story.num}</span>
+      <span class="sec-uni"><span class="ico ico-star" aria-hidden="true"></span>{t.story.kicker}</span>
+    </div>
+    <h2>{t.story.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.story.leadHtml} /></div>
+  <div class="rv">
+    <dl class="mech">
+      {t.story.rows.map((r) => (
+        <div><dt><span class="ico ico-cube" aria-hidden="true"></span>{r.dt}</dt><dd class="v" style="margin:0" set:html={r.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+  <div class="epigraph rv" style="--acc:#a78bfa">
+    <p>{t.story.epigraph}</p>
+    <cite>- {t.story.epigraphCite}</cite>
+  </div>
+</section>
+
+<!-- ============ 03 PROLOG ============ -->
+<section class="sector" id="prolog" style="--acc:#3ddad0">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.prolog.num}</span>
+      <span class="sec-uni"><span class="ico ico-check" aria-hidden="true"></span>{t.prolog.kicker}</span>
+    </div>
+    <h2>{t.prolog.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.prolog.leadHtml} /></div>
+  <div class="rv">
+    <dl class="mech">
+      {t.prolog.items.map((r) => (
+        <div><dt><span class="ico ico-check" aria-hidden="true"></span>{r.dt}</dt><dd class="v" style="margin:0" set:html={r.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+  <div class="rv">
+    <a class="se-cta" href={PLAY_URL} style="--acc:#3ddad0"><span class="ico ico-fast" aria-hidden="true"></span>{t.prolog.ctaLabel} →</a>
+  </div>
+  <div class="target rv prolog-note" style="--acc:#3ddad0"><span class="k"><span class="ico ico-doc" aria-hidden="true"></span>Info</span><p set:html={t.prolog.noteHtml} /></div>
+</section>
+
+<!-- ============ 04 PEŁNA WERSJA ============ -->
+<section class="sector" id="pelna-wersja" style="--acc:#f4b942">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.full.num}</span>
+      <span class="sec-uni"><span class="ico ico-cube" aria-hidden="true"></span>{t.full.kicker}</span>
+    </div>
+    <h2>{t.full.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.full.leadHtml} /></div>
+  <div class="sum-grid rv">
+    {t.full.moons.map((m) => (
+      <div class="sum-card" style={`--acc:${m.color}`}>
+        <Fragment set:html={MOON_GLYPH} />
+        <span class="num">{m.num}</span>
+        <h3>{m.h3}</h3>
+        <p>{m.p}</p>
+      </div>
+    ))}
+  </div>
+  <div class="target rv se-feats" style="--acc:#f4b942"><span class="k"><span class="ico ico-star" aria-hidden="true"></span>{t.full.featuresK}</span><p set:html={t.full.featuresHtml} /></div>
+</section>
+
+<!-- ============ 05 RANGI ============ -->
+<section class="sector" id="rangi" style="--acc:#7c8cff">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.ranks.num}</span>
+      <span class="sec-uni"><span class="ico ico-trophy" aria-hidden="true"></span>{t.ranks.kicker}</span>
+    </div>
+    <h2>{t.ranks.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.ranks.leadHtml} /></div>
+  <ol class="se-ranks rv">
+    {t.ranks.list.map((r) => (
+      <li><span class="rn">{r.name}</span><span class="rx">{r.xp}</span></li>
+    ))}
+  </ol>
+  <div class="target rv" style="--acc:#7c8cff"><span class="k"><span class="ico ico-up" aria-hidden="true"></span>Max</span><p set:html={t.ranks.noteHtml} /></div>
+</section>
+
+<!-- ============ DALEJ ============ -->
+<section class="sector" id="dalej" style="--acc:#7c8cff">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.next.num}</span>
+      <span class="sec-uni"><span class="ico ico-fast" aria-hidden="true"></span>{t.next.kicker}</span>
+    </div>
+    <h2>{t.next.h2}</h2>
+  </div>
+  <div class="rv">
+    <a class="se-cta" href={PLAY_URL} style="--acc:#3ddad0"><span class="ico ico-fast" aria-hidden="true"></span>{t.next.ctaLabel} →</a>
+  </div>
+  <div class="solo rv">
+    <div class="tx">
+      <span class="mono"><span class="ico ico-link" aria-hidden="true"></span>Skróty</span>
+      <dl class="mech">
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>{t.next.playDt}</dt><dd class="v" style="margin:0"><a href={PLAY_URL} style="color:var(--acc)">{t.next.playLink}</a>{t.next.playRest}</dd></div>
+        <div><dt><span class="ico ico-star" aria-hidden="true"></span>{t.next.joinDt}</dt><dd class="v" style="margin:0"><a href={tenxDevsUrl('space-explorers-cta')} target="_blank" rel="noopener" style="color:var(--acc)">{t.next.joinLink}</a>{t.next.joinRest}</dd></div>
+        <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.next.kursDt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'jak-dziala-kurs', lang)} style="color:var(--acc)">{t.next.kursLink}</a>{t.next.kursRest}</dd></div>
+        <div><dt><span class="ico ico-radar" aria-hidden="true"></span>{t.next.logDt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'log', lang)} style="color:var(--acc)">{t.next.logLink}</a>{t.next.logRest}</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>

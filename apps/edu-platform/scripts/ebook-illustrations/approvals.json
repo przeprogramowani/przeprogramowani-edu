@@ -1,0 +1,174 @@
+{
+  "ebook": "10xdevs3-ebook",
+  "updatedAt": "2026-03-28T11:27:00.706Z",
+  "assets": {
+    "hero-overview": {
+      "approved": true,
+      "approvedAt": "2026-03-28T09:52:05.699Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/hero-overview.webp",
+      "promptHash": "0d1babef4929338c",
+      "note": "User approved Gemini generation on 2026-03-28."
+    },
+    "ch1-metric-reductionism": {
+      "approved": true,
+      "approvedAt": "2026-03-28T09:52:22.389Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch1-metric-reductionism.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch1-metric-reductionism.webp",
+      "promptHash": "b0c4d8761ffa3ea0",
+      "note": "User approved Gemini generation on 2026-03-28."
+    },
+    "ch2-maturity-spectrum": {
+      "approved": true,
+      "approvedAt": "2026-03-28T09:52:40.932Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch2-maturity-spectrum.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch2-maturity-spectrum.webp",
+      "promptHash": "967c4e487591bdae",
+      "note": "User approved Gemini generation on 2026-03-28."
+    },
+    "ch2-benchmark-landscape": {
+      "approved": true,
+      "approvedAt": "2026-03-28T09:53:00.160Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch2-benchmark-landscape.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch2-benchmark-landscape.webp",
+      "promptHash": "72ab650e7611ae58",
+      "note": "User approved Gemini generation on 2026-03-28."
+    },
+    "ch3-agent-vs-inline": {
+      "approved": true,
+      "approvedAt": "2026-03-28T09:59:24.748Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch3-agent-vs-inline.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch3-agent-vs-inline.webp",
+      "promptHash": "e886a737d7627d6b",
+      "note": "User approved Gemini generation on 2026-03-28."
+    },
+    "ch4-harness-system-model": {
+      "approved": true,
+      "approvedAt": "2026-03-28T09:59:44.265Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch4-harness-system-model.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch4-harness-system-model.webp",
+      "promptHash": "ca0d623e2a0c476b",
+      "note": "User approved Gemini generation on 2026-03-28."
+    },
+    "ch5-technique-spectrum": {
+      "approved": true,
+      "approvedAt": "2026-03-28T09:59:59.434Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch5-technique-spectrum.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch5-technique-spectrum.webp",
+      "promptHash": "b88f3bef3d6dad7d",
+      "note": "User approved Gemini generation on 2026-03-28."
+    },
+    "ch7-10xbench-criteria": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:00:40.993Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch7-10xbench-criteria.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch7-10xbench-criteria.webp",
+      "promptHash": "2b3d854c6f00bb01",
+      "note": "User approved Gemini generation on 2026-03-28."
+    },
+    "ch8-price-frontier": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:00:56.603Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch8-price-frontier.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch8-price-frontier.webp",
+      "promptHash": "ee93abfe10326b83",
+      "note": "User approved Gemini generation on 2026-03-28."
+    },
+    "ch9-decision-scorecard": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:01:12.487Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch9-decision-scorecard.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch9-decision-scorecard.webp",
+      "promptHash": "84fa0efa7d914b5e",
+      "note": "User approved Gemini generation on 2026-03-28."
+    },
+    "ch10-rollout-mission": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:01:28.567Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch10-rollout-mission.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch10-rollout-mission.webp",
+      "promptHash": "7b65abf0f011d382",
+      "note": "User approved Gemini generation on 2026-03-28."
+    },
+    "ch1-benchmark-lifecycle-orbit": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:09:48.659Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch1-benchmark-lifecycle-orbit.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch1-benchmark-lifecycle-orbit.webp",
+      "promptHash": "130bbc0e76dde1f7",
+      "note": "User approved on 2026-03-28."
+    },
+    "ch3-cost-vs-value": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:10:01.561Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch3-cost-vs-value.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch3-cost-vs-value.webp",
+      "promptHash": "f56bbdd094174761",
+      "note": "User approved on 2026-03-28."
+    },
+    "ch4-architecture-paradigms": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:10:15.462Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch4-architecture-paradigms.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch4-architecture-paradigms.webp",
+      "promptHash": "5c567b16380b26da",
+      "note": "User approved on 2026-03-28."
+    },
+    "ch5-perception-gap": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:10:32.841Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch5-perception-gap.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch5-perception-gap.webp",
+      "promptHash": "e89d69898f595f67",
+      "note": "User approved on 2026-03-28."
+    },
+    "ch7-quality-gate": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:11:05.179Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch7-quality-gate.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch7-quality-gate.webp",
+      "promptHash": "f1f2c4521fe578ca",
+      "note": "User approved on 2026-03-28."
+    },
+    "ch8-tier-routing": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:11:23.547Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch8-tier-routing.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch8-tier-routing.webp",
+      "promptHash": "fb97fa67f4d978d0",
+      "note": "User approved on 2026-03-28."
+    },
+    "ch9-decision-tree": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:11:43.163Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch9-decision-tree.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch9-decision-tree.webp",
+      "promptHash": "066962fb2261a200",
+      "note": "User approved on 2026-03-28."
+    },
+    "ch10-daily-quality-workflow": {
+      "approved": true,
+      "approvedAt": "2026-03-28T10:11:59.456Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch10-daily-quality-workflow.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch10-daily-quality-workflow.webp",
+      "promptHash": "697e73631ecb5bf2",
+      "note": "User approved on 2026-03-28."
+    },
+    "ch6-framework-selector": {
+      "approved": true,
+      "approvedAt": "2026-03-28T11:16:02.960Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch6-framework-selector.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch6-framework-selector.webp",
+      "promptHash": "623ec3e5190a0e42",
+      "note": "User approved on 2026-03-28."
+    },
+    "ch6-hybrid-eval-stack": {
+      "approved": true,
+      "approvedAt": "2026-03-28T11:23:50.382Z",
+      "outputFile": "/Users/admin/code/przeprogramowani-sites/projects/edu-platform/public/assets/10xdevs/ebook-evals/ch6-hybrid-eval-stack.webp",
+      "outputPath": "/assets/10xdevs/ebook-evals/ch6-hybrid-eval-stack.webp",
+      "promptHash": "9b613fb6f93e5f70",
+      "note": "User approved on 2026-03-28."
+    }
+  }
+}

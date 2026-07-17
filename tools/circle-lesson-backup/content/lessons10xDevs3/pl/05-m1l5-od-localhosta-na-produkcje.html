@@ -1,0 +1,284 @@
+<p>Na tym etapie szkolenia projekt działa już lokalnie, a agent zaczyna go coraz lepiej rozumieć. Moglibyśmy w tym stanie pozostać jeszcze długo, dodając kolejne funkcje, pliki i moduły - całość rosłaby w oczach a ty miałbyś złudne poczucie progressu.</p>
+<p>Tylko że... lokalna aplikacja to dla twoich przyszłych użytkowników aplikacja, która nie istnieje.</p>
+<p>Zamiast rozdmuchiwać aplikację "wszerz", zadbajmy więc o domknięcie pierwszego tygodnia w stylu end-to-end - od pomysłu (lekcja 1) do pierwszego deploymentu produkcyjnego (lekcja 5 - tu jesteśmy).</p>
+<p>Drogę na produkcję przejdziemy myśląc nie tylko o projekcie, ale również o agencie AI, który powinien w tym procesie czuć się tak samo komfortowo, jak opiekun projektu. No dobra - to w którą stronę idziemy?</p>
+<p>Klasyczny scenariusz wygląda tak: szukasz w Google "free hosting [twój framework]", trafiasz na pierwszy poradnik na Medium albo blog producenta platformy, klikasz "Deploy", aplikacja idzie na produkcję. Działa...</p>
+<p>...do pierwszego problemu. Inny runtime, powolny build, problem z zależnościami, trudności z dodaniem usług wspierających główny projekt (baza, cache, analityka, etc.) - miało być inaczej.</p>
+<p>Wybór platformy nie jest więc kosmetycznym, ostatnim krokiem przed udostępnieniem aplikacji. To decyzja, która zostaje z tobą na cały czas trwania projektu a my, zajmując się nią już teraz, wykonamy klasyczny de-risking dostarczenia rozwiązania klientowi. Widząc, że całość działa na produkcji, wrócimy do pracy nad ficzerami.</p>
+<p>Tym domykamy moduł 1: zamiast deployować "na oko" lub "tak piszą w necie", chcemy podjąć świadomą decyzję o platformie i środowisku produkcyjnym. Dopasowaną do stacku i potencjału agentów AI.</p>
+<p>Czas wyjść z localhosta.</p>
+<p>Na start - pobierz paczkę dla tej lekcji:</p>
+<pre><code class="language-bash">npx @przeprogramowani/10x-cli@latest get m1l5
+</code></pre>
+<p>Albo powiedz agentowi: <em>"pobierz paczkę z lekcji m1l5"</em> — skill <strong>10x-cli-guide</strong> zna komendy za ciebie.</p>
+<h3>Łańcuch artefaktów modułu 1</h3>
+<p>Do tej pory każda lekcja modułu 1 zostawiała w repo konkretny plik albo stan. PRD opisuje co i dla kogo budujesz, tech-stack opisuje z czego, scaffoldowane repo daje punkt startu, a AGENTS.md uczy agenta lokalnych konwencji. Brakuje ostatniego ogniwa - <strong>gdzie i jak to wszystko działa</strong>.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l5-lesson-draft-1-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l5-lesson-draft-1-10x.png</a></p></blockquote>
+<p>To miejsce zapełnimy nowym artefaktem - <strong>infrastructure.md</strong>. Ale zanim do niego dojdziemy, warto zatrzymać się przy pytaniu, na które ten plik ma odpowiedzieć.</p>
+<h3>Wybór platformy jako świadoma decyzja</h3>
+<p>W preworku <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/14">[4.1]</a> Cloudflare jest wymieniany jako rekomendowana ścieżka dla projektu szkoleniowego, który chcesz odtwarzać 1:1 z naszych lekcji - przystępny pricing, dobrze udokumentowane SDK, sensowne wsparcie dla agentów.</p>
+<p>Mógłbyś więc zatrzymać się na tym i ruszyć z <strong>wrangler deploy</strong> dla prezentowanego przez nas 10xCards, ale ważniejsze pytanie nie brzmi "co mentorzy rekomendują pod 10xDevs?", tylko "skąd wiesz, że to dobry wybór dla <em>tego</em> projektu, <em>tego</em> zespołu i <em>tej</em> aplikacji?".</p>
+<p>Trzy pytania, na które warto mieć odpowiedź zanim klikniesz deploy:</p>
+<ul>
+<li>Czy platforma pasuje do twojego runtime'u i sposobu budowania aplikacji (SSR vs static, edge vs Node, długie procesy vs krótkie żądania)?</li>
+<li>Czy ma sensowny tryb pracy z agentem - udokumentowany i aktualny CLI, opcjonalny serwer MCP, logi dostępne przez API?</li>
+<li>Czy umiesz odpowiedzieć "jak wycofuję zmiany, jak skaluję serwery, ile zapłacę przy 10x ruchu" bez googlowania w panice?</li>
+</ul>
+<p>Jeśli odpowiedzi nie masz, nie wybrałeś platformy - została wybrana za ciebie. Zróbmy to jeszcze raz - lepiej i bardziej uniwersalnie. Nie tylko pod Astro i 10xCards, ale pod projekt, który chcesz po prostu wdrożyć na produkcję.</p>
+<h3>10x-infra-research: research z agentem AI</h3>
+<p>W paczce skilli dla tej lekcji znajdziesz <strong>10x-infra-research</strong>. Skill ma trzy zadania - wyciągnąć z ciebie kontekst projektu, zebrać dane z sieci o platformach wchodzących w grę i porównać je w spójnej tabeli.</p>
+<p>Wsadem będzie <strong>context/foundation/tech-stack.md</strong> (jeśli tego pliku nie masz, możesz go odtworzyć ręcznie albo zmodyfikować skill podając listę technologii wprost). Ważne, żeby agent rozumiał runtime, framework, bazę i planowane integracje.</p>
+<p>Uruchomisz go poprzez:</p>
+<pre><code class="language-text">/10x-infra-research
+</code></pre>
+<p>Założenia omawianego procesu wyglądają następująco:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l5-lesson-draft-2-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l5-lesson-draft-2-10x.png</a></p></blockquote>
+<p>Co dzieje się w trakcie:</p>
+<ol>
+<li>
+<p><strong>Wywiad z tobą.</strong> Skill dopyta o kilka rzeczy, których nie da się wyczytać z <strong>tech-stack.md</strong>: czy planujesz długo działające procesy, czy zależy ci na regionie EU, czy projekt ma być open source na potrzeby portfolio, czy budżet jest twardo ograniczony. Odpowiadasz zgodnie z bieżącą wiedzą - <strong>tak</strong>/<strong>nie</strong>/<strong>nie wiem</strong> - ostatnia opcja jest tu legalna i ważna.</p>
+</li>
+<li>
+<p><strong>Web research.</strong> Agent czyta oficjalne dokumentacje platform pasujących do twojego stacku, sprawdza aktualny status feature'ów (preview/GA/beta), porównuje pricing, szuka znanych ograniczeń.</p>
+</li>
+<li>
+<p><strong>Scored comparison.</strong> Każda platforma dostaje Pass/Partial/Fail po pięciu kryteriach agent-friendly: jakość CLI (czy agent zrobi z terminala wszystko, bez klikania w panelu), stopień managed/serverless (mniej infrastruktury do utrzymania = mniej rzeczy do zepsucia), dokumentacja w formacie czytelnym dla agenta (MDX, <strong>llms.txt</strong>), stabilne i skryptowalne deployment API, oraz obecność serwera MCP albo CLI. Wynik to tabela z notatkami, nie esej.</p>
+</li>
+</ol>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1191889945?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1191889945?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<p>Pełną listę kryteriów i ich wagi znajdziesz w <strong>SKILL.md</strong> skilla - nie ma sensu kopiować ich tutaj, bo ewoluują razem z platformami. Zwróć uwagę na jedno: skill nie odpowiada za ciebie, "która platforma jest najlepsza". Zostawia ci tabelę i kontekst do podjęcia decyzji.</p>
+<p>Warto dopowiedzieć, jaką dokładnie rolę gra tu skill - <strong>10x-infra-research</strong> jest procedurą - mówi agentowi <em>co po kolei zrobić</em>, żeby dojść do uzasadnionej rekomendacji. <em>Czym</em> to robi - dostępnymi narzędziami agenta, np. <strong>WebFetch</strong> do pobrania dokumentacji, <strong>AskUserQuestion</strong> pod interaktywny wywiad, itd. Skill bez narzędzi się nie obejdzie, narzędzia bez skilla zostawią cię z surowym Bashem i nadzieją, że agent sam coś z tego ułoży.</p>
+<h3>Anti-Confirmation Bias prompting - jak unikać "sugestii dopasowanych do ciebie"</h3>
+<p>Każdy research prowadzony z agentem ma jedną wbudowaną wadę. Modele językowe domyślnie dostosowują się do tego, co już od ciebie usłyszały - to zjawisko ma własną nazwę, <a href="https://openai.com/index/sycophancy-in-gpt-4o/">sycophancy</a>, i było kiedyś powodem mocnego bólu głowy w OpenAI. W praktyce oznacza to tyle, że jeśli półświadomie ciągnęło cię w stronę konkretnej platformy, scoring zostanie tak skonstruowany, żeby ta platforma wygrała. Twój research potwierdzi twoje przekonania, zamiast je przetestować.</p>
+<p>Recepta jest prosta. Zamiast pytać agenta <strong>czy platforma X nadaje się pod stack Y?</strong>, pytasz <strong>dlaczego platforma X to zły wybór pod stack Y?</strong>.</p>
+<p>Anti-bias to seria pytań ułożonych tak, żeby model nie miał drogi ucieczki. Zanim zatwierdzisz wynik, agent przepuszcza go przez trzy testy anti-biasu. To poszerza pulę dostępnych opcji i zwiększa twoją świadomość w wybranym obszarze.</p>
+<p><strong>Devil's advocate - co najgorszego można powiedzieć o tym wyborze?</strong></p>
+<p>Agent wciela się w sceptycznego architekta, którego jedynym zadaniem jest znaleźć wady, ukryte koszty i ryzyka technologii, która wygląda na zwycięską. Gdzie ta platforma zacznie cię uwierać? Jakie limity, których teraz nie widzisz, uderzą cię najpierw? Co na pierwszy rzut oka jest świetne, ale w drugim kwartale okaże się problemem? Cel nie jest udowodnić, że wybór jest zły - cel jest dostać brutalną listę słabości na piśmie.</p>
+<p><strong>Pre-mortem - wyobraź sobie, że jest 3 miesiące później i żałujesz wyboru.</strong></p>
+<p>Klasyczna technika research projektowych. Zamiast pytać "co może pójść nie tak?" - na co model ucieknie w ogólniki - zakładasz, że <em>już poszło nie tak</em>, i razem z agentem odtwarzasz scenariusz porażki. Jakie błędne założenia doprowadziły do tej decyzji? Której pułapki nie widziałeś z perspektywy dnia 1, ale po 90 dniach była oczywista? Pre-mortem zmienia perspektywę z prognozy na narrację, a narracje są o wiele bogatsze w konkrety niż abstrakcyjne listy ryzyk.</p>
+<p><strong>Unknown unknowns - co nie trafiło do scoringu, bo nie pomyślałeś o tym pytaniu?</strong></p>
+<p>Najtrudniejszy test, bo dotyczy rzeczy, o których nie wiedziałeś, że nie wiesz. Tu zadaniem agenta nie jest wymyślić nic sensacyjnego, tylko wymienić klasy ryzyk, które standardowy scoring uchwycił słabo lub w ogóle - compliance, backupy, ścieżki wyjścia z platformy, status produkcyjny konkretnego feature'a (GA czy beta?), zależności od decyzji innych zespołów. Te pytania powstają tylko wtedy, gdy ktoś o nie poprosi.</p>
+<p>Każdy taki test kończy się jedną z trzech decyzji:</p>
+<ul>
+<li><strong>akceptuję ryzyko</strong> - znam je, godzę się z nim, idę dalej.</li>
+<li><strong>dopisuję do <strong>infrastructure.md</strong> jako znane ograniczenie</strong> - decyzja zostaje, ale ryzyko jest świadomie zapisane.</li>
+<li><strong>muszę zmienić wybór</strong> - test pokazał coś, czego scoring nie wyłapał.</li>
+</ul>
+<p>Trzecia opcja zdarza się rzadko, ale to właśnie dla niej robisz cały ten cross-check. Bez niej research zamienia się w ćwiczenie z racjonalizacji decyzji, którą i tak miałeś już podjętą.</p>
+<p>Techniki unikania efektu potwierdzenia to znakomity sposób na to, aby dowolna konwersacja z AI przyniosła bardziej obiektywne, biorące pod uwagę różne scenariusze rezultaty. Trzy testy powyżej są wbudowane w skill, ale to nie wszystko, co warto mieć w głowie. Dwie dodatkowe techniki nie wymagają skilla - możesz je odpalić z poziomu zwykłego prompta, kiedy poczujesz, że agent zaczyna ci przytakiwać.</p>
+<p><strong>Porównanie alternatyw - zmuś model do pokazania konkurencji.</strong></p>
+<p>Zamiast prosić o ocenę jednego rozwiązania (na co model odpowie pochwałą), poproś o trzy alternatywne podejścia w tabeli porównawczej. Tabela wymusza spójną strukturę i utrudnia modelowi wybór "tego samego, ale w innych słowach". Działa wszędzie - od wyboru biblioteki, przez architekturę modułu, po decyzje organizacyjne typu "czy wprowadzać code review przez para-programming".</p>
+<pre><code class="language-text">Rozważam {{decyzję X}}.
+
+Zamiast oceniać mój wybór, przedstaw mi trzy realne alternatywy. Dla każdej zrób
+wiersz w tabeli Markdown z kolumnami: koszt wdrożenia, długoterminowy koszt
+utrzymania, krzywa uczenia, kluczowe ograniczenie.
+</code></pre>
+<p><strong>Zmiana ról i perspektyw - ten sam pomysł oczami różnych ludzi.</strong></p>
+<p>Każda decyzja wygląda inaczej z perspektywy osoby, która będzie z nią żyła. Twoja decyzja o platformie ucieszy backendowca, ale może wkurzyć osobę odpowiedzialną za bezpieczeństwo, która nie chce nowego dostawcy w audycie. Polecenie modelowi, żeby wcielił się po kolei w kilka konkretnych ról, ujawnia ciężary, których z pojedynczej perspektywy nie widzisz.</p>
+<pre><code class="language-text">Rozważam {{decyzję X}}.
+
+Wciel się po kolei w trzy role z mojego zespołu - frontend developera, osoby
+odpowiedzialnej za bezpieczeństwo i osoby odpowiedzialnej za koszty. Dla każdej
+napisz, jak ta decyzja wpłynie na ich codzienną pracę i priorytety. Jeśli choć
+jedna z tych osób zareaguje negatywnie, zaproponuj realną alternatywę.
+</code></pre>
+<p>Te dwie techniki dobrze uzupełniają trójkę ze skilla. Devil's advocate, pre-mortem i unknown unknowns testują <em>ten sam</em> wybór z różnych stron. Porównanie alternatyw i zmiana ról testują <em>przestrzeń</em> wokół wyboru - co jeszcze mogłeś wybrać i kto z tym wyborem będzie żył.</p>
+<h3>infrastructure.md - nowy kontrakt</h3>
+<p>Wynik researchu i procesu anti-bias powinien trafić do pliku, który zostaje w repo na kolejne etapy pracy:</p>
+<pre><code class="language-text">context/foundation/infrastructure.md
+</code></pre>
+<p>To trzeci kontrakt w łańcuchu, który budujemy od początku modułu:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l5-lesson-draft-3-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l5-lesson-draft-3-10x.png</a></p></blockquote>
+<p>Plik jest krótki, ale ustrukturyzowany. Sensowny szkielet zawiera:</p>
+<ul>
+<li><strong>Wybór i uzasadnienie</strong> - rekomendowana platforma + 2-3 zdania uzasadnienia.</li>
+<li><strong>Dopasowanie stacku</strong> - jak runtime'y i build pasują do twojego frameworka (SSR vs static, edge vs Node, Workers vs Pages).</li>
+<li><strong>CLI / MCP / API fit</strong> - co platforma daje agentowi do operability po deployment (jakie CLI, czy jest gotowy serwer MCP, czy logi są dostępne przez API).</li>
+<li><strong>Podgląd wdrożenia</strong> - jak wyglądają preview deploymenty per PR, czy są chronione (np. Cloudflare Access dla prywatnych preview).</li>
+<li><strong>Sekrety</strong> - gdzie trzymasz zmienne środowiskowe (panel platformy, GitHub Secrets, Cloudflare Workers Secrets), kto ma dostęp.</li>
+<li><strong>Rollback</strong> - ile minut i ile kroków zajmuje cofnięcie wadliwego deploymentu; co konkretnie klikasz/wpisujesz.</li>
+<li><strong>Uprawnienia</strong> - które akcje wymagają człowieka (publish do produkcji, rotate secret, drop bazy), które agent może robić sam.</li>
+<li><strong>Ryzyka</strong> - lista znanych ograniczeń z anti-bias: limity, beta features, region restrictions, znane brzegowe przypadki.</li>
+<li><strong>Decyzje techniczne</strong> - region, runtime, plan abonamentowy.</li>
+<li><strong>Sygnał zmiany decyzji</strong> - co zmieni się w decyzji, gdy projekt wyjdzie z fazy MVP (pre-prod, dedykowana baza, wydzielony CDN).</li>
+</ul>
+<p>Po co w ogóle ten plik?</p>
+<p>Dwa powody. Pierwszy to zapowiedź nawyku <strong>planowania przed implementacją</strong>, który w praktyce będziemy realizować w drugim module i który ogólnie jest jedną z najszerzej stosowany praktyk w kontekście programowania z AI. Plik <strong>infrastructure.md</strong> jest wsadem do <strong>Plan Mode</strong> w następnej sekcji. Agent dostaje go razem z <strong>tech-stack.md</strong> i wie, co i gdzie wdraża.</p>
+<p>Drugi - perspektywa średnio i długoterminowa. Kiedy projekt zacznie boleć ("dlaczego workery, jak teraz potrzebujemy CRONa?"), masz w repo zapis z datą, na podstawie czego podjęto decyzję. Możesz ją zrewidować świadomie, a nie przepisywać projekt w panice. To również pewien odpowiednik wzorca, który z powodzeniem stosuje wiele firm - tzw. Architectural Decision Record (ARD). Nie jest to główny wątek tej lekcji, ale o ADR dowiesz się więcej <a href="https://martinfowler.com/bliki/ArchitectureDecisionRecord.html">pod tym linkiem</a>.</p>
+<p>Ważne - ostateczna treść <strong>infrastructure.md</strong> jest twoja. Dopisz biznesowy kontekst, zatwierdź ryzyka, dodaj rzeczy, które wiesz tylko ty.</p>
+<p>Skill jest tu silnikiem, nie redaktorem.</p>
+<h3>Deployment z Plan Mode</h3>
+<p>Wykonajmy teraz pierwsze wdrożenie aplikacji na wybraną platformę lub środowisko produkcyjne.</p>
+<p>Wsadem tego procesu powinny być <strong>infrastructure.md</strong> i <strong>tech-stack.md</strong>. Agent wie, gdzie wdraża projekt i z czego jest on zbudowany. Czas na setup i realne wdrożenie.</p>
+<p>Czego chcemy uniknąć? Klasycznego - "agent działa, ja patrzę". Jeśli coś pójdzie nie tak w połowie i będziesz musiał ratować sytuację, dobrze byłoby wiedzieć <em>co dokładnie miało się stać</em>, zamiast rekonstruować to z historii pracy Agenta.</p>
+<p>Tu z pomocą przychodzi wbudowany w wiele narzędzi AI-Native tzw. <strong>Plan Mode</strong>.</p>
+<p>To tryb, w którym agent działa <em>read-only</em>: czyta repo, ogląda zewnętrzne źródła, dopytuje cię o brakujące decyzje, ale nie modyfikuje plików ani nie wykonuje mutacji projektu. Końcowym efektem jest plan - tekstowy opis tego, co agent zamierza zrobić, krok po kroku. W sesji Claude Code przejdziesz do tego trybu skrótem <strong>Shift+Tab</strong> (cykl trybów: default → auto-accept → plan) - w IDE to zwykle dedykowany przycisk pod polem do wpisania wiadomości do agenta.</p>
+<p>Jak posługiwać się planem? To proste:</p>
+<ol>
+<li><strong>Zainicjalizuj Plan Mode.</strong> Agent w trybie planowania czyta wsad (<strong>infrastructure.md</strong>, <strong>tech-stack.md</strong>), ewentualnie dopytuje o luki i zwraca plan procedurę wdrożenia.</li>
+<li><strong>Ocena.</strong> Czytasz plan. Jeśli czegoś brakuje albo coś jest źle - mówisz to wprost. Nie akceptujesz od razu.</li>
+<li><strong>Zatwierdzenie.</strong> Akceptujesz plan. Dopiero teraz agent wychodzi z trybu plan i przechodzi do wykonania zadania.</li>
+<li><strong>Referencja.</strong> Plan zostaje w projekcie. Kiedy coś pójdzie nie tak (a w pierwszym deployu zwykle idzie), masz konkretny dokument, do którego można zaglądnąć i odpowiedzieć na pytanie "co miało się stać?".</li>
+</ol>
+<p>Przy tej okazji warto też wrócić do skilla <strong>/10x-lesson</strong> - jeśli zauważysz, że dany skill lub fragment pracy agenta nie odpowiada twoim preferencjom (np. w planie analizowany jest nieistotny zakres repozytorium), dodaj to info do reguł na przyszłość.</p>
+<p>Efekt netto: agent działa bardziej przewidywalnie, a ty masz punkt odniesienia, który nie znika razem z kontekstem.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l5-lesson-draft-4-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l5-lesson-draft-4-10x.png</a></p></blockquote>
+<p>Wsad do Plan Mode może się różnić w zależności od zadania. Teraz to dwa pliki referencyjne i krótki cel: "Wykonajmy pierwsze wdrożenie w oparciu o <strong>@infrastructure.md</strong>, zgodnie ze stackiem z <strong>@tech-stack.md</strong>".</p>
+<p>Plan, który wygeneruje agent, powinien zawierać:</p>
+<ul>
+<li>kroki automatyczne, które będą wykonane przez agenta</li>
+<li>listę kont i serwisów, które trzeba skonfigurować ręcznie (konto Cloudflare, ewentualnie zewnętrzna baza),</li>
+<li>listę sekretów do skonfigurowania (zmienne środowiskowe, klucze API),</li>
+<li>konkretne komendy wdrożeniowe w formie dokumentacji (<strong>wrangler pages deploy</strong> albo <strong>wrangler deploy</strong> w zależności od wyboru Pages vs Workers - to nie są te same komendy),</li>
+</ul>
+<p>Po zatwierdzeniu planu agent wykonuje te kroki, gdzie sam przypisał się jako "owner". Twoja rola może dotyczyć uzupełniania luk, konfiguracji sekretów czy weryfikacji stanu końcowego. Obserwuj, czy agent nie próbuje czegoś, czego nie ma w planie.</p>
+<p>Zatwierdzony plan zostaje w repo jako <strong>context/deployment/deploy-plan.md</strong>. To nie jest "dokument na półkę" - w kolejnej lekcji, kiedy będziemy planować milestony implementacji samego MVP, agent dostanie ten plik jako kontekst, żeby wiedzieć, co już jest postawione, jakie sekrety są skonfigurowane i z jakich gotowych ścieżek deploy korzysta projekt.</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1191889944?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1191889944?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<h3>Przygotowania do wdrożenia</h3>
+<p>Cztery rzeczy, które musimy domknąć przed deployem 10xCards:</p>
+<ul>
+<li><strong>Konto Cloudflare</strong> - do pracy nad MVP darmowy plan w zupełności wystarczy. Rejestrację wykonasz przez <a href="https://dash.cloudflare.com/sign-up">dash.cloudflare.com/sign-up</a>, później potwierdzenie e-maila i gotowe.</li>
+<li><strong>Wrangler</strong> - oficjalny CLI Cloudflare do Workers i Pages. Trzymamy go w projekcie jako zależność i wołamy przez <strong>npx wrangler</strong>. Pierwsze logowanie to <strong>npx wrangler login</strong>. Dokumentacja: <a href="https://developers.cloudflare.com/workers/wrangler/">developers.cloudflare.com/workers/wrangler</a>.</li>
+<li><strong>Konto Supabase i testowa baza</strong> - dla 10xCards potrzebujemy zarządzanego Postgresa. Zakładasz konto na <a href="https://supabase.com">supabase.com</a>, klikasz "New project", wybierasz region najbliżej siebie. W zmiennych środowiskowych będziemy potrzebować URLa projektu i klucza publicznego.</li>
+<li><strong>GitHub CLI</strong> - <strong>gh</strong> przyda się agentowi do PR-ów, statusu builda i podglądu preview deploymentów wystawianych przez Cloudflare po każdym pushu. Instalacja: <a href="https://cli.github.com/">cli.github.com</a>, logowanie: <strong>gh auth login</strong>.</li>
+</ul>
+<p>Przygotowania w naszej sesji zobaczysz poniżej:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1192705068?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1192705068?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<h3>Realizacja wdrożenia</h3>
+<p>Zobaczmy teraz jak przeprowadzić pierwsze wdrożenie przy wsparciu Agenta, Wrangler CLI oraz przygotowanej infrastruktury:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1192705069?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1192705069?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<p>To moment, w którym domykasz sprint zerowy. Aplikacja nie jest jeszcze w pełni zautomatyzowana, brakuje twardych bramek bezpieczeństwa wokół produkcji, a wiele decyzji infrastrukturalnych jeszcze przed tobą. Ale kluczowa infrastruktura stoi, agent ma do dyspozycji <strong>wrangler</strong> i <strong>gh</strong>, a 10xCards wita pierwszych odwiedzających pod publicznym adresem.</p>
+<p>Gratulacje - to naprawdę kawał roboty!</p>
+<p>W kolejnym tygodniu wchodzimy w funkcjonalność biznesową MVP i dokładamy do warsztatu kolejne skille z 10xWorkflow.</p>
+<h2>🧑🏻‍💻 Zadania praktyczne</h2>
+<ul>
+<li><strong>Wykonaj research platformy.</strong> Uruchom <strong>/10x-infra-research</strong> z <strong>context/foundation/tech-stack.md</strong> jako wsadem. Odpowiedz uczciwie na pytania wywiadu (region, długo działające procesy, budżet, portfolio), a po scoringu przepuść wynik przez trzy testy anti-bias: devil's advocate, pre-mortem i unknown unknowns.</li>
+<li><strong>Zdefiniuj plan deploymentu.</strong> Wejdź w Plan Mode i przygotuj wdrożenie: <em>"Wykonajmy pierwsze wdrożenie w oparciu o <strong>@infrastructure.md</strong>, zgodnie ze stackiem z <strong>@tech-stack.md</strong>"</em>. Oceń plan, popraw braki, zapisz go jako <strong>context/deployment/deploy-plan.md</strong>.</li>
+<li><strong>Wykonaj pierwsze wdrożenie.</strong> Domknij przygotowania (konto Cloudflare, <strong>wrangler login</strong>, baza Supabase, <strong>gh auth login</strong>), zatwierdź plan i pozwól agentowi przejść do implementacji. Twoja rola: konfiguracja sekretów, uzupełnianie luk i weryfikacja stanu końcowego. Po deployu otwórz publiczny URL aplikacji i pochwal się nim na 10xDevs Arena (Circle).</li>
+</ul>
+<h2>Odbierz swoją odznakę</h2>
+<p>Po ukończeniu tej lekcji odbierz odznakę w sekcji <a href="https://platforma.przeprogramowani.pl/10xdevs-3/mission-log">10xDevs Mission Log</a> a następnie pochwal się swoim osiągnięciem!</p>
+<h2>🔎 Deep Dive</h2>
+<p>Ta sekcja zawiera dodatkowe pogłębienie wiedzy na temat wybranych zagadnień związanych z lekcją. W tym Deep Dive znajdziesz:</p>
+<ul>
+<li><strong>CLI vs MCP — jak agent korzysta z żywej aplikacji</strong> — porównanie dwóch ścieżek integracji agenta z platformą produkcyjną i kiedy każda z nich ma sens.</li>
+<li><strong>Demo: gotowy serwer MCP w sesji agenta</strong> — konfiguracja zunifikowanego Cloudflare MCP i pierwsze zapytania do produkcji z poziomu sesji agenta.</li>
+<li><strong>Wrangler i gh — kilka komend, które warto znać</strong> — minimum komend CLI do diagnostyki Cloudflare Pages i pracy z GitHubem bez opuszczania terminala.</li>
+<li><strong>Granica dostępu agenta do produkcji</strong> — zasady minimalnych uprawnień i ludzka autoryzacja na akcjach nieodwracalnych.</li>
+</ul>
+<p>Ta sekcja lekcji nie jest obowiązkowa, ale warto się z nią zapoznać jeżeli chcesz zostać ekspertem.</p>
+<h3>CLI vs MCP - jak agent korzysta z żywej aplikacji</h3>
+<p>Aplikacja jest wdrożona, ale to nie koniec - cała przygoda z utrzymaniem produkcji tak naprawdę się rozpoczyna. Na skutek kolejnych rozszerzeń, zmian czy decyzji, twoja aplikacja zacznie tutaj żyć własnym życiem. Czasami wszystko będzie pod kontrolą, a czasami będzie to stan, z którego nie jesteś zadowolony. I tutaj również z pomocą przychodzi agent AI.</p>
+<p>Na przykładzie komunikacji z produkcją rozpoczniemy tutaj wątek, który będzie się przewijał przez wiele kolejnych lekcji - integrację agenta z zewnętrznymi usługami poprzez CLI (narzędzia terminalowe) oraz <a href="https://modelcontextprotocol.io/docs/getting-started/intro">MCP</a> (dedykowany protokół zewnętrzny).</p>
+<p>To jedna z najbardziej istotnych różnic pomiędzy chatbotem żyjącym w przeglądarce, a agentem, który może realnie pracować dla nas. Oczywiście zrobi to tylko wtedy, kiedy poinformujemy go o konkretnych narzędziach i nowych możliwościach.</p>
+<p>W preworku <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/04">[2.1]</a> mówiliśmy, że terminal (nie tylko agentowy, ale po prostu powłoka systemowa) to uniwersalne środowisko dla wielu narzędzi - wszystko, co da się wykonać w terminalu, agent też potrafi wykonać. To pierwsza ścieżka <strong>agentic operability</strong>: dajesz agentowi narzędzia takie jak <strong>wrangler</strong>, <strong>gh</strong>, <strong>npm</strong>, <strong>psql</strong>, agent woła je przez Bash, zbiera output, podejmuje kolejne decyzje.</p>
+<p>Druga ścieżka to <strong>MCP</strong> (Model Context Protocol). Zamiast wywoływać dowolne komendy shellowe, agent rozmawia z dedykowanym serwerem, który eksponuje konkretny zestaw narzędzi - na przykład "lista deploymentów", "logi z ostatniej godziny", "zmienne środowiskowe projektu". Każde narzędzie ma jawnie zdefiniowany schemat wejścia i wyjścia, a serwer pilnuje uprawnień.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m1-l5-lesson-draft-5-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m1-l5-lesson-draft-5-10x.png</a></p></blockquote>
+<p>No dobra, więc pojawia się oczywiste pytanie - to którą opcję wybrać? Anthropic w swoim <a href="https://claude.com/blog/building-agents-that-reach-production-systems-with-mcp">tekście o agentach produkcyjnych</a> pisze wprost: API, CLI i MCP to trzy uzupełniające się drogi. Dojrzała platforma często udostępnia wszystkie trzy. Netlify w dokumentacji <a href="https://docs.netlify.com/welcome/build-with-ai/netlify-mcp-server/">zaleca instalację swojego CLI razem z serwerem MCP</a>, bo MCP używa pod spodem CLI tam, gdzie to ma sens.</p>
+<p>Kiedy CLI jest wystarczające, a kiedy warto sięgnąć po MCP?</p>
+<ul>
+<li><strong>CLI</strong> sprawdza się przy operacjach, które chcesz mieć <strong>jawne i audytowalne</strong>. Komenda zostaje w terminalu, output zostaje w terminalu, łatwo to wkleić do raportu albo failure-modes.md. Idealne dla MVP - mało setupu, zero dodatkowej infrastruktury.</li>
+<li><strong>MCP</strong> zaczyna mieć sens, gdy agent ma działać w środowiskach, gdzie shell jest niepraktyczny (cloud agent, zdalna sesja bez dostępu do twojego terminala), albo gdy operacja wymaga <strong>auto-discovery</strong> - agent ma sam znaleźć "która komenda służy do X", a nie czytać 30-stronicową dokumentację CLI.</li>
+</ul>
+<p>Jest jeszcze jeden argument na korzyść CLI dla MVP - <strong>bezpieczniejsze defaulty</strong>. Netlify CLI dobrze to ilustruje: <strong>netlify deploy</strong> domyślnie robi <em>draft deploy</em> (ląduje pod tymczasowym URL-em do podglądu), a publikacja na produkcję wymaga jawnej flagi <strong>--prod</strong>. Komenda wprost wymaga, żeby ktoś świadomie powiedział "tak, na produkcję". Z MCP to ta sama operacja może być pojedynczym wywołaniem narzędzia, które nie ma analogicznej bramki - chyba że serwer MCP sam ją wymusi.</p>
+<p>Jest też koszt. Każdy podłączony serwer MCP wnosi do okna kontekstowego wszystkie definicje swoich narzędzi. Przy kilku serwerach naraz potrafi to zjeść tysiące tokenów na... samym ich schemacie. Anthropic <a href="https://www.anthropic.com/engineering/code-execution-with-mcp">opisuje praktyczne mitygacje</a>, takie jak progressive disclosure i lazy loading, które poznałeś choćby przy okazji tematu Skilli (zaczynamy od metadanych, na skutek decyzji ładujemy definicję API, a na koniec instruujemy agenta do korzystania z aktywnego MCP).</p>
+<p>Społeczność praktyków też ma na ten temat wyrobione zdanie. W <a href="https://news.ycombinator.com/item?id=47392011">dyskusjach na HN</a> wokół CLI vs MCP najczęściej powtarza się jedna myśl: <strong>CLI is great when you know what command to run. MCP is great when the agent decides what to run</strong>. Dla nas to praktyczna wskazówka - dobierz interfejs do zadania, nie do mody.</p>
+<h3>Demo: gotowy serwer MCP w sesji agenta</h3>
+<p>Najszybsza droga, żeby zobaczyć to w działaniu, to podłączyć gotowy serwer MCP swojego hostingu. Skoro deployujemy na Cloudflare, sięgamy po <a href="https://developers.cloudflare.com/agents/model-context-protocol/mcp-servers-for-cloudflare/">Cloudflare MCP</a>.</p>
+<p>Zanim zaczniesz, warto wiedzieć, że Cloudflare udostępnia <a href="https://github.com/cloudflare/mcp-server-cloudflare/blob/main/README.md">dwie kategorie serwerów MCP</a> i każda z nich ma inne zastosowanie:</p>
+<ul>
+<li><strong>Code Mode server</strong> (<strong>mcp.cloudflare.com</strong>) - jeden zunifikowany endpoint, który daje agentowi szeroki dostęp do całego API Cloudflare przez wykonywanie kodu. Wybierasz go, gdy zależy ci na pokryciu wielu produktów Cloudflare jednocześnie i wolisz mały zestaw uniwersalnych narzędzi, na bazie których agent sam komponuje operacje. Największa korzyść to bardzo ograniczone zużycie okna kontekstowego.</li>
+<li><strong>Domain-specific servers</strong> (<strong>*.mcp.cloudflare.com</strong>) - serwery wyspecjalizowane pod konkretne produkty, m.in. <strong>docs.mcp.cloudflare.com/mcp</strong> (dokumentacja), <strong>bindings.mcp.cloudflare.com/mcp</strong> (Workers Bindings: KV, R2, D1), <strong>observability.mcp.cloudflare.com/mcp</strong> (logi i analityka Workers), czy <strong>radar.mcp.cloudflare.com/mcp</strong> (Radar) i <strong>browser.mcp.cloudflare.com/mcp</strong> (Browser Rendering). Wybierasz je, gdy chcesz mieć gotowe, typowane narzędzia w jednym obszarze produktowym - bardziej przewidywalne, bardziej "guided", mniej kombinowania po stronie agenta.</li>
+</ul>
+<p>W skrócie: Code Mode = szerokość, domain-specific = głębokość i bezpieczne defaulty w wybranej domenie. Wzorzec podłączenia jest dla obu identyczny - zmienia się tylko URL.</p>
+<p>Dla naszego MVP, gdzie chcemy szybko sprawdzić status deploymentu Pages i zerknąć w logi, wystarczy zunifikowany endpoint:</p>
+<pre><code class="language-text">https://mcp.cloudflare.com/mcp
+</code></pre>
+<h3>Czym jest MCP w trybie Code Mode?</h3>
+<p>Code Mode to bezpośrednia odpowiedź na problem, który sygnalizowaliśmy wcześniej - <strong>każdy podłączony serwer MCP wnosi do okna kontekstowego definicje swoich narzędzi</strong>. Cloudflare w artykule <a href="https://blog.cloudflare.com/code-mode-mcp/">Code Mode: the better way to use MCP</a> podaje twardą liczbę - klasyczne wystawienie wszystkich ~2500 endpointów API Cloudflare jako osobnych narzędzi MCP zjadałoby okolice <strong>1.17 mln tokenów</strong> w kontekście modelu. To więcej niż mieści większość okien kontekstowych - i to <em>zanim</em> agent wykona jakąkolwiek operację.</p>
+<p>Code Mode wycina ten problem prostym ruchem - zamiast wystawiać każdy endpoint jako narzędzie, serwer udostępnia tylko dwa:</p>
+<ul>
+<li><strong>search()</strong> - agent pisze fragment JavaScriptu, który przeszukuje specyfikację OpenAPI Cloudflare (po produkcie, ścieżce, tagach), żeby znaleźć właściwy endpoint, bez ładowania całej specyfikacji do kontekstu.</li>
+<li><strong>execute()</strong> - agent pisze kod, który wykonuje uwierzytelnione wywołanie API, obsługuje paginację, łączy operacje i zwraca tylko to, co jest potrzebne.</li>
+</ul>
+<p>Wygenerowany kod uruchamia się po stronie Cloudflare w izolowanym Dynamic Worker (sandbox V8, bez systemu plików, bez zmiennych środowiskowych do wycieku przez prompt injection). Według Cloudflare, dzięki temu zunifikowany serwer Cloudflare MCP zajmuje w kontekście modelu <strong>około 1000 tokenów</strong> - niezależnie od tego, czy API platformy ma 100 endpointów, czy kilka tysięcy.</p>
+<p>Dla ciebie jako użytkownika oznacza to mniej więcej tyle: większa szansa, że agent w trakcie długiej sesji <em>nadal pamięta o czym była rozmowa</em>, bo definicje narzędzi MCP nie wypchnęły mu z głowy reszty kontekstu. Cena - operacje na MCP wymagają od modelu pisania krótkiego kodu pod każde zapytanie, więc dobre modele radzą sobie z tym dobrze, słabsze potrafią się gubić.</p>
+<p>Aby podłączyć się do tak zoptymalizowanego MCP, w roocie repo dodaj serwer w pliku <strong>.mcp.json</strong> (alternatywnie dla CC - przez <strong>claude mcp add --transport http --scope project cloudflare https://mcp.cloudflare.com/mcp</strong>):</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "cloudflare": {
+      "url": "https://mcp.cloudflare.com/mcp"
+    }
+  }
+}
+</code></pre>
+<p>Po starcie sesji wybierz komendę <strong>/mcp</strong>, a następnie pozycję <strong>Cloudflare</strong> - klient otworzy w przeglądarce flow OAuth do Cloudflare - logujesz się raz, token zostaje zapisany lokalnie przez klienta MCP, agent dostaje dostęp z zakresem twojego konta.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m1-l5/assets/cloudflare-mcp.png">https://images.przeprogramowani.pl/lessons/m1-l5/assets/cloudflare-mcp.png</a></p></blockquote>
+<p>Po konfiguracji serwera, twojego agenta możesz zapytać np. tak: <strong>Kiedy był ostatni deployment projektu &lt;nazwa&gt;? Wykorzystaj MCP</strong> - agent woła odpowiednie narzędzie MCP, dostaje strukturalną odpowiedź, prezentuje ci wynik.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m1-l5/assets/opanuj-ai-mcp.png">https://images.przeprogramowani.pl/lessons/m1-l5/assets/opanuj-ai-mcp.png</a></p></blockquote>
+<h3>Ta sama operacja przez wrangler CLI</h3>
+<p>Cloudflare ma też dojrzały CLI - <strong>wrangler</strong> - i większość rzeczy, które robi MCP, da się wykonać przez niego bez podłączania serwera. Po zainstalowaniu narzędzia, możemy wykonywać następujące prompty:</p>
+<pre><code>Kiedy był ostatni deploy projektu opanuj-ai? Wykorzystaj wrangler cli.
+</code></pre>
+<p>Agent tłumaczy to na komendy terminalowe, parsuje wyniki i przygotowuje podsumowanie. Output jest tekstowy, a nie strukturalny - agent musi go zinterpretować, ale za to każdy krok zostaje w historii terminala.</p>
+<p>Co konkretnie się różni:</p>
+<ul>
+<li><strong>Setup.</strong> MCP wymaga jednorazowej konfiguracji w <strong>.mcp.json</strong> i odpowiednich credentiali. CLI wymaga zalogowania poza sesją agenta (<strong>wrangler login</strong> raz) i jest gotowe do użycia.</li>
+<li><strong>Format.</strong> MCP zwraca JSON ze schematem. CLI zwraca tekst (czasami z flagą <strong>--json</strong> da się wymusić strukturę). Dla agenta JSON jest tańszy w parsowaniu. CLI nie musi być tworzone konkretnie pod AI - MCP to standard niemal natywny.</li>
+<li><strong>Discovery.</strong> Pytanie "co umiesz zrobić z Cloudflare Pages?" - MCP odpowie listą narzędzi z opisami. CLI to zwykle start od <strong>--help</strong> i czytania outputu, krok po kroku.</li>
+<li><strong>Audyt.</strong> CLI zostawia historię w terminalu i może iść do logów shell. MCP rozmawia ze swoim serwerem - audyt zależy od tego, co serwer loguje po stronie platformy.</li>
+<li><strong>Koszt kontekstu.</strong> Każdy podłączony serwer MCP wnosi do okna definicje swoich narzędzi. CLI nic nie wnosi, dopóki go nie wywołasz - ale za to opisy w <strong>--help</strong> przy każdym wywołaniu lądują w kontekście jako tekst.</li>
+</ul>
+<p>Uwaga - jeśli korzystasz z wewnętrznego CLI (lub nawet <strong>10x-cli</strong>), definicje narzędzi i sposób obsługi tak czy tak powinieneś umieścić gdzieś w kontekście modelu (skill, rules, inline prompt). Inaczej model nie poradzi sobie z obsługą i spali mnóstwo tokenów na metodzie prób i błędów (stąd u nas dedykowany skill do obsługi narzędzia).</p>
+<p>W kontekście projektów MVP, CLI często wygrywa prostotą. MCP zaczyna opłacać się w momencie, gdy agent ma wykonywać dziesiątki kontekstowych zapytań ("pokaż mi logi z błędem 500 z ostatnich 24h", "porównaj rozmiar bundle'a między dwoma deploymentami") - tam discovery i strukturalna odpowiedź realnie redukują ilość kroków.</p>
+<p>Najlepszy punkt startu? Zacznij od CLI, dołóż MCP, gdy zauważysz powtarzający się wzorzec zapytań, których agent musi się dopytywać przez <strong>--help</strong>.</p>
+<p>Konfiguracja innego gotowego serwera jest analogiczna - zmieniasz endpoint i ewentualnie sposób autoryzacji:</p>
+<ul>
+<li><strong>Vercel MCP</strong> - <a href="https://vercel.com/docs/ai-resources/vercel-mcp">https://vercel.com/docs/ai-resources/vercel-mcp</a></li>
+<li><strong>Netlify MCP</strong> - <a href="https://docs.netlify.com/welcome/build-with-ai/netlify-mcp-server/">https://docs.netlify.com/welcome/build-with-ai/netlify-mcp-server/</a></li>
+<li><strong>GitHub MCP</strong> - <a href="https://github.com/github/github-mcp-server">https://github.com/github/github-mcp-server</a></li>
+</ul>
+<p>Wzorzec jest ten sam, kod jest specyficzny dla platformy. Jeśli wybrałeś hosting bez gotowego MCP, CLI z odpowiednim narzędziem (<strong>wrangler</strong>, <strong>flyctl</strong>, <strong>vercel</strong>) załatwia sprawę bez kompromisu.</p>
+<blockquote>
+<p>Część serwerów MCP (m.in. Vercel MCP, AWS Deployment SOPs) jest ciągle w <strong>beta</strong> - sprawdź status feature'a i regiony przed użyciem produkcyjnym.</p>
+</blockquote>
+<h3>Wrangler i gh - kilka komend, które warto znać</h3>
+<p>Niezależnie od tego, czy postawisz na MCP czy zostaniesz przy CLI, agent będzie po deployu sięgał po <strong>wrangler</strong> i <strong>gh</strong> regularnie - diagnostyka, sprawdzenie sekretów, podgląd PR-a z preview deploymentem. Garść komend, których nie warto każdorazowo szukać w <strong>--help</strong>.</p>
+<p><strong>Wrangler - minimum do utrzymania Cloudflare Pages:</strong></p>
+<ul>
+<li><strong>wrangler whoami</strong> - sprawdza, na jakie konto Cloudflare jest zalogowana sesja. Pierwszy ruch agenta przed <strong>pages deploy</strong>, jeśli chcesz uniknąć wdrożenia na nie ten projekt.</li>
+<li><strong>wrangler pages deployment list --project-name 10xcards</strong> - historia ostatnich deploymentów z URL-ami i statusami. Podstawa pytania "co poszło na produkcję, kiedy i z jakiego commita".</li>
+<li><strong>wrangler pages deployment tail --project-name 10xcards</strong> - strumień logów na żywo z aktywnego deploymentu. Bywa nieoceniony, gdy aplikacja działa lokalnie, a wywala się dopiero na edge'u.</li>
+<li><strong>wrangler pages secret list --project-name 10xcards</strong> - lista nazw sekretów skonfigurowanych w projekcie. Wartości nie zobaczysz, ale od razu wiadomo, czy np. <strong>JWT_SECRET</strong> jest na miejscu, zanim ruszysz z debugowaniem.</li>
+</ul>
+<p>Pełen katalog komend Pages: <a href="https://developers.cloudflare.com/workers/wrangler/commands/pages/">https://developers.cloudflare.com/workers/wrangler/commands/pages/</a>.</p>
+<p><strong>gh - kontakt z GitHubem bez wychodzenia z terminala:</strong></p>
+<ul>
+<li><strong>gh auth status</strong> - odpowiednik <strong>wrangler whoami</strong> po stronie GitHuba.</li>
+<li><strong>gh repo view --web</strong> - otwiera repo w przeglądarce z poziomu katalogu projektu.</li>
+<li><strong>gh pr list</strong> - lista otwartych PR-ów.</li>
+<li><strong>gh pr view &lt;numer&gt; --web</strong> - otwiera konkretny PR w przeglądarce.</li>
+<li><strong>gh pr create --fill</strong> - tworzy PR używając ostatniego commit message jako tytułu i opisu. Dorzucasz <strong>--draft</strong>, jeśli nie chcesz jeszcze wciągać reviewerów.</li>
+</ul>
+<p>Pełen manual: <a href="https://cli.github.com/manual/">https://cli.github.com/manual/</a>.</p>
+<h3>Granica dostępu agenta do produkcji</h3>
+<p>⚠ Korzystając zarówno z CLI jak i MCP, agent może uzyskać bezpośredni dostęp do twojej infrastruktury. To jest moment, w którym warto się zatrzymać.</p>
+<p>Pytanie podstawowe brzmi tak: <strong>czy ten dostęp jest absolutnie konieczny, żeby agent zrobił to, co ma zrobić?</strong></p>
+<p>Dla MVP na 10xCards odpowiedź zwykle brzmi "tak, do diagnostyki i logów". Nie brzmi "tak, do dropowania bazy" ani "tak, do rotowania wpisów w DNS". Wzorzec bezpieczeństwa jest prosty: <strong>minimalne uprawnienia, ludzka autoryzacja na rzeczach nieodwracalnych</strong>.</p>
+<p>W praktyce na Cloudflare wygląda to tak:</p>
+<ul>
+<li><strong>Tworzysz token API w panelu Cloudflare</strong> lub wyklikujesz zawężony scope w trakcie autentykacji - tylko do tej części platformy, którą agent realnie używa (Pages albo Workers dla <em>jednego</em> konkretnego projektu). Bez DNS, bez Workers Secrets dla nieobjętych projektów, bez billingu.</li>
+<li><strong>Token wkładasz w zmienną środowiskową</strong>, nie w <strong>.mcp.json</strong> zatwierdzony do repo. Agent dostaje go pośrednio przez serwer MCP lub env discovery wybranego CLI, nie wklejasz go w okno rozmowy.</li>
+<li><strong>Akcje destrukcyjne robisz sam.</strong> Jeśli agent sugeruje "usuń projekt z panelu" albo "zrotuj główny secret", logujesz się do panelu i robisz to manualnie. Manualne kliknięcie kosztuje 30 sekund, sprzątanie po automatycznej pomyłce - kilka godzin.</li>
+</ul>
+<p>Wzorzec działa identycznie na innych chmurach. Na AWS i GCP odpowiednikiem są role IAM ze scope'owanym dostępem i <strong>console-only-user</strong> i minimalny zakres uprawnień, jaki przydzielisz danemu użytkownikowi / tokenowi.</p>
+<p>To jest setup na MVP. Kiedy projekt rośnie, naturalna ewolucja prowadzi w stronę odseparowanego pre-prod environment - agent dostaje pełny dostęp do staging, a do produkcji ma tylko read-only. To temat, który omówimy w kolejnych modułach.</p>
+<h2>📚 Materiały dodatkowe</h2>
+<ul>
+<li><a href="https://docs.claude.com/en/docs/claude-code/common-workflows#use-plan-mode-for-safe-code-analysis">Plan Mode in Claude Code</a> — oficjalna dokumentacja trybu plan, w tym jak go włączać i co działa w trybie <em>read-only</em>.</li>
+<li><a href="https://claude.com/blog/building-agents-that-reach-production-systems-with-mcp">Building agents that reach production systems with MCP</a> — dlaczego API, CLI i MCP są ścieżkami uzupełniającymi, nie wykluczającymi.</li>
+<li><a href="https://docs.anthropic.com/en/docs/claude-code/mcp">Connect Claude Code to tools via MCP</a> — jak konfigurować serwery MCP w sesjach Claude Code.</li>
+<li><a href="https://docs.github.com/en/actions/reference/deployments-and-environments">GitHub Actions: Deployments and environments</a> — approval gates i ochrona środowisk dla bardziej dojrzałych pipeline'ów.</li>
+<li><a href="https://news.ycombinator.com/item?id=47392011">HN: CLI. Always CLI. Never MCP - and replies</a> — sygnał praktyków: prawdziwy problem to "too many tool definitions", nie sam wybór interfejsu.</li>
+</ul>

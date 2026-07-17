@@ -1,0 +1,297 @@
+---
+import Layout from '@/layouts/BaseLayout.astro';
+import AccountStrip from '@/components/AccountStrip.astro';
+import CourseAssets from '@/components/CourseAssets.astro';
+import { getExternalAuthConfig, getCourseDisplayName } from '@/server/circle/externalAuthConfig';
+import { verifyExternalAuth } from '@/server/externalAuth';
+import { groupLessonsBySection } from '@/server/circle/courseStructureApi';
+import { getCourseStructure } from '@/server/circle/courseStructureCache';
+import { getChecklistsForCourse } from '@/server/checklistData';
+import { getPreworkLessons, PREWORK_COURSE_ID } from '@/server/content/preworkContent';
+import { formatPreworkLessonCount } from '@/server/content/preworkLessonList';
+import { getMainCourseLessons, formatMainCourseLessonCount, MAIN_COURSE_ID } from '@/server/content/mainCourseContent';
+import { getExternalMarkdownCourseStructure } from '@/server/content/externalMarkdownContent';
+import { buildExternalCourseLoginUrl } from '@/server/urlValidation';
+import type { ChecklistItem } from '@/server/checklistData';
+import type { CourseStructure } from '@/server/circle/courseStructureTypes';
+import type { CourseSlug } from '@/models/CollectionMappings';
+
+const { courseId } = Astro.params;
+
+if (!courseId) {
+  return Astro.redirect('/external/not-found');
+}
+
+// Validate courseId exists in config
+const config = getExternalAuthConfig(courseId);
+if (!config) {
+  return Astro.redirect('/external/not-found');
+}
+
+const env = Astro.locals.runtime.env;
+const isPrework = courseId === PREWORK_COURSE_ID;
+const isMainCourse = courseId === MAIN_COURSE_ID;
+
+// Auth check
+const authResult = await verifyExternalAuth(Astro.cookies, courseId, env);
+if (!authResult.isAuthenticated) {
+  return Astro.redirect(buildExternalCourseLoginUrl(courseId, Astro.url.pathname));
+}
+
+const courseName = getCourseDisplayName(courseId);
+const courseSlug = courseId as CourseSlug;
+
+const preworkLessonCounts = isPrework
+  ? {
+      pl: (await getPreworkLessons('pl')).length,
+      en: (await getPreworkLessons('en')).length,
+    }
+  : null;
+const preworkLanguageEntries = preworkLessonCounts
+  ? [
+      {
+        lang: 'pl',
+        title: 'Prework',
+        description: formatPreworkLessonCount(preworkLessonCounts.pl, 'pl'),
+      },
+      {
+        lang: 'en',
+        title: 'Prework',
+        description: formatPreworkLessonCount(preworkLessonCounts.en, 'en'),
+      },
+    ]
+  : [];
+
+const mainCourseLessonCounts = isMainCourse
+  ? {
+      pl: (await getMainCourseLessons('pl')).length,
+      en: (await getMainCourseLessons('en')).length,
+    }
+  : null;
+const mainCourseLanguageEntries = mainCourseLessonCounts
+  ? [
+      {
+        lang: 'pl',
+        title: '10xDevs 3.0',
+        description: formatMainCourseLessonCount(mainCourseLessonCounts.pl, 'pl'),
+      },
+      {
+        lang: 'en',
+        title: '10xDevs 3.0',
+        description: formatMainCourseLessonCount(mainCourseLessonCounts.en, 'en'),
+      },
+    ]
+  : [];
+let structure: CourseStructure | null = null;
+let lessonsBySection: ReturnType<typeof groupLessonsBySection> | null = null;
+let checklists: ChecklistItem[] = [];
+
+if (!isPrework && !isMainCourse) {
+  try {
+    structure = (await getExternalMarkdownCourseStructure(courseSlug)) ?? await getCourseStructure(courseId, env);
+    lessonsBySection = groupLessonsBySection(structure);
+  } catch (error) {
+    console.error('Failed to fetch course structure:', error);
+    return Astro.redirect('/external/not-found');
+  }
+
+  // Fetch checklists for this course (may be empty for courses without checklists)
+  checklists = await getChecklistsForCourse(courseId);
+}
+---
+
+<Layout>
+  <div class="min-h-screen flex flex-col bg-gray-900">
+    <AccountStrip
+      email={authResult.email!}
+      firstName={authResult.firstName}
+      lastName={authResult.lastName}
+      avatarUrl={authResult.avatarUrl}
+      courseName={courseName}
+    />
+
+    <main class="flex-1 overflow-y-auto">
+      <div class="max-w-4xl mx-auto px-4 py-8">
+        {
+          isPrework || isMainCourse ? (
+            <>
+              <div class="mb-8">
+                <h1 class="text-3xl font-bold text-white mb-2">{courseName}</h1>
+                <p class="text-gray-400">
+                  {isPrework ? 'Wybierz wersję językową preworku' : 'Wybierz wersję językową kursu'}
+                </p>
+              </div>
+
+              <div class="grid gap-4">
+                {(isPrework ? preworkLanguageEntries : mainCourseLanguageEntries).map((entry) => (
+                  <a
+                    href={`/external/${courseId}/${entry.lang}`}
+                    class="flex items-center gap-4 rounded-lg bg-gray-800 px-4 py-4 transition-colors hover:bg-gray-700/70 group"
+                  >
+                    <span class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-gray-700 text-gray-300 text-sm font-semibold uppercase group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                      {entry.lang}
+                    </span>
+                    <div class="min-w-0 flex-1">
+                      <h2 class="text-lg font-semibold text-white">{entry.title}</h2>
+                      <p class="text-sm text-gray-400">{entry.description}</p>
+                    </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-gray-500 group-hover:text-white flex-shrink-0 transition-colors"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+
+              <div class="mt-6">
+                <CourseAssets courseId={courseId} />
+              </div>
+            </>
+          ) : (
+            <>
+              <div class="mb-8">
+                <h1 class="text-3xl font-bold text-white mb-2">{courseName}</h1>
+                <p class="text-gray-400">
+                  {structure?.lessons.length ?? 0} lekcji w {structure?.sections.length ?? 0} sekcjach
+                </p>
+              </div>
+
+              <div class="space-y-6">
+                {Array.from(lessonsBySection?.values() ?? []).map(({ section, lessons }) => (
+                  <div class="bg-gray-800 rounded-lg overflow-hidden">
+                    <div class="px-4 py-3 bg-gray-700/50 border-b border-gray-600">
+                      <h2 class="text-lg font-semibold text-white">{section.name}</h2>
+                      <p class="text-sm text-gray-400">{lessons.length} lekcji</p>
+                    </div>
+                    <ul class="divide-y divide-gray-700">
+                      {lessons.map((lesson, index) => (
+                        <li>
+                          <a
+                            href={`/external/${courseId}/${lesson.id}`}
+                            class="flex items-center gap-4 px-4 py-3 hover:bg-gray-700/50 transition-colors group"
+                          >
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-700 text-gray-300 text-sm font-medium group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                              {index + 1}
+                            </span>
+                            <span class="text-gray-300 group-hover:text-white transition-colors">
+                              {lesson.name}
+                            </span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 text-gray-500 group-hover:text-white ml-auto transition-colors"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+
+                <CourseAssets courseId={courseId} />
+
+                {checklists.length > 0 && (
+                  <div class="bg-gray-800 rounded-lg overflow-hidden border border-emerald-800/30">
+                    <div class="px-4 py-3 bg-emerald-900/30 border-b border-emerald-800/30">
+                      <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-5 w-5 text-emerald-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                          />
+                        </svg>
+                        Checklisty i poradniki
+                      </h2>
+                      <p class="text-sm text-emerald-300/70">
+                        {checklists.length}{' '}
+                        {checklists.length === 1
+                          ? 'checklista'
+                          : checklists.length < 5
+                            ? 'checklisty'
+                            : 'checklist'}
+                      </p>
+                    </div>
+                    <ul class="divide-y divide-gray-700">
+                      {checklists.map((checklist) => (
+                        <li>
+                          <a
+                            href={`/external/${courseId}/checklists/${checklist.id}`}
+                            class="flex items-center gap-4 px-4 py-3 hover:bg-emerald-900/20 transition-colors group"
+                          >
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-emerald-900/50 text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            </span>
+                            <div class="flex-1 min-w-0">
+                              <span class="text-gray-300 group-hover:text-white transition-colors block">
+                                {checklist.title}
+                              </span>
+                              <span class="text-xs text-gray-500">{checklist.module}</span>
+                            </div>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 text-gray-500 group-hover:text-emerald-400 flex-shrink-0 transition-colors"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </>
+          )
+        }
+      </div>
+    </main>
+  </div>
+</Layout>

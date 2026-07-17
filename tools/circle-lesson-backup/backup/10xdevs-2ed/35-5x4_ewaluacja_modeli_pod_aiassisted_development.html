@@ -1,0 +1,136 @@
+<meta name="lesson-id" content="[5x4] Ewaluacja modeli pod AI-Assisted Development"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/lckrw4m07nomllcriwo4qndr4ies" style="width: 100%; max-width: 100%;"><p>Wersja Focus Mode (Markdown) <a href="https://platforma.przeprogramowani.pl/external/10xdevs-2/2580258" target="_blank" rel="noopener noreferrer">pod tym linkiem</a>.</p><h2>Wprowadzenie</h2><p>Jak rzetelnie sprawdzać, który model językowy naprawdę przyspieszy i ułatwi twoją pracę? Możesz to robić pośrednio poprzez codzienną praktykę, ale przy dużej skali i częstej zmienności modeli trudno o nadążanie za każdą nową opcją.</p><p>W tej lekcji poznasz rekomendowane przez nas narzędzie do testowania i porównywania różnych modeli językowych, optymalizacji promptów oraz wiarygodnej oceny tego, który model najlepiej sprawdzi się w konkretnych zadaniach programistycznych. Nie będą to jednak suche testy i akademickie benchmarki, a użyteczny framework i narzędzie do oceny LLMów pod kątem ich zdolności w preferowanym przez ciebie stacku technologicznym.</p><p>Zanim skupimy się na konkretnym przykładzie, najpierw przedstawimy ogólne założenia i najważniejsze zagadnienia ze świata testowania modeli.</p><h2>Evals, czyli ewaluacja modeli AI</h2><p>Niezależnie od konkretnego narzędzia czy platformy, tzw. “<em>evale</em>” (testy modeli) sprowadzają się&nbsp;do kilku ustandaryzowanych praktyk.</p><p>Podstawowa forma testu będzie zawierać następujące elementy:</p><ul><li><p><strong>Dane wejściowe</strong></p><ul><li><p>Prompt lub łańcuch promptów wejściowych</p></li></ul></li><li><p><strong>Scenariusz testu</strong></p><ul><li><p>Oczekiwana poprawna odpowiedź lub kontynuacja konwersacji przez model (<em>ground truth</em>)</p></li><li><p>Typ asercji (np. tekstowe <em>equals, contains, not contains, itd.</em>)</p></li></ul></li><li><p><strong>Przedmiot testu</strong></p><ul><li><p>Odpowiedź testowanego modelu</p></li></ul></li></ul><p>W poniższym przykładzie trzykrotnie testujemy zachowanie tego samego modelu i sprawdzamy, czy rozumie zarówno pytanie jak i oczekiwania względem formatu odpowiedzi:</p><img loading="lazy" src="https://assets-v2.circle.so/b263328c8cyt78wbsj7enrnz2u4q" style="width: 100%; max-width: 100%;"><p>Po trzykrotnym uruchomieniu modelu z tymi samymi parametrami, uzyskujemy 33% poprawnych odpowiedzi. </p><p>Aby uzyskać realne wyobrażenie o jakości danego modelu, najczęściej będziemy wykorzystywać nie jeden, a kilka testów (<em>batch</em>) wpływających na całe badanie. Aby badanie było miarodajne, prawdopodobnie chcielibyśmy zwiększyć skalę co najmniej o 50-100x.</p><h3>Wariantowanie promptów</h3><p>Wiele narzędzi do testowania modeli wspiera dodatkowy wymiar testów, czyli parametryzację samego prompta wejściowego.</p><p>Osiągamy to poprzez:</p><ul><li><p>wprowadzenie zmiennych do prompta, np. {{country}}</p></li><li><p>wykonanie testu na określonym zestawie danych testowych (tzw. dataset)</p></li></ul><p>Rozszerzony scenariusz prezentuje poniższy schemat:</p><img loading="lazy" src="https://assets-v2.circle.so/j6eihn1ubmvwhxqnywq1neck0aay" style="width: 100%; max-width: 100%;"><p>W takim wariancie nasze badanie wykona się wg równania:</p><blockquote><p><strong><em>1 prompt</em></strong> x <strong><em>liczba wierszy z datasetu</em></strong> x <strong><em>liczba powtórzeń danego scenariusza</em></strong></p></blockquote><p>Dzięki przetestowaniu 1 prompta dla 3 państw po 3 razy uzyskujemy 9 odpowiedzi z modelu.</p><p>Parametryzowanie promptów pozwala nam uzyskać znacznie lepszy obraz tego, jak wybrany model zachowuje się dla różnych danych wejściowych i dla różnego zestawu danych oczekiwanych.</p><p>Co ważne, same testy nie muszą działać wyłącznie z warunkiem typu “<em>equals</em>”, ale mogą też oceniać modele pod kątem właściwej klasyfikacji tekstu, zrozumienia poleceń, blokowania określonych zachowań czy unikania odpowiedzi na podchwytliwe pytania. Wszystko sprowadza się jednak do podobnych elementów - promptu wejściowego, odpowiedzi oczekiwanej oraz odpowiedzi generowanej przez model w trakcie testu (do oceny).</p><p>Testowanie w tym stylu wspierają choćby:</p><ul><li><p><a href="https://platform.openai.com/docs/guides/evals" target="_blank" rel="noopener noreferrer">OpenAI - Evals na platformie oraz w API</a></p></li><li><p><a href="https://docs.anthropic.com/en/docs/test-and-evaluate/eval-tool" target="_blank" rel="noopener noreferrer">Anthropic - Evals w Anthropic Console</a></p></li></ul><p>Obszerne teoretyczne omówienie całego tematu “evali” znajdziesz w otwartym repozytorium od HuggingFace:</p><p><a href="https://github.com/huggingface/evaluation-guidebook" target="_blank" rel="noopener noreferrer">https://github.com/huggingface/evaluation-guidebook</a></p><h2>Evals vs. AI-Assisted Development</h2><p>Przedstawione powyżej informacje sprawdzą się dobrze w integracjach bazujących na tekście (np. planowanie projektu, klasyfikacja, konwersacje z AI), ale nie dają nam informacji o tym, czy odpowiedź może być faktycznie wykorzystywana do programowaniu w określonym stacku.</p><p>Miarodajne badanie powinno oceniać m.in. to, czy model:</p><ul><li><p>potrafi pisać kod w określonym języku programowania</p></li><li><p>czy rozumie polecenia i spełnia założenia dot. logiki biznesowej</p></li><li><p>czy kod przechodzi określone testy (np. jednostkowe)</p></li><li><p>czy kod zawiera określone standardy lub wzorce (np. let/const zamiast var w JavaScript)</p></li><li><p>czy kod spełnia wymagania dot. wydajności (np. unika zagnieżdżonych pętli)</p></li><li><p>itd.</p></li></ul><p>W tym celu musimy wykorzystać narzędzie, które nie tylko jest w stanie komunikować się z modelem i oceniać jego odpowiedzi w formie surowego tekstu, ale takie, który ten tekst konwertuje na rzeczywisty kod poddawany dalszej ocenie.</p><p>Jednym z takich narzędzi jest <a href="https://www.promptfoo.dev/" target="_blank" rel="noopener noreferrer">Promptfoo</a>, które można zintegrować z istniejącym projektem w dowolnym stacku, a następnie przy jego pomocy wykonywać ocenę jakości odpowiedzi z AI.</p><h2>Promptfoo w akcji</h2><p>Na dobry początek zapoznaj się z filmem, w którym testujemy trzy różne modele pod kątem znajomości składni frameworka Svelte 5.</p><p>Obejrzyj ogólne założenia, a w dalszej części przejdziemy przez poszczególne etapy testowania:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1079142959?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Jak łatwo zauważyć, taka forma testowania modeli przynosi istotne korzyści względem ręcznego wywoływania setek promptów na wielu różnych platformach.</p><p>Promptfoo umożliwia łatwe porównywanie wielu modeli względem siebie, a ten sam prompt wejściowy może być poddany różnorodnym testom z odpowiednimi parametrami. Testy te mogą zawierać dowolne asercje dotyczące realnej oceny odpowiedzi i/lub kodu, a dodatkowo są uruchamiane równolegle, co przyśpiesza i automatyzuje cały proces testowania.</p><p>Ważnym aspektem jest również to, że całość konfigurowana jest poprzez deklaratywne ustawienia w pliku YAML - ustawienia projektu testowego mogą być śledzone przez GITa i edytowane z zachowaniem pełnej kontroli zmian (nie musimy bazować na dostawcy zewnętrznej platformy typu SaaS).</p><p>Aby dobrze zrozumieć działanie całego rozwiązania, przejdźmy przez najważniejsze kroki całego procesu testowania z promptfoo.</p><h2>Pierwsze kroki</h2><p>Promptfoo jest rozwiązaniem publikowanym w dwóch rejestrach:</p><ul><li><p>w <strong>npm</strong>: <a href="https://www.npmjs.com/package/promptfoo" target="_blank" rel="noopener noreferrer">https://www.npmjs.com/package/promptfoo</a> </p></li><li><p>w <strong>homebrew</strong>: <a href="https://formulae.brew.sh/formula/promptfoo" target="_blank" rel="noopener noreferrer">https://formulae.brew.sh/formula/promptfoo</a></p></li></ul><p>Narzędzie można wykorzystywać na kilka sposobów - po instalacji jako globalny util, jako narzędzie uruchamiane poprzez <em>npx</em>, a także jako lokalną zależność w projekcie:</p><pre><code># globalnie z npm:
+npm install -g promptfoo
+# lub
+npx promptfoo@latest
+# lub w projekcie:
+npm install promptfoo -DE
+# lub z homebrew:
+brew install promptfoo</code></pre><p>Polecenie <em>init</em> utworzy dla ciebie pierwszą wersję konfiguracji projektu (<em>promptfooconfig.yaml</em>):</p><pre><code>npx promptfoo@latest init
+# lub, po instalacji
+promptfoo init
+
+# ==&gt; promptfooconfig.yaml</code></pre><p>Sama konfiguracja jest naprawdę intuicyjna - na poziomie projektu możemy definiować&nbsp;zestaw dostawców i wersji modeli, ich konfigurację, testowe prompty, a także wybrane asercje:</p><pre><code>providers:
+  - id: openai:gpt-5
+    label: gpt-5
+    config:
+      apiKey: ######
+      temperature: 0.7
+      max_tokens: 1000
+
+  - id: anthropic:messages:claude-sonnet-4-5-20250929
+    label: sonnet-4_5
+    config:
+      apiKey: ######
+      temperature: 0.7
+      max_tokens: 1000
+
+prompts:
+  - 'Translate the following text to Polish: "{{sentence}}". Respond only with the translation, no other text.'
+
+tests:
+  - vars:
+      sentence: How are you?
+    assert:
+      - type: equals
+        value: Jak się masz?
+  - vars:
+      sentence: Wie gehts?
+    assert:
+      - type: equals
+        value: Jak leci?
+</code></pre><p>Konfigurację można uruchomić poleceniem “eval”, wskazując dodatkowo na opcjonalny plik wynikowy.</p><pre><code>promptfoo eval --output results.txt</code></pre><p>W efekcie otrzymamy podsumowanie naszego testu:</p><img loading="lazy" src="https://assets-v2.circle.so/w36mz7bz8b5a5c4yxh9w90ii9vxk" style="width: 100%; max-width: 100%;"><p>Niewątpliwą zaletą promptfoo jest duża liczba dostępnych modeli i samych integracji, w tym OpenRouter, OpenAI API, Anthropic API, Grok API, itd. - cała listę znajdziesz <a href="https://www.promptfoo.dev/docs/providers/" target="_blank" rel="noopener noreferrer">tutaj</a> (można również budować niestandardowych <em>providerów</em> przy pomocy JavaScriptu i Pythona).</p><p>Modele mogą być poddawane testom w wielu wymiarach - asercje mogą zawierać:</p><ul><li><p>deterministyczne kryteria jakości odpowiedzi, np. equals, contains, is-json, itd. - <a href="https://www.promptfoo.dev/docs/configuration/expected-outputs/deterministic/" target="_blank" rel="noopener noreferrer">więcej tutaj</a></p></li><li><p>LLM-as-a-Judge (wybrany model ocenia odpowiedź modelu testowanego) - <a href="https://www.promptfoo.dev/docs/configuration/expected-outputs/model-graded/#overriding-the-llm-grader" target="_blank" rel="noopener noreferrer">konfiguracja</a></p></li><li><p>odwołania do zewnętrznych plików (własne skrypty Node/Python do oceny jakości odpowiedzi)</p></li></ul><p>O ile pierwsze dwa typy asercji mogą się przydać chociażby do oceny jakości planowania czy kreatywnej burzy mózgu prowadzonej przez AI, to ostatni element pozwoli nam rozszerzyć możliwości promptfoo pod AI-Assisted Development.</p><h2>Rozszerzanie możliwości promptfoo</h2><p>Ogromną zaletą promptfoo jest możliwość zamiany promptów, testów i asercji tekstowych, na asynchroniczne funkcje pisane w językach JavaScript (CJS/ESM) oraz Python.</p><p>Najprostsza konfiguracja będzie zawierać jeden plik z eksportowanymi funkcjami (właściwa implementacja może zawierać dedykowane moduły na prompty, testy i asercje):</p><pre><code>// evalConfig.js
+
+export async function prompt() {
+  return 'Translate the following text to Polish: "{{sentence}}". Respond only with the translation, no other text.';
+}
+
+export async function testCases() {
+  return [
+    {
+      id: "test-1",
+      description: "Test #1",
+      vars: {sentence: "How are you?"},
+      assert: [
+        {
+          type: "javascript",
+          value: async (output, context) =&gt; {
+
+           // - Run vitest
+           // - Run eslint
+           // - Run ...
+
+            const pass = output === "Jak się masz?";
+            return {
+              pass,
+              score: pass ? 1 : 0,
+              reason: pass ? "Correct" : "Incorrect",
+            };
+          },
+        },
+      ],
+    },
+  ];
+}
+
+export async function teardownHook(hookName) {
+  if (hookName === "afterAll") {
+    // ... cleanup
+  }
+}</code></pre><p>Do funkcji możemy się odwoływać poprzez ścieżkę do pliku oraz wskazanie konkretnej funkcji (jeśli nie decydujemy się na eksporty domyślne - wtedy nazwa funkcji jest zbędna):</p><pre><code># promptfooconfig.yaml
+
+prompts:
+  - file://evalConfig.js:prompt
+
+tests:
+  - file://evalConfig.js:testCases
+
+extensions:
+ - file://evalConfig.js:teardownHook</code></pre><h3>Niestandardowy stack w promptfoo</h3><p>Chociaż promptfoo natywnie korzysta z rozszerzeń Pythona i JavaScriptu, w obu językach możemy “zespawnować” zadania innego typu (np. testy jednostkowe .NET).</p><p>JavaScript:</p><pre><code>// run-dotnet-xunit.mjs
+import { execSync } from 'child_process';
+
+const testProjectPath = './path/to/your/test/project';
+
+try {
+  console.log('Running .NET xUnit tests...');
+  
+  execSync(`dotnet test ${testProjectPath} --logger "xunit;LogFilePath=TestResults.xml"`, {
+    stdio: 'inherit'
+  });
+  
+  console.log('Tests completed successfully');
+} catch (error) {
+  console.error('Tests failed');
+  process.exit(1);
+}</code></pre><p><strong>Ważne: </strong>Pracując z promptfoo w standardzie importów ESM, musiałem ustawić na sztywno jedną z wersji bibliotek, która sprawiała problemy (downgrade z 3.x na 2.x):</p><pre><code>"dependencies": {
+    "estree-walker": "2.0.2"
+ },
+"overrides": {
+    "estree-walker": "2.0.2"
+  }</code></pre><p>Python:</p><pre><code>#!/usr/bin/env python3
+# run_dotnet_xunit.py
+import subprocess
+import sys
+from pathlib import Path
+
+test_project_path = Path('./path/to/your/test/project')
+
+print('Running .NET xUnit tests...')
+
+try:
+    subprocess.run(
+        [
+            'dotnet', 
+            'test', 
+            str(test_project_path),
+            '--logger', 
+            'xunit;LogFilePath=TestResults.xml'
+        ],
+        check=True, 
+        text=True, 
+        capture_output=False
+    )
+    
+    print('Tests completed successfully')
+except subprocess.CalledProcessError as e:
+    print(f'Tests failed with exit code: {e.returncode}')
+    sys.exit(e.returncode)</code></pre><p>Stąd już prosta droga do prawdziwie skalowalnego, modularnego środowiska testów LLMów.</p><p>Przedstawiany na filmie projekt znajdziesz pod tym linkiem:</p><p><a href="https://github.com/przeprogramowani/10x-evals" target="_blank" rel="noopener noreferrer">https://github.com/przeprogramowani/10x-evals</a></p><h2>Cache wyników testów</h2><p>Z punktu widzenia budżetu na testy, promptfoo ma jeszcze jedną istotną zaletę - kiedy dany fragment konfiguracji się nie zmienia pomiędzy kolejnymi <em>test runami</em>, narzędzie wykorzystuje cache do szybkiego generowania zapisanych odpowiedzi.</p><p>Klucz cache’a budowany jest wg wzorca:</p><blockquote><p>{dostawca modelu + konfiguracja modelu + zawartość prompta + zmienne do prompta} =&gt; output</p></blockquote><p>Dopóki żaden z czterech elementów wejściowych się nie zmienia, promptfoo będzie reużywać wcześniejsze odpowiedzi, a my unikniemy zbędnych kosztów.</p><p>Jeśli chcesz tymczasowo wyłączyć ten mechanizm, dodaj do polecenia <em>eval</em> dodatkowy parametr:</p><pre><code>promptfoo eval --no-cache</code></pre><h2>Metodyczne wdrażanie evali</h2><p>Chociaż twórcy promptfoo skupiają się w swojej dokumentacji przede wszystkim na integracjach technicznych w aplikacjach opartych na AI, to ich rekomendacje możemy z łatwością przekształcić w praktyczny workflow dla 10xDeva współpracującego z Agentami AI.</p><h3>Trzy obszary oceny AI</h3><p>Trzy kluczowe obszary, które pozwolą nam budować&nbsp;wartościowe środowisko testów przekładające się na docelową współpracę z AI, to:</p><ul><li><p><strong>Development</strong> - ciągły rozwój scenariuszy i promptów do współpracy z AI (np. prompty z 10xDevs)</p></li><li><p><strong>Evaluation</strong> - asercje do oceny przydatności modelu w określonym zadaniu</p></li><li><p><strong>Production</strong> - praktyczna ocena modeli, które wypadły najlepiej w fazie testowania</p></li></ul><p>Z <a href="https://www.promptfoo.dev/docs/intro/" target="_blank" rel="noopener noreferrer">dokumentacji</a> promptfoo:</p><img loading="lazy" src="https://assets-v2.circle.so/gnp8zfsee12zv4z1joegdibxslyz" style="width: 100%; max-width: 100%;"><p>Jak pracować w tych obszarach? Kluczem do sukcesu jest podejście iteracyjne - zaczynamy od spięcia całego flow end-to-end, a dopiero potem rozszerzamy je o zaawansowane przypadki brzegowe:</p><ol start="1"><li><p><strong>Zidentyfikuj scenariusz</strong> - wybierz wartościowy scenariusz współpracy z AI</p></li><li><p><strong>Utwórz pierwszy prompt</strong> - zaprojektuj podstawową wersję promptu rozwiązującego problem</p></li><li><p><strong>Minimalne asercje</strong> - określ 1-2 kluczowe testy weryfikujące poprawność odpowiedzi</p></li><li><p><strong>Zintegruj promptfoo</strong> - utwórz bazowy plik konfiguracyjny łączący prompt z asercjami</p></li><li><p><strong>Przetestuj na jednym modelu</strong> - uruchom testy na domyślnym modelu, aby sprawdzić działanie</p></li></ol><h3>Przykład:</h3><ol start="1"><li><p><strong>Zadanie:</strong> Implementacja komponentów w React przez Agenta AI</p></li><li><p><strong>Prompt:</strong> Utwórz komponent w React + Tailwind + TypeScript wg {{spec}} bazując na {{rules}}</p></li><li><p><strong>Testy:</strong> Asercje do oceny komponentu, wykorzystujące np. vitest, eslint, rules of hooks, itd.</p></li><li><p><strong>Tooling:</strong> Integracja promptfoo - konfiguracja dostawcy modelu, promptu i testu</p></li><li><p><strong>Modele:</strong> Testy na preferowanych modelach (np. Gemini 2.5 Pro, Claude 3.5 Sonnet, itd.)</p></li></ol><h3>W kierunku sandboxa dużej skali</h3><p>Po uruchomieniu podstawowego flow możesz systematycznie rozszerzać cały system tworząc skalowalne środowisko do oceny AI w najbardziej istotnych obszarach (dla ciebie, twojego zespołu lub całej firmy):</p><ul><li><p><strong>Rozbuduj asercje</strong> - dodaj bardziej szczegółowe testy sprawdzające specyficzne aspekty odpowiedzi - możesz wspomagać się asercjami deterministycznymi, kodem, a także LLM-as-a-Judge, gdzie polegasz na zdolnościach modeli AI.</p></li><li><p><strong>Wprowadź warianty promptów</strong> - testuj różne sformułowania i struktury tego samego zadania, aby uzyskać bardziej przekrojowe środowisko do oceny modeli. W przypadku implementacji kodu mogą to być urozmaicone wymagania biznesowe lub przypadki brzegowe (tak jak w klasycznych testach).</p></li><li><p><strong>Dodaj więcej modeli</strong> - porównaj wyniki między różnymi modelami AI, które pozwolą ci zauważyć istotne różnice w kosztach, szybkości i jakości odpowiedzi. Możesz korzystać z platform dużych firm jak OpenAI, Anthropic czy Grok, a także uniwersalnego integratora (OpenRouter).</p></li></ul><p>Każda runda testów dostarczy ci cennych wniosków, dzięki którym udoskonalisz prompty, dokonasz selekcji modeli i zbudujesz bardziej precyzyjne asercje. Z każdą iteracją Twój system będzie stawał się coraz bardziej niezawodny, a ocena nowych modeli - szybsza i dokładniejsza.</p><p>Ten stopniowy rozwój pozwali uniknąć przeciążenia zbyt dużą liczbą zmiennych na początku, jednocześnie budując solidne fundamenty pod bardziej zaawansowane testy w przyszłości.</p><p>Pamiętaj również o poprzednich lekcjach - znając CI/CD takie jak GitHub Actions, testowanie z promptfoo możesz przekonwertować na cyklicznie uruchamiane scenariusze i raportowanie, do którego wgląd mogą mieć pozostali członkowie zespołu.</p><p>Czy brzmi to jak firmowy AI Leaderboard? Czemu nie!</p><h2>Evale modeli vs. praktyczne testy AI-toolingu</h2><p>Należy pamiętać, że w zależności od konkretnego przypadku i scenariusza współpracy z AI, nasze testy będą&nbsp;oddawać&nbsp;rzeczywisty stan danego modelu na różne sposoby.</p><p>Przykładowo, kiedy budujemy integracje AI z CI/CD łącząc się bezpośrednio z API danej platformy hostującej modele, nie korzystamy z żadnej dodatkowej warstwy pośredniej. W tym przypadku evale będą <strong>dobrym wskaźnikiem</strong> przydatności modeli do budowanej funkcjonalności, bo nasze prompty możemy w 100% współdzielić między testami a praktyką.</p><p>Inaczej wygląda to w przypadku edytorów czy pluginów, które dostarczają własny backend lub realizują za kulisami prompt engineering.</p><p>Tutaj evale będą <strong>częściowym wskaźnikiem</strong> przydatności modeli - pokażą istotne różnice między poszczególnymi generacjami (np. GPT-3.5 → GPT-4 → GPT-5), ale w niektórych przypadkach mogą nie oddawać jakości współpracy np. z poziomu Cursora. Na to będzie składać&nbsp;się:</p><ul><li><p>ilość wbudowanego, ukrytego promptingu, który rozbudowuje nasze polecenia</p></li><li><p>jakość integracji narzędzi z wybranymi modelami</p></li><li><p>dostęp do źródeł zewnętrznych i umiejętność ich przeszukiwania ad-hoc</p></li><li><p>poziom kompresowania kontekstu, wprowadzanego np. w Cursorze dla optymalizacji kosztów</p></li></ul><img loading="lazy" src="https://assets-v2.circle.so/00dee9aybl248grwpz0789kxfsk4" style="width: 100%; max-width: 100%;"><p>Czym w takim wypadku evale są bezużyteczne? W żadnym wypadku - zwykle z dużym prawdopodobieństwem potwierdzą lub wykluczą:</p><ul><li><p>znajomość wybranego API, języka programowania lub technologii (wiedza w modelu)</p></li><li><p>ostatnią znaną wersję wykorzystywanej technologii (np. rozmowy o .NET 9, React 19, itd.)</p></li><li><p>jakość komunikacji w wybranym języku naturalnym (polskim, angielskim, itd.)</p></li><li><p>testowanie znajomości praktyk i konceptów programistycznych (np. wzorzec X w języku Y)</p></li><li><p>jakościową kontynuację łańcucha promptów (np. wyszukując luki w analizie wymagań)</p></li></ul><p>Bazując na slajdzie z preworku (poniżej) można powiedzieć, że im więcej warstw pośrednich między naszym poleceniem a platformą AI, tym więcej potencjalnych różnic między evalem a praktyką (zarówno na plus jak i minus - po prostu trudno to przewidzieć dzięki samym testom).</p><h2>🏁 Podsumowanie lekcji</h2><p>Świat sztucznej inteligencji poddaje nas nieustannej presji testowania nowych modeli, technik promptowania oraz warunków dostawców, którzy rywalizują na koszty i szybkość działania poszczególnych systemów.</p><p>Aby trzymać rękę na pulsie i rozpoznawać optymalne dla nas rozwiązania w dużej skali, nie możemy polegać wyłącznie na testowaniu ręcznym, z poziomu edytora czy konsoli dostawcy. W tym kontekście polecanym przez nas rozwiązaniem będzie <em>promptfoo</em> - narzędzie pozwoli porównywać odpowiedzi setek dostępnych modeli poprzez deklaratywną konfigurację YAML a także zewnętrzne skrypty, gdzie umieścimy preferowane przez nas kryteria oceny.</p><p>Promptfoo najlepiej czuje się w środowisku JavaScript/Python, ale oba języki mogą wywoływać zewnętrzne, dostępne w ramach OS-a narzędzia z innego stacku. A stąd prosta droga do testowania sprawności AI w ulubionym stacku czy języku programowania.</p><p>Na koniec uczulamy jednak na fakt, że czym innym jest testowanie modelu w sposób bezpośredni, a czym innym jego wykorzystywanie np. poprzez Cursora czy Copilota. Warstwy pośrednie wprowadzane przez dostawców edytorów mogą zmieniać działanie danego LLMa, czego nie będziemy w stanie odtworzyć na poziomie testów. Właśnie dlatego kluczowe jest<strong> łączenie codziennej praktyki z toolingiem do testowania</strong> surowej formy modeli - obie aktywności dadzą nam pełny obraz tego, jak i kiedy zmieniać swoje nawyki współpracy z AI.</p><h2>👨‍💻 Ćwiczenia praktyczne</h2><h3><strong>Zadanie 1: Wykonaj pierwszy test promptfoo</strong></h3><p><strong>Cel:</strong> Przetestuj 3 modele - GPT-4o, GPT-5 oraz Gemini 2.5 Pro na wybranym prompcie</p><p><strong>Instrukcje:</strong></p><ol start="1"><li><p>Zainicjalizuj promptfoo w konfiguracji pod zewnętrzne pliki (prompt + testy + asercje)</p></li><li><p>Zdefiniuj scenariusz testowy dla 3 modeli (np. generowanie kodu TypeScript)</p></li><li><p>Wprowadź test i jedną użyteczną asercję (np. wyszukiwanie typów, używanie kompilatora tsc)</p></li><li><p>Wykonaj test i sprawdź jakość modeli - podziel się wynikami na <a class="entity" href="https://bravecourses.circle.so/c/watki-dotyczace-lekcji-i-cwiczen" target="_blank" rel="noopener noreferrer">#Dyskusje - praktyka [10X]</a> </p></li></ol><p>Powodzenia!</p><img loading="lazy" src="https://assets-v2.circle.so/ekrtcr8j44qd531ut1i2iwox5c9h" style="width: 100%; max-width: 100%;"></div></body></html>

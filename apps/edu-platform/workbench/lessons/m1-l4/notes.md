@@ -1,0 +1,11 @@
+- Agents.md / Claude.md / AI Rules
+- Memory (project, machine)
+- Feedback loop
+- Static Code Analysis (Formatters, Basic Tests)
+- Agents vs Claude vs Team Setup, symlinks, etc.
+- Cross-project Memory
+- Failure Modes Memory
+- https://arxiv.org/abs/2602.11988
+- https://arxiv.org/abs/2601.20404
+- https://github.com/asgeirtj/system_prompts_leaks/blob/main/Anthropic/claude-code.md — przykład do analizy w lekcji: co trafia do system promptu agenta, jakie warstwy są widoczne
+- https://github.com/asgeirtj/system_prompts_leaks — całe repo leaked system promptów; wybrać 1-2 dodatkowe (np. Cursor, Copilot lub inny agent kodowania) jako materiał porównawczy do sekcji recap wizualny hierarchii

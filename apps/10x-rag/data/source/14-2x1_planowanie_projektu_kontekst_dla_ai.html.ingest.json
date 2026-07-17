@@ -1,0 +1,602 @@
+{
+  "lessonId": "[2x1] Planowanie projektu (Kontekst dla AI)",
+  "file": "14-2x1_planowanie_projektu_kontekst_dla_ai.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 2,
+      "order": 1
+    },
+    {
+      "slug": "dlaczego-planowanie-jest-kluczowe-w-pracy-z-ai",
+      "title": "Dlaczego planowanie jest kluczowe w pracy z AI?",
+      "blocks": 2,
+      "order": 2
+    },
+    {
+      "slug": "korzysci-z-dokadnego-planowania",
+      "title": "Korzyści z dokładnego planowania",
+      "blocks": 7,
+      "order": 3
+    },
+    {
+      "slug": "plan-dziaania-10xdeva",
+      "title": "Plan działania 10xDeva",
+      "blocks": 6,
+      "order": 4
+    },
+    {
+      "slug": "wybor-pomysu-na-projekt",
+      "title": "Wybór pomysłu na projekt",
+      "blocks": 6,
+      "order": 5
+    },
+    {
+      "slug": "przykadowy-pomys-na-projekt-10xcards",
+      "title": "Przykładowy pomysł na projekt: 10xCards",
+      "blocks": 2,
+      "order": 6
+    },
+    {
+      "slug": "problem-ktory-rozwiazujemy",
+      "title": "Problem, który rozwiązujemy",
+      "blocks": 4,
+      "order": 7
+    },
+    {
+      "slug": "rozwiazanie-z-wykorzystaniem-ai",
+      "title": "Rozwiązanie z wykorzystaniem AI",
+      "blocks": 2,
+      "order": 8
+    },
+    {
+      "slug": "walidacja-problemu",
+      "title": "Walidacja problemu",
+      "blocks": 3,
+      "order": 9
+    },
+    {
+      "slug": "czym-sa-poc-i-mvp",
+      "title": "Czym są POC i MVP?",
+      "blocks": 19,
+      "order": 10
+    },
+    {
+      "slug": "mvp-dla-10xcards",
+      "title": "MVP dla 10xCards",
+      "blocks": 3,
+      "order": 11
+    },
+    {
+      "slug": "sciezki-alternatywne",
+      "title": "Ścieżki alternatywne",
+      "blocks": 20,
+      "order": 12
+    },
+    {
+      "slug": "dokumentacja-mvp---prd-dla-ai",
+      "title": "Dokumentacja MVP - PRD dla AI",
+      "blocks": 39,
+      "order": 13
+    },
+    {
+      "slug": "stack-technologiczny",
+      "title": "Stack technologiczny",
+      "blocks": 1,
+      "order": 14
+    },
+    {
+      "slug": "kryteria-wyboru-technologii-w-epoce-ai-assisted-programming",
+      "title": "Kryteria wyboru technologii w epoce AI-assisted programming",
+      "blocks": 16,
+      "order": 15
+    },
+    {
+      "slug": "stack-technologiczny-dla-10xcards",
+      "title": "Stack technologiczny dla 10xCards",
+      "blocks": 2,
+      "order": 16
+    },
+    {
+      "slug": "uzasadnienie-rekomendowanego-stacku",
+      "title": "Uzasadnienie rekomendowanego stacku",
+      "blocks": 5,
+      "order": 17
+    },
+    {
+      "slug": "weryfikacja-stacku-z-ai",
+      "title": "Weryfikacja stacku z AI",
+      "blocks": 6,
+      "order": 18
+    },
+    {
+      "slug": "inicjalizacja-repozytorium-github",
+      "title": "Inicjalizacja repozytorium GitHub",
+      "blocks": 6,
+      "order": 19
+    },
+    {
+      "slug": "generowanie-prototypu-z-boltnew",
+      "title": "Generowanie prototypu z Bolt.new",
+      "blocks": 23,
+      "order": 20
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 3,
+      "order": 21
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻Ćwiczenia praktyczne",
+      "blocks": 28,
+      "order": 22
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:d9d71aa7:43cc23fa",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:43cc23fa:0-1",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:24701484",
+      "tokenEstimate": 137,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:24701484:0-1",
+      "tokenEstimate": 137,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:38379f39",
+      "tokenEstimate": 130,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:38379f39:0-1",
+      "tokenEstimate": 130,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:37faf19e",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:37faf19e:0-6",
+      "tokenEstimate": 403,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:9604451b",
+      "tokenEstimate": 188,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:9604451b:0-5",
+      "tokenEstimate": 256,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:d4a532bc",
+      "tokenEstimate": 187,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:d4a532bc:0-5",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:b2e9ce82",
+      "tokenEstimate": 94,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:b2e9ce82:0-1",
+      "tokenEstimate": 94,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:4fbe23c5",
+      "tokenEstimate": 140,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:4fbe23c5:0-3",
+      "tokenEstimate": 161,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:969311db",
+      "tokenEstimate": 84,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:969311db:0-1",
+      "tokenEstimate": 110,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:2d67bae4",
+      "tokenEstimate": 132,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:2d67bae4:0-2",
+      "tokenEstimate": 155,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:51076737",
+      "tokenEstimate": 200,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:51076737:0-12",
+      "tokenEstimate": 372,
+      "span": [
+        0,
+        12
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:51076737:11-18",
+      "tokenEstimate": 382,
+      "span": [
+        11,
+        18
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:a54319dc",
+      "tokenEstimate": 224,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:a54319dc:0-2",
+      "tokenEstimate": 350,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:de8317f5",
+      "tokenEstimate": 218,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:de8317f5:0-5",
+      "tokenEstimate": 370,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:de8317f5:5-8",
+      "tokenEstimate": 409,
+      "span": [
+        5,
+        8
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:de8317f5:8-12",
+      "tokenEstimate": 386,
+      "span": [
+        8,
+        12
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:de8317f5:12-19",
+      "tokenEstimate": 305,
+      "span": [
+        12,
+        19
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:6192d407",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:6192d407:0-11",
+      "tokenEstimate": 389,
+      "span": [
+        0,
+        11
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:6192d407:10-22",
+      "tokenEstimate": 382,
+      "span": [
+        10,
+        22
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:6192d407:20-33",
+      "tokenEstimate": 374,
+      "span": [
+        20,
+        33
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:6192d407:32-38",
+      "tokenEstimate": 232,
+      "span": [
+        32,
+        38
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:76e32337",
+      "tokenEstimate": 95,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:76e32337:0-0",
+      "tokenEstimate": 95,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:75d0f375",
+      "tokenEstimate": 209,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:75d0f375:0-15",
+      "tokenEstimate": 389,
+      "span": [
+        0,
+        15
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:fd367755",
+      "tokenEstimate": 212,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:fd367755:0-1",
+      "tokenEstimate": 284,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:c8c4749a",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:c8c4749a:0-4",
+      "tokenEstimate": 289,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:8b5de29f",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:8b5de29f:0-5",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:98989f5b",
+      "tokenEstimate": 200,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:98989f5b:0-5",
+      "tokenEstimate": 217,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:801035c8",
+      "tokenEstimate": 212,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:801035c8:0-12",
+      "tokenEstimate": 386,
+      "span": [
+        0,
+        12
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:801035c8:11-21",
+      "tokenEstimate": 377,
+      "span": [
+        11,
+        21
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:801035c8:21-22",
+      "tokenEstimate": 132,
+      "span": [
+        21,
+        22
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:7eabec50",
+      "tokenEstimate": 139,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:7eabec50:0-2",
+      "tokenEstimate": 156,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:d9d71aa7:dcc8ec86",
+      "tokenEstimate": 194,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:dcc8ec86:0-8",
+      "tokenEstimate": 385,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:dcc8ec86:8-24",
+      "tokenEstimate": 434,
+      "span": [
+        8,
+        24
+      ]
+    },
+    {
+      "id": "chk:d9d71aa7:dcc8ec86:24-27",
+      "tokenEstimate": 154,
+      "span": [
+        24,
+        27
+      ]
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+<meta name="lesson-id" content="Generowanie klientów HTTP z OpenAPI"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/nfqf8upv54fiifqaszba7fuevy70" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>W poprzedniej lekcji poznałeś popularne rozwiązania służące do komunikacji z backendem w środowisku Reacta i TypeScriptu. W takim podejściu, niezależnie od wykorzystywanej metody, narzut pracy i analizy zewnętrznego API pozostaje na programiście. Mowa tutaj zarówno o nawiązaniu podstawowej komunikacji, wymiany pierwszej porcji danych, ale również (szczególnie w aplikacjach opartych o TS) o typowaniu wszystkich obiektów i parametrów, które są wykorzystywane w takiej integracji.</p><p>Dodatkowym wyzwaniem, którego do tej pory nie omówiliśmy, może być niespójna dokumentacja - taka, która opisuje nieaktualne wersje endpointów lub błędne parametry.</p><p>Na szczęście, w świecie web developmentu został wypracowany standard, który stara się adresować większość wymienionych wcześniej problemów. Jest nim OpenAPI - to ujednolicony format opisu publicznych zasobów, z którego możemy skorzystać przy budowaniu integracji.</p><h2>Standard OpenAPI</h2><p>OpenAPI (dawniej Swagger <a href="https://swagger.io/specification/" target="_blank" rel="noopener noreferrer">https://swagger.io/specification/</a>) to standardowy format opisu API w formie pliku (np. YAML lub JSON), który może być interpretowany w spójny i przewidywalny sposób. Dzięki OpenAPI można udostępnić zrozumiałą deklarację dostępnych endpointów, metod, modeli danych, a nawet informacji o zabezpieczeniach czy limitach połączeń.</p><p>Wykorzystywanie tego standardu wnosi kilka realnych korzyści:</p><ul><li><p><strong>Czytelność dla programistów</strong> - Publiczne API, wraz z wszystkimi jego cechami, może być opisane w jednym pliku, co ułatwia zrozumienie tego, jak przeprowadzić skuteczną integrację.</p></li><li><p><strong>Interpretowalność dla narzędzi</strong> - Wykorzystywanie formatów YAML/JSON powoduje, że w oparciu o standard OpenAPI powstało mnóstwo narzędzi, które konwertują deklarację API np. na automatyczne klienty do pobierania danych (co przetestujemy w dalszej części lekcji).</p></li><li><p><strong>Spójność i powtarzalność</strong> - Dokumentacja w formacie OpenAPI może być regularnie odświeżana i generowana na podstawie istniejącego kodu. Jej tworzenie może być uniezależnione od motywacji czy dobrej woli programistów, co niestety może skutkować nieaktualnymi informacjami dostępnymi publicznie.</p></li></ul><h3>Przykład dokumentacji</h3><p>Poniżej możesz zapoznać się z przykładowym fragmentem dokumentacji opartym o OpenAPI - są w nim zawarte dwa endpointy (GET i POST) oraz kilka modeli opisujących oczekiwany format danych:</p><pre><code>openapi: 3.0.3
+info:
+  title: Order Management API
+  description: API to manage orders for an e-commerce platform.
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: Production Server
+paths:
+  /orders:
+    get:
+      summary: Get a list of orders
+      description: Retrieve a list of all orders with optional filtering by status.
+      parameters:
+        - name: status
+          in: query
+          description: Filter orders by their status (e.g., pending, completed).
+          required: false
+          schema:
+            type: string
+            enum: [pending, completed, cancelled]
+        - name: limit
+          in: query
+          description: Limit the number of orders returned.
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+        - name: offset
+          in: query
+          description: Offset the list of returned orders for pagination.
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: A list of orders.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '400':
+          description: Bad request due to invalid parameters.
+        '500':
+          description: Server error.
+    post:
+      summary: Create a new order
+      description: Create a new order with the provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewOrder'
+      responses:
+        '201':
+          description: Order created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Invalid order data provided.
+        '500':
+          description: Server error.
+components:
+  schemas:
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the order.
+          example: "ord_12345"
+        customerName:
+          type: string
+          description: Name of the customer.
+          example: "John Doe"
+        items:
+          type: array
+          description: List of items in the order.
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        status:
+          type: string
+          description: Current status of the order.
+          enum: [pending, completed, cancelled]
+          example: "pending"
+        totalPrice:
+          type: number
+          format: float
+          description: Total price of the order.
+          example: 99.99
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the order was created.
+          example: "2024-12-01T15:30:00Z"
+    NewOrder:
+      type: object
+      required:
+        - customerName
+        - items
+      properties:
+        customerName:
+          type: string
+          description: Name of the customer placing the order.
+          example: "John Doe"
+        items:
+          type: array
+          description: List of items in the order.
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    OrderItem:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Unique identifier of the product.
+          example: "prod_54321"
+        quantity:
+          type: integer
+          description: Number of units of the product.
+          example: 2
+        price:
+          type: number
+          format: float
+          description: Price per unit of the product.
+          example: 49.99</code></pre><p>Taki opis można wystawić jako klasyczny, statyczny zasób w formie pliku, który mogą pobierać programiści budujący integrację w oparciu o opisywane API.</p><p>Można z niego wyczytać chociażby:</p><ul><li><p>Wsparcie dla metod GET i POST, pod adresem /orders </p></li><li><p>Filtrowanie zamówień po parametrach “status”, “limit” i “offset”</p></li><li><p>Modele danych - Order, NewOrder oraz OrderItem, wraz z ich właściwościami</p></li></ul><p>Ta definicja posłuży nam do zamiany wszystkich składowych w użyteczne typy i modele.</p><p>Zobaczmy teraz jak wykorzystać ten format w aplikacjach opartych o Reacta i TypeScript.</p><h2>Automatyczne generowanie klientów</h2><p>Integracja, którą zaraz zbudujemy, będzie się opierać na publicznym <a href="https://docs.github.com/en/rest?apiVersion=2022-11-28" target="_blank" rel="noopener noreferrer">API GitHuba</a>. Naszym zadaniem będzie utworzenie aplikacji, która na podstawie przekazanych parametrów (owner i nazwa repozytorium) wyświetli wszystkie utworzone forki. Nie chcemy jednak pisać całej integracji ręcznie - w tej lekcji skorzystamy z generatorów, które podpowiedzą nam jak korzystać z API w poprawny sposób.</p><h3>Przygotowanie do integracji</h3><p>W zadaniu wykorzystamy specyfikację OpenAPI, którą publicznie udostępnia GitHub: <a href="https://github.com/github/rest-api-description/tree/main" target="_blank" rel="noopener noreferrer">LINK</a></p><p>Do realizacji zadania potrzebujemy dwóch elementów:</p><ol start="1"><li><p>Mechanizmu do konwersji publicznej specyfikacji na definicję typów TypeScript</p></li><li><p>Mechanizmu do komunikacji z API w oparciu o wygenerowane typy</p></li></ol><p>Oba zadania zrealizujemy w oparciu o narzędzia z projektu <a href="https://openapi-ts.dev/" target="_blank" rel="noopener noreferrer">openapi-typescript</a>, a konkretnie trzy moduły:</p><ol start="1"><li><p><a href="https://openapi-ts.dev/introduction" target="_blank" rel="noopener noreferrer">openapi-typescript</a> - narzędzie do konwersji specyfikacji na deklarację typów</p></li><li><p><a href="https://openapi-ts.dev/openapi-react-query/" target="_blank" rel="noopener noreferrer">openapi-react-query</a> - wrapper na React Query który interpretuje utworzone typy</p></li><li><p><a href="https://openapi-ts.dev/openapi-fetch/" target="_blank" rel="noopener noreferrer">openapi-fetch</a> - wrapper na Fetch API, który umożliwia budowanie mocno typowanego klienta, przekazywanego później do samego React Query (podobny mechanizm do poznanego wcześniej fetchera w swr).</p></li></ol><p>Schemat wykorzystywanych elementów prezentuje się następująco:</p><img loading="lazy" src="https://assets-v2.circle.so/4hjf9vrjbxz8t8s5vprhiauldqz6" style="width: 100%; max-width: 100%;"><p>Wybór docelowej metody pobierania danych zależy wyłącznie od programisty - my zapoznamy się z klientem HTTP opartym o React Query, ale w swoich projektach możesz <a href="https://openapi-generator.tech/" target="_blank" rel="noopener noreferrer">wykorzystać inne narzędzia</a> dostępne w ekosystemie OpenAPI.</p><h3>Generowanie klienta GitHub API</h3><p>Zobacz teraz, jak wykorzystać openapi-typescript do zbudowania omawianej integracji:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1037252075?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Jak widzisz, dzięki <strong>openapi-typescript</strong> interpretowanie publicznej specyfikacji jest naprawdę proste. </p><p>Biblioteka jest w stanie przeanalizować plik YAML i dodać do naszego projektu utworzone na jego podstawie typy i modele danych. Same typy możemy wykorzystać na różne sposoby - najłatwiejsze rozwiązanie to wykorzystywanie omawianych modułów z tego samego ekosystemu (np. openapi-react-query czy openapi-swr), ale nic nie stoi na przeszkodzie, aby ręcznie integrować je z dowolną biblioteką do pobierania danych, którą dostosujesz do własnych potrzeb.</p><h3>Klienty bez dodatkowych zależności</h3><img loading="lazy" src="https://assets-v2.circle.so/5wn063l4p0ulg8byd91m490kuvg2" style="width: 100%; max-width: 100%;"><p>Jeśli nie chcesz korzystać z wrapperów na istniejące biblioteki do pobierania danych, takie jak openapi-react-query, jako alternatywę możesz przetestować generator Orval (<a href="https://orval.dev/" target="_blank" rel="noopener noreferrer">https://orval.dev/</a>).</p><p>Orval to narzędzie, które na podstawie istniejącej specyfikacji wygeneruje kod zgodny z preferowaną biblioteką, ale bez dodatkowej, ręcznie instalowanej zależności. Podobnie jak openapi-typescript, Orval wspiera klienty oparte o Fetch API, axios, React Query czy SWR. Naszą uwagę zwróciło eleganckie API i intuicyjna konfiguracja, która steruje zachowaniem generatorów.</p><p>W sekcji ćwiczeń przygotowaliśmy dla ciebie zadanie, które wykorzystuje właśnie to narzędzie - zobaczysz jak łatwo zintegrować je z istniejącym kodem React / TypeScript.</p><h3>Generowanie dokumentacji w Node / Express</h3><p>W tym module głównie skupiamy się na zagadnieniach frontendowych, więc z perspektywy komunikacji z API interesuje nas rola klienta korzystającego z istniejącej specyfikacji. Dla ciekawskich dodajemy jeszcze kilka informacji o tym, jak poradzić sobie z rolą producenta specyfikacji na backendzie.</p><p>W ekosystemie narzędzia openapi-typescript znajduje się rozwiązanie, które to zadanie ułatwia - jest to biblioteka o nazwie <a href="https://openapi-ts.dev/openapi-metadata/" target="_blank" rel="noopener noreferrer">openapi-metadata</a>, która umożliwia automatyczne generowanie dokumentacji na podstawie istniejącego kodu.</p><p>Jej działanie opiera się o trzy główne składowe - modele danych (klasy i pola), kontrolery (wystawiane publicznie endpointy), oraz docelowy dokument łączący wszystko w jedną całość.</p><img loading="lazy" src="https://assets-v2.circle.so/bnh42hxa7hxyqs2aigs595ci61ys" style="width: 100%; max-width: 100%;"><p>Wspomniana biblioteka udostępnia zestaw dekoratorów TypeScript, które umieszczamy na wybranych elementach naszego API. Możemy dzięki nim definiować metadane endpointów oraz modeli danych, które następnie zostaną przekonwertowane na dokument zgody z OpenAPI.</p><pre><code>import {ApiOperation, ApiResponse} from "openapi-metadata/decorators";
+import {Request, Response} from "express";
+import {users} from "../data/users";
+
+export class UserController {
+
+  @ApiOperation({
+    operationId: "listUsers",
+    methods: ["get"],
+    path: "/users",
+    summary: "List users",
+    description: "List all users",
+  })
+  @ApiResponse({
+    type: [User],
+  })
+  list(req: Request, res: Response) {
+    res.json(users);
+  }
+
+}</code></pre><p>Utworzony w ten sposób kod niestety traci na czytelności, ale w przypadku stabilnych, wolniej rozwijanych API, może to być&nbsp;akceptowalny koszt na rzecz automatycznego generowania specyfikacji dla wielu różnych klientów (np. frontendu, mobile czy innych). Warto również zadbać o odpowiednią separację logiki serwisu od samych endpointów tak, aby metadane i dekoratory dotyczyły najbardziej zewnętrznej warstwy naszej aplikacji.</p><p>Na potrzeby naszego szkolenia zbudowaliśmy prosty projekt, który pokazuje jak integrować tego typu aplikację opartą o Express, TypeScript oraz openapi-ts - <a href="https://github.com/psmyrdek/express-openapi-typescript" target="_blank" rel="noopener noreferrer">skocz do repo</a>.</p><p>Popularna alternatywa pozwalająca budować backendowe API z OpenAPI to tsoa - szczegóły znajdziesz pod <a href="https://tsoa-community.github.io/docs/" target="_blank" rel="noopener noreferrer">tym linkiem</a>.</p><h2>Podsumowanie</h2><p>Przedstawione w tej lekcji rozwiązania oparte o specyfikację&nbsp;OpenAPI pozwolą ci generować&nbsp;zarówno klienty HTTP, jak i dokumentację API w ujednoliconym formacie. Co dzięki temu zyskujesz i jakie są koszta takich rozwiązań?</p><p>Przede wszystkim, automatyzacja eliminuje potrzebę ręcznego pisania kodu odpowiedzialnego za komunikację z API. To z kolei zmniejsza ryzyko błędów związanych z niepoprawną interpretacją dokumentacji i dostarczaniem niewłaściwej implementacji. Generatory klientów zapewniają także lepszą spójność kodu i kompatybilność z publiczną specyfikacją API, co może ułatwiać utrzymanie i rozwój projektu. Generatory mogą również działać jak testy integracji - kiedy tworzony na ich podstawie kod będzie częścią scenariusza CI/CD, poprawny build całego projektu (lub jego brak) podpowie nam, czy spójność pomiędzy naszą aplikacją a ostatnią wersją specyfikacji jest nadal zachowana.</p><p>Nie można jednak zapominać, że automatyczne generowanie klientów HTTP ma swoje wady. </p><p>Aby umożliwić powtarzalne odtwarzanie klientów z istniejącej specyfikacji, wygenerowany moduł powinien być “zamrożony”. Tylko wtedy mamy pewność, że powstałe metody i modele odpowiadają temu, co deklarują twórcy danego API. Niestety, czytelność takiego kodu nie zawsze jest na akceptowalnym poziomie, a generatory mają tendencję do tworzenia nadmiarowych klas czy metod. </p><p>Dodatkowo, trzeba pamiętać, że deklarowana specyfikacja nie zawsze musi odpowiadać aktualnie opublikowanej wersji API. Może się zdarzyć, że błędy w integracji wynikają nie z tego, że docelowe API zachowuje się niepoprawnie, a z interpretacji nieaktualnej wersji specyfikacji. Zostajemy przez to obciążeni dodatkowym elementem do debugowania, co może opóźniać dostarczanie naszego projektu.</p><p>No i na koniec - techniczna kwestia związana z ekosystemem TypeScript. Duże specyfikacje mogą generować nadmiarowe typy, a ich interpretacja może z kolei obciążać sam kompilator. Warto więc podejść do takiego rozwiązania jak do eksperymentu, którego korzyści i koszta ocenimy z wielu stron, zanim uznamy go za obowiązujący standard w projekcie.</p><p>💡 Jeśli chcesz zgłębić ten temat poza ekosystemem Reacta i TypeScriptu, więcej generatorów klientów i samej dokumentacji znajdziesz <a href="https://openapi-generator.tech/" target="_blank" rel="noopener noreferrer">pod tym linkiem</a>.</p><h2>Ćwiczenia praktyczne</h2><ol start="1"><li><p><strong>531-star-wars </strong>- Dawno temu, w odległej galaktyce, rozpoczęto prace nad katalogiem pojazdów ze świata Gwiezdnych Wojen. Publiczne API (<a href="https://swapi.dev/" target="_blank" rel="noopener noreferrer">https://swapi.dev/</a>) oraz przygotowana specyfikacja OpenAPI są znakomitym punktem startowym do rozbudowania interaktywnej aplikacji React. Wykorzystaj narzędzie Orval do wygenerowania klienta HTTP opartego o React Query, zapoznaj się z wygenerowanymi metodami i połącz całą aplikację w jedną całość.</p></li></ol><ul><li><p>Aby wygenerować klienta HTTP, z poziomu terminala wejdź do <strong>tasks/react-pro/531-star-wars/scripts </strong>i wykonaj polecenie “node generate.js”. Orval przygotuje dla ciebie niezbędny kod.</p></li><li><p>Przeprowadź integrację nowego hooka “<em>useGetStarships</em>” z komponentem <em>Starships.tsx</em></p></li><li><p>Upewnij się, że wczytywanie kolejnych stron działa - wspomniany hook akceptuje parametr <em>page</em>.</p></li><li><p>🎁 Opcjonalnie: Zobacz jak zmieni się aplikacja, kiedy w Local Storage umieścisz twój prywatny klucz OPENAI_API_KEY (więcej w hooku <em>useDalle.ts</em>).</p></li></ul></div></body></html>

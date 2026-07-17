@@ -1,0 +1,296 @@
+{
+  "lessonId": "[5x5] Rozwój 10xDeva w epoce AI",
+  "file": "37-5x5_rozwj_10xdeva_w_epoce_ai.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 7,
+      "order": 1
+    },
+    {
+      "slug": "rozwoj-w-kontekscie-stosowania-ai",
+      "title": "Rozwój w kontekście stosowania AI",
+      "blocks": 6,
+      "order": 2
+    },
+    {
+      "slug": "kariera---wewnatrzfirmowy-ai-leadership",
+      "title": "Kariera - Wewnątrzfirmowy AI Leadership",
+      "blocks": 9,
+      "order": 3
+    },
+    {
+      "slug": "dwie-sciezki-rozwoju",
+      "title": "Dwie ścieżki rozwoju",
+      "blocks": 1,
+      "order": 4
+    },
+    {
+      "slug": "zadania-odporne-na-automatyzacje-poki-co",
+      "title": "Zadania odporne na automatyzację (póki co)",
+      "blocks": 10,
+      "order": 5
+    },
+    {
+      "slug": "sciezka-techniczna-kompetencje-twarde",
+      "title": "Ścieżka techniczna – kompetencje twarde",
+      "blocks": 1,
+      "order": 6
+    },
+    {
+      "slug": "sciezka-hybrydowa---kompetencje-miekkie-i-procesowe",
+      "title": "Ścieżka hybrydowa - Kompetencje miękkie i procesowe",
+      "blocks": 1,
+      "order": 7
+    },
+    {
+      "slug": "nowe-technologie-warte-uwagi",
+      "title": "Nowe technologie warte uwagi",
+      "blocks": 2,
+      "order": 8
+    },
+    {
+      "slug": "metodyka-reagowania-na-trendy-i-pogebiania-wiedzy",
+      "title": "Metodyka reagowania na trendy i pogłębiania wiedzy",
+      "blocks": 2,
+      "order": 9
+    },
+    {
+      "slug": "zroda-wiedzy-i-kompetencji",
+      "title": "Źródła wiedzy i kompetencji",
+      "blocks": 1,
+      "order": 10
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 7,
+      "order": 11
+    }
+  ],
+  "chunks": [
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:document",
+      "tokenEstimate": 12,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:document:0-1",
+      "tokenEstimate": 12,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:wprowadzenie",
+      "tokenEstimate": 116,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:wprowadzenie:0-6",
+      "tokenEstimate": 215,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:rozwoj-w-kontekscie-stosowania-ai",
+      "tokenEstimate": 140,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:rozwoj-w-kontekscie-stosowania-ai:0-5",
+      "tokenEstimate": 238,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:kariera---wewnatrzfirmowy-ai-leadership",
+      "tokenEstimate": 152,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:kariera---wewnatrzfirmowy-ai-leadership:0-5",
+      "tokenEstimate": 317,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:kariera---wewnatrzfirmowy-ai-leadership:5-8",
+      "tokenEstimate": 228,
+      "span": [
+        5,
+        8
+      ]
+    },
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:dwie-sciezki-rozwoju",
+      "tokenEstimate": 80,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:dwie-sciezki-rozwoju:0-0",
+      "tokenEstimate": 80,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:zadania-odporne-na-automatyzacje-poki-co",
+      "tokenEstimate": 120,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:zadania-odporne-na-automatyzacje-poki-co:0-7",
+      "tokenEstimate": 335,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:zadania-odporne-na-automatyzacje-poki-co:7-9",
+      "tokenEstimate": 127,
+      "span": [
+        7,
+        9
+      ]
+    },
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:sciezka-techniczna-kompetencje-twarde",
+      "tokenEstimate": 14,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:sciezka-techniczna-kompetencje-twarde:0-0",
+      "tokenEstimate": 538,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:sciezka-hybrydowa---kompetencje-miekkie-i-procesowe",
+      "tokenEstimate": 17,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:sciezka-hybrydowa---kompetencje-miekkie-i-procesowe:0-0",
+      "tokenEstimate": 166,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:nowe-technologie-warte-uwagi",
+      "tokenEstimate": 127,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:nowe-technologie-warte-uwagi:0-1",
+      "tokenEstimate": 168,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:metodyka-reagowania-na-trendy-i-pogebiania-wiedzy",
+      "tokenEstimate": 24,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:metodyka-reagowania-na-trendy-i-pogebiania-wiedzy:0-1",
+      "tokenEstimate": 182,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:zroda-wiedzy-i-kompetencji",
+      "tokenEstimate": 13,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:zroda-wiedzy-i-kompetencji:0-0",
+      "tokenEstimate": 217,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "section:[5x5] Rozwój 10xDeva w epoce AI:podsumowanie",
+      "tokenEstimate": 24,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:podsumowanie:0-4",
+      "tokenEstimate": 312,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "chunk:[5x5] Rozwój 10xDeva w epoce AI:podsumowanie:4-6",
+      "tokenEstimate": 186,
+      "span": [
+        4,
+        6
+      ]
+    }
+  ]
+}

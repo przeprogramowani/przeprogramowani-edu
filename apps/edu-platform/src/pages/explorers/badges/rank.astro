@@ -1,0 +1,62 @@
+---
+import { RANKS } from '@/explorers/config/ranks';
+
+const tier = Number(Astro.url.searchParams.get('tier') ?? '2');
+const rank = RANKS.find((r) => r.tier === tier) ?? RANKS[1];
+const name = rank.name;
+
+const imgUrl = `/game/badges/rank-1.jpeg`;// `/game/badges/rank-${tier}.jpeg`;
+---
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{name} — 10x Explorers</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body class="bg-gray-950 min-h-screen flex flex-col items-center justify-center gap-6 p-6">
+    <h1 class="text-white font-mono text-lg text-center">
+      ✨ Gratulacje! Oto odznaka za rangę: <span class="text-teal-400">{name}</span> ✨
+    </h1>
+    <img
+      src={imgUrl}
+      alt={`Odznaka rangi ${name}`}
+      class="max-w-3xl w-full rounded-xl"
+    />
+    <p class="text-gray-400 font-mono text-xs text-center">
+      Zapisz i udostępnij tę grafikę na social media
+    </p>
+    <div class="max-w-sm w-full flex flex-col gap-2">
+      <textarea
+        id="share-text"
+        readonly
+        rows="2"
+        class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-gray-200 font-mono text-sm resize-none focus:outline-none focus:border-teal-600 cursor-text text-center"
+      >Hej! Właśnie zdobyłem rangę {name} w Space Explorers — zagraj ze mną!</textarea>
+      <button
+        id="copy-btn"
+        class="w-full py-2 px-4 rounded-lg bg-teal-700 hover:bg-teal-600 text-white font-mono text-sm transition-colors"
+      >
+        Kopiuj tekst
+      </button>
+    </div>
+  </body>
+</html>
+
+<script>
+  const btn = document.getElementById('copy-btn') as HTMLButtonElement;
+  const textarea = document.getElementById('share-text') as HTMLTextAreaElement;
+
+  btn.addEventListener('click', () => {
+    navigator.clipboard.writeText(textarea.value).then(() => {
+      btn.textContent = 'Skopiowano!';
+      setTimeout(() => { btn.textContent = 'Kopiuj tekst'; }, 2000);
+    });
+  });
+</script>
+
+<style is:global>
+  html, body { margin: 0; font-family: ui-monospace, monospace; }
+  .bg-gray-950 { background-color: rgb(3 7 18); }
+</style>

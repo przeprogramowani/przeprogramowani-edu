@@ -1,0 +1,112 @@
+---
+import Layout from '../../layouts/BaseLayout.astro';
+import AccountStrip from '../../components/AccountStrip.astro';
+import MissionLogGrid from '../../components/missionLog/MissionLogGrid.svelte';
+import ParticipationBadge from '../../components/missionLog/ParticipationBadge.svelte';
+import boardBg from '@/images/mission-log/board-bg.png';
+import { verifyAuth } from '@/server/verifyAuth';
+import { ADMIN_EMAILS } from '@/server/admins';
+import { upsertUser } from '@/server/supabase/userService';
+import { hasGrant } from '@/server/supabase/accessService';
+import { buildMissionLogState } from '@/server/missionLog/buildState';
+import {
+  checkTenXDevs3ToolkitMembership,
+  syncTenXDevs3ToolkitGrant,
+  TEN_X_DEVS_3_COURSE_ID,
+} from '@/server/toolkit/tenXDevs3Membership';
+
+// Authenticate first without the course-slug gate so we can apply the admin bypass below.
+const authResult = await verifyAuth(Astro);
+
+if (!authResult.isAuthenticated) {
+  return Astro.redirect('/login?next=' + encodeURIComponent('/10xdevs-3/mission-log'));
+}
+
+const email = authResult.email!;
+const isAdmin = ADMIN_EMAILS.includes(email);
+
+const env = Astro.locals.runtime.env;
+const supabaseEnv = {
+  SUPABASE_URL: env.SUPABASE_URL,
+  SUPABASE_SERVICE_KEY: env.SUPABASE_SERVICE_KEY,
+};
+
+// Reuse the userId resolved by verifyAuth; only self-heal (create profile) when
+// verifyAuth fell back to the Airtable path or the login-time upsert never
+// landed a profile row. Saves a SELECT + UPDATE per page view in the common case.
+const userId = authResult.userId ?? (await upsertUser(email, supabaseEnv));
+
+// Precise 10xdevs-3 gate. `authResult.purchases` collapses both '10xdevs-3' and
+// '10xdevs-3-prework' grants to the same AirtableCourse ('10XDEVS_3'), so a
+// prework-only grant would falsely admit the user here — then badge generation
+// (which checks the exact slug) would 403. Check the slug directly and fall
+// back to the toolkit KV bridge, persisting a grant when it allows.
+if (!isAdmin) {
+  const granted = await hasGrant(userId, TEN_X_DEVS_3_COURSE_ID, supabaseEnv);
+  if (!granted) {
+    const toolkitDecision = await checkTenXDevs3ToolkitMembership(
+      email,
+      TEN_X_DEVS_3_COURSE_ID,
+      env
+    );
+    const wrote = await syncTenXDevs3ToolkitGrant(
+      userId,
+      TEN_X_DEVS_3_COURSE_ID,
+      toolkitDecision,
+      supabaseEnv
+    );
+    if (!wrote) {
+      return Astro.redirect('/courses');
+    }
+  }
+}
+const initialState = await buildMissionLogState({
+  userId,
+  avatarUrl: authResult.avatarUrl ?? null,
+  env: supabaseEnv,
+});
+
+const devMode = env.ENV !== 'PROD';
+---
+
+<Layout>
+  <div class="relative min-h-screen">
+    <!-- Sci-fi board background — fades to transparent at the bottom so there's no hard edge -->
+    <img
+      src={boardBg.src}
+      width={boardBg.width}
+      height={boardBg.height}
+      alt=""
+      aria-hidden="true"
+      style="-webkit-mask-image: linear-gradient(to bottom, black 0%, black 40%, transparent 100%); mask-image: linear-gradient(to bottom, black 0%, black 40%, transparent 100%);"
+      class="pointer-events-none hidden lg:block absolute inset-x-0 top-0 mx-auto w-full max-w-[1672px] h-auto select-none opacity-95"
+    />
+
+    <div class="relative z-10">
+      <AccountStrip
+        email={authResult.email!}
+        firstName={authResult.firstName}
+        lastName={authResult.lastName}
+        avatarUrl={authResult.avatarUrl}
+      />
+      <main class="max-w-7xl mx-auto p-4 md:p-6">
+        <header class="mb-10 pt-4 md:pt-24 lg:pt-[clamp(6rem,11vw,12rem)] text-center">
+          <h1 class="text-3xl md:text-5xl font-main text-white mb-3 drop-shadow-[0_0_20px_rgba(168,85,247,0.35)]">
+            10xDevs Mission Log
+          </h1>
+          <p class="text-sm md:text-base text-gray-300 max-w-2xl text-center mx-auto">
+            Zdobywaj odznaki za ukończone lekcje 10xDevs 3.0.
+          </p>
+        </header>
+        <MissionLogGrid
+          client:load
+          initialState={initialState}
+          avatarUrl={authResult.avatarUrl ?? null}
+          email={authResult.email!}
+          devMode={devMode}
+        />
+        <ParticipationBadge client:load />
+      </main>
+    </div>
+  </div>
+</Layout>

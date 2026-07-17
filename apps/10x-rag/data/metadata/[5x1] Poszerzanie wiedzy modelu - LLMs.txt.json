@@ -1,0 +1,6 @@
+{
+  "lessonId": "[5x1] Poszerzanie wiedzy modelu - LLMs.txt",
+  "displayName": "[5x1] Poszerzanie wiedzy modelu - LLMs.txt",
+  "summary": "1) Na czym polega in-context learning i dlaczego wiedza w nim przekazana jest tymczasowa?  \n2) Jak przekazać fragmenty oficjalnej dokumentacji (np. Next.js) do kontekstu rozmowy z modelem, aby ograniczyć halucynacje?  \n3) Gdzie umieścić plik llms.txt w serwisie/projekcie i w jakim formacie powinien być zapisany?  \n4) Jakie elementy powinno zawierać llms.txt (krótkie tło projektu, wskazówki, spis treści i linki do .md)?  \n5) Czym różni się llms-full.txt od llms.txt i kiedy stosować wersję pełną vs skróconą?  \n6) W jaki sposób llms.txt zmniejsza potrzebę crawl’owania całej witryny i upraszcza modelowi dostęp do istotnej dokumentacji?  \n7) Jakie są praktyczne ograniczenia ręcznego wklejania dokumentacji do kontekstu (przekroczenie okna kontekstowego, utrata szerszego obrazu, zmęczenie pracą ręczną)?  \n8) Dlaczego standaryzacja llms.txt ułatwia automatyczne parsowanie przez narzędzia AI i poprawia użyteczność dla modeli?",
+  "tokenEstimate": 150
+}

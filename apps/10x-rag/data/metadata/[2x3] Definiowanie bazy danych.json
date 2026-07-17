@@ -1,0 +1,6 @@
+{
+  "lessonId": "[2x3] Definiowanie bazy danych",
+  "displayName": "[2x3] Definiowanie bazy danych",
+  "summary": "1) Jak przygotować środowisko lokalne do pracy z Supabase (instalacja Docker Desktop i Supabase CLI) oraz jakie komendy uruchamiają lokalną instancję (supabase init; supabase start)?  \n2) Jak przeprowadzić sesję planistyczną bazy danych z użyciem promptu z 10xRules.ai — ile rund pytań minimalnie wykonać (≥2) i co zapisać jako wynik sesji?  \n3) Jak przekształcić wyniki sesji planistycznej w dokument db-plan.md — jakie materiały przekazać modelowi (PRD, notatki z sesji, stack technologiczny) i gdzie zapisać wynik (.ai/db-plan.md)?  \n4) Co należy jawnie napisać w db-plan.md gdy korzystasz z Supabase, aby tabela “users” była obsługiwana przez Supabase Auth (zamiast tworzyć public.users)?  \n5) Jak wygenerować pliki migracji przy pomocy promptu z 10xRules.ai — jaka konwencja nazewnictwa ma być użyta (YYYYMMDDHHmmss_short_description.sql) i gdzie umieścić pliki (supabase/migrations/)?  \n6) Jak wykonać migracje w Supabase po wygenerowaniu plików (komenda npx supabase migration up)?  \n7) Jakie konkretne elementy powinien zawierać i zostać zrewidowany w db-plan.md przed wdrożeniem (tabele, relacje, indeksy, reguły bezpieczeństwa na poziomie wierszy — RLS)?",
+  "tokenEstimate": 188
+}

@@ -1,0 +1,6 @@
+{
+  "lessonId": "[1x5] Efektywna praca z AI - część 1",
+  "displayName": "[1x5] Efektywna praca z AI - część 1",
+  "summary": "1) Kiedy warto promptować po polsku, a kiedy lepiej po angielsku, biorąc pod uwagę skuteczność i koszty?  \n2) Jakie konkretne różnice w liczbie tokenów zaobserwowano dla tego samego prompta w GPT‑4 (cl100k) i Claude 3.5 między angielskim a polskim?  \n3) W jaki sposób większa liczba tokenów dla języków innych niż angielski wpływa na koszty, latencję i szybkie zapełnianie okna kontekstu?  \n4) Jaki orientacyjny wzrost zużycia tokenów można przyjąć dla polskich opisów w porównaniu do angielskich (przy typowych promptach)?  \n5) Dlaczego tokenizery są zoptymalizowane pod angielski i kod, i jakie konsekwencje ma to dla tokenizacji słów polskich?  \n6) W jakich przypadkach „nadwyżka” tokenów związana z polskim jest mniej odczuwalna (rola fragmentów kodu w promptach)?  \n7) Jak zmiana modelu biznesowego na usage‑based (kredyty/rozliczenie za tokeny) wpływa na decyzję o języku promptów i kiedy możesz bez obaw używać polskiego (które usługi są nadal ryczałtowe)?  \n8) Jak wyniki badania OneRuler (np. przewaga polskiego w zadaniach „needle-in-a-haystack”) powinny wpłynąć na wybór języka w praktycznych zadaniach wyszukiwania informacji?",
+  "tokenEstimate": 194
+}

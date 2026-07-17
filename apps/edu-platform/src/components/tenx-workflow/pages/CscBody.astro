@@ -1,0 +1,531 @@
+---
+/**
+ * Tresc strony Core Skills Chain (CSC). Zrodlo: kampania 10xdevs-csc.html;
+ * hud-top, xnav, footer i wspolny CSS renderuje TenxCosmicLayout.
+ * Teksty (pl+en) w i18n/csc.ts - markup, SVG, kolory i geometria wspolne;
+ * zmiana tresci = zmiana obu jezykow w slowniku. Tresci paneli DeepDive
+ * (wydestylowane z ~/.claude/skills/<skill>/SKILL.md) takze w slowniku.
+ */
+import type { Lang } from '../i18n';
+import { CSC } from '../i18n/csc';
+import { pageHref } from '../pages';
+import { UNIVERSES, universeName } from '../universes';
+import DeepDive from '../DeepDive.astro';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+}
+
+const { base, lang = 'pl' } = Astro.props;
+const t = CSC[lang];
+---
+
+<style is:global>
+/* Reguly specyficzne dla strony (diff vs CSS wspolny w TenxCosmicLayout) */
+@media print{
+  #k-new{break-before:auto}
+}
+</style>
+
+<header>
+  <p class="eyebrow" style="--acc:var(--indigo)"><span class="ico ico-link" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1>{t.h1Pre}<span class="glow"><span class="sf-only">{t.h1Sf}</span><span class="neutral-only">{t.h1Neutral}</span></span></h1>
+  <p class="sub"><Fragment set:html={t.subPreHtml} /><span class="sf-only">{t.subSf}</span><span class="neutral-only">{t.subNeutral}</span><Fragment set:html={t.subPostHtml} /></p>
+
+  <div class="chainwrap">
+    <svg class="chain" viewBox="0 0 960 250" role="img" aria-label={t.svgAria}>
+      <path d="M15,125 H945" stroke="#7c8cff" opacity=".12" fill="none"/>
+      <g stroke="#7c8cff" fill="none" opacity=".65" stroke-width="1.4">
+        <path class="anim-dash" stroke-dasharray="4 5" d="M169,125 H196"/><path d="M196,120 l7,5 -7,5"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M364,125 H391"/><path d="M391,120 l7,5 -7,5"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M559,125 H586"/><path d="M586,120 l7,5 -7,5"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M754,125 H781"/><path d="M781,120 l7,5 -7,5"/>
+      </g>
+      <a href="#k-new" style="color:#4ade9b" aria-label={t.nodes.new.aria}>
+        <text class="ann" x="90" y="52" text-anchor="middle">{t.nodes.new.annTop[0]}</text>
+        <path d="M90,62 V87" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <rect class="kbox" x="15" y="93" width="150" height="64" stroke-width="1.4"/>
+        <text class="knum" x="90" y="115" text-anchor="middle">{t.nodes.new.knum}</text>
+        <text class="klbl" x="90" y="140" text-anchor="middle">{t.nodes.new.klbl}</text>
+        <path d="M90,163 V186" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <text class="ann" x="90" y="202" text-anchor="middle">{t.nodes.new.annBottom[0]}</text>
+      </a>
+      <a href="#k-research" style="color:#4cc9f0" aria-label={t.nodes.research.aria}>
+        <text class="ann" x="285" y="52" text-anchor="middle">{t.nodes.research.annTop[0]}</text>
+        <path d="M285,62 V87" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <rect class="kbox" x="210" y="93" width="150" height="64" stroke-width="1.4"/>
+        <text class="knum" x="285" y="115" text-anchor="middle">{t.nodes.research.knum}</text>
+        <text class="klbl" x="285" y="140" text-anchor="middle">{t.nodes.research.klbl}</text>
+        <path d="M285,163 V186" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <text class="ann" x="285" y="202" text-anchor="middle">{t.nodes.research.annBottom[0]}</text>
+      </a>
+      <a href="#k-plan" style="color:#a78bfa" aria-label={t.nodes.plan.aria}>
+        <text class="ann" x="480" y="52" text-anchor="middle">{t.nodes.plan.annTop[0]}</text>
+        <path d="M480,62 V87" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <rect class="kbox" x="405" y="93" width="150" height="64" stroke-width="1.4"/>
+        <text class="knum" x="480" y="115" text-anchor="middle">{t.nodes.plan.knum}</text>
+        <text class="klbl" x="480" y="140" text-anchor="middle">{t.nodes.plan.klbl}</text>
+        <path d="M480,163 V186" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <text class="ann" x="480" y="202" text-anchor="middle">{t.nodes.plan.annBottom[0]}</text>
+      </a>
+      <a href="#k-implement" style="color:#3ddad0" aria-label={t.nodes.implement.aria}>
+        <text class="ann" x="675" y="40" text-anchor="middle">{t.nodes.implement.annTop[0]}<tspan x="675" y="53">{t.nodes.implement.annTop[1]}</tspan></text>
+        <path d="M675,62 V87" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <rect class="kbox" x="600" y="93" width="150" height="64" stroke-width="1.4"/>
+        <text class="knum" x="675" y="115" text-anchor="middle">{t.nodes.implement.knum}</text>
+        <text class="klbl" x="675" y="140" text-anchor="middle">{t.nodes.implement.klbl}</text>
+        <path d="M675,163 V186" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <text class="ann" x="675" y="201" text-anchor="middle">{t.nodes.implement.annBottom[0]}<tspan x="675" y="214">{t.nodes.implement.annBottom[1]}</tspan></text>
+      </a>
+      <a href="#k-review" style="color:#e2564a" aria-label={t.nodes.review.aria}>
+        <text class="ann" x="870" y="40" text-anchor="middle">{t.nodes.review.annTop[0]}<tspan x="870" y="53">{t.nodes.review.annTop[1]}</tspan></text>
+        <path d="M870,62 V87" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <rect class="kbox" x="795" y="93" width="150" height="64" stroke-width="1.4"/>
+        <text class="knum" x="870" y="115" text-anchor="middle">{t.nodes.review.knum}</text>
+        <text class="klbl" x="870" y="140" text-anchor="middle">{t.nodes.review.klbl}</text>
+        <path d="M870,163 V186" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <text class="ann" x="870" y="201" text-anchor="middle">{t.nodes.review.annBottom[0]}<tspan x="870" y="214">{t.nodes.review.annBottom[1]}</tspan></text>
+      </a>
+      <circle r="7" fill="#7c8cff" opacity=".25"><animateMotion dur="7s" repeatCount="indefinite" path="M20,125 H940"/></circle>
+      <circle r="3" fill="#dce2f5" class="anim-pulse"><animateMotion dur="7s" repeatCount="indefinite" path="M20,125 H940"/></circle>
+    </svg>
+    <p class="map-cap">{t.mapCapPre}<span class="sf-only">{t.mapCapSf}</span><span class="neutral-only">{t.mapCapNeutral}</span>{t.mapCapPost}</p>
+  </div>
+
+  <nav class="route" aria-label={t.routeAria}>
+    <a href="#k-new" style="--hov:#4ade9b">{t.route[0]}</a>
+    <a href="#k-research" style="--hov:#4cc9f0">{t.route[1]}</a>
+    <a href="#k-plan" style="--hov:#a78bfa">{t.route[2]}</a>
+    <a href="#k-implement" style="--hov:#3ddad0">{t.route[3]}</a>
+    <a href="#k-review" style="--hov:#e2564a">{t.route[4]}</a>
+    <a href="#zastosowanie">{t.route[5]}</a>
+    <a href="#fundament">{t.route[6]}</a>
+  </nav>
+</header>
+
+<!-- ============ SKRÓT ============ -->
+<section id="skrot">
+  <div class="rv">
+    <p class="eyebrow" style="--acc:var(--indigo)"><span class="ico ico-star" aria-hidden="true"></span>{t.sum.eyebrowPre}<span class="sf-only">{t.sum.eyebrowSf}</span><span class="neutral-only">{t.sum.eyebrowNeutral}</span>{t.sum.eyebrowPost}</p>
+  </div>
+  <div class="sum-grid rv">
+    <a class="sum-card" href="#k-new" style="--acc:#4ade9b">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="1.5"><path d="M25,9 h9 M25,31 h9"/><path d="M25,9 v22 M34,9 v22" opacity=".4"/><rect x="6" y="16" width="8" height="8"/><path d="M17,20 h6 m-3,-3 3,3 -3,3"/></g></svg>
+      <span class="num">{t.sum.cards[0].num}</span>
+      <h3>{t.sum.cards[0].h3}</h3>
+      <p>{t.sum.cards[0].p}</p>
+    </a>
+    <a class="sum-card" href="#k-research" style="--acc:#4cc9f0">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="1.5"><circle cx="28" cy="20" r="7"/><path d="M11,10 L20,16.5 M11,20 H20 M11,30 L20,23.5" opacity=".7"/></g><g fill="currentColor"><circle cx="9" cy="10" r="2"/><circle cx="9" cy="20" r="2"/><circle cx="9" cy="30" r="2"/><circle cx="28" cy="20" r="2"/></g></svg>
+      <span class="num">{t.sum.cards[1].num}</span>
+      <h3>{t.sum.cards[1].h3}</h3>
+      <p>{t.sum.cards[1].p}</p>
+    </a>
+    <a class="sum-card" href="#k-plan" style="--acc:#a78bfa">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="1.5"><path d="M7,32 C 15,29 15,15 21,12 25,10 28,9 33,8" stroke-dasharray="3 3" opacity=".7"/><circle cx="7" cy="32" r="3"/><circle cx="20" cy="13" r="3"/><circle cx="33" cy="8" r="3"/></g></svg>
+      <span class="num">{t.sum.cards[2].num}</span>
+      <h3>{t.sum.cards[2].h3}</h3>
+      <p>{t.sum.cards[2].p}</p>
+    </a>
+    <a class="sum-card" href="#k-implement" style="--acc:#3ddad0">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="1.5"><path d="M6,32 C 14,27 26,15 34,9" stroke-dasharray="3 3" opacity=".7"/><path d="M13,27 l3,3 -3,3 -3,-3 z"/><path d="M22,19 l3,3 -3,3 -3,-3 z"/><path d="M30,12 l3,3 -3,3 -3,-3 z"/></g></svg>
+      <span class="num">{t.sum.cards[3].num}</span>
+      <h3>{t.sum.cards[3].h3}</h3>
+      <p>{t.sum.cards[3].p}</p>
+    </a>
+    <a class="sum-card" href="#k-review" style="--acc:#e2564a">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="1.5"><rect x="5" y="12" width="9" height="15"/><rect x="26" y="12" width="9" height="15"/><rect x="16" y="15" width="8" height="9"/><path d="M14,19.5 h2 M24,19.5 h2" opacity=".7"/><path d="M20,24 v6 m-2.5,-3 2.5,3 2.5,-3" opacity=".7"/></g></svg>
+      <span class="num">{t.sum.cards[4].num}</span>
+      <h3>{t.sum.cards[4].h3}</h3>
+      <p>{t.sum.cards[4].p}</p>
+    </a>
+  </div>
+  <div class="epigraph finis rv" style="--acc:var(--indigo)">
+    <p>{t.sum.finis}</p>
+    <cite>{t.sum.finisCite}</cite>
+  </div>
+</section>
+
+<!-- ============ KROK 01 NEW ============ -->
+<section class="sector" id="k-new" style="--acc:#4ade9b">
+  <div class="sec-top rv">
+    <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.k1.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.ender.glyph} />{universeName(UNIVERSES.ender, lang)} · {t.k1.uniSub}</span>
+    </div>
+    <h2>{t.k1.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.k1.epigraphSf}</p>
+      <cite>{t.k1.epigraphCiteSf}</cite>
+    </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.k1.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <g opacity=".5">
+              <rect x="52" y="86" width="26" height="26"/>
+              <rect x="90" y="70" width="26" height="26" opacity=".7"/>
+              <rect x="64" y="130" width="26" height="26" opacity=".7"/>
+              <rect x="104" y="112" width="26" height="26"/>
+              <rect x="86" y="160" width="26" height="26" opacity=".5"/>
+            </g>
+            <path d="M300,96 h72 M300,204 h72" stroke-width="1.5"/>
+            <path d="M300,96 v108 M372,96 v108" opacity=".3"/>
+            <rect x="322" y="136" width="28" height="28" stroke-width="1.5" class="anim-pulse"/>
+            <path d="M130,150 C 200,150 240,150 296,150" stroke-dasharray="4 5" opacity=".65" class="anim-dash"/>
+          </g>
+          <rect x="-11" y="-11" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+            <animateMotion dur="5s" repeatCount="indefinite" path="M120,150 C 200,150 240,150 336,150"/>
+          </rect>
+          <text x="36" y="42">{t.k1.fig[0]}</text>
+          <text x="36" y="56" class="dim">{t.k1.fig[1]}</text>
+          <text x="336" y="230" text-anchor="middle" class="acc">{t.k1.fig[2]}</text>
+          <text x="404" y="266" text-anchor="end" class="dim">{t.k1.fig[3]}</text>
+        </svg>
+      </div>
+      <figcaption>{t.k1.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.k1.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.k1.leadNeutralHtml} />
+      <p class="lead"><Fragment set:html={t.k1.lead3PreHtml} /><span class="sf-only">{t.k1.lead3Sf}</span><span class="neutral-only">{t.k1.lead3Neutral}</span><Fragment set:html={t.k1.lead3PostHtml} /></p>
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.mechDt.q}</dt><dd class="v" style="margin:0">{t.k1.mechQ}</dd></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.mechDt.g}</dt><dd class="v" style="margin:0">{t.k1.mechG}</dd></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.mechDt.a}</dt><dd class="v" style="margin:0" set:html={t.k1.mechArtHtml} /></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mechDt.s}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'skill/10x-new', lang)} style="color:var(--acc)">{t.k1.skillLink}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.k1.targetHtml} />
+  </div>
+  <DeepDive skill="10x-new" items={t.k1.dd} href={pageHref(base, 'skill/10x-new', lang)} lang={lang} />
+</section>
+
+<!-- ============ KROK 02 RESEARCH ============ -->
+<section class="sector" id="k-research" style="--acc:#4cc9f0">
+  <div class="sec-top rv">
+    <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.k2.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.trzycia.glyph} />{universeName(UNIVERSES.trzycia, lang)} · {t.k2.uniSub}</span>
+    </div>
+    <h2>{t.k2.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.k2.epigraphSf}</p>
+      <cite>{t.k2.epigraphCiteSf}</cite>
+    </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.k2.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <rect x="48" y="60" width="88" height="30"/>
+            <rect x="48" y="135" width="88" height="30"/>
+            <rect x="48" y="210" width="88" height="30"/>
+            <circle cx="280" cy="150" r="34" stroke-width="1.5"/>
+            <path d="M136,75 C 200,85 230,115 250,133" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <path d="M136,150 H242" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <path d="M136,225 C 200,215 230,185 250,167" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <path d="M314,150 H388" stroke-width="1.5"/>
+            <path d="M382,145 l7,5 -7,5" stroke-width="1.5"/>
+          </g>
+          <circle cx="280" cy="150" r="6" fill="currentColor" class="anim-pulse"/>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="4s" repeatCount="indefinite" path="M136,75 C 200,85 230,115 250,133"/></circle>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="4s" begin="1.3s" repeatCount="indefinite" path="M136,150 H242"/></circle>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="4s" begin="2.6s" repeatCount="indefinite" path="M136,225 C 200,215 230,185 250,167"/></circle>
+          <text x="92" y="79" text-anchor="middle">{t.k2.fig[0]}</text>
+          <text x="92" y="154" text-anchor="middle">{t.k2.fig[1]}</text>
+          <text x="92" y="229" text-anchor="middle">{t.k2.fig[2]}</text>
+          <text x="280" y="205" text-anchor="middle" class="acc">{t.k2.fig[3]}</text>
+          <text x="404" y="266" text-anchor="end" class="acc">{t.k2.fig[4]}</text>
+          <text x="36" y="42" class="dim">{t.k2.fig[5]}</text>
+        </svg>
+      </div>
+      <figcaption>{t.k2.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.k2.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.k2.leadNeutralHtml} />
+      <p class="lead" set:html={t.k2.lead3Html} />
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.mechDt.q}</dt><dd class="v" style="margin:0">{t.k2.mechQ}</dd></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.mechDt.g}</dt><dd class="v" style="margin:0">{t.k2.mechG}</dd></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.mechDt.a}</dt><dd class="v" style="margin:0" set:html={t.k2.mechArtHtml} /></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mechDt.s}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'skill/10x-research', lang)} style="color:var(--acc)">{t.k2.skillLink}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.k2.targetHtml} />
+  </div>
+  <DeepDive skill="10x-research" items={t.k2.dd} href={pageHref(base, 'skill/10x-research', lang)} lang={lang} />
+</section>
+
+<!-- ============ KROK 03 PLAN ============ -->
+<section class="sector" id="k-plan" style="--acc:#a78bfa">
+  <div class="sec-top rv">
+    <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.k3.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.hyperion.glyph} />{universeName(UNIVERSES.hyperion, lang)} · {t.k3.uniSub}</span>
+    </div>
+    <h2>{t.k3.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.k3.epigraphSf}</p>
+      <cite>{t.k3.epigraphCiteSf}</cite>
+    </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.k3.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <path d="M60,240 C 140,222 150,152 220,140 C 290,128 300,80 380,66" stroke-dasharray="4 5" opacity=".65" class="anim-dash-slow"/>
+            <circle cx="60" cy="240" r="9" stroke-width="1.5"/>
+            <circle cx="220" cy="140" r="9" stroke-width="1.5"/>
+            <circle cx="380" cy="66" r="9" stroke-width="1.5"/>
+            <circle cx="380" cy="66" r="16" opacity=".4" class="anim-pulse"/>
+            <rect x="84" y="228" width="16" height="16"/>
+            <path d="M87,236 l4,4 7,-8" stroke-width="1.5"/>
+            <rect x="244" y="128" width="16" height="16"/>
+            <path d="M247,136 l4,4 7,-8" stroke-width="1.5"/>
+          </g>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="7s" repeatCount="indefinite" path="M60,240 C 140,222 150,152 220,140 C 290,128 300,80 380,66"/></circle>
+          <text x="60" y="270" text-anchor="middle">{t.k3.fig[0]}</text>
+          <text x="220" y="170" text-anchor="middle">{t.k3.fig[1]}</text>
+          <text x="380" y="96" text-anchor="middle" class="acc">{t.k3.fig[2]}</text>
+          <text x="36" y="42">{t.k3.fig[3]}</text>
+          <text x="36" y="56" class="dim">{t.k3.fig[4]}</text>
+        </svg>
+      </div>
+      <figcaption>{t.k3.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.k3.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.k3.leadNeutralHtml} />
+      <p class="lead" set:html={t.k3.lead3Html} />
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.mechDt.q}</dt><dd class="v" style="margin:0">{t.k3.mechQ}</dd></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.mechDt.g}</dt><dd class="v" style="margin:0">{t.k3.mechG}</dd></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.mechDt.a}</dt><dd class="v" style="margin:0" set:html={t.k3.mechArtHtml} /></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mechDt.s}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'skill/10x-plan', lang)} style="color:var(--acc)">{t.k3.skillLink}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.k3.targetHtml} />
+  </div>
+  <DeepDive skill="10x-plan" items={t.k3.dd} href={pageHref(base, 'skill/10x-plan', lang)} lang={lang} />
+</section>
+
+<!-- ============ KROK 04 IMPLEMENT ============ -->
+<section class="sector" id="k-implement" style="--acc:#3ddad0">
+  <div class="sec-top rv">
+    <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.k4.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.expanse.glyph} />{universeName(UNIVERSES.expanse, lang)} · {t.k4.uniSub}</span>
+    </div>
+    <h2>{t.k4.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.k4.epigraphSf}</p>
+      <cite>{t.k4.epigraphCiteSf}</cite>
+    </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.k4.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <path d="M48,250 C 150,190 290,110 392,60" stroke-dasharray="4 5" opacity=".65" class="anim-dash-slow"/>
+            <circle cx="48" cy="250" r="7" stroke-width="1.5"/>
+            <circle cx="392" cy="60" r="7" stroke-width="1.5"/>
+            <circle cx="392" cy="60" r="14" opacity=".4" class="anim-pulse"/>
+            <path d="M124,203 l6,6 -6,6 -6,-6 z" stroke-width="1.5"/>
+            <path d="M222,150 l6,6 -6,6 -6,-6 z" stroke-width="1.5"/>
+            <path d="M320,98 l6,6 -6,6 -6,-6 z" stroke-width="1.5"/>
+            <path d="M222,132 v-18 m-4,5 4,-5 4,5" opacity=".6"/>
+          </g>
+          <path d="M0,-6 5,4 0,1 -5,4 z" fill="currentColor">
+            <animateMotion dur="6s" repeatCount="indefinite" rotate="auto" path="M48,250 C 150,190 290,110 392,60"/>
+          </path>
+          <text x="48" y="278" text-anchor="middle">{t.k4.fig[0]}</text>
+          <text x="222" y="106" text-anchor="middle" class="acc">{t.k4.fig[1]}</text>
+          <text x="392" y="92" text-anchor="middle" class="acc">{t.k4.fig[2]}</text>
+          <text x="124" y="236" text-anchor="middle" class="dim">{t.k4.fig[3]}</text>
+          <text x="252" y="180" text-anchor="middle" class="dim">{t.k4.fig[4]}</text>
+          <text x="350" y="128" text-anchor="middle" class="dim">{t.k4.fig[5]}</text>
+          <text x="36" y="42" class="dim">{t.k4.fig[6]}</text>
+        </svg>
+      </div>
+      <figcaption>{t.k4.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.k4.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.k4.leadNeutralHtml} />
+      <p class="lead" set:html={t.k4.lead3Html} />
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.mechDt.q}</dt><dd class="v" style="margin:0">{t.k4.mechQ}</dd></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.mechDt.g}</dt><dd class="v" style="margin:0">{t.k4.mechG}</dd></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.mechDt.a}</dt><dd class="v" style="margin:0" set:html={t.k4.mechArtHtml} /></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mechDt.s}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'skill/10x-implement', lang)} style="color:var(--acc)">{t.k4.skillLink}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.k4.targetHtml} />
+  </div>
+  <DeepDive skill="10x-implement" items={t.k4.dd} href={pageHref(base, 'skill/10x-implement', lang)} lang={lang} />
+</section>
+
+<!-- ============ KROK 05 REVIEW ============ -->
+<section class="sector" id="k-review" style="--acc:#e2564a">
+  <div class="sec-top rv">
+    <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.k5.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.wh40k.glyph} />{universeName(UNIVERSES.wh40k, lang)} · {t.k5.uniSub}</span>
+    </div>
+    <h2>{t.k5.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.k5.epigraphSf}</p>
+      <cite>{t.k5.epigraphCiteSf}</cite>
+    </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.k5.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <rect x="48" y="80" width="90" height="110"/>
+            <path d="M60,102 h66 M60,120 h66 M60,138 h44" opacity=".4"/>
+            <rect x="302" y="80" width="90" height="110"/>
+            <path d="M314,102 h66 M314,120 h50 M314,138 h66" opacity=".4"/>
+            <rect x="185" y="100" width="70" height="70" stroke-width="1.5"/>
+            <path d="M191,135 h58" stroke-width="1.5" class="anim-flicker"/>
+            <path d="M138,135 H181" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <path d="M302,135 H259" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <path d="M220,170 V226" stroke-dasharray="4 5" opacity=".6" class="anim-dash-slow"/>
+            <path d="M215,220 l5,7 5,-7" stroke-width="1.5"/>
+          </g>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="3.5s" repeatCount="indefinite" path="M138,135 H181"/></circle>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="3.5s" begin="1.7s" repeatCount="indefinite" path="M302,135 H259"/></circle>
+          <text x="93" y="68" text-anchor="middle">{t.k5.fig[0]}</text>
+          <text x="347" y="68" text-anchor="middle">{t.k5.fig[1]}</text>
+          <text x="220" y="90" text-anchor="middle" class="acc">{t.k5.fig[2]}</text>
+          <text x="220" y="248" text-anchor="middle" class="acc">{t.k5.fig[3]}</text>
+          <text x="36" y="42" class="dim">{t.k5.fig[4]}</text>
+        </svg>
+      </div>
+      <figcaption>{t.k5.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.k5.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.k5.leadNeutralHtml} />
+      <p class="lead" set:html={t.k5.lead3Html} />
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.mechDt.q}</dt><dd class="v" style="margin:0">{t.k5.mechQ}</dd></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.mechDt.g}</dt><dd class="v" style="margin:0">{t.k5.mechG}</dd></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.mechDt.a}</dt><dd class="v" style="margin:0" set:html={t.k5.mechArtHtml} /></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mechDt.s}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'skill/10x-impl-review', lang)} style="color:var(--acc)">{t.k5.skillLink}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.k5.targetHtml} />
+  </div>
+  <DeepDive skill="10x-impl-review" items={t.k5.dd} href={pageHref(base, 'skill/10x-impl-review', lang)} lang={lang} />
+</section>
+
+<!-- ============ W PRAKTYCE ============ -->
+<section class="sector" id="zastosowanie" style="--acc:var(--indigo)">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num"><span class="sf-only">{t.app.numSf}</span><span class="neutral-only">{t.app.numNeutral}</span></span>
+      <span class="sec-uni sf-only"><span class="ico ico-star" aria-hidden="true"></span>{t.app.uniSf}</span>
+    </div>
+    <h2>{t.app.h2}</h2>
+  </div>
+
+  <div class="duo rv">
+    <div class="tx">
+      <span class="mono"><span class="ico ico-cube" aria-hidden="true"></span>{t.app.aMono}</span>
+      <p class="lead" set:html={t.app.aLeadHtml} />
+      <dl class="mech">
+        {t.app.aRows.map((row) => (
+          <div><dt><span class="ico ico-link" aria-hidden="true"></span>{row.dt}</dt><dd class="v" style="margin:0" set:html={row.ddHtml} /></div>
+        ))}
+      </dl>
+    </div>
+    <div class="tx">
+      <span class="mono"><span class="ico ico-up" aria-hidden="true"></span>{t.app.bMono}</span>
+      <p class="lead" set:html={t.app.bLeadHtml} />
+      <dl class="mech">
+        {t.app.bRows.map((row) => (
+          <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{row.dt}</dt><dd class="v" style="margin:0" set:html={row.ddHtml} /></div>
+        ))}
+      </dl>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============ FUNDAMENT I SKALOWANIE ============ -->
+<section class="sector" id="fundament" style="--acc:var(--indigo)">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num"><span class="sf-only">{t.fnd.numSf}</span><span class="neutral-only">{t.fnd.numNeutral}</span></span>
+      <span class="sec-uni sf-only"><span class="ico ico-star" aria-hidden="true"></span>{t.fnd.uniSf}</span>
+    </div>
+    <h2>{t.fnd.h2}</h2>
+  </div>
+
+  <div class="duo rv">
+    <div class="tx">
+      <span class="mono"><span class="ico ico-cube" aria-hidden="true"></span>{t.fnd.aMono}</span>
+      <p class="lead" set:html={t.fnd.aLeadHtml} />
+      <dl class="mech">
+        <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.fnd.aRows[0].dt}</dt><dd class="v" style="margin:0" set:html={t.fnd.aRows[0].ddHtml} /></div>
+        <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.fnd.aRows[1].dt}</dt><dd class="v" style="margin:0" set:html={t.fnd.aRows[1].ddHtml} /></div>
+        <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.fnd.aRows[2].dt}</dt><dd class="v" style="margin:0" set:html={t.fnd.aRows[2].ddHtml} /></div>
+      </dl>
+    </div>
+    <div class="tx">
+      <span class="mono"><span class="ico ico-up" aria-hidden="true"></span>{t.fnd.bMono}</span>
+      <p class="lead" set:html={t.fnd.bLeadHtml} />
+      <dl class="mech">
+        <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.fnd.bRows[0].dt}</dt><dd class="v" style="margin:0" set:html={t.fnd.bRows[0].ddHtml} /></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>{t.fnd.bRows[1].dt}</dt><dd class="v" style="margin:0" set:html={t.fnd.bRows[1].ddHtml} /></div>
+        <div><dt><span class="ico ico-radar" aria-hidden="true"></span>{t.fnd.bRows[2].dt}</dt><dd class="v" style="margin:0" set:html={t.fnd.bRows[2].ddHtml} /></div>
+      </dl>
+    </div>
+  </div>
+
+</section>

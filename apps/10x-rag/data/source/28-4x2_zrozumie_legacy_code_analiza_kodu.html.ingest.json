@@ -1,0 +1,460 @@
+{
+  "lessonId": "[4x2] Zrozumieć Legacy Code - analiza kodu",
+  "file": "28-4x2_zrozumie_legacy_code_analiza_kodu.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 6,
+      "order": 1
+    },
+    {
+      "slug": "bug-w-excalidraw-niestabilne-poaczenia-strzaek-9339",
+      "title": "Bug w Excalidraw: Niestabilne połączenia strzałek (#9339)",
+      "blocks": 4,
+      "order": 2
+    },
+    {
+      "slug": "etap-1-tworzenie-action-planu-z-gemini-25-pro",
+      "title": "Etap 1: Tworzenie action planu z Gemini 2.5 Pro",
+      "blocks": 2,
+      "order": 3
+    },
+    {
+      "slug": "struktura-promptu-dla-action-planu",
+      "title": "Struktura promptu dla action planu",
+      "blocks": 9,
+      "order": 4
+    },
+    {
+      "slug": "etap-2-analiza-kodu-poprzez-logowanie",
+      "title": "Etap 2: Analiza kodu poprzez logowanie",
+      "blocks": 3,
+      "order": 5
+    },
+    {
+      "slug": "struktura-promptu-dodajacego-logi-do-kluczowych-plikow",
+      "title": "Struktura promptu dodającego logi do kluczowych plików",
+      "blocks": 1,
+      "order": 6
+    },
+    {
+      "slug": "przykadowa-analiza-i-dodanie-logow",
+      "title": "Przykładowa analiza i dodanie logów",
+      "blocks": 5,
+      "order": 7
+    },
+    {
+      "slug": "etap-3-analiza-zebranych-logow",
+      "title": "Etap 3: Analiza zebranych logów",
+      "blocks": 4,
+      "order": 8
+    },
+    {
+      "slug": "struktura-promptu-dla-analizy-logow",
+      "title": "Struktura promptu dla analizy logów",
+      "blocks": 1,
+      "order": 9
+    },
+    {
+      "slug": "etap-4-synteza-i-aktualizacja-action-planu",
+      "title": "Etap 4: Synteza i aktualizacja action planu",
+      "blocks": 14,
+      "order": 10
+    },
+    {
+      "slug": "wartosc-gemini-25-pro-w-kontekscie-analizy-problemow",
+      "title": "Wartość Gemini 2.5 Pro w kontekście analizy problemów",
+      "blocks": 6,
+      "order": 11
+    },
+    {
+      "slug": "uatwianie-przyszej-analizy-kodu-poprzez-generowanie-dokumentacji",
+      "title": "Ułatwianie przyszłej analizy kodu poprzez generowanie dokumentacji",
+      "blocks": 1,
+      "order": 12
+    },
+    {
+      "slug": "wartosc-dokumentacji-kodu-w-analizie-projektow",
+      "title": "Wartość dokumentacji kodu w analizie projektów",
+      "blocks": 2,
+      "order": 13
+    },
+    {
+      "slug": "wykorzystanie-llm-do-generowania-dokumentacji",
+      "title": "Wykorzystanie LLM do generowania dokumentacji",
+      "blocks": 3,
+      "order": 14
+    },
+    {
+      "slug": "prompt-do-generowania-dokumentacji",
+      "title": "Prompt do generowania dokumentacji",
+      "blocks": 4,
+      "order": 15
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 3,
+      "order": 16
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 10,
+      "order": 17
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:265b5b3f:43cc23fa",
+      "tokenEstimate": 76,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:43cc23fa:0-1",
+      "tokenEstimate": 76,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:24701484",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:24701484:0-5",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:d42ffd91",
+      "tokenEstimate": 168,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:d42ffd91:0-3",
+      "tokenEstimate": 168,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:07a41556",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:07a41556:0-1",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:903a3a76",
+      "tokenEstimate": 200,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:903a3a76:0-0",
+      "tokenEstimate": 656,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:903a3a76:0-1",
+      "tokenEstimate": 668,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:903a3a76:0-2",
+      "tokenEstimate": 704,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:903a3a76:1-8",
+      "tokenEstimate": 246,
+      "span": [
+        1,
+        8
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:e0fd49e5",
+      "tokenEstimate": 140,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:e0fd49e5:0-2",
+      "tokenEstimate": 140,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:492c5e39",
+      "tokenEstimate": 229,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:492c5e39:0-0",
+      "tokenEstimate": 497,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:38b8b156",
+      "tokenEstimate": 211,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:38b8b156:0-4",
+      "tokenEstimate": 307,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:c45ada2b",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:c45ada2b:0-3",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:2187e72f",
+      "tokenEstimate": 140,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:2187e72f:0-0",
+      "tokenEstimate": 140,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:3d7cc1b9",
+      "tokenEstimate": 216,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:3d7cc1b9:0-10",
+      "tokenEstimate": 388,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:3d7cc1b9:8-11",
+      "tokenEstimate": 598,
+      "span": [
+        8,
+        11
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:3d7cc1b9:11-12",
+      "tokenEstimate": 497,
+      "span": [
+        11,
+        12
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:3d7cc1b9:12-13",
+      "tokenEstimate": 148,
+      "span": [
+        12,
+        13
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:7488cdc2",
+      "tokenEstimate": 215,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:7488cdc2:0-5",
+      "tokenEstimate": 272,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:4e9f5be3",
+      "tokenEstimate": 122,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:4e9f5be3:0-0",
+      "tokenEstimate": 122,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:ff9dc14e",
+      "tokenEstimate": 94,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:ff9dc14e:0-1",
+      "tokenEstimate": 168,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:b0a132f0",
+      "tokenEstimate": 131,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:b0a132f0:0-2",
+      "tokenEstimate": 172,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:70144394",
+      "tokenEstimate": 223,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:70144394:0-3",
+      "tokenEstimate": 240,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:33c7f0dd",
+      "tokenEstimate": 88,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:33c7f0dd:0-2",
+      "tokenEstimate": 269,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:265b5b3f:dcc8ec86",
+      "tokenEstimate": 180,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:dcc8ec86:0-6",
+      "tokenEstimate": 394,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "chk:265b5b3f:dcc8ec86:6-9",
+      "tokenEstimate": 194,
+      "span": [
+        6,
+        9
+      ]
+    }
+  ]
+}

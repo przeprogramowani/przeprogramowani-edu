@@ -1,0 +1,310 @@
+{
+  "lessonId": "[3x4] Refaktoryzacja projektu z AI",
+  "file": "24-3x4_refaktoryzacja_projektu_z_ai.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 3,
+      "order": 1
+    },
+    {
+      "slug": "ai-detektyw",
+      "title": "🕵️♀️ AI Detektyw",
+      "blocks": 11,
+      "order": 2
+    },
+    {
+      "slug": "refaktoryzacja-formularzy",
+      "title": "Refaktoryzacja formularzy",
+      "blocks": 8,
+      "order": 3
+    },
+    {
+      "slug": "responsywny-interfejs-uzytkownika",
+      "title": "Responsywny interfejs użytkownika",
+      "blocks": 23,
+      "order": 4
+    },
+    {
+      "slug": "korzystanie-z-instrukcji-migracji",
+      "title": "Korzystanie z instrukcji migracji",
+      "blocks": 11,
+      "order": 5
+    },
+    {
+      "slug": "eksperymenty-domenowe",
+      "title": "Eksperymenty domenowe",
+      "blocks": 3,
+      "order": 6
+    },
+    {
+      "slug": "supabase-i-row-level-security",
+      "title": "Supabase i Row-Level Security",
+      "blocks": 12,
+      "order": 7
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 5,
+      "order": 8
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 0,
+      "order": 9
+    },
+    {
+      "slug": "zadanie-1-przetestuj-mozliwosci-ai-detektywa",
+      "title": "Zadanie 1: Przetestuj możliwości “AI Detektywa”",
+      "blocks": 3,
+      "order": 10
+    },
+    {
+      "slug": "zadanie-2-opcjonalne-wprowadz-zabezpieczenia-rls",
+      "title": "Zadanie 2: (Opcjonalne) Wprowadź zabezpieczenia RLS",
+      "blocks": 3,
+      "order": 11
+    },
+    {
+      "slug": "zadanie-3-opcjonalne-analiza-ui-z-gemini-20-flash",
+      "title": "Zadanie 3: (Opcjonalne) Analiza UI z Gemini 2.0 Flash",
+      "blocks": 4,
+      "order": 12
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:5b1ccbad:43cc23fa",
+      "tokenEstimate": 68,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:43cc23fa:0-1",
+      "tokenEstimate": 68,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:24701484",
+      "tokenEstimate": 172,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:24701484:0-2",
+      "tokenEstimate": 172,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:f4cf4f6f",
+      "tokenEstimate": 210,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:f4cf4f6f:0-10",
+      "tokenEstimate": 336,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:ceaa5b8f",
+      "tokenEstimate": 191,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:ceaa5b8f:0-5",
+      "tokenEstimate": 278,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:ceaa5b8f:4-6",
+      "tokenEstimate": 506,
+      "span": [
+        4,
+        6
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:ceaa5b8f:6-7",
+      "tokenEstimate": 454,
+      "span": [
+        6,
+        7
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:e13e0314",
+      "tokenEstimate": 196,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:e13e0314:0-15",
+      "tokenEstimate": 450,
+      "span": [
+        0,
+        15
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:e13e0314:15-22",
+      "tokenEstimate": 293,
+      "span": [
+        15,
+        22
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:db33f26b",
+      "tokenEstimate": 226,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:db33f26b:0-10",
+      "tokenEstimate": 334,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:9be3a62b",
+      "tokenEstimate": 192,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:9be3a62b:0-2",
+      "tokenEstimate": 192,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:2bfa2087",
+      "tokenEstimate": 173,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:2bfa2087:0-11",
+      "tokenEstimate": 384,
+      "span": [
+        0,
+        11
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:7eabec50",
+      "tokenEstimate": 210,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:7eabec50:0-4",
+      "tokenEstimate": 238,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:dcc8ec86",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:85a40817",
+      "tokenEstimate": 138,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:85a40817:0-2",
+      "tokenEstimate": 138,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:51059fb9",
+      "tokenEstimate": 116,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:51059fb9:0-2",
+      "tokenEstimate": 116,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:5b1ccbad:b204fe9f",
+      "tokenEstimate": 162,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:5b1ccbad:b204fe9f:0-3",
+      "tokenEstimate": 162,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

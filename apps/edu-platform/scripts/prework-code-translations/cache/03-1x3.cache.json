@@ -1,0 +1,76 @@
+{
+  "lessonPrefix": "03-1x3",
+  "updatedAt": "2026-04-29T05:05:01.175Z",
+  "entries": [
+    {
+      "key": "882699691e80f148b2354f7065d93ea36e46b4eb712aa14e5c97dc36b78a57b6",
+      "blockHash": "23af3f255f1b055dd924b215175458d3f89ed299436ae65f86944f21aa15bf42",
+      "promptVersion": "prework-mermaid-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "mermaid",
+      "ordinal": 0,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "flowchart LR\n    A[Nowy problem] --> B{Jak uzywasz AI?}\n    B -->|Delegacja| C[Gotowe rozwiazanie]\n    C --> D[Approve]\n    D --> E[Brak wlasnej hipotezy]\n    D --> F[Brak tarcia bledu]\n    D --> G[Brak aktywnego odtwarzania]\n    E --> H[Slabsze zrozumienie]\n    F --> H\n    G --> H\n    H --> I[Iluzja postepu]\n\n    B -->|Korepetytor| J[Proba zrozumienia]\n    J --> K[Pytania sprawdzajace]\n    K --> L[Wlasne odtworzenie logiki]\n    L --> M[Trwalsza wiedza]\n",
+      "translatedText": "flowchart LR\n    A[New problem] --> B{How do you use AI?}\n    B -->|Delegation| C[Ready-made solution]\n    C --> D[Approve]\n    D --> E[Lack of own hypothesis]\n    D --> F[Lack of error friction]\n    D --> G[Lack of active recall]\n    E --> H[Weaker understanding]\n    F --> H\n    G --> H\n    H --> I[Illusion of progress]\n\n    B -->|Tutor| J[Attempt to understand]\n    J --> K[Verification questions]\n    K --> L[Own reproduction of logic]\n    L --> M[More lasting knowledge]",
+      "status": "translated",
+      "createdAt": "2026-04-29T05:05:01.175Z"
+    },
+    {
+      "key": "d8b98317ea1f7410e3a466659d5895fce0eb42341b40b79c4c0326bf2230f81c",
+      "blockHash": "23af3f255f1b055dd924b215175458d3f89ed299436ae65f86944f21aa15bf42",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "mermaid",
+      "ordinal": 0,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "flowchart LR\n    A[Nowy problem] --> B{Jak uzywasz AI?}\n    B -->|Delegacja| C[Gotowe rozwiazanie]\n    C --> D[Approve]\n    D --> E[Brak wlasnej hipotezy]\n    D --> F[Brak tarcia bledu]\n    D --> G[Brak aktywnego odtwarzania]\n    E --> H[Slabsze zrozumienie]\n    F --> H\n    G --> H\n    H --> I[Iluzja postepu]\n\n    B -->|Korepetytor| J[Proba zrozumienia]\n    J --> K[Pytania sprawdzajace]\n    K --> L[Wlasne odtworzenie logiki]\n    L --> M[Trwalsza wiedza]\n",
+      "translatedText": "flowchart LR\n    A[Nowy problem] --> B{Jak uzywasz AI?}\n    B -->|Delegacja| C[Gotowe rozwiazanie]\n    C --> D[Approve]\n    D --> E[Brak wlasnej hipotezy]\n    D --> F[Brak tarcia bledu]\n    D --> G[Brak aktywnego odtwarzania]\n    E --> H[Slabsze zrozumienie]\n    F --> H\n    G --> H\n    H --> I[Iluzja postepu]\n\n    B -->|Korepetytor| J[Proba zrozumienia]\n    J --> K[Pytania sprawdzajace]\n    K --> L[Wlasne odtworzenie logiki]\n    L --> M[Trwalsza wiedza]\n",
+      "status": "manual-translation-required",
+      "createdAt": "2026-04-28T15:48:26.781Z"
+    },
+    {
+      "key": "57ac6600cb0e95f699375a4469a0d442e7c7843837717af67f683af54a2af1d6",
+      "blockHash": "2b94e8f775b5d23034733e284d9d19619a116ad0803fc5e53d649e6053885317",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 1,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "Uczę się nowego obszaru. Wyjaśniaj to, co właśnie powstało,\nkrok po kroku, jeden koncept naraz.\n\nPo każdym kroku zadaj mi krótkie pytanie sprawdzające.\nNie przechodź dalej, dopóki nie odpowiem poprawnie.\n\nSkupiaj się na \"dlaczego tak\", \"jakie są trade-offy\"\ni \"kiedy to podejście byłoby złym wyborem\".\n",
+      "translatedText": "I'm learning a new area. Explain what has just been created,\nstep by step, one concept at a time.\n\nAfter each step, ask me a short comprehension question.\nDo not proceed until I answer correctly.\n\nFocus on \"why this way\", \"what are the trade-offs\"\nand \"when this approach would be a bad choice\".",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:27.867Z"
+    },
+    {
+      "key": "5f42a4e3a14581c4a254bd40810368ec9a8a2874187e1f85bc5991e0ff8ad722",
+      "blockHash": "c497aca30a9475f5fffeef6b12c493517b3bf4aa1a85e31c55d29d878b5e7cf8",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 2,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "Na podstawie naszej rozmowy wygeneruj fiszki Q/A.\nSkup się na kluczowych konceptach, decyzjach i sygnałach błędu,\nnie na detalach składni.\n\nKażda odpowiedź: maksymalnie 2-3 zdania.\nDodaj pytania, które sprawdzają zastosowanie wiedzy,\na nie tylko definicję.\n",
+      "translatedText": "Based on our conversation, generate Q/A flashcards.\nFocus on key concepts, decisions, and error signals,\nnot on syntax details.\n\nEach answer: maximum 2-3 sentences.\nAdd questions that test knowledge application,\nnot just definitions.",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:28.568Z"
+    },
+    {
+      "key": "78c868d3fd00699e2a139b64cee3e5cba98cac2c6f8dcb8e0ae2dc656980f229",
+      "blockHash": "d2f8ae6eef5138e1929bc3b3cab35c1273d4a104240b09274e87b43a4b176993",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 3,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "Zachowuj się jak korepetytor programowania.\n\nWyjaśniaj krótko, ale konkretnie.\nPokazuj 2 perspektywy albo 2 sensowne alternatywy.\nPo każdym ważnym kroku zadawaj pytanie sprawdzające.\nGdy odpowiem źle, wskaż błąd i zadaj prostsze pytanie.\nNie kończ na gotowej odpowiedzi, jeśli temat jest nowy.\n",
+      "translatedText": "Act like a programming tutor.\n\nExplain briefly, but to the point.\nShow 2 perspectives or 2 sensible alternatives.\nAfter each important step, ask a checking question.\nIf I answer incorrectly, point out the mistake and ask a simpler question.\nDo not end with a ready-made answer if the topic is new.",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:29.458Z"
+    }
+  ]
+}

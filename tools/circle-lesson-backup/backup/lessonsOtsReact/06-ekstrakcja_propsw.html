@@ -1,0 +1,77 @@
+<meta name="lesson-id" content="Ekstrakcja propsów"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/5zsmm93gmqkllaphogv51r7ocg2h" style="width: 100%; max-width: 100%;"><p>Jednym z najużyteczniejszych helperów typu eksportowanych przez bibliotekę React jest ComponentProps. Ten generyk umożliwia ekstrakcję typu propsów z istniejącego komponentu lub elementu HTML. </p><p>Dzięki temu można łatwo ponownie wykorzystać typy oraz zapewnić, że są one aktualizowane dynamicznie, eliminując potrzebę manualnego przypisywania i utrzymywania zduplikowanych typów.</p><h2>Ekstrakcja propsów z ComponentProps</h2><p>Jednym z najużyteczniejszych helperów typu eksportowanych przez bibliotekę React jest ComponentProps. </p><p><em>React.ComponentProps</em> to typ generyczny, które przyjmuje komponent lub nazwę element HTML (jako string) i zwraca typ jego propsów.</p><p>Dzięki temu można łatwo ponownie wykorzystać typy oraz zapewnić, że są one aktualizowane dynamicznie, eliminując potrzebę manualnego przypisywania i utrzymywania zduplikowanych typów.</p><pre><code>import { ComponentProps } from 'react';
+
+type ButtonProps = ComponentProps&lt;'button'&gt;;
+
+const Button = (props: ButtonProps) =&gt; (
+  &lt;button {...props}&gt;Click me&lt;/button&gt;
+);</code></pre><p>W powyższym przykładzie <em>ButtonProps</em> ekstraktuje typy propsów z natywnego elementu HTML <em>&lt;button&gt;</em>. Dzięki temu komponent Button dziedziczy wszystkie standardowe właściwości, takie jak disabled czy onClick, co zwiększa jego elastyczność i odporność na ewentualne zmiany/nowości.</p><h3>Duplikowanie propsów innych komponentów</h3><p>React.ComponentProps umożliwia tworzenie komponentów, które automatycznie dziedziczą typy z innych komponentów lub elementów, co minimalizuje potrzebę ręcznego zarządzania typami.</p><pre><code>import { ComponentProps } from 'react';
+
+const CustomInput = ({ value }: { value: string }) =&gt; &lt;input value={value} /&gt;;
+
+type CustomInputProps = ComponentProps&lt;typeof CustomInput&gt;;
+
+const FormField = (props: CustomInputProps) =&gt; &lt;CustomInput {...props} /&gt;;</code></pre><p>W tym przypadku FormField przyjmuje te same propsy co CustomInput, co zapewnia spójność typów bez konieczności ich ręcznego przepisywania.</p><h3><strong>ComponentPropsWithRef - Typowanie z obsługą Ref</strong></h3><p>ComponentPropsWithRef to rozwinięcie ComponentProps, które pozwala na dodanie obsługi refów. Jest to kluczowe, gdy potrzebujemy przekazać ref, który będzie używany przez komponent. Dzięki temu ref jest traktowany jako integralna część komponentu.</p><pre><code>import { ComponentPropsWithRef } from 'react';
+
+type InputWithRefProps = ComponentPropsWithRef&lt;'input'&gt;; //
+
+const InputWithRef = React.forwardRef&lt;HTMLInputElement, InputWithRefProps&gt;((props, ref) =&gt; (
+  &lt;input ref={ref} {...props} /&gt;
+));</code></pre><p>W powyższym przykładzie komponent <em>InputWithRef</em> korzysta z <em>ComponentPropsWithRef&lt;'input'&gt;</em>, co oznacza, że oprócz wszystkich typowych propsów &lt;input&gt;, obsługuje również ref do tego elementu. Dzięki temu można łatwo zarządzać focusem i innymi właściwościami elementu poprzez ref.</p><h3><strong>React.JSX.IntrinsicElements – Alternatywa dla HTML Elementów</strong></h3><p><em>React.JSX.IntrinsicElements</em> to typ, który podobnie jak <em>ComponentProps</em>, pozwala na odziedziczenie typów natywnych elementów HTML. Różnica polega na tym, że React.JSX.IntrinsicElements jest używany bezpośrednio dla HTML elementów, zapewniając pełne wsparcie dla natywnych atrybutów, ale bez dodatkowych właściwości Reacta (onClick, ref, key itd.). Z tego względu ComponentProps jest preferowany do komponentów React, ale IntrinsicElements zapewnia większą precyzję dla typowego HTML.</p><pre><code>type ButtonIntrinsicProps = React.JSX.IntrinsicElements[`button`];
+
+const CustomButton = (props: ButtonIntrinsicProps) =&gt; {
+  return &lt;button {...props}&gt;Click me&lt;/button&gt;
+};</code></pre><p>W tym przykładzie CustomButton wykorzystuje wszystkie atrybuty natywne button bez dodatkowych atrybutów Reacta. Jest to przydatne w projektach, gdzie typy Reactowe nie są wymagane, a ważne jest trzymanie się ścisłych typów HTML. <strong>W praktyce taki wymóg jest rzadki, stąd rekomendujemy stosowanie ComponentProps</strong> dla zachowania spójności w projekcie.</p><h3>interface extends zamiast operatora &amp; dla złożonych struktur typów</h3><p>Stosowanie operatora przecięcia (&amp;) w aliasach typów może prowadzić do spowolnienia wydajności w dużych projektach - szczególnie gdy używane są dla złożonych typów, które powstają z ComponentProps (więcej szczegółów w <a href="https://github.com/microsoft/TypeScript/wiki/Performance#preferring-interfaces-over-intersections" target="_blank" rel="noopener noreferrer">TypeScript Perfomance Wiki</a>)</p><p>Dlatego zalecamy używanie <em>interface extends</em>, które jest bardziej wydajnym podejściem:</p><pre><code>// Mniej wydajne - złożone przecięcie
+type InputProps = ComponentProps&lt;'input'&gt; &amp; {
+  label: string;
+};
+
+// Bardziej wydajne podejście z `interface extends`
+interface InputProps extends ComponentProps&lt;'input'&gt; {
+  label: string;
+}
+
+const LabeledInput = ({ label, ...props }: InputProps) =&gt; (
+  &lt;label&gt;
+    {label}
+    &lt;input {...props} /&gt;
+  &lt;/label&gt;
+);</code></pre><p>W powyższym przykładzie interface extends umożliwia typowi InputProps rozszerzenie typów propsów elementu input bez negatywnego wpływu na wydajność, co jest bardziej efektywne niż użycie operatora &amp;.</p><h3>Pick i selektywne wybieranie propsów z ComponentProps</h3><p>W sytuacjach, gdy nie potrzebujesz wszystkich propsów komponentu, Pick może pomóc ograniczyć odziedziczone propsy tylko do tych, które są wymagane. Dzięki Pick możemy wybrać tylko konkretne właściwości i uniknąć nadmiarowych typów, co poprawia czytelność i kontrolę.</p><pre><code>import { ComponentProps } from 'react';
+
+type ProductTileProps = {
+  title: string;
+  description?: string;
+  price: number;
+  imageSrc: string;
+  onAddToCart: () =&gt; void;
+};
+
+const ProductTile = ({ title, description, price, imageSrc, onAddToCart }: ProductTileProps) =&gt; (
+  &lt;div&gt;
+    &lt;img src={imageSrc} alt={title} /&gt;
+    &lt;h2&gt;{title}&lt;/h2&gt;
+    {description &amp;&amp; &lt;p&gt;{description}&lt;/p&gt;}
+    &lt;p&gt;Price: ${price}&lt;/p&gt;
+    &lt;button onClick={onAddToCart}&gt;Add to Cart&lt;/button&gt;
+  &lt;/div&gt;
+);
+
+// Zdefiniujemy jednak nowy komponent HighlightedProductTile, który potrzebuje tylko `title` i `description`
+// Za pomocą `Pick` wybieramy tylko te propsy, które są nam potrzebne
+interface HighlightedTileProps extends Pick&lt;ComponentProps&lt;typeof ProductTile&gt;, "title" | "description"&gt; {
+  highlightColor: string;
+}
+
+const HighlightedProductTile = ({ highlightColor, title, description }: HighlightedTileProps) =&gt; (
+  &lt;div style={{ border: `2px solid ${highlightColor}`, padding: '1rem' }}&gt;
+    &lt;h2&gt;{title}&lt;/h2&gt;
+    {description &amp;&amp; &lt;p&gt;{description}&lt;/p&gt;}
+  &lt;/div&gt;
+);
+
+// Użycie komponentu HighlightedProductTile
+const App = () =&gt; (
+  &lt;div&gt;
+    &lt;HighlightedProductTile title="Stylish Shoes" description="Comfortable and stylish" highlightColor="blue" /&gt;
+    {/* `price`, `imageSrc`, i `onAddToCart` są pominięte i nie są wymagane */}
+  &lt;/div&gt;
+);</code></pre><p>W tym przykładzie <em>HighlightedProductTile</em> dziedziczy tylko <em>title</em> i <em>description</em> z <em>ProductTile</em>, dzięki czemu komponent jest bardziej czytelny i lepiej kontrolowany.</p><h2>Podsumowanie lekcji</h2><p>W tej lekcji omówiliśmy różne techniki ekstrakcji propsów:</p><ul><li><p><strong>ComponentProps</strong> jest przydatny do ekstrakcji typów propsów zarówno z elementów HTML, jak i komponentów React, co pozwala na elastyczne i dynamiczne zarządzanie typami. </p></li><li><p><strong>ComponentPropsWithRef</strong> rozszerza te możliwości o obsługę refów, co jest kluczowe dla komponentów wymagających zarządzania fokusem. </p></li><li><p><strong>React.JSX.IntrinsicElements</strong> oferuje alternatywę dla ekstrakcji typów propsów natywnych elementów HTML, choć w praktyce częściej zaleca się stosowanie ComponentProps dla zachowania spójności w projekcie.</p></li><li><p>Dodatkowo, stosowanie<strong> interface extends</strong> zamiast operatora przecięcia (&amp;) pozwala na bardziej wydajne typowanie w złożonych strukturach, a <strong>Pick</strong> umożliwia selektywne wybieranie tylko potrzebnych propsów, co poprawia czytelność i kontrolę nad komponentami.</p></li></ul><p>Opanowanie tych technik znacząco zwiększa elastyczność i utrzymywalność kodu w aplikacjach Reactowych, szczególnie w dużych projektach lub przy pracy z bibliotekami komponentów.</p><h3>Ćwiczenia</h3><ul><li><p><strong>231-custom-button - </strong>Zdefiniuj typowanie propsów dla CustomButton, które pozwoli na przekazanie dowolnych atrybutów elementu HTML button.</p></li></ul></div></body></html>

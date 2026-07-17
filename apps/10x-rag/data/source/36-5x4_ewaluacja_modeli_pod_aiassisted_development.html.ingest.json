@@ -1,0 +1,404 @@
+{
+  "lessonId": "[5x4] Ewaluacja modeli pod AI-Assisted Development",
+  "file": "36-5x4_ewaluacja_modeli_pod_aiassisted_development.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 3,
+      "order": 1
+    },
+    {
+      "slug": "evals-czyli-ewaluacja-modeli-ai",
+      "title": "Evals, czyli ewaluacja modeli AI",
+      "blocks": 7,
+      "order": 2
+    },
+    {
+      "slug": "wariantowanie-promptow",
+      "title": "Wariantowanie promptów",
+      "blocks": 14,
+      "order": 3
+    },
+    {
+      "slug": "evals-vs-ai-assisted-development",
+      "title": "Evals vs. AI-Assisted Development",
+      "blocks": 5,
+      "order": 4
+    },
+    {
+      "slug": "promptfoo-w-akcji",
+      "title": "Promptfoo w akcji",
+      "blocks": 7,
+      "order": 5
+    },
+    {
+      "slug": "pierwsze-kroki",
+      "title": "Pierwsze kroki",
+      "blocks": 15,
+      "order": 6
+    },
+    {
+      "slug": "rozszerzanie-mozliwosci-promptfoo",
+      "title": "Rozszerzanie możliwości promptfoo",
+      "blocks": 5,
+      "order": 7
+    },
+    {
+      "slug": "niestandardowy-stack-w-promptfoo",
+      "title": "Niestandardowy stack w promptfoo",
+      "blocks": 10,
+      "order": 8
+    },
+    {
+      "slug": "cache-wynikow-testow",
+      "title": "Cache wyników testów",
+      "blocks": 6,
+      "order": 9
+    },
+    {
+      "slug": "metodyczne-wdrazanie-evali",
+      "title": "Metodyczne wdrażanie evali",
+      "blocks": 1,
+      "order": 10
+    },
+    {
+      "slug": "trzy-obszary-oceny-ai",
+      "title": "Trzy obszary oceny AI",
+      "blocks": 6,
+      "order": 11
+    },
+    {
+      "slug": "przykad",
+      "title": "Przykład:",
+      "blocks": 1,
+      "order": 12
+    },
+    {
+      "slug": "w-kierunku-sandboxa-duzej-skali",
+      "title": "W kierunku sandboxa dużej skali",
+      "blocks": 6,
+      "order": 13
+    },
+    {
+      "slug": "evale-modeli-vs-praktyczne-testy-ai-toolingu",
+      "title": "Evale modeli vs. praktyczne testy AI-toolingu",
+      "blocks": 9,
+      "order": 14
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 4,
+      "order": 15
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 0,
+      "order": 16
+    },
+    {
+      "slug": "zadanie-1-wykonaj-pierwszy-test-promptfoo",
+      "title": "Zadanie 1: Wykonaj pierwszy test promptfoo",
+      "blocks": 5,
+      "order": 17
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:2a29c1f9:43cc23fa",
+      "tokenEstimate": 68,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:43cc23fa:0-1",
+      "tokenEstimate": 68,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:24701484",
+      "tokenEstimate": 193,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:24701484:0-2",
+      "tokenEstimate": 193,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:2faee105",
+      "tokenEstimate": 187,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:2faee105:0-6",
+      "tokenEstimate": 227,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:40389067",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:40389067:0-13",
+      "tokenEstimate": 311,
+      "span": [
+        0,
+        13
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:e8f2e34a",
+      "tokenEstimate": 188,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:e8f2e34a:0-4",
+      "tokenEstimate": 263,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:81919cd9",
+      "tokenEstimate": 179,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:81919cd9:0-6",
+      "tokenEstimate": 245,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:61b6976d",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:61b6976d:0-12",
+      "tokenEstimate": 370,
+      "span": [
+        0,
+        12
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:61b6976d:11-14",
+      "tokenEstimate": 202,
+      "span": [
+        11,
+        14
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:beffd777",
+      "tokenEstimate": 208,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:beffd777:0-4",
+      "tokenEstimate": 310,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:d1fcde03",
+      "tokenEstimate": 217,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:d1fcde03:0-9",
+      "tokenEstimate": 275,
+      "span": [
+        0,
+        9
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:5e5ddd84",
+      "tokenEstimate": 172,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:5e5ddd84:0-5",
+      "tokenEstimate": 172,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:d06a2e90",
+      "tokenEstimate": 106,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:d06a2e90:0-0",
+      "tokenEstimate": 106,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:92d1d502",
+      "tokenEstimate": 186,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:92d1d502:0-5",
+      "tokenEstimate": 256,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:7ae296d5",
+      "tokenEstimate": 72,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:7ae296d5:0-0",
+      "tokenEstimate": 148,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:5edb4645",
+      "tokenEstimate": 110,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:5edb4645:0-5",
+      "tokenEstimate": 358,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:7187d130",
+      "tokenEstimate": 176,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:7187d130:0-8",
+      "tokenEstimate": 410,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:7eabec50",
+      "tokenEstimate": 208,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:7eabec50:0-3",
+      "tokenEstimate": 299,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:dcc8ec86",
+      "tokenEstimate": 72,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:2a29c1f9:9ca5e8d9",
+      "tokenEstimate": 156,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:2a29c1f9:9ca5e8d9:0-4",
+      "tokenEstimate": 158,
+      "span": [
+        0,
+        4
+      ]
+    }
+  ]
+}

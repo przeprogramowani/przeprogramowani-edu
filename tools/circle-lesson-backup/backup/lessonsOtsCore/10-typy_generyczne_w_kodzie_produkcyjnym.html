@@ -1,0 +1,398 @@
+<meta name="lesson-id" content="Typy generyczne w kodzie produkcyjnym"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>W tej lekcji poznasz zestaw dobrych praktyk związanych ze stosowaniem generyków na produkcji.</p><p>Pokażemy ci również jeden z najbardziej popularnych wzorców zarządzania danymi, który z łatwością zrealizujesz w oparciu o język taki jak TypeScript.</p><p>Zaczynajmy!</p><h3>Wzorzec repozytorium</h3><img loading="lazy" src="https://assets-v2.circle.so/yj9vdezuwqauu189k2mo09tm57oa" style="width: 100%; max-width: 100%;"><p>Jedno z najczęściej spotykanych zastosowań generyków wiąże się z wzorcem Repozytorium.</p><p>Wzorzec Repozytorium (ang. Repository Pattern) to wzorzec projektowy, który oddziela warstwę dostępu do danych (Data Access) od logiki biznesowej (App). Zamiast bezpośrednio korzystać z bazy danych w logice aplikacji (i za każdym razem kontrolować zarządzanie połączeniami, budowanie zapytań czy sprawdzać stan bazy), używamy specjalistycznych modułów (repozytoriów), które obsługują operacje na danych – np. pobieranie, zapisywanie, usuwanie czy aktualizowanie danych. Dzięki temu aplikacja staje się bardziej modularna, łatwiejsza do testowania oraz utrzymania.</p><p>Zauważmy, że komunikacja z bazą będzie wyglądać tak samo niezależnie od tego, którą kolumnę akurat obsługujemy. Wykonywane zapytania będą się&nbsp;zwykle różnić listą parametrów oraz nazwą tabeli, przy czym ogólny kształt zapytań będzie bardzo podobny:</p><pre><code>-- Wyszukiwanie po id
+SELECT id, name, age FROM users WHERE id = 123
+SELECT id, price, variant FROM products WHERE id = 432
+
+-- Usuwanie po id
+DELETE FROM users WHERE id = 123
+DELETE FROM products WHERE id = 432</code></pre><p>Ta prawidłowość wpisuje się w nasze rekomendacje dotyczące generyków - jeśli poszczególne operacje różnią się&nbsp;wyłącznie typem danych, prawdopodobnie możemy przeprowadzić dodatkową refaktoryzację w kierunku typów generycznych.</p><h3>Punkt startowy</h3><p>Naszą refaktoryzację przeprowadzimy na kodzie JavaScript składającym się z trzech elementów:</p><ul><li><p>db.js - moduł udostępniający połączenie z bazą</p></li><li><p>data-access.js - moduł wystawiający operacje na danych</p></li><li><p>index.js - docelowa logika aplikacji</p></li></ul><p>Całość prezentuje się następująco (korzystamy z Node.JS, bazy PostgreSQL i biblioteki <a href="https://www.npmjs.com/package/pg" target="_blank" rel="noopener noreferrer">pg</a>):</p><pre><code>// db.js
+import pg from "pg";
+const {Pool} = pg;
+
+const connectionString = "postgres://postgres:postgres@localhost:5432/postgres";
+
+// 👉 Obiekt pool działa jak "brama do bazy danych" - pozwala na jednorazowe
+// nawiązanie połączenia, wykonanie serii niezbędnych zapytań i zamknięcie dostępu.
+const pool = new Pool({connectionString});
+
+export default pool;</code></pre><pre><code>// data-access.js
+import pool from "./db.js";
+
+const db = {
+  getUserById: async (id) =&gt; {
+    const query = "SELECT * FROM users WHERE id = $1";
+    const values = [id];
+    const res = await pool.query(query, values);
+    return res.rows[0];
+  },
+  getAllUsers: async () =&gt; {
+    const query = "SELECT * FROM users";
+    const res = await pool.query(query);
+    return res.rows;
+  },
+  insertUser: async (user) =&gt; {
+    const {name, email} = user;
+    const query = "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *";
+    const values = [name, email];
+    const res = await pool.query(query, values);
+    return res.rows[0];
+  },
+  getProductById: async (id) =&gt; {
+    const query = "SELECT * FROM products WHERE id = $1";
+    const values = [id];
+    const res = await pool.query(query, values);
+    return res.rows[0];
+  },
+  getAllProducts: async () =&gt; {
+    const query = "SELECT * FROM products";
+    const res = await pool.query(query);
+    return res.rows;
+  },
+  insertProduct: async (product) =&gt; {
+    const {name, price} = product;
+    const query =
+      "INSERT INTO products (name, price) VALUES ($1, $2) RETURNING *";
+    const values = [name, price];
+    const res = await pool.query(query, values);
+    return res.rows[0];
+  },
+};
+
+// 👉 Funkcja pomocnicza, która pozwoli nam zrealizować wiele operacji na jednej puli połączeń
+export const useDb = async (callback) =&gt; {
+  try {
+    await callback(db);
+  } catch (error) {
+    console.error("Database operation failed:", error);
+    throw error;
+  } finally {
+    // 👉 Po wykonaniu wszystkich operacji zamykamy połączenie z bazą
+    await pool.end();
+  }
+};</code></pre><pre><code>// index.js
+import {useDb} from "./data-access.js";
+
+(async () =&gt; {
+  // 👉 Obiekt "db" reprezentuje nasz moduł data-access i dostępne tam funkcje
+  await useDb(async (db) =&gt; {
+    try {
+      const insertedUser = await db.insertUser({
+        name: "Jane Doe",
+        email: "jane.doe@example.com",
+      });
+      console.log("Inserted User:", insertedUser);
+
+      const insertedProduct = await db.insertProduct({
+        name: "Smartphone",
+        price: 699.99,
+      });
+      console.log("Inserted Product:", insertedProduct);
+    } catch (error) {
+      console.error("Error during database operations:", error);
+    }
+  });
+})();
+</code></pre><p>Na potrzeby tej lekcji moduły <em>db.js</em> oraz <em>index.js</em> pozostawimy bez zmian - refaktoryzacja będzie przede wszystkim dotyczyć samej warstwy dostępu do danych, gdzie obecnie mieszają się&nbsp;metody z domeny użytkowników i produktów, a do tego same metody wyglądają niemal identycznie dla różnych typów obiektów.</p><h3>Refaktoryzacja z użyciem TypeScript</h3><p>W pierwszym kroku zajmiemy się rozdzieleniem złożonego modułu <em>data-access.js</em> na dwa repozytoria:</p><ul><li><p>UserRepository - zarządzanie użytkownikami</p></li><li><p>ProductsRepository - zarządzanie produktami </p></li></ul><p>W warstwie dostępu do danych (data-access.ts) wprowadzamy dedykowane repozytorium które będzie w sobie zawierać wszystkie dostępne operacje na kolumnie <em>users</em>:</p><pre><code>// data-access.ts
+import {Pool} from "pg";
+import pool from "./db";
+
+type User = {
+  id?: number;
+  name: string;
+  email: string;
+};
+
+export class UserRepository {
+  private pool: Pool;
+
+  constructor(pool: Pool) {
+    this.pool = pool;
+  }
+
+  async getUserById(id: number) {
+    const query = "SELECT * FROM users WHERE id = $1";
+    const values = [id];
+    const res = await this.pool.query(query, values);
+    return res.rows[0];
+  }
+
+  async getAllUsers() {
+    const query = "SELECT * FROM users";
+    const res = await this.pool.query(query);
+    return res.rows;
+  }
+
+  async insertUser(user: User) {
+    const {name, email} = user;
+    const query = "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *";
+    const values = [name, email];
+    const res = await this.pool.query(query, values);
+    return res.rows[0];
+  }
+}</code></pre><p>Poniżej tworzymy odpowiednik dla produktów - zwróć uwagę na lustrzane odbicie dostępnych funkcji:</p><pre><code>// data-access.ts (Ciąg dalszy)
+type Product = {
+  id?: number;
+  name: string;
+  price: number;
+};
+
+export class ProductRepository {
+  private pool: Pool;
+
+  constructor(pool: Pool) {
+    this.pool = pool;
+  }
+
+  async getProductById(id: number) {
+    const query = "SELECT * FROM products WHERE id = $1";
+    const values = [id];
+    const res = await this.pool.query(query, values);
+    return res.rows[0];
+  }
+
+  async getAllProducts() {
+    const query = "SELECT * FROM products";
+    const res = await this.pool.query(query);
+    return res.rows;
+  }
+
+  async insertProduct(product: Product) {
+    const {name, price} = product;
+    const query =
+      "INSERT INTO products (name, price) VALUES ($1, $2) RETURNING *";
+    const values = [name, price];
+    const res = await this.pool.query(query, values);
+    return res.rows[0];
+  }
+}</code></pre><p>Na koniec pozostaje nam rozszerzyć funkcję&nbsp;<em>useDb</em> o jawne typowanie i możliwość posługiwania się połączeniem do bazy (pool):</p><pre><code>export async function useDb(callback: (pool: Pool) =&gt; Promise&lt;void&gt;) {
+  try {
+    await callback(pool);
+  } catch (error) {
+    console.error("Database operation failed:", error);
+    throw error;
+  } finally {
+    await pool.end();
+  }
+}</code></pre><p>W docelowej aplikacji możemy teraz zaimportować wybrane repozytorium i przy pomocy funkcji useDb zrealizować na istniejącym połączeniu z bazą wymagane operacje:</p><pre><code>// index.ts
+import {UserRepository, useDb} from "./data-access";
+
+(async () =&gt; {
+  await useDb(async (db) =&gt; {
+    try {
+      // 👉 Nowość - praca z dedykowanym repozytorium (przekazujemy do niego połączenie)
+      const userRepo = new UserRepository(db);
+
+      const insertedUser = await userRepo.insertUser({
+        name: "Jane Doe",
+        email: "jane.doe@example.com",
+      });
+      console.log("Inserted User:", insertedUser);
+
+      // Pozostałe operacje na danych
+    } catch (error) {
+      console.error("Error during database operations:", error);
+    }
+  });
+})();</code></pre><p>Pierwszy krok refaktoryzacji poskutkował rozdzieleniem “<a href="https://en.wikipedia.org/wiki/God_object" target="_blank" rel="noopener noreferrer">god objectu</a>” na dwa dedykowane repozytoria.</p><p>Dodatkowo, wprowadziliśmy jawne typowanie poszczególnych elementów naszej aplikacji, dzięki czemu zyskujemy opiekę kompilatora TypeScript nad wykonywanymi operacjami.</p><p>Zobaczmy teraz co zyskamy (i jakie będą tego konsekwencje) wprowadzając jeszcze jedną optymalizację.</p><h3>Refaktoryzacja z generycznym repozytorium</h3><p>Wprowadźmy teraz generyczne repozytorium, które będzie zawierać&nbsp;zestaw wspieranych przez nas operacji na poszczególnych kolumnach. O tym, jakie to kolumny i jakie typy będą przekazywane, będą decydować konsumenci repozytorium:</p><pre><code>// repository.ts
+import {Pool} from "pg";
+import {Identifiable} from "./models";
+
+export class Repository&lt;T extends Identifiable&gt; {
+  private pool: Pool;
+  private tableName: string;
+
+  constructor(pool: Pool, tableName: string) {
+    this.pool = pool;
+    this.tableName = tableName;
+  }
+
+  async getById(id: number): Promise&lt;T&gt; {
+    const query = `SELECT * FROM ${this.tableName} WHERE id = $1`;
+    const values = [id];
+    const res = await this.pool.query&lt;T&gt;(query, values);
+    return res.rows[0] as T;
+  }
+
+  async getAll(): Promise&lt;T[]&gt; {
+    const query = `SELECT * FROM ${this.tableName}`;
+    const res = await this.pool.query&lt;T&gt;(query);
+    return res.rows;
+  }
+
+  async insert(item: T): Promise&lt;T&gt; {
+    const columns = Object.keys(item).filter((key) =&gt; key !== "id");
+    const values = columns.map((_, i) =&gt; `$${i + 1}`);
+    const placeholders = columns.map((col) =&gt; (item as any)[col]);
+
+    // Np. INSERT INTO users (id, name, email) VALUES $1, $2, $3
+    const query = `
+      INSERT INTO ${this.tableName} (${columns.join(", ")})
+      VALUES (${values.join(", ")})
+      RETURNING *
+    `;
+
+    const res = await this.pool.query&lt;T&gt;(query, placeholders);
+    return res.rows[0];
+  }
+}</code></pre><p>Repozytorium generyczne będzie reprezentować zestaw operacji na określonej kolumnie. Aby kod był naprawdę uniwersalny, nazwy kolumn musimy przekazywać w konstruktorze, obok zainicjalizowanego połączenia z bazą.</p><p>Jeśli wkleiłeś ten kod do swojego edytora to widzisz, że czegoś tutaj brakuje. TypeScript wskazuje, że parametr generyczny nie jest sprecyzowany w wystarczający sposób, co psuje typowanie na przestrzeni całego repozytorium. Potrzebujemy ograniczenia na parametr naszego typu T:</p><pre><code>// repository.ts
+import {Identifiable} from "./models";
+
+export class Repository&lt;T extends Identifiable&gt; {
+// ...</code></pre><p>Poniższy interfejs <em>Identifiable</em> wymusi pracę z obiektami, a dodatkowo pozwoli nam rozszerzyć istniejące typy o spójny identyfikator (to jedna z dostępnych opcji):</p><pre><code>// models.ts
+export interface Identifiable {
+  id?: number;
+}
+
+export interface User extends Identifiable {
+  name: string;
+  email: string;
+}
+
+export interface Product extends Identifiable {
+  name: string;
+  price: number;
+}</code></pre><p>Alternatywnie, moglibyśmy wykorzystać typ <em>QueryResultRow </em>z biblioteki pg, który reprezentuje uniwersalny wynik operacji na bazie - na końcu musielibyśmy go rzutować na nasz model danych.</p><pre><code>// repository.ts
+import {Pool, QueryResultRow} from "pg";
+
+export class Repository&lt;T extends QueryResultRow&gt; {
+
+// node_modules/@types/pg/index.d.ts
+export interface QueryResultRow {
+    [column: string]: any;
+}</code></pre><p>Mając wprowadzone generyczne repozytorium możemy teraz zbudować dedykowany moduł, którym będzie się posługiwał użytkownik końcowy. Będzie on zawierał konkretne implementacje dla wspieranych typów danych oraz kolumn, które mają być z nimi połączone:</p><pre><code>// data-access.ts
+import pool from "./db";
+import {Product, User} from "./models";
+import {Repository} from "./repository";
+
+class DbContext {
+  users: Repository&lt;User&gt;;
+  products: Repository&lt;Product&gt;;
+
+  constructor() {
+    this.users = new Repository&lt;User&gt;(pool, "users");
+    this.products = new Repository&lt;Product&gt;(pool, "products");
+  }
+}
+
+const ctx = new DbContext();
+
+export async function useDb(callback: (db: DbContext) =&gt; Promise&lt;void&gt;) {
+  try {
+    await callback(ctx);
+  } catch (error) {
+    console.error("Database operation failed:", error);
+    throw error;
+  } finally {
+    await pool.end();
+  }
+}</code></pre><p>Nowa klasa <em>DbContext</em> jest opcjonalna, jednak pozwala uniknąć ręcznego zarządzania repozytoriami w docelowym kodzie aplikacji. Zamiast tego otrzymujemy wygodny sposób dostępu do danych, gdzie na obiekcie <em>db</em> mamy od razu dostęp do poszczególnych kolumn i wspieranych operacji:</p><pre><code>// index.ts
+import {useDb} from "./data-access";
+
+(async () =&gt; {
+  await useDb(async (db) =&gt; {
+    const users = await db.users.getAll();
+    console.log(users);
+
+    const products = await db.products.getAll();
+    console.log(products);
+
+    // ...
+  });
+})();</code></pre><h3>Generyczne repozytorium - mocne i słabe strony</h3><p>Wzorzec repozytorium, a także jego wariant generyczny, to przydatne narzędzia do rozwiązywania określonego typu problemów (utrudnione i rozproszone zarządzanie danymi, realizowane przez powtarzający się kod i trudne do zlokalizowania bugi). </p><p>W klasycznych aplikacjach typu CRUD, gdzie dla użytkownika końcowego wystawiamy tabele i formularze do modyfikacji danych, generyczne repozytorium sprawdzi się znakomicie. To jednolity interfejs do wszystkich elementów bazy danych, który pozwala łatwo i szybko wprowadzać nowe modele, a także unikać powielania logiki związanej z zarządzaniem danymi.</p><p>W tzw. “systemach głębokich”, gdzie procesowanie danych odbywa się w tle, bez wiedzy użytkownika, a także powoduje wiele efektów ubocznych, repozytorium może być ograniczeniem. Jeśli dodatkowo realizowane operacje wymagają kontekstu wielu tabel, warto rozważyć alternatywy (np. <a href="https://bigmachine.io/2014/03/04/repositories-and-unitofwork-are-not-a-good-idea/" target="_blank" rel="noopener noreferrer">Commands &amp; Queries</a>) - wszystko jak zwykle zależy od problemu, który rozwiązujesz. Tym niemniej, repozytorium jako koncept zdecydowanie warto poznać, a rozszerzanie jego możliwości przez generyki to rozwijające ćwiczenie dla każdego pasjonata TypeScriptu.</p><h2>Dobre praktyki w posługiwaniu się generykami</h2><p>Typy generyczne to naprawdę potężny mechanizm, dzięki któremu wprowadzisz do swojego kodu więcej reużywalnych, modularnych struktur i algorytmów. Warto jednak korzystać z nich świadomie, aby uniknąć dodatkowych kosztów utrzymania projektu.</p><h3>Stosuj czytelne nazewnictwo</h3><p>Wcześniej wspomnieliśmy, że zgodnie z konwencją typy generyczne określamy pojedynczymi literami - <em>T, K, V</em>, itd.</p><p>Nic nie stoi jednak na przeszkodzie, aby w przypadku bardziej złożonych typów ich nazwa oddawała intencję programisty. Wiele projektów korzysta z takiej możliwości, co potwierdza przegląd rozwiązań dostępnych na GitHubie. Poniżej przykład z biblioteki <strong>react-redux</strong>:</p><pre><code>export interface UseStore&lt;StoreType extends Store&gt; { ... }
+
+// Tożsame z:
+
+export interface UseStore&lt;T extends Store&gt; { ... }</code></pre><p>A to przykład z biblioteki <strong>Drizzle ORM</strong>:</p><pre><code>export interface ColumnBaseConfig&lt;
+	TDataType extends ColumnDataType,
+	TColumnType extends string
+&gt; { ... }
+
+// Tożsame z:
+
+export interface ColumnBaseConfig&lt;
+	T extends ColumnDataType,
+	K extends string
+&gt; { ... }</code></pre><p>Podobnie wygląda to w bibliotece <strong>react-query</strong>, gdzie dodatkowo widzimy <strong>parametry domyślne dla typów generycznych</strong>:</p><pre><code>export function useQuery&lt;
+  TQueryFnData = unknown,
+  TError = DefaultError,
+  TData = TQueryFnData,
+  TQueryKey extends QueryKey = QueryKey,
+&gt; { ... }
+
+// Tożsame z:
+
+export function useQuery&lt;
+  T = unknown,
+  K = DefaultError,
+  V = TQueryFnData,
+  Z extends QueryKey = QueryKey,
+&gt; { ... }</code></pre><p>Na którą wersję nazewnictwa powinieneś się decydować? Tutaj znowu warto pomyśleć o perspektywie odbiorcy danego fragmentu kodu - jeśli tworzysz krótkie funkcje, typy lub klasy, to jednoliterowe typy generyczne są akceptowalne. Jeśli złożoność rośnie, a typy mają oddawać konkretne scenariusze lub przypadki użycia, wprowadzaj pełne nazewnictwo.</p><h3>Unikaj nadmiarowego stosowania generyków</h3><p>Zdobywanie nowej wiedzy w programowaniu często wiąże się z tym, że staramy się ją zastosować w pierwszym możliwym momencie. Przykładowo, możemy wprowadzić do naszego kodu “uniwersalną” funkcję do procesowania wszystkich dostępnych typów. W praktyce okaże się, że na poziomie implementacji pracujemy wyłącznie z jednym typem.</p><p>Może to być typ string, tak jak w funkcji poniżej, a może to być każdy inny przypadek, gdzie wprowadzony typ generyczny natychmiast opakowujemy wyrażeniami warunkowymi, które ograniczają&nbsp;realne pole manewru:</p><pre><code>function processValue&lt;T&gt;(value: T): string {
+  if (typeof value === "string") {
+    return value.toUpperCase();
+  } else {
+    throw new Error("This function only supports strings");
+  }
+}</code></pre><p>Tutaj prawdopodobnie wystarczy nam zwykła funkcja z jednym typem:</p><pre><code>function stringToUpper(value: string): string {
+  return value.toUpperCase();
+}</code></pre><p>Czasami stosowanie generyków jest nadmiarowe, a złożoność funkcji niepotrzebnie wzrasta.</p><p>Aby unikać takich nadmiernie złożonych konstrukcji, autorzy TypeScriptu zalecają stosowanie generyków tam, gdzie relacje i wiązania pomiędzy typami stają się łatwo zauważalne (np. dotyczą relacji parametrów funkcji i typu na wyjściu):</p><blockquote><p>Type parameters are for <em>relating the types of multiple values</em>. If a type parameter is only used once in the function signature, it’s not relating anything.</p></blockquote><p>Jeśli generyk ma zastąpić wyłącznie jeden typ w jednym miejscu (np. na poziomie funkcji), zastanów się nad alternatywnymi rozwiązaniami.</p><h3>Zwracaj uwagę na relacje miedzy typami</h3><p>Relacje pomiędzy typami to jeden z najbardziej powszechnych scenariuszy stosowania generyków, który dodatkowo wnosi realne korzyści i okazję do tworzenia prawdziwie reużywalnych narzędzi. </p><p>Jakie scenariusze mogą bazować na takich relacjach? Wyobraźmy sobie narzędzie do podglądu danych tabelarycznych (np. Google Sheets lub Airtable), gdzie na start wczytujesz wszystkie kolumny, ale na skutek filtrowania, użytkownik powinien zobaczyć wyłącznie podzbiór kolumn (zestaw pól obiektu).</p><img loading="lazy" src="https://assets-v2.circle.so/mn3rq6s2a9yzeerxafy6c6nuh0o6" style="width: 100%; max-width: 100%;"><p>Na początku zrealizujmy to bez generyków - w naszym kodzie mamy funkcję <em>pickColumns</em> która obsługuje relację typu <em>User</em> do typu zwracanego z kolumnami <em>name i email</em> (mapuje jeden typ na drugi):</p><pre><code>type User = {
+  id: number;
+  name: string;
+  email: string;
+  age: number;
+};
+
+// user (User) -&gt; result (name, email)
+function pickColumns(users: User[]): { name: string; email: string }[] {
+  return users.map(user =&gt; ({
+    name: user.name,
+    email: user.email
+  }));
+}
+
+// Przykład użycia:
+const users: User[] = [
+  { id: 1, name: "Alice", email: "alice@example.com", age: 25 },
+  { id: 2, name: "Bob", email: "bob@example.com", age: 30 }
+];
+
+console.log(pickColumns(users));
+// Output: [{ name: "Alice", email: "alice@example.com" }, { name: "Bob", email: "bob@example.com" }]</code></pre><p>Kiedy zauważymy taką relację, to możemy ją uogólnić z wykorzystaniem generyków:</p><ul><li><p>Typ User zamienimy na parametr <em>TBase</em></p></li><li><p>Typ <em>TColumns posłuży </em>do określenia podzbioru wybieranych pól (wcześniej: literał obiektu)</p></li></ul><pre><code>type TDetails = { name: string; email: string };
+
+function mapItems&lt;TBase extends TColumns&gt;(items: TBase[]): TColumns[] {
+  return items.map(item =&gt; ({
+    name: item.name,
+    email: item.email
+  }));
+}</code></pre><p>Zauważ, od teraz nasza funkcja <em>mapItems </em>może być stosowana do typów innych niż <em>User - </em>tak długo, jak typ bazowy ma pola name oraz email, możemy go wykorzystywać na wejściu.</p><p>Co ciekawe, w refaktoryzacji możemy iść o krok dalej i sprawić, aby dowolne dwa typy współpracowały ze sobą w podobny sposób. Wykorzystamy do tego dwie poznane wcześnie konstrukcje:</p><ul><li><p><em>extends keyof </em>- do nadania właściwego ograniczenia na typ K</p></li><li><p>Pick&lt;T, K&gt; - do określenia typu obiektu zwracanego</p></li></ul><pre><code>function mapItems&lt;T, K extends keyof T&gt;(items: T[], keys: K[]): Pick&lt;T, K&gt;[] {
+  return items.map((item) =&gt; {
+    const mappedItem = {} as Pick&lt;T, K&gt;;
+    keys.forEach((key) =&gt; {
+      mappedItem[key] = item[key];
+    });
+    return mappedItem;
+  });
+}</code></pre><p>Nasza generyczna funkcja spełnia rekomendację związaną z relacjami - <strong>wiąże ona typy T i K</strong> w taki sposób, że z jednej strony możemy je podmieniać dynamicznie, a z drugiej wciąż muszą od siebie zależeć (jeden musi być podzbiorem drugiego). W efekcie uzyskujemy:</p><pre><code>type User = {
+  id: number;
+  name: string;
+  email: string;
+  age: number;
+};
+
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+};
+
+// Przykład użycia:
+const users: User[] = [
+  {id: 1, name: "Alice", email: "alice@example.com", age: 25},
+  {id: 2, name: "Bob", email: "bob@example.com", age: 30},
+];
+
+const products: Product[] = [
+  {id: 1, name: "Product 1", price: 10},
+  {id: 2, name: "Product 2", price: 20},
+];
+
+console.log(mapItems(users, ["name"])); // [{name: "Alice"}, {name: "Bob"}]
+console.log(mapItems(products, ["price"])); // [{price: 10}, {price: 20}]</code></pre><h2>Podsumowanie</h2><p>W tej lekcji omówiliśmy praktyczne zastosowanie generyków w TypeScript, koncentrując się na wzorcu Repozytorium oraz jego generycznej implementacji - wiesz już kiedy warto go stosować, a kiedy unikać. Podzieliliśmy się także dobrymi praktykami, które sprawiają, że wykorzystywanie generyków nie jest nadmiarowe i prowadzi do rzeczywistego podniesienia jakości całego projektu.</p><p>W następnej lekcji zagłębimy się w <strong>zaawansowaną logikę typów</strong>, gdzie odkryjesz, jak używać złożonych elementów TypeScript, takich jak typy mapowane, warunkowe oraz rozwiązywane dynamicznie poprzez mechanizm inferencji. Zapraszamy!</p><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>341-generics-repository - </strong>Twoim zadaniem jest zrefaktoryzowanie istniejącego kodu: UserRepository i ProductRepository, tworząc generyczne repozytorium Repository&lt;T&gt;. Nowe repozytorium powinno obsługiwać operacje CRUD dla dowolnego typu danych i tabeli w bazie danych. Podstawą zaliczenia jest obsługa: getById, getAll, insert. Podczas rozwiązywania zadania nie powinieneś modyfikować pliku DataAccess.ts (mockuje on bazę danych).</p></li></ol><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

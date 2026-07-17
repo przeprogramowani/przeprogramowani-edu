@@ -1,0 +1,72 @@
+{
+  "stylePreset": "dark-cosmic-10xdevs",
+  "referenceDirectory": "/Users/admin/Downloads/referance-images",
+  "sharedPromptPrefixPl": "Ciemne granatowo-fioletowe tło kosmiczne, mocne krawędziowe światło, neonowe poświaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa głębia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu.",
+  "lightingPattern": [
+    "mocny rim light w chłodnym błękicie i fiolecie",
+    "ciepłe pomarańczowe akcenty tylko jako kontrapunkt i punkt skupienia",
+    "wysoki kontrast z wyraźnie odseparowanym pierwszym i drugim planem"
+  ],
+  "compositionPattern": [
+    "centralny bohater lub główny obiekt otoczony orbitą, ramą albo półkolistą maską",
+    "warstwowe tło z głębią: dalszy kosmos, środkowe panele lub konstrukcje, wyraźny foreground",
+    "dla infografik: czyste modułowe panele z dużymi blokami informacji zamiast drobnych tabel"
+  ],
+  "textureAndDetailExpectations": [
+    "lekko malarska, premium tekstura zamiast fotorealizmu stockowego",
+    "gładkie powierzchnie z subtelnym glow i bez nadmiaru szumu",
+    "czytelne kontury i ograniczona liczba elementów, aby obraz działał w kolumnie ebooka"
+  ],
+  "forbiddenTraits": [
+    "flat stock-photo look",
+    "generyczny clipart lub office illustration",
+    "jasne białe tło dominujące nad kompozycją",
+    "losowe logo, watermark, branding lub angielski filler text",
+    "przeładowane dashboardy z mikrotekstem nieczytelnym w wąskiej kolumnie",
+    "agresywny cyberpunk i neonowy chaos bez edukacyjnej czytelności"
+  ],
+  "references": [
+    {
+      "id": "698eee61bd0cba7404e03d70_hero-image-webp.webp",
+      "role": "hero framing",
+      "lightingNotes": "niebiesko-fioletowa poświata z ciepłym pomarańczowym halo za głównymi postaciami",
+      "compositionNotes": "mocny centralny fokus, owalna świetlna rama, warstwowanie pierwszego i drugiego planu",
+      "textureNotes": "wysoki kontrast, gładkie premium wykończenie, bez płaskiego tła"
+    },
+    {
+      "id": "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+      "role": "process storytelling",
+      "lightingNotes": "nocna scena z zimnym światłem i małymi ciepłymi źródłami akcentującymi ważne punkty",
+      "compositionNotes": "postać obserwująca złożony proces lub konstrukcję, wyraźny kierunek wzroku",
+      "textureNotes": "czytelne bryły i przestrzeń, dobre poczucie skali"
+    },
+    {
+      "id": "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+      "role": "ui panel language",
+      "lightingNotes": "chłodne niebiesko-fioletowe światło z pomarańczowymi akcentami na panelach",
+      "compositionNotes": "kokpit lub ramy interfejsu wspierające główny temat, nie dominujące nad nim",
+      "textureNotes": "czytelne panele sci-fi, kontrolowana liczba etykiet, brak chaosu"
+    },
+    {
+      "id": "69930442ade6530f1db4282c_mvp-image-v2-webp.webp",
+      "role": "central subject",
+      "lightingNotes": "główny obiekt wyizolowany przez halo i kontrastowe oświetlenie",
+      "compositionNotes": "jeden silny centralny motyw z zapleczem budowy lub tworzenia",
+      "textureNotes": "prosta sylwetka, wyraźne kontury, mało rozpraszaczy"
+    },
+    {
+      "id": "6993045f4289b5784c42764e_legacy-image-v2-webp.webp",
+      "role": "motion and trajectory",
+      "lightingNotes": "jasne ślady ruchu na ciemnym tle podkreślające kierunek i wybór ścieżki",
+      "compositionNotes": "diagonalny ruch lub krzywa pozwalająca zasugerować progres albo frontier",
+      "textureNotes": "gładkie powierzchnie i czytelna oś wizualna"
+    },
+    {
+      "id": "6993049b959c28628759a2af_tempo-image-v2-webp.webp",
+      "role": "team or cadence",
+      "lightingNotes": "spokojniejsze portretowe oświetlenie z kosmicznym tłem i ciepłym kontrapunktem",
+      "compositionNotes": "symetryczna, stabilna kompozycja dobra dla scen równowagi i decyzji",
+      "textureNotes": "miękkie przejścia tonalne, bez sztywnej korporacyjności"
+    }
+  ]
+}

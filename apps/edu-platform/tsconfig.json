@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["node_modules", "public", "dist", "scripts"],
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/layouts/*": ["src/layouts/*"],
+      "@/components/*": ["src/components/*"],
+      "@/models/*": ["src/models/*"],
+      "@/middlewares/*": ["src/middlewares/*"],
+      "@/images/*": ["src/assets/images/*"],
+      "@/utils/*": ["src/utils/*"],
+      "@/server/*": ["src/server/*"],
+      "@/explorers/*": ["src/explorers/*"],
+      "@edu/circle": ["../../libs/circle/src"],
+      "@edu/circle/*": ["../../libs/circle/src/*"]
+    }
+  }
+}

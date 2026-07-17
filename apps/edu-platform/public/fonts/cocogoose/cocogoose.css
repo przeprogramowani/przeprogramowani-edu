@@ -1,0 +1,10 @@
+/* Webfont: Cocogoose */@font-face {
+    font-family: 'Cocogoose';
+    src: url('Cocogoose.woff2') format('woff2'), /* Best compression for modern browsers */
+         url('Cocogoose.woff') format('woff'); /* Fallback for older browsers */
+    font-style: normal;
+    font-weight: normal;
+    font-display: swap; /* Show fallback font immediately, swap when custom font loads */
+    text-rendering: optimizeLegibility;
+}
+

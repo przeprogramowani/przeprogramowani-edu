@@ -1,0 +1,61 @@
+<meta name="lesson-id" content="Typowanie children"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/5zsmm93gmqkllaphogv51r7ocg2h" style="width: 100%; max-width: 100%;"><p>W tej lekcji skupimy się na typowaniu propsa children w komponentach React. </p><p>Po ukończeniu tej lekcji będziesz umiał zastosować odpowiednie typy dla propsa children w React, dostosowane do specyficznych wymagań projektu. </p><h3>Elastyczność React w przekazywaniu children</h3><p><em>React</em> oferuje dużą elastyczność w przekazywaniu children, co umożliwia tworzenie reużywalnych i elastycznych komponentów. </p><p><em>children</em> mogą być pojedynczym elementem JSX, tablicą elementów, tekstem, a nawet funkcją. Takie różnorodne możliwości wymagają elastycznego podejścia do ich typowania w TypeScript.</p><h2>Typowanie children za pomocą React.ReactNode</h2><p>Najczęściej używanym typem do opisu children w komponentach jest React.ReactNode. Ten typ obejmuje większość możliwych wartości, które mogą być przekazane jako dzieci w React:</p><ul><li><p>Typy proste (string, number, boolean)</p></li><li><p>Element React (React.ReactElement)</p></li><li><p>Tablice elementów React i zagnieżdżone struktury komponentów</p></li><li><p>null oraz undefined (umożliwiają renderowanie warunkowe)</p></li></ul><pre><code>import React from "react";
+
+type CardProps = {
+  children: React.ReactNode;
+};
+
+const Card = ({ children }): CardProps =&gt; (
+  &lt;div className="card"&gt;
+    {children}
+  &lt;/div&gt;
+);</code></pre><p>W powyższym przykładzie komponent Card akceptuje dowolny typ children, który jest zgodny z React.ReactNode, co czyni go bardzo elastycznym.</p><h2>Alternatywne metody typowania children</h2><p>Chociaż <em>React.ReactNode</em> jest najczęściej używanym typem, czasami potrzebujemy bardziej precyzyjnego typowania. </p><h3><strong>ReactElement</strong></h3><p>Jednym z alternatywnych typów jest React.ReactElement, który akceptuje wyłącznie elementy Reacta lub HTML. Dzięki temu możemy ograniczyć children do konkretnego rodzaju elementów.</p><p>Typ ten akceptuje wyłącznie elementy Reacta lub HTML:</p><pre><code>type CardProps = {
+  children: React.ReactElement;
+};
+
+const Card= ({ children }: CardProps) =&gt; &lt;div className="card"&gt;{children}&lt;/div&gt;;
+
+const CardContent = () =&gt; &lt;p&gt;Card content&lt;/p&gt;;
+
+const App = () =&gt; (
+  &lt;Card&gt;
+    &lt;CardContent /&gt;
+    {/* &lt;span&gt;Other content&lt;/span&gt; */} {/* Błąd: zezwalamy na jeden komponent/element HTML */}
+  &lt;/Card&gt;
+);</code></pre><p>W tym przypadku komponent Card akceptuje tylko jeden element React jako children. Próba przekazania dodatkowego elementu, jak &lt;span&gt;, spowoduje błąd kompilacji.</p><p>Jeśli chcemy kontrolować liczbę przekazywanych elementów, możemy zdefiniować children jako tablicę elementów React:</p><pre><code>type CardProps = {
+  children: [React.ReactElement, React.ReactElement];
+};
+
+const Card = ({ children }: CardProps) =&gt; &lt;div className="card"&gt;{children}&lt;/div&gt;;
+
+const App = () =&gt; (
+  &lt;Card&gt;
+    &lt;CardContent /&gt;
+    &lt;span&gt;Other content&lt;/span&gt; {/* Teraz działa, ponieważ oczekujemy dokładnie dwóch elementów */}
+  &lt;/Card&gt;
+);</code></pre><p>Aby umożliwić dowolną liczbę elementów, można użyć typu React.ReactElement[]:</p><pre><code>type CardProps = {
+  children: React.ReactElement[];
+};</code></pre><h3><strong>JSX.Element</strong></h3><p>Ten typ to nakładka na omówione powyżej <em>React.ReactElement</em>, która jest dystrybuowana w samym TypeScript. Dla spójności z pozostałymi wariantami rekomendujemy stosowanie <strong>ReactElement</strong>.</p><h3><strong>Typowanie children jako funkcji</strong></h3><p>W niektórych przypadkach, szczególnie przy wzorcu <a class="entity" href="https://przeprogramowani.circle.so/c/o-ts-react-pro/sections/415274/lessons/1568378" target="_blank" rel="noopener noreferrer">#Render props</a>, children mogą być funkcją zwracającą element Reacta. W takim scenariuszu typowanie wygląda nieco inaczej:</p><pre><code>type CardProps = {
+  children: (name: string) =&gt; React.ReactNode;
+};
+
+const Card = ({ children }: CardProps) =&gt; (
+  &lt;div className='card'&gt;{children("Marcin")}&lt;/div&gt;
+);
+
+const App = () =&gt; &lt;Card&gt;{(name) =&gt; &lt;p&gt;User: {name}&lt;/p&gt;}&lt;/Card&gt;;</code></pre><p>Tutaj children jest funkcją, która przyjmuje parametr typu string i zwraca React.ReactNode, co pozwala na dynamiczne generowanie zawartości na podstawie przekazanych danych.</p><h2>Przestarzałe typy children</h2><p>Wraz z rozwojem Reacta i TypeScriptu, niektóre typy używane do typowania children zostały uznane za przestarzałe i niezalecane do użycia w nowych projektach. Przykładem są ReactText, ReactChild, ReactNodeArray oraz ReactFragment.</p><ul><li><p><strong>ReactText</strong>: Kiedyś używany dla children w postaci tekstu lub liczby, obecnie zaleca się bezpośrednie użycie string | number dla lepszej czytelności.</p></li></ul><pre><code>// Kiedyś
+type CardProps = {
+  children: React.ReactText;
+}
+
+// Teraz
+type CardProps = {
+  children: string | number;
+};</code></pre><ul><li><p><strong>ReactChild</strong>: Typ ten był używany jako połączenie ReactElement i tekstu, jednak teraz lepiej jest stosować React.ReactNode, który oferuje tę samą funkcjonalność w bardziej nowoczesny sposób.</p></li></ul><pre><code>// Kiedyś
+type CardProps = {
+  children: React.ReactChild;
+}
+
+// Teraz
+type CardProps = {
+  children: React.ReactNode;
+};</code></pre><ul><li><p><strong>ReactNodeArray i ReactFragment</strong>: ReactNodeArray zostało zastąpione przez React.ReactNode[], a ReactFragment przez Iterable&lt;React.ReactNode&gt;. W przypadku potrzeby użycia tych typów najlepiej jest korzystać z ich aktualnych odpowiedników.</p></li></ul><h2>Czy mogę ograniczyć children do wybranego komponentu?</h2><p>Niestety nie.</p><p>Na poziomie wnioskowania o typach, każdy komponent jest finalnie postrzegany przez TypeScript jako JSX.Element (tj. ReactElement). Z tego powodu integracja TypeScript z React obecnie <strong>nie pozwala na ograniczenie children do wybranego komponentu. </strong></p><h2>Podsumowanie</h2><p>Typowanie children w React za pomocą TypeScript daje nam możliwość kontrolowania, jakie wartości mogą być przekazywane do komponentów. </p><p>W zależności od potrzeb możemy wybrać bardziej elastyczne podejście z React.ReactNode, które pozwala na szeroki zakres typów, lub bardziej restrykcyjne, takie jak React.ReactElement, które umożliwiają dokładniejsze określenie oczekiwanych elementów. </p><p>Integracja TypeScript z React <strong>nie pozwala na ograniczenie children do wybranego komponentu. </strong></p><p>Ważne jest także, aby unikać przestarzałych typów, które mogą prowadzić do niejasności i problemów w przyszłości.</p><h2>Ćwiczenia</h2><ul><li><p><strong>221-flexible-children</strong> - Dodaj typowanie propsa children dla FlexibleContainer, które pozwoli na przekazanie dowolnego dziecka (komponent(y), element(y), tekst itd.)</p></li><li><p><strong>222-three-children</strong> - Dodaj typowanie propsa children dla komponentu TripleContainer, które wymusi przekazanie dokładnie trzech komponentów lub elementów HTML.</p></li></ul></div></body></html>

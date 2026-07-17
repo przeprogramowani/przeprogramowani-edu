@@ -1,0 +1,6 @@
+{
+  "lessonId": "[4x3] Testy regresji z multimodalnym AI",
+  "displayName": "[4x3] Testy regresji z multimodalnym AI",
+  "summary": "1) Jakie kluczowe obszary aplikacji należy objąć testami regresji (te, których zachowanie nie może się pogorszyć)?  \n2) Jak przygotować nagranie do analizy multimodalnej (jaki format pliku i jakie opcje nagrywania podnoszą jakość analizy)?  \n3) Jak zmniejszyć rozmiar pliku wideo przy zachowaniu ciągłości scenariusza i jakie polecenie ffmpeg użyć (przykład)?  \n4) Jaki multimodalny model wybrać do analizy video i jakie ma okno kontekstowe oraz praktyczne ograniczenia czasowe?  \n5) Jak obliczyć przybliżoną liczbę tokenów generowanych przez wideo (tokeny na klatkę) oraz dodatkowy koszt za audio (tokens/sec) — przykład kalkulacji dla 60s@24fps?  \n6) Jak przesyłać pliki do modelu w praktyce (kiedy można dołączać inline, a kiedy trzeba użyć uploadu przez File API)?  \n7) Gdzie znaleźć repozytorium 10xCMS do lokalnego testowania i jakie są dane logowania do środowiska deweloperskiego?  \n8) Jakie zasady bezpieczeństwa stosować przy eksperymentach z analizą projektów (dot. danych i bazy)?",
+  "tokenEstimate": 167
+}

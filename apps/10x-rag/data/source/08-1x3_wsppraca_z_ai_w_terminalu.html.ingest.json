@@ -1,0 +1,636 @@
+{
+  "lessonId": "[1x3] Współpraca z AI w terminalu",
+  "file": "08-1x3_wsppraca_z_ai_w_terminalu.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 3,
+      "order": 1
+    },
+    {
+      "slug": "dla-kogo-ai-w-terminalu",
+      "title": "Dla kogo AI w terminalu?",
+      "blocks": 3,
+      "order": 2
+    },
+    {
+      "slug": "wstepna-konfiguracja",
+      "title": "Wstępna konfiguracja",
+      "blocks": 2,
+      "order": 3
+    },
+    {
+      "slug": "plany-pricingowe",
+      "title": "Plany pricingowe",
+      "blocks": 16,
+      "order": 4
+    },
+    {
+      "slug": "pierwszy-kontakt-z-claude-code",
+      "title": "Pierwszy kontakt z Claude Code",
+      "blocks": 16,
+      "order": 5
+    },
+    {
+      "slug": "prywatnosc",
+      "title": "Prywatność",
+      "blocks": 4,
+      "order": 6
+    },
+    {
+      "slug": "pierwsze-zadanie-z-claude-code",
+      "title": "Pierwsze zadanie z Claude Code",
+      "blocks": 2,
+      "order": 7
+    },
+    {
+      "slug": "wybor-modelu",
+      "title": "Wybór modelu",
+      "blocks": 12,
+      "order": 8
+    },
+    {
+      "slug": "zarzadzanie-uprawnieniami",
+      "title": "Zarządzanie uprawnieniami",
+      "blocks": 22,
+      "order": 9
+    },
+    {
+      "slug": "praca-z-kontekstem",
+      "title": "Praca z kontekstem",
+      "blocks": 15,
+      "order": 10
+    },
+    {
+      "slug": "rozszerzenia-i-automatyzacja-pracy",
+      "title": "Rozszerzenia i automatyzacja pracy",
+      "blocks": 1,
+      "order": 11
+    },
+    {
+      "slug": "custom-commands-wasne-komendy",
+      "title": "Custom Commands (własne komendy)",
+      "blocks": 7,
+      "order": 12
+    },
+    {
+      "slug": "hooks-automatyczne-akcje",
+      "title": "Hooks (automatyczne akcje)",
+      "blocks": 7,
+      "order": 13
+    },
+    {
+      "slug": "subagenci",
+      "title": "Subagenci",
+      "blocks": 12,
+      "order": 14
+    },
+    {
+      "slug": "claude-code-sdk",
+      "title": "Claude Code SDK",
+      "blocks": 8,
+      "order": 15
+    },
+    {
+      "slug": "najlepsze-praktyki-pracy-z-claude-code",
+      "title": "Najlepsze praktyki pracy z Claude Code",
+      "blocks": 6,
+      "order": 16
+    },
+    {
+      "slug": "routing-do-innych-modeli-i-usug",
+      "title": "Routing do innych modeli i usług",
+      "blocks": 8,
+      "order": 17
+    },
+    {
+      "slug": "alternatywy-codex-cli-gemini-cli-i-opencode",
+      "title": "Alternatywy: Codex CLI, Gemini CLI i OpenCode",
+      "blocks": 1,
+      "order": 18
+    },
+    {
+      "slug": "codex-cli-openai",
+      "title": "Codex CLI (OpenAI)",
+      "blocks": 7,
+      "order": 19
+    },
+    {
+      "slug": "gemini-cli-google",
+      "title": "Gemini CLI (Google)",
+      "blocks": 8,
+      "order": 20
+    },
+    {
+      "slug": "opencode-sstopencode",
+      "title": "OpenCode (sst/opencode)",
+      "blocks": 9,
+      "order": 21
+    },
+    {
+      "slug": "z-jakiego-ai-w-cli-korzystac",
+      "title": "🤔 Z jakiego AI w CLI korzystać?",
+      "blocks": 2,
+      "order": 22
+    },
+    {
+      "slug": "materiay-dodatkowe",
+      "title": "📚 Materiały dodatkowe",
+      "blocks": 1,
+      "order": 23
+    },
+    {
+      "slug": "zadania-praktyczne",
+      "title": "🧑🏻💻 Zadania praktyczne",
+      "blocks": 3,
+      "order": 24
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 4,
+      "order": 25
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:54d5f78a:43cc23fa",
+      "tokenEstimate": 61,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:43cc23fa:0-1",
+      "tokenEstimate": 61,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:24701484",
+      "tokenEstimate": 205,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:24701484:0-2",
+      "tokenEstimate": 239,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:8d910015",
+      "tokenEstimate": 191,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:8d910015:0-2",
+      "tokenEstimate": 191,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:6846b26b",
+      "tokenEstimate": 126,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:6846b26b:0-1",
+      "tokenEstimate": 126,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:3ca60efc",
+      "tokenEstimate": 215,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:3ca60efc:0-11",
+      "tokenEstimate": 370,
+      "span": [
+        0,
+        11
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:3ca60efc:10-15",
+      "tokenEstimate": 268,
+      "span": [
+        10,
+        15
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:46981a8d",
+      "tokenEstimate": 182,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:46981a8d:0-10",
+      "tokenEstimate": 391,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:46981a8d:10-15",
+      "tokenEstimate": 292,
+      "span": [
+        10,
+        15
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:f28722a1",
+      "tokenEstimate": 218,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:f28722a1:0-3",
+      "tokenEstimate": 230,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:d3304c0c",
+      "tokenEstimate": 92,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:d3304c0c:0-1",
+      "tokenEstimate": 92,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:c7b19449",
+      "tokenEstimate": 173,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:c7b19449:0-11",
+      "tokenEstimate": 389,
+      "span": [
+        0,
+        11
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:ec86a24f",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:ec86a24f:0-12",
+      "tokenEstimate": 410,
+      "span": [
+        0,
+        12
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:ec86a24f:12-20",
+      "tokenEstimate": 372,
+      "span": [
+        12,
+        20
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:ec86a24f:19-21",
+      "tokenEstimate": 127,
+      "span": [
+        19,
+        21
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:a847711a",
+      "tokenEstimate": 194,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:a847711a:0-7",
+      "tokenEstimate": 378,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:a847711a:7-12",
+      "tokenEstimate": 389,
+      "span": [
+        7,
+        12
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:a847711a:12-14",
+      "tokenEstimate": 215,
+      "span": [
+        12,
+        14
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:1cf0fb5c",
+      "tokenEstimate": 113,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:1cf0fb5c:0-0",
+      "tokenEstimate": 113,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:c19f2423",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:c19f2423:0-6",
+      "tokenEstimate": 355,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:f466ba9e",
+      "tokenEstimate": 200,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:f466ba9e:0-6",
+      "tokenEstimate": 270,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:a5d6653c",
+      "tokenEstimate": 198,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:a5d6653c:0-10",
+      "tokenEstimate": 431,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:a5d6653c:10-11",
+      "tokenEstimate": 194,
+      "span": [
+        10,
+        11
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:8671e007",
+      "tokenEstimate": 220,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:8671e007:0-7",
+      "tokenEstimate": 305,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:f4970f59",
+      "tokenEstimate": 187,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:f4970f59:0-5",
+      "tokenEstimate": 349,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:6520d07a",
+      "tokenEstimate": 198,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:6520d07a:0-7",
+      "tokenEstimate": 325,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:5ba29948",
+      "tokenEstimate": 108,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:5ba29948:0-0",
+      "tokenEstimate": 108,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:b8ae0d76",
+      "tokenEstimate": 226,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:b8ae0d76:0-6",
+      "tokenEstimate": 298,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:7fad252e",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:7fad252e:0-7",
+      "tokenEstimate": 424,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:3aecc55f",
+      "tokenEstimate": 224,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:3aecc55f:0-8",
+      "tokenEstimate": 413,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:1969e7a7",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:1969e7a7:0-1",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:58784905",
+      "tokenEstimate": 66,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:58784905:0-0",
+      "tokenEstimate": 344,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:e1485996",
+      "tokenEstimate": 184,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:e1485996:0-2",
+      "tokenEstimate": 184,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:54d5f78a:7eabec50",
+      "tokenEstimate": 143,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:54d5f78a:7eabec50:0-3",
+      "tokenEstimate": 143,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

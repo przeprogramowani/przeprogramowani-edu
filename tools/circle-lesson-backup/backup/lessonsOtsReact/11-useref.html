@@ -1,0 +1,247 @@
+<meta name="lesson-id" content="useRef"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/te5qi6ukg00jzc2j0nfza5nw1oj1" style="width: 100%; max-width: 100%;"><p>W tej lekcji skupimy się na dwóch mechanizmach, które są nieodłączną częścią pracy z referencjami w React: <em>useRef</em> i <em>forwardRef</em>. </p><p>Oba te mechanizmy są szczególnie przydatne w sytuacjach, gdy musimy manipulować bezpośrednio DOM-em lub przekazywać referencje do zagnieżdżonych komponentów. </p><p>Omówimy zarówno podstawy ich użycia, jak i zaawansowane techniki, takie jak typowanie referencji w TypeScript oraz radzenie sobie z wyzwaniami związanymi z komponentami generycznymi.</p><h3>Typowanie referencji za pomocą useRef</h3><p><em>useRef</em> jest hookiem, który pozwala na przechowywanie referencji do elementów DOM lub innych zmiennych, które mają pozostać niezmienne przez cały cykl życia komponentu. Jest to użyteczne, gdy potrzebujemy uzyskać dostęp do elementu w DOM lub przechować jakąś wartość, dla których nie chcemy, by powodowały ponowne renderowanie komponentu.</p><p>Przykład użycia useRef do uzyskania dostępu do elementu DOM:</p><pre><code>import React, { useRef } from 'react';
+
+const TextInputWithFocusButton = () =&gt; {
+  // Tworzymy ref dla elementu input
+  const inputRef = useRef&lt;HTMLInputElement&gt;(null);
+
+  const focusInputOnClick = () =&gt; {
+    // Odwołanie do ref i ustawienie focusa na elemencie
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
+  return (
+    &lt;&gt;
+      &lt;input ref={inputRef} type="text" /&gt;
+      &lt;button onClick={focusInputOnClick}&gt;Focus the input&lt;/button&gt;
+    &lt;/&gt;
+  );
+};
+
+export default TextInputWithFocusButton;</code></pre><p>W tym przykładzie <em>inputRef</em> jest referencją do elementu <em>input</em>, a dzięki <em>inputEl.current</em> uzyskujemy dostęp do tego elementu, aby wywołać na nim metodę <em>focus()</em>. Ważne jest, aby pamiętać o sprawdzeniu, czy <em>current</em> nie jest <em>null</em>, ponieważ TypeScript nie zna dokładnego typu elementu, dopóki nie zostanie przypisany do referencji.</p><h3>Typowanie useRef z ElementRef</h3><p>Integrując Reacta z TSem musimy mieć pewność, że nasza referencja korzysta z odpowiedniego typu dla elementu DOM. Typów dla elementów DOM jest pełno i ciężko je wszystkie zapamiętać. Na szczęście możemy skorzystać z generycznego typu pomocniczego ElementRef, który automatycznie typuje naszą referencję do odpowiedniego typu HTML na podstawie stringa z nazwą elementu.</p><pre><code>import React, { useRef, ElementRef } from 'react';
+
+const HelloDialog = () =&gt; {
+  const dialogRef = useRef&lt;ElementRef&lt;'dialog'&gt;&gt;(null);
+
+  return &lt;dialog ref={dialogRef}&gt;Hello&lt;/dialog&gt;;
+};</code></pre><p>W powyższym przykładzie używamy ElementRef, który automatycznie wyciąga odpowiedni typ z elementu, w tym przypadku <strong><em>HTMLDialogElement</em></strong>. </p><h3>forwardRef - przekazywanie referencji do komponentów</h3><p><em>forwardRef</em> to funkcja wyższego rzędu, która umożliwia przekazywanie referencji do komponentów funkcyjnych. Dzięki <em>forwardRef</em> możemy przekazać referencję z komponentu nadrzędnego do komponentu podrzędnego, co jest szczególnie przydatne w przypadku komponentów kontenerowych, które zarządzają stanem swoich dzieci.</p><pre><code>import React, { forwardRef } from 'react';
+
+const InputWithFocusButton = forwardRef&lt;ElementRef&lt;'input'&gt;, {}&gt;((props, ref) =&gt; (
+  &lt;input ref={ref} type="text" /&gt;
+));
+
+const ParentComponent = () =&gt; {
+  const inputRef = useRef&lt;ElementRef&lt;'input'&gt;&gt;(null);
+
+  const focusInput = () =&gt; {
+    inputRef.current?.focus();
+  };
+
+  return (
+    &lt;&gt;
+      &lt;InputWithFocusButton ref={inputRef} /&gt;
+      &lt;button onClick={focusInput}&gt;Focus Input&lt;/button&gt;
+    &lt;/&gt;
+  );
+};</code></pre><p>W powyższym przykładzie <em>forwardRef</em> jest użyte do przekazywania referencji do wewnętrznego elementu input w komponencie <em>InputWithFocusButton</em>.</p><h3><strong>Problemy z inferencją typu w forwardRef dla komponentów generycznych</strong></h3><p>Jednak w przypadku komponentów generycznych (generic components), takich jak tabelki czy listy, TypeScript może mieć problemy z poprawnym rozpoznaniem typów w odniesieniu do przekazywanych referencji.</p><pre><code>import React, { forwardRef, useRef } from 'react';
+
+type TableProps&lt;T&gt; = {
+  data: T[];
+  renderRow: (row: T) =&gt; React.ReactNode;
+};
+
+const Table = &lt;T,&gt;({ data, renderRow }: TableProps&lt;T&gt;, ref: React.Ref&lt;HTMLTableElement&gt;) =&gt; (
+  &lt;table ref={ref}&gt;
+    &lt;tbody&gt;
+      {data.map((row, index) =&gt; (
+        &lt;tr key={index}&gt;{renderRow(row)}&lt;/tr&gt;
+      ))}
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+);
+
+const ForwardRefTable = forwardRef(Table);
+
+const App = () =&gt; {
+  const tableRef = useRef&lt;HTMLTableElement&gt;(null);
+
+  return (
+    &lt;ForwardRefTable
+      ref={tableRef}
+      data={['Row 1', 'Row 2']}
+      renderRow={(row) =&gt; &lt;td&gt;{row}&lt;/td&gt;} // Type 'unknown' is not assignable to type 'ReactNode'.ts(2322)
+    /&gt;
+  );
+};</code></pre><p>W powyższym kodzie TypeScript nie potrafi poprawnie wywnioskować typu danych w <em>renderRow</em>. Zamiast oczekiwanego typu string, w wielu przypadkach typ <em>row</em> zostanie rozpoznany jako <em>unknown</em>. Dzieje się tak, ponieważ definicja typu React.forwardRef nie wspiera dobrze inferencji typów generycznych.</p><p><strong>Jak działa FixedForwardRef?</strong></p><p>FixedForwardRef to customowa funkcja, która zastępuje standardowe typowanie forwardRef i poprawia inferencję typów w przypadku komponentów generycznych.</p><pre><code>export function fixedForwardRef&lt;T, P = {}&gt;(
+  render: (props: React.PropsWithoutRef&lt;P&gt;, ref: React.Ref&lt;T&gt;) =&gt; React.ReactNode
+): (props: P &amp; React.RefAttributes&lt;T&gt;) =&gt; React.ReactNode {
+  return React.forwardRef(render) as any;
+}</code></pre><ol start="1"><li><p><strong>Przyjmuje funkcję renderującą</strong>, która działa jak standardowy React.forwardRef, ale typy T (typ referencji) i P (typ propsów) są jawnie przekazywane.</p></li><li><p><strong>Zwraca nową funkcję</strong>, która dodaje RefAttributes&lt;T&gt; do przekazywanych propsów, dzięki czemu TypeScript może poprawnie wnioskować typ referencji.</p></li><li><p><strong>Używa as any</strong>, aby obejść ograniczenia standardowego typowania forwardRef (ten fragment jest bezpieczny w tym kontekście, ponieważ typowanie jest precyzyjnie kontrolowane na poziomie funkcji).</p></li></ol><p>Warto ją umieścić fixedForwardRef w głównym pliku z typami pomocniczymi Twojego projektu i wykorzystywać do obsługi komponentów generycznych wykorzystujących referencje.</p><p><strong>Przykład zastosowania FixedForwardRef</strong></p><p>Załóżmy, że mamy generyczny komponent formularza, który wyświetla różne pola i pozwala uzyskać referencję do całego formularza.</p><pre><code>import React, {useRef} from "react";
+import {fixedForwardRef} from "@types/utils"
+
+type FormProps&lt;T&gt; = {
+  data: T;
+  renderFields: (data: T) =&gt; React.ReactNode;
+};
+
+const Form = &lt;T,&gt;(
+  props: FormProps&lt;T&gt;,
+  ref: React.ForwardedRef&lt;HTMLFormElement&gt;
+) =&gt; {
+  return (
+    &lt;form ref={ref}&gt;
+      {props.renderFields(props.data)}
+      &lt;button type='submit'&gt;Submit&lt;/button&gt;
+    &lt;/form&gt;
+  );
+};
+
+const ForwardReffedForm = fixedForwardRef(Form);
+
+const App = () =&gt; {
+  const formRef = useRef&lt;HTMLFormElement&gt;(null);
+
+  const handleSubmit = () =&gt; {
+    if (formRef.current) {
+      console.log("Form submitted!", new FormData(formRef.current));
+    }
+  };
+
+  const formData = {
+    name: "",
+    age: "",
+  };
+
+  const renderFields = (data: typeof formData) =&gt; (
+    &lt;&gt;
+      &lt;label&gt;
+        Name:
+        &lt;input name='name' defaultValue={data.name} /&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        Age:
+        &lt;input name='age' defaultValue={data.age} type='number' /&gt;
+      &lt;/label&gt;
+    &lt;/&gt;
+  );
+
+  return (
+    &lt;&gt;
+      &lt;ForwardReffedForm
+        ref={formRef}
+        data={formData}
+        renderFields={renderFields}
+      /&gt;
+      &lt;button onClick={handleSubmit}&gt;Submit Form&lt;/button&gt;
+    &lt;/&gt;
+  );
+};
+
+export default App;</code></pre><ul><li><p><strong>FixedForwardRef w akcji</strong>: Funkcja fixedForwardRef poprawia inferencję typów dla komponentu Form. Dzięki temu TypeScript prawidłowo rozpoznaje, że ref odnosi się do elementu HTMLFormElement, a data jest obiektem zawierającym pola formularza.</p></li><li><p><strong>Dynamiczne pola</strong>: Funkcja renderFields generuje pola formularza na podstawie danych wejściowych, a ich typy są automatycznie wnioskowane.</p></li><li><p><strong>Zarządzanie referencją</strong>: Referencja formRef jest używana do odczytu danych formularza przy użyciu FormData.</p></li></ul><h2>Zaawansowane wzorce pracy z useRef i forwardRef</h2><h3><strong>Korzystanie z useImperativeHandle</strong></h3><p>Kiedy używamy <em>forwardRef</em>, możemy skorzystać z hooka <em>useImperativeHandle</em>, aby dostosować zachowanie referencji przekazywanych do komponentu. Dzięki temu możemy kontrolować, co dokładnie jest dostępne dla komponentu nadrzędnego.</p><pre><code>import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
+
+interface CountdownHandle {
+  start: () =&gt; void;
+  reset: () =&gt; void;
+};
+
+const Countdown = forwardRef&lt;CountdownHandle&gt;((props, ref) =&gt; {
+  const intervalRef = useRef&lt;number | null&gt;(null);
+  const [count, setCount] = useState(10);
+
+  useImperativeHandle(ref, () =&gt; ({
+    start() {
+      if (!intervalRef.current) {
+        intervalRef.current = setInterval(() =&gt; {
+          setCount((prev) =&gt; (prev &gt; 0 ? prev - 1 : 0));
+        }, 1000);
+      }
+    },
+    reset() {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      setCount(10);
+    },
+  }));
+
+  return &lt;div&gt;Countdown: {count}&lt;/div&gt;;
+});
+
+const App = () =&gt; {
+  const countdownRef = useRef&lt;CountdownHandle&gt;(null);
+
+  return (
+    &lt;&gt;
+      &lt;Countdown ref={countdownRef} /&gt;
+      &lt;button onClick={() =&gt; countdownRef.current?.start()}&gt;Start&lt;/button&gt;
+      &lt;button onClick={() =&gt; countdownRef.current?.reset()}&gt;Reset&lt;/button&gt;
+    &lt;/&gt;
+  );
+};
+
+export default App;</code></pre><ul><li><p>Hook useImperativeHandle pozwala na zadeklarowanie interfejsu, co będzie dostępne w ref. </p></li><li><p>Dzięki temu możemy przekazywać tylko te metody lub właściwości, które chcemy udostępnić komponentowi nadrzędnemu. W tym przypadku interfejs określa CountdownHandle.</p></li><li><p>Użycie tego wzorca pomaga w izolacji logiki komponentu dziecka względem rodzica.</p></li></ul><h3><strong>Dynamiczne renderowanie różnych elementów DOM</strong></h3><p>W niektórych przypadkach komponenty muszą dynamicznie renderować różne elementy DOM w zależności od propsów lub innych czynników. Użycie <em>typeof Component</em> zamiast sztywnych typów takich jak <em>ElementRef&lt;"div"&gt;</em> zapewnia elastyczność i poprawność typowania nawet w dynamicznych scenariuszach.</p><p>Stworzymy komponent <em>DynamicElement</em>, który renderuje różne elementy DOM (div, button, input) w zależności od wartości propsów. Dzięki <em>typeof</em> możemy automatycznie typować referencję bez potrzeby ręcznej aktualizacji typów.</p><pre><code>import React, {ElementRef, forwardRef, useRef} from "react";
+
+type DynamicElementProps = {
+  as: "div" | "button" | "input";
+  label?: string;
+};
+
+const DynamicElement = forwardRef&lt;HTMLElement, DynamicElementProps&gt;(
+  ({as, label, ...props}, ref) =&gt; {
+    if (as === "button") {
+      return (
+        &lt;button ref={ref as React.Ref&lt;HTMLButtonElement&gt;} {...props}&gt;
+          {label || "Button"}
+        &lt;/button&gt;
+      );
+    }
+    if (as === "input") {
+      return (
+        &lt;input
+          ref={ref as React.Ref&lt;HTMLInputElement&gt;}
+          {...props}
+          placeholder={label}
+        /&gt;
+      );
+    }
+
+    return (
+      &lt;div ref={ref as React.Ref&lt;HTMLDivElement&gt;} {...props}&gt;
+        {label || "Div"}
+      &lt;/div&gt;
+    );
+  }
+);</code></pre><pre><code>// Typ referencji bazujący na DynamicElement
+type DynamicElementRef = ElementRef&lt;typeof DynamicElement&gt;;
+
+const App = () =&gt; {
+  const elementRef = useRef&lt;DynamicElementRef&gt;(null);
+
+  const handleFocus = () =&gt; {
+    if (elementRef.current instanceof HTMLInputElement) {
+      elementRef.current.focus();
+    }
+  };
+
+  const handleClick = () =&gt; {
+    if (elementRef.current instanceof HTMLButtonElement) {
+      alert("Button clicked!");
+    }
+  };
+
+  return (
+    &lt;&gt;
+      &lt;DynamicElement ref={elementRef} as='input' label='Type something' /&gt;
+      &lt;button onClick={handleFocus}&gt;Focus Input&lt;/button&gt;
+
+      &lt;DynamicElement ref={elementRef} as='button' label='Click me' /&gt;
+      &lt;button onClick={handleClick}&gt;Trigger Button Action&lt;/button&gt;
+
+      &lt;DynamicElement ref={elementRef} as='div' label='Just a Div' /&gt;
+    &lt;/&gt;
+  );
+};
+
+export default App;</code></pre><p>Dlaczego warto skorzystać z <em>type DynamicElementRef = ElementRef&lt;typeof DynamicElement&gt;</em>?</p><ul><li><p>Typ <em>ElementRef&lt;typeof DynamicElement&gt;</em> automatycznie dostosowuje się do aktualnie renderowanego elementu (div, button, input), co pozwala na dynamiczne kontrolowanie referencji.</p></li><li><p><strong>Elastyczność</strong>: Jeśli w przyszłości dodamy obsługę kolejnych elementów DOM, typ ElementRef&lt;typeof DynamicElement&gt; nie wymaga modyfikacji.</p></li></ul><h3>Najlepsze praktyki</h3><ol start="1"><li><p><strong>Stosuj dokładne typy elementów HTML</strong><br>Zawsze preferuj typowanie referencji z najbardziej szczegółowym typem, np. HTMLDivElement zamiast HTMLElement, aby uzyskać większą precyzję i uniknąć błędów w dostępie do metod i właściwości elementów. Jeżeli nie pamiętasz odpowiedniego typu, skorzystaj z ElementRef&lt;“div”&gt;.</p></li><li><p><strong>Używanie forwardRef z komponentami generycznymi</strong><br>W przypadku komponentów generycznych, takich jak tabela, musisz zadbać o odpowiednie zarządzanie referencjami. Możesz zastosować fixedForwardRef, aby obejść problemy z inferencją typu.</p></li><li><p><strong>Zarządzanie nullowymi referencjami w useRef</strong><br>Gdy używasz useRef z typami DOM, pamiętaj, aby sprawdzać, czy current nie jest null, szczególnie gdy elementy mogą być warunkowo renderowane lub mogą nie być dostępne przy pierwszym renderowaniu.</p></li></ol><h2>Podsumowanie</h2><ul><li><p><strong>useRef</strong> jest uniwersalnym narzędziem do przechowywania referencji do DOM-u lub innych zmiennych, a dzięki typowaniu w TypeScript można znacznie poprawić czytelność i bezpieczeństwo kodu.</p></li><li><p><strong>forwardRef</strong> to kluczowy mechanizm do przekazywania referencji między komponentami, który w połączeniu z useImperativeHandle pozwala na precyzyjne zarządzanie API komponentu.</p></li><li><p>Zrozumienie wyzwań z inferencją typów i zastosowanie takich rozwiązań jak <strong>fixedForwardRef</strong> pozwala unikać frustracji i problemów w bardziej zaawansowanych przypadkach.</p></li></ul><p>Praktyka z omawianymi przykładami zapewni głębsze zrozumienie tych mechanizmów i pomoże Ci w codziennej pracy.</p><h2>Ćwiczenia</h2><ul><li><p><strong>331-fixed-forward-ref</strong> - Napraw błędy typowania w poniższym generycznym komponencie FormComponent, który używa fixedForwardRef do przekazywania referencji do elementu form: </p><ul><li><p>Dodaj pełną implementację fixedForwardRef, która zapewni poprawną inferencje typów. </p></li><li><p>Zadbaj o poprawne typowanie propsów i referencji. </p></li><li><p>Zadbaj o poprawne typowanie handlerów i stanu.</p></li></ul></li></ul></div></body></html>

@@ -1,0 +1,39 @@
+name = "przeprogramowani-edu"
+pages_build_output_dir = "dist"
+compatibility_flags = ["nodejs_compat"]
+compatibility_date = "2024-09-23"
+
+kv_namespaces = [
+  { binding = "MAGIC_LINKS",           id = "a67fe4e98cbd459088d056668f9fe302" },
+  { binding = "PLATFORM_LESSON_CACHE", id = "b14217e30ebf42cb82d9afb708d3c418" },
+  { binding = "CIRCLE_MEMBERS",        id = "1f0379f28e60442f9dc0455a70387dba" },
+  # Temporary 10xDevs 3 bridge to 10x-toolkit CLI_10X3_MEMBERSHIP_KV.
+  { binding = "TOOLKIT_10X3_MEMBERSHIP_KV", id = "dd7fed61a71d42bfbace69865f18e9bb" },
+  { binding = "GAME_STATE",            id = "20d16620dfdb441a99454c15fea0dc09" },
+  { binding = "GAME_API_TOKENS",       id = "4631b7d94bee47c9ac05b53180959e61" }
+]
+
+analytics_engine_datasets = [
+  { binding = "ANON_GAME_STARTS", dataset = "anon_game_starts" }
+]
+
+[vars]
+ENV = "PROD"
+PUBLIC_SENTRY_DSN = "https://80ecc85e28e3c8d9369b72e96dc23fe5@o4511366431309824.ingest.de.sentry.io/4511366432882768"
+SITE_URL = "https://platforma.przeprogramowani.pl"
+SUPABASE_URL = "https://uxankjtsfdgrlogkdioz.supabase.co"
+GITHUB_CLIENT_ID = "Ov23li1PFD5FBEjwcIJ0"
+GOOGLE_CLIENT_ID = "670384238290-vdogcr5ltaombuc6ldoqefr4bc9a6t56.apps.googleusercontent.com"
+TEN_X_DEVS_3_EXTERNAL_AUTH_SOURCE = "toolkit_kv"
+# Temporary: when "true", a missing toolkit KV record falls back to the legacy
+# Circle membership check instead of denying access. Mitigates Circle email
+# changes that leave the KV with only the old hash. Flip to "false" once the
+# upstream toolkit reacts to email changes promptly.
+TEN_X_DEVS_3_TOOLKIT_LEGACY_FALLBACK_ON_MISSING = "true"
+
+# Required encrypted Pages secrets are managed in Cloudflare:
+# AIRTABLE_API_KEY, CF_CAPTCHA_SECRET_KEY, CF_CAPTCHA_SITE_KEY,
+# CIRCLE_BRAVE_V1_TOKEN, CIRCLE_PRZEPROGRAMOWANI_V1_TOKEN,
+# GITHUB_CLIENT_SECRET, GOOGLE_CLIENT_SECRET, JWT_SECRET, MAILING_SERVICE_URL,
+# RESEND_API_KEY, SUPABASE_SERVICE_KEY, TEN_X_DEVS_MAILERLITE_API_KEY,
+# TEN_X_DEVS_GAME_ACCOUNT_CREATED_GROUP_ID, TEN_X_DEVS_GAME_FINISHED_GROUP_ID.

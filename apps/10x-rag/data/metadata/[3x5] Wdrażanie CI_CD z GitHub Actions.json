@@ -1,0 +1,6 @@
+{
+  "lessonId": "[3x5] Wdrażanie CI/CD z GitHub Actions",
+  "displayName": "[3x5] Wdrażanie CI/CD z GitHub Actions",
+  "summary": "1) Gdzie w repozytorium umieścić plik workflow GitHub Actions, aby został automatycznie rozpoznany i aktywował Actions?  \n2) Jak wygląda minimalna struktura pliku .yml dla workflow (name, on: push/pull_request, jobs, runs-on, steps z uses: actions/checkout i run)?  \n3) Jakie są praktyczne różnice między Continuous Integration, Continuous Delivery i Continuous Deployment?  \n4) Jak w workflow ustawić joby uruchamiane równolegle i jak zdefiniować zależności między jobami przy użyciu id i needs?  \n5) Jak określić środowisko wykonania joba (runs-on) oraz zdefiniować poszczególne kroki (steps) wykorzystujące actions i polecenia run?  \n6) Jak zorganizować scenariusz pull-request.yml, żeby wykonać: lint → dwa równoległe joby (unit + e2e) → status-comment uruchamiany tylko po sukcesie poprzednich?  \n7) Jak w workflow korzystać z sekretów i środowisk (secrets, environment) oraz jak je powiązać z jobami?  \n8) Jak zbierać i zapisywać artefakty oraz coverage wynikające z uruchomionych testów w ramach workflow?  \n9) Jak wykorzystać plik package.json (lub jego odpowiedniki dla innych stacków) jako źródło kontekstu przy tworzeniu lub aktualizowaniu scenariuszy CI/CD?",
+  "tokenEstimate": 191
+}

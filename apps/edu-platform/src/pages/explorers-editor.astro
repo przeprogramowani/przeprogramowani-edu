@@ -1,0 +1,13 @@
+---
+import GameLayout from '@/layouts/GameLayout.astro';
+import MapEditor from '@/explorers/editor/MapEditor.svelte';
+import { ENV } from 'astro:env/server';
+
+if (ENV === 'PROD') {
+  return Astro.redirect('/explorers');
+}
+---
+
+<GameLayout>
+  <MapEditor client:only="svelte" />
+</GameLayout>

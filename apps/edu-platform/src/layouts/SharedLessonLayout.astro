@@ -1,0 +1,169 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+// Ensure UTF-8 charset in HTTP response
+Astro.response.headers.set('Content-Type', 'text/html; charset=utf-8');
+
+import LayoutScripts from './LayoutScripts.astro';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} - Przeprogramowani</title>
+
+    <!-- Preload critical fonts for faster loading -->
+    <link rel="preload" href="/fonts/cocogoose/Cocogoose.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/cocogoose-light/Cocogoose-Pro-Light.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Critical CSS - Prevents FOUC by inlining essential styles -->
+    <style>
+      /* Base resets */
+      html { line-height: 1.5; -webkit-text-size-adjust: 100%; tab-size: 4; }
+      body { margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+
+      /* Critical background colors - prevents white flash */
+      .bg-gray-900 { background-color: rgb(17 24 39); }
+      .bg-gray-800 { background-color: rgb(31 41 55); }
+      .bg-gray-700 { background-color: rgb(55 65 81); }
+      .bg-gray-600 { background-color: rgb(75 85 99); }
+
+      /* Critical text colors */
+      .text-gray-100 { color: rgb(243 244 246); }
+      .text-gray-200 { color: rgb(229 231 235); }
+      .text-gray-300 { color: rgb(209 213 219); }
+      .text-gray-400 { color: rgb(156 163 175); }
+      .text-white { color: rgb(255 255 255); }
+
+      /* Layout utilities */
+      .min-h-screen { min-height: 100vh; }
+      .hidden { display: none; }
+      .block { display: block; }
+      .flex { display: flex; }
+      .inline-block { display: inline-block; }
+      .fixed { position: fixed; }
+      .relative { position: relative; }
+      .sticky { position: sticky; }
+
+      /* Flexbox utilities */
+      .flex-col { flex-direction: column; }
+      .items-center { align-items: center; }
+      .justify-between { justify-content: space-between; }
+
+      /* Spacing utilities */
+      .p-4 { padding: 1rem; }
+      .p-6 { padding: 1.5rem; }
+      .px-4 { padding-left: 1rem; padding-right: 1rem; }
+      .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+      .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+      .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+      .mx-auto { margin-left: auto; margin-right: auto; }
+      .mt-4 { margin-top: 1rem; }
+      .mb-8 { margin-bottom: 2rem; }
+
+      /* Width/max-width utilities */
+      .w-full { width: 100%; }
+      .max-w-\[800px\] { max-width: 800px; }
+      .max-w-4xl { max-width: 56rem; }
+
+      /* Border utilities */
+      .rounded-lg { border-radius: 0.5rem; }
+      .border { border-width: 1px; }
+      .border-gray-700 { border-color: rgb(55 65 81); }
+
+      /* Typography utilities */
+      .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+      .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+      .font-bold { font-weight: 700; }
+
+      /* Space utilities */
+      .space-y-8 > :not([hidden]) ~ :not([hidden]) { margin-top: 2rem; }
+      .space-y-4 > :not([hidden]) ~ :not([hidden]) { margin-top: 1rem; }
+
+      /* Responsive utilities for medium screens (768px+) */
+      @media (min-width: 768px) {
+        .md\:block { display: block; }
+        .md\:flex { display: flex; }
+        .md\:hidden { display: none; }
+        .md\:ml-72 { margin-left: 18rem; }
+        .md\:py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+        .md\:px-8 { padding-left: 2rem; padding-right: 2rem; }
+      }
+
+      /* Prose base styles for content */
+      .prose {
+        color: rgb(209 213 219);
+        max-width: 65ch;
+        font-size: 1rem;
+        line-height: 1.75;
+      }
+      .prose-invert {
+        --tw-prose-body: rgb(209 213 219);
+        --tw-prose-headings: rgb(243 244 246);
+        --tw-prose-links: rgb(96 165 250);
+      }
+
+      /* ========================================
+         TOC Critical CSS - Prevents FOUC Only
+         ======================================== */
+
+      /* Hide all TOC elements until Svelte hydration completes and state is settled */
+      html.toc-not-hydrated .toc-desktop-widget,
+      html.toc-not-hydrated .toc-fab-button,
+      html.toc-not-hydrated .toc-toggle-mobile,
+      html.toc-not-hydrated .toc-mobile-overlay {
+        display: none !important;
+      }
+
+      /* All other styling is handled by the hydrated topbar component classes */
+
+      /* Large screen TOC width variant */
+      @media (min-width: 1536px) {
+        .toc-desktop-widget {
+          width: 20rem; /* 2xl:w-80 */
+        }
+      }
+
+      /* SVG icon sizing */
+      .toc-toggle-desktop svg,
+      .toc-toggle-mobile svg {
+        width: 1.25rem; /* w-5 */
+        height: 1.25rem; /* h-5 */
+      }
+
+      .toc-toggle-mobile svg {
+        width: 1.5rem; /* w-6 */
+        height: 1.5rem; /* h-6 */
+      }
+    </style>
+
+    <!-- Load font stylesheets -->
+    <link rel="stylesheet" href="/fonts/cocogoose/cocogoose.css" />
+    <link rel="stylesheet" href="/fonts/cocogoose-light/cocogoose-light.css" />
+
+    <!-- Self-hosted syntax highlighting CSS -->
+    <link rel="stylesheet" href="/styles/highlight-github-dark.min.css" />
+  </head>
+  <body class="bg-gray-900 text-gray-100 min-h-screen">
+    <slot />
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+  }
+</style>
+
+<LayoutScripts />

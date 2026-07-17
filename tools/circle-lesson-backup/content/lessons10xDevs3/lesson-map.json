@@ -1,0 +1,102 @@
+{
+  "01-m1l1-od-pomyslu-do-prd": {
+    "sectionId": 966234,
+    "circleLessonId": 3662385
+  },
+  "02-m1l2-od-chatbota-do-agenta": {
+    "sectionId": 966234,
+    "circleLessonId": 3662386
+  },
+  "03-m1l3-ai-powered-bootstrap": {
+    "sectionId": 966234,
+    "circleLessonId": 3662387
+  },
+  "04-m1l4-agent-onboarding": {
+    "sectionId": 966234,
+    "circleLessonId": 3662388
+  },
+  "05-m1l5-od-localhosta-na-produkcje": {
+    "sectionId": 966234,
+    "circleLessonId": 3662389
+  },
+  "06-m2l1-plan-mvp": {
+    "sectionId": 966235,
+    "circleLessonId": 3662392
+  },
+  "07-m2l2-architektura-z-agentami": {
+    "sectionId": 966235,
+    "circleLessonId": 3662393
+  },
+  "08-m2l3-solo-code-review": {
+    "sectionId": 966235,
+    "circleLessonId": 3662395
+  },
+  "09-m2l4-implementacja-z-ai": {
+    "sectionId": 966235,
+    "circleLessonId": 3662394
+  },
+  "10-m2l5-innovate": {
+    "sectionId": 966235,
+    "circleLessonId": 3662396
+  },
+  "11-m3l1-plan-testow-z-ai": {
+    "sectionId": 966236,
+    "circleLessonId": 3662398
+  },
+  "12-m3l2-od-planu-do-testow": {
+    "sectionId": 966236,
+    "circleLessonId": 3662400
+  },
+  "13-m3l3-hooki-i-triggery": {
+    "sectionId": 966236,
+    "circleLessonId": 3662401
+  },
+  "14-m3l4-testy-e2e": {
+    "sectionId": 966236,
+    "circleLessonId": 3662402
+  },
+  "15-m3l5-debugowanie-z-ai": {
+    "sectionId": 966236,
+    "circleLessonId": 3662403
+  },
+  "16-m4l1-skalowanie-kontekstu-dla-ai-w-duzych-projektach": {
+    "sectionId": 966240,
+    "circleLessonId": 3662412
+  },
+  "17-m4l2-agent-w-projekcie-legacy-generowanie-mapy-projektu": {
+    "sectionId": 966240,
+    "circleLessonId": 3662405
+  },
+  "18-m4l3-analiza-feature-z-ai": {
+    "sectionId": 966240,
+    "circleLessonId": 3662406
+  },
+  "19-m4l4-refaktoryzacja-z-agentem": {
+    "sectionId": 966240,
+    "circleLessonId": 3662408
+  },
+  "20-m4l5-modernizacja-legacy-z-ddd": {
+    "sectionId": 966240,
+    "circleLessonId": 3662410
+  },
+  "21-m5l1-ai-internal-builders": {
+    "sectionId": 966241,
+    "circleLessonId": 3662420
+  },
+  "22-m5l2-twoj-pierwszy-agent-zespolowy": {
+    "sectionId": 966241,
+    "circleLessonId": 3662415
+  },
+  "23-m5l3-code-review-w-erze-ai": {
+    "sectionId": 966241,
+    "circleLessonId": 3662416
+  },
+  "24-m5l4-shared-ai-registry": {
+    "sectionId": 966241,
+    "circleLessonId": 3662417
+  },
+  "25-m5l5-innovate": {
+    "sectionId": 966241,
+    "circleLessonId": 3662421
+  }
+}

@@ -1,0 +1,43 @@
+<meta name="lesson-id" content="Adnotacje, asercje i operator satisfies"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 52.5822%;"><iframe src="https://player.vimeo.com/video/1035136160?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="189" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>TypeScript oferuje bogaty zestaw narzędzi do zarządzania typami, takich jak adnotacje zmiennych, asercje typu czy operator satisfies. Pozwalają one na precyzyjne kontrolowanie typów w złożonych aplikacjach. W tej lekcji przyjrzymy się każdemu z tych mechanizmów, ilustrując ich zastosowanie zupełnie nowymi przykładami, aby w pełni zrozumieć ich działanie.</p><h3>Adnotacje zmiennych i wartości</h3><p>Adnotacje w TypeScript pomagają określić, jakie typy danych mogą być przypisane do zmiennych. Dzięki temu kompilator może skutecznie wykrywać błędy jeszcze przed uruchomieniem aplikacji.</p><p><strong>Typowanie zmiennych w praktyce</strong></p><p>Kiedy przypisujemy adnotację do zmiennej, określamy jej oczekiwany typ. W praktyce oznacza to, że TypeScript weryfikuje poprawność przypisywanej wartości, ale także odrzuca szczegóły jej typu literalnego.</p><pre><code>type RGB = { r: number; g: number; b: number };
+type Color = string | RGB;
+
+const palette: Record&lt;string, Color&gt; = {
+  primary: { r: 255, g: 0, b: 0 },
+  secondary: "blue",
+};
+
+// Poniższa operacja zgłasza błąd, ponieważ TypeScript "zapomniał" szczegóły o RGB.
+console.log(palette.primary.r); // Error: 'r' nie istnieje w typie 'Color'.</code></pre><p>W tym przypadku, mimo że palette.primary to obiekt typu <em>RGB</em>, TypeScript widzi go tylko jako <em>Color</em>, co wymaga jawnego zawężenia typu.</p><pre><code>console.log((palette.primary as RGB).r);</code></pre><p><strong>Typowanie wartości</strong></p><p>Jeżeli zamiast korzystać z adnotacji typu, wykorzystamy mechanizm inferencji, TypeScript zachowa pełną wiedzę o strukturze obiektu:</p><pre><code>const palette = {
+  primary: { r: 255, g: 0, b: 0 },
+  secondary: "blue",
+}; // TypeScript w pełni zna strukturę 'RGB'.
+
+console.log(palette.primary.r); // Działa poprawnie.</code></pre><p>Jednakże w przypadku dynamicznych kluczy lub bardziej złożonych typów, ta technika prowadzi do spadku czytelności i bezpieczeństwa kodu, stąd zalecamy korzystanie z operatora satisfies.</p><h2>Operator satisfies </h2><p>Operator satisfies pozwala na sprawdzenie, czy dana wartość spełnia określone kryteria typu, jednocześnie zachowując precyzyjne informacje o tym obiekcie. Dzięki temu TypeScript może dokładniej inferować typy, co prowadzi do lepszej autouzupełniania i wczesnego wykrywania błędów:</p><pre><code>type RGB = {r: number; g: number; b: number};
+type Color = string | RGB;
+
+const palette = {
+  primary: {r: 255, g: 0, b: 0},
+  secondary: "blue",
+} satisfies Record&lt;string, Color&gt;;
+
+console.log(palette.primary.r); // Brak błędu</code></pre><p><strong>Zapewnienie zgodności podczas rozwoju aplikacji</strong></p><p>Kiedy rozwijasz aplikację, możesz chcieć, aby nowe właściwości w obiektach nie naruszały istniejących typów. Operator satisfies pomaga w utrzymaniu spójności typów:</p><pre><code>type Settings = {
+  theme: string;
+  notifications: boolean;
+};
+
+const userSettings = {
+  theme: "dark",
+  notifications: true,
+  language: "en", // Błąd: Property 'language' does not exist on type Settings
+} satisfies Settings;</code></pre><h3>Kiedy używać satisfies?</h3><p>Operator satisfies jest najbardziej efektywny w następujących przypadkach:</p><ol start="1"><li><p><strong>Precyzyjna kontrola typów:</strong> Gdy chcesz upewnić się, że obiekt dokładnie spełnia wymagania typu bez rozszerzania go.</p></li><li><p><strong>Weryfikacja złożonych typów:</strong> Przy definiowaniu skomplikowanych struktur danych, gdzie ważne jest, aby obiekt spełniał określone kryteria.</p></li><li><p><strong>Unikanie problemów z autouzupełnianiem:</strong> Zapewnia lepsze wsparcie dla edytorów kodu, co pomaga w unikaniu błędów typów poprzez lepsze autouzupełnianie.</p></li></ol><h2>Asercje typu – praktyczne zastosowania</h2><p>Asercje typu umożliwiają nadpisanie domyślnej inferencji TypeScript. Czasami jako programiści mamy więcej informacji o typie, niż kompilator może wnioskować.</p><p><strong>as – wymuszanie typu</strong></p><p>Asercje typu są często stosowane w sytuacjach, gdy interfejsy nie są jednoznaczne. Rozważmy przykład pracy z DOM:</p><pre><code>const button = document.querySelector("#submit") as HTMLButtonElement;
+
+// Gdyby element nie istniał, poniższa operacja spowoduje błąd runtime:
+button.click();</code></pre><p>Aby poprawić bezpieczeństwo kodu, asercję można połączyć z warunkiem:</p><pre><code>const button = document.querySelector("#submit");
+
+if (button instanceof HTMLButtonElement) {
+  button.click(); // Teraz mamy pewność co do typu.
+}</code></pre><p><strong>Non-null assertion (!)</strong></p><p>Non-null assertion skraca kod w sytuacjach, gdy wartość może być niejawnie null lub undefined. Przykład:</p><pre><code>const value = document.getElementById("app")!.textContent; // Zakładamy, że element istnieje.</code></pre><p>Jednakże lepszym podejściem byłoby wcześniejsze sprawdzenie wartości:</p><pre><code>const app = document.getElementById("app");
+
+if (app) {
+  console.log(app.textContent);
+}</code></pre><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>611-type-details - </strong>Chcesz się odwołać do właściwości jednego z obiektów zawartych w zagnieżdżonej strukturze. Niestety TypeScript utracił szczegółowe informacje na jego temat. Wykorzystaj technikę przedstawioną w tej lekcji, aby rozwiązać problem.</p></li></ol><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

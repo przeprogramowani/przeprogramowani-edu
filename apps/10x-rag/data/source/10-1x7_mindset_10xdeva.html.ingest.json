@@ -1,0 +1,126 @@
+{
+  "lessonId": "[1x7] Mindset 10xDeva",
+  "file": "10-1x7_mindset_10xdeva.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 11,
+      "order": 1
+    },
+    {
+      "slug": "ograniczenia-llm-w-kontekscie-programowania",
+      "title": "Ograniczenia LLM w kontekście programowania",
+      "blocks": 4,
+      "order": 2
+    },
+    {
+      "slug": "nadzor-nad-ai",
+      "title": "Nadzór nad AI",
+      "blocks": 4,
+      "order": 3
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 7,
+      "order": 4
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:f710a839:43cc23fa",
+      "tokenEstimate": 54,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f710a839:43cc23fa:0-1",
+      "tokenEstimate": 54,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:f710a839:24701484",
+      "tokenEstimate": 193,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f710a839:24701484:0-8",
+      "tokenEstimate": 395,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "chk:f710a839:24701484:7-10",
+      "tokenEstimate": 188,
+      "span": [
+        7,
+        10
+      ]
+    },
+    {
+      "id": "sec:f710a839:72e7af4f",
+      "tokenEstimate": 80,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f710a839:72e7af4f:0-3",
+      "tokenEstimate": 254,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:f710a839:00be4d07",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f710a839:00be4d07:0-3",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:f710a839:33c7f0dd",
+      "tokenEstimate": 181,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f710a839:33c7f0dd:0-6",
+      "tokenEstimate": 289,
+      "span": [
+        0,
+        6
+      ]
+    }
+  ]
+}

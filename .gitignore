@@ -1,0 +1,33 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+pnpm-lock.yaml
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.local
+.env.test
+.env.e2e
+.env.production
+
+# Playwright reports and browser artifacts
+apps/edu-platform/tests/playwright-report/
+apps/edu-platform/playwright-report/
+apps/edu-platform/test-results/
+
+# macOS-specific files
+.DS_Store
+
+.nx/
+.vscode
+data/with*.json
+data/*.csv

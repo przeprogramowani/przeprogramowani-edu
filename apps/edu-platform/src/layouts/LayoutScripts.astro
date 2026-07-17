@@ -1,0 +1,246 @@
+<script>
+  import hljs from 'highlight.js';
+
+  function initializeLessonEnhancements() {
+    const codeBlocks = document.querySelectorAll('pre > code');
+
+    // Apply highlight heuristics before highlighting
+    codeBlocks.forEach(function (codeBlock) {
+      const pre = codeBlock.parentElement;
+      if (pre && pre.classList.contains('mermaid')) {
+        return; // Skip Mermaid containers entirely — no hljs, no language heuristics.
+      }
+
+      const codeText = codeBlock.textContent || '';
+
+      // ASCII decision trees/diagrams should stay plain text (no syntax colors).
+      const looksLikeAsciiDiagram =
+        codeText.includes('+--') ||
+        codeText.includes('|   -->') ||
+        (codeText.includes('Jakie pytanie zadajesz?') && codeText.includes('-->'));
+      if (looksLikeAsciiDiagram) {
+        codeBlock.className = 'nohighlight language-plaintext';
+        return;
+      }
+
+      // Respect explicit language provided in Markdown fences (e.g. ```plaintext)
+      const hasExplicitLanguage = Array.from(codeBlock.classList).some((className) =>
+        className.startsWith('language-')
+      );
+      if (hasExplicitLanguage) {
+        // For plain text fences, force nohighlight to avoid any theme token colors.
+        const isPlainTextFence = Array.from(codeBlock.classList).some(
+          (className) =>
+            className === 'language-plaintext' ||
+            className === 'language-text' ||
+            className === 'language-txt'
+        );
+        if (isPlainTextFence) {
+          codeBlock.classList.add('nohighlight');
+        }
+        return;
+      }
+
+      // TypeScript detection (most strict)
+      if (
+        codeText.includes('interface ') ||
+        codeText.includes('type ') ||
+        codeText.includes(': string') ||
+        codeText.includes(': number') ||
+        codeText.includes(': boolean') ||
+        codeText.includes('extends ') ||
+        codeText.includes('implements ') ||
+        codeText.includes('fetch') ||
+        codeText.includes('enum ') ||
+        codeText.includes('as ')
+      ) {
+        codeBlock.className = 'language-typescript';
+      }
+      // JavaScript detection
+      else if (
+        codeText.includes('const ') ||
+        codeText.includes('let ') ||
+        codeText.includes('var ') ||
+        codeText.includes('function ') ||
+        codeText.includes('=> ') ||
+        codeText.includes('import ') ||
+        codeText.includes('export ') ||
+        codeText.includes('require(') ||
+        codeText.includes('console.') ||
+        codeText.includes('document.') ||
+        codeText.includes('window.')
+      ) {
+        codeBlock.className = 'language-javascript';
+      }
+      // JSON detection
+      else if (
+        (codeText.trim().startsWith('{') && codeText.trim().endsWith('}')) ||
+        (codeText.trim().startsWith('[') && codeText.trim().endsWith(']')) ||
+        (codeText.includes('"') && codeText.includes(':'))
+      ) {
+        codeBlock.className = 'language-json';
+      }
+      // Markdown detection
+      else if (
+        codeText.includes('# ') ||
+        codeText.includes('## ') ||
+        codeText.includes('### ') ||
+        codeText.includes('**') ||
+        codeText.includes('*') ||
+        (codeText.includes('[') && codeText.includes('](')) ||
+        codeText.includes('```')
+      ) {
+        codeBlock.className = 'language-markdown';
+      }
+      // Default to plaintext
+      else {
+        codeBlock.className = 'language-plaintext';
+      }
+    });
+
+    // Initialize highlight.js
+    hljs.highlightAll();
+
+    codeBlocks.forEach(function (codeBlock) {
+      const pre = codeBlock.parentElement!;
+      if (pre.classList.contains('mermaid')) {
+        return; // Don't bolt a copy button onto a rendered diagram.
+      }
+
+      // Create copy button
+      const copyButton = document.createElement('button');
+      copyButton.textContent = 'Kopiuj do schowka';
+      copyButton.className =
+        'copy-btn absolute top-2 right-2 px-3 py-1 bg-gray-700 text-gray-300 text-sm rounded hover:bg-gray-600 transition-colors opacity-0 hover:opacity-100 border border-gray-600';
+      copyButton.style.fontSize = '12px';
+
+      // Make pre element relative for absolute positioning
+      pre.style.position = 'relative';
+
+      // Add copy button to pre element
+      pre.appendChild(copyButton);
+
+      // Show button on hover over pre element
+      pre.addEventListener('mouseenter', function () {
+        copyButton.style.opacity = '1';
+      });
+
+      pre.addEventListener('mouseleave', function () {
+        copyButton.style.opacity = '0';
+      });
+
+      // Copy functionality
+      copyButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const textToCopy = codeBlock.textContent || '';
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(textToCopy).then(function () {
+            copyButton.textContent = 'Skopiowane!';
+            copyButton.style.backgroundColor = '#059669';
+            setTimeout(function () {
+              copyButton.textContent = 'Kopiuj do schowka';
+              copyButton.style.backgroundColor = '';
+            }, 2000);
+          });
+        } else {
+          // Fallback for older browsers
+          const textArea = document.createElement('textarea');
+          textArea.value = textToCopy;
+          textArea.style.position = 'fixed';
+          textArea.style.left = '-999999px';
+          textArea.style.top = '-999999px';
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+
+          try {
+            document.execCommand('copy');
+            copyButton.textContent = 'Skopiowane!';
+            copyButton.style.backgroundColor = '#059669';
+            setTimeout(function () {
+              copyButton.textContent = 'Kopiuj do schowka';
+              copyButton.style.backgroundColor = '';
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy text: ', err);
+          }
+
+          document.body.removeChild(textArea);
+        }
+      });
+    });
+
+    renderMermaidDiagrams();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeLessonEnhancements, { once: true });
+  } else {
+    initializeLessonEnhancements();
+  }
+
+  // Mermaid render pass — dynamic import only when diagrams are present.
+  async function renderMermaidDiagrams() {
+    const containers = Array.from(
+      document.querySelectorAll<HTMLElement>('pre.mermaid:not([data-processed="true"])')
+    );
+    if (containers.length === 0) return;
+
+    try {
+      const mermaid = (await import('mermaid')).default;
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        securityLevel: 'loose', // prework lessons are trusted content
+      });
+
+      for (const container of containers) {
+        const source = (container.textContent ?? '').trim();
+        try {
+          await mermaid.run({ nodes: [container] });
+          container.setAttribute('data-processed', 'true');
+        } catch (renderError) {
+          console.warn('[mermaid] render failed for diagram', renderError);
+          container.classList.remove('mermaid');
+          container.classList.add('mermaid-error');
+          container.innerHTML = `<code>${escapeHtml(source)}</code><div class="text-xs opacity-60 mt-2">Nie udało się wyrenderować diagramu.</div>`;
+        }
+      }
+    } catch (loadError) {
+      console.warn('[mermaid] library failed to load', loadError);
+      // Raw DSL is already visible in the container — degrade gracefully.
+    }
+  }
+
+  function escapeHtml(s: string): string {
+    return s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+</script>
+
+<style is:global>
+  .prose pre.mermaid,
+  .lesson-content pre.mermaid {
+    background: transparent;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+  .prose pre.mermaid svg,
+  .lesson-content pre.mermaid svg {
+    max-width: 100%;
+    height: auto;
+  }
+  .prose pre.mermaid-error,
+  .lesson-content pre.mermaid-error {
+    border: 1px solid rgb(127 29 29 / 0.6);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+  }
+</style>

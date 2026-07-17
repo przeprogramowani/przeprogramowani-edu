@@ -1,0 +1,582 @@
+{
+  "lessonId": "[1x6] Efektywna praca z AI - część 2",
+  "file": "13-1x6_efektywna_praca_z_ai_cz_2.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 4,
+      "order": 1
+    },
+    {
+      "slug": "1-brainstorming-i-eksploracja-rozwiazan",
+      "title": "1. Brainstorming i eksploracja rozwiązań",
+      "blocks": 3,
+      "order": 2
+    },
+    {
+      "slug": "patrz-szerzej---z-ai-to-prostsze",
+      "title": "Patrz szerzej - z AI to prostsze",
+      "blocks": 4,
+      "order": 3
+    },
+    {
+      "slug": "najlepsze-praktyki",
+      "title": "Najlepsze praktyki",
+      "blocks": 4,
+      "order": 4
+    },
+    {
+      "slug": "najczestsze-bedy",
+      "title": "Najczęstsze błędy",
+      "blocks": 4,
+      "order": 5
+    },
+    {
+      "slug": "2-planowanie-zadan",
+      "title": "2. Planowanie zadań",
+      "blocks": 4,
+      "order": 6
+    },
+    {
+      "slug": "systematyczne-planowanie-wspolnie-z-ai",
+      "title": "Systematyczne planowanie wspólnie z AI",
+      "blocks": 4,
+      "order": 7
+    },
+    {
+      "slug": "najlepsze-praktyki",
+      "title": "Najlepsze praktyki",
+      "blocks": 3,
+      "order": 8
+    },
+    {
+      "slug": "najczestsze-bedy",
+      "title": "Najczęstsze błędy",
+      "blocks": 4,
+      "order": 9
+    },
+    {
+      "slug": "3-promptowanie-bez-efektu-potwierdzenia",
+      "title": "3. Promptowanie bez efektu potwierdzenia",
+      "blocks": 4,
+      "order": 10
+    },
+    {
+      "slug": "przejmij-kontrole-nad-rozmowa",
+      "title": "Przejmij kontrolę nad rozmową",
+      "blocks": 17,
+      "order": 11
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "Podsumowanie",
+      "blocks": 1,
+      "order": 12
+    },
+    {
+      "slug": "4-ratowanie-problematycznych-konwersacji",
+      "title": "4. Ratowanie problematycznych konwersacji",
+      "blocks": 4,
+      "order": 13
+    },
+    {
+      "slug": "konsolidacja-i-reset",
+      "title": "Konsolidacja i reset",
+      "blocks": 6,
+      "order": 14
+    },
+    {
+      "slug": "najlepsze-praktyki",
+      "title": "Najlepsze praktyki",
+      "blocks": 2,
+      "order": 15
+    },
+    {
+      "slug": "najczestsze-bedy",
+      "title": "Najczęstsze błędy",
+      "blocks": 4,
+      "order": 16
+    },
+    {
+      "slug": "5-diagramy-i-schematy",
+      "title": "5. Diagramy i schematy",
+      "blocks": 9,
+      "order": 17
+    },
+    {
+      "slug": "interaktywne-artefakty",
+      "title": "Interaktywne artefakty",
+      "blocks": 4,
+      "order": 18
+    },
+    {
+      "slug": "diagramy-ascii-art",
+      "title": "Diagramy ASCII ART",
+      "blocks": 5,
+      "order": 19
+    },
+    {
+      "slug": "diagramy-mermaid",
+      "title": "Diagramy Mermaid",
+      "blocks": 6,
+      "order": 20
+    },
+    {
+      "slug": "grafika-wektorowa-na-zadanie",
+      "title": "Grafika wektorowa na żądanie",
+      "blocks": 5,
+      "order": 21
+    },
+    {
+      "slug": "latex-i-tabele-markdown",
+      "title": "LaTeX i Tabele Markdown",
+      "blocks": 10,
+      "order": 22
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "🧑🏻💻 Ćwiczenia praktyczne",
+      "blocks": 21,
+      "order": 23
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 4,
+      "order": 24
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:e30fbc65:43cc23fa",
+      "tokenEstimate": 68,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:43cc23fa:0-1",
+      "tokenEstimate": 68,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:24701484",
+      "tokenEstimate": 218,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:24701484:0-3",
+      "tokenEstimate": 256,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:ca67e3c8",
+      "tokenEstimate": 202,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:ca67e3c8:0-2",
+      "tokenEstimate": 202,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:ae7d8f3b",
+      "tokenEstimate": 230,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:ae7d8f3b:0-3",
+      "tokenEstimate": 370,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:7ec566dd",
+      "tokenEstimate": 220,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:7ec566dd:0-3",
+      "tokenEstimate": 274,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:2e76aaf7",
+      "tokenEstimate": 204,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:2e76aaf7:0-3",
+      "tokenEstimate": 334,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:a602e011",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:a602e011:0-3",
+      "tokenEstimate": 245,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:5d412d3b",
+      "tokenEstimate": 222,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:5d412d3b:0-3",
+      "tokenEstimate": 222,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:7ec566dd",
+      "tokenEstimate": 185,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:7ec566dd:0-2",
+      "tokenEstimate": 244,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:2e76aaf7",
+      "tokenEstimate": 182,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:2e76aaf7:0-3",
+      "tokenEstimate": 281,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:4663c0bf",
+      "tokenEstimate": 214,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:4663c0bf:0-3",
+      "tokenEstimate": 244,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:74726d43",
+      "tokenEstimate": 215,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:74726d43:0-13",
+      "tokenEstimate": 475,
+      "span": [
+        0,
+        13
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:74726d43:13-16",
+      "tokenEstimate": 233,
+      "span": [
+        13,
+        16
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:33c7f0dd",
+      "tokenEstimate": 137,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:33c7f0dd:0-0",
+      "tokenEstimate": 137,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:301abe75",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:301abe75:0-3",
+      "tokenEstimate": 259,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:c7ffc5a3",
+      "tokenEstimate": 216,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:c7ffc5a3:0-4",
+      "tokenEstimate": 461,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:c7ffc5a3:4-5",
+      "tokenEstimate": 346,
+      "span": [
+        4,
+        5
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:7ec566dd",
+      "tokenEstimate": 168,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:7ec566dd:0-1",
+      "tokenEstimate": 168,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:2e76aaf7",
+      "tokenEstimate": 208,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:2e76aaf7:0-3",
+      "tokenEstimate": 304,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:2c0d77df",
+      "tokenEstimate": 178,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:2c0d77df:0-8",
+      "tokenEstimate": 276,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:68b41a9b",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:68b41a9b:0-3",
+      "tokenEstimate": 253,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:e9602516",
+      "tokenEstimate": 154,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:e9602516:0-4",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:e853681d",
+      "tokenEstimate": 173,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:e853681d:0-5",
+      "tokenEstimate": 208,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:323f1e25",
+      "tokenEstimate": 173,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:323f1e25:0-4",
+      "tokenEstimate": 205,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:530541f0",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:530541f0:0-9",
+      "tokenEstimate": 296,
+      "span": [
+        0,
+        9
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:dcc8ec86",
+      "tokenEstimate": 164,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:dcc8ec86:0-15",
+      "tokenEstimate": 434,
+      "span": [
+        0,
+        15
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:dcc8ec86:15-20",
+      "tokenEstimate": 240,
+      "span": [
+        15,
+        20
+      ]
+    },
+    {
+      "id": "sec:e30fbc65:33c7f0dd",
+      "tokenEstimate": 223,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e30fbc65:33c7f0dd:0-3",
+      "tokenEstimate": 223,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

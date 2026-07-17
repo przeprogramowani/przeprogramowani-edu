@@ -1,0 +1,247 @@
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m2-l4/assets/cover.jpg">https://images.przeprogramowani.pl/lessons/m2-l4/assets/cover.jpg</a></p></blockquote>
+<p>W poprzednich lekcjach przeszliśmy pełny cykl jednej zmiany: roadmapa, plan, fazowa implementacja i review wygenerowanego kodu. Generowanie kart działa, zapis do decku działa, edycja też. CRUD jak się patrzy.</p>
+<p>I nagle pojawia się slice, który na pierwszy rzut oka wygląda jak kolejny endpoint, a wcale nim nie jest.</p>
+<p><strong>S-04 srs-review-session</strong>, czyli sesja powtórek. Na pierwszy rzut oka to po prostu "pokaż kartę, zbierz ocenę, zaktualizuj stan, pokaż następną". Klasyczny CRUD z odrobiną logiki. Otwierasz Cursora albo Claude Code, wpisujesz to samo polecenie co poprzednio - <strong>/10x-plan srs-review-session</strong>. Po chwili agent zaczyna zadawać pytania, których być może się nie spodziewałeś: jakie ratingi przyjmujemy, czy karta ma jedną politykę powtórek czy konfigurowalną, jak liczymy <strong>due date</strong>, co dzieje się z kartą po edycji. I z której biblioteki korzystamy. Skąd masz to wiedzieć?</p>
+<p>Workflow nie jest popsuty. To logika biznesowa zaczyna robić się bardziej unikalna, a twój projekt przestaje być zbiorem endpointów.</p>
+<p>Potrzebujemy więc nowych narzędzi na trudniejsze przypadki. Po pierwsze, taki slice wymaga <strong>szerszego przygotowania przed planem</strong>: w CRUD wystarczał <strong>/10x-plan</strong>, ale przy mniej oczywistych funkcjach warto najpierw zebrać dodatkowy kontekst - z codebase'u i ze źródeł zewnętrznych. Po drugie, dorzucamy konkretny toolkit do external researchu dla agentów: AI-native search, live docs i dyscyplinę szukania źródeł zaprojektowanych pod LLM.</p>
+<p>Workflow zostaje ten sam. Tylko przygotowanie rośnie razem z ryzykiem.</p>
+<h3>Po CRUD mamy karty, ale brakuje powtórek</h3>
+<p>Nasz checkpoint wygląda teraz następująco: użytkownik wygenerował propozycje fiszek, zaakceptował część i zapisał je jako <strong>Flashcard</strong> w decku. Karta istnieje. Ma front, back, deck i datę utworzenia. I dokładnie tu kończy się to, co Stream A oferuje produktowi.</p>
+<p>Bo z perspektywy nauki deck pełen kart bez sesji powtórek to po prostu lepsza wersja notatnika.</p>
+<p>Brakuje nam systemu powtórek:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-1-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-1-10x.png</a></p></blockquote>
+<p><strong>S-04</strong> to właśnie ta pętla. Karta zyskuje <strong>ReviewState</strong>. Z <strong>ReviewState</strong> wynika, które karty dziś trzeba pokazać. Pokazujemy je, użytkownik ocenia ("Again / Hard / Good / Easy" albo "1-5", w zależności od algorytmu), na podstawie oceny aktualizujemy stan i wyznaczamy kolejny termin powtórki.</p>
+<p>Brzmi prosto. I właśnie ta prostota jest pułapką, w którą łatwo wpaść.</p>
+<h3>SRS to decyzja kontraktowa</h3>
+<p>Naturalny odruch w pracy z agentem to potraktować <strong>S-04</strong> jak każdy inny slice z roadmapy: change-id, <strong>/10x-plan</strong>, fazy, implementacja. Spróbuj zacząć tak w głowie i zatrzymaj się na pierwszej decyzji, którą agent będzie musiał podjąć.</p>
+<p>Jakiego kształtu ma być <strong>ReviewState</strong>?</p>
+<p>Tu nie ma "zdroworozsądkowej" odpowiedzi. Jeśli oprzesz się o klasyczny algorytm SuperMemo (SM-2), używany w starszej wersji <a href="https://apps.ankiweb.net/">Anki</a>, <strong>ReviewState</strong> to z grubsza <strong>easeFactor</strong>, <strong>interval</strong>, <strong>repetitions</strong> plus data ostatniej powtórki. Skala ocen ma sześć stopni, polityka edycji jest dość liberalna. Jeśli przyjmiesz FSRS (nowszy algorytm, opcjonalny w Anki od wersji 23.10 z listopada 2023), <strong>ReviewState</strong> to trójka <strong>Difficulty / Stability / Retrievability</strong> plus parametry modelu, skala ocen ma cztery stopnie (<strong>Again / Hard / Good / Easy</strong>), a edycja karty wpływa na stan w sposób, który trzeba świadomie obsłużyć.</p>
+<p>Każda taka decyzja to kontrakt, który propaguje się dalej:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-2-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-2-10x.png</a></p></blockquote>
+<p>Innymi słowy: w <strong>S-04</strong> nie blokuje cię brak kodu do napisania. Blokuje cię <strong>brak osadzenia kodu w konkretnych decyzjach domenowych</strong>, bez których agent nie wie, w którą stronę pisać. Plan zbudowany przed tą decyzją będzie mocno ograniczony - agent wybierze coś sam, w połowie implementacji okaże się, że schemat nie pasuje do API biblioteki i wrócisz do tego samego miejsca, tylko ze śmietnikiem w repo.</p>
+<p>Ten sam wzorzec zobaczysz w wielu innych aplikacjach:</p>
+<ul>
+<li>W typowym SaaS-ie "zmiana schematu subskrypcji" brzmi jak formularz i webhook. W praktyce blokują cię zasady przedpłat, okresy rozliczeniowe, ponowienia płatności, faktury korygujące, podatki i API dostawcy płatności.</li>
+<li>W aplikacji logistycznej "zaproponuj trasę kurierowi" brzmi jak widok mapy. W praktyce musisz wybrać model optymalizacji: okna czasowe, pojemność auta, priorytety paczek, korki, punkty odbioru.</li>
+<li>W serwisie typu marketplace "dopasuj klienta do wykonawcy" brzmi jak wyszukiwarka. W praktyce research może dotyczyć metod rankingu, dostępności, odległości, stawek, anulowań, reputacji i tego, czy wynik ma być deterministyczny, czy uczący się z zachowań użytkowników.</li>
+<li>W produkcie edukacyjnym "poleć następną lekcję" brzmi jak lista rekomendacji. W praktyce trzeba ustalić, czy rekomendujesz po ukończonych lekcjach, wynikach quizów, lukach kompetencyjnych, czasie do celu, czy po podobieństwie treści.</li>
+</ul>
+<p>W każdym z tych przypadków agent może napisać kod. Problem w tym, że bez researchu napisze go pod przypadkowy model świata.</p>
+<p>To jest właśnie sygnał, że nasz slice z SRS potrzebuje szerszego przygotowania.</p>
+<p>Żeby zmieścić wszystkie nowe informacje w oknie kontekstowym modelu, podzielimy je na dwa ruchy: najpierw zewnętrzny rekonesans (co jest sensownym gotowcem na rynku?), potem analiza projektu (co już mamy w kodzie?). Zacznijmy od kilku pomysłów na SRS z zewnątrz.</p>
+<h3>External research dla agentów</h3>
+<p>Na start implementacji SRS poszukamy inspiracji w sieci - czym właściwie jest ten system, ile jest dostępnych algorytmów i jakie są trade-offy. I tu pojawia się odruch z czasów ChataGPT, który warto rozbroić od razu:</p>
+<blockquote>
+<p>"Wkleję pytanie do darmowego ChataGPT, wezmę pierwszą odpowiedź i wrzucę do planu."</p>
+</blockquote>
+<p>Po pierwsze, typowy chatbot odpowie z pamięci treningowej - uderzy w datę odcięcia danych, a w konsekwencji w halucynacje i nieaktualne nazwy paczek. Po drugie, nawet jeśli odpowiedź będzie sensowna, nie wiemy, czy jest oparta na czymś, co da się sprawdzić. Nie zrobiliśmy tzw. <strong>groundingu</strong>, czyli osadzenia wyników AI w realnych danych.</p>
+<p>Wracamy tu do różnicy z preworku: chatbot głównie odpowiada, agent działa w harnessie i korzysta z narzędzi. Jednym z tych narzędzi jest pobieranie zasobów z sieci, np. <strong>WebFetch</strong>, które pozwala wyjść poza ograniczenia pamięci modelu i wczytać aktualną dokumentację, issue, README albo artykuł techniczny.</p>
+<p>Tylko że <strong>WebFetch</strong> to dopiero pierwszy element układanki. Jeśli masz konkretny URL, agent go pobierze. Jeśli dopiero szukasz źródeł, potrzebujesz jeszcze narzędzia typu <strong>WebSearch</strong> albo zewnętrznego MCP. Tu zaczyna się nierówność między agentami: nie każdy ma wbudowaną wyszukiwarkę, nie każdy pozwala ją konfigurować i nie każdy korzysta z tego samego backendu.</p>
+<p>Na dziś wygląda to mniej więcej tak:</p>
+<ul>
+<li><strong>Cursor</strong> - używa usługi Exa.ai do wyszukiwania aktualnych informacji i dodawania ich do kontekstu.</li>
+<li><strong>Codex</strong> i <strong>ChatGPT</strong> - integracja z wyszukiwarką Bing od Microsoftu - <a href="https://help.openai.com/en/articles/9237897-chatgpt-search">support page</a>.</li>
+<li><strong>Claude Code</strong> - wbudowane narzędzie <strong>WebSearch</strong> nie ma opisanych providerów, ale użytkownicy Reddita wskazują, że wyniki często pokrywają się z rezultatami <a href="https://search.brave.com/">Brave Search</a>, co widzi też <a href="https://simonwillison.net/2025/Mar/21/anthropic-use-brave/">Simon Willison</a>.</li>
+</ul>
+<p>Inne narzędzia mogą do wyszukiwania podchodzić inaczej, albo nie wspierać tej funkcjonalności w ogóle. Na szczęście dzięki MCP i zewnętrznym dostawcom wyszukiwania AI-native możemy tę lukę zaadresować.</p>
+<h3>Agentic search</h3>
+<p>Zanim wybierzemy konkretnego dostawcę, zatrzymajmy się chwilę na koncepcji integracji wyszukiwarek z agentami. <strong>Agentic search</strong> to osobna warstwa zaprojektowana pod pracę z agentem: zapytania mogą wykorzystywać bardziej naturalne zwroty i terminy, wyniki przychodzą w formacie gotowym do dalszej obróbki (najczęściej czysty markdown z metadanymi), a API są pomyślane pod łańcuch wywołań - szybkie odpowiedzi, oczyszczona treść strony zamiast surowego HTML-a, endpointy typu <strong>answer</strong>, które od razu zwracają wynik z cytowanymi źródłami.</p>
+<p>Na rynku jest dziś kilku poważnych graczy, którzy walczą o twoją uwagę: <strong>Brave Search</strong>, <strong>Firecrawl</strong>, <strong>Exa</strong>, <strong>Tavily</strong>, <strong>Perplexity</strong>, <strong>Parallel Search</strong>, <strong>SerpAPI</strong>.</p>
+<p>W maju 2026 zespół AIMultiple <a href="https://aimultiple.com/agentic-search">opublikował benchmark</a> całej ósemki na 100 realnych pytaniach z branży programowania. W roli sędziego (LLM-as-a-Judge) pracował GPT-5.2, a 10% wyników zostało dodatkowo zweryfikowane przez ludzi. Główny wniosek - nie ma jednego lidera, który gniecie konkurencję: <strong>czwórka liderów (Brave, Firecrawl, Exa, Parallel Pro) jest statystycznie nie do odróżnienia</strong> w ogólnym rankingu</p>
+<p>Najciekawsze są jednak wyniki w podziale na typ zapytania. Benchmark dzieli pytania na sześć kategorii: <em>Research</em>, <em>Factual Verification</em>, <strong>Technical Documentation</strong>, <em>Real-time Events</em>, <em>Comparative</em> i <em>Tool Discovery</em>.</p>
+<p>To, co mamy do zrobienia w <strong>S-04</strong> - znaleźć kandydata na bibliotekę SRS w TypeScript, przeczytać dokumentację, zweryfikować kształt API - to podręcznikowy przykład <em>Technical Documentation</em>. I w tej właśnie kategorii przedstawiana za chwilę <strong>Exa.ai zdobyła najwyższą ocenę jakości</strong> spośród całej ósemki.</p>
+<p>Do tego dochodzi sygnał z rynku, który już znamy: Cursor pod <strong>@web</strong> korzysta właśnie z Exy, a Notion AI używa jej do wyszukiwania aktualności. Wybór praktyków i niezależny benchmark wskazują w tę samą stronę. Dlatego w dalszej części lekcji wpinamy Exę - jako jednego z przedstawicieli kategorii, dobranego pod nasz konkretny przypadek.</p>
+<blockquote>
+<p>Uwaga - jeśli korzystasz z Cursora, poniższa integracja z Exa.ai nie jest dla ciebie niezbędna, bo Cursor obsługuje ją natywnie. Jeśli twój agent działa już z innym dostawcą z czołówki (Brave, Firecrawl, Tavily), nie zmieniaj go odruchowo - najpierw zobacz, jak radzi sobie na zadaniu zbliżonym do twojego, a dopiero potem decyduj o migracji.</p>
+</blockquote>
+<h3>Exa.ai jako AI-native search</h3>
+<p>Exa.ai opisuje się jako "the best search API for AI" i "industry-leading web index built for agents". Marketing marketingiem, ale za hasłem stoją trzy rzeczy, które realnie liczą się w pracy z agentem i które potwierdza opisany wyżej benchmark: trafność na zapytaniach technicznych, krótkie czasy odpowiedzi i wyniki w formacie gotowym do dalszej obróbki. Do tego dostajemy MCP, dzięki któremu agent bez gimnastyki włącza tę wyszukiwarkę do swojego zestawu narzędzi.</p>
+<p>W darmowym planie wykonamy 1000 zapytań, a kolejne 1000 kosztuje tylko 7$ (dla porównania, <strong>WebSearch</strong> w aplikacjach opartych o Claude SDK to 10$ za 1000 zapytań). Na potrzeby kodowania z agentami i okazjonalnego researchu w sieci free tier będzie wystarczający.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m2-l4/assets/exa-pricing.png">https://images.przeprogramowani.pl/lessons/m2-l4/assets/exa-pricing.png</a></p></blockquote>
+<p>Żeby zacząć, zakładamy darmowe konto i wybieramy wariant środowiska. Nie korzystamy z Exa.ai w formie biblioteki, bo nie budujemy aplikacji z AI search (tę opcję też możesz rozważyć!), tylko potrzebujemy MCP:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m2-l4/assets/exa-config.png">https://images.przeprogramowani.pl/lessons/m2-l4/assets/exa-config.png</a></p></blockquote>
+<p>W odpowiedzi dostajemy prompt, który możemy przerobić np. na custom command (<strong>.claude/commands/exa-init.md</strong> lub podobny - ważne, żeby móc się do niego odwołać w swoim agencie):</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m2-l4/assets/exa-prompt.png">https://images.przeprogramowani.pl/lessons/m2-l4/assets/exa-prompt.png</a></p></blockquote>
+<p>Do czego wykorzystamy to narzędzie? Przeszukamy internet pod kątem algorytmów SRS i kandydatów na biblioteki obsługujące core tej funkcjonalności. Przykład video za chwilę.</p>
+<h3>Context7 jako live library docs</h3>
+<p>Powiedzmy, że Exa potwierdziła, że najmocniejszym kandydatem w TypeScript jest <strong>ts-fsrs</strong> (implementacja FSRS od community Open Spaced Repetition). Wiesz już, <em>którą</em> bibliotekę chcesz w planie. Teraz potrzebujesz wiedzieć, <em>jak</em> ta biblioteka wygląda od strony API: jakie typy eksportuje, jakie ma kontrakty, jak wygląda inicjalizacja, jak wygląda typowe wywołanie.</p>
+<p>Tu zaczyna się druga klasa błędów: pytasz agenta o API biblioteki, on odpowiada z pamięci treningowej i podaje pięknie sformatowany kod z funkcjami, które nie istnieją albo zostały zmienione trzy wersje temu. Klasyczna halucynacja warstwy technicznej.</p>
+<p><strong>Context7</strong> to jedna z opcji, która rozwiązuje ten problem przez wstrzyknięcie aktualnej dokumentacji do kontekstu agenta. Wspiera MCP, <a href="https://context7.com/docs/clients/cli">CLI</a> i dedykowane <a href="https://context7.com/docs/skills">skille</a> - możesz skonfigurować to według własnych preferencji. Darmowy plan dopuszcza 1000 wywołań, a za 10$/mc wchodzimy na "unlimited API calls".</p>
+<p>Instalacja - <a href="https://context7.com/install">zakładka Install</a>.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m2-l4/assets/context-7.png">https://images.przeprogramowani.pl/lessons/m2-l4/assets/context-7.png</a></p></blockquote>
+<p>Kopiujemy wskazane polecenie, uruchamiamy je <strong>poza agentem</strong>, żeby zaktualizował się nasz setup MCP, otwieramy nową sesję i MCP powinno być już gotowe do uwierzytelnienia naszym kontem.</p>
+<p>A jak to działa? Kiedy prosisz agenta o pobranie wybranej dokumentacji, w praktyce korzysta on z dwóch narzędzi:</p>
+<pre><code class="language-text">1. resolve-library-id: "ts-fsrs"
+   → /open-spaced-repetition/ts-fsrs
+
+2. query-docs: "/open-spaced-repetition/ts-fsrs"
+   → strukturyzowany markdown z aktualnymi docsami, docięty pod budżet tokenów
+</code></pre>
+<p>Te dwa narzędzia możesz wywoływać osobno, ale możesz też zadać ogólne zapytanie:</p>
+<p><strong>Pobierz dokumentację &lt;library_name&gt;, która pozwoli zaimplementować S-04 z roadmapy. Użyj Context7 mcp</strong></p>
+<p>W codziennej rozmowie z agentem rozbijanie tego na dwa kroki nie jest niezbędne. Jeśli twoje narzędzie ma wpięty Context7 i potrafi się nim posługiwać, mów do niego naturalnie; jeśli widzisz problemy, rozbij to na dwa etapy - "najpierw zidentyfikuj bibliotekę po ID, potem pobierz konkretne fragmenty dokumentacji".</p>
+<p>Efekt jest taki, że <strong>/10x-plan</strong> dla <strong>S-04</strong> dostaje na wejście fragment docsów <strong>ts-fsrs</strong> zamiast halucynowanego API. Plan może uczciwie powiedzieć "używamy <strong>createEmptyCard</strong> i <strong>fsrs().next(card, rating)</strong>" zamiast wymyślać funkcje.</p>
+<p>Trzymając się tych dwóch narzędzi, mamy też ukryty bonus dla jakości źródeł. Exa i Context7 zwracają content zaprojektowany pod LLM - czysty markdown bez chrome, paywalla i popupów. Tę kategorię "agent-friendly docs" (Cloudflare <strong>markdown-for-agents</strong>, <strong>llms.txt</strong>, <strong>/md</strong> endpointy) rozwijam w sekcji Deep Dive - tam pokazuję, dlaczego źródło w czystym markdown bije HTML z nawigacją i dlaczego warto rozpoznawać te ślady.</p>
+<h3>Internal research na projektowym kodzie</h3>
+<p>Czas na ostatni element układanki - skill do analizy stanu projektu z uwzględnieniem efektywnego wykorzystania okna kontekstowego.</p>
+<p><strong>/10x-research</strong> to nowy dodatek do naszego toolkitu. Uruchamia on kilka subagentów równolegle i wraca ze skondensowanym raportem. Subagenty czytają, grepują, oglądają strukturę. Ty dostajesz na koniec syntezę.</p>
+<p>Od strony zawartości:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-3-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-3-10x.png</a></p></blockquote>
+<ul>
+<li><strong>Grupa subagentów uruchamiana równolegle.</strong> Skill korzysta z agenta <strong>Explore</strong> (szybki search po plikach i wzorcach) oraz <strong>general-purpose</strong> (głębsza wielo-plikowa analiza z reasoningiem). Główny agent dzieli pytanie na 2-4 obszary i odpala je w jednej wiadomości, a potem zbiera wyniki w jeden raport. Twoje główne okno kontekstowe nie wczytuje całego repo - robią to subagenty u siebie, a do rozmowy wraca już synteza z <strong>file:line</strong>.</li>
+<li><strong>Scope check przed researchem.</strong> Jeśli pytanie jest niejednoznaczne, skill zatrzymuje się i pyta przez <strong>AskUserQuestion</strong> o zakres, głębokość i obszar (np. "architecture &amp; patterns" vs "integration points"). Krótki dialog wymusza decyzję, zanim agent zacznie palić tokeny.</li>
+<li><strong>Output ląduje na dysku jako <strong>context/changes/&lt;change-id&gt;/research.md</strong>.</strong> Strukturyzowany dokument z sekcjami <em>Summary</em>, <em>Detailed Findings</em> (każde z referencją <strong>file.ext:line</strong>), <em>Code References</em>, <em>Architecture Insights</em> i <em>Open Questions</em>.</li>
+<li><strong><strong>context/foundation/lessons.md</strong> jako wstępniak.</strong> Reguły zaakceptowane wcześniej w projekcie (np. "trzymamy SQLite w prototypie", "logger przez <strong>pino</strong>, nie <strong>console.log</strong>") są wczytywane jako znany kontekst i zawężają to, co w ogóle warto badać.</li>
+</ul>
+<p>Przykładowe wywołanie:</p>
+<pre><code class="language-text">/10x-research &lt;change-id&gt; &lt;query&gt;
+</code></pre>
+<p>W naszym 10xCards dobrze sformułowany internal research odpowiada na pytania typu:</p>
+<ul>
+<li>Jak wygląda główny przepływ informacji w obszarze zarządzania kartami?</li>
+<li>Jaki jest cykl życia sesji użytkownika?</li>
+<li>Czy najnowsza wersja biblioteki <strong>ts-fsrs</strong> jest kompatybilna z naszym kodem?</li>
+</ul>
+<p>W odpowiedzi dostajemy nazwy plików, krótkie wycinki kodu, listę konwencji i miejsc związanych z pytaniem.</p>
+<p>Pamiętaj - czego internal research <strong>nie</strong> zrobi:</p>
+<ul>
+<li><strong>Nie powie ci, którą bibliotekę SRS wybrać.</strong> Nawet jeśli zapytasz wprost. Agent zobaczy, że w <strong>package.json</strong> nic takiego nie ma i co najwyżej zaproponuje napisanie własnego harmonogramowania, a to przy SRS jest bardzo szybkim wzorcem na piasku - dobrze działający algorytm spaced repetition to nie jest "kilka linii z <strong>setTimeout</strong>".</li>
+<li><strong>Nie modyfikuje kodu projektu.</strong> Jedyny plik, który skill ma prawo zapisać, to <strong>research.md</strong> w folderze change'a. To celowy bezpiecznik - research nie jest furtką do "agent przy okazji posprzątał".</li>
+<li><strong>Nie wychodzi poza ustalony zakres.</strong> Jeśli zgodziłeś się na "quick overview", subagenty nie zaczną nagle czytać <strong>node_modules</strong> ani historii gita.</li>
+<li><strong>Nie zgaduje, gdy może sprawdzić.</strong> Każde znalezisko musi przyjść z referencją do pliku i linii. Brak referencji = brak claimu, nie szacunek.</li>
+</ul>
+<p>W całym workflow <strong>research.md</strong> nie jest raportem do szuflady. Stałe miejsce na dysku oznacza, że <strong>/10x-plan</strong> zaciąga go przez <strong>@research.md</strong>, <strong>/10x-plan-review</strong> ma do czego porównywać założenia, a <strong>/10x-implement</strong> wraca do tego samego dokumentu, gdy któraś faza wchodzi w obszar, którego agent nie dotykał wcześniej.</p>
+<p>Łącząc wszystkie składowe w całość, mamy następujący schemat przygotowania kontekstu pod nowe zadanie:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-4-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-4-10x.png</a></p></blockquote>
+<p>Zobaczmy jak to działa w praktyce:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1194309204?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1194309204?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<h3>Plan oparty o zebrany research</h3>
+<p>Mamy teraz wszystkie elementy układanki w jednym miejscu. External research z Exa.ai i Context7 powiedział, że sensownym wyborem jest <strong>ts-fsrs</strong>. Znamy API biblioteki i jej alternatywy. Internal research z nowym skillem przeanalizował tę opcję pod kątem obecnego stanu projektu.</p>
+<p>Cały przygotowany kontekst jest znakomitym wsadem do nowego planu:</p>
+<pre><code class="language-text">/10x-plan srs-review-session Build S-04 implementation plan based on @research.md and @ts-fsrs.md
+</code></pre>
+<p>Wcześniej <strong>/10x-plan</strong> szedł do przodu z lokalnym kontekstem zebranym ad hoc. Tutaj wchodzi z kontekstem przyciętym na miarę:</p>
+<ul>
+<li>rezultatami Exa, które uzasadniają wybór <strong>ts-fsrs</strong> zamiast SM-2 albo własnej implementacji,</li>
+<li>dokumentacją z Context7 z aktualnym API <strong>ts-fsrs</strong>,</li>
+<li>raportem <strong>/10x-research</strong> z opisem konwencji 10xCards i mapą plików.</li>
+</ul>
+<p>Co to zmienia w samym <strong>plan.md</strong>? Pytania robią się <strong>zorientowane na rozwiązanie</strong>, a nie czysto diagnostyczne ani eksploracyjne.</p>
+<p>Zamiast "jaki rating scale przyjmujemy?" agent wpisuje wprost: "rating scale: <strong>Rating.Again | Hard | Good | Easy</strong> z <strong>ts-fsrs</strong>, UI ma cztery przyciski, zapisujemy ostatni rating". Zamiast "jak wygląda <strong>ReviewState</strong>?" - "trzymamy strukturę <strong>card</strong> z <strong>ts-fsrs</strong> (zwracaną przez <strong>createEmptyCard</strong>) jako jeden obiekt w kolumnie <strong>review_state</strong> w tabeli <strong>flashcard</strong>; aktualizujemy ją przez <strong>scheduler.next(card, new Date(), rating)</strong>; pełna struktura w <strong>plan-brief</strong>".</p>
+<p><strong>plan-brief.md</strong> przestaje być streszczeniem planu i staje się prawdziwym kontraktem decyzji. Jedno miejsce, w którym widać, dlaczego biblioteka taka, a nie inna; dlaczego cztery przyciski, a nie pięć; dlaczego edycja karty resetuje stan, a nie modyfikuje go w miejscu.</p>
+<p>Wszystko osadzone w starannie zebranym researchu.</p>
+<h3>Plan review i implementacja do udanego domknięcia</h3>
+<p>Zanim wjedziemy z kodem, opcjonalnie do zastosowania jeszcze jedna bramka, dla tych szczególnie podejrzliwych co do jakości pracy agenta. Skill <strong>/10x-plan-review</strong> z poprzedniej lekcji nie znika tylko dlatego, że plan jest oparty o research. Wręcz przeciwnie - gdy plan zaczyna nieść kontraktowe decyzje (rating scale, kształt <strong>ReviewState</strong>, edit-vs-reset policy), <strong>/10x-plan-review</strong> jest najtańszym miejscem, żeby wyłapać blind spoty i niespójności zanim agent zacznie modyfikować pliki.</p>
+<p>Po takim review możemy odpalić implementację. Mechanikę <strong>/10x-implement</strong> poznałeś już wcześniej: agent bierze plan, wykonuje konkretną fazę, weryfikuje, zatrzymuje się na ręcznych metodach weryfikacji, commituje, aktualizuje <strong>## Progress</strong> i pozwala wrócić do realizacji zadania po czasie.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-5-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-5-10x.png</a></p></blockquote>
+<p>Osadzenie planu w starannie zebranych źródłach jeszcze bardziej podnosi skuteczność działania agenta. Trudne i nieoczywiste problemy rozbijamy na mniejsze, "do zjedzenia" podzadania.</p>
+<p>W taki sposób powinieneś pracować z wyzwaniami, które są dla ciebie (i agenta) trudne. Najpierw zebrany kontekst, research (wewnętrzny i zewnętrzny), potem plan i dopiero implementacja.</p>
+<h3>Context drift, czyli kiedy agent kaskaduje błędy</h3>
+<p>Workflow <strong>research -&gt; plan -&gt; implement</strong> ogranicza najczęstszą pułapkę pracy z agentem, której do tej pory nie nazwaliśmy wprost. Nazywa się <strong>context drift</strong>.</p>
+<p>Drift to kaskada drobnych, błędnych decyzji agenta, które po kilku krokach prowadzą pracę w niewłaściwą stronę. Pojedyncza decyzja wygląda rozsądnie. Druga buduje na pierwszej. Trzecia traktuje dwie poprzednie jak fakty. Po piątym kroku masz wewnętrznie spójny kod, który rozwiązuje problem, którego nie miałeś.</p>
+<p>Drift potrafi przyjść z dwóch różnych kierunków.</p>
+<p><strong>Z braku przygotowania.</strong> Agent wchodzi w zadanie bez ugruntowanego kontekstu - bez planu, bez researchu, bez znajomości konwencji projektu - więc zaczyna zgadywać. Pierwsze zgadnięcie wygląda dobrze. Każde kolejne staje się fundamentem dla następnego. To dokładnie ten przypadek, który adresujemy przez <strong>/10x-research</strong>, Exa i Context7: zamiast pamięci modelu, opieramy decyzje na źródłach, które da się sprawdzić.</p>
+<p><strong>Z przeciągania rozmowy.</strong> Tu sprawa jest mniej intuicyjna. Modele językowe tracą jakość wraz ze wzrostem długości kontekstu - i to nie dopiero wtedy, gdy okno się "skończy". Zjawisko opisuje <a href="https://research.trychroma.com/context-rot">badanie Chromy "Context Rot"</a> z 2025 roku, przeprowadzone na 18 czołowych modelach (m.in. GPT-4.1, Claude Opus 4, Gemini 2.5). Wszystkie pokazują ten sam wzorzec: im więcej tokenów na wejściu, tym niższa precyzja - nawet gdy okno nie jest jeszcze zapełnione.</p>
+<p>Wynika to z architektury transformerów. Środek kontekstu dostaje statystycznie mniej uwagi niż początek i koniec ("lost in the middle"), a semantycznie podobne, ale nietrafione fragmenty mylą model jak dystraktory. Anthropic w <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a> ujmuje to wprost: zwiększanie okna nie rozwiązuje problemu, bo to własność architektury, a nie luka w treningu.</p>
+<p>Praktycznie drift z długiej sesji wygląda tak:</p>
+<ul>
+<li>pierwsza wiadomość: agent ma zaimplementować jedną fazę,</li>
+<li>po kilkunastu wymianach: rozmowa zawiera fragmenty trzech slice'ów, dwa porzucone podejścia i pół poprzedniego planu,</li>
+<li>po godzinie: agent miesza nazwy z różnych etapów, "pamięta" decyzje, których nie podjęliście, i pisze kod pod model danych z dwóch tematów wcześniej.</li>
+</ul>
+<p>Ten sam agent, ten sam model. Inny stan kontekstu.</p>
+<p>Dlatego cały workflow z tej lekcji to nie biurokracja, tylko konkretne odpowiedzi na drift:</p>
+<ul>
+<li><strong>research osadza decyzje w źródłach</strong> zamiast w pamięci modelu - kolejne kroki nie budują się na zgadywaniu,</li>
+<li><strong>plan w pliku</strong> jest stałym punktem odniesienia, którego agent nie traci po resecie sesji,</li>
+<li><strong>fazy z commitami</strong> rozdzielają pracę na krótkie konteksty, które kończą się jasnym stanem na dysku,</li>
+<li><strong><strong>## Progress</strong></strong> pozwala wrócić do pracy w świeżej sesji bez "opowiadania od początku".</li>
+</ul>
+<p>Sygnał, że drift się zaczyna, to zwykle nie jeden konkretny błąd, tylko zestaw drobnych objawów: agent powtarza te same poprawki w kółko, przekręca nazwy plików, traci ślad poprzedniej decyzji, miesza fazy. Wtedy nie "popraw to jeszcze raz". Otwórz świeżą sesję, wczytaj <strong>plan.md</strong> i ostatni stan <strong>## Progress</strong>, i zacznij fazę od czystego kontekstu.</p>
+<p>Drift to nie jest "agent miał gorszy dzień". To przewidywalna własność systemu, którą można konkretnie ograniczyć.</p>
+<h3>SRS domknięty, ale co, gdy plan się nie układa?</h3>
+<p>Mała pauza, zanim domkniemy główną część lekcji.</p>
+<p>To, że workflow dowiózł SRS, nie oznacza, że dowiezie wszystko. W pracy z agentem są sytuacje, w których nawet dobrze zebrane poszlaki nie wystarczą. Plan nie układa się w jasną decyzję. Albo plan się układa, ale w trakcie wdrażania kolejne kroki uderzają w ścianę, a próby kontynuacji nic nie dają. Albo - co najbardziej mylące - implementacja zaczyna odbiegać od planu w sposób, który po dwóch korektach wraca dokładnie tak samo, jakbyś próbował naprawić nie tę rzecz, co trzeba.</p>
+<p>To trzy różne objawy tego samego problemu. Nie brak przygotowania, ale <strong>błędny framing</strong> - problem rozwiązywany od niewłaściwej strony.</p>
+<p>Błędny framing oznacza, że już sama nazwa problemu jest myląca i sklejona z proponowanym rozwiązaniem. Research produkuje wtedy coraz więcej szczegółowych odpowiedzi na pytanie, które od początku jest zadane źle.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-6-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-6-10x.png</a></p></blockquote>
+<p>W naszym przypadku pytanie "jak wygląda docelowa sesja powtórek?" było jasne. Wykonaliśmy research, na tej podstawie powstał plan, z tego wyszła udana implementacja. Ale nie zawsze tak jest.</p>
+<p>Poznasz teraz skill, który pomoże ci rozwiązywać problemy, co do których nie wiesz, czy właściwie istnieje dobre rozwiązanie. Albo te, w których agent uporczywie odmawia posłuszeństwa.</p>
+<p>Żeby pokazać, jak to wygląda, wychodzimy na chwilę poza 10xCards.</p>
+<h3><strong>/10x-frame</strong> jako koło ratunkowe</h3>
+<p>Nowy skill wykorzystasz wszędzie tam, gdzie:</p>
+<p>a) brakuje ci ekspertyzy w obszarze, w którym pracujesz,
+b) nie jesteś pewien, czy kierunek pracy jest właściwy,
+c) poprzednie próby z agentem nie przyniosły oczekiwanego rezultatu.</p>
+<p>Jeden z przykładów, na którym go uruchomiliśmy, dotyczył gry Space Explorers. Brakowało nam ekspertyzy w gamedevie i tajnikach gier 2D, ale widzieliśmy problem - nachodzące na siebie postacie. Rozwiązanie? Nie wiadomo... ale skoro jest system kolizji, to pewnie on jest winowajcą.</p>
+<p>Planujemy, robimy, palimy tokeny - zero efektów.</p>
+<p>Postacie nadal nakładały się wizualnie. Każda kolejna próba naprawy szła głębiej w warstwę, w której nie było żadnego problemu.</p>
+<p>Co poszło nie tak? Brak doświadczenia i skupienie na niewłaściwym obszarze aplikacji. Braliśmy do ręki niewłaściwe narzędzie.</p>
+<p>Skąd ten rozjazd? Zlepiły się trzy różne rzeczy:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-7-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m2-l4-lesson-draft-7-10x.png</a></p></blockquote>
+<p><strong>/10x-frame</strong> to skill, który wymusza rozdzielenie tych trzech warstw, <strong>zanim</strong> w ogóle przejdziesz do planu. Prowadzi cię przez Frame Brief: rozpisz osobno obserwację, osobno zakładaną przyczynę, osobno proponowany fix.</p>
+<p>Zapytaj, czy obserwacja faktycznie wymaga tej konkretnej przyczyny. Zapytaj, czy proponowany fix nie został odziedziczony z poprzedniej rozmowy albo zgłoszenia, w którym nie miałeś jeszcze wszystkich danych.</p>
+<p>Zobaczmy to na kolejnym fragmencie:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1193158119?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1193158119?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<p>Trzy rzeczy do zapamiętania o <strong>/10x-frame</strong>:</p>
+<ul>
+<li><strong>Nie jest częścią głównego workflow 10xDevs - to koło ratunkowe.</strong> Przy MVP, do którego przygotowywałeś się w poprzednim tygodniu, najpewniej go nie odpalisz, a praca pójdzie ścieżką <strong>research -&gt; plan -&gt; implement</strong>. W projektach poza kursem, legacy albo brownfield (gdzie brakuje ci wiedzy) zdecydowanie może się przydać.</li>
+<li><strong>Nie zastępuje researchu.</strong> Research adresuje brak danych i dowodów. Frame adresuje błędne nazwanie problemu i podejście do zadania od złej strony. Czasem potrzebujesz najpierw frame, potem researchu, potem planu - kolejność zależy od tego, co naprawdę blokuje pracę.</li>
+<li><strong>Nie każdy problem to "misframing".</strong> Mały rozjazd w działaniu agenta zaadaptujesz w bieżącej sesji. Frame przychodzi do gry, gdy mimo prób kontynuacji rozmowy twoje działania nie przynoszą efektu - więcej niż jedna sesja, więcej niż jedna wpadka albo zupełny brak pomysłu, co robić.</li>
+</ul>
+<h2>🧑🏻‍💻 Zadania praktyczne</h2>
+<p>👉 Uwaga - etapy researchu i framingu są opcjonalne. Wykonaj poniższe ćwiczenia tylko wtedy, kiedy w twoim projekcie znajdziesz zadania o szczególnej złożoności, lub po prostu kiedy chcesz przetestować działanie serwisów takich jak Exa. Nie komplikuj procesu planowania jeśli nie ma takiej potrzeby.</p>
+<ul>
+<li><strong>Podłącz Exa.ai i Context7, a potem zrób external research dla jednego slice'a.</strong> Wybierz z roadmapy slice, w którym nie jesteś pewny biblioteki, algorytmu lub modelu domenowego (twój odpowiednik <strong>S-04</strong>). Skonfiguruj Exa MCP oraz Context7 MCP w swoim agencie i otwórz świeżą sesję. Poproś agenta o dwa kroki: najpierw przez Exa wyszukaj 2-3 kandydatów na bibliotekę lub podejście, potem przez Context7 pobierz aktualne API zwycięzcy (<strong>resolve-library-id</strong> → <strong>query-docs</strong>). Cel: jedno uzasadnione zdanie "wybieramy X, bo ..." z konkretnym wycinkiem aktualnej dokumentacji - zamiast halucynowanej propozycji z pamięci treningowej. Jeśli Exa zwraca głównie SEO-spam, przeformułuj zapytanie pod <em>Technical Documentation</em>, a nie pod "best library 2026".</li>
+<li><strong>Przejdź pełną pętlę <strong>research → plan</strong> dla nieoczywistego change'a.</strong> Dla tego samego change-id uruchom <strong>/10x-research &lt;change-id&gt; &lt;query&gt;</strong> z konkretnym pytaniem o stan projektu (mapa plików, konwencje, miejsca styku z nową funkcjonalnością). Po wygenerowaniu <strong>context/changes/&lt;change-id&gt;/research.md</strong> odpal <strong>/10x-plan &lt;change-id&gt;</strong> z referencjami <strong>@research.md</strong> i pobranymi docsami. Porównaj nowy <strong>plan-brief.md</strong> z planem zrobionym wcześniej "z głowy" na podobnym slice'ie. Cel: plan, w którym decyzje kontraktowe (kształt danych, kontrakty API, polityki edge case'ów) wskazują konkretne źródło zamiast agenckiego "let's assume". Jeśli plan dalej zawiera otwarte pytania - zostaw je jako jawne <strong>Open Questions</strong>, nie pozwól agentowi ich zgadnąć.</li>
+</ul>
+<h2>🔎 Deep Dive</h2>
+<p>Ta sekcja zawiera pogłębienie wiedzy na temat wybranych zagadnień związanych z lekcją. W tym Deep Dive znajdziesz:</p>
+<ul>
+<li><strong>Agent-friendly docs</strong> — dlaczego markdown bije HTML w workflow z agentem i jak rozpoznawać świadomych "dostawców treści dla internetu agentów".</li>
+<li><strong>Widoczność usługi w internecie agentów</strong> — kto realnie wybiera dziś bibliotekę: ty, czy agent, który ją zna i potrafi w nią wejść w jednym kroku.</li>
+</ul>
+<p>Ta sekcja lekcji nie jest obowiązkowa, ale warto się z nią zapoznać jeżeli chcesz zostać ekspertem.</p>
+<h3>Agent-friendly docs</h3>
+<p>Na tym etapie szkolenia 10xDevs widzisz już, że agent AI staje się realnym współpracownikiem programisty - pracuje w pętli, otrzymuje zadania, korzysta z narzędzi, koryguje swoje akcje.</p>
+<p>Aby cała ta machina działała poprawnie, agent zawsze potrzebuje kontekstu, gdzie jakość i ilość informacji są dobrane optymalnie. Optymalny musi być również format kontekstu, a konkretnie format dokumentacji technicznej.</p>
+<blockquote>
+<p>No to świetnie, wystarczy, że agent dostanie link do dokumentacji!</p>
+</blockquote>
+<p>Wskazanie agentowi linku do dowolnej dokumentacji może nie wystarczyć. Wiele stron przesłania najważniejsze treści JavaScriptem, reklamami, cookie-bannerami i innymi ozdobnikami, które utrudniają nawigację po stronie.</p>
+<p>Właśnie dlatego od pewnego czasu obserwujemy trend budowania dokumentacji w formacie przyjaznym agentom. Format to najczęściej markdown - taka dokumentacja ładuje się szybko, jest konkretna i zawiera tylko niezbędne elementy.</p>
+<p>Kilka podejść do tej praktyki to m.in.:</p>
+<p><strong><strong>llms.txt</strong>.</strong> Konwencja zaproponowana w 2024 przez Jeremy'ego Howarda (Answer.AI). Plik <strong>llms.txt</strong> w roocie domeny (<strong>https://przeprogramowani.pl/llms.txt</strong>) zawiera markdown z linkami do najważniejszych zasobów i krótkimi opisami tego, co znajduje się na stronie. To nie jest <strong>robots.txt</strong> (nie reguluje crawlowania) ani sitemap (nie indeksuje wszystkiego). To celowo krótki indeks "zacznij stąd, jeśli jesteś agentem". Adopcja jest nierówna - Anthropic, Stripe, Cursor, Cloudflare, Vercel, Mintlify, Supabase mają, większość projektów globalnie niestety nie. Brak <strong>llms.txt</strong> to norma. Jego obecność to sygnał, że projekt świadomie pracuje z agentami. Dokumentacja <a href="https://llmstxt.org/">pod tym linkiem</a>.</p>
+<p><strong>Dynamiczna zmiana formatu tresci.</strong> Cloudflare w lutym uruchomiło mechanizm, w którym ich docsy (i zasoby hostowanych stron - być może i twoja) serwują się jako markdown na żądanie. Wystarczy nagłówek <strong>Accept: text/markdown</strong> w zapytaniu do wybranej strony i dostajesz wersję bez nawigacji, footera, skryptów i CSS. Odpowiedź zawiera dodatkowo nagłówek <strong>x-markdown-tokens</strong>, dzięki któremu agent może budżetować kontekst, zanim w ogóle wczyta payload. To zmiana formatu w locie, przez którą dostawca strony nie musi wykonywać dodatkowych akcji aby stać się "widzialnym" przez agentów. Na dzisiaj tylko w planach Pro, Business i Enterprise, ale podobną zmianę możesz rozważyć w firmowych middleware'ach i proxy.</p>
+<p><strong>Dodatkowe opcje renderowania treści</strong> Coraz częściej na stronach popularnych bibliotek i frameworków pojawia się nowy format renderowania treści - surowy markdown. Niektóre usługi, jak Cloudflare, realizują to poprzez dedykowany link do formatu przyjaznego agentom, a niektóre, jak Vercel, pozwalają na dopisanie ".md" do URLa aby trafić na jego lekką wersję.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m2-l4/assets/markdown.png">https://images.przeprogramowani.pl/lessons/m2-l4/assets/markdown.png</a></p></blockquote>
+<pre><code>https://vercel.com/docs/deployments
+=&gt;
+https://vercel.com/docs/deployments.md
+</code></pre>
+<p>Tego typu zmiany to nie tylko chwilowy trend ale dowód na to, jak ważna będzie wkrótce kompatybilność dostarczanych usług z agentami AI. Agent karmiony HTML-em z paywallem, navigation barem, popupami i skryptami spędza tokeny na parsowaniu szumu, a najważniejsza informacja często przed nim uciekają. Dzisiaj nie można sobie na to pozwolić.</p>
+<h3>Widoczność usługi w internecie agentów</h3>
+<p>Dokumentacja to jedna warstwa, ale szersza zmiana zachodzi po stronie samych produktów. Lavanya Shukla zebrała tę obserwację w <a href="https://x.com/lavanyaai/status/2037589114170789951">trafnym wątku na X</a>: w 2026 produkty coraz częściej wybiera nie programista, ale agent, który ma je zaproponować, zainstalować i puścić w ruch jednym strzałem.</p>
+<p>Z jej wątku warto wynieść trzy konkretne sygnały:</p>
+<ul>
+<li><strong>Resend.</strong> Z zera do około 500 tys. deweloperów w rok. Kiedy Claude Code dostaje ogólnego prompta "dodaj obsługę wysyłki maili", w 63% przypadków proponuje właśnie Resend. SendGrid dostaje 7%. Nie dlatego, że Resend nokautuje konkurencję technologicznie. Dlatego, że integracja to <em>jedno polecenie, jedna zmienna środowiskowa i jedna strona docsów</em>, którą agent czyta od góry do dołu bez zgadywania.</li>
+<li><strong>Supabase.</strong> Z 1 mln do 4,5 mln deweloperów w 12 miesięcy. Wzrost ciągnie głównie pojedynczy SDK, jasne typy i markdownowe docsy, z których agent działa, zanim ty zdążysz przeczytać pierwszy akapit.</li>
+<li><strong>First Successful Execution.</strong> Lavanya nazywa tak pierwsze wywołanie, które agent dowiózł od początku do końca bez interwencji człowieka. To zdarzenie waży najwięcej, bo zostaje w pamięci sesji, w skopiowanych snippetach community i w kolejnych treningach modeli. Pętla wzmacnia się sama.</li>
+</ul>
+<p>Cytat, który najmocniej wybrzmiewa: <em>"your product is no longer your UI. It's your API."</em> Andrej Karpathy w tym samym duchu rzuca: <em>"It's 2026. Build. For. Agents."</em></p>
+<p>Praktyczny wniosek dla researchu z poprzedniej sekcji: Exa i Context7 nie są tylko "wyszukiwarką i docsami". Są też filtrem, który pokazuje, które projekty <em>chcą</em> być znalezione przez agenta. A to dzisiaj często pokrywa się z tym, które zadziałają, gdy agent się za nie weźmie.</p>
+<h2>📚 Materiały dodatkowe</h2>
+<ul>
+<li><a href="https://research.trychroma.com/context-rot">Context Rot: How Increasing Input Tokens Impacts LLM Performance</a> — Chroma Research, 2025; badanie na 18 czołowych modelach (GPT-4.1, Claude Opus 4, Gemini 2.5 i innych) pokazujące, że jakość odpowiedzi spada wraz z długością wejścia - nawet zanim okno się zapełni. Podstawa do nazwania mechanizmu context drift.</li>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a> — Anthropic, 2025; praktyczny przewodnik po zarządzaniu kontekstem (write/select/compress/isolate) jako odpowiedź na context rot. Bezpośrednie tło dla naszego workflow <strong>research -&gt; plan -&gt; implement</strong> z plikami na dysku zamiast długich rozmów.</li>
+<li><a href="https://arxiv.org/abs/2005.11401">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a> — Lewis et al., NeurIPS 2020; background dla mentalnego modelu "pamięć modelu vs retrieval", który leży pod Exa i Context7.</li>
+<li><a href="https://arxiv.org/abs/1707.03869">Cognitive Biases in Software Engineering: A Systematic Mapping Study</a> — Mohanani et al.; przegląd bias w SE i uzasadnienie scaffoldingu w workflow z agentem.</li>
+<li><a href="https://www.cin.ufpe.br/~phmb/ip/MaterialDeEnsino/BrooksNoSilverBullet.html">No Silver Bullet: Essence and Accidents of Software Engineering</a> — Frederick P. Brooks Jr.; kanoniczny tekst o tym, że nie ma jednego rozwiązania całości.</li>
+<li><a href="https://github.com/open-spaced-repetition/ts-fsrs">ts-fsrs</a> — Open Spaced Repetition; TypeScript implementacja FSRS użyta jako kandydat biblioteki w demo (<a href="https://open-spaced-repetition.github.io/ts-fsrs/">docs</a>).</li>
+<li><a href="https://faqs.ankiweb.net/what-spaced-repetition-algorithm">Anki FAQ: spaced repetition algorithm</a> — Anki; tło algorytmiczne FSRS vs SM-2, opcjonalne pogłębienie.</li>
+<li><a href="https://x.com/lavanyaai/status/2037589114170789951">Lavanya Shukla on the agent flywheel</a> — wątek X z 2026 o produktach wybieranych przez agentów (Resend, Supabase, "First Successful Execution"); silny sygnał praktyczny, nie twardy dowód.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/11">[3.3]</a> <em>Cykl życia wątku i zarządzanie kontekstem</em> — context engineering Write/Select/Compress/Isolate; tło dla context assessment między fazami.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/10">[3.2]</a> <em>Wzorce i antywzorce promptowania</em> — prompt/plan jako kontrakt; tło dla <strong>plan-brief.md</strong> jako kontraktu decyzji.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/02">[1.2]</a> <em>Chatbot vs Agent vs Harness - definicje</em> — tło dla rozumienia <strong>/10x-research</strong> i Context7 jako tool use w harnessie.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/15">[4.2]</a> <em>Dobry i zły projekt kursowy</em> — MVP z realną logiką biznesową; tło dla traktowania SRS jako logiki biznesowej, nie kolejnego CRUD.</li>
+</ul>

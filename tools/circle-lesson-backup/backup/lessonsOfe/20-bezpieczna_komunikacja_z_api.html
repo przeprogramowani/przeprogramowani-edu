@@ -1,0 +1,120 @@
+<meta name="lesson-id" content="Bezpieczna komunikacja z API"><html><head></head><body><div><img loading="lazy" src="https://assets-v3.circle.so/jk533j94l2v1ltdxl04z7yyz0llh" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>Jako początkujący programista miałem kiedyś za zadanie zrealizować integrację z publicznym API dużej europejskiej korporacji.</p><p>Wprowadzenie do zadania było mniej więcej takie:</p><p><em>“-Zerknij w tego PDFa, tam jest dokumentacja, sprawdź czy możesz pobrać od nich jakieś dane”</em>. No cóż, nie brzmiało to obiecująco, ale z drugiej strony PDFa mogło wcale nie być. Skoro jest, to bierzmy co dają.</p><p>Wtedy jeszcze nie wiedziałem, na co się piszę.</p><p>Przez kolejne tygodnie wspomnianego projektu miałem okazję przetestować wszystkie bolączki integrowania frontendu z publicznym API, które w tamtym czasie było przez naszego klienta traktowane jak obywatel trzeciej kategorii. Było tam naprawdę wszystko:</p><ul><li><p>Dokumentacja w formie PDF, czyli zapewne nieaktualna i bez przełożenia na mój kod</p></li><li><p>Komunikaty błędów mówiące mniej więcej tyle - “panie, co ty mi tu wysyłasz”</p></li><li><p>Brak informacji o tym, czy jestem na tej aktualnej, czy może już dawno porzuconej wersji API</p></li><li><p>Dane testowe, które nijak nie przypominały rzeczywistych obiektów biznesowych</p></li><li><p>Radykalnie inne zachowanie serwera produkcyjnego od tego, na którym testowałem integrację</p></li></ul><p>Cały projekt to była naprawdę ciężka przeprawa. Po czasie zrozumiałem, że była to też&nbsp;lekcja tego, jak publiczne API nigdy nie powinno wyglądać i czego ja sam nie chciałbym swoim klientom oferować.</p><p>Właśnie dlatego w tej lekcji zachęcam Cię do wyjścia z <em>frontendowo-interfejsowej</em> strefy komfortu, żeby spędzić kilkanaście minut w bardziej full-stackowym środowisku. Zaczynajmy!</p><img loading="lazy" src="https://assets-v2.circle.so/q9ij2bmu1b8fytr87l7h6pyfblbl" style="width: 100%; max-width: 100%;"><h2>API jako produkt</h2><p>Jak głosi legenda, w 2002r. Jeff Bezos, założyciel Amazona, opublikował do technicznej części swojej załogi dokument znany jako “API Mandate”:</p><ol start="1"><li><p><em>Wszystkie zespoły będą od tej pory udostępniać swoje dane i funkcjonalności przez interfejsy (API).</em></p></li><li><p><em>Zespoły muszą komunikować się między sobą za pomocą tych interfejsów.</em></p></li><li><p><em>Nie będzie dozwolona żadna inna forma komunikacji międzyprocesowej: bez bezpośredniego łączenia, bez bezpośredniego odczytu źródeł danych innego zespołu, bez współdzielonego modelu pamięci, bez żadnego backdoora. Jedyną dozwoloną formą komunikacji są wywołania API.</em></p></li><li><p><em>Nie ma znaczenia, jakiej technologii używacie. HTTP, Corba, Pubsub, protokoły niestandardowe — to nie ma znaczenia.</em></p></li><li><p><em>Wszystkie interfejsy usług, bez wyjątku, muszą być zaprojektowane od podstaw tak, aby można je było opublikować na zewnątrz. To znaczy, że zespół musi planować i projektować z myślą o możliwości udostępnienia interfejsu programistom spoza firmy. Bez wyjątków.</em></p></li><li><p><em>Każdy, kto tego nie zrobi, zostanie zwolniony.</em></p></li><li><p><em>Dziękuję, miłego dnia!</em></p></li></ol><p>Ta krótka notka, którą można byłoby zmieścić w jednej wiadomości na Slacku, zmieniła fundamentalnie rolę i znaczenie API jako pełnoprawnego produktu wewnątrz Amazona. Pomyśl tylko, jak na taką notatkę musieli zareagować developerzy zarzadzający konkretnymi serwisami.</p><img loading="lazy" src="https://assets-v3.circle.so/ydaw4pxlb8k14gvzvudw7rpsuopy" style="width: 100%; max-width: 100%;"><p>Jeszcze wczoraj najważniejsze operacje mogłeś wykonywać za pozwoleniem lidera technicznego danego serwisu, a dzisiaj miałeś uzyskać do nich dostęp ot tak, przez jeden publiczny endpoint. Jeszcze wczoraj zlecałeś właścicielom danego serwisu zbudowanie dla ciebie szytego na miarę scenariusza, którego akurat wymagał twój projekt, a dzisiaj to ty - na podstawie uniwersalnych i reużywalnych endpointów - miałeś ten scenariusz poskładać w jedną&nbsp;całość. Jeszcze wczoraj pięć różnych zespołów pisało własną implementację funkcji “getUser()” łącząc się z kilku miejsc do tej samej bazy, a od dzisiaj dostępu do bazy już nie masz, natomiast użytkownika miałeś zacząć pobierać z Users API. Jeszcze wczoraj mogłeś się umówić ze znajomymi “co robić i czego nie robić” w obrębie danego serwisu, a dzisiaj nie masz gwarancji, że ten serwis nie stanie się w pewnym momencie publiczny, wywoływany przez kogoś z drugiego końca świata.</p><p>Z perspektywy czasu widać, jak opisywana tutaj rewolucja API miała się później przełożyć na ostateczny sukces Amazona jako globalnego lidera e-commerce. Przejście na uniwersalny, agnostyczny technologicznie model komunikacji zapewniał zespołom więcej niezależności, ułatwiał i przyśpieszał integracje, a ryzyko można było analizować w obrębie jednej, a nie dziesięciu różnych domen, które akurat postanowiły korzystać z tej samej bazy danych. Dalsza popularyzacja architektury mikroserwisów wprowadziła do tego modelu więcej standardów i wspólnego języka, które - niezależnie od opinii - podbiły świat na dobre kilka lat.</p><p>Dzisiaj traktowanie API jak <a href="https://nordicapis.com/what-is-an-api-as-a-product/" target="_blank" rel="noopener noreferrer">pełnoprawnego produktu</a> nikogo już nie dziwi. Zunifikowany interfejs komunikacji zapewniają&nbsp;tak znane marki jak <a href="https://docs.stripe.com/api" target="_blank" rel="noopener noreferrer">Stripe</a>, <a href="https://platform.openai.com/" target="_blank" rel="noopener noreferrer">OpenAI</a> czy <a href="https://mailchimp.com/developer/" target="_blank" rel="noopener noreferrer">Mailchimp</a>, bo jest to dla nich kolejne narzędzie poszerzania wpływów i zwiększania świadomości wśród bardziej technicznych użytkowników. Na rynku pracy znaczenie API również rośnie - niczym szczególnym nie są dzisiaj ogłoszenia o pracę dla “API Engineera” czy “Platform Product Managera”. Kiedy natomiast <a href="https://www.theverge.com/2023/2/2/23582615/twitter-removing-free-api-developer-apps-price-announcement" target="_blank" rel="noopener noreferrer">dostęp do popularnego API znika lub jest utrudniony</a>, rozpisują się&nbsp;o tym największe portale technologiczne.</p><img loading="lazy" src="https://assets-v3.circle.so/p72lc7ko0e9vuw7yqlhxafly69hq" style="width: 100%; max-width: 100%;"><p>Opisywany tutaj ruch <em>API-as-a-product</em> jest o tyle istotny, że większe inwestycje w ten obszar aplikacji webowych to więcej korzyści dla nas - frontend developerów. Firmy, chcąc podnosić jakość swojego API, a tym samym ułatwiać integrowanie się z ich usługami, przykładają większą uwagę do dokumentacji, realizują ją w bardziej ustandaryzowany sposób, przeznaczają część swojego budżetu na projekty Open Source skupione na tym obszarze i chętniej sponsorują eventy, na których można usłyszeć o dobrych praktykach rozwijania i konsumowania nowoczesnych API.</p><p>W tej lekcji przedstawimy ci kilka popularnych praktyk i narzędzi, które wpłyną na jakość realizowanych przez ciebie integracji.</p><h2>Łatwiejsze konsumowanie API</h2><p>Nowoczesne API nie przypominają dzisiaj systemów, które opisałem we wprowadzeniu do tej lekcji. Żaden szanujący się zespół nie decyduje się już na udostępnianie zamrożonego PDFa, będącego pewnym wycinkiem rzeczywistości jaką kiedyś dane API było. Wszyscy chcemy pracować szybciej i lepiej, ryzykując mniejszą liczba&nbsp;incydentów na produkcji, a do tego potrzebujemy lepszych narzędzi działających bliżej kodu.</p><p>Dzisiaj standardem jest żywa, interaktywna, regularnie aktualizowana dokumentacja (<em>live docs</em>), wystawiana w formie publicznej strony czy aplikacji webowej. Ułatwia ona zrozumienie działania danego API, umożliwia testowe wywoływanie endpointów, przekazywanie parametrów oraz nagłówków HTTP. Dzięki obsłudze z poziomu interfejsu użytkownika jest ona o wiele bardziej przystępna dla osób, które nie budują technicznych integracji, albo nie korzystają na co dzień z aplikacji takich jak <a href="https://www.postman.com/" target="_blank" rel="noopener noreferrer">Postman</a> służących do testowania API.</p><h3><strong>Poznaj standard OpenAPI</strong></h3><p>Fundamentem żywej dokumentacji i powszechnie obowiązującym standardem jest dzisiaj <a href="https://www.openapis.org/" target="_blank" rel="noopener noreferrer"><strong>OpenAPI</strong></a>, czyli sposób na usystematyzowanie i standaryzację interakcji między producentami i konsumentami API. </p><p><strong>OpenAPI</strong>, pierwotnie znane jako <strong>Swagger</strong>, jest specyfikacją powstałą w 2011r., opracowaną w celu opisania interfejsów API dla aplikacji RESTful. Celem tej inicjatywy było stworzenie uniwersalnego formatu, który ułatwiłby projektowanie, budowanie, dokumentowanie oraz korzystanie z interfejsów API.</p><p>W dokumentacji zgodnej ze <a href="https://learn.openapis.org/" target="_blank" rel="noopener noreferrer">standardem OpenAPI</a> znajdziemy:</p><ul><li><p>aktualnie wspieraną wersję API i metadane serwisu (autora, przeznaczenie, rodzaj usług)</p></li><li><p>lokalizację poszczególnych serwerów (testowych, produkcyjnych, pre-produkcyjnych)</p></li><li><p>opis endpointów wystawianych w ramach API</p></li><li><p>opis metod, jakie wspierają poszczególne endpointy</p></li><li><p>opis przyjmowanych parametrów i nagłówków</p></li><li><p>opis metod autoryzacji</p></li><li><p>opis formatu i typów danych zwracanych z API</p></li><li><p>opis przykładowych obiektów, jakie pojawią się w odpowiedzi na zapytanie</p></li></ul><p>Dokumentację zgodną&nbsp;ze standardem OpenAPI możemy rozwijać w formatach JSON i YAML, a jej przykładowy schemat <em>(schema)</em> w obowiązującej wersji 3.0 znajdziesz poniżej. Zauważ, jak przystępny jest to standard - nawet bez wprowadzenia, z łatwością zrozumiesz działanie tego API:</p><pre><code>openapi: 3.0.0
+info:
+  title: Platforma szkoleń dla programistów
+  description: To API pozwala uzyskiwać informacje o modułach i lekcjach naszych szkoleń
+  version: 1.0.0
+servers:
+  - url: 'https://api.przeprogramowani.pl/courses/v1'
+paths:
+  /module/{moduleId}:
+    get:
+      summary: Pobierz szczegóły modułu
+      operationId: getModule
+      parameters:
+        - name: moduleId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID modułu do pobrania
+      responses:
+        '200':
+          description: Odpowiedź ze szczegółami modułu zakończona sukcesem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+        '404':
+          description: Moduł o wybranym ID nie został znaleziony
+  /lesson/{lessonId}:
+    get:
+      summary: Pobierz szczegóły lekcji
+      operationId: getLesson
+      parameters:
+        - name: lessonId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID lekcji do pobrania
+      responses:
+        '200':
+          description: Odpowiedź ze szczegółami lekcji zakończona sukcesem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+        '404':
+          description: Lekcja o wybranym ID nie została znaleziona
+components:
+  schemas:
+    Module:
+      type: object
+      properties:
+        moduleId:
+          type: string
+          description: Unikalny identyfikator modułu
+        title:
+          type: string
+          description: Tytuł modułu
+        description:
+          type: string
+          description: Krótki opis zawartości modułu
+        lessons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lesson'
+    Lesson:
+      type: object
+      properties:
+        lessonId:
+          type: string
+          description: Unikalny identyfikator lekcji
+        title:
+          type: string
+          description: Tytuł lekcji
+        content:
+          type: string
+          description: Szczegółowy opis lekcji i poruszanych zagadnień
+</code></pre><p>Dokumentację w formacie OpenAPI możesz poznać i rozwijać na dwa sposoby. Pierwszy to zapoznanie się z <a href="https://swagger.io/specification/" target="_blank" rel="noopener noreferrer">oficjalną dokumentacją</a>, która przedstawi ci najważniejsze składowe tego standardu, a drugi to narzędzia, które na podstawie konkretnych danych wejściowych wygenerują ją dla ciebie automatycznie:</p><ul><li><p><a href="https://tsoa-community.github.io/docs/" target="_blank" rel="noopener noreferrer">tsoa</a> - Tworzenie specyfikacji na podstawie dekoratorów TypeScript</p></li><li><p><a href="https://github.com/asteasolutions/zod-to-openapi" target="_blank" rel="noopener noreferrer">zod-to-openapi</a> - Tworzenie specyfikacji na podstawie schematu danych biblioteki Zod (o tym później)</p></li></ul><p>Samo generowanie specyfikacji dotyczy bardziej backendu niż&nbsp;frontendu, więc zainteresowanych zachęcamy do poznania tych narzędzi we własnym zakresie, ale być może zastanawiasz się, jak tego typu dokumentacja przekłada się na pracę na stanowisku frontend developera. W końcu nie znajdziemy tutaj informacji o komponentach, frameworkach czy bibliotekach, z których zbudowana jest twoja aplikacja, więc na ile wnosi ona realną wartość dla nas, frontendowców?</p><p>W poniższym filmie zobaczysz jak OpenAPI pomaga łatwiej i szybciej budować klienty http, czyli moduły, dzięki którym z takim API się połączymy:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1045261369?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p><strong>📝 Te fragmenty znajdziesz w projekcie examples/module2/lesson3/acme-client oraz openapi-spec</strong></p><p>Podsumowując - dzięki specyfikacji OpenAPI przestajemy tworzyć alternatywną rzeczywistość frontendową, w której opisujemy modele i metody wystawiane przez backend, a trzymamy się źródła prawdy jakim jest plik JSON albo YAML z opisem backendu. Tak jak wspominamy na filmie, pierwsze podejście do generowania klientów realizujemy ręcznie, natomiast w module poświęconym CI/CD zobaczysz, jak pracę z generatorami można automatyzować&nbsp;przez Github Actions.</p><p>Przedstawiony na filmie generator znajdziesz tutaj - <a href="https://openapi-generator.tech/" target="_blank" rel="noopener noreferrer">https://openapi-generator.tech/</a></p><h3><strong>Ekosystem narzędzi</strong></h3><p>Przedstawiony na poprzednim filmie OpenAPI Generator to tylko jeden z wielu przykładów tego, jak wiele zalet przynosi spójny format dokumentowania API.</p><p>Ogromną zaletą standardu, jakim jest OpenAPI, jest wytworzony wokół niego ekosystem bibliotek, edytorów i narzędzi, które ten format rozumieją. Twórcy tych rozwiązań mogą skupić się na dowożeniu konkretnych usprawnień na poszczególnych etapach procesu wytwarzania oprogramowania bo wiedzą, że niezależnie od zadania mogą pracować z jednym i tym samym formatem danych o endpointach, metodach i parametrach.</p><p>Jednym z takich narzędzi jest <strong>Swagger Editor, </strong>który pozwala przetestować&nbsp;czy nasza specyfikacja może być wykorzystania do utworzenia <em>live docsów </em>opartych o standard OpenAPI. </p><p>W ramach ćwiczenia, skopiuj powyższy wycinek dokumentacji i wklej go do edytora na stronie <a href="https://editor.swagger.io/" target="_blank" rel="noopener noreferrer">https://editor.swagger.io/</a> - przetestuj dokumentację i jej poszczególne sekcje po prawej:</p><img loading="lazy" src="https://assets-v3.circle.so/hndcpykd0i9aseqzwuo1nbr60ofa" style="width: 100%; max-width: 100%;"><p>Pozostając w edytorze, spróbuj teraz wprowadzić nowy endpoint służący do dodawania lekcji, wykorzystując poniższy fragment specyfikacji:</p><pre><code>  /lesson:
+    post:
+      summary: Dodaje nową lekcję
+      operationId: addLesson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+              properties:
+                title:
+                  type: string
+                  example: 'Wprowadzenie do React'
+                description:
+                  type: string
+                  example: 'Podstawowe pojęcia i pierwsze kroki w React.'
+      responses:
+        '201':
+          description: Lekcja została pomyślnie dodana
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Unikalny identyfikator nowo dodanej lekcji
+                    example: '123e4567-e89b-12d3-a456-426614174000'
+                  title:
+                    type: string
+                    example: 'Wprowadzenie do React'
+                  description:
+                    type: string
+                    example: 'Podstawowe pojęcia i pierwsze kroki w React.'
+        '400':
+          description: Nieprawidłowe żądanie, brakuje tytułu lub opisu
+        '500':
+          description: Błąd serwera</code></pre><p>Dzięki tej zmianie twoja dokumentacja powinna się wzbogacić o nową sekcję, a to wszystko bez dopisywania jakiejkolwiek linijki kodu frontendowego:</p><img loading="lazy" src="https://assets-v3.circle.so/84r55iw7x8eehiaftcqwo2jp5p8m" style="width: 100%; max-width: 100%;"><p>Jeśli udało ci się zaktualizować podgląd dokumentacji, to możesz teraz przejść do budowania podobnych <em>live docsów</em> w twojej firmie (z naszego doświadczenia, to właśnie frontend developerzy byli przypisywani do tego typu zadań). Niestety, nie wykorzystasz do tego Swagger Editora, który jest usługą online, ale możesz wykorzystać popularną&nbsp;bibliotekę <a href="https://www.npmjs.com/package/swagger-ui" target="_blank" rel="noopener noreferrer"><strong>swagger-ui</strong></a>, która pomoże ci zbudować identyczną aplikację gotową do wystawienia dla klientów.</p><p>Co ciekawe, OpenAPI tak bardzo przyjęło się w ekosystemie aplikacji webowych, że dzisiaj w oparciu o ten format powstają niezależne produkty takie jak <a href="https://readme.com/" target="_blank" rel="noopener noreferrer">Readme.com</a>…</p><img loading="lazy" src="https://assets-v3.circle.so/nooqe7asqni7unmi0nxbvfnr2o1z" style="width: 100%; max-width: 100%;"><p>…czy prezentowane wcześniej (  )  Custom GPTs w ramach ChataGPT, które uczą się obsługi API&nbsp;właśnie na podstawie poznanej przez ciebie specyfikacji:</p><img loading="lazy" src="https://assets-v3.circle.so/1ijobnu5s2aj8ni92c757fvcmhr0" style="width: 100%; max-width: 100%;"><p>Jak sam widzisz, OpenAPI to szeroko akceptowany standard dokumentacji, którego powinniśmy nie tylko pobierać integrując się z nowym API, ale też promować, kiedy rozmawiamy ze znajomymi programistami i możemy mieć wpływ na firmową infrastrukturę.</p><p>Od teraz, kiedy znajomy backend developer poprosi cię o zbudowanie interaktywnej dokumentacji dla jego serwisu, właściwą odpowiedzią będzie:</p><p>- Chętnie to zrobię, ale najpierw podrzuć mi spec w formacie OpenAPI ✅</p><img loading="lazy" src="https://assets-v3.circle.so/rsrbr0hux335ueiz9kr2ruv5grfd" style="width: 100%; max-width: 100%;"></div></body></html>

@@ -1,0 +1,6 @@
+{
+  "lessonId": "[3x1] Implementacja uwierzytelniania z Supabase Auth",
+  "displayName": "[3x1] Implementacja uwierzytelniania z Supabase Auth",
+  "summary": "1) Który element aplikacji ma wymagać aktywnej sesji użytkownika (czyli być dostępny tylko po zalogowaniu)?  \n2) Czy reszta aplikacji poza tym elementem powinna działać bez logowania?  \n3) Jakie pola muszą znaleźć się na stronie logowania (login)?  \n4) Jakie pola muszą znaleźć się na stronie rejestracji (signup)?  \n5) Gdzie w interfejsie umieścić przycisk logowania i przycisk wylogowania (w którym miejscu Layoutu)?  \n6) Jakie operacje na kolekcjach reguł muszą być obsługiwane (zapisywanie, aktualizacja, usuwanie, przywracanie wersji) i które z nich wymagają logowania?  \n7) Czy można używać zewnętrznych serwisów logowania (np. Google, GitHub)?  \n8) Czy tworzenie reguł „ad-hoc” wymaga zalogowania użytkownika?  \n9) Co należy dodać lub zaktualizować w project-prd.md / User Stories przed przekazaniem wymagań Agentowi AI (jakie user stories i kryteria akceptacji)?",
+  "tokenEstimate": 144
+}

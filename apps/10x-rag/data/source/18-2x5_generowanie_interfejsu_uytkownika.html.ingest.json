@@ -1,0 +1,450 @@
+{
+  "lessonId": "[2x5] Generowanie interfejsu użytkownika",
+  "file": "18-2x5_generowanie_interfejsu_uytkownika.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 4,
+      "order": 1
+    },
+    {
+      "slug": "tailwind",
+      "title": "Tailwind",
+      "blocks": 2,
+      "order": 2
+    },
+    {
+      "slug": "korzysci-ze-stosowania-tailwind",
+      "title": "Korzyści ze stosowania Tailwind:",
+      "blocks": 1,
+      "order": 3
+    },
+    {
+      "slug": "przykadowy-fragment-interfejsu-z-tailwind",
+      "title": "Przykładowy fragment interfejsu z Tailwind:",
+      "blocks": 8,
+      "order": 4
+    },
+    {
+      "slug": "shadcnui",
+      "title": "Shadcn/ui",
+      "blocks": 3,
+      "order": 5
+    },
+    {
+      "slug": "cechy-biblioteki",
+      "title": "Cechy biblioteki:",
+      "blocks": 2,
+      "order": 6
+    },
+    {
+      "slug": "konfiguracja-shadcnui",
+      "title": "🚀 Konfiguracja shadcn/ui",
+      "blocks": 2,
+      "order": 7
+    },
+    {
+      "slug": "proces-inicjalizacji-shadcnui",
+      "title": "Proces inicjalizacji shadcn/ui",
+      "blocks": 5,
+      "order": 8
+    },
+    {
+      "slug": "po-inicjalizacji",
+      "title": "Po inicjalizacji",
+      "blocks": 4,
+      "order": 9
+    },
+    {
+      "slug": "sesja-planistyczna-interfejsu-uzytkownika",
+      "title": "Sesja planistyczna interfejsu użytkownika",
+      "blocks": 4,
+      "order": 10
+    },
+    {
+      "slug": "generowanie-wysokopoziomowego-planu-ui",
+      "title": "Generowanie wysokopoziomowego planu UI",
+      "blocks": 3,
+      "order": 11
+    },
+    {
+      "slug": "szczegoowy-plan-implementacji-widoku-do-generowania-fiszek",
+      "title": "Szczegółowy plan implementacji widoku do generowania fiszek",
+      "blocks": 2,
+      "order": 12
+    },
+    {
+      "slug": "implementacja-widoku-generowania-fiszek-z-shadcnui-i-tailwind",
+      "title": "Implementacja widoku generowania fiszek z shadcn/ui i Tailwind",
+      "blocks": 5,
+      "order": 13
+    },
+    {
+      "slug": "model-zaczyna-sie-gubic-podsumowanie-i-nowy-watek",
+      "title": "Model zaczyna się gubić? Podsumowanie i nowy wątek!",
+      "blocks": 8,
+      "order": 14
+    },
+    {
+      "slug": "kreatywne-inspiracje",
+      "title": "🎨 Kreatywne inspiracje",
+      "blocks": 6,
+      "order": 15
+    },
+    {
+      "slug": "generowanie-nowych-komponentow",
+      "title": "Generowanie nowych komponentów",
+      "blocks": 19,
+      "order": 16
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 3,
+      "order": 17
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 11,
+      "order": 18
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:a1aad992:43cc23fa",
+      "tokenEstimate": 62,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:43cc23fa:0-1",
+      "tokenEstimate": 62,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:a1aad992:24701484",
+      "tokenEstimate": 155,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:24701484:0-3",
+      "tokenEstimate": 224,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:a1aad992:44c8cf4c",
+      "tokenEstimate": 96,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:44c8cf4c:0-1",
+      "tokenEstimate": 96,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:a1aad992:1310ee96",
+      "tokenEstimate": 60,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:a1aad992:1310ee96:0-0",
+      "tokenEstimate": 148,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:a1aad992:487149ea",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:487149ea:0-7",
+      "tokenEstimate": 236,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:a1aad992:5bbd813c",
+      "tokenEstimate": 103,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:5bbd813c:0-2",
+      "tokenEstimate": 103,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:a1aad992:c5651174",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:c5651174:0-1",
+      "tokenEstimate": 198,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:a1aad992:9a46f892",
+      "tokenEstimate": 98,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:9a46f892:0-1",
+      "tokenEstimate": 98,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:a1aad992:41a1ddb1",
+      "tokenEstimate": 139,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:41a1ddb1:0-4",
+      "tokenEstimate": 139,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:a1aad992:4c95cda5",
+      "tokenEstimate": 116,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:4c95cda5:0-3",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:a1aad992:035874a8",
+      "tokenEstimate": 97,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:035874a8:0-3",
+      "tokenEstimate": 97,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:a1aad992:1e1fd461",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:1e1fd461:0-2",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:a1aad992:3ccceb43",
+      "tokenEstimate": 85,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:3ccceb43:0-1",
+      "tokenEstimate": 85,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:a1aad992:2e892fae",
+      "tokenEstimate": 202,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:2e892fae:0-4",
+      "tokenEstimate": 408,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:a1aad992:cf4b708a",
+      "tokenEstimate": 205,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:cf4b708a:0-6",
+      "tokenEstimate": 544,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "chk:a1aad992:cf4b708a:6-7",
+      "tokenEstimate": 325,
+      "span": [
+        6,
+        7
+      ]
+    },
+    {
+      "id": "sec:a1aad992:4ac178eb",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:4ac178eb:0-5",
+      "tokenEstimate": 194,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:a1aad992:f6abf162",
+      "tokenEstimate": 220,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:f6abf162:0-17",
+      "tokenEstimate": 392,
+      "span": [
+        0,
+        17
+      ]
+    },
+    {
+      "id": "chk:a1aad992:f6abf162:17-18",
+      "tokenEstimate": 167,
+      "span": [
+        17,
+        18
+      ]
+    },
+    {
+      "id": "sec:a1aad992:33c7f0dd",
+      "tokenEstimate": 80,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:33c7f0dd:0-2",
+      "tokenEstimate": 302,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:a1aad992:dcc8ec86",
+      "tokenEstimate": 208,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:a1aad992:dcc8ec86:0-7",
+      "tokenEstimate": 366,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "chk:a1aad992:dcc8ec86:7-10",
+      "tokenEstimate": 234,
+      "span": [
+        7,
+        10
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@edu/circle",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "description": "Circle.so API client and course access configuration (absorbed from the source monorepo common package)",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens": "./src/tokens.ts",
+    "./*": "./src/*"
+  }
+}

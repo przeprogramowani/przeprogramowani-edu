@@ -1,0 +1,46 @@
+---
+import { slugify } from '@/utils/slugify';
+import { sanitizeForYaml } from '@/utils/decodeHtmlEntities';
+import { buildAttachmentContentDisposition } from '@/utils/contentDisposition';
+import { rawContent } from '@/content/resources/10xdevs3-ebook.md';
+
+const EBOOK_TITLE =
+  'Rankingi modeli AI kłamią. Kompletny przewodnik po wyborze modelu i narzędzia do kodowania z AI';
+const DEFAULT_FILENAME = slugify(EBOOK_TITLE);
+const EBOOK_EXPORT_ASSET_ORIGIN = 'https://platforma.przeprogramowani.pl';
+
+let markdownContent = rawContent();
+
+markdownContent = markdownContent.replace(/^<!DOCTYPE[^>]*>/i, '').trim();
+markdownContent = markdownContent.replace(/^<html[^>]*>/i, '').trim();
+markdownContent = markdownContent.replace(/<\/html>\s*$/i, '').trim();
+markdownContent = markdownContent.replace(/^<body[^>]*>/i, '').trim();
+markdownContent = markdownContent.replace(/<\/body>\s*$/i, '').trim();
+// Exported markdown is opened outside the platform context, so ebook image paths
+// must be absolute even though the on-site reader uses root-relative asset URLs.
+markdownContent = markdownContent.replace(
+  /(!\[[^\]]*]\()(?=\/assets\/10xdevs\/ebook-evals\/)/g,
+  `$1${EBOOK_EXPORT_ASSET_ORIGIN}`
+);
+
+const url = new URL(Astro.request.url);
+const filename = url.searchParams.get('filename') || DEFAULT_FILENAME;
+const cleanTitle = sanitizeForYaml(EBOOK_TITLE);
+
+const frontmatter = `---
+title: "${cleanTitle}"
+type: "ebook"
+source: "Przeprogramowani.pl - 10xDevs 3.0"
+exported: "${new Date().toISOString().split('T')[0]}"
+format: "markdown"
+---
+
+`;
+
+return new Response(frontmatter + markdownContent, {
+  headers: {
+    'Content-Type': 'text/markdown; charset=utf-8',
+    'Content-Disposition': buildAttachmentContentDisposition(filename),
+  },
+});
+---

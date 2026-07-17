@@ -1,0 +1,74 @@
+{
+  "lessonId": "[0x1] Generative AI dla programisty",
+  "file": "01-0x1_generative_ai_dla_programisty.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "czesc",
+      "title": "Cześć!",
+      "blocks": 8,
+      "order": 1
+    },
+    {
+      "slug": "nastepny-krok---wstep-do-popularnych-narzedzi-zintegrowanych-z-ai",
+      "title": "Następny krok - wstęp do popularnych narzędzi zintegrowanych z AI",
+      "blocks": 3,
+      "order": 2
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:e38e4cb2:43cc23fa",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e38e4cb2:43cc23fa:0-1",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:e38e4cb2:54787483",
+      "tokenEstimate": 200,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e38e4cb2:54787483:0-7",
+      "tokenEstimate": 276,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:e38e4cb2:7fce883e",
+      "tokenEstimate": 161,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:e38e4cb2:7fce883e:0-2",
+      "tokenEstimate": 161,
+      "span": [
+        0,
+        2
+      ]
+    }
+  ]
+}

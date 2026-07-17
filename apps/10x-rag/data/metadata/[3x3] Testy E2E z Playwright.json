@@ -1,0 +1,6 @@
+{
+  "lessonId": "[3x3] Testy E2E z Playwright",
+  "displayName": "[3x3] Testy E2E z Playwright",
+  "summary": "1) Jak utworzyć i skąd pobrać Project URL oraz Public key dla dedykowanego projektu Supabase do testów e2e?  \n2) Jak przygotować plik .env.test (jakie zmienne umieścić i dodać go do .gitignore/.cursorignore)?  \n3) Jak dodać testowego użytkownika w panelu Supabase i gdzie zapisać E2E_USERNAME / E2E_PASSWORD dla testów?  \n4) Jak zastosować migracje na nowym projekcie Supabase (polecenia: supabase link --project-ref ... oraz supabase db push)?  \n5) Jak uruchomić aplikację Astro w trybie testowym (jaki skrypt dodać do package.json)?  \n6) Gdzie umieszczać atrybuty data-testid — wewnątrz komponentu czy w komponencie nadrzędnym — aby zapewnić precyzję testów?  \n7) Jak skonfigurować Playwright, aby ładował zmienne z .env.test (przykład wykorzystania dotenv w playwright.config.ts)?  \n8) Jakie optymalizacje logowania w testach e2e można zastosować (ponowne użycie sesji vs logowanie przez API)?  \n9) Jak realizować teardown i bezpiecznie czyścić dane po testach, uwzględniając Row-Level Security (logowanie tym samym kontem przed usuwaniem) oraz uwagi o pracy równoległej?",
+  "tokenEstimate": 178
+}

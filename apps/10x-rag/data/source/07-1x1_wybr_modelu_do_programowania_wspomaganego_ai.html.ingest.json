@@ -1,0 +1,362 @@
+{
+  "lessonId": "[1x1] Wybór modelu do programowania wspomaganego AI",
+  "file": "07-1x1_wybr_modelu_do_programowania_wspomaganego_ai.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 6,
+      "order": 1
+    },
+    {
+      "slug": "wybor-modelu",
+      "title": "Wybór modelu",
+      "blocks": 5,
+      "order": 2
+    },
+    {
+      "slug": "jaki-model-do-programowania-optymalny",
+      "title": "Jaki model do programowania? Optymalny!",
+      "blocks": 23,
+      "order": 3
+    },
+    {
+      "slug": "dostep-do-modeli",
+      "title": "Dostęp do modeli",
+      "blocks": 5,
+      "order": 4
+    },
+    {
+      "slug": "dwie-formy-rozliczen-za-komunikacje-z-ai",
+      "title": "Dwie formy rozliczeń za komunikację z AI",
+      "blocks": 11,
+      "order": 5
+    },
+    {
+      "slug": "tokeny---podstawa-rozliczenia",
+      "title": "Tokeny - podstawa rozliczenia",
+      "blocks": 9,
+      "order": 6
+    },
+    {
+      "slug": "oferty-specjalne",
+      "title": "Oferty specjalne",
+      "blocks": 4,
+      "order": 7
+    },
+    {
+      "slug": "wiecej-tokenow-za-darmo",
+      "title": "Więcej tokenów za darmo",
+      "blocks": 5,
+      "order": 8
+    },
+    {
+      "slug": "obserwuj-trendy-i-unikaj-ai-fomo",
+      "title": "Obserwuj trendy i unikaj AI FOMO",
+      "blocks": 16,
+      "order": 9
+    },
+    {
+      "slug": "ostroznie-z-poleganiem-na-benchmarkach",
+      "title": "Ostrożnie z poleganiem na benchmarkach",
+      "blocks": 13,
+      "order": 10
+    },
+    {
+      "slug": "programowanie-z-modelami-lokalnymi",
+      "title": "💻 Programowanie z modelami lokalnymi",
+      "blocks": 18,
+      "order": 11
+    },
+    {
+      "slug": "materiay-dodatkowe",
+      "title": "📚 Materiały dodatkowe",
+      "blocks": 2,
+      "order": 12
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 9,
+      "order": 13
+    },
+    {
+      "slug": "nastepny-krok---wspopraca-z-ai-w-ide-i-terminalu",
+      "title": "Następny krok - współpraca z AI w IDE i Terminalu",
+      "blocks": 4,
+      "order": 14
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:9c0bf573:43cc23fa",
+      "tokenEstimate": 77,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:43cc23fa:0-1",
+      "tokenEstimate": 77,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:24701484",
+      "tokenEstimate": 168,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:24701484:0-5",
+      "tokenEstimate": 226,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:c7b19449",
+      "tokenEstimate": 185,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:c7b19449:0-4",
+      "tokenEstimate": 236,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:2d00a87d",
+      "tokenEstimate": 181,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:2d00a87d:0-14",
+      "tokenEstimate": 379,
+      "span": [
+        0,
+        14
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:2d00a87d:12-22",
+      "tokenEstimate": 313,
+      "span": [
+        12,
+        22
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:7464ee3a",
+      "tokenEstimate": 186,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:7464ee3a:0-4",
+      "tokenEstimate": 186,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:0b56cf63",
+      "tokenEstimate": 134,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:0b56cf63:0-10",
+      "tokenEstimate": 365,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:c287a5d1",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:c287a5d1:0-8",
+      "tokenEstimate": 263,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:f4bcf2dd",
+      "tokenEstimate": 196,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:f4bcf2dd:0-3",
+      "tokenEstimate": 210,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:36e176a6",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:36e176a6:0-4",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:91cc833f",
+      "tokenEstimate": 208,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:91cc833f:0-15",
+      "tokenEstimate": 371,
+      "span": [
+        0,
+        15
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:63cc1844",
+      "tokenEstimate": 110,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:63cc1844:0-9",
+      "tokenEstimate": 463,
+      "span": [
+        0,
+        9
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:63cc1844:9-12",
+      "tokenEstimate": 242,
+      "span": [
+        9,
+        12
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:ca431aa2",
+      "tokenEstimate": 202,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:ca431aa2:0-10",
+      "tokenEstimate": 384,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:ca431aa2:9-17",
+      "tokenEstimate": 298,
+      "span": [
+        9,
+        17
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:58784905",
+      "tokenEstimate": 98,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:58784905:0-1",
+      "tokenEstimate": 133,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:dcc8ec86",
+      "tokenEstimate": 223,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:dcc8ec86:0-8",
+      "tokenEstimate": 334,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:9c0bf573:53d377f1",
+      "tokenEstimate": 181,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9c0bf573:53d377f1:0-3",
+      "tokenEstimate": 181,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

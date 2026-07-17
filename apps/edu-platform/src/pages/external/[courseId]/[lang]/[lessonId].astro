@@ -1,0 +1,164 @@
+---
+import ExternalLessonLayout from '@/layouts/ExternalLessonLayout.astro';
+import MarkdownDownloadButton from '@/components/shared/MarkdownDownloadButton.astro';
+import LessonCompletionControls from '@/components/progress/LessonCompletionControls.astro';
+import { verifyExternalAuth } from '@/server/externalAuth';
+import {
+  getAdjacentPreworkLessonIds,
+  getPreworkCourseSections,
+  getPreworkLesson,
+  getPreworkLessonListItems,
+  getPreworkLessons,
+  isPreworkLanguage,
+  PREWORK_COURSE_ID,
+} from '@/server/content/preworkContent';
+import {
+  getAdjacentMainCourseLessonIds,
+  getMainCourseLesson,
+  getMainCourseLessons,
+  getMainCourseSections,
+  isMainCourseLanguage,
+  MAIN_COURSE_ID,
+} from '@/server/content/mainCourseContent';
+import { getExternalMarkdownCourseStructure } from '@/server/content/externalMarkdownContent';
+import { buildExternalCourseLoginUrl } from '@/server/urlValidation';
+import { loadPreworkSidebarPersonalization } from '@/server/quiz/preworkSidebarPersonalization';
+import { getExternalLessonShellCopy } from '@/lib/externalLessonShellCopy';
+import { loadLessonProgressForCourse } from '@/server/progress/lessonProgressLoader';
+import { buildCompleteToc } from '@/utils/buildTocHierarchy';
+import { extractHeadingsFromHtml } from '@/utils/extractHeadingsFromHtml';
+import { slugify } from '@/utils/slugify';
+import type { CourseSection } from '@/server/circle/courseStructureTypes';
+import type { LessonPersonalizationById } from '@/server/quiz/preworkSidebarPersonalization';
+
+const { courseId, lang, lessonId } = Astro.params;
+const env = Astro.locals.runtime.env;
+
+const isPrework = courseId === PREWORK_COURSE_ID && isPreworkLanguage(lang);
+const isMainCourse = courseId === MAIN_COURSE_ID && isMainCourseLanguage(lang);
+
+if ((!isPrework && !isMainCourse) || !lessonId) {
+  return new Response(null, { status: 404 });
+}
+
+const authResult = await verifyExternalAuth(Astro.cookies, courseId, env);
+if (!authResult.isAuthenticated) {
+  return Astro.redirect(buildExternalCourseLoginUrl(courseId, Astro.url.pathname));
+}
+
+const prefix = `/external/${courseId}/${lang}`;
+const shellCopy = getExternalLessonShellCopy(lang);
+
+let lessonContent: { name: string; html: string } | null = null;
+let lessonItems: { id: string | number; name: string; position?: number; sectionId: number; sectionName?: string }[] = [];
+let sections: CourseSection[] = [];
+let prevLessonId: string | number | null = null;
+let nextLessonId: string | number | null = null;
+let lessonPersonalization: LessonPersonalizationById = {};
+
+if (isPrework) {
+  const [lesson, lessons, personalization] = await Promise.all([
+    getPreworkLesson(lang, lessonId),
+    getPreworkLessons(lang),
+    loadPreworkSidebarPersonalization(authResult.email, lang, env),
+  ]);
+
+  if (!lesson) {
+    return new Response(null, { status: 404 });
+  }
+
+  const adjacent = getAdjacentPreworkLessonIds(lessons, lesson.id);
+  prevLessonId = adjacent.prevLessonId;
+  nextLessonId = adjacent.nextLessonId;
+  lessonContent = { name: lesson.data.name, html: lesson.data.content };
+  lessonItems = getPreworkLessonListItems(lessons);
+  sections = getPreworkCourseSections(lang);
+  lessonPersonalization = personalization;
+} else {
+  const [lesson, lessons] = await Promise.all([
+    getMainCourseLesson(lang, lessonId),
+    getMainCourseLessons(lang),
+  ]);
+
+  if (!lesson) {
+    return new Response(null, { status: 404 });
+  }
+
+  const adjacent = getAdjacentMainCourseLessonIds(lessons, lesson.id);
+  prevLessonId = adjacent.prevLessonId;
+  nextLessonId = adjacent.nextLessonId;
+  lessonContent = { name: lesson.data.name, html: lesson.data.content };
+
+  const structure = await getExternalMarkdownCourseStructure(courseId, lang);
+  lessonItems = structure?.lessons ?? [];
+  sections = structure?.sections ?? getMainCourseSections(lang);
+}
+
+const { headings: flatHeadings, modifiedHtml } = extractHeadingsFromHtml(lessonContent.html);
+const tocHeadings = buildCompleteToc(flatHeadings).tree;
+const slugifiedName = slugify(lessonContent.name);
+const lessonProgress = await loadLessonProgressForCourse({
+  email: authResult.email,
+  courseSlug: courseId,
+  language: lang,
+  env,
+});
+---
+
+<ExternalLessonLayout
+  courseId={courseId}
+  lessonName={lessonContent.name}
+  lessons={lessonItems}
+  sections={sections}
+  activeLessonId={lessonId}
+  prevLessonId={prevLessonId}
+  nextLessonId={nextLessonId}
+  tocHeadings={tocHeadings}
+  tocStorageKey={`toc-widget-open-${courseId}-${lang}`}
+  lessonUrlPrefix={prefix}
+  courseHomeUrl={prefix}
+  htmlLang={lang}
+  shellCopy={shellCopy}
+  lessonPersonalization={lessonPersonalization}
+  lessonProgress={lessonProgress}
+  progressLanguage={lang}
+>
+  <div class="p-4 md:p-8">
+    <div class="lesson-surface rounded-xl shadow max-w-7xl mx-auto">
+      <div class="lesson-prose prose prose-invert mx-auto max-w-[800px] space-y-8 py-6 md:py-8">
+        <h1 class="text-4xl font-bold">{lessonContent.name}</h1>
+
+        <div class="not-prose">
+          <MarkdownDownloadButton
+            markdownUrl={`${prefix}/${lessonId}/markdown`}
+            slugifiedName={slugifiedName}
+            buttonText={shellCopy.downloadMarkdown}
+            titleText={shellCopy.markdownTitle}
+            ariaLabel={shellCopy.downloadMarkdown}
+          />
+        </div>
+
+        <LessonCompletionControls
+          courseSlug={courseId}
+          language={lang}
+          lessonId={lessonId}
+          lessonName={lessonContent.name}
+          lessonProgress={lessonProgress}
+          labels={shellCopy}
+        />
+
+        <div set:html={modifiedHtml} />
+
+        <LessonCompletionControls
+          courseSlug={courseId}
+          language={lang}
+          lessonId={lessonId}
+          lessonName={lessonContent.name}
+          lessonProgress={lessonProgress}
+          labels={shellCopy}
+          class="not-prose border-t lesson-divider pt-6"
+        />
+      </div>
+    </div>
+  </div>
+</ExternalLessonLayout>

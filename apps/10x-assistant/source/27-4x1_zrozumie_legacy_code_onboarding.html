@@ -1,0 +1,470 @@
+<meta name="lesson-id" content="[4x1] Zrozumieć Legacy Code - onboarding"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/dxhq7lyd04fqa9m24fulxov1eq0s" style="width: 100%; max-width: 100%;"><p>Wersja Focus Mode (Markdown) <a href="https://platforma.przeprogramowani.pl/external/10xdevs-2/2580237" target="_blank" rel="noopener noreferrer">pod tym linkiem</a>.</p><h2>Wprowadzenie</h2><p>W pracy developera nieustannie stajemy przed wyzwaniem pracy z istniejącymi systemami. Niezależnie od tego, czy dołączamy do nowego zespołu, przejmujemy projekt po poprzednikach, czy stajemy przed zadaniem modernizacji wieloletniego systemu - konieczność zrozumienia zastanego kodu jest naszą codziennością.</p><p>W tym module skupimy się na dwóch kluczowych kontekstach pracy z zastanym kodem: legacy i brownfield. Choć często używane zamiennie, te terminy opisują różne sytuacje i wymagają odmiennego podejścia.</p><p><strong>Legacy code</strong> to kod, który istnieje od dłuższego czasu, często nieobjęty testami, słabo udokumentowany, napisany w przestarzałych technologiach. To system, który "działa i nie ruszamy", bo boimy się konsekwencji zmian.</p><p><strong>Brownfield</strong> natomiast to projekty istniejące, ale niekoniecznie przestarzałe - to cały ekosystem zastanego kodu, infrastruktury i procesów, do których musimy się zintegrować. Może to być nowoczesny system, który przejmujemy po innym zespole, lub projekt klienta, do którego dołączamy jako konsultanci.</p><p>W tej lekcji nauczysz się wykorzystywać nowoczesne narzędzia AI do szybkiego onboardingu w obu tych scenariuszach. Pokażemy Ci, jak efektywnie zrozumieć strukturę projektu, zidentyfikować kluczowe komponenty i przygotować się do bezpiecznej modernizacji lub rozbudowy systemu. </p><p>Będziemy wykorzystywali LLMy do analizy kodu, generowania diagramów i tworzenia brakującej dokumentacji - wszystko po to, aby skrócić czas potrzebny na efektywne rozpoczęcie pracy z istniejącym kodem.</p><h3>Z jakiego modelu korzystać w większych projektach?</h3><p>Na dzień dzisiejszy (21.04.25) Google z rodziną Gemini 2.5 jest liderem w kategorii LLM przez API, oferując najlepszy stosunek ceny do wydajności i intelektu we wszystkich kluczowych kategoriach. Więcej na ten temat w poście <a class="entity" href="https://bravecourses.circle.so/c/dyskusje-10x/google-liderem-llm-przez-api-cena-wydajnosc" target="_blank" rel="noopener noreferrer">#Google liderem LLM przez API (cena/wydajność)</a>.</p><p><strong>Model Gemini 2.5 Pro</strong> oferuje kluczowe parametry dla pracy z kodem, zwłaszcza w kontekście większych projektów:</p><ul><li><p>Okno kontekstowe:<strong> 1 milion tokenów</strong> z kilkuset tysiącami efektywnego okna kontekstowego (czekamy na więcej benchmarków i badań)</p></li><li><p><strong>Efektywny kontekst na poziomie 90.6% przy 128k tokenów</strong> (podczas gdy konkurencja osiąga około 60%)</p></li><li><p>Jakość planowania i kodowania na poziomie Sonnet 3.7 Thinking, ale bez jego nadgorliwości która często prowadzi do sprzątania i rozkmin “na co mi było to AI?”</p></li></ul><p>W porównaniu do konkurencyjnych modeli Anthropic (Claude Sonnet 3.5 i 3.7) OpenAI (o3, o4-mini, gpt-4.1), Gemini 2.5 Pro oferuje lepszy stosunek jakości (intelekt, szybkość) do ceny, co czyni go obecnie najlepszym modelem dostępnym dla programistów.</p><img loading="lazy" src="https://assets-v2.circle.so/1r2tlvp616kauqyfed98d1ce71zl" style="width: 100%; max-width: 100%;"><p>Taką rekomendację przekazujemy po kompleksowych testach w ostatnim miesiącu oraz wynikach w wartościowych benchmarkach: <a href="https://livebench.ai/" target="_blank" rel="noopener noreferrer">LiveBench</a> - intelekt, <a href="https://fiction.live/stories/Fiction-liveBench-Mar-25-2025/oQdzQvKHw8JyXbN87" target="_blank" rel="noopener noreferrer">Fiction.liveBench</a> - efektywny kontekst, <a href="https://lmarena.ai/" target="_blank" rel="noopener noreferrer">LLM Arena (Coding)</a> - vibe check, <a href="https://openrouter.ai/rankings/programming?view=week" target="_blank" rel="noopener noreferrer">OpenRouter</a> - szybkość i popularność po API. </p><p>We wszystkich tych zestawieniach Gemini 2.5 Pro jest blisko pozycji lidera, nie ma istotnych słabych stron. Co najmniej warto sprawdzić jak sprawdzi się w Twoim workflow.</p><h3>Wyzwania przy korzystaniu z Gemini 2.5 Pro</h3><p>Gemini 2.5 Pro nie jest jeszcze optymalnie zintegrowane z edytorami AI takimi jak Cursor, Windsurf Copilot. Czasami musimy przypominać modelowi o jego możliwościach i sprawczości - bez zachęty nie tworzy plików itd. Proste komunikaty pt. “zatrzymałeś się przed stworzeniem pliku” załatwiają sprawę. Pewnie to kwestia kilku tygodni i problem zostanie w pełni rozwiązany (ten model nie jest pierwszym i ostatnim z takimi problemami). </p><h2>Praktyczne zastosowania w analizie kodu</h2><img loading="lazy" src="https://assets-v2.circle.so/bz821m8mj5hgvlwcawowken7a3dl" style="width: 100%; max-width: 100%;"><p>Zaczniemy od prezentacji jak wykorzystać potencjał Gemini 2.5 Pro do analizy dużych projektów brownfield, na przykładzie <a href="https://excalidraw.com/" target="_blank" rel="noopener noreferrer">Excalidraw</a> - aplikacji open-source liczącej ponad 150 tysięcy linii kodu TypeScript i React.</p><p>Excalidraw to narzędzie do tworzenia wirtualnych tablic do współpracy, które umożliwia łatwe szkicowanie diagramów o odręcznym charakterze. Świetnie sprawdza się przy planowaniu architektury oraz tworzeniu materiałów wizualnych do prezentacji.</p><p>W każdym z naszym kursów mamy kilka diagramów stworzonych z użyciem Excalidraw, więc cenimy ten projekt za wartość którą wnosi do naszych szkoleń. </p><p>Dwie najbliższe lekcją obejmują:</p><ol start="1"><li><p>Lekcja 3×1: Tworzenie kompleksowego dokumentu onboardingowego dla nowych developerów w dwóch wydaniach:</p><ol start="1"><li><p>Brownfield (<a href="https://github.com/excalidraw/excalidraw" target="_blank" rel="noopener noreferrer">repo Excalidraw</a>)</p></li><li><p>Legacy (<a href="https://github.com/przeprogramowani/10x-cms" target="_blank" rel="noopener noreferrer">repo 10xCMS</a>)</p></li></ol></li><li><p>Lekcja 3×2: Generowanie action planu do wsparcia nas w procesie debugowania zastanego kodu na przykładzie issue zgłoszonego w repo excalidraw</p></li><li><p>Lekcja 3×2: Wykorzystanie action planu przy analizie i debugowaniu problemu:</p><ol start="1"><li><p>Sugestie i implementacja logów w kodzie, które pomogą nam w analizie problemu</p></li><li><p>Analiza zgromadzonych logów, aby wypracować lepsze hipotezy dotyczącymi źródeł problemów - może być ich bardzo dużo, tak jak to zaobserwujesz w filmie (91k tokenów)</p></li><li><p>Iteracyjna aktualizacja action planu na podstawie nowych informacji</p></li></ol></li></ol><p>Jest się czego uczyć i testować, więc przejdźmy do czynów!</p><h2>Wdrażanie się w duże projekty - jak to zrobić szybko i z głową?</h2><p>Historia Git to nieocenione źródło wiedzy o projekcie, które często pozostaje niewykorzystane. Zapisana w niej ewolucja kodu stanowi mapę dla każdego, kto chce zrozumieć rzeczywistą strukturę i dynamikę rozwoju aplikacji. </p><p>W kontekście wprowadzania nowych deweloperów do projektu, analiza historii repozytorium pozwala w praktyczny sposób zastosować zasadę Pareto - zrozumienie 20% kluczowego kodu może dać nam 80% wiedzy o całym systemie, której potrzebujemy wdrażając się w codebase.</p><p>Przedstawione w tej lekcji skrypty Git służą do odkrywania "hot spotów" - najczęściej modyfikowanych modułów i plików w repozytorium. Ta informacja jest szczególnie cenna przy:</p><ul><li><p>Onboardingu nowych członków zespołu</p></li><li><p>Planowaniu refaktoryzacji</p></li><li><p>Identyfikacji potencjalnych obszarów ryzyka</p></li><li><p>Priorytetyzacji code review</p></li></ul><p>W połączeniu z modelami językowymi, takimi jak Gemini 2.5 Pro, analiza strukturalna bazująca na historii zmian dostarcza kontekstu niezbędnego do głębszego zrozumienia architektury projektu. Model AI, mając dostęp do informacji o częstotliwości zmian i powiązaniach między plikami, może lepiej interpretować logikę biznesową i sugerować rozwiązania zgodne z ustalonymi wzorcami w projekcie.</p><h2>Skrypty git do analizy hotspotów</h2><h3>1. Skrypt do analizy plików</h3><p>Ten skrypt identyfikuje najczęściej modyfikowane pliki w repozytorium w ciągu ostatniego roku, co pozwala określić hot spoty kodu - miejsca, gdzie zachodzi najwięcej zmian i które mogą wymagać szczególnej uwagi.</p><p><strong>Dla systemów Unix/Linux:</strong></p><pre><code>git log --since="1 year ago" --pretty=format:"" --name-only --no-merges | \
+  grep -vE "${EXCLUDE_PATTERN_GREP:-^$}" | \
+  grep '.' | \
+  sort | \
+  uniq -c | \
+  sort -nr | \
+  head -n 10 | \
+  awk '{count=$1; $1=""; sub(/^[ \t]+/, ""); print $0 ": " count " changes"}' | cat</code></pre><h3>Omówienie skryptu krok po kroku</h3><ol start="1"><li><p><em>git log --since="1 year ago"</em> - pobiera historię commitów z ostatniego roku</p></li><li><p><em>--pretty=format:""</em> - usuwa opis commitów, zostawiając tylko nazwy plików</p></li><li><p><em>--name-only</em> - wyświetla tylko nazwy zmienionych plików</p></li><li><p><em>--no-merges</em> - wyklucza merge commity, co daje czystszy obraz zmian</p></li><li><p><em>grep -vE "${EXCLUDE_PATTERN_GREP:-^$}"</em> - filtruje niechciane pliki według wzorca regex</p></li><li><p><em>grep '.'</em> - usuwa puste linie</p></li><li><p><em>sort | uniq -c</em> - zlicza wystąpienia każdego pliku</p></li><li><p><em>sort -nr </em>- sortuje malejąco według liczby zmian</p></li><li><p><em>head -n 10</em> - wybiera 10 najczęściej modyfikowanych plików</p></li><li><p><em>awk '{...}'</em> - formatuje wynik do czytelnej postaci "nazwa_pliku: X changes"</p></li></ol><h3>Ustawianie EXCLUDE_PATTERN_GREP</h3><p>Zmienna EXCLUDE_PATTERN_GREP pozwala wykluczyć pliki według wzorca regex. Przykłady użycia:</p><pre><code># Wykluczenie plików konfiguracyjnych
+EXCLUDE_PATTERN_GREP='(\.yml$|\.yaml$|\.config\.js$)'
+
+# Wykluczenie testów i dokumentacji
+EXCLUDE_PATTERN_GREP='(test|spec|docs?/)'
+
+# Wykluczenie plików z node_modules i build
+EXCLUDE_PATTERN_GREP='(node_modules|dist|build|\.gitignore)'
+
+# Złożony wzorzec - wyklucza wiele typów plików
+EXCLUDE_PATTERN_GREP='(\.svg$|\.png$|\.jpg$|package-lock\.json|yarn\.lock|\.md$)'
+
+# Użycie w skrypcie
+EXCLUDE_PATTERN_GREP='(test|spec)' 
+git log --since="1 year ago" --pretty=format:"" --name-only --no-merges | \
+  grep -vE "${EXCLUDE_PATTERN_GREP:-^$}" | \
+  grep '.' | \
+  sort | \
+  uniq -c | \
+  sort -nr | \
+  head -n 10 | \
+  awk '{count=$1; $1=""; sub(/^[ \t]+/, ""); print $0 ": " count " changes"}' | cat</code></pre><p>Właściwe EXCLUDE_PATTERN_GREP najłatwiej ustalić poprzez uruchomienie skryptu. Jeżeli rzucą nam się w oczy jakieś pliki, które trafią do top10 a niewiele wniosą do analizy hot spotów (np. package.json, pliki i18n, fonty) to warto dodać je do ścieżki wykluczeń.</p><p><strong>Dla Windows:</strong></p><p>Rekomendowanym sposobem jest wykorzystanie tego samego skryptów przez <a href="https://gitforwindows.org/" target="_blank" rel="noopener noreferrer">Git Bash</a> lub Windows Subsystem for Linux (WSL). Alternatywnie przygotowaliśmy skrypt PowerShell:</p><pre><code>git log --since="1 year ago" --pretty=format:"" --name-only --no-merges | 
+  Where-Object { $_ -match '\S' } | 
+  Where-Object { $_ -notmatch "" } | 
+  Group-Object | 
+  Sort-Object -Property Count -Descending | 
+  Select-Object -First 10 | 
+  ForEach-Object { "$($_.Name): $($_.Count) changes" }
+</code></pre><h3>2. Skrypt do analizy modułów</h3><p>Kolejny skrypt analizuje, które moduły (katalogi) są najczęściej modyfikowane, dostarczając informacji o ogólnej strukturze projektu i kluczowych obszarach rozwoju.</p><p><strong>Dla systemów Unix/Linux:</strong></p><pre><code>git log --since="1 year ago" --pretty=format:"" --name-only --no-merges | \
+  grep -vE "${EXCLUDE_PATTERN_GREP:-^$}" | \
+  grep '.' | \
+  awk -F/ -v OFS=/ 'NF &gt; 1 {$NF = ""; print $0 } NF &lt;= 1 { print "." }' | \
+  sed 's|/*$||' | \
+  sed 's|^\\.$|project root|' | \
+  sort | \
+  uniq -c | \
+  sort -nr | \
+  head -n 10 | \
+  awk '{count=$1; $1=""; sub(/^[ \t]+/, ""); print $0 ": " count " changes"}' | cat</code></pre><p><strong>Dla Windows (PowerShell):</strong></p><pre><code>git log --since="1 year ago" --pretty=format:"" --name-only --no-merges | 
+  Where-Object { $_ -match '\S' } | 
+  Where-Object { $_ -notmatch "(package\.json$|package-lock\.json$|yarn\.lock$|^node_modules/|^dist/|^build/|\.log$|\.svg$|\.png$|\.ico$|\.map$|\.d\.ts$|README\.md$|\.gitignore$|CHANGELOG\.md$|LICENSE$)" } | 
+  ForEach-Object {
+    if ($_ -match "/") {
+      $parts = $_ -split "/"
+      $parts[0..($parts.Length-2)] -join "/"
+    } else {
+      "project root"
+    }
+  } | 
+  Group-Object | 
+  Sort-Object -Property Count -Descending | 
+  Select-Object -First 10 | 
+  ForEach-Object { "$($_.Name): $($_.Count) changes" }
+</code></pre><h3>3. Skrypt do Analizy Kontrybutorów</h3><p>Ten skrypt identyfikuje najaktywniejszych kontrybutorów projektu, dostarczając informacji o tym, kto najlepiej zna repozytorium i poszczególne jego obszary.</p><p><strong>Dla systemów Unix/Linux:</strong></p><pre><code>git log --since="1 year ago" --pretty=format:"%an &lt;%ae&gt;" --no-merges |\
+  sort |\
+  uniq -c |\
+  sort -nr |\
+  head -n 5 |\
+  awk '{count=$1; $1=""; sub(/^[ \t]+/, ""); print $0 ": " count " commits"}'</code></pre><p><strong>Dla Windows (PowerShell):</strong></p><pre><code>git log --since="1 year ago" --pretty=format:"%an &lt;%ae&gt;" --no-merges | 
+  Group-Object | 
+  Sort-Object -Property Count -Descending | 
+  Select-Object -First 5 | 
+  ForEach-Object { "$($_.Name): $($_.Count) commits" }</code></pre><h3>Wyniki Analizy Excalidraw</h3><p><strong>Najczęściej modyfikowane pliki</strong></p><pre><code>packages/excalidraw/components/App.tsx: 86 changes
+packages/excalidraw/element/binding.ts: 36 changes
+packages/excalidraw/types.ts: 27 changes
+packages/excalidraw/tests/__snapshots__/history.test.tsx.snap: 27 changes
+packages/excalidraw/data/restore.ts: 27 changes</code></pre><p>Analiza pokazuje, że centralnym elementem aplikacji jest App.tsx z 86 zmianami, co sugeruje, że jest to "serce" aplikacji, które integruje większość funkcjonalności. Znaczącą rolę odgrywają również mechanizmy wiązania elementów (binding.ts) oraz definicje typów (types.ts).</p><p><strong>Najaktywniejsze moduły</strong></p><pre><code>packages/excalidraw/components: 380 changes
+packages/excalidraw/element: 369 changes
+packages/excalidraw/actions: 288 changes
+packages/excalidraw: 259 changes
+packages/excalidraw/tests: 231 changes</code></pre><p>Te wyniki ujawniają, że największa aktywność koncentruje się wokół komponentów UI, logiki rysowania, systemu akcji i testów. To daje jasny obraz architektury aplikacji opartej na komponentach React z wydzieloną logiką elementów i systemem akcji.</p><p><strong>Najaktywniejsi kontrybutorzy</strong></p><pre><code>David Luzar &lt;5153846+dwelle@users.noreply.github.com&gt;: 99 commits
+Márk Tolmács &lt;mark@lazycat.hu&gt;: 45 commits
+Marcel Mraz &lt;marcel@excalidraw.com&gt;: 35 commits
+Ryan Di &lt;ryan.weihao.di@gmail.com&gt;: 26 commits
+Aakansha Doshi &lt;aakansha1216@gmail.com&gt;: 16 commits</code></pre><p>Te informacje identyfikują głównych ekspertów projektu, do których można się zwrócić z pytaniami dotyczącymi konkretnych obszarów.</p><h2>Wstępna analiza projektu</h2><p>Za chwilę w formie video przedstawimy prompt dla Gemini 2.5 Pro, który wykorzystuje zebrane dane do automatycznego generowania planu onboardingu dla nowych deweloperów. Jest to szczególnie wartościowe dla dużych projektów, ponieważ:</p><ol start="1"><li><p><strong>Automatycznie identyfikuje kluczowe obszary</strong> - Na podstawie analizy git, AI może wskazać najważniejsze moduły i pliki wymagające szczególnego zrozumienia.</p></li><li><p><strong>Określa ostatnie kierunki rozwoju</strong> - Informacje o najczęściej modyfikowanych plikach pokazują, gdzie obecnie skupiony jest wysiłek zespołu.</p></li><li><p><strong>Identyfikuje ekspertów dziedzinowych</strong> - Analiza kontrybutorów pomaga wskazać, kto ma wiedzę ekspercką w poszczególnych obszarach.</p></li><li><p><strong>Tworzy ustrukturyzowany dokument wprowadzający</strong> - Generuje dokument zawierający wszystkie niezbędne informacje dla nowego dewelopera, w tym sekcje:</p><ul><li><p>Przegląd projektu</p></li><li><p>Kluczowe moduły</p></li><li><p>Główni kontrybutorzy</p></li><li><p>Obszary złożoności</p></li><li><p>Pytania dla zespołu</p></li><li><p>Kolejne kroki (jak zacząć)</p></li><li><p>Pomocne zasoby (issue tracking, komunikacja z core team)</p></li></ul></li></ol><p>Zobacz zastosowanie prompta w praktyce na przykładzie repozytorium Excalidraw:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1077106311?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p><strong>Ważne dla userów Cursora:</strong> w lekcji korzystałem z wersji modelu Gemini 2.5 Pro (MAX), która jest dodatkowo płatna za każde zapytanie i wywołanie narzędzi. </p><p>👉 Aby uniknąć dodatkowych kosztów, korzystaj z “gemini-2.5-pro-exp-03-25” (więcej informacji znajdziesz w <a href="https://docs.cursor.com/settings/models" target="_blank" rel="noopener noreferrer">cenniku modeli Cursora</a>). MAX pozwala pracować na kontekście przekraczającym 120 tysięcy tokenów. </p><img loading="lazy" src="https://assets-v2.circle.so/j7a6vwb0vtlgzbewtpdpdw7rlv39" style="width: 100%; max-width: 100%;"><p>O to prompt z lekcji:</p><pre><code>You are an AI assistant tasked with onboarding a new developer to a big project. Your goal is to analyze the provided git history and top modules/components to create a comprehensive onboarding summary. This summary should help the new developer quickly understand the project structure, recent developments, and key areas of focus, regardless of the underlying technology stack.
+
+First, review the following information:
+
+&lt;top_modules&gt;
+{{top-modules}} - zastąp wynikiem ze skryptu git dla modułów
+&lt;/top_modules&gt;
+
+&lt;top_files&gt;
+{{top-files}} - zastąp wynikiem ze skryptu git dla plików
+&lt;/top_files&gt;
+
+&lt;top_contributors&gt;
+{{top-contributors}} - zastąp wynikiem ze skryptu git dla kontrybutorów
+&lt;/top_contributors&gt;
+
+Analyze the git history and top modules/files to identify:
+1. The main areas of development focus in the past year.
+2. Frequently updated modules, directories, or core files.
+3. Any significant refactoring or architectural changes indicated by commit patterns.
+
+Based on your analysis, create an onboarding summary. 
+
+**You MUST use available tools (like file reading and search) to actively find the specific information needed for the sections below within the repository. Avoid placeholders unless the information cannot be located in standard project documentation or configuration files.**
+
+**Specifically for 'Core Modules':**
+*   When describing 'Key Files/Areas' and 'Top Contributed Files' for each module/package/directory, attempt to verify file paths and roles by listing directory contents or reading key files, correlating with the provided `&lt;top_files&gt;` data.
+
+**Specifically for 'Development Environment Setup':**
+*   Search for and read primary project documentation files like `README` (e.g., `README.md`, `README.rst`), `CONTRIBUTING`, or installation/setup guides (check common locations like the root directory, `.github/`, or `docs/`).
+*   Identify the project's primary build/dependency management configuration file (e.g., `package.json`, `pom.xml`, `build.gradle`, `requirements.txt`, `Pipfile`, `go.mod`, `Cargo.toml`, `composer.json`, etc.). Read this file if necessary.
+*   Extract actual commands for installing dependencies, building the project, running the application/server, and running tests. Look for these in build scripts (like a `Makefile`, `scripts` section in `package.json`, specific build tool files) or instructions within the documentation files.
+*   Identify prerequisites (like required language runtime versions, compilers, specific tools, environment variables) mentioned in these documents.
+*   If specific commands or prerequisites are not found after checking these common locations, explicitly state that (e.g., "Dependency installation command not found in checked files.").
+
+**Specifically for 'Helpful Resources':**
+*   Search for and read `README`, `CONTRIBUTING`, and other documentation files (potentially in a `/docs` or similar directory if `list_dir` shows one exists).
+*   Extract actual URLs for external documentation websites, the project's issue tracker (e.g., GitHub Issues, Jira), contribution guidelines, communication channels (like Discord, Slack, mailing list links), etc., mentioned in these files.
+*   If specific links are not found, explicitly state that (e.g., "Link to communication channel not found in checked files.").
+
+To accomplish this task, you have access to the following tools:
+1. file_read: Reads the content of a specified file.
+2. file_search: Searches for files matching a given pattern.
+3. list_dir: Lists the contents of a specified directory.
+
+Generate a list of 5-7 questions that the new developer should dig into via analysing the codebase, git history and project repository (e.g., on GitHub, GitLab) to gain a deeper understanding of the project. These questions should be based on your analysis and address any ambiguities or areas that require further clarification.
+
+Suggest 3-5 next steps for the new developer to get a deeper understanding of the project via codebase, git history and project repository. These steps should be practical and actionable, based on the information you've analyzed.
+
+Your final output should **only** include the content in markdown with the specified format that you will save in `.ai/onboarding.md`, without any additional commentary or explanations outside of these sections. Structure the output as follows, **filling it with information discovered from the repository**:
+
+```markdown
+# Project Onboarding: [Project Name Found in Repo, e.g., from README or build config]
+
+## Welcome
+
+Welcome to the [Project Name Found in Repo] project! [Brief 1-2 sentence description of what the project does and its purpose, potentially summarized from README].
+
+## Project Overview &amp; Structure
+
+The core functionality revolves around [key functionality description, inferred from README/context]. The project is organized as [monorepo/multi-project/single application/etc.], with the following key components/modules:
+
+## Core Modules
+
+### `[Module/Package/Directory Name]`
+
+- **Role:** [Concise description of this component's purpose]
+- **Key Files/Areas:** 
+  - [Category/Group Name]: `path/to/file1`, `path/to/file2`, etc.
+  - [Category/Group Name]: `path/to/file3`, `path/to/file4`, etc.
+- **Top Contributed Files:** `path/to/filename`, `path/to/filename`, etc.  
+- **Recent Focus:** [Description of recent work, features, or bug fixes in this area with issue/PR references if possible to infer]
+
+[Repeat for each major module/package/directory based on the top_modules data]
+
+## Key Contributors
+
+- **[Contributor Name]:** [Areas of focus or expertise, key contributions based on available data]
+- **[Contributor Name]:** [Areas of focus or expertise, key contributions based on available data]
+[List top 3-5 contributors]
+
+## Overall Takeaways &amp; Recent Focus
+
+1. **[Major Theme/Initiative]:** [Description of significant recent project-wide change based on active modules/files]
+2. **Feature Development:** [Description of recent major features added to the project, inferred from active areas]
+3. **[Specific Area] Improvements:** [Details on focused improvements in a particular active area]
+4. **UI/UX Refinement (if applicable):** [Recent UI/UX changes and improvements, inferred from relevant file activity]
+5. **Performance &amp; Stability:** [Recent performance optimizations and stability improvements, inferred from core logic/testing activity]
+
+## Potential Complexity/Areas to Note
+
+- **[Complex Area]:** [Description of why this area might be complex (e.g., core domain logic, concurrency, state management, external system integration) and what to watch out for]
+- **[Complex Area]:** [Description of why this area might be complex and what to watch out for]
+- **[Complex Area]:** [Description of why this area might be complex and what to watch out for]
+
+## Questions for the Team
+
+1. [Question about project structure, architecture, or key design decisions]
+2. [Question about build process, deployment, or development workflows inferred from setup/docs]
+3. [Question about specific complex areas identified]
+4. [Question about data persistence, state management, or inter-service communication patterns]
+5. [Question about contributing changes to active modules or adding new features]
+6. [Question about testing strategy, code quality standards, or CI/CD pipeline]
+7. [Question about collaboration, code ownership, or release process]
+
+## Next Steps
+
+1. **[Action Item]:** [Specific details, e.g., Set up the development environment using instructions found in README]
+2. **[Action Item]:** [Specific details, e.g., Explore the `[highly_active_module/directory]` identified as highly active]
+3. **[Action Item]:** [Specific details, e.g., Run the project's test suite using the command found in the build configuration/documentation]
+4. **[Action Item]:** [Specific details, e.g., Trace a core business logic flow related to `[frequently_edited_core_file]`]
+5. **[Action Item]:** [Specific details, e.g., Review recent Pull Requests/Merge Requests related to `[another_active_module]`]
+
+## Development Environment Setup
+
+1. **Prerequisites:** [Actual prerequisites found, e.g., Language Runtime version X.Y, Compiler Z, Tool A]
+2. **Dependency Installation:** `[Actual command(s) found, or "Command not specified"]`
+3. **Building the Project (if applicable):** `[Actual command(s) found, or "Command not specified"]`
+4. **Running the Application/Service:** `[Actual command(s) found, or "Command not specified"]`
+5. **Running Tests:** `[Actual command(s) found, or "Command not specified"]`
+6. **Common Issues:** [Summarize common setup issues mentioned in docs, or state "Common issues section not found in checked files"]
+
+## Helpful Resources
+
+- **Documentation:** [Actual link(s) found, or state "Primary documentation link not found"]
+- **Issue Tracker:** [Actual link(s) found, e.g., GitHub Issues URL, Jira Project URL]
+- **Contribution Guide:** [Actual link(s) found]
+- **Communication Channels:** [Actual link(s) found, e.g., Slack invite, mailing list archive]
+- **Learning Resources:** [Actual link(s) found, or state "Specific learning resources section not found"]
+
+Ensure that all information in the summary is based on &lt;top_modules&gt;, &lt;top_files&gt;, &lt;top_contributors&gt; and your exploration of the project using the provided tools. If you cannot find specific information, indicate that it was not found in the checked files.
+
+Your final output should consist only of the markdown-formatted onboarding summary that you will save in .ai/onboarding.md and should not duplicate or rehash any of the work you did in the exploration section of the thinking block. Finish the work after you created document with a required structure and content.
+
+Begin your response with your exploration.</code></pre><p>Poniżej plik onboarding.md dla Excalidraw wygenerowany z tym promptem podczas nagrywania lekcji:</p><a class="file" href="https://assets-v2.circle.so/6f78tvjg3odnd5km1axp7gjf5guc" target="_blank" rel="noopener noreferrer">onboarding.md</a><p>Ten dokument zawiera wstępny przegląd projektu, opisuje jego strukturę, identyfikuje kluczowe moduły i najaktywniejsze obszary, a także sugeruje pytania dla zespołu i kolejne kroki dla nowego dewelopera.</p><p>Ważne: aby osiągnąć dobre efekty potrzebujemy modelu reasoningowego z dużym efektywnym oknem kontekstowym. Na 21 kwietnia 2025, Gemini 2.5 Pro jako jedyny model zapewnia tutaj stabilne wyniki czyli 90.6% efektywności utrzymania kontekstu przy 128k tokenów. Claude 3.7 Sonnet z Thinking (53.1%) i o4-mini (62.5%) to zauważalnie gorsze alternatywy.</p><h2>Pogłębianie dokumentacji onboardingowej </h2><p>Wcześniej omówiliśmy, jak wykorzystać skrypty git do stworzenia podstawowego dokumentu onboardingowego dla nowych deweloperów dołączających do projektu. Teraz pójdziemy o krok dalej i wykonany pogłębioną analizę modułów i plików przy użyciu Gemini 2.5 Pro, co pozwoli nam stworzyć znacznie bardziej kompleksowy i wartościowy dokument onboardingowy.</p><h2>Strategia pogłębionej analizy</h2><p>Po wygenerowaniu podstawowego dokumentu onboardingowego możemy zastosować serię wyspecjalizowanych promptów, które pomogą nam dokładniej zrozumieć strukturę projektu i najważniejsze elementy kodu. Przedstawione prompty tworzą trzyetapowy proces pogłębiania analizy, który wykonujemy w ramach jednej konwersacji z Gemini 2.5 Pro. </p><h3>1. Prompt do analizy modułów</h3><pre><code>You are a skilled software developer tasked with analyzing the core modules of a project. Your goal is to provide a high-level overview of these modules based on the project's onboarding documentation and git history.
+
+First, carefully read the project onboarding document:
+
+&lt;project_onboarding_doc&gt;
+{{onboarding.md}} - przekaż referencję do dokumentacji onboardingowej
+
+&lt;/project_onboarding_doc&gt;
+
+Based on this document, identify the core modules of the project. For each core module, you will conduct an analysis using git history and various tools. Perform your initial analysis inside &lt;module_analysis&gt; tags within your thinking block (step 1), then when you encounter &lt;perform_action&gt; block, exit thinking block and use tool calling to perform git commands for further analysis via exploring the project (step 2).
+
+&lt;module_analysis&gt;
+1. List all core modules identified from the onboarding document:
+   [List modules here]
+
+&lt;/module_analysis&gt;
+
+Then use git commands to perform next steps:
+&lt;perform_action&gt;
+2. For each core module:
+   a. Extract and quote relevant information about the module from the onboarding document.
+
+   b. Git History Analysis:
+      Command: git --no-pager log --pretty=format:"Commit: %H%nAuthor: %an &lt;%ae&gt;%nDate: %ad%nSubject: %s%n%n------------------------------------------------------------" --date=iso -n 10  -- [path-to-module]
+      [Record the output here]
+      [Identify and note patterns or themes in the commit messages]
+
+   c. Module Analysis Summary:
+      Module Name: [Name of the module]
+      Role: [Describe the primary purpose and responsibilities in 2-3 sentences]
+      Structure: [Outline the key components and organization in 2-3 sentences]
+      Recent Focus: [Identify areas of recent development activity in 2-3 sentences]
+
+[Repeat steps a-c for each core module]
+&lt;/perform_action&gt;
+
+3. Cross-module analysis:
+   [Compare and contrast modules, noting similarities and differences]
+   [Summarize findings across all modules, noting any patterns or relationships]
+
+After completing your analysis, compile a high-level overview that summarizes your findings. Your final output should be structured as follows:
+
+Core Modules Overview:
+
+1. [Module Name 1]
+   - Role: [Description in 2-3 sentences based on onboarding document and performed analysis]
+   - Structure: [Key components]
+   - Recent Focus: [Areas of recent activity]
+
+2. [Module Name 2]
+   - Role: [Description in 2-3 sentences based on onboarding document and performed analysis]
+   - Structure: [Key components]
+   - Recent Focus: [Areas of recent activity]
+
+[Continue for all identified core modules]
+
+Ensure that your overview is based on the detailed analysis you conducted, including insights from the git history and tool usage. Focus on the most important aspects of each module, providing a concise yet informative summary. Your final output should consist only of the Core Modules Overview and should not duplicate or rehash any of the work you did in the thinking block.</code></pre><p><strong>Kluczowe elementy tego promptu:</strong></p><ul><li><p>Identyfikacja wszystkich głównych modułów z dokumentu onboardingowego</p></li><li><p>Analiza historii git dla każdego modułu</p></li><li><p>Podsumowanie roli, struktury i ostatnich obszarów aktywności dla każdego modułu</p></li><li><p>Analiza relacji między modułami</p></li></ul><p><strong>Wartość dla onboardingu:</strong> Ten prompt pozwala uzyskać głębsze zrozumienie każdego modułu, bazując nie tylko na statycznych opisach, ale także na rzeczywistej historii zmian w kodzie. Szczególnie cenne jest odkrywanie wzorców i trendów w ostatniej aktywności, co daje nowym deweloperom wgląd w aktualne priorytety zespołu.</p><h2>2. Prompt do analizy kluczowych plików</h2><pre><code>You are a skilled software developer tasked with analyzing the key files of a project. Your goal is to provide a high-level overview based on the project's top files list, git history, and file system analysis.
+
+First, carefully examine the list of top files and their change history:
+&lt;top_files_list&gt;
+{{top-files}} - ta sama lista top plików ze skryptu git którą przekazywaliśmy do przygotowania dokumentu onboardingowego
+
+&lt;/top_files_list&gt;
+
+Please complete this analysis in THREE DISTINCT PHASES:
+
+PHASE 1: Initial Identification
+Identify the 10 most important files based on the provided top files list. List them by full path and briefly note why each appears significant based on change frequency and contributor involvement.
+
+PHASE 2: Git History Analysis
+For each of the 10 key files identified:
+1. First, run the git log command to examine the recent commit history:
+git --no-pager log --pretty=format:"Commit: %H%nAuthor: %an &lt;%ae&gt;%nDate: %ad%nSubject: %s%n%n" --date=iso -n 5 -- [file-path]
+2. Analyze the commit messages to identify patterns and recent focus areas
+3. Record your observations about the git history before proceeding to file analysis
+
+YOU MUST COMPLETE PHASE 2 BEFORE MOVING TO PHASE 3.
+
+PHASE 3: File Content Analysis
+After completing the git history analysis for all 10 files, examine the actual content of each file:
+1. Use the file_read tool to view the content of each key file
+2. For each file, provide:
+- File purpose and function (2-3 sentences)
+- Content organization and key components (2-3 sentences)
+- How the file connects to other parts of the system (1-2 sentences)
+
+Final Deliverable:
+After completing all three phases, summarize your findings in a "Key Files Overview" section that includes:
+1. The role of each file in the system
+2. Recent development focus areas based on git history
+3. Key architectural insights about how these files work together
+
+Your response should clearly show the progression through all three phases and culminate in the final overview.</code></pre><p><strong>Trzy fazy analizy plików:</strong></p><ol start="1"><li><p><strong>Identyfikacja</strong> - określenie 10 najważniejszych plików na podstawie częstotliwości zmian</p></li><li><p><strong>Analiza historii git</strong> - badanie ostatnich commitów do każdego pliku</p></li><li><p><strong>Analiza zawartości plików</strong> - badanie rzeczywistego kodu i jego struktury</p></li></ol><p><strong>Wartość dodana:</strong> Ten prompt pozwala przejść od wysokopoziomowej analizy modułów do szczegółowych informacji o konkretnych plikach. Dla nowego dewelopera zrozumienie kluczowych plików, ich przeznaczenia oraz ostatnich zmian jest nieocenione. Szczególnie wartościowe jest powiązanie plików z ogólną architekturą systemu, które Gemini 2.5 Pro opisuje naprawdę nieźle (chociaż wciąż nieidealnie).</p><h2>3. Prompt do syntezy i aktualizacji dokumentu onboardingowego</h2><pre><code>You are a senior developer tasked with enhancing the onboarding documentation for the Excalidraw project. You have completed both module-level and file-level analyses, and now need to synthesize these findings to update the original onboarding document.
+
+Please review:
+1. Your module analysis findings
+2. Your key files analysis findings
+3. The original onboarding document:
+&lt;onboarding-document&gt;
+{{onboarding-md}} - przekaż referencję do dokumentacji onboardingowej
+
+&lt;/onboarding-document&gt;
+
+Based on your comprehensive analysis, update the following sections of the  document with deeper insights:
+
+1. Core Modules
+   - Enhance the description of each module with insights from your analysis
+   - Add any missing modules you discovered that weren't in the original document
+   - Include relationships between modules that weren't previously documented
+
+2. Key Contributors
+   - Update with accurate contributor information from git history
+   - Note areas of expertise/focus for major contributors
+   - Identify which contributors are most active in which areas
+
+3. Overall Takeaways &amp; Recent Focus
+   - Synthesize patterns discovered in git commits across files and modules
+   - Highlight the current development priorities based on recent activity
+   - Note any shifts in focus compared to what was stated in the original document
+
+4. Potential Complexity/Areas to Note
+   - Flag specific files or modules with high change rates that might indicate complexity
+   - Identify areas where multiple contributors frequently make changes (potential knowledge sharing needs)
+   - Note any discrepancies between documented architecture and actual implementation
+
+5. Questions for the Team
+   - Based on your analysis, formulate 3-5 specific questions that would help a new developer understand unclear aspects of the codebase
+   - Focus on areas where the documentation doesn't align with observed code patterns
+
+6. Next Steps
+   - Provide concrete recommendations for a new developer joining the project
+   - Suggest which files/modules should be reviewed first based on your analysis
+   - Recommend specific documentation improvements
+
+Create a revised onboarding document that maintains the overall structure of the original, but enhances these sections with your new findings. The document should be comprehensive yet concise, suitable for helping new developers quickly understand the project landscape.
+
+When updating each section, clearly indicate:
+- What information was preserved from the original
+- What new insights were added based on your analysis
+- Any corrections to the original documentation
+
+Don't return new version as a text, but update the existing @onboarding.md file.</code></pre><p><strong>Kluczowe elementy aktualizacji:</strong></p><ul><li><p>Wzbogacenie opisów modułów o nowe odkrycia</p></li><li><p>Aktualizacja informacji o kluczowych kontrybutorach</p></li><li><p>Synteza aktualnych obszarów rozwoju i priorytetów</p></li><li><p>Identyfikacja potencjalnych obszarów złożoności</p></li><li><p>Tworzenie celnych pytań dla zespołu</p></li><li><p>Rekomendacja konkretnych kroków dla nowych deweloperów</p></li></ul><p><strong>Wartość końcowa:</strong> Ten prompt pozwala połączyć wszystkie znalezione informacje w spójny, zaktualizowany dokument onboardingowy, który będzie znacznie bardziej wartościowy dla nowych deweloperów niż wersja początkowa. Dokument zawiera nie tylko statyczne opisy, ale także informacje o aktualnych trendach rozwoju, potencjalnych wyzwaniach i konkretnych krokach do podjęcia.</p><p>Zobacz jak to wygląda w praktyce w kolejnym materiale video.</p><h2>Pogłębiona analiza projektu Excalidraw (case study)</h2><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1077106289?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>W przypadku projektu Excalidraw, ta pogłębiona analiza pozwoliła zidentyfikować:</p><ol start="1"><li><p><strong>Rzeczywiste zależności między modułami</strong> - np. jak dokładnie packages/excalidraw/components wchodzi w interakcje z packages/element</p></li><li><p><strong>Kluczowe pliki integracyjne</strong> - jak App.tsx (86 zmian) łączy wszystkie elementy systemu</p></li><li><p><strong>Obszary aktywnego rozwoju</strong> - np. obsługa wiązań między elementami (binding.ts z 36 zmianami)</p></li><li><p><strong>Potencjalne wyzwania</strong> - identyfikacja plików z wysoką częstotliwością zmian i wieloma kontrybutorami</p></li></ol><p>O to pogłębiony plik onboardingowy, który wygenerowałem podczas nagrywania lekcji:</p><a class="file" href="https://assets-v2.circle.so/idh73dysos8nsv6fv1zxqocaljvl" target="_blank" rel="noopener noreferrer">onboarding.md</a><p>Przedstawione prompty tworzą kompleksowy proces analizy projektu, który znacząco wzbogaca dokumentację onboardingową. Przy użyciu Gemini 2.5 Pro, można szybko stworzyć dogłębny obraz projektu dla nowych deweloperów, oszczędzając im tygodni samodzielnej eksploracji kodu i pozwalając szybciej stać się produktywnymi członkami zespołu.</p><p>Ta metodologia jest szczególnie wartościowa dla dużych projektów o złożonej strukturze, takich jak Excalidraw, gdzie zrozumienie architektury i ostatnich trendów rozwoju jest kluczowe dla efektywnej pracy.</p><h2>Analiza projektów bez rozbudowanej historii git</h2><p>Do tej pory omawialiśmy metody analizy projektów z wykorzystaniem bogatej historii git, która stanowi cenny źródło informacji o kluczowych modułach, plikach i kontrybutorach. Jednak w praktyce często spotykamy projekty, które:</p><ol start="1"><li><p>Są na wczesnym etapie rozwoju</p></li><li><p>Miały niedawno zresetowaną historię git</p></li><li><p>Zostały zmigrowane z innego systemu kontroli wersji</p></li><li><p>Mają nieczytelną lub niejednolitą historię commitów</p></li></ol><p>W takich przypadkach analiza wyłącznie w oparciu o historię git może być niewystarczająca lub wręcz niemożliwa. Dla takich projektów potrzebujemy innego podejścia, które koncentruje się na bezpośredniej eksploracji struktury repozytorium.</p><h2>Prompt do analizy projektów bez rozbudowanej historii git</h2><p>Przedstawiony prompt zapewnia kompleksowe podejście do analizy projektów bez polegania na historii git:</p><pre><code>You are an AI assistant tasked with onboarding a new developer to a large project. Your goal is to create a comprehensive onboarding summary by exploring the project repository and analyzing its structure, recent developments, and key areas of focus. This summary should help the new developer quickly understand the project, regardless of the underlying technology stack.
+
+To accomplish this task, you have access to the following tools:
+1. file_read: Reads the content of a specified file.
+2. file_search: Searches for files matching a given pattern.
+3. list_dir: Lists the contents of a specified directory.
+
+Use these tools to explore the project structure, read documentation, and analyze the codebase. Do not assume any information about the project that you haven't explicitly discovered through these tools.
+
+Before creating the final onboarding summary, conduct your exploration inside &lt;exploration&gt; tags within your thinking block. In your exploration:
+
+1. Explore the project structure:
+   - Use list_dir to understand the directory structure.
+   - Identify key directories (e.g., src, docs, tests).
+   - Write down the main directories you've found.
+
+2. Analyze core modules and components:
+   - Use file_search and file_read to identify and examine main source code files.
+   - Determine the project's primary programming language(s) and frameworks.
+   - List each core module/component you've identified, numbering them as you go.
+   - Write down key observations about each module/component.
+
+3. Review documentation:
+   - Search for and read README files, CONTRIBUTING guidelines, and other documentation.
+   - Extract information about project setup, running tests, and development workflows.
+   - Quote relevant parts of the documentation you find.
+
+4. Identify recent development focus:
+   - Examine recently modified files to infer areas of active development.
+   - Use git log to check last 10 commits (modules, files, authors). Remember that you have to pipe the results to the stdout so command is not stuck.
+   - List the most recently modified files and their modification dates.
+
+5. Determine key contributors:
+   - Look for author information in file headers, documentation and previous git log.
+   - Write down the names of contributors you've found and their apparent roles.
+
+6. Identify potential complexity areas:
+   - Analyze core logic files, state management, or complex integrations.
+   - List areas that seem particularly complex and explain why.
+
+7. Gather development environment setup information:
+   - Search for build scripts, configuration files, and setup instructions.
+   - Summarize the setup process based on what you've found.
+
+8. Collect helpful resources:
+   - Find links to external documentation, issue trackers, and communication channels.
+   - List all relevant links you've discovered.
+
+9. Conclusions:
+   - Summarize your key findings from the exploration.
+   - Note any areas where you couldn't find information.
+
+After your exploration, compile an onboarding summary in markdown format with the following structure:
+
+```markdown
+# Project Onboarding: [Project Name]
+
+## Welcome
+
+[Brief welcome message and project description]
+
+## Project Overview &amp; Structure
+
+[Overview of project organization and key components]
+
+## Core Modules
+
+[For each identified core module/component]
+### `[Module/Component Name]`
+
+- **Role:** [Description of purpose]
+- **Key Files/Areas:** [List of important files or areas]
+- **Recent Focus:** [Description of recent work or changes]
+
+## Key Contributors
+
+[List of key contributors and their areas of focus]
+
+## Overall Takeaways &amp; Recent Focus
+
+[List of major themes, recent initiatives, and focus areas]
+
+## Potential Complexity/Areas to Note
+
+[List of complex areas and what to watch out for]
+
+## Questions for the Team
+
+[List of 5-7 questions for the new developer to investigate]
+
+## Next Steps
+
+[List of 3-5 actionable steps for the new developer]
+
+## Development Environment Setup
+
+[Instructions for setting up the development environment]
+
+## Helpful Resources
+
+[List of relevant links and resources]
+```
+
+Ensure that all information in the summary is based on your exploration of the project using the provided tools. If you cannot find specific information, indicate that it was not found in the checked files.
+
+Your final output should consist only of the markdown-formatted onboarding summary that you will save in .ai/onboarding.md and should not duplicate or rehash any of the work you did in the exploration section of the thinking block. Finish the work after you created document with a required structure and content.
+
+Begin your response with your exploration.</code></pre><h3>Kluczowe elementy tego prompta:</h3><p><strong>1. Eksploracja struktury projektu</strong></p><p>Zamiast polegać na historii git, model bezpośrednio analizuje strukturę katalogów używając narzędzia list_dir. To pozwala zidentyfikować główne komponenty projektu.</p><pre><code>- Use list_dir to understand the directory structure.
+- Identify key directories (e.g., src, docs, tests).
+- Write down the main directories you've found.</code></pre><p><strong>2. Analiza modułów i komponentów</strong></p><p>Model używa narzędzi file_search i file_read do identyfikacji i analizy głównych plików źródłowych, co pozwala określić architekturę projektu.</p><pre><code>- Use file_search and file_read to identify and examine main source code files.
+- Determine the project's primary programming language(s) and frameworks.
+- List each core module/component you've identified, numbering them as you go.</code></pre><p><strong>3. Przegląd dokumentacji</strong></p><p>Strategiczne wyszukiwanie i analiza plików dokumentacji (README, CONTRIBUTING) dostarcza informacji o celach projektu i procesach deweloperskich.</p><pre><code>- Search for and read README files, CONTRIBUTING guidelines, and other documentation.
+- Extract information about project setup, running tests, and development workflows.</code></pre><p><strong>4. Identyfikacja ostatnich prac</strong></p><p>Mimo braku rozbudowanej historii git, model może użyć podstawowych komend git do zrozumienia ostatnich zmian.</p><pre><code>- Use the following command git log command to understand recent developments:
+  git --no-pager log --stat -n 10</code></pre><p><strong>5. Pozostałe elementy analizy</strong></p><p>Prompt zawiera również wskazówki dotyczące identyfikacji:</p><ul><li><p>Kluczowych kontrybutorów</p></li><li><p>Potencjalnych obszarów złożoności</p></li><li><p>Informacji o konfiguracji środowiska deweloperskiego</p></li><li><p>Pomocnych zasobów i dokumentacji zewnętrznej</p></li></ul><p>W kolejnym filmie znajdziesz case study z zastosowania tej metody na aplikacji legacy <a href="https://github.com/przeprogramowani/10x-cms" target="_blank" rel="noopener noreferrer">10xCMS</a>, którą utworzyliśmy na potrzeby tego kursu i będzie ona wykorzystywana w dalszych lekcjach (<a class="entity" href="https://bravecourses.circle.so/c/lekcje-video-i-nagrania-spotkan-10x/sections/523706/lessons/1962759" target="_blank" rel="noopener noreferrer">#[3x3] Testy regresji z multimodalnym AI</a> i kolejne)</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1077106273?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Tutaj również możemy wykonać analizę pogłębioną (analiza modułów i kluczowych plików jak w Excalidraw), tyle że ich listę musimy wyciągnąć samodzielnie na bazie własnej oceny. Pierwsza wersja dokumentu onboardingowego stanowi tutaj świetny punkt startu i ułatwia nam samodzielny rekonesans.</p><p>O to dokument onboardingowy dla projektu 10xCMS, który wygenerowałem podczas nagrywania lekcji:</p><a class="file" href="https://assets-v2.circle.so/cqxc4g6xhc80u7xq6u76om6qpnbv" target="_blank" rel="noopener noreferrer">onboarding.md</a><p>PS. Dla utrudnienia życia Gemini 2.5 Pro przed pracą nad dokumentem onboardingowym, usunąłem lokalnie Rules for AI. Stanowiły dobrą dokumentację projektu, w prawdziwym projekcie legacy byśmy tego nie mieli - tak więc zgodnie z zasadą #zerorezyserki, nie ma miękkiej gry. </p><p><strong>Podsumowanie</strong></p><p>Metoda analizy projektów bez polegania na historii git jest uzupełnieniem wcześniej omówionych technik. Pozwala na tworzenie kompleksowych dokumentów onboardingowych nawet dla projektów, które nie mają bogatej historii commitów.</p><p>W praktyce, najlepsze rezultaty osiąga się często przez łączenie obu podejść - wykorzystanie historii git tam, gdzie jest dostępna i wartościowa, oraz bezpośrednią eksplorację repozytorium dla uzupełnienia brakujących informacji.</p><p>Gemini 2.5 Pro, dzięki swojemu dużemu oknu kontekstowemu i zdolności do analizy kodu, jest idealnym narzędziem do przeprowadzania takich złożonych analiz, znacząco przyspieszając proces onboardingu nowych deweloperów w różnorodnych projektach legacy i brownfield.</p><h2>🏁 Podsumowanie</h2><p>W tej lekcji poznaliśmy kluczowe aspekty wdrażania się w istniejące projekty z wykorzystaniem nowoczesnych narzędzi AI:</p><ul><li><p><strong>Analiza historii Git</strong> - wykorzystanie skryptów do identyfikacji hot spotów w kodzie poprzez analizę najczęściej modyfikowanych plików i modułów, co pomaga określić kluczowe obszary projektu</p></li><li><p><strong>Gemini 2.5 Pro</strong> - model AI zalecany do pracy z dużymi (i małymi) projektami ze względu na duże okno kontekstowe (1M tokenów) i wysoki współczynnik efektywności przy długich rozmowach (90.6% przy 128k tokenów)</p></li><li><p><strong>Automatyzacja tworzenia dokumentacji onboardingowej</strong> - wykorzystanie AI do generowania kompleksowego dokumentu wprowadzającego dla nowych deweloperów, zawierającego analizę struktury projektu, kluczowych modułów, kontrybutorów oraz sugerowanego planu działania</p></li><li><p><strong>Pogłębiona analiza projektu</strong> - metodyczne podejście do zrozumienia projektu w trzech etapach: analiza modułów, analiza kluczowych plików oraz synteza i aktualizacja dokumentu onboardingowego</p></li><li><p><strong>Alternatywne podejście dla projektów bez historii Git</strong> - strategie analizy projektów z ograniczoną historią wersji, koncentrujące się na bezpośredniej eksploracji struktury repozytorium i analizie zawartości plików</p></li></ul><p>Pamiętaj, że efektywny onboarding wymaga zarówno wykorzystania narzędzi AI jak i samodzielnej eksploracji kodu. Kluczem jest połączenie automatycznej analizy z samodzielną eksploracją.</p><h2>👨‍💻 Ćwiczenia praktyczne</h2><p><strong>Wszystkie poniższe ćwiczenia są opcjonalne</strong>. W tym momencie kursu zalecamy priorytetyzować pracę nad aplikacją zaliczeniową. Przedstawione tutaj workflow analizy projektów brownfield i legacy na pewno przydadzą się w Waszej codziennej pracy programistycznej - rzeczywistość sama sprowokuje was do ich wykorzystania, gdy będziecie dołączać do nowych zespołów lub przejmować istniejące projekty. Wróćcie do tych ćwiczeń, gdy będziecie potrzebować efektywnych metod wdrażania się w nowe projekty. Można również wypróbować tych metod na aplikacjach zaliczeniowych, ale to projekty które są małe, więc zadanie jest dużo prostsze.</p><p><strong>Zadanie 1: Analiza hot spotów w repozytorium</strong><br><strong>Cel:</strong> Zidentyfikowanie kluczowych plików i modułów w projekcie<br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Wybierz repozytorium Git (może być to Twój projekt lub dowolny projekt open-source)</p></li><li><p>Uruchom skrypty z lekcji do analizy najczęściej modyfikowanych plików i modułów</p></li><li><p>Przeanalizuj wyniki i stwórz notatkę z 5 najważniejszymi obszarami projektu</p></li><li><p>Spróbuj zrozumieć, dlaczego te obszary są tak często modyfikowane</p></li><li><p>Porównaj swoje obserwacje z dokumentacją projektu, jeśli jest dostępna</p></li></ol><p><strong>Zadanie 2: Stworzenie dokumentu onboardingowego</strong><br><strong>Cel:</strong> Przygotowanie kompleksowego dokumentu onboardingowego dla projektu<br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Wykorzystaj prompt do analizy projektu z lekcji, dostosowując go do swojego repozytorium</p></li><li><p>Przekaż modelowi AI wyniki analizy hot spotów (pliki, moduły, kontrybutorzy)</p></li><li><p>Wygeneruj podstawowy dokument onboardingowy</p></li><li><p>Sprawdź, czy wygenerowany dokument jest zgodny z rzeczywistą strukturą projektu</p></li><li><p>Zapisz dokument jako .ai/onboarding.md w swoim repozytorium</p></li></ol><p><strong>Zadanie 3: Pogłębiona analiza repozytorium</strong><br><strong>Cel:</strong> Szczegółowe zrozumienie projektu<br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Użyj prompta do szczegółowej analizy top modułów</p></li><li><p>Użyj prompta do szczegółowej analizy top plików</p></li><li><p>Użyj prompta do podsumowania i aktualizacji onboarding.md</p></li></ol><p><strong>Zadanie 4: Analiza projektu bez rozbudowanej historii Git</strong><br><strong>Cel:</strong> Zastosowanie alternatywnego podejścia do analizy projektu<br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Znajdź projekt z niewielką ilością commitów lub słabo rozwiniętą historią Git (np. aplikacja zaliczeniowa)</p></li><li><p>Wykorzystaj prompt do analizy projektów bez historii Git</p></li><li><p>Przeprowadź eksplorację struktury projektu używając narzędzi file_read, file_search i list_dir</p></li><li><p>Wygeneruj dokument onboardingowy bazujący na bezpośredniej analizie struktury</p></li><li><p>Porównaj efekty tej metody z analizą opartą o historię Git</p></li></ol><p><br></p><img loading="lazy" src="https://assets-v2.circle.so/ekrtcr8j44qd531ut1i2iwox5c9h" style="width: 100%; max-width: 100%;"></div></body></html>

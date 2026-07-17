@@ -1,0 +1,468 @@
+{
+  "lessonId": "[3x1] Implementacja uwierzytelniania z Supabase Auth",
+  "file": "21-3x1_implementacja_uwierzytelniania_z_supabase_auth.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 4,
+      "order": 1
+    },
+    {
+      "slug": "bezpieczna-praca-z-danymi-wrazliwymi",
+      "title": "🔐 Bezpieczna praca z danymi wrażliwymi",
+      "blocks": 25,
+      "order": 2
+    },
+    {
+      "slug": "kontynuacja-projektu-i-aktualizacja-wymagan",
+      "title": "Kontynuacja projektu i aktualizacja wymagań",
+      "blocks": 9,
+      "order": 3
+    },
+    {
+      "slug": "uwierzytelnianie-od-zera-czy-supabase-auth",
+      "title": "Uwierzytelnianie od zera czy Supabase Auth?",
+      "blocks": 8,
+      "order": 4
+    },
+    {
+      "slug": "czym-wyroznia-sie-supabase-auth",
+      "title": "Czym wyróżnia się Supabase Auth?",
+      "blocks": 6,
+      "order": 5
+    },
+    {
+      "slug": "przygotowanie-do-implementacji",
+      "title": "Przygotowanie do implementacji",
+      "blocks": 10,
+      "order": 6
+    },
+    {
+      "slug": "diagramy-mermaid",
+      "title": "Diagramy Mermaid",
+      "blocks": 8,
+      "order": 7
+    },
+    {
+      "slug": "implementacja-procesu-logowania",
+      "title": "Implementacja procesu logowania",
+      "blocks": 24,
+      "order": 8
+    },
+    {
+      "slug": "troubleshooting",
+      "title": "Troubleshooting",
+      "blocks": 7,
+      "order": 9
+    },
+    {
+      "slug": "wdrozenie-rejestracji",
+      "title": "Wdrożenie rejestracji",
+      "blocks": 7,
+      "order": 10
+    },
+    {
+      "slug": "konfiguracja-url",
+      "title": "Konfiguracja URL",
+      "blocks": 4,
+      "order": 11
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 3,
+      "order": 12
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 0,
+      "order": 13
+    },
+    {
+      "slug": "zadanie-1-aktualizacja-user-stories",
+      "title": "Zadanie 1: Aktualizacja User Stories",
+      "blocks": 3,
+      "order": 14
+    },
+    {
+      "slug": "zadanie-2-architektura-uwierzytelniania",
+      "title": "Zadanie 2: Architektura uwierzytelniania",
+      "blocks": 3,
+      "order": 15
+    },
+    {
+      "slug": "zadanie-3-wdrozenie-logowania",
+      "title": "Zadanie 3: Wdrożenie logowania",
+      "blocks": 3,
+      "order": 16
+    },
+    {
+      "slug": "zadanie-4-opcjonalne-rejestracja-i-odzyskiwanie-hasa",
+      "title": "Zadanie 4: (Opcjonalne) Rejestracja i odzyskiwanie hasła",
+      "blocks": 5,
+      "order": 17
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:08a39d61:43cc23fa",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:43cc23fa:0-1",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:08a39d61:24701484",
+      "tokenEstimate": 143,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:24701484:0-3",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:08a39d61:56642b18",
+      "tokenEstimate": 136,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:56642b18:0-12",
+      "tokenEstimate": 371,
+      "span": [
+        0,
+        12
+      ]
+    },
+    {
+      "id": "chk:08a39d61:56642b18:6-17",
+      "tokenEstimate": 396,
+      "span": [
+        6,
+        17
+      ]
+    },
+    {
+      "id": "chk:08a39d61:56642b18:17-22",
+      "tokenEstimate": 384,
+      "span": [
+        17,
+        22
+      ]
+    },
+    {
+      "id": "chk:08a39d61:56642b18:21-24",
+      "tokenEstimate": 184,
+      "span": [
+        21,
+        24
+      ]
+    },
+    {
+      "id": "sec:08a39d61:c6f3fb72",
+      "tokenEstimate": 215,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:c6f3fb72:0-5",
+      "tokenEstimate": 460,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "chk:08a39d61:c6f3fb72:5-7",
+      "tokenEstimate": 380,
+      "span": [
+        5,
+        7
+      ]
+    },
+    {
+      "id": "chk:08a39d61:c6f3fb72:6-8",
+      "tokenEstimate": 152,
+      "span": [
+        6,
+        8
+      ]
+    },
+    {
+      "id": "sec:08a39d61:0af30e15",
+      "tokenEstimate": 181,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:0af30e15:0-7",
+      "tokenEstimate": 259,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:08a39d61:a2168795",
+      "tokenEstimate": 178,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:a2168795:0-5",
+      "tokenEstimate": 193,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:08a39d61:177d95cf",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:177d95cf:0-6",
+      "tokenEstimate": 404,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "chk:08a39d61:177d95cf:6-8",
+      "tokenEstimate": 397,
+      "span": [
+        6,
+        8
+      ]
+    },
+    {
+      "id": "chk:08a39d61:177d95cf:8-9",
+      "tokenEstimate": 118,
+      "span": [
+        8,
+        9
+      ]
+    },
+    {
+      "id": "sec:08a39d61:e853681d",
+      "tokenEstimate": 140,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:e853681d:0-7",
+      "tokenEstimate": 359,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:08a39d61:95d619d9",
+      "tokenEstimate": 186,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:95d619d9:0-11",
+      "tokenEstimate": 383,
+      "span": [
+        0,
+        11
+      ]
+    },
+    {
+      "id": "chk:08a39d61:95d619d9:11-22",
+      "tokenEstimate": 377,
+      "span": [
+        11,
+        22
+      ]
+    },
+    {
+      "id": "chk:08a39d61:95d619d9:18-23",
+      "tokenEstimate": 150,
+      "span": [
+        18,
+        23
+      ]
+    },
+    {
+      "id": "sec:08a39d61:680d12f9",
+      "tokenEstimate": 200,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:680d12f9:0-6",
+      "tokenEstimate": 306,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:08a39d61:a2cede7c",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:a2cede7c:0-6",
+      "tokenEstimate": 245,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:08a39d61:277e69d2",
+      "tokenEstimate": 115,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:277e69d2:0-3",
+      "tokenEstimate": 119,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:08a39d61:7eabec50",
+      "tokenEstimate": 182,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:7eabec50:0-2",
+      "tokenEstimate": 252,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:08a39d61:dcc8ec86",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:08a39d61:8ee0e8f9",
+      "tokenEstimate": 131,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:8ee0e8f9:0-2",
+      "tokenEstimate": 131,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:08a39d61:3632c335",
+      "tokenEstimate": 88,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:3632c335:0-2",
+      "tokenEstimate": 127,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:08a39d61:cf0a0a9b",
+      "tokenEstimate": 101,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:cf0a0a9b:0-2",
+      "tokenEstimate": 172,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:08a39d61:dfb8bfd8",
+      "tokenEstimate": 134,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:08a39d61:dfb8bfd8:0-4",
+      "tokenEstimate": 134,
+      "span": [
+        0,
+        4
+      ]
+    }
+  ]
+}

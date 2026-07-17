@@ -1,0 +1,107 @@
+<meta name="lesson-id" content="[BONUS] CLAUDE.md vs AGENTS.md" />
+<div
+  contenteditable="false"
+  focus=""
+  data-readonly="true"
+  translate="no"
+  class="tiptap ProseMirror z-0 max-w-none whitespace-pre-wrap bg-transparent border-none ring-0 circle-block-editor text-dark">
+  <h2>AGENTS.md vs CLAUDE.md - jak ogarnąć wiele konwencji reguł i instrukcji?</h2>
+  <p>
+    Sporo osób używa różnych narzędzi AI do kodowania: Claude Code, Cursor, GitHub Copilot, Gemini CLI.
+    <br /><br />Problem? Każde narzędzie chce innego pliku z kontekstem projektu.
+  </p>
+  <p>Rozwiązań się namnożyło jak grzybów po deszczu, a wraz z nimi różne “standardy”:</p>
+  <ul>
+    <li>
+      <p>
+        <strong>Claude Code</strong> →
+        <a target="_blank" rel="noopener noreferrer nofollow" href="http://claude.md/">CLAUDE.md</a>
+      </p>
+    </li>
+    <li>
+      <p>
+        <strong>Gemini CLI</strong> →
+        <a target="_blank" rel="noopener noreferrer nofollow" href="http://gemini.md/">GEMINI.md</a>
+      </p>
+    </li>
+    <li>
+      <p><strong>Cursor</strong> → .cursor/rules</p>
+    </li>
+    <li>
+      <p><strong>Cline</strong> → .clinerules/rules</p>
+    </li>
+    <li>
+      <p><strong>Roo</strong> → .roorules/rules</p>
+    </li>
+    <li>
+      <p>
+        <strong>OpenAI Codex</strong> →
+        <a target="_blank" rel="noopener noreferrer nofollow" href="http://agents.md/">AGENTS.md</a>
+      </p>
+    </li>
+    <li>
+      <p>
+        <strong>AMP</strong> →
+        <a target="_blank" rel="noopener noreferrer nofollow" href="http://agent.md/">AGENT.md</a>
+      </p>
+    </li>
+  </ul>
+  <p>
+    Masz projekt i chcesz używać Cursor rano, Claude Code po południu, a Copilot wieczorem? Zostaje utrzymywać 3,4,5
+    plików jednocześnie….
+  </p>
+  <p>może, że jest na to inny sposób? :)</p>
+  <h2>Rozwiązanie: Symlinki</h2>
+  <p>Zamiast kopiować zawartość między plikami, zrób symlink - skrót który wskazuje na ten sam plik.</p>
+  <p><strong>macOS/Linux:</strong></p>
+  <pre spellcheck="false"><code class="language-bash"># Utwórz AGENTS.md jako główny plik
+  touch AGENTS.md
+
+  # Stwórz symlinki dla narzędzi które jeszcze nie wspierają standardu
+  ln -s AGENTS.md CLAUDE.md
+  ln -s AGENTS.md GEMINI.md
+
+  # Teraz masz jeden plik, trzy nazwy
+  # Edytujesz AGENTS.md → zmiany widać wszędzie</code></pre>
+  <p><strong>Windows (CMD jako administrator):</strong></p>
+  <pre spellcheck="false"><code class="language-bash">mklink CLAUDE.md AGENTS.md
+  mklink GEMINI.md AGENTS.md</code></pre>
+  <p><strong>Windows (PowerShell jako administrator):</strong></p>
+  <pre
+    spellcheck="false"><code class="language-bash">New-Item -ItemType SymbolicLink -Path "CLAUDE.md" -Target "AGENTS.md"
+  New-Item -ItemType SymbolicLink -Path "GEMINI.md" -Target "AGENTS.md"</code></pre>
+  <p>
+    Voila! Jak to zrobiłeś, to zedytujesz
+    <a target="_blank" rel="noopener noreferrer nofollow" href="http://agents.md/">AGENTS.md</a>, Claude Code
+    automatycznie widzi zmiany przez
+    <a target="_blank" rel="noopener noreferrer nofollow" href="http://claude.md/">CLAUDE.md</a>.
+  </p>
+  <h2>TL;DR</h2>
+  <ol>
+    <li>
+      <p>
+        Stwórz <a target="_blank" rel="noopener noreferrer nofollow" href="http://agents.md/">AGENTS.md</a> jako główny
+        plik
+      </p>
+    </li>
+    <li>
+      <p>
+        Zrób symlinki do <a target="_blank" rel="noopener noreferrer nofollow" href="http://claude.md/">CLAUDE.md</a>,
+        <a target="_blank" rel="noopener noreferrer nofollow" href="http://gemini.md/">GEMINI.md</a> dla narzędzi które
+        jeszcze nie wspierają standardu
+      </p>
+    </li>
+    <li>
+      <p>
+        Commituj <a target="_blank" rel="noopener noreferrer nofollow" href="http://agents.md/">AGENTS.md</a> do repo
+      </p>
+    </li>
+    <li><p>Edytujesz jeden plik → wszystkie AI go widzą</p></li>
+  </ol>
+  <p>Jeden plik zamiast trzech/czterech. Zero duplikacji. Mniej bólu głowy.</p>
+  <p>
+    Używacie innych rozwiązań do zarządzania plikami kontekstu? Wrzucajcie w komentarzach.<br /><br />PS. Zdaję sobie
+    sprawę, że można inaczej określić/sprecyzować instrukcję per narzędzie, ale to jest sposób dla ludzi, którzy chcą
+    zarządzać jedną dokumentacją .md i nie utrzymywać paru w projektem. Zostaw ❤️ jak ci się podoba.
+  </p>
+</div>

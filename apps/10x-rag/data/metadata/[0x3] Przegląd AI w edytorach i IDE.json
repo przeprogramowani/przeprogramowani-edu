@@ -1,0 +1,6 @@
+{
+  "lessonId": "[0x3] Przegląd AI w edytorach i IDE",
+  "displayName": "[0x3] Przegląd AI w edytorach i IDE",
+  "summary": "1) Kiedy w IDE używać inline completions, a kiedy przełączyć się na chat?\n2) Jakie zadania zlecać code actions zamiast ręcznych edycji (refaktory, generowanie testów/dokumentacji, apply patch)?\n3) Kiedy włączać repo-level context (indeks symboli/wyszukiwanie semantyczne) zamiast tylko kontekstu pliku?\n4) W jakich sytuacjach uruchomić agenta w IDE i jak zorganizować plan→patch→weryfikacja (wieloplikowe edycje + testy)?\n5) Jak ograniczać ryzyko „dużych patchy” wykonywanych przez agentów (checkpointy, mniejsze commity, testy po kroku, granularne PR-y)?\n6) Co zrobić, gdy inline completions zaczynają lagować (wykluczyć katalogi, skrócić okno kontekstu, włączyć lokalny indeks)?\n7) Jak kontrolować koszty i limity zapytań (limity per repo/branch/dev, wybór szybszych modeli dla autocomplete)?\n8) Jak zabezpieczyć wrażliwy kod i spełnić wymagania enterprise (zero‑retention/lokalne modele, SSO/SAML, RBAC, SCIM, audyt, filtry podobieństwa/IP indemnity)?",
+  "tokenEstimate": 145
+}

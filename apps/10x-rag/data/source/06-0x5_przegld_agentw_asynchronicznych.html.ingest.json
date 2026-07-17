@@ -1,0 +1,412 @@
+{
+  "lessonId": "[0x5] Przegląd agentów asynchronicznych",
+  "file": "06-0x5_przegld_agentw_asynchronicznych.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 1,
+      "order": 1
+    },
+    {
+      "slug": "kluczowe-mozliwosci",
+      "title": "Kluczowe możliwości",
+      "blocks": 3,
+      "order": 2
+    },
+    {
+      "slug": "integracje-i-ekosystem",
+      "title": "Integracje i ekosystem",
+      "blocks": 1,
+      "order": 3
+    },
+    {
+      "slug": "wydajnosc-koszty-i-ograniczenia",
+      "title": "Wydajność, koszty i ograniczenia",
+      "blocks": 2,
+      "order": 4
+    },
+    {
+      "slug": "bezpieczenstwo-zgodnosc-i-prywatnosc",
+      "title": "Bezpieczeństwo, zgodność i prywatność",
+      "blocks": 1,
+      "order": 5
+    },
+    {
+      "slug": "kiedy-uzywac-tego-podejscianarzedzi",
+      "title": "Kiedy używać tego podejścia/narzędzi?",
+      "blocks": 2,
+      "order": 6
+    },
+    {
+      "slug": "porownanie-najpopularniejszych-opcji",
+      "title": "Porównanie najpopularniejszych opcji",
+      "blocks": 5,
+      "order": 7
+    },
+    {
+      "slug": "kiedy-co-wybrac",
+      "title": "Kiedy co wybrać",
+      "blocks": 1,
+      "order": 8
+    },
+    {
+      "slug": "openai-codex",
+      "title": "OpenAI Codex",
+      "blocks": 1,
+      "order": 9
+    },
+    {
+      "slug": "google-jules",
+      "title": "Google Jules",
+      "blocks": 1,
+      "order": 10
+    },
+    {
+      "slug": "github-copilot-agent-mode",
+      "title": "GitHub Copilot Agent Mode",
+      "blocks": 1,
+      "order": 11
+    },
+    {
+      "slug": "devin",
+      "title": "Devin",
+      "blocks": 1,
+      "order": 12
+    },
+    {
+      "slug": "materiay-do-researchu-opcjonalne",
+      "title": "Materiały do researchu (opcjonalne)",
+      "blocks": 1,
+      "order": 13
+    },
+    {
+      "slug": "openai-codex",
+      "title": "OpenAI Codex",
+      "blocks": 6,
+      "order": 14
+    },
+    {
+      "slug": "google-jules",
+      "title": "Google Jules",
+      "blocks": 6,
+      "order": 15
+    },
+    {
+      "slug": "devin-cognition-labs",
+      "title": "Devin (Cognition Labs)",
+      "blocks": 6,
+      "order": 16
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "Podsumowanie",
+      "blocks": 3,
+      "order": 17
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:fb8c56be:43cc23fa",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:43cc23fa:0-1",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:24701484",
+      "tokenEstimate": 103,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:24701484:0-0",
+      "tokenEstimate": 103,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:17b67575",
+      "tokenEstimate": 89,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:17b67575:0-2",
+      "tokenEstimate": 161,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:66f74530",
+      "tokenEstimate": 131,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:66f74530:0-0",
+      "tokenEstimate": 131,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:185894ae",
+      "tokenEstimate": 89,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:185894ae:0-1",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:0a0f8b98",
+      "tokenEstimate": 114,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:0a0f8b98:0-0",
+      "tokenEstimate": 114,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:309dc828",
+      "tokenEstimate": 78,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:309dc828:0-1",
+      "tokenEstimate": 142,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:69de17ac",
+      "tokenEstimate": 173,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:69de17ac:0-3",
+      "tokenEstimate": 386,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:69de17ac:3-4",
+      "tokenEstimate": 283,
+      "span": [
+        3,
+        4
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:68832fa6",
+      "tokenEstimate": 60,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:68832fa6:0-0",
+      "tokenEstimate": 60,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:a220d41c",
+      "tokenEstimate": 71,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:a220d41c:0-0",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:bb7db263",
+      "tokenEstimate": 71,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:bb7db263:0-0",
+      "tokenEstimate": 140,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:7b7ef67a",
+      "tokenEstimate": 66,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:7b7ef67a:0-0",
+      "tokenEstimate": 146,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:5792d298",
+      "tokenEstimate": 62,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:5792d298:0-0",
+      "tokenEstimate": 134,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:d1c4bc45",
+      "tokenEstimate": 67,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:d1c4bc45:0-0",
+      "tokenEstimate": 67,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:a220d41c",
+      "tokenEstimate": 100,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:a220d41c:0-5",
+      "tokenEstimate": 131,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:bb7db263",
+      "tokenEstimate": 119,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:bb7db263:0-5",
+      "tokenEstimate": 150,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:bb2dec06",
+      "tokenEstimate": 98,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:bb2dec06:0-5",
+      "tokenEstimate": 127,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:fb8c56be:33c7f0dd",
+      "tokenEstimate": 174,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:fb8c56be:33c7f0dd:0-2",
+      "tokenEstimate": 294,
+      "span": [
+        0,
+        2
+      ]
+    }
+  ]
+}

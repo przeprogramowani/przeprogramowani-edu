@@ -1,0 +1,6 @@
+{
+  "lessonId": "[1x4] Współpraca z Agentem AI",
+  "displayName": "[1x4] Współpraca z Agentem AI",
+  "summary": "1) Czym agenci AI różnią się od klasycznych chatbotów i jakie dodatkowe możliwości dzięki temu zyskują?  \n2) Jakie praktyczne problemy developerów adresują agenci (np. brak kontekstu projektu, ręczne copy/paste, wdrażanie zmian)?  \n3) Co oznacza „tool use” u agenta i jakie scenariusze praktyczne zostaną przetestowane (generowanie mock‑danych, pobieranie wiedzy z internetu, przeszukiwanie projektu)?  \n4) Gdzie w repozytorium znaleźć przykłady komend z narzędziami oraz pliki używane jako parametry zapytań? (podaj ścieżki)  \n5) Na czym polega Agent Loop — jakie kroki wykonuje agent od decyzji o użyciu narzędzia do otrzymania końcowego wyniku?  \n6) Jaką rolę pełni model językowy w orkiestracji działania agenta i jak decyduje, które narzędzia wywołać?  \n7) Jakie ograniczenia mają wbudowane narzędzia agentów i dlaczego często potrzebne są integracje z zewnętrznymi usługami?  \n8) Jak korzystać ręcznie z Context7, aby znaleźć fragment dokumentacji i wkleić go do konwersacji lub zapisać w pliku .md?",
+  "tokenEstimate": 169
+}

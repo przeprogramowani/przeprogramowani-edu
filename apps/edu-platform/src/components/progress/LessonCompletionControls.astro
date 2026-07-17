@@ -1,0 +1,44 @@
+---
+import LessonProgressToggle from './LessonProgressToggle.svelte';
+import type { LessonProgressById } from '@/server/progress/lessonProgressLoader';
+import type { LessonSidebarLabels } from '@/components/sidebar/types';
+
+interface Props {
+  courseSlug: string;
+  language?: string | null;
+  lessonId: string | number;
+  lessonName: string;
+  lessonProgress: LessonProgressById | null;
+  labels?: LessonSidebarLabels;
+  class?: string;
+}
+
+const {
+  courseSlug,
+  language = null,
+  lessonId,
+  lessonName,
+  lessonProgress,
+  labels,
+  class: className = 'not-prose',
+}: Props = Astro.props;
+
+const normalizedLessonId = String(lessonId);
+---
+
+{
+  lessonProgress && (
+    <div class={className}>
+      <LessonProgressToggle
+        client:load
+        courseSlug={courseSlug}
+        language={language}
+        lessonId={normalizedLessonId}
+        completed={Boolean(lessonProgress[normalizedLessonId])}
+        lessonName={lessonName}
+        variant="content"
+        labels={labels}
+      />
+    </div>
+  )
+}

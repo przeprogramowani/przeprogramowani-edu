@@ -1,0 +1,220 @@
+{
+  "lessonId": "[3x3] Testy E2E z Playwright",
+  "file": "23-3x3_testy_e2e_z_playwright.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 3,
+      "order": 1
+    },
+    {
+      "slug": "konfiguracja-bazy-chmurowej",
+      "title": "Konfiguracja bazy chmurowej",
+      "blocks": 22,
+      "order": 2
+    },
+    {
+      "slug": "migracja-schematu-bazy",
+      "title": "Migracja schematu bazy",
+      "blocks": 5,
+      "order": 3
+    },
+    {
+      "slug": "testowanie-z-playwright",
+      "title": "Testowanie z Playwright",
+      "blocks": 13,
+      "order": 4
+    },
+    {
+      "slug": "optymalizacja-procesu-logowania",
+      "title": "Optymalizacja procesu logowania",
+      "blocks": 5,
+      "order": 5
+    },
+    {
+      "slug": "teardown",
+      "title": "Teardown",
+      "blocks": 9,
+      "order": 6
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 6,
+      "order": 7
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 0,
+      "order": 8
+    },
+    {
+      "slug": "zadanie-1-konfiguracja-i-implementacja-testow-e2e",
+      "title": "Zadanie 1: Konfiguracja i implementacja Testów E2E",
+      "blocks": 4,
+      "order": 9
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:f6d64e59:43cc23fa",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f6d64e59:43cc23fa:0-1",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:f6d64e59:24701484",
+      "tokenEstimate": 187,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f6d64e59:24701484:0-2",
+      "tokenEstimate": 187,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:f6d64e59:4e0806c5",
+      "tokenEstimate": 200,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f6d64e59:4e0806c5:0-21",
+      "tokenEstimate": 340,
+      "span": [
+        0,
+        21
+      ]
+    },
+    {
+      "id": "sec:f6d64e59:54938fba",
+      "tokenEstimate": 188,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f6d64e59:54938fba:0-4",
+      "tokenEstimate": 188,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:f6d64e59:930bcfcc",
+      "tokenEstimate": 208,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f6d64e59:930bcfcc:0-12",
+      "tokenEstimate": 344,
+      "span": [
+        0,
+        12
+      ]
+    },
+    {
+      "id": "sec:f6d64e59:7e3c2230",
+      "tokenEstimate": 191,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f6d64e59:7e3c2230:0-4",
+      "tokenEstimate": 191,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:f6d64e59:fa1236b0",
+      "tokenEstimate": 208,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f6d64e59:fa1236b0:0-8",
+      "tokenEstimate": 329,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:f6d64e59:7eabec50",
+      "tokenEstimate": 188,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f6d64e59:7eabec50:0-5",
+      "tokenEstimate": 262,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:f6d64e59:dcc8ec86",
+      "tokenEstimate": 62,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:f6d64e59:6dd396ec",
+      "tokenEstimate": 148,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:f6d64e59:6dd396ec:0-3",
+      "tokenEstimate": 149,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

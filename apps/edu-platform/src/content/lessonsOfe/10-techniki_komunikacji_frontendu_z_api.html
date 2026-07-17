@@ -1,0 +1,194 @@
+<meta name="lesson-id" content="Techniki komunikacji frontendu z API"><html><head></head><body><div><img loading="lazy" src="https://assets-v3.circle.so/9zq7ryq3lavgamcg7exraivdpqsj" style="width: 100%; max-width: 100%;"><h2><strong>Wprowadzenie</strong></h2><p>Poprzednie dwie lekcje pokazały ci, jak szerokim zagadnieniem jest zarządzanie stanem aplikacji. Opanowałeś stan lokalny i globalny, więc zabierasz się do jego inicjalizacji. Tylko skąd go pobrać? </p><p>Nowoczesne narzędzia takie jak <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">Vite</a> czy <a href="https://parceljs.org/" target="_blank" rel="noopener noreferrer">Parcel</a> umożliwiają ci importy plików, możesz wykorzystać Web Storage API (Local Storage i Session Storage), a nawet pobierać stan z poziomu parametrów URL czy informacji w cookies.</p><p>Przede wszystkim możesz jednak zdecydować się na utrzymywanie i aktualizowanie stanu aplikacji po stronie serwera. To właśnie tam najczęściej przechowywane jest źródło prawdy o wszystkim, co dzieje się w ramach aplikacji. Serwer to absolutnie fundamentalna składowa aplikacji webowych, które działając w modelu <em>“client-server”</em> rozdzielają pomiędzy dwie warstwy poszczególne odpowiedzialności.</p><p>Serwer to w dużym uproszczeniu niezależnie działający komputer, z którym próbujemy się&nbsp;komunikować przez wystawiony publicznie interfejs (API). Aby robić to skutecznie, w tej lekcji:</p><ul><li><p>Poznasz terminologię i najważniejsze koncepty komunikacji z API na backendzie</p></li><li><p>Poznasz popularne narzędzia służące do pobierania i aktualizowania danych</p></li><li><p>Poznasz dobre praktyki w budowaniu wielowarstwowej aplikacji dostępnej 24/7</p></li></ul><p>Zaczynajmy!</p><img loading="lazy" src="https://assets-v2.circle.so/zkzqiw5kqi32k7uyun80kc1xve5r" style="width: 100%; max-width: 100%;"><h2>API, ale jakie?</h2><p>Sam akronim API (Application Programming Interface) nie mówi wprost, z jakiego rodzaju interfejsem pracujemy. Zazwyczaj dotyczy jednak pewnej “bramki” przez którą uzyskujemy dostęp do zestawu określonych zasobów. Czasami tym terminem określa się zbiór publicznie dostępnych funkcji w bibliotece lub frameworku, czasami mówimy o publicznej części jednego z wielu modułów tej samej aplikacji, a czasami o REST / GraphQL API.</p><p>Dla uproszczenia ustalmy, że w tej lekcji wymiennie będziemy się posługiwać takimi terminami jak serwer, API lub backend.</p><p>W każdym z tych przypadków mamy na myśli pewnego rodzaju <strong>zasób zdalny, działający poza granicami przeglądarki, z którym interakcja odbywa się asynchronicznie</strong>, w modelu klient-serwer. Na początku skupimy się na <em>modelu pull</em>, w którym frontend pobiera na żądanie dane z backendu, ale na końcu omówimy także <em>model push</em>, w którym to serwer decyduje o momencie publikacji informacji do klientów (WebSockets).</p><h2>API w aplikacjach webowych</h2><p>Najbardziej popularne podejścia do budowania webowych API oparte są o REST oraz GraphQL.</p><h3>REST API</h3><p>To styl architektury, który promuje udostępnianie zasobów wykorzystując metody HTTP, takie jak GET, POST, PUT czy DELETE. Metody te stosuje się do następujących operacji:</p><ul><li><p>GET - pobieranie listy zasobów lub jednego zasobu o określonym identyfikatorze, bez modyfikowania jego stanu</p></li><li><p>HEAD - sprawdzenie nagłówków, jakie zostałyby nadane stosując metodę GET (może służyć do wstępnej analizy rozmiaru i dostępności pobieranego zasobu)</p></li><li><p>POST - dodawanie nowego zasobu</p></li><li><p>PUT - aktualizowanie zasobu o określonym identyfikatorze</p></li><li><p>PATCH - częściowa aktualizacja zasobu o określonym identyfikatorze (np. z użyciem <a href="https://jsonpatch.com/" target="_blank" rel="noopener noreferrer">JSON Patch</a>)</p></li><li><p>DELETE - usuwanie zasobu o określonym identyfikatorze</p></li><li><p>OPTIONS - sprawdzenie dostępnych metod HTTP dla klienta (w przypadku zapytań <a href="https://auth0.com/blog/cors-tutorial-a-guide-to-cross-origin-resource-sharing/" target="_blank" rel="noopener noreferrer">cross-origin</a>)</p></li></ul><p>Każde żądanie HTTP w architekturze REST jest bezstanowe, co oznacza, że serwer nie przechowuje żadnych informacji o stanie klienta (aplikacji webowej, aplikacji mobilnej, etc.). Zasoby mogą być reprezentowane w różnych formatach, takich jak JSON (na dzisiaj to najbardziej popularny format udostępniania danych), XML czy HTML. Klient i serwer negocjują format reprezentacji za pomocą nagłówków HTTP.</p><p>Pracując na frontendzie z klasycznym REST API, nasze zapytania mogą wyglądać w ten sposób:</p><pre><code>GET /users           # pobranie listy użytkowników
+GET /users/:id       # pobranie użytkownika o konkretnym id
+POST /users          # utworzenie nowego użytkownika
+PUT /users/:id       # zaktualizowanie danych użytkownika o konkretnym id
+DELETE /users/:id    # usunięcie użytkownika o konkretnym id</code></pre><p>W praktyce zdarza się, że od tak “książkowo” zaprojektowanego API zdarzają się odstępstwa. Szczególnie w warstwie Backend-For-Frontend (o której w dalszych lekcjach) znajdziemy bardziej złożone API udostępniające wiele zasobów jednocześnie, albo wystawiające dane pod konkretny fragment interfejsu aplikacji.</p><p>Więcej na ten temat przeczytasz we wpisie - <a href="https://max.engineer/server-informed-ui" target="_blank" rel="noopener noreferrer">Data API vs Application API</a></p><h3>Różnice pomiędzy metodami</h3><p>Pytaniem, które w kontekście REST API często pojawia się na rozmowach kwalifikacyjnych, jest to o różnicę pomiędzy zapytaniami POST, PUT i PATCH (GET i DELETE są łatwe w odszyfrowaniu).</p><p>Dobra odpowiedź powinna zawierać wzmiankę o tym, że PUT jest idempotentny. Oznacza to, że wielokrotne wysyłanie tego samego żądania jest bezpieczne i powtarzalne (np. typowy scenariusz - aktualizacja danych). </p><p>POST/PATCH nie jest idempotentny - wysyłając taki sam zestaw parametrów kilka razy, możemy się spodziewać skutków ubocznych (np. błędów pt. “użytkownik z tym adresem email już istnieje”).</p><p>Przyjęło się, że:</p><ul><li><p>PUT stosujemy w przypadku bezpiecznej aktualizacji całości istniejących zasobów</p></li><li><p>PATCH stosujemy w przypadku aktualizacji fragmentów istniejących zasobów (np. kilka pól)</p></li><li><p>POST stosujemy w przypadku tworzenia nowych zasobów</p></li></ul><h3>Publiczne API</h3><p>W sieci znajdziesz mnóstwo publicznych API, na których możesz ćwiczyć kolejne aspekty budowania aplikacji webowych, korzystających z zewnętrznych zasobów.</p><p>Popularna lista znajduje się pod tym adresem - <a href="https://github.com/public-apis/public-apis" target="_blank" rel="noopener noreferrer">https://github.com/public-apis/public-apis</a></p><h3>Fragmenty zapytania HTTP</h3><p>W kontekście zapytań HTTP, określenie samej metody zapytania nie wystarczy. Jeśli chcemy przekazywać dane pomiędzy klientem i serwerem, powinniśmy rozumieć czym różnią się <strong>body</strong> i <strong>query string</strong>, a także kiedy potrzebne nam<strong> </strong>będą<strong> nagłówki (headers)</strong>.</p><ul><li><p><strong>Body</strong> (ciało) żądania HTTP to część wiadomości, która zawiera dane wysyłane do serwera. Jest używane głównie w metodach POST, PUT, PATCH, gdzie dane są częścią treści żądania. Może zawierać różne rodzaje danych, takie jak dane formularza, JSON, XML, pliki binarne itp. Jest używane do przesyłania większej ilości danych, które są często wymagane w operacjach takich jak tworzenie lub aktualizacja zasobu (np. tworzenie nowego użytkownika z danymi użytkownika w formacie JSON).</p></li><li><p><strong>Query string</strong> to część URL, która zawiera parametry zapytania, które mogą być używane do przekazania dodatkowych informacji do serwera. Rozpoczyna się od znaku zapytania <strong>?</strong> i zawiera pary klucz-wartość oddzielone znakiem <strong>&amp;</strong>. Składa się z prostych par klucz-wartość, gdzie klucz i wartość są ciągami znaków. Jest powszechnie używany w żądaniach GET, aby przekazać krótkie dane do serwera, takie jak parametry wyszukiwania, filtrów, numerowania stron czy kampanii reklamowych.</p></li></ul><ul><li><p><strong>Headers</strong>, czyli nagłówki, to dodatkowy sposób na przekazywanie metadanych pomiędzy klientem i serwerem. Nagłówki pomagają określić sposób przetwarzania żądania lub odpowiedzi. Spośród tych najczęściej wykorzystywanych warto znać <strong>Content-Type</strong> (typ przekazywanych danych), <strong>Authorization</strong> (metadane uwierzytelniania zapytania) oraz <strong>Accept</strong> (oczekiwany typ odpowiedzi).</p></li></ul><h3>Obietnica lepszego REST API - GraphQL</h3><p>To technologia opublikowana przez Facebooka w 2015r., która w założeniu miała rozwiązywać problem rozproszonych REST API w dużej skali. Dzięki <a href="https://graphql.org/" target="_blank" rel="noopener noreferrer">GraphQL</a> autorzy aplikacji client-side (najczęściej aplikacji webowych i mobilnych) nie muszą wykonywać izolowanych zapytań po poszczególne zasoby, a następnie łączyć je pole po polu, ale mogą wysłać jedno zapytanie do rozwiązania przez serwer GraphQL.</p><p>Zapytania do API opartego o GraphQL najczęściej wykorzystują dwie metody HTTP - POST i GET, jednak ich zasoby nie są udostępniane przez wiele różnych endpointów, a jeden główny. Co decyduje o kształcie zwracanych danych? Samo zapytanie, którego <strong>body </strong>(lub rzadziej - query string)<strong> </strong>określa pola których potrzebujemy, lub planujemy modyfikować:</p><pre><code>query UserWithComments {
+  user {
+    name
+    comments {
+      body
+    }
+  }
+}</code></pre><p>Powyższe zapytanie zostaje rozwiązane w oparciu o zasoby <strong>User</strong> i <strong>Comments</strong>, a w odpowiedzi uzyskujemy:</p><pre><code>{
+  "data": {
+    "user": {
+      "name": "John Doe",
+      "comments": [
+        {
+          "body": "Great job!"
+        },
+        {
+          "body": "Amazing!"
+        },
+        {
+          "body": "I love it!"
+        }
+      ]
+    }
+  }
+}</code></pre><p>Główną zaletą GraphQL jest łączenie wielu zapytań do API w jedno, co może być istotną kwestią w przypadku klientów o mniejszych zasobach sprzętowych, oraz zaletą dla programistów frontend, którzy oczekują większej elastyczności w pracy. Istotną wadą, która powoduje że na GraphQL nie decyduje się większość małych i średnich firm, jest narzut związany z utrzymaniem dodatkowej infrastruktury. Wdrażając GraphQL, w stosie technologicznym danego rozwiązania musimy dodać kolejną warstwę, która połączy zapytania od klientów z rozproszonymi, niezależnymi API.</p><p>Jeśli chcesz sprawdzić jak pracuje się z tego typu interfejsem, możesz wykorzystać jedno z publicznie dostępnych API, np.:</p><ul><li><p>Countries API - <a href="https://github.com/trevorblades/countries" target="_blank" rel="noopener noreferrer">https://github.com/trevorblades/countries</a></p></li><li><p>Anime List API - <a href="https://anilist.gitbook.io/anilist-apiv2-docs/" target="_blank" rel="noopener noreferrer">https://anilist.gitbook.io/anilist-apiv2-docs/</a></p></li><li><p>GitHub GraphQL API - <a href="https://docs.github.com/en/graphql" target="_blank" rel="noopener noreferrer">https://docs.github.com/en/graphql</a></p></li></ul><p>W tym miejscu znajdziesz zestaw starannie redagowanych zasobów na temat GraphQL - <a href="https://github.com/chentsulin/awesome-graphql" target="_blank" rel="noopener noreferrer">Awesome GraphQL</a>.</p><h2>Komunikacja z API na poziomie aplikacji</h2><h3>Fetch API</h3><p>Niezależnie od stosowanego frameworka, najbardziej standardowym podejściem do wykonywania zapytań HTTP w aplikacjach frontendowych jest obecnie Fetch API. To zamiennik dla starszego API XMLHttpRequest (XHR). Metoda `fetch`, czyli główny składnik Fetch API, opiera się o Promise, co znacznie ułatwia obsługę asynchronicznych zapytań a także obsługę rezultatów danego zapytania.</p><p>Oto prosty przykład pokazujący, jak używać Fetch API do wykonania żądania GET (bez pełnej obsługi błędów, o czym poniżej):</p><pre><code>fetch('/api/users.json')
+  .then(response =&gt; response.json()) // Parsowanie odpowiedzi jako JSON
+  .then(data =&gt; console.log(data)) // Przetwarzanie otrzymanych danych
+  .catch(error =&gt; console.error('Fetching error:', error));</code></pre><p>Wykonanie żądania POST z konkretnymi parametrami wymaga dodatkowego obiektu konfiguracyjnego:</p><pre><code>// Konfiguracja żądania
+const requestOptions = {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(data) // Serializacja danych do formatu JSON
+};
+
+// Wykonanie żądania POST
+fetch('/api/users.json', requestOptions)
+  .then(response =&gt; response.json()) // Parsowanie odpowiedzi jako JSON
+  .then(data =&gt; console.log(data)) // Przetwarzanie otrzymanych danych
+  .catch(error =&gt; console.error('Fetching error:', error));</code></pre><p>Fetch API możemy też z powodzeniem łączyć&nbsp;z async/await:</p><pre><code>async function fetchData(url) {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error('Fetching error:', error);
+  }
+}
+
+fetchData('/api/users.json');</code></pre><p>Strona <a href="https://caniuse.com/fetch" target="_blank" rel="noopener noreferrer">CanIUse</a> podaje, że to natywne rozwiązanie możemy już stosować w niemal wszystkich nowoczesnych przeglądarkach internetowych:</p><img loading="lazy" src="https://assets-v3.circle.so/vbbjfwevqe0nowu7wp0g1o28ilhw" style="width: 100%; max-width: 100%;"><h3>Fetch API - Obsługa błędów</h3><p>W przeciwieństwie do innych popularnych bibliotek HTTP, takich jak omawiany poniżej Axios, Fetch API <strong>nie odrzuca</strong> automatycznie tych zapytań, które kończą się serwerowymi kodami z zakresu 4xx i 5xx. Oznacza to, że odpowiedzi pokroju “Not Found” i “Server Error” są traktowane jako zakończone sukcesem, co może być mylące i prowadzić do problemów.</p><p>Koniecznie zapamiętaj, że otrzymanie kodu innego niż&nbsp;2xx nie jest jednoznaczne z odrzuceniem Promise’a przez Fetch API:</p><pre><code>fetch('/api/users.json')
+  .then(response =&gt; {
+    return response.json(); // Jeśli otrzymasz kod 4xx lub 5xx, ten fragment i tak się wykona
+  })
+  .then(data =&gt; {
+    console.log('Data:', data);
+  })
+  .catch(error =&gt; { // Klasyczny "catch" nie wystarczy do pełnej obsługi błędów
+    console.error('Błąd:', error); 
+  });</code></pre><p>Oto przykład, który ilustruje, jak Fetch API radzi sobie z odpowiedziami 4xx i 5xx, oraz jak możesz prawidłowo obsłużyć te przypadki:</p><pre><code>fetch('/api/users.json')
+  .then(response =&gt; {
+    if (!response.ok) { // Promise rozwiązany z sukcesem, ale pole "ok" jest ustawione na false
+      // Jeśli status odpowiedzi nie jest w zakresie 2xx, wyrzuć błąd
+      throw new Error(`HTTP Error: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data =&gt; {
+    console.log('Data:', data);
+  })
+  .catch(error =&gt; {
+    console.error('Błąd:', error);
+  });</code></pre><p>Fetch API to ogromny krok naprzód w porównaniu do zapytań realizowanych przez obiekt XMLHttpRequest, ale być może oczekujesz jeszcze większego komfortu pracy z API. W takim przypadku jedną z najbardziej popularnych opcji jest biblioteka <strong>axios</strong>.</p><h3>Axios</h3><p><a href="https://axios-http.com/" target="_blank" rel="noopener noreferrer">Axios</a> jest popularną biblioteką JavaScript do wykonywania zapytań HTTP, używaną zarówno w aplikacjach przeglądarkowych, jak i Node.js. Jest to alternatywa dla natywnej metody <strong>fetch</strong>.</p><p>Jej główne zalety to:</p><ul><li><p>automatyczne przekształcanie danych na format JSON</p><ul><li><p>w Fetch API musimy to zrobić sami</p></li></ul></li><li><p>interceptory, czyli opakowywanie zapytań i odpowiedzi z serwera</p><ul><li><p>w Fetch API wymaga to ręcznej implementacji</p></li></ul></li><li><p>intuicyjna obsługa błędów (w oparciu o kody niż inne 2xx)</p><ul><li><p>w Fetch API kody takie jak 4xx i 5xx są uznawane za sukces (otrzymanie odpowiedzi)</p></li></ul></li><li><p>rozbudowane wsparcie dla anulowania i limitów czasowych zapytań</p><ul><li><p>przez dodatkowy parametr (timeout na poziomie oczekiwania na odpowiedź)</p></li><li><p>z wykorzystaniem AbortController (timeout na poziomie nawiązywania połączenia)</p></li></ul></li><li><p>wsparcie dla starszych przeglądarek</p></li></ul><p>Wykonanie podstawowego zapytania GET w bibliotece <strong>axios</strong> wygląda dość podobnie do Fetch API:</p><pre><code>import axios from 'axios';
+
+axios.get('/api/users.json')
+  .then(response =&gt; {
+    console.log(response.data); // dane są już sparsowane jako JSON
+  })
+  .catch(error =&gt; {
+    console.error('Error fetching data:', error);
+  });</code></pre><p>Natomiast w przypadku POST nie musimy ręcznie konwertować obiektu na JSON:</p><pre><code>import axios from 'axios';
+
+axios.post('/api/users', {
+  firstName: 'Fred',
+  lastName: 'Flintstone'
+})
+.then(function (response) {
+  console.log(response);
+})
+.catch(function (error) {
+  console.log(error);
+});</code></pre><p>Więcej różnic zauważymy budując obsługę błędów i wsparcie dla przekroczenia czasu oczekiwania na odpowiedź. </p><h3>Axios vs Fetch API - Brak odpowiedzi z serwera</h3><p>Pracując z aplikacjami webowymi na produkcji, musimy się przygotować na nieprzewidziane sytuacje na styku frontendu i backendu. Jedną z takich sytuacji jest przekroczenie czasu odpowiedzi z serwera. Może to być spowodowane wysokim obciążeniem serwera, wykonaniem nieoptymalnego zapytania do bazy, czy niedostępności innego serwisu, z którym nasz backend jest powiązany.</p><p>Aby zapewnić&nbsp;optymalne doświadczenia dla użytkownika, nasz frontend powinien mieć zdefiniowany maksymalny czas oczekiwania na odpowiedź i poprawnie obsługiwać taką sytuację.</p><p>Porównajmy oba rozwiązania. Najpierw Fetch API i Promise.race:</p><pre><code>// Rozbudowanie Fetch API o obsługę maksymalnego czasu oczekiwania
+const fetchWithTimeout = (url, timeout) =&gt; {
+  return Promise.race([
+    fetch(url),
+    new Promise((_, reject) =&gt;
+      setTimeout(() =&gt; reject(new Error('Timeout')), timeout)
+    )
+  ]);
+};
+
+fetchWithTimeout('/api/users.json', 5000) // timeout 5 sekund
+  .then(response =&gt; /* obsługa odpowiedzi */)
+  .catch(error =&gt; /* obsługa błędu lub timeoutu */);</code></pre><p>W powyższym przykładzie Promise.race oczekuje na pierwszy Promise, który zostanie rozwiązany. Jeśli uzyskamy odpowiedź na zapytanie HTTP poniżej czasu w parametrze <em>timeout</em>, to zostanie ona zwrócona. Jeśli nie, to otrzymamy odrzucony Promise z wiadomością ‘Timeout’.</p><p>W axios wygląda to zdecydowanie mniej skomplikowanie, a logika timeoutu ukryta jest w bibliotece:</p><pre><code>import axios from 'axios';
+
+// Natywne wsparcie dla parametru timeout w axios
+axios.get('/api/users.json', { timeout: 5000 }) // timeout 5 sekund
+  .then(response =&gt; /* obsługa odpowiedzi */)
+  .catch(error =&gt; {
+    if (error.code === 'ECONNABORTED') {
+      console.log('Timeout');
+    } else {
+      /* obsługa innych błędów */
+    }
+  });</code></pre><p>Biblioteka wspiera również globalną konfigurację, której możemy używać na przekroju całej aplikacji:</p><pre><code>import axios from 'axios';
+
+export const myProductApi = axios.create({
+  baseURL: 'https://myproduct.com',
+  timeout: 5000
+});
+
+const users = await myProductApi.get('/users') // timeout: 5s
+const items = await myProductApi.get('/items') // timeout: 5s</code></pre><h3>Axios - Anulowanie żądania przez klienta</h3><p>Poza przekroczeniem czasu na odpowiedź, drugim ze scenariuszy związanych z obsługą błędów jest przekroczenie czasu nawiązywania połączenia z serwerem, lub anulowanie zapytania na skutek konkretnej akcji użytkownika.</p><p>Przykładowo, kiedy budujemy dużą aplikację do wyszukiwania danych, użytkownik może zmieniać&nbsp;zakres filtrów zanim jeszcze otrzyma odpowiedź na poprzednie zapytanie. Bez anulowania zapytań interfejs użytkownika może się zmieniać zbyt wiele razy.</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1047815158?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>📝 Ten przykład znajdziesz w folderze <strong><em>examples/module1/lesson4/abort-controller</em></strong>.</p><p>Aby lepiej zarządzać równoległymi i już&nbsp;trwającymi zapytaniami, możemy wykorzystać&nbsp;wbudowany w przeglądarkę AbortController (którego wsparcie przewiduje również Fetch API). </p><pre><code>import axios from 'axios';
+
+const controller = new AbortController(); // AbortController to obiekt wbudowany w przeglądarkę
+
+axios.get('/api/users.json', {
+   signal: controller.signal
+}).then((response) =&gt; {
+   //...
+}).catch((error) =&gt; {
+  if (!axios.isCancel(error)) {
+    // Obsługa błędu innego niż ręczne anulowanie zapytania
+  }
+})
+
+controller.abort() // Wywołanie funkcji abort spowoduje anulowanie zapytania</code></pre><p>To od ciebie zależy kto i kiedy będzie mógł wywołać funkcje “abort”. Może to być głęboki fragment aplikacji, albo rozbudowanie jednej z funkcji wywoływanej przez użytkownika.</p><p>Na końcu lekcji znajdziesz ćwiczenie, w którym przetestujesz posługiwanie się AbortControllerem.</p><h3>Axios - Interceptory (Wzorzec Dekorator)</h3><p>Korzystając z axiosa warto zainteresować się wykorzystaniem tzw. Interceptorów, czyli klasycznego przypadku użycia wzorca projektowego <strong>Dekorator</strong>.</p><p>Czym jest Dekorator? Dekorator to wzorzec, który przydaje się kiedy udostępniamy konsumentowi konkretny, zamknięty zestaw funkcjonalności (np. zestaw funkcji do zapytań HTTP), ale chcemy również umożliwić jej rozszerzanie, np. dodanie logowania do każdego zapytania. Osiągniemy to właśnie dzięki wzorcowi Dekorator, który na konkretnym przykładzie w bibliotece axios wygląda w ten sposób:</p><pre><code>import axios from 'axios';
+
+const requestLogger = (config) =&gt; {
+  console.log(
+    `Zapytanie ${config.method} pod ${config.url} zarejestrowano o ${new Date().toISOString()}`
+  );
+  return config;
+}
+
+axios.interceptors.request.use(requestLogger);
+
+const { data: { users }} = await axios.get('/api/users.json')
+const { data: { items }} = await axios.get('/api/items.json')</code></pre><p>Dzięki dodaniu interceptora `requestLogger` do wychodzących zapytań, po wykonaniu dwóch żądań GET w konsoli pojawiają się&nbsp;dwa wpisy:</p><pre><code>Zapytanie get pod /api/users.json zarejestrowano o 2024-02-01T08:58:26.550Z
+Zapytanie get pod /api/items.json zarejestrowano o 2024-02-01T08:58:26.556Z</code></pre><p>Niezależnie od zapytań możemy też rozszerzać procesowanie odpowiedzi. W obu przypadkach do wykorzystania mamy dwa parametry funkcji “use” - pierwszy to interceptor odpowiedzi z kodem 2xx, czyli sukcesu, a drugi to obsługa błędów:</p><pre><code>axios.interceptors.response.use(successInterceptor, errorInterceptor);</code></pre><p>Potencjał interceptorów jest naprawdę szeroki - może to być logowanie zapytań, obsługa i analiza błędów, albo nawet zarządzanie konkretnymi fragmentami interfejsu, prezentującymi stan oczekiwania na odpowiedź z serwera.</p><p>W dużej skali interceptory są szczególnie przydatne wtedy, kiedy konwencją w firmie nie jest poleganie na surowej wersji biblioteki. Zamiast tego, zespół platformowy może przygotować “axiosa++” i udostępnić go w wewnętrznym repozytorium rozbudowując go właśnie przez interceptory.</p><h3>Modyfikowanie klientów HTTP (Wzorzec Proxy)</h3><p>Obiekty takie jak <strong>fetch </strong>i <strong>axios</strong> często nazywa się&nbsp;<strong>klientami HTTP</strong>. Zawierają one metody niezbędne do wykonywania zapytań, a także wcześniej przygotowaną konfigurację adresów docelowych serwisów, nagłówków czy obsługi błędów.</p><p>Zdarza się, że rozbudowywane konfiguracje klientów HTTP są ukrywane w dedykowanych modułach, a programiści nie pracują z surową wersją biblioteki, a właśnie z wersją rozszerzoną. Jak takie rozszerzenie przygotować? Jednym z wcześniej zaprezentowanych rozwiązań są interceptory, ale można do tego celu wykorzystać także wbudowany obiekt <strong>Proxy.</strong></p><p>Jak działa Proxy? Stwórzmy prostą klasę&nbsp;i jej rozszerzenie przez Proxy:</p><pre><code>class User {
+  constructor(name) {
+    this.name = name;
+  }
+
+  getName() {
+    return this.name;
+  }
+}
+
+// Funkcja korzystająca z Proxy do rozszerzenia możliwości obiektów klasy User
+function createUserProxy(user) {
+  return new Proxy(user, {
+    get(target, property, receiver) {
+      if (property === 'getName') {
+        return () =&gt; `User Name: ${target.getName()}`;
+      }
+      return property;
+    }
+  });
+}</code></pre><p>W tym przykładzie, tworzymy funkcję <strong>createUserProxy</strong>, która tworzy <strong>Proxy</strong> dla instancji <strong>User</strong>. Gdy odwołujemy się do metody <strong>getName</strong>, <strong>Proxy</strong> modyfikuje jej działanie, dodając prefix “User Name:…”.</p><p>Wzorzec (i obiekt) Proxy to jedna z wielu możliwości rozszerzania zachowania obiektów, bez ingerowania w ich detale implementacyjne:</p><pre><code>const user = new User('Marek');
+console.log(user.getName()); // Marek
+
+const proxiedUser = createUserProxy(user);
+console.log(proxiedUser.getName()); // User Name: Marek</code></pre><p>To samo Proxy możemy wykorzystać do rozbudowywania naszych klientów, dodając do zapytań nowe nagłówki (wg konwencji - z prefixem “x-”) czy parametry konfiguracji:</p><pre><code>import { v4 as uuidv4 } from 'uuid';
+
+const fetchProxy = new Proxy(fetch, {
+  apply(target, thisArg, argumentsList) {
+    let [url, cfg] = argumentsList;
+    const newHeader = { 'x-req-id': `kurs-${uuidv4()}` };
+    return target(url, {
+      ...cfg,
+      headers: {
+        ...cfg?.headers,
+        ...newHeader,
+      },
+    });
+  },
+});
+
+fetchProxy('/api/users.json')
+  .then((response) =&gt; response.json())
+  .then((data) =&gt; console.log(data));</code></pre><p>Korzystając z <strong>fetchProxy</strong>, nasze zapytania będą wzbogacone o nowy nagłówek, który możemy czytać na backendzie, a o którym frontend developer nie musi pamiętać:</p><img loading="lazy" src="https://assets-v3.circle.so/a3bh6hqshsy34d27ktx6e4w1y3pw" style="width: 100%; max-width: 100%;"><p>Co ważne, w takim podejściu nie modyfikujemy wbudowanego w przeglądarkę obiektu <strong>fetch</strong> (bardzo zła praktyka, niestety wciąż spotykana na frontendzie), ale uzyskujemy jego alternatywną wersję.</p><h2>Zapytania HTTP w popularnych frameworkach</h2><p>Opisywane wcześniej Fetch API jak i bibliotekę axios możesz z powodzeniem wykorzystywać w każdym nowoczesnym frameworku frontendowym. W szczegółach skupimy się na tej tematyce w kolejnej lekcji, natomiast poniżej krótko podsumowujemy jak wygląda obecnie sytuacja z zapytaniami HTTP w danym ekosystemie:</p><h3>React / Vue / Svelte</h3><p>Żaden z tych frameworków nie wymusza, ani nie<strong> </strong>dostarcza konkretnego klienta HTTP. Jest to zgodne z filozofią&nbsp;tych technologii, skupiających się przede wszystkim na rozwijaniu interaktywnych, reaktywnych widoków.</p><p>Zwykle w ich przypadku używa się bezpośrednio metod Fetch API, bibliotek zewnętrznych jak Axios, <a href="https://tanstack.com/query/latest/" target="_blank" rel="noopener noreferrer">TanStack Query</a> i dodatków takich jak <a href="https://swr.vercel.app/" target="_blank" rel="noopener noreferrer">swr</a> lub bardziej <a href="https://react.dev/learn/synchronizing-with-effects" target="_blank" rel="noopener noreferrer">rozbudowanych hooków</a>.</p><p>Różnice mogą się pojawić na poziomie obsługi stanu, śledzenia zmian i optymalizowania pracy komponentów, ale na tym właśnie skupimy się w kolejnej lekcji.</p><h3>Angular</h3><p>Angular promuje filozofię “batteries included”, dostarczając programistom serwis <strong>HttpClient</strong>, którym zrealizujemy zapytania do API z poziomu naszej aplikacji. </p><p><strong>HttpClient</strong> jest ściśle zintegrowany z biblioteką RxJS, co oznacza, że operacje HTTP zwracają obiekty typu Observable służące do obsługi asynchronicznych strumieni danych. Pozwala to na łatwe stosowanie operatorów RxJS do transformacji, filtrowania i łączenia zapytań HTTP z innymi typami zdarzeń. Wbudowany klient HTTP jest projektowany z myślą o integracji z innymi funkcjami Angulara, takimi jak system Dependency Injection (DI), co ułatwia zarządzanie zależnościami i konfiguracją.</p><h3>Inny model komunikacji - WebSockets</h3><p>Wszystko to, co opisaliśmy do tej pory, zakłada jednokierunkową komunikację w modelu “pull”. Pobieramy z serwera kolejne dane, a użytkownik i warstwa client-side decydują o tym, kiedy to nastąpi.</p><p>Kierunek komunikacji można rozszerzyć dzięki WebSocketom, które umożliwiają dwustronną komunikację w modelu “push” opartym o publikowanie zdarzeń z serwera do nasłuchujących klientów. W przeciwieństwie do tradycyjnego modelu zapytania i odpowiedzi HTTP, gdzie każda akcja użytkownika wymaga nowego żądania do serwera, WebSockety utrzymują otwarte połączenie pomiędzy warstwami.</p><p>Absolutnym liderem w tym obszarze jest biblioteka <a href="https://socket.io/" target="_blank" rel="noopener noreferrer">Socket.IO</a> (sprawdź także <a href="https://www.partykit.io/" target="_blank" rel="noopener noreferrer">PartyKit</a> oraz <a href="https://liveblocks.io/" target="_blank" rel="noopener noreferrer">Liveblocks</a>).</p><p><strong>Gdzie wykorzystywane są WebSockety?</strong></p><ol start="1"><li><p><strong>Aplikacje czatu i komunikatory:</strong> WebSockety są idealne dla aplikacji, które wymagają ciągłej wymiany wiadomości między użytkownikami w czasie rzeczywistym.</p></li><li><p><strong>Gry online:</strong> Umożliwiają szybką wymianę informacji o stanie gry, pozycjach graczy, i innych dynamicznie zmieniających się danych.</p></li><li><p><strong>Aplikacje finansowe i handel:</strong> W przypadku aplikacji śledzących kursy akcji lub walut w czasie rzeczywistym, WebSockety zapewniają natychmiastową aktualizację danych.</p></li><li><p><strong>Notyfikacje w czasie rzeczywistym:</strong> Dla aplikacji wymagających informowania użytkownika o nowych zdarzeniach, wiadomościach czy aktualizacjach bez konieczności odświeżania strony.</p></li><li><p><strong>Dashboardy i monitoring:</strong> Aplikacje do monitorowania danych w czasie rzeczywistym, takie jak dashboardy analityczne, mogą skorzystać na ciągłym strumieniu danych.</p></li></ol><p><strong>Kiedy decydować się na klasyczną komunikację HTTP?</strong></p><ol start="1"><li><p><strong>Aplikacje z małą zmiennością danych:</strong> Jeśli aplikacja nie wymaga aktualizacji w czasie rzeczywistym, utrzymanie otwartego połączenia może być niepotrzebne pod względem złożoności i zasobów.</p></li><li><p><strong>Proste strony internetowe:</strong> Dla statycznych stron internetowych, blogów czy stron informacyjnych, gdzie komunikacja w dwie strony nie jest potrzebna, WebSockety mogą być nadmiarowe.</p></li><li><p><strong>Ograniczenia infrastruktury:</strong> Utrzymanie dużej liczby otwartych połączeń może być wyzwaniem dla serwera, szczególnie w systemach rozproszonych i przy zastosowaniu load balancingu.</p></li></ol><h2>Podsumowanie</h2><p>Efektywna komunikacja z API to fundament nowoczesnych aplikacji frontendowych. Chociaż pobranie pierwszych bajtów nie stanowi problemu, to przekształcenie tego w proces wysokiej jakości, z odpowiednio dobranymi narzędziami, może stanowić pewne wyzwanie.</p><p>Na szczęście teraz znasz już różne typy zapytań&nbsp;i technologii, które umożliwiają połączenie klienta z serwerem. Wiesz również, na czym polegają różnice pomiędzy metodami natywnymi (Fetch) a zewnętrznymi bibliotekami (Axios). Potrafisz także rozszerzać istniejące rozwiązania w taki sposób, aby do zapytań dodawać monitoring czy dodatkowe elementy wspomagające debugowanie requestów.</p><p>W kolejnej lekcji zobaczysz czym różni się praca z API na produkcji od tego, do czego mógł cię przyzwyczaić localhost. Uwierz nam - dopiero tam zaczyna się zabawa!</p><img loading="lazy" src="https://assets-v3.circle.so/fq4c8abb28zn5ntd9tt8wxfxlbh0" style="width: 100%; max-width: 100%;"></div></body></html>

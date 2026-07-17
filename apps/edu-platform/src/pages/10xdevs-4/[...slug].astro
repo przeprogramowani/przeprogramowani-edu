@@ -1,0 +1,154 @@
+---
+/**
+ * Publiczne (bez auth) wrappery stron 10x Workflow pod /10xdevs-4/.
+ * Widocznosc steruje PUBLIC_PAGES w components/tenx-workflow/pages.ts -
+ * otwarcie strony = dopisanie sluga do listy. Slug "index" (pusty segment)
+ * renderuje hub (mostek) pod /10xdevs-4; dokumentacja quick search mieszka
+ * pod slugiem "docs". Nawigacja pokazuje tylko strony otwarte.
+ * Title / breadcrumb / footerRight czytane z rejestrow (pages.ts, skills.ts);
+ * tutaj zostaje tylko mapa slug -> Body i logika skill/.
+ */
+import TenxCosmicLayout from '@/components/tenx-workflow/TenxCosmicLayout.astro';
+import { CERTIFICATION_POST, PUBLIC_BASE } from '@/components/tenx-workflow/config';
+import type { Lang } from '@/components/tenx-workflow/i18n';
+import { EN_PAGES, PUBLIC_PAGES, WORKFLOW_PAGES, pageText } from '@/components/tenx-workflow/pages';
+import FundamentBody from '@/components/tenx-workflow/pages/FundamentBody.astro';
+import CscBody from '@/components/tenx-workflow/pages/CscBody.astro';
+import SkalowanieBody from '@/components/tenx-workflow/pages/SkalowanieBody.astro';
+import JakoscBody from '@/components/tenx-workflow/pages/JakoscBody.astro';
+import LegacyBody from '@/components/tenx-workflow/pages/LegacyBody.astro';
+import TeamworkBody from '@/components/tenx-workflow/pages/TeamworkBody.astro';
+import KanonBody from '@/components/tenx-workflow/pages/KanonBody.astro';
+import DocsBody from '@/components/tenx-workflow/pages/DocsBody.astro';
+import HubBody from '@/components/tenx-workflow/pages/HubBody.astro';
+import CategoryBody from '@/components/tenx-workflow/pages/CategoryBody.astro';
+import Top5Body from '@/components/tenx-workflow/pages/Top5Body.astro';
+import BackstoryBody from '@/components/tenx-workflow/pages/BackstoryBody.astro';
+import KursBody from '@/components/tenx-workflow/pages/KursBody.astro';
+import FaqBody from '@/components/tenx-workflow/pages/FaqBody.astro';
+import CertBody from '@/components/tenx-workflow/pages/CertBody.astro';
+import CliBody from '@/components/tenx-workflow/pages/CliBody.astro';
+import SpaceExplorersBody from '@/components/tenx-workflow/pages/SpaceExplorersBody.astro';
+import { getCirclePost } from '@/server/circle/circlePost';
+import { SKILL_PAGES } from '@/components/tenx-workflow/skills';
+import NewSkillBody from '@/components/tenx-workflow/skills/NewSkillBody.astro';
+import ResearchSkillBody from '@/components/tenx-workflow/skills/ResearchSkillBody.astro';
+import PlanSkillBody from '@/components/tenx-workflow/skills/PlanSkillBody.astro';
+import ImplementSkillBody from '@/components/tenx-workflow/skills/ImplementSkillBody.astro';
+import ImplReviewSkillBody from '@/components/tenx-workflow/skills/ImplReviewSkillBody.astro';
+
+const BASE = PUBLIC_BASE;
+
+const PAGE_BODIES: Record<string, any> = {
+  fundament: FundamentBody,
+  csc: CscBody,
+  skalowanie: SkalowanieBody,
+  jakosc: JakoscBody,
+  legacy: LegacyBody,
+  teamwork: TeamworkBody,
+  kanon: KanonBody,
+  top5: Top5Body,
+  index: HubBody,
+  kurs: CategoryBody,
+  moduly: CategoryBody,
+  skille: CategoryBody,
+  ekosystem: CategoryBody,
+  docs: DocsBody,
+  log: BackstoryBody,
+  'jak-dziala-kurs': KursBody,
+  certyfikacja: CertBody,
+  '10x-cli': CliBody,
+  'space-explorers': SpaceExplorersBody,
+  faq: FaqBody,
+};
+
+/* Publiczne strony skilli: dostepne, gdy otwarta jest strona csc (linki "Skill"
+   z lancucha i "STRONA SKILLA" z docs musza dzialac takze w kontekscie 10xdevs-4). */
+const SKILL_BODIES: Record<string, any> = {
+  '10x-new': NewSkillBody,
+  '10x-research': ResearchSkillBody,
+  '10x-plan': PlanSkillBody,
+  '10x-implement': ImplementSkillBody,
+  '10x-impl-review': ImplReviewSkillBody,
+};
+
+const rawSlug = Astro.params.slug ?? '';
+
+// Wersja angielska: prefiks en/ w slugu (misja EN, rollout przez EN_PAGES).
+// /10xdevs-4/en = angielski hub, /10xdevs-4/en/<slug> = angielska strona.
+let lang: Lang = 'pl';
+let slug = rawSlug === '' ? 'index' : rawSlug;
+if (slug === 'en') {
+  lang = 'en';
+  slug = 'index';
+} else if (slug.startsWith('en/')) {
+  lang = 'en';
+  slug = slug.slice('en/'.length);
+}
+
+let meta:
+  | { Body: any; title: string; breadcrumb?: string; footerRight?: string }
+  | undefined;
+let layoutSlug = slug;
+
+const workflowPage = WORKFLOW_PAGES.find((p) => p.slug === slug);
+if (workflowPage && PAGE_BODIES[slug]) {
+  const view = pageText(workflowPage, lang);
+  meta = {
+    Body: PAGE_BODIES[slug],
+    title: view.title,
+    breadcrumb: view.breadcrumb,
+    footerRight: view.footerRight,
+  };
+}
+
+if (slug.startsWith('skill/')) {
+  const skillSlug = slug.slice('skill/'.length);
+  const skillPage = SKILL_PAGES.find((s) => s.slug === skillSlug);
+  const SkillBody = SKILL_BODIES[skillSlug];
+  if (skillPage && SkillBody && PUBLIC_PAGES.includes('csc')) {
+    meta = {
+      Body: SkillBody,
+      title: lang === 'en' ? skillPage.titleEn : skillPage.title,
+      breadcrumb: skillPage.breadcrumb,
+      footerRight: `SKILL // /${skillSlug}`,
+    };
+    layoutSlug = 'csc';
+  }
+}
+
+if (!meta || (!slug.startsWith('skill/') && !PUBLIC_PAGES.includes(slug))) {
+  return new Response('Not found', { status: 404 });
+}
+
+// Wersja EN istnieje tylko dla stron z EN_PAGES (strony skilli dojda w fazie 2).
+if (lang === 'en' && !EN_PAGES.includes(slug)) {
+  return new Response('Not found', { status: 404 });
+}
+
+const publicPages = WORKFLOW_PAGES.filter((p) => PUBLIC_PAGES.includes(p.slug));
+
+// Dedykowana strona certyfikacji osadza pelne zasady pobrane na zywo z Circle
+// (post w kanale "Informacje i ogloszenia [10X3]"). Blad pobrania nie wywraca
+// strony - Body dostaje certHtml=null i renderuje fallback z linkiem do Circle.
+let certHtml: string | null = null;
+if (slug === 'certyfikacja') {
+  const env = Astro.locals.runtime?.env;
+  const post = await getCirclePost(CERTIFICATION_POST.postId, env);
+  certHtml = post?.html ?? null;
+}
+---
+
+<TenxCosmicLayout
+  title={meta.title}
+  slug={layoutSlug}
+  enSlug={slug}
+  base={BASE}
+  lang={lang}
+  modeDefaults={{ tryb: 'sf', dd: '0' }}
+  breadcrumb={meta.breadcrumb}
+  pages={publicPages}
+>
+  <meta.Body base={BASE} lang={lang} certHtml={certHtml} certUrl={CERTIFICATION_POST.url} category={workflowPage?.category} pages={publicPages} />
+  <Fragment slot="footer-right">{meta.footerRight}</Fragment>
+</TenxCosmicLayout>

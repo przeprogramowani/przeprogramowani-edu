@@ -1,0 +1,35 @@
+---
+import GameLayout from '@/layouts/GameLayout.astro';
+import PhaserGame from '@/explorers/PhaserGame.svelte';
+import BraveFBPixel from '@/components/shared/BraveFBPixel.astro';
+import { verifyToken } from '@/server/auth';
+import { ENV, JWT_SECRET } from 'astro:env/server';
+import {
+  shouldTrackAnonymousStart,
+  trackAnonymousGameStart,
+  GAME_STARTED_COOKIE_CONFIG,
+} from '@/server/game/anonymousTracking';
+
+const token = Astro.cookies.get('token')?.value;
+let userEmail: string | undefined;
+
+if (token) {
+  const payload = await verifyToken(token, JWT_SECRET);
+  if (payload) userEmail = payload.email;
+}
+
+const isProd = ENV === 'PROD';
+
+if (isProd && shouldTrackAnonymousStart(userEmail, Astro.cookies.get('game-started')?.value)) {
+  trackAnonymousGameStart((Astro.locals as any).runtime.env);
+  Astro.cookies.set(GAME_STARTED_COOKIE_CONFIG.name, GAME_STARTED_COOKIE_CONFIG.value, {
+    path: GAME_STARTED_COOKIE_CONFIG.path,
+    maxAge: GAME_STARTED_COOKIE_CONFIG.maxAge,
+  });
+}
+---
+
+<GameLayout>
+  <PhaserGame client:only="svelte" userEmail={userEmail} />
+  {isProd && <BraveFBPixel />}
+</GameLayout>

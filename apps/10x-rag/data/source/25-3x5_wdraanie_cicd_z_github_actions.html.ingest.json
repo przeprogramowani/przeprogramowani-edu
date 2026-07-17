@@ -1,0 +1,236 @@
+{
+  "lessonId": "[3x5] Wdrażanie CI/CD z GitHub Actions",
+  "file": "25-3x5_wdraanie_cicd_z_github_actions.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 10,
+      "order": 1
+    },
+    {
+      "slug": "poznajemy-github-actions-z-magic-docs",
+      "title": "Poznajemy GitHub Actions z Magic Docs ✨",
+      "blocks": 16,
+      "order": 2
+    },
+    {
+      "slug": "pierwszy-scenariusz-i-narzedzia-dla-agenta-ai",
+      "title": "Pierwszy scenariusz i narzędzia dla Agenta AI",
+      "blocks": 6,
+      "order": 3
+    },
+    {
+      "slug": "terminal-i-publiczne-api-w-reguach-dla-ai",
+      "title": "Terminal i publiczne API w regułach dla AI",
+      "blocks": 2,
+      "order": 4
+    },
+    {
+      "slug": "zabezpieczanie-pull-requestow",
+      "title": "Zabezpieczanie Pull Requestów",
+      "blocks": 14,
+      "order": 5
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 5,
+      "order": 6
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 0,
+      "order": 7
+    },
+    {
+      "slug": "zadanie-1-pull-request-workflow",
+      "title": "Zadanie 1: Pull Request Workflow",
+      "blocks": 5,
+      "order": 8
+    },
+    {
+      "slug": "zadanie-2-nowa-wiedza-z-magic-docs",
+      "title": "Zadanie 2: Nowa wiedza z Magic Docs",
+      "blocks": 4,
+      "order": 9
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:42799d4c:43cc23fa",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:42799d4c:43cc23fa:0-1",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:42799d4c:24701484",
+      "tokenEstimate": 181,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:42799d4c:24701484:0-5",
+      "tokenEstimate": 383,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "chk:42799d4c:24701484:5-9",
+      "tokenEstimate": 347,
+      "span": [
+        5,
+        9
+      ]
+    },
+    {
+      "id": "sec:42799d4c:f9d9299f",
+      "tokenEstimate": 202,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:42799d4c:f9d9299f:0-13",
+      "tokenEstimate": 376,
+      "span": [
+        0,
+        13
+      ]
+    },
+    {
+      "id": "chk:42799d4c:f9d9299f:13-15",
+      "tokenEstimate": 164,
+      "span": [
+        13,
+        15
+      ]
+    },
+    {
+      "id": "sec:42799d4c:5b73d856",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:42799d4c:5b73d856:0-5",
+      "tokenEstimate": 242,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:42799d4c:504c1e82",
+      "tokenEstimate": 178,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:42799d4c:504c1e82:0-1",
+      "tokenEstimate": 178,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:42799d4c:732eed55",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:42799d4c:732eed55:0-13",
+      "tokenEstimate": 403,
+      "span": [
+        0,
+        13
+      ]
+    },
+    {
+      "id": "sec:42799d4c:7eabec50",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:42799d4c:7eabec50:0-4",
+      "tokenEstimate": 223,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:42799d4c:dcc8ec86",
+      "tokenEstimate": 59,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:42799d4c:9746003f",
+      "tokenEstimate": 178,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:42799d4c:9746003f:0-4",
+      "tokenEstimate": 178,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:42799d4c:517f34af",
+      "tokenEstimate": 125,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:42799d4c:517f34af:0-3",
+      "tokenEstimate": 125,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

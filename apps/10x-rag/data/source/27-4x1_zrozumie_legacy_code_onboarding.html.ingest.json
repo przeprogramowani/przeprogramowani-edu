@@ -1,0 +1,678 @@
+{
+  "lessonId": "[4x1] Zrozumieć Legacy Code - onboarding",
+  "file": "27-4x1_zrozumie_legacy_code_onboarding.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 6,
+      "order": 1
+    },
+    {
+      "slug": "z-jakiego-modelu-korzystac-w-wiekszych-projektach",
+      "title": "Z jakiego modelu korzystać w większych projektach?",
+      "blocks": 7,
+      "order": 2
+    },
+    {
+      "slug": "wyzwania-przy-korzystaniu-z-gemini-25-pro",
+      "title": "Wyzwania przy korzystaniu z Gemini 2.5 Pro",
+      "blocks": 1,
+      "order": 3
+    },
+    {
+      "slug": "praktyczne-zastosowania-w-analizie-kodu",
+      "title": "Praktyczne zastosowania w analizie kodu",
+      "blocks": 7,
+      "order": 4
+    },
+    {
+      "slug": "wdrazanie-sie-w-duze-projekty---jak-to-zrobic-szybko-i-z-gowa",
+      "title": "Wdrażanie się w duże projekty - jak to zrobić szybko i z głową?",
+      "blocks": 5,
+      "order": 5
+    },
+    {
+      "slug": "skrypty-git-do-analizy-hotspotow",
+      "title": "Skrypty git do analizy hotspotów",
+      "blocks": 0,
+      "order": 6
+    },
+    {
+      "slug": "1-skrypt-do-analizy-plikow",
+      "title": "1. Skrypt do analizy plików",
+      "blocks": 3,
+      "order": 7
+    },
+    {
+      "slug": "omowienie-skryptu-krok-po-kroku",
+      "title": "Omówienie skryptu krok po kroku",
+      "blocks": 1,
+      "order": 8
+    },
+    {
+      "slug": "ustawianie-exclude_pattern_grep",
+      "title": "Ustawianie EXCLUDE_PATTERN_GREP",
+      "blocks": 6,
+      "order": 9
+    },
+    {
+      "slug": "2-skrypt-do-analizy-moduow",
+      "title": "2. Skrypt do analizy modułów",
+      "blocks": 5,
+      "order": 10
+    },
+    {
+      "slug": "3-skrypt-do-analizy-kontrybutorow",
+      "title": "3. Skrypt do Analizy Kontrybutorów",
+      "blocks": 5,
+      "order": 11
+    },
+    {
+      "slug": "wyniki-analizy-excalidraw",
+      "title": "Wyniki Analizy Excalidraw",
+      "blocks": 9,
+      "order": 12
+    },
+    {
+      "slug": "wstepna-analiza-projektu",
+      "title": "Wstępna analiza projektu",
+      "blocks": 12,
+      "order": 13
+    },
+    {
+      "slug": "pogebianie-dokumentacji-onboardingowej",
+      "title": "Pogłębianie dokumentacji onboardingowej",
+      "blocks": 1,
+      "order": 14
+    },
+    {
+      "slug": "strategia-pogebionej-analizy",
+      "title": "Strategia pogłębionej analizy",
+      "blocks": 1,
+      "order": 15
+    },
+    {
+      "slug": "1-prompt-do-analizy-moduow",
+      "title": "1. Prompt do analizy modułów",
+      "blocks": 4,
+      "order": 16
+    },
+    {
+      "slug": "2-prompt-do-analizy-kluczowych-plikow",
+      "title": "2. Prompt do analizy kluczowych plików",
+      "blocks": 4,
+      "order": 17
+    },
+    {
+      "slug": "3-prompt-do-syntezy-i-aktualizacji-dokumentu-onboardingowego",
+      "title": "3. Prompt do syntezy i aktualizacji dokumentu onboardingowego",
+      "blocks": 5,
+      "order": 18
+    },
+    {
+      "slug": "pogebiona-analiza-projektu-excalidraw-case-study",
+      "title": "Pogłębiona analiza projektu Excalidraw (case study)",
+      "blocks": 6,
+      "order": 19
+    },
+    {
+      "slug": "analiza-projektow-bez-rozbudowanej-historii-git",
+      "title": "Analiza projektów bez rozbudowanej historii git",
+      "blocks": 3,
+      "order": 20
+    },
+    {
+      "slug": "prompt-do-analizy-projektow-bez-rozbudowanej-historii-git",
+      "title": "Prompt do analizy projektów bez rozbudowanej historii git",
+      "blocks": 2,
+      "order": 21
+    },
+    {
+      "slug": "kluczowe-elementy-tego-prompta",
+      "title": "Kluczowe elementy tego prompta:",
+      "blocks": 24,
+      "order": 22
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 3,
+      "order": 23
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 10,
+      "order": 24
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:4bbd6545:43cc23fa",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:43cc23fa:0-1",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:24701484",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:24701484:0-5",
+      "tokenEstimate": 298,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:1512744a",
+      "tokenEstimate": 216,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:1512744a:0-6",
+      "tokenEstimate": 331,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:a8385563",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:a8385563:0-0",
+      "tokenEstimate": 151,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:5e65035b",
+      "tokenEstimate": 174,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:5e65035b:0-6",
+      "tokenEstimate": 306,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:890b673b",
+      "tokenEstimate": 215,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:890b673b:0-4",
+      "tokenEstimate": 276,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:17f2f7bf",
+      "tokenEstimate": 71,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:013ec7c9",
+      "tokenEstimate": 178,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:013ec7c9:0-2",
+      "tokenEstimate": 178,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:46f80a2e",
+      "tokenEstimate": 73,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:46f80a2e:0-0",
+      "tokenEstimate": 194,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:1205379f",
+      "tokenEstimate": 187,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:1205379f:0-5",
+      "tokenEstimate": 310,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:5b8714bf",
+      "tokenEstimate": 210,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:5b8714bf:0-4",
+      "tokenEstimate": 288,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:54be2f2f",
+      "tokenEstimate": 170,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:54be2f2f:0-4",
+      "tokenEstimate": 170,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:7faac13c",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:7faac13c:0-8",
+      "tokenEstimate": 251,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:91ecfa41",
+      "tokenEstimate": 109,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:91ecfa41:0-7",
+      "tokenEstimate": 310,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:91ecfa41:4-8",
+      "tokenEstimate": 1717,
+      "span": [
+        4,
+        8
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:91ecfa41:8-9",
+      "tokenEstimate": 1667,
+      "span": [
+        8,
+        9
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:91ecfa41:8-10",
+      "tokenEstimate": 1699,
+      "span": [
+        8,
+        10
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:91ecfa41:9-11",
+      "tokenEstimate": 176,
+      "span": [
+        9,
+        11
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:de94220a",
+      "tokenEstimate": 120,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:de94220a:0-0",
+      "tokenEstimate": 120,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:fa15b3ef",
+      "tokenEstimate": 112,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:fa15b3ef:0-0",
+      "tokenEstimate": 112,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:36193d9e",
+      "tokenEstimate": 228,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:36193d9e:0-0",
+      "tokenEstimate": 581,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:36193d9e:0-1",
+      "tokenEstimate": 586,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:36193d9e:0-2",
+      "tokenEstimate": 623,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:36193d9e:1-3",
+      "tokenEstimate": 182,
+      "span": [
+        1,
+        3
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:64f3ccf6",
+      "tokenEstimate": 215,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:64f3ccf6:0-0",
+      "tokenEstimate": 463,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:64f3ccf6:0-1",
+      "tokenEstimate": 468,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:64f3ccf6:0-2",
+      "tokenEstimate": 508,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:64f3ccf6:2-3",
+      "tokenEstimate": 179,
+      "span": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:f506fe1a",
+      "tokenEstimate": 209,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:f506fe1a:0-0",
+      "tokenEstimate": 529,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:f506fe1a:0-1",
+      "tokenEstimate": 533,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:f506fe1a:0-2",
+      "tokenEstimate": 578,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:f506fe1a:2-4",
+      "tokenEstimate": 181,
+      "span": [
+        2,
+        4
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:2d282df7",
+      "tokenEstimate": 205,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:2d282df7:0-5",
+      "tokenEstimate": 236,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:7de49cb0",
+      "tokenEstimate": 144,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:7de49cb0:0-2",
+      "tokenEstimate": 180,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:97193492",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:97193492:0-0",
+      "tokenEstimate": 91,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:97193492:0-1",
+      "tokenEstimate": 919,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:9db165ea",
+      "tokenEstimate": 205,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:9db165ea:0-15",
+      "tokenEstimate": 378,
+      "span": [
+        0,
+        15
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:9db165ea:15-23",
+      "tokenEstimate": 335,
+      "span": [
+        15,
+        23
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:33c7f0dd",
+      "tokenEstimate": 86,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:33c7f0dd:0-2",
+      "tokenEstimate": 278,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:4bbd6545:dcc8ec86",
+      "tokenEstimate": 188,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:dcc8ec86:0-6",
+      "tokenEstimate": 370,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "chk:4bbd6545:dcc8ec86:5-9",
+      "tokenEstimate": 197,
+      "span": [
+        5,
+        9
+      ]
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "lessonPrefix": "10-3x2",
+  "updatedAt": "2026-04-28T15:48:36.147Z",
+  "entries": [
+    {
+      "key": "1cf0437998f640f17c412e509d2a3182517c19b4ffe2b32c0aedd55bb6e22de2",
+      "blockHash": "b56a55e22954b46db9901423189db181629dd2eb1687d0d152a11b91dd6f91be",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 0,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "Naprawiamy krytyczny incydent. Oto zgłoszenie z supportu: \n<TICKET>\n[krótki opis objawu].\n</TICKET>\n\nPrawdopodobny zakres zmian dotyczy @{module/directory/file}\nNajpierw znajdź przyczynę i wskaż minimalny plan, potem wprowadź poprawkę.\nNie zmieniaj publicznego API bez mojej zgody.\n\nWeryfikacja: uruchom [komenda testu/builda] i opisz wynik.\nNa końcu podsumuj zmienione pliki i ryzyka.\n",
+      "translatedText": "We are fixing a critical incident. Here is the support ticket:\n<TICKET>\n[short symptom description].\n</TICKET>\n\nThe probable scope of changes concerns @{module/directory/file}\nFirst, find the cause and propose a minimal plan, then implement the fix.\nDo not change the public API without my permission.\n\nVerification: run [test/build command] and describe the result.\nFinally, summarize the changed files and risks.",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:32.605Z"
+    },
+    {
+      "key": "639f459a4ebb123ca8e16676a2c50404bb49c6e42fbfe54ca35e34761e6b82d3",
+      "blockHash": "e66c51eecd614a2f14fc966ef687db8caf9c66fc71bd583151ad116770b5b914",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 1,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "Zrefaktoryzuj [obszar], zachowując obecne zachowanie.\n\nCel: [np. uproszczenie duplikacji / rozdzielenie odpowiedzialności].\nZakres: [pliki/moduły].\nNie zmieniaj kontraktu publicznych funkcji ani formatu danych.\nJeśli zauważysz potrzebę zmiany publicznego API, zatrzymaj się i poinformuj mnie.\n\nWeryfikacja: [komenda] oraz krótki opis, jak potwierdziłeś brak zmiany zachowania.\n",
+      "translatedText": "Refactor the [area], preserving current behavior.\n\nGoal: [e.g., reduce duplication / separate concerns].\nScope: [files/modules].\nDo not change the contract of public functions or data format.\nIf you find a need to change the public API, stop and inform me.\n\nVerification: [command] and a brief description of how you confirmed no change in behavior.",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:33.380Z"
+    },
+    {
+      "key": "4dba19b1cbb579fc3429537924f62edfe48b1576e1cae76a69c30b1a1404275c",
+      "blockHash": "79f94574eec326ae9dfb63bcd7b24606dfc98072fd5803032e2fd6d629506a47",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 2,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "Przejrzyj zmiany pod kątem błędów, regresji i brakujących testów.\n\nOto reguły zespołowe: {rules}\n\nSkup się na zachowaniu, bezpieczeństwie, edge case'ach i zgodności z konwencjami projektu.\nZwróć tylko konkretne uwagi z plikiem i linią.\nNa końcu dodaj krótką listę testów, których brakuje albo których nie da się ocenić z diffu.\n",
+      "translatedText": "Review changes for errors, regressions, and missing tests.\n\nHere are the team rules: {rules}\n\nFocus on behavior, security, edge cases, and adherence to project conventions.\nReturn only specific comments with file and line.\nAt the end, add a short list of missing tests or tests that cannot be evaluated from the diff.",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:34.303Z"
+    },
+    {
+      "key": "1abb6bcffa35477c17134db4a618477beb46325fdcbb956e0e8c9afb14e8215f",
+      "blockHash": "88f281fdefca437ab4176837047d6ceda6e971fb8f29db24efac9900e6112201",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 3,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "Zbadaj, jak w tym projekcie działa [obszar/funkcja].\n\nZnajdź najważniejsze miejsca w kodzie, zależności i przepływ danych między składowymi.\nNa końcu zaproponuj 2-3 możliwe podejścia do rozwiązania [problem], z ryzykami.\nZatrzymaj się przed implementacją i nie edytuj plików.\n",
+      "translatedText": "Investigate how [area/feature] works in this project.\n\nFind the most important parts of the code, dependencies, and data flow between components.\nFinally, propose 2-3 possible approaches to solve [problem], along with their risks.\nStop before implementing and do not edit any files.",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:35.397Z"
+    },
+    {
+      "key": "1c8c4f7e8e1e4cce2743a16cd4ea9b0c83fa3bc2e30fe154b63e1b59056cce62",
+      "blockHash": "4e529b488d18dab28f9792b7f44db6ef46d6ace409fe80aaa13b021d0a202fae",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 4,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "Zaimplementuj zatwierdzony plan z [link/sekcja].\n\nJeśli plan okaże się nieaktualny, zatrzymaj się i wyjaśnij konflikt.\nWeryfikacja: [komenda].\n",
+      "translatedText": "Implement the approved plan from [link/section].\n\nIf the plan is outdated, stop and explain the conflict.\nVerification: [command].",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:36.147Z"
+    }
+  ]
+}

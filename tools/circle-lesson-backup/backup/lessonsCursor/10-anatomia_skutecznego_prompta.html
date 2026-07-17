@@ -1,0 +1,52 @@
+<meta name="lesson-id" content="Anatomia skutecznego prompta"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/sp4b2ejo9mg2zhmjl9is23sjzjtv" style="width: 100%; max-width: 100%;"><p>Skuteczny prompt to kluczowy element w efektywnej komunikacji z modelami AI. Zrozumienie jego anatomii pozwali Ci na tworzenie precyzyjnych i efektywnych instrukcji, które prowadzą do generowania wysokiej jakości, odpowiednio ukierunkowanych odpowiedzi. Poniżej przedstawiamy pięć kluczowych elementów, które składają się na dobrze skonstruowany prompt, wraz z ich charakterystyką i przykładami zastosowania w kontekście web developmentu.</p><h3>1. Polecenie (Dyrektywa)</h3><p>Konkretne zadanie lub instrukcja, którą model ma wykonać. Zaczyna się od czasownika (np. wygeneruj, napisz, wyjaśnij, podsumuj, przetłumacz, sklasyfikuj). Powinno być jasne i konkretne.</p><pre><code>Wygeneruj listę 10 najlepszych praktyk optymalizacji wydajności dla aplikacji React.</code></pre><h3>2. Kontekst</h3><p>Dodatkowe informacje lub szczegóły, które pomagają modelowi lepiej zrozumieć zadanie i dostosować odpowiedź. Odpowiada na kluczowe pytania (dla web deva):</p><ol start="1"><li><p>Co model powinien wiedzieć o projekcie?</p></li><li><p>Jaki jest cel polecenia?</p></li><li><p>Jakie są ograniczenia techniczne?</p></li></ol><pre><code>Pracuję nad dużą aplikacją e-commerce w React, która obsługuje tysiące użytkowników dziennie. Naszym celem jest skrócenie czasu ładowania strony i poprawa interaktywności. Używamy React 18 i Next.js.</code></pre><h3>3. Przykłady (Shots)</h3><p>Demonstracje wykonania zadania, które pomagają modelowi zrozumieć oczekiwania. Mogą być własne lub generowane. Powinny być spójne i nakierowane na cel. Liczba przykładów zależy od złożoności problemu. Przykłady są szczególnie użyteczne w dużej skali.</p><pre><code>Wykorzystaj React.lazy() do dynamicznego importu komponentów:
+
+const HeavyComponent = React.lazy(() =&gt; import('./HeavyComponent'));
+
+To pozwala na lazy loading komponentów, co przyspiesza początkowe ładowanie aplikacji.</code></pre><h3>4. Format</h3><p>Określa strukturę, styl i ton oczekiwanej odpowiedzi.</p><p><strong>Popularne struktury</strong>:</p><ul><li><p>Bloki kodu JavaScript/React</p></li></ul><ul><li><p>Markdown z przykładami kodu</p></li><li><p>Listy kroków implementacji</p></li><li><p>Dokumentacja techniczna</p></li><li><p>Opisy architektury aplikacji</p></li></ul><pre><code>Przedstaw każdą praktykę optymalizacji w formie listy numerowanej.
+Dla każdego punktu podaj krótki opis, przykład kodu w React i potencjalny
+wpływ na wydajność.</code></pre><h3>5. Rola</h3><p>Przypisanie osobowości lub ekspertyzy do modelu. Dopasowana do polecenia, aby nakierować model na odpowiedni kontekst. Wpływa na ton, styl i zawartość. Efektywna przy minimalnym nakładzie pracy. Różny poziom efektywności w zależności do typu polecenia.</p><pre><code>Jako doświadczony architekt front-end specjalizujący się w optymalizacji
+aplikacji React, zaproponuj...</code></pre><p>Więcej o stosowaniu roli znajdziesz w kolejnej sekcji “Role prompting”.</p><p>—</p><p>Pamiętaj, że skuteczny prompt to połączenie tych elementów w sposób, który najlepiej odpowiada Twoim aktualnym potrzebom. Eksperymentuj z różnymi kombinacjami, aby osiągnąć optymalne rezultaty w swoich projektach związanych z tworzeniem i optymalizacją aplikacji webowych.</p><h3><strong>🧠 Kluczowe wnioski</strong></h3><ol start="1"><li><p><strong>Polecenie (Dyrektywa)</strong>: fundamentem prompta, określającym konkretne zadanie do wykonania.</p></li><li><p><strong>Kontekst:</strong> dostarcza niezbędnych informacji o projekcie, celu i ograniczeniach technicznych.</p></li><li><p><strong>Przykłady (Shots):</strong> demonstrują oczekiwane wykonanie zadania, pomagając modelowi zrozumieć nasze wymagania.</p></li><li><p><strong>Format:</strong> określa strukturę i styl oczekiwanej odpowiedzi, zapewniając spójność i czytelność wyniku.</p></li><li><p><strong>Rola:</strong> przypisuje modelowi określoną ekspertyzę, wpływając na ton i zawartość generowanej odpowiedzi.</p></li><li><p>Efektywne prompty łączą te elementy w sposób dostosowany do specyficznych potrzeb zadania i projektu.</p></li><li><p>Eksperymentowanie z różnymi kombinacjami elementów prompta może prowadzić do optymalizacji rezultatów w Twoim przypadku użycia.</p></li></ol><p><strong>🧑🏻‍💻 Ćwiczenie</strong></p><p>Poniżej znajduje się pełny prompt, którego elementy zostały przemieszane. Twoim zadaniem jest zidentyfikować i oznaczyć pięć głównych elementów anatomii skutecznego prompta:</p><ol start="1"><li><p>Rola</p></li><li><p>Kontekst</p></li><li><p>Polecenie</p></li><li><p>Format</p></li><li><p>Przykład</p></li></ol><p>Przeczytaj uważnie prompt i oznacz każdy fragment odpowiednim numerem (1-5).</p><p><strong>Prompt do analizy</strong></p><pre><code>Przedstaw każdą technikę jako osobną sekcję z nagłówkiem. Użyj składni markdown dla lepszej czytelności. Kod powinien być umieszczony w blokach kodu z odpowiednim podświetlaniem składni.
+
+Pracuję nad dużą aplikacją e-commerce zbudowaną w React 18 i Next.js. Nasz zespół składa się z 5 developerów z różnym poziomem doświadczenia. Aplikacja obsługuje ponad 10,000 użytkowników dziennie i zawiera setki produktów. Obecnie borykamy się z problemami wydajnościowymi, szczególnie na stronie głównej i w koszyku zakupowym. Naszym celem jest skrócenie czasu ładowania strony do poniżej 2 sekund i poprawa ogólnej responsywności aplikacji.
+
+Jesteś doświadczonym architektem front-end, specjalizującym się w optymalizacji aplikacji React i Next.js.
+
+Wygeneruj listę 5 zaawansowanych technik optymalizacji wydajności, które możemy zastosować w naszej aplikacji e-commerce. Dla każdej techniki podaj:
+1. Krótki opis problemu, który rozwiązuje
+2. Szczegółowe wyjaśnienie implementacji
+3. Przykładowy kod w React/Next.js
+4. Potencjalny wpływ na wydajność (z szacunkowym procentem poprawy)
+5. Możliwe wady lub pułapki, na które należy uważać
+
+Po wykonaniu tego zadania, przeanalizuj wyniki i zaproponuj plan wdrożenia tych optymalizacji w naszej aplikacji, uwzględniając priorytety i potencjalne ryzyka.
+
+Przykład:
+
+1. Implementacja wirtualizacji listy produktów
+
+Problem: Renderowanie dużej liczby produktów na stronie głównej powoduje znaczne spowolnienie aplikacji.
+
+Implementacja: Użyj react-window do wirtualizacji listy, renderując tylko widoczne elementy.
+
+import { FixedSizeList as List } from 'react-window';
+
+const Row = ({ index, style }) =&gt; (
+  &lt;div style={style}&gt;
+    {/* Render product item */}
+  &lt;/div&gt;
+);
+
+const ProductList = ({ products }) =&gt; (
+  &lt;List
+    height={600}
+    itemCount={products.length}
+    itemSize={50}
+    width={300}
+  &gt;
+    {Row}
+  &lt;/List&gt;
+);
+
+Wpływ na wydajność: Może przyspieszyć renderowanie listy o 40-60%.
+
+Pułapki: Wymaga dokładnego obliczenia rozmiaru elementów. Może wpłynąć na SEO, jeśli nie jest odpowiednio zaimplementowane.</code></pre><p><strong>Wskazówka</strong></p><p>Pamiętaj, że niektóre elementy mogą być dłuższe i składać się z kilku akapitów, podczas gdy inne mogą być krótsze i bardziej zwięzłe.</p><p><strong>Kryteria sukcesu</strong></p><ul><li><p>Prawidłowo zidentyfikowałeś i oznaczyłeś wszystkie pięć elementów anatomii skutecznego prompta w podanym tekście.</p></li><li><p>Poprawnie rozpoznałeś, że niektóre elementy mogą być dłuższe i składać się z kilku akapitów.</p></li><li><p>Zrozumiałeś i wyjaśniłeś, dlaczego dany fragment tekstu został przypisany do konkretnego elementu anatomii prompta.</p></li><li><p>Byłeś w stanie krótko opisać rolę każdego z pięciu elementów w tworzeniu skutecznego prompta.</p></li><li><p>Zauważyłeś, jak poszczególne elementy współpracują ze sobą, tworząc spójny i efektywny prompt.</p></li><li><p>Zaproponowałeś, jak można by ulepszyć lub zmodyfikować prompt, bazując na zrozumieniu jego anatomii.</p></li></ul></div></body></html>

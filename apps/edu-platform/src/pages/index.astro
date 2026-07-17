@@ -1,0 +1,19 @@
+---
+import {verifyToken} from '@/server/auth';
+import Layout from '@/layouts/BaseLayout.astro';
+import { JWT_SECRET } from 'astro:env/server';
+
+const token = Astro.cookies.get('token')?.value;
+if (!token) {
+  return Astro.redirect('/login');
+}
+
+const payload = await verifyToken(token, JWT_SECRET);
+if (payload) {
+  return Astro.redirect('/courses');
+} else {
+  return Astro.redirect('/login');
+}
+---
+
+<Layout />

@@ -1,0 +1,175 @@
+<meta name="lesson-id" content="Customowe hooki"><html><head></head><body><div><p>Tworzenie własnych hooków w React pozwala na reużywanie logiki komponentów, co prowadzi do czystszego i bardziej zorganizowanego kodu. Integracja TypeScript z customowymi hookami dodatkowo zwiększa bezpieczeństwo typów i czytelność kodu. </p><p>W tej lekcji omówimy zaawansowane techniki budowania customowych hooków w React z wykorzystaniem TypeScript:</p><h3>Użycie as const do poprawnego wnioskowania typu tuple</h3><p>Operator as const w TypeScript pozwala dokładnie typowanie zwracanych wartości, co jest szczególnie przydatne przy zwracaniu API customowego hooka. Dzięki temu TypeScript traktuje zwrócony array jako tuple o stałych typach elementów:</p><pre><code>import { useState, useCallback } from 'react';
+
+export const useToggle = (initial: boolean = false) =&gt; {
+  const [state, setState] = useState&lt;boolean&gt;(initial);
+
+  const toggle = useCallback(() =&gt; setState(prev =&gt; !prev), []);
+
+  return [state, toggle] as const;
+};</code></pre><p>Dzięki temu możemy skorzystać z useToggle w komponencie mając szczegółowe informacje o typach:</p><pre><code>import React from 'react';
+import { useToggle } from './useToggle';
+
+const ToggleComponent = () =&gt; {
+  const [isToggled, toggle] = useToggle();
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Status: {isToggled ? 'Włączony' : 'Wyłączony'}&lt;/p&gt;
+      &lt;button onClick={toggle}&gt;Przełącz&lt;/button&gt;
+    &lt;/div&gt;
+  );
+};
+</code></pre><p>Dzięki temu<em> isToggled</em> ma typ <em>boolean</em>, a <em>toggle</em> ma typ <em>() =&gt; void</em>. Bez as const obydwie zmienne miałyby typ <em>boolean | () =&gt; void</em>.</p><p><strong>Dlaczego warto stosować as const zwracając tuple?</strong></p><ul><li><p><strong>Stałe typowanie:</strong> as const zapewnia, że TypeScript traktuje zwrócony array jako tuple o określonych typach.</p></li><li><p><strong>Bezpieczeństwo typów:</strong> Zapobiega błędom wynikającym z nieoczekiwanych zmian w strukturze zwracanych danych.</p></li></ul><h3>Zarządzanie złożonym stanem za pomocą unii </h3><p>Zarządzanie złożonym stanem w aplikacjach React często wymaga reprezentowania różnych stanów, takich jak loading, success czy error. TypeScript umożliwia wykorzystanie typów unii, aby precyzyjnie określić możliwe wartości stanu, co poprawia autouzupełnianie i zapobiega błędom:</p><pre><code>import { useState, useEffect } from 'react';
+
+type FetchState&lt;T&gt; = 
+  | { status: 'loading' }
+  | { status: 'success'; data: T }
+  | { status: 'error'; error: Error };
+
+export const useFetchData = &lt;T&gt;(url: string) =&gt; {
+  const [state, setState] = useState&lt;FetchState&lt;T&gt;&gt;({ status: 'loading' });
+
+  useEffect(() =&gt; {
+    let isMounted = true;
+    fetch(url)
+      .then(async response =&gt; {
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data: T = await response.json();
+        if (isMounted) setState({ status: 'success', data });
+      })
+      .catch(error =&gt; {
+        if (isMounted) setState({ status: 'error', error });
+      });
+    return () =&gt; {
+      isMounted = false;
+    };
+  }, [url]);
+
+  return state;
+};</code></pre><p>Taki customowy hook możemy użyć w następujący sposób w komponencie:</p><pre><code>import React from 'react';
+import { useFetchData } from './useFetchData';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const UserProfile = ({userId}: {userId: number}) =&gt; {
+  const fetchState = useFetchData&lt;User&gt;(`https://api.example.com/users/${userId}`);
+
+  if (fetchState.status === "loading") return &lt;p&gt;Ładowanie...&lt;/p&gt;;
+  if (fetchState.status === "error") return &lt;p&gt;Błąd: {fetchState.error.message}&lt;/p&gt;;
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;{fetchState.data.name}&lt;/h1&gt;
+      &lt;p&gt;Email: {fetchState.data.email}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+};</code></pre><p>Dlaczego warto korzystać z unii?</p><ul><li><p><strong>Autouzupełnianie:</strong> TypeScript zapewnia autouzupełnianie dla możliwych stanów.</p></li><li><p><strong>Bezpieczeństwo typów:</strong> Unia typów zapobiega przypisaniu nieistniejących stanów: np. dostęp do data w stanie loading.</p></li></ul><p><br></p><h3>Stosowanie discrimnated tuples dla złożonych wartości zwrotnych</h3><p>Przedstawione powyżej podejście możemy popchnąć dalej stosując tzw. Discriminated tuples. Pozwalają one na precyzyjne powiązanie różnych typów danych w tuple, co zwiększa bezpieczeństwo i czytelność kodu, szczególnie podczas destrukturyzacji zwracanych wartości z hooków.</p><pre><code>import { useState, useEffect } from 'react';
+
+type AsyncResult&lt;T&gt; = 
+  | ['idle', undefined]
+  | ['pending', undefined]
+  | ['success', T]
+  | ['failure', Error];
+
+export const useAsync = &lt;T&gt;(asyncFunction: () =&gt; Promise&lt;T&gt;, deps: any[] = []): AsyncResult&lt;T&gt; =&gt; {
+  const [result, setResult] = useState&lt;AsyncResult&lt;T&gt;&gt;(['idle', undefined]);
+
+  useEffect(() =&gt; {
+    setResult(['pending', undefined]);
+
+    asyncFunction()
+      .then(data =&gt; {
+        setResult(['success', data]);
+      })
+      .catch(error =&gt; {
+        setResult(['failure', error]);
+      });
+  }, deps);
+
+  return result;
+}; </code></pre><p>useAsync możemy użyć w następujący sposób w komponencie:</p><pre><code>import React from 'react';
+import { useAsync } from './useAsync';
+
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+}
+
+const PostList = () =&gt; {
+  const [status, data, error] = useAsync&lt;Post[]&gt;(async () =&gt; {
+    const response = await fetch('https://api.example.com/posts');
+    if (!response.ok) throw new Error('Failed to fetch posts');
+    return response.json();
+  }, []);
+
+  if (status === 'idle') return &lt;p&gt;Wprowadź zapytanie.&lt;/p&gt;;
+  if (status === 'pending') return &lt;p&gt;Ładowanie postów...&lt;/p&gt;;
+  if (status === 'failure') return &lt;p&gt;Błąd: {error.message}&lt;/p&gt;;
+  return (
+    &lt;ul&gt;
+      {data.map(post =&gt; (
+        &lt;li key={post.id}&gt;
+          &lt;h2&gt;{post.title}&lt;/h2&gt;
+          &lt;p&gt;{post.content}&lt;/p&gt;
+        &lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+};</code></pre><p>Dlaczego warto korzystać z discriminated tuples?</p><ul><li><p><strong>Precyzyjne typowanie:</strong> Każdy stan ma dokładnie określony typ.</p></li><li><p><strong>Czytelność:</strong> Jasne powiązanie między statusem a danymi lub błędami.</p></li></ul><p><br></p><h3>Lepsze wrappery useState z wykorzystaniem function overload</h3><p>Przeciążania funkcji (ang. function overload) pozwalają na definiowanie różnych sygnatur funkcji, co jest szczególnie przydatne przy opakowywaniu hooków takich jak useState. Dzięki temu customowy hook może zachować pełną dokładność typów charakterystyczną dla oryginalnego hooka, która uwzględnia różne przypadki użycia. </p><p>Jest to technika stosowana w typach Reacta dla wbudowanych hooków, który możemy przenieść na grunt customowych rozwiązań:</p><pre><code>export function usePersistedState&lt;T&gt;(key: string, initial: T): [T, Dispatch&lt;SetStateAction&lt;T&gt;&gt;];
+export function usePersistedState&lt;T&gt;(key: string): [T | undefined, Dispatch&lt;SetStateAction&lt;T | undefined&gt;&gt;];
+export function usePersistedState&lt;T&gt;(key: string, initial?: T) {
+  // Pobranie początkowej wartości z localStorage
+  const getInitialValue = (): T | undefined =&gt; {
+    const storedValue = localStorage.getItem(key);
+    if (storedValue !== null) {
+      return JSON.parse(storedValue) as T;
+    }
+    return initial;
+  };
+
+  const [state, setState] = useState&lt;T | undefined&gt;(getInitialValue);
+
+  // Efekt zapisujący wartość do localStorage przy zmianie stanu
+  useEffect(() =&gt; {
+    if (state !== undefined) {
+      localStorage.setItem(key, JSON.stringify(state));
+    }
+  }, [key, state]);
+
+  return [state, setState] as const;
+}</code></pre><p>Hooka w rodzaju <em>usePersistedState</em> możemy użyć w komponencie w następujący sposób:</p><pre><code>import React from 'react';
+import { usePersistedState } from './usePersistedState';
+
+const Settings = () =&gt; {
+  const [theme, setTheme] = usePersistedState&lt;string&gt;('theme', 'light');
+  const [volume, setVolume] = usePersistedState&lt;number&gt;('volume');
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Settings&lt;/h1&gt;
+      &lt;div&gt;
+        &lt;p&gt;Current Theme: {theme}&lt;/p&gt;
+        &lt;button onClick={() =&gt; setTheme('light')}&gt;Light&lt;/button&gt;
+        &lt;button onClick={() =&gt; setTheme('dark')}&gt;Dark&lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;p&gt;Volume: {volume}&lt;/p&gt;
+        &lt;input
+          type="range"
+          min="0"
+          max="100"
+          value={volume}
+          onChange={(e) =&gt; setVolume(Number(e.target.value))}
+        /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default Settings;</code></pre><p><strong>Dlaczego warto korzystać z function overloads?</strong></p><ul><li><p><strong>Elastyczność:</strong> Customowy hook jest odpowiednio typowany zarówno dla inicjalizację ze stanem, jak i bez.</p></li><li><p><strong>Pełna funkcjonalność i bezpieczeństwo:</strong> Zachowuje oryginalne przeciążenia useState, umożliwiając bezpieczną obsługę różnych scenariuszy.</p></li></ul><h2>Podsumowanie</h2><p>Integracja przedstawionych technik w codziennej pracy z hookami podniesie ich użyteczność i bezpieczeństwo Twojego kodu w codziennej pracy z Reactem. Zachęcamy do eksperymentowania z przedstawionymi rozwiązaniami i adaptowania ich do własnych projektów.</p><h2>Ćwiczenia </h2><ul><li><p><strong>351-persisted-state</strong> - Wykorzystaj przeciążenia funkcji w hooku usePersistedState, aby obsłużyć dwa przypadki.</p><ul><li><p>Z parametrami key i initial </p></li><li><p>Z samym parametrem key</p></li></ul><p>Staraj się nie podglądać gotowego kodu w zawartości lekcji - powodzenia!</p></li></ul></div></body></html>

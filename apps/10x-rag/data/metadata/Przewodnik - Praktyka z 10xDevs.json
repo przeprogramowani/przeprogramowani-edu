@@ -1,0 +1,6 @@
+{
+  "lessonId": "Przewodnik - Praktyka z 10xDevs",
+  "displayName": "Przewodnik - Praktyka z 10xDevs",
+  "summary": "1) Jak uzyskać dostęp do Prompt Library w 10xRules.ai (co zrobić, gdy masz już konto, a co gdy go nie masz)?  \n2) Jak postąpić, gdy otrzymasz komunikat z zaproszeniem do organizacji 10xDevs w 10xRules.ai?  \n3) Gdzie znajdziesz wszystkie prompty wykorzystywane w modułach 2–5 10xDevs?  \n4) Jak sprawdzić status realizacji kryteriów certyfikacyjnych projektu webowego przy użyciu serwera MCP (jaki prompt użyć)?  \n5) Jakiego modelu zaleca się użyć z narzędziem 10x-mvp-tracker / serwerem MCP (rekomendacja użyta w filmie)?  \n6) Gdzie znaleźć szczegóły konfiguracji serwera MCP dostosowanej do wybranego narzędzia AI (repozytorium z instrukcjami)?",
+  "tokenEstimate": 109
+}

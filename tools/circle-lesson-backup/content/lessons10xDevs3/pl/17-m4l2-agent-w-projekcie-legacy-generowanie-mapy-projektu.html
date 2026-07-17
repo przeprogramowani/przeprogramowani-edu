@@ -1,0 +1,557 @@
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m4-l2/assets/cover.png">https://images.przeprogramowani.pl/lessons/m4-l2/assets/cover.png</a></p></blockquote>
+<p>W poprzedniej lekcji ustawiliśmy fundament dla dużych projektów: jak świadomie zarządzać tym, co agent widzi w danym momencie. To była sytuacja, w której masz wpływ na projekt. Możesz poprawić <strong>AGENTS.md</strong>, uporządkować dokumentację, stworzyć trwały system notatek i stopniowo rozwijać procesy razem z repo.</p>
+<p>A teraz wchodzisz w projekt, którego nie znasz.</p>
+<p>Może to być legacy w pracy. Może to być stary moduł, do którego wracasz po roku. Może to być repo po innym zespole, z dokumentacją napisaną w czasach, kiedy ostatni deploy był jeszcze "tymczasowy".</p>
+<p>Pierwszy odruch jest kuszący: "hej Agent, przeczytaj całe repo i wyjaśnij mi architekturę".</p>
+<p>Brzmi rozsądnie. W końcu mamy duże okna kontekstowe, narzędzia do pakowania repo i modele, które potrafią długo rozumować.</p>
+<p>Tyle że w naprawdę dużym projekcie taki prompt często odpada już na samym oknie kontekstowym. Duże okno rzędu 200K tokenów nie oznacza 200K tokenów na sam kod: w tym samym budżecie muszą zmieścić się instrukcje systemowe, reguły projektu, definicje narzędzi, historia rozmowy i miejsce na odpowiedź modelu.</p>
+<p>Kod dodatkowo tokenizuje się nierówno. Prosty przelicznik "1 token ≈ 4 znaki" daje tylko intuicję, bo liczba tokenów zależy od modelu, domeny tekstu i języka. W praktyce 200K tokenów to rząd kilkudziesięciu tysięcy linii kodu w najlepszym scenariuszu, a po doliczeniu testów, konfiguracji, dokumentacji, plików generowanych i narzutu samych narzędzi twój budżet znika szybciej, niż sugeruje sama liczba.</p>
+<p>Bez dodatkowych technik zarządzania kontekstem zadanie "zbadaj to repo" często po prostu nie mieści się w oknie modelu.</p>
+<p>Drugi problem jest subtelniejszy. Nawet jeśli fragment projektu technicznie się zmieści, "dużo kontekstu" nie oznacza "dobre zrozumienie". Jeśli wrzucisz agentowi wszystko naraz, dostaniesz płaskie streszczenie bez priorytetów: trochę folderów, kilka trafnych nazw, parę domysłów i fałszywe poczucie, że rozumiesz system.</p>
+<p>W tej lekcji nauczysz się procesu, który rozwiązuje oba problemy. Roboczo nazywamy go <strong>Wide Scan -&gt; Deep Focus</strong>. Najpierw robisz szeroki skan repozytorium tanimi i deterministycznymi narzędziami CLI. Dzięki temu widzisz, które obszary są kluczowe, aktywne, sprzężone i wrażliwe, zanim poprosisz agenta o kosztowne czytanie kodu.</p>
+<p>Efektem będzie artefakt o nazwie <strong>Mapa projektu</strong>.</p>
+<blockquote>
+<p><strong>Mapa projektu</strong> to operacyjna mapa terytorium projektu legacy. Zbierasz tanie sygnały z CLI, prosisz agenta o syntezę i dostajesz krótki artefakt: moduły, entry pointy, kierunki zależności, cykle, wrażliwe obszary, niewiadome oraz miejsca, które trzeba zabezpieczyć przed większą zmianą.</p>
+<p>Po co nam ta mapa? Żeby nie spalać okna kontekstowego na losowe czytanie plików i nie zmieniać legacy na ślepo. Mapa mówi agentowi i człowiekowi: "tu jest rdzeń systemu, tu są ryzyka, tu zmiana może przejść przez kilka warstw, tutaj najpierw sprawdź dowody".</p>
+<p>Ważne: Prezentujemy jeden z przykładowych formatów takiej mapy. W swoich projektach te praktyki możesz dostosować do swoich potrzeb i pogłębić zakres wykonywanych zapytań.</p>
+</blockquote>
+<p>Będziemy zapisywać ją w repo jako <strong>context/map/repo-map.md</strong>. To nie ma być esej dla człowieka ani zrzut z chatu. To ma być format przyjazny agentowi: krótkie sekcje, konkretne listy, ślady dowodów z komend, jawne <strong>niewiadome</strong> i wyraźne miejsca, w których trzeba uważać przed większą zmianą.</p>
+<p>Po drodze powstaną trzy robocze artefakty w tym samym folderze:</p>
+<pre><code class="language-text">context/map/artifact-1-territory.md
+context/map/artifact-2-structure.md
+context/map/artifact-3-contributors.md
+</code></pre>
+<p>To są notatki robocze z kolejnych skanów (nazewnictwo to kwestia zupełnie subiektywna, możesz to zorganizować wg własnych preferencji). Finalna <strong>Mapa projektu</strong> powstaje dopiero po ich syntezie w <strong>context/map/repo-map.md</strong>.</p>
+<h3>Dlaczego nie zaczynamy od całego repo</h3>
+<p>Zasada z poprzedniej lekcji jest prosta: agent działa lepiej, gdy dostaje właściwy kontekst we właściwym momencie. W projekcie legacy problem jest trudniejszy, bo nie masz jeszcze uporządkowanej pamięci projektu. Musisz ją zbudować od zera, bez przepalania okna kontekstowego na losowe czytanie plików.</p>
+<p>Dwie lekcje preworku ustawiają fundament pod tę decyzję: w <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/09">[3.1]</a> mówiliśmy, że model nie ma magicznej pamięci projektu i operuje tylko na tym, co trafia do okna kontekstowego, a w <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/11">[3.3]</a> dokładaliśmy strategię <strong>Select</strong>, czyli wybieranie kontekstu potrzebnego do następnego kroku.</p>
+<p>Ta lekcja jest praktycznym zastosowaniem obu zasad w legacy: nie wrzucasz wszystkiego "na wszelki wypadek", tylko najpierw ustalasz, co naprawdę warto czytać. Podobnie jak programista, który siadając do buga albo poprawki, mniej lub bardziej świadomie selekcjonuje to, który fragment projektu "załadować do pamięci".</p>
+<p>Gdy prosisz agenta o przeczytanie całego repo, mieszasz niestety trzy różne zadania:</p>
+<ul>
+<li>przeszukiwanie struktury projektu (tool calle),</li>
+<li>wybranie obszarów ważnych dla architektury (reasoning + tool calle),</li>
+<li>głębokie zrozumienie konkretnego zachowania (reasoning).</li>
+</ul>
+<p>To zbyt wiele naraz. Agent może wtedy poprawnie nazwać kilka katalogów, ale nie wie jeszcze, które zależności są krytyczne, które entry pointy są realnie używane, gdzie są cykle i gdzie warto zużyć uwagę człowieka.</p>
+<p>Dlatego zamiast pełnego zrzutu robimy najpierw szeroki skan i wyciągamy kontekst klasycznymi narzędziami.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-1-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-1-10x.png</a></p></blockquote>
+<p>Zwróć uwagę na różnicę w obu podejściach. Narzędzia CLI nie "rozumieją architektury" za ciebie. One redukują szum.</p>
+<p>Zamiast karmić model setkami plików, dajesz mu wyniki komend: listę entry pointów, graf zależności, cykle, symbole, podejrzane importy i krótkie sygnały z historii zmian. Agent interpretuje mniejsze, lepsze dane.</p>
+<p>To jest różnica między "czytaj wszystko" a "zinterpretuj dowody".</p>
+<blockquote>
+<p>Część z narzędzi, które w tej lekcji wywołujemy wprost, agent potrafi wykonać "w locie" w trakcie procesu rozumowania. Nam chodzi jednak o to, aby każdy tool call i każdy "peek" w dany obszar repo wykonywać celowo, aby pozyskać konkretną i powtarzalną porcję informacji.</p>
+</blockquote>
+<h3>Wide Scan -&gt; Deep Focus</h3>
+<p>Nasz dwuetapowy proces pozyskiwania kontekstu z dużego repo to bezpośrednia odpowiedź na limity okna kontekstowego i tego, jak nieprzewidywalne bywa działanie LLMów bez określonych ram.</p>
+<p>W celu zrozumienia nowego projektu wykonamy więc dwa etapy analizy:</p>
+<p><strong>Wide Scan</strong> to szeroka, płytka analiza repozytorium, do której spokojnie wystarczy tańszy model. Szukasz sygnałów: historii modułów, entry pointów, kierunku zależności, cykli, granic, aktywnych przepływów zmian i miejsc, które wymagają ostrożności. To jeszcze nie jest pełne zrozumienie systemu, ale zawęża dalsze poszukiwania.</p>
+<p><strong>Deep Focus</strong> to głęboka analiza jednego obszaru, na którą warto już wypuścić mocniejszego agenta. Bierzesz jeden feature, jeden moduł albo jedno podejrzane zgrupowanie elementów i śledzisz realny przepływ danych, zachowanie, ryzyka oraz miejsca do modernizacji.</p>
+<p>W tej lekcji wykonujemy <strong>Wide Scan</strong> i kończymy Mapą projektu. W kolejnej lekcji wybierzemy jeden z wrażliwych obszarów, żeby wejść w Deep Focus.</p>
+<p>Mapa sama w sobie ma już odpowiedzieć na praktyczne pytanie: "gdzie w tym legacy muszę uważać?".</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-2-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-2-10x.png</a></p></blockquote>
+<p>Taka kolejność pracy chroni cię przed dwoma błędami.</p>
+<p>Pierwszy błąd to losowy deep-read. Agent otwiera plik, który wygląda ważnie, potem kolejne importy, potem jeszcze trzy sąsiednie moduły, a po kilkunastu tool callach okazuje się, że to stary adapter, którego nikt już nie używa.</p>
+<p>Technicznie "coś przeczytał", ale zapłaciłeś za to oknem kontekstowym, tokenami i szumem w rozmowie. To jest bezsensowne sito: dużo ruchu, mało decyzji.</p>
+<p>Drugi błąd to mapa bez decyzji. Jeśli mapa nie wskazuje istotnych obszarów projektu, potencjalnych ryzyk, wrażliwych modułów i miejsc do dalszego sprawdzenia, to jest tylko obrazkiem.</p>
+<p>Dobra mapa jest operacyjna. Ma przyspieszać wejście w kluczowe części legacy, a nie udawać, że samo narysowanie grafu oznacza zrozumienie systemu.</p>
+<p>Dobra mapa kończy się decyzją: "te obszary są naprawdę istotne; tutaj zmiana ma największą szansę przejść przez kilka warstw; tutaj najpierw sprawdzamy dowody, testy, historię PR-ów i unknowns".</p>
+<h3>Czego nie mówi drzewko katalogów</h3>
+<p>Kiedy wchodzisz w obce legacy, eksplorator plików daje szybkie poczucie kontroli.</p>
+<p>Widzisz <strong>src/</strong>, <strong>pages/</strong>, <strong>services/</strong>, <strong>domain/</strong>, <strong>components/</strong>, <strong>shared/</strong>. Możesz rozwinąć drzewko, policzyć katalogi, znaleźć największe pliki i poprosić agenta: "opisz mi architekturę na podstawie struktury katalogów".</p>
+<p>To jest dobry start, ale zły model rzeczywistości.</p>
+<p>Foldery pokazują statyczny snapshot: gdzie coś leży dzisiaj. Nie pokazują dynamiki projektu:</p>
+<ul>
+<li>które miejsca naprawdę zmieniają się co tydzień,</li>
+<li>które foldery są pozostałością po starym podziale zespołu,</li>
+<li>które moduły zawsze pękają razem przy jednej zmianie,</li>
+<li>gdzie zespół najczęściej naprawia błędy,</li>
+<li>które ścieżki są "martwe", a które są krytyczne dla biznesu,</li>
+<li>kto ma ukrytą wiedzę o danym obszarze.</li>
+</ul>
+<p>Klasyczny search ma ten sam problem. <strong>search: "payments"</strong> znajdzie pliki ze słowem <strong>payments</strong>, ale nie powie ci, czy płatności są sterowane przez webhooki, joby, panel admina, feature flagi, czy ręczne migracje danych. <strong>search: "auth"</strong> pokaże miejsca, gdzie pojawia się nazwa, ale nie odróżni rdzenia uwierzytelniania od testowego helpera, starego adaptera i komentarza w README.</p>
+<p>Eksplorator plików odpowiada na pytanie: "co tu jest?". Mapa projektu musi odpowiedzieć na trudniejsze pytanie: "co tutaj jest ważne, powiązane, aktywne i ryzykowne?".</p>
+<p>Na tym etapie nie musisz jeszcze oceniać jakości każdego modułu. Wystarczy, że przestajesz traktować układ katalogów jak prawdę i zaczynasz traktować go jak pierwszą hipotezę do sprawdzenia.</p>
+<h3>Efektywna Mapa projektu</h3>
+<p>Użyteczna mapa powinna odpowiedzieć na kilka pytań:</p>
+<ul>
+<li><strong>kluczowe moduły i ich rola</strong> - jakie większe części tworzą system i za co odpowiadają,</li>
+<li><strong>częstotliwość zmian</strong> - które obszary są często dotykane w historii gita, a które wyglądają na stabilne,</li>
+<li><strong>obszary wrażliwe</strong> - gdzie zmiana może mieć duży koszt: auth, płatności, dane, cache, integracje, migracje, runtime config,</li>
+<li><strong>coupling i blast radius</strong> (sprzężenie i zasięg, w jaki zmiana może się rozlać) - które moduły są mocno powiązane przez importy, cykle, wspólne helpery, publiczne kontrakty albo częste współzmiany,</li>
+<li><strong>kontrybutorzy</strong> - kto najczęściej pracował przy danym obszarze i gdzie może istnieć ukryta wiedza zespołowa.</li>
+</ul>
+<p>Najważniejsze jest to, że mapa ma być użyteczna decyzyjnie. Nie musi być kompletna. Ma być wystarczająco dobra, żeby powiedzieć: "rozumiem główny układ projektu, widzę miejsca wymagające ostrożności i wiem, gdzie zmiana może mnie zaskoczyć".</p>
+<h3>Język naturalny i przewidywalne CLI</h3>
+<p>W tym miejscu agent zaczyna mieć bardzo praktyczny sens. Nie dlatego, że "magicznie rozumie repo", ale dlatego, że dobrze łączy dwa światy: język naturalny i przewidywalne narzędzia CLI.</p>
+<p>Ty możesz zadać pytanie po ludzku: "pokaż mi entry pointy", "sprawdź, które moduły importują auth", "znajdź miejsca, gdzie frontend sięga bezpośrednio do bazy", "pokaż pliki najczęściej zmieniane w ostatnim roku". Agent może przełożyć takie pytanie na serię konkretnych komend: <strong>rg</strong>, <strong>find</strong>, <strong>git log</strong>, analizę importów, narzędzie do grafu zależności albo strukturalne wyszukiwanie po AST.</p>
+<p>Jak już wiesz, CLI aż do momentu zwrócenia wyników działa poza oknem kontekstowym modelu. Komenda może przejść przez tysiące plików, historię gita albo cały graf importów, a do rozmowy trafia dopiero skondensowany wynik: lista ścieżek, licznik zmian, kilka cykli, fragment JSON-a, tabela podejrzanych zależności.</p>
+<p>Potem zaczyna się część, w której agent jest najbardziej użyteczny: możesz rozmawiać z wynikami.</p>
+<p>Nie musisz od razu wiedzieć, jaka komenda będzie idealna. Możesz zapytać: "czy to wygląda na rdzeń systemu?", "które z tych wyników są szumem?", "co powinniśmy sprawdzić dalej?", "zawęź to do modułu płatności", "porównaj to z historią zmian". Agent prowadzi cię od szerokiego sygnału do kolejnego, bardziej precyzyjnego pytania.</p>
+<p>W Wide Scan nie chodzi więc o to, żeby agent sam wymyślił architekturę. Chodzi o pętlę:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-3-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-3-10x.png</a></p></blockquote>
+<p>To połączenie jest mocniejsze niż samo klikanie po eksploratorze plików i bezpieczniejsze niż wrzucanie agentowi całego repo. Najpierw każesz narzędziom zebrać dowody. Dopiero potem prosisz agenta o interpretację.</p>
+<h3>Trzy składowe Mapy projektu</h3>
+<p>Żeby zorientować się w dużym legacy, potrzebujesz trzech różnych pytań i trzech różnych źródeł sygnałów, które razem budują jedną Mapę projektu.</p>
+<p><strong>Terytorium</strong> — gdzie naprawdę odbywa się praca, które obszary są aktywne, które zamrożone, które zmieniają się razem i gdzie częsta praca może zwiększać ryzyko przypadkowej regresji.</p>
+<p><strong>Struktura</strong> — entry pointy, warstwy systemu, kierunek importów, powiązania, kontrakty i miejsca, których nie widać z samego drzewa katalogów.</p>
+<p><strong>Kontekst kontrybutorów</strong> — kto pracował przy trudnych edge case'ach, protokołach, migracjach, uprawnieniach albo awaryjnych poprawkach.</p>
+<p>Każda składowa odpowiada na inne pytanie. Dopiero razem dają Mapę projektu, na której warto podejmować decyzje. Ważne: nie czekasz z interpretacją do końca. Po każdej składowej zapisujesz, co już wynika dla pracy w legacy.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-4-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-4-10x.png</a></p></blockquote>
+<p>W poniższych przykładach pracujemy na repozytorium <strong>Mattermost</strong>, czyli platformie open-source do komunikacji zespołowej (backend Go, frontend React/TypeScript). To projekt z wieloletnią historią, dziesiątkami kontrybutorów i kilkoma wyraźnymi warstwami: <strong>server/channels</strong> jako logika domenowa, <strong>webapp/channels</strong> jako produkcyjny UI, <strong>server/public</strong> jako publiczne modele i kontrakt API. I, co najważniejsze, ze skalą rzędu miliona linii kodu, której w całości nie wciśniesz w okno kontekstowe żadnego modelu z 2026 roku. To realne legacy, które możesz sam sprawdzić.</p>
+<blockquote>
+<p>Zapoznaj się z tą lekcją na przykładzie Mattermost. Ćwiczenia praktyczne wykonaj na dowolnym projekcie, który masz pod ręką — niekoniecznie tym z lekcji.</p>
+</blockquote>
+<h3>Mapa terytorialna — gdzie projekt żyje</h3>
+<blockquote>
+<p>W tej sesji nie zaczynamy od gotowego skilla. Na wczesnym etapie wystarczą krótkie prompty pisane ad hoc. Dopiero po kilku takich sesjach eksploracyjnych na różnych projektach zaczniesz dostrzegać powtarzalne procedury, które warto wynieść do osobnego, reużywalnego skilla dla agenta.</p>
+</blockquote>
+<p>Zanim otworzysz jakikolwiek plik, warto wiedzieć, które obszary są aktywne, a które zamrożone. Mało co odpowiada na to pytanie szybciej niż historia Gita. Ale co tu do odkrycia? Przecież większość z nas korzysta z jakiegoś klienta, który potrafi rysować branche. Czujemy, że to za mało na pełne zrozumienie kodu odziedziczonego - bo aktywność to nie tylko zmiany i punktowe operacje, ale przekrojowa narracja o tym, co i za sprawą kogo się wydarzyło w projekcie.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m4-l2/assets/kraken.png">https://images.przeprogramowani.pl/lessons/m4-l2/assets/kraken.png</a></p></blockquote>
+<p>Faktycznie - klienci Gita operują na tych samych modelach, co sam git - commity, branche, cherry-picki, fixy - niby widać co się dzieje, a jednak żeby <strong>naprawdę zrozumieć co się dzieje</strong>, to często za mało. Właśnie dlatego do nawigacji po tych skomplikowanych strukturach zapraszamy agenta, który ma dla nas rozwikłaś kilka zagadek.</p>
+<p>Zobaczmy to na przykładzie:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1199008037?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1199008037?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<p>Pierwsze pytanie do agenta powinno od razu filtrować projekt pod kątem wrażliwości:</p>
+<pre><code class="language-text">Korzystając z historii gita, w zakresie ostatnich 12 miesięcy, pokaż TOP 10 najczęściej modyfikowanych:
+
+a) folderów lub modułów
+b) plików
+
+Odfiltruj szum: lockfile'y, snapshoty, generowane pliki, dotenvy, configi, etc.
+
+Możesz zejść poziom niżej jeśli pierwsza seria wyników da ogólne rezultaty jak "src/frontend" i "src/backend" - chcemy poznać realne obszary aktywności hands-on.
+</code></pre>
+<p>Agent przetłumaczy to na konkretne komendy, które zliczają zmiany w plikach w zadanym okresie. W odpowiedzi zobaczysz, które katalogi były najczęściej dotykane w ostatnich 12 miesiącach — już po odfiltrowaniu szumu w postaci lokalizacji, lockfile'ów i plików generowanych.</p>
+<p>Wynik dla Mattermost:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m4-l2/assets/git-annual.png">https://images.przeprogramowani.pl/lessons/m4-l2/assets/git-annual.png</a></p></blockquote>
+<p>Konsola admina to bezsprzecznie główny obszar, w którym ostatnio odbywa się praca. Ale jeden ranking nie mówi dwóch rzeczy: czy dany obszar jest stałym centrum, czy sezonową kampanią zmian — i czy jest gorący dlatego, że przechodzi przez niego ważna funkcja, czy raczej dlatego, że ciągle coś się tam psuje i poprawia. To nie to samo, a po samej liczbie zmian łatwo pomylić jedno z drugim. Dlatego warto zapytać dalej.</p>
+<p>Drugie pytanie może brzmieć tak:</p>
+<pre><code class="language-text">Podziel te same dane na kwartały — chcę zobaczyć, jak zmieniał się nacisk pracy w projekcie przez ostatni rok.
+</code></pre>
+<p>Wyniki to pogłębiony opis pierwszego raportu:</p>
+<pre><code class="language-text">Trend
+
+  - admin_console dominuje przez cały rok, ale jego udział maleje: Q2 peak 254, Q3 233, Q4 206.
+  - Backend storage był najmocniejszy w Q1 (server/channels/store/sqlstore, storetest), potem spada.
+  - mmctl było wyraźnie aktywne w Q1-Q2, znika z TOP 10 w Q3-Q4.
+  - Q4 przesuwa nacisk w stronę e2e: enterprise, messaging, Playwright functional/lib.
+  - Q3 mocniej dotykał postów i warstwy app: server/channels/app/post.go, post_test.go, server.go.
+</code></pre>
+<p>Trzecie pytanie:</p>
+<pre><code class="language-text">Jakie pary lub trójki katalogów najczęściej pojawiają się w tych samych commitach? Wyszukaj sprzężenia i krótko podsumuj wnioski dla top 3 z naszego rankingu.
+</code></pre>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m4-l2/assets/git-cochange.png">https://images.przeprogramowani.pl/lessons/m4-l2/assets/git-cochange.png</a></p></blockquote>
+<p>Te współzmiany patrzą na projekt z poziomu folderów. Zanim ruszysz dalej, dorzuć jeszcze jedno pytanie — o rzeczy, które łatwo przeoczyć:</p>
+<pre><code class="language-text">Jeszcze dwie rzeczy przy okazji tych współzmian:
+
+- Czy jest jakiś pojedynczy plik, który zmienia się razem z wieloma różnymi obszarami naraz? Myślę o czymś wspólnym dla całego repo — plik z tłumaczeniami, config, coś generowanego. Ciekawi mnie, czy poza podziałem na foldery jest jakiś taki "wspólny mianownik".
+- I sprawdź, czy pliki, które wyszły jako mocno sprzężone, na pewno nadal są w repo. To historia, więc coś mogło dużo się zmieniać, a potem zostać usunięte albo przeniesione — nie chcę później opierać analizy na pliku, którego już nie ma.
+</code></pre>
+<p>To jest inny sygnał niż sam ranking aktywności: pokazuje ukryte sąsiedztwa i zmiany cross-layer. Pamiętaj tylko, że współzmiany to historia — pokażą, co zmieniało się razem, ale nie powiedzą ci, czy te pliki wciąż istnieją (stąd drugie pytanie powyżej) ani czy coś, co <em>powinno</em> zmieniać się razem, przypadkiem tego nie robi. To pierwsze wyłapujesz od razu; to drugie zapisujesz jako <strong>unknown</strong> do sprawdzenia później.</p>
+<p><strong>Zapisz teraz wyniki całej sesji do artefaktu pomocniczego:</strong></p>
+<pre><code class="language-text">Zapisz podsumowanie tej sesji do `context/map/artifact-1-territory.md`
+</code></pre>
+<p>Tak wygląda początek zapisanego artefaktu:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m4-l2/assets/artifact-territory.png">https://images.przeprogramowani.pl/lessons/m4-l2/assets/artifact-territory.png</a></p></blockquote>
+<blockquote>
+<p>Jeśli potrzebujesz większej precyzji, możesz wykonać podobny raport w ramach konkretnego folderu. Poinstruuj agenta wprost, żeby rootem wyszukiwania był określony folder a nie root repozytorium.</p>
+</blockquote>
+<p>Równie istotna jak same dane jest zajętość okna kontekstowego. Tak wykonana analiza w modelu Claude Sonnet 4.6 zostawiła okno zajęte na zaledwie 45 tys. tokenów, z czego same wiadomości to 23 tys. W Codexie zatrzymaliśmy się na 50 tys. tokenów. To wciąż mnóstwo miejsca na jakościową rozmowę z agentem.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m4-l2/assets/git-context.png">https://images.przeprogramowani.pl/lessons/m4-l2/assets/git-context.png</a></p></blockquote>
+<h3>Mapa strukturalna — jak to jest zbudowane</h3>
+<p>Historia gita mówi "gdzie patrzeć". Następne pytanie brzmi: "jak to jest zbudowane?".</p>
+<p>Zamiast otwierać kolejne pliki, przy pomocy agenta możemy wygenerować użyteczny graf zależności danego obszaru kodu.</p>
+<p>Tutaj pomaga <strong>dependency-cruiser</strong> (<strong>depcruise</strong>), czyli CLI, które buduje <strong>statyczny graf importów</strong> całego obszaru kodu i emituje go w wielu formatach przyjaznych zarówno dla człowieka, jak i dla agenta: <strong>DOT</strong> (renderowany do SVG/PNG przez Graphviz), <strong>Mermaid</strong>, <strong>JSON</strong>, <strong>Markdown</strong>, <strong>HTML</strong> i <strong>CSV</strong>. Na rzecz tej lekcji wykorzystamy go w stacku <strong>JS/TS</strong>, a na końcu sekcji wymienimy alternatywy pod inne języki.</p>
+<p>Warto wiedzieć, że z jednego narzędzia wyciągniesz <strong>cztery różne sygnały</strong> do Mapy projektu — i to nie tylko dla całego repo, ale dla pojedynczego, wskazanego modułu:</p>
+<ul>
+<li><strong>Mapa terytorium modułu</strong> — zwijając graf do poziomu folderów (<strong>--collapse</strong>) zobaczysz moduły jako węzły, kierunek zależności i centralne huby, zamiast setek plików.</li>
+<li><strong>Fokus na jeden moduł</strong> — <strong>--focus</strong> albo <strong>--include-only</strong> wycina wybrany obszar i jego sąsiadów, dzięki czemu graf pozostaje czytelny i decyzyjny.</li>
+<li><strong>Metryki sprzężenia</strong> — <strong>--metrics</strong> liczy tzw. afferent coupling (<strong>Ca</strong>, ilu od modułu zależy), efferent coupling (<strong>Ce</strong>, od ilu zależy moduł) oraz <strong>instability = Ce / (Ca + Ce)</strong>. To zamienia „wydaje mi się, że to mocno sprzężone" w konkretną współrzędną.</li>
+<li><strong>Cykle i splątane granice</strong> — reguła <strong>no-circular</strong> znajduje cykle importów, które są typowym źródłem trudnego do przewidzenia blast radius i dobrym kandydatem na cel Deep Focus.</li>
+</ul>
+<p><strong>dependency-cruiser</strong> instalujesz jak każde narzędzie Node.js, przez npm, yarn albo pnpm, i uruchamiasz jako CLI tam, gdzie działa twój toolchain JS. Obsługuje JavaScript, TypeScript, LiveScript i CoffeeScript oraz moduły ES6, CommonJS i AMD, więc dobrze pasuje do frontendów, backendów Node.js i monorepo JS/TS. Jeśli potrzebujesz tylko szybkiego wykrycia cykli i prostego grafu, sięgnij po <strong>madge</strong>: działa w ekosystemie Node.js i obsługuje preprocesory CSS, a przy TypeScript wymaga dopięcia <strong>tsconfig</strong> i resolverów.</p>
+<h3>Pierwsze kroki</h3>
+<p><strong>dependency-cruiser</strong> znajdziesz na GitHubie w repozytorium <strong>sverweij/dependency-cruiser</strong> oraz w rejestrze npm jako pakiet <strong>dependency-cruiser</strong>.</p>
+<p>Instrukcje dla agenta uzyskasz wskazując na surowe pliki <strong>.md</strong> z GitHuba:</p>
+<pre><code class="language-text">Zapoznaj się&nbsp;z https://raw.githubusercontent.com/sverweij/dependency-cruiser/refs/heads/main/doc/cli.md i skonfiguruj to narzędzie w moim projekcie.
+</code></pre>
+<p>Możesz też zrobić to klasycznie, instalując bibliotekę w twoim projekcie (stack JS/TS - np. 10xCards):</p>
+<pre><code class="language-bash">npm install --save-dev dependency-cruiser
+</code></pre>
+<p>Jeśli używasz innego package managera:</p>
+<pre><code class="language-bash">yarn add -D dependency-cruiser
+pnpm add -D dependency-cruiser
+</code></pre>
+<h3>Pozyskujemy informacje o strukturze</h3>
+<p>Nasze pytania do <strong>dependency-cruiser</strong> mogą powstawać ad hoc, ale teraz naturalnie możemy też wyjść od <strong>context/map/artifact-1-territory.md</strong> (w nowej sesji). Historia zmian mówi, które obszary są aktywne. Graf zależności pomaga sprawdzić, czy aktywny plik jest realnym centrum, cienkim wejściem, kontraktem między warstwami albo częścią większego korytarza zmian.</p>
+<p>Zanim agent wygeneruje pierwszy graf, jedna uwaga praktyczna: <strong>dependency-cruiser</strong> analizuje kod import po imporcie, więc potrzebuje toolchainu projektu (np. zainstalowanego <strong>typescript</strong> lub po prostu gotowego <strong>npm install</strong>).</p>
+<p>Chociaż <strong>dependency-cruiser</strong> generuje znakomite grafy, poniższe prompty nie zaczynają od obrazka. Na tym etapie lepszy jest <strong>Markdown z tabelami</strong>. Najpierw chcemy dostać krótką odpowiedź: gdzie kod jest splątany, czy warstwy projektu nadal trzymają swoje granice i które miejsca będą bolesne przy testach. Markdown łatwo przeczytać, łatwo wkleić do <strong>context/map/artifact-2-structure.md</strong> i łatwo potem doprecyzować w rozmowie z agentem. JSON zostaw na sytuację, w której chcesz automatycznie porównywać wyniki między uruchomieniami, a SVG na finalną prezentację (jego generowanie trwa najdłużej).</p>
+<p><strong>0. Co może nam zaoferować to narzędzie?</strong></p>
+<p>Jeśli korzystasz z dowolnego narzędzia po raz pierwszy, warto zapytać&nbsp;agenta o potencjalne kierunki działania:</p>
+<pre><code class="language-text">Daj mi top 3 pomysły na eksplorację kodu legacy z biblioteką dependency-cruiser.
+
+Chcę zrozumieć istotne i najbardziej wrażliwe na zmiany obszary, a także potencjalny dług technologiczny.
+
+Jakiego rodzaju raporty mogę generować?
+</code></pre>
+<p>Po uzyskaniu wyników możesz przejść do konkretnej analizy.</p>
+<p><strong>1. Cykle w aktywnych obszarach frontendowych</strong></p>
+<pre><code class="language-text">Użyj dependency-cruiser dla `webapp` i sprawdź cykle zależności w najaktywniejszych obszarach z `context/map/artifact-1-territory.md`: `channels/src/components/admin_console`, `channels/src/packages`, `channels/src/utils`, `channels/src/actions`, `platform/client/src`, `platform/types/src`.
+
+Nie interesuje mnie pełna lista wszystkiego w repo. Chcę zobaczyć tylko te cykle, które dotykają obszarów aktywnych według mapy terytorium. Dla każdego cyklu napisz prostym językiem, dlaczego może utrudnić zmianę w repo legacy.
+
+Format odpowiedzi:
+- Nie generuj Graphviz/DOT na tym etapie.
+- Zwróć wynik w Markdown.
+- Zacznij od 3-5 najważniejszych obserwacji.
+- Potem użyj tabeli z kolumnami:
+  - Obszar
+  - Co znalazłeś
+  - Dowód z dependency-cruiser
+  - Dlaczego to ważne przy zmianie
+  - Związek z `artifact-1-territory.md`
+  - Co sprawdzić dalej
+</code></pre>
+<p><strong>2. Granice warstw: <strong>channels</strong>, <strong>platform/client</strong>, <strong>platform/types</strong></strong></p>
+<pre><code class="language-text">Sprawdź, czy frontend respektuje granice warstw: `platform/types` jako fundament, `platform/client` poniżej `channels/src`, oraz brak niedozwolonych importów między tymi obszarami.
+
+Zinterpretuj wyniki w kontekście aktywności z `context/map/artifact-1-territory.md`, szczególnie dla `admin_console`, `packages`, `client` i `types`. Chcę wiedzieć, czy często zmieniane miejsca korzystają z tych warstw w przewidywalny sposób, czy widać importy, które mogą zaskoczyć przy zmianie.
+
+Format odpowiedzi:
+- Nie generuj Graphviz/DOT na tym etapie.
+- Zwróć wynik w Markdown.
+- Zacznij od 3-5 najważniejszych obserwacji.
+- Potem użyj tabeli z kolumnami:
+  - Sprawdzana granica
+  - Wynik
+  - Dowód z dependency-cruiser
+  - Dlaczego to ważne przy zmianie
+  - Związek z `artifact-1-territory.md`
+  - Co sprawdzić dalej
+</code></pre>
+<p><strong>3. Ryzyka testów wynikające z grafu zależności</strong></p>
+<pre><code class="language-text">Użyj dependency-cruiser dla `webapp` i przeanalizuj ryzyka testowalności w najaktywniejszych obszarach z `context/map/artifact-1-territory.md`: `admin_console`, `packages`, `utils`, `actions`, `platform/client`, `platform/types`.
+
+Sprawdź, które miejsca mogą być trudne do testowania w izolacji, bo ciągną za sobą dużo importów, akcje, klienta API, globalny stan, wspólne utilsy albo typy z platformy. Zwróć konkretną listę ryzyk: gdzie prawdopodobnie trzeba będzie dużo mockować, gdzie lepszy będzie test integracyjny, a gdzie zmiana może naturalnie kończyć się testem e2e.
+
+Format odpowiedzi:
+- Zwróć Markdown, bez Graphviz/DOT.
+- Użyj sekcji:
+  - `Podsumowanie`
+  - `Lista ryzyk testowych`
+  - `Najbardziej podejrzane moduły`
+  - `Co sprawdzić dalej`
+  - `Opcjonalny kolejny krok: graf`
+</code></pre>
+<p>Graphviz zostawiamy jako krok po selekcji, nie jako pierwszy output. Po analizie Markdown prosisz agenta o wyrenderowanie tylko tego, co ma już sens decyzyjny: jednego cyklu, jednej granicy warstw albo jednego fragmentu z ryzykiem testowym. Wtedy prompt może brzmieć:</p>
+<pre><code class="language-text">Wybierz najważniejszy podgraf i wyrenderuj go do SVG przez Graphviz.
+
+Nie renderuj całego `webapp`. Ogranicz zakres do wskazanych modułów, użyj `--focus`, `--include-only`, `--collapse` albo metryk fan-in/fan-out tak, aby graf odpowiadał na jedno pytanie z analizy.
+</code></pre>
+<p><strong>Zapisz teraz wyniki całej sesji do artefaktu pomocniczego:</strong></p>
+<pre><code class="language-text">Zapisz podsumowanie tej sesji do `context/map/artifact-2-structure.md`
+</code></pre>
+<p>W naszym przebiegu artefakt struktury zaczyna się tak:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m4-l2/assets/artifact-structure.png">https://images.przeprogramowani.pl/lessons/m4-l2/assets/artifact-structure.png</a></p></blockquote>
+<h3>Jak ujarzmić zbyt gęsty graf</h3>
+<p>Surowy graf całego modułu prawie zawsze wychodzi jako hairball — setki krawędzi, nieczytelny, bezużyteczny decyzyjnie. <strong>dependency-cruiser</strong> (i sam Graphviz) dają jednak konkretne dźwignie, którymi możesz wymusić układ pod pytanie, które zadajesz. Poproś agenta o jedną z nich, zamiast godzić się na pierwszy zrzut:</p>
+
+<ul>
+<li><strong>Cel</strong>: <strong>Widok z góry na dół</strong> | <strong>Dźwignia</strong>: <strong>rankdir=TB</strong> (w DOT przez <strong>reporterOptions.dot.theme.graph.rankdir</strong> albo prostym <strong>sed 's/rankdir="LR"/rankdir="TB"/'</strong>) | <strong>Co robi</strong>: hierarchia pionowa zamiast poziomej</li>
+<li><strong>Cel</strong>: <strong>Zwinięcie detalu do struktury</strong> | <strong>Dźwignia</strong>: <strong>--collapse "^src/[^/]+"</strong> | <strong>Co robi</strong>: węzły = foldery, nie pojedyncze pliki</li>
+<li><strong>Cel</strong>: <strong>Tylko upstream (kto zależy od X)</strong> | <strong>Dźwignia</strong>: <strong>--reaches "X"</strong> | <strong>Co robi</strong>: wszystkie moduły, które prowadzą do X</li>
+<li><strong>Cel</strong>: <strong>Tylko downstream (od czego zależy X)</strong> | <strong>Dźwignia</strong>: <strong>--focus "X" --focus-depth N</strong> | <strong>Co robi</strong>: X i jego okolica do głębokości N</li>
+<li><strong>Cel</strong>: <strong>Gotowy widok architektoniczny</strong> | <strong>Dźwignia</strong>: <strong>--output-type archi</strong> (auto high-level) | <strong>Co robi</strong>: reporter zaprojektowany pod diagram architektury</li>
+<li><strong>Cel</strong>: <strong>Tylko huby (filtr po stopniu)</strong> | <strong>Dźwignia</strong>: brak natywnej flagi — złóż z <strong>--metrics</strong> + <strong>--include-only</strong> | <strong>Co robi</strong>: pokaż tylko węzły z dużą liczbą połączeń</li>
+<li><strong>Cel</strong>: <strong>Bez zewnętrznych paczek (<strong>node_modules</strong>)</strong> | <strong>Dźwignia</strong>: <strong>--exclude 'node_modules'</strong> (a nie <strong>doNotFollow</strong>) | <strong>Co robi</strong>: wycina <strong>react</strong>, <strong>redux</strong>, <strong>@floating-ui</strong> itp. z grafu</li>
+<li><strong>Cel</strong>: <strong>Silnik układu</strong> | <strong>Dźwignia</strong>: <strong>dot</strong> (hierarchiczny) zamiast <strong>fdp</strong>/<strong>sfdp</strong> (force-directed) | <strong>Co robi</strong>: hierarchiczny DAG zamiast chmury punktów</li>
+</ul>
+<blockquote>
+<p><strong>Jak ignorować <strong>node_modules</strong> i inny szum.</strong> Zewnętrzne paczki niemal nigdy nie należą do Mapy projektu — interesuje cię <em>twój</em> kod, nie graf <strong>react</strong> czy <strong>lodash</strong>. Uwaga na pułapkę: domyślny <strong>doNotFollow: 'node_modules'</strong> z konfiguracji <strong>nie usuwa</strong> paczek, tylko przestaje wchodzić w ich głąb — wciąż rysuje je jako węzły-liście, które zaśmiecają render. Żeby zniknęły całkowicie, użyj <strong>exclude</strong> (w konfiguracji albo flagą <strong>--exclude</strong>). Ten sam wzorzec stosuj do testów, stories, snapshotów i kodu generowanego: <strong>--exclude 'node_modules|\.test\.|\.stories\.|__snapshots__|\.d\.ts$'</strong>. Po ludzku wystarczy: „pomiń node_modules i pliki testowe na grafie".</p>
+</blockquote>
+<p>Nie musisz pamiętać tych wszystkich flag. Cała ta zabawa składaniem <strong>--collapse</strong>, <strong>--focus</strong>, <strong>--reaches</strong>, progów stopnia czy <strong>rankdir</strong> to robota dla agenta — to on przekłada twoje pytanie po ludzku na konkretne wywołanie <strong>depcruise</strong>. Ty pracujesz na poziomie wymagania, nie składni: „graf jest zbyt szczegółowy, pokaż tylko huby", „zwiń do folderów", „odwróć na pionowy", „pokaż tylko to, co zależy od work loopu". Agent generuje, ty patrzysz na wynik i korygujesz w tę samą, naturalną stronę — aż graf odpowie na twoje pytanie. To dokładnie pętla „wybór narzędzia → cel → komenda → wynik → rozmowa" z początku lekcji, tylko zastosowana do czytelności samego diagramu.</p>
+<h3>Alternatywy pod inne stacki</h3>
+<p><strong>dependency-cruiser</strong> celuje w JS/TS, ale sam wzorzec jest uniwersalny: <strong>statyczny graf importów → DOT/SVG/JSON → synteza agenta</strong>. Większość poniższych narzędzi emituje DOT (ten sam format Graphviz), więc możesz wygenerować mapy z różnych stacków i poprosić agenta o jedną wspólną syntezę. Pytanie zostaje to samo: „czy ten moduł jest realnym centrum zależności, czy tylko cienkim wejściem?".</p>
+
+<ul>
+<li><strong>Stack</strong>: JS/TS | <strong>Narzędzia</strong>: <strong>dependency-cruiser</strong>, <strong>madge</strong>, <strong>skott</strong> | <strong>CLI / output</strong>: DOT, SVG, JSON, Mermaid; <strong>skott</strong> lepiej radzi sobie z path aliasami</li>
+<li><strong>Stack</strong>: Python | <strong>Narzędzia</strong>: <strong>Tach</strong>, <strong>pydeps</strong> | <strong>CLI / output</strong>: Tach: <strong>tach show</strong> → DOT, <strong>--web</strong> graf, JSON; pydeps: <strong>-T png/svg</strong>, <strong>--show-dot</strong>, <strong>--show-cycles</strong></li>
+<li><strong>Stack</strong>: Java | <strong>Narzędzia</strong>: <strong>jdeps</strong>, Maven Dependency Plugin | <strong>CLI / output</strong>: jdeps (w JDK): <strong>--dot-output</strong>; Maven: <strong>dependency:tree -DoutputType=json/dot/graphml/tgf</strong></li>
+<li><strong>Stack</strong>: Go | <strong>Narzędzia</strong>: <strong>goda</strong>, <strong>go mod graph</strong> | <strong>CLI / output</strong>: goda: <strong>goda graph ./...</strong> → DOT (Graphviz), <strong>-cluster</strong> grupuje powiązane pakiety; <strong>go mod graph</strong> → tekstowy graf modułów</li>
+<li><strong>Stack</strong>: C# / .NET | <strong>Narzędzia</strong>: <strong>dotnet-deptree</strong>, <strong>NDepend</strong> | <strong>CLI / output</strong>: dotnet-deptree: <strong>-f svg/png/pdf/dot</strong>; NDepend: graf + dependency matrix (komercyjne)</li>
+<li><strong>Stack</strong>: Swift | <strong>Narzędzia</strong>: <strong>spmgraph</strong>, <strong>swift package show-dependencies</strong> | <strong>CLI / output</strong>: spmgraph: <strong>visualize</strong>/<strong>lint</strong> (wymaga Graphviz); SwiftPM: <strong>--format json/dot/text</strong></li>
+<li><strong>Stack</strong>: Kotlin / Gradle | <strong>Narzędzia</strong>: vanniktech <strong>gradle-dependency-graph-generator</strong>, <strong>modules-graph-assert</strong> | <strong>CLI / output</strong>: taski Gradle → png/svg/dot; modules-graph-assert wymusza reguły zależności w buildzie</li>
+</ul>
+<p>Każde z tych narzędzi ma granice, które warto zapisać jako <strong>unknowns</strong> w mapie: <strong>jdeps</strong> nie widzi zależności przez refleksję ani <strong>Class.forName</strong>, <strong>goda</strong> nie wykrywa automatycznie granic modułów Go, narzędzia JS/TS gubią importy za źle skonfigurowanymi aliasami, a graf statyczny nigdy nie pokaże zależności wstrzykiwanych w runtime (dynamic require, build-time injection, feature flagi, codegen). Te luki są częścią mapy, nie jej wadą.</p>
+<h3>Mapa kontrybutorów — kto wie co i o co go zapytać</h3>
+<p>To jest warstwa, którą najczęściej pomija się w analizie legacy. I jest to błąd.</p>
+<p>Kod można przeczytać. Decyzji, kontekstu i edge case'ów często już nie. Te rzeczy żyją w głowach ludzi, którzy przez ostatni rok dotykali danego obszaru. Mapa kontrybutorów odpowiada na pytanie: "kogo zapytać, zanim wprowadzę zmianę, którą ktoś już próbował zrobić rok temu?". I tu znowu wracamy do mocy <strong>gita</strong> i elastyczności agentów.</p>
+<pre><code class="language-text">Zapoznaj się&nbsp;z context/map/artifact-1-territory.md oraz context/map/artifact-2-structure.md, a następnie zidentyfikuj top 5 obszarów, które mogą wymagać potencjalnego kontaktu z kontrybutorami.
+</code></pre>
+<p>A teraz prosimy o linię ewentualnego wsparcia:</p>
+<pre><code class="language-text">Dla zidentyfikowanych obszarów pokaż kluczowych kontrybutorów z ostatnich 12 miesięcy. Odfiltruj boty i automatyzacje, a także commity agentów jak Claude, Codex czy Copilot, bez wyraźnego autorstwa człowieka.
+
+Dla każdej osoby sklasyfikuj aktywności pogrupowane tematycznie, które mogą wskazywać kto zaoferuje support w wybranym obszarze tego projektu.
+</code></pre>
+<p>Wynik:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m4-l2/assets/git-contributors-1.png">https://images.przeprogramowani.pl/lessons/m4-l2/assets/git-contributors-1.png</a></p></blockquote>
+<p>To jest wiedza o kontekście, której nie daje samo zliczenie commitów. Nie mamy tutaj suchej listy pt. "kto najczęściej dotykał kodu", tylko sensowne i rzeczowe informacje z odpowiedziami na pytanie "kto pracował nad jakim typem problemu w tym sektorze" — i do kogo warto zajrzeć przed wprowadzaniem zmian.</p>
+<p><strong>Zapisz teraz wyniki całej sesji do artefaktu pomocniczego:</strong></p>
+<pre><code class="language-text">Zapisz wyniki do context/map/artifact-3-contributors.md
+</code></pre>
+<p>A co z <strong>git blame</strong>? <strong>git blame</strong> odpowiada na pytanie "kto zmienił tę linię?". Mapa kontrybutorów odpowiada na inne: kto ma kontekst do tego obszaru zmian i w jakim typie problemów się specjalizuje. Tutaj filtrujesz i precyzujesz dowolnie, znacznie szerzej, niż pozwala pojedyncze narzędzie w stylu <strong>git blame</strong> czy GitLens.</p>
+<h3>Mapa projektu — finalna synteza</h3>
+<p>Po trzech składowych masz dużo sygnałów, ale jeszcze nie masz mapy. Pełny graf zależności zwykle jest zbyt gęsty, żeby pomagał w decyzji. Jeśli wkleisz do raportu automatycznie wygenerowany obraz z setkami krawędzi, dostaniesz dekorację, nie narzędzie pracy.</p>
+<p>Mapa projektu ma być <strong>syntezą dowodów</strong>. Bierzesz wyniki z historii gita, grafu zależności i kontekstu kontrybutorów, a potem zostawiasz tylko to, co pokazuje kluczowe i wrażliwe obszary projektu.</p>
+<pre><code class="language-text">Jesteś inżynierem wprowadzającym nowego developera do dużego repo legacy.
+
+Twoim zadaniem jest utworzyć dokument onboardingowy `context/map/repo-map.md` z trzech już istniejących artefaktów — nie generuj danych od zera, nie powtarzaj ich tabel w całości.
+
+Kontekst do mapy:
+- `context/map/artifact-1-territory.md`
+- `context/map/artifact-2-structure.md`
+- `context/map/artifact-3-contributors.md`
+
+Zasady:
+1. Łącz trzy perspektywy w jeden spójny obraz: gdzie żyje system → jak jest powiązany → kogo zapytać.
+2. Pokaż realne granice i te miejsca, gdzie struktura katalogów nie odpowiada realnej aktywności.
+3. Dokument ma prowadzić od szerokiego obrazu do 5–8 „pierwszych plików do przeczytania”.
+4. Zaznacz wprost ograniczenia: to mapa aktywności i struktury w oknie 1 roku.
+5. Przy sprzężeniach dopisz, skąd je wiesz: z grafu importów, z historii gita, czy to obszar, którego narzędzie w ogóle nie objęło (np. inny język albo część stacku bez grafu). Jeśli jakaś warstwa nie ma grafu zależności, powiedz to wprost — to jest `unknown`, a nie „brak powiązań”.
+6. Jeśli coś zmienia się razem, bo jest generowane albo mockowane, a nie dlatego, że ktoś edytuje to ręcznie — oznacz to. Zmiana „przez regenerację” to inny, tańszy rodzaj sprzężenia niż ręczna edycja i inaczej waży przy ocenie kosztu zmiany.
+
+Struktura `repo-map.md`:
+1. TL;DR (5–7 zdań) — czym jest repo, główne warstwy (Mermaid), gdzie skupia się praca, gdzie boli.
+2. Teren — duża odpowiedzialność vs peryferia; moduły głębokie i płytkie; aktywność w czasie.
+3. Realne powiązania — co naprawdę zmienia się razem (couplingi + warstwy + cykle);
+4. Strefy ryzyka — 4–6 obszarów wysokiego ryzyka z jedną linijką „dlaczego”
+5. Kogo zapytać — per strefa: 1–2 kandydatów dopasowanych tematycznie.
+6. Pierwszy dzień — uporządkowana lista 5–8 plików/modułów wejściowych do przeczytania.
+7. Ograniczenia — okno czasowe, metoda, czego mapa NIE mówi.
+
+## Format
+Markdown z Mermaid, zwięźle, tabele tylko gdy realnie pomagają.
+
+Cel: nowy developer po 15 min czytania wie, gdzie rzeczy żyją, co jest niebezpieczne i od czego zacząć.
+
+Zapisz do `context/map/repo-map.md`.
+</code></pre>
+<p>Finalna mapa dla Mattermost zaczyna się od TL;DR, który w kilku zdaniach spina wszystkie trzy artefakty:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m4-l2/assets/artifact-repo-map.png">https://images.przeprogramowani.pl/lessons/m4-l2/assets/artifact-repo-map.png</a></p></blockquote>
+<p>Użyteczny dokument powinien realnie ułatwiać onboarding. Jeśli w tym workflow widzisz coś, co zrobiłbyś inaczej, śmiało dostosuj poszczególne elementy do swoich potrzeb i przyzwyczajeń.</p>
+<h2>🧑🏻‍💻 Zadania praktyczne</h2>
+<p>Na start pobierz paczkę promptów dla tej lekcji:</p>
+<pre><code class="language-bash">npx @przeprogramowani/10x-cli@latest get m4l2
+</code></pre>
+<p>Sklonuj na dysk repozytorium, którego nie znasz dobrze. Najlepiej sprawdzają się duże projekty open source — <strong>Mattermost</strong>, <strong>tldraw</strong>, <strong>React</strong> albo dowolny inny projekt w stacku, który rozumiesz wystarczająco, żeby zweryfikować mapę. Celem jest sprawdzenie, jak agent radzi sobie z generowaniem mapy na kodzie, którego nikt ci nie tłumaczył.</p>
+<p>Twoim zadaniem jest zbudować <strong>Mapę projektu ①</strong> — korzystając z trzech składowych, które widziałeś w lekcji na przykładzie Mattermost.</p>
+<p>Pracujemy w jednym folderze: <strong>context/map/</strong>. Najpierw zapisujesz tam trzy artefakty robocze, a dopiero na końcu robisz syntezę do finalnej mapy:</p>
+<pre><code class="language-text">context/map/artifact-1-territory.md
+context/map/artifact-2-structure.md
+context/map/artifact-3-contributors.md
+context/map/repo-map.md
+</code></pre>
+<p>Jeśli katalog <strong>context/map/</strong> nie istnieje, utwórz go na początku ćwiczenia za pomocą <strong>/10x-init</strong>. <strong>artifact-*.md</strong> to raporty robocze. <strong>repo-map.md</strong> to finalna <strong>Mapa projektu</strong>: krótka, decyzyjna, oparta na dowodach i gotowa do użycia przez agenta w kolejnej sesji.</p>
+<p>Finalny plik ma być czytelny dla człowieka i zoptymalizowany pod pracę w legacy: krótkie sekcje, listy z dowodami, jawne <strong>unknowns</strong> i wyraźne miejsca, w których trzeba uważać przed większą zmianą.</p>
+<h3>Krok 0: Przygotuj folder mapy</h3>
+<p>Poproś agenta:</p>
+<pre><code class="language-text">Utwórz katalog `context/map/`, jeśli jeszcze nie istnieje.
+
+W tym folderze będziemy pracować na czterech plikach:
+- `artifact-1-territory.md` - historia zmian i aktywne obszary,
+- `artifact-2-structure.md` - zależności, entry pointy, cykle i lokalne centra,
+- `artifact-3-contributors.md` - kontekst kontrybutorów dla wybranego obszaru,
+- `repo-map.md` - finalna synteza Mapy projektu.
+
+Nie twórz jeszcze finalnej mapy. Najpierw zbierz raporty robocze.
+</code></pre>
+<h3>Krok 1: Terytorium — gdzie projekt żyje</h3>
+<p>Zacznij od historii gita. Nie czytasz jeszcze kodu; chcesz zobaczyć, gdzie projekt był realnie dotykany i które obszary mogą być wrażliwe przed większą zmianą.</p>
+<p>Kluczowe pytania w tym kroku:</p>
+<ul>
+<li>które katalogi albo pliki były stale aktywne w ostatnich miesiącach,</li>
+<li>które katalogi lub pliki często zmieniają się razem w tych samych commitach,</li>
+<li>gdzie aktywność przecina się z runtime, auth, danymi, publicznym API, integracjami albo buildem,</li>
+<li>co trzeba odfiltrować jako szum: lockfile'y, snapshoty, pliki generowane, masowe formatowanie, lokalizacje.</li>
+</ul>
+<p>Zapisz wynik jako <strong>context/map/artifact-1-territory.md</strong>.</p>
+<h3>Krok 2: Struktura — zależności i powiązania</h3>
+<p>Jedno pytanie prowadzi ten krok: co realnie zależy od czego? Graf ma pokazać blast radius, lokalne centra i cienkie wejścia, nie tylko listę importów.</p>
+<p>Kluczowe pytania w tym kroku:</p>
+<ul>
+<li>gdzie widać kontrakty używane między warstwami,</li>
+<li>które pliki są cienkimi wejściami, a które wyglądają jak głębsze centra,</li>
+<li>czy graf pokazuje cykle albo podejrzane zależności,</li>
+<li>kto zależy od danego modułu i co może pęknąć przy zmianie.</li>
+</ul>
+<p>Zanim instalujesz nowe narzędzie, poproś agenta, żeby sprawdził package manager, istniejące skrypty, konfigurację workspace, aliasy ścieżek i to, czy projekt ma już narzędzie do grafu zależności. Możesz wybrać narzędzie preferowane w twoim ekosystemie.</p>
+<p>Zapisz wynik jako <strong>context/map/artifact-2-structure.md</strong>.</p>
+<h3>Krok 3: Kontekst kontrybutorów — kto wie co</h3>
+<p>Wybierz jeden obszar, który w poprzednich krokach wyglądał na centralny lub podejrzany.</p>
+<p>Kluczowe pytania w tym kroku:</p>
+<ul>
+<li>kto najczęściej pracował przy wybranym obszarze w ostatnich 12 miesiącach,</li>
+<li>jakie tematy powtarzają się u konkretnych kontrybutorów,</li>
+<li>które PR-y, decyzje albo edge case'y warto przeczytać przed zmianą,</li>
+<li>czy wiedza o tym obszarze wygląda na rozproszoną, czy skupioną wokół kilku osób.</li>
+</ul>
+<p>Zapisz wynik jako <strong>context/map/artifact-3-contributors.md</strong>.</p>
+<h3>Krok 4: Poproś agenta o syntezę i diagram</h3>
+<p>Zbierz wnioski z kroków 1–3 i zredaguj je jako jeden artefakt: <strong>context/map/repo-map.md</strong>. Mapa ma być krótka, decyzyjna i oparta na dowodach, a nie pełnym opisem repo.</p>
+<h2>Odbierz swoją odznakę</h2>
+<p>Po ukończeniu tej lekcji odbierz odznakę w sekcji <a href="https://platforma.przeprogramowani.pl/10xdevs-3/mission-log">10xDevs Mission Log</a> a następnie pochwal się swoim osiągnięciem!</p>
+<h2>🔎 Deep Dive</h2>
+<p>Ta sekcja zawiera dodatkowe pogłębienie wiedzy na temat wybranych zagadnień związanych z lekcją. W tym Deep Dive znajdziesz:</p>
+<ul>
+<li><strong>Cztery rodziny wyszukiwania repo</strong> — jak wybrać właściwy typ narzędzia zamiast szukać jednego "najlepszego".</li>
+<li><strong>Granice każdej składowej</strong> — co deterministyczne CLI potrafi pokazać, a czego nie wolno z niego wywnioskować.</li>
+<li><strong>Dwa znaczenia semantic search</strong> — jak nie pomylić AST-aware wyszukiwania z embeddingowym RAG.</li>
+<li><strong>Jak klasyfikować moduły na mapie</strong> — co realnie liczy się przy statycznej analizie legacy: rola, coupling, metryki z grafu i pytania do agenta.</li>
+</ul>
+<p>Ta sekcja nie jest obowiązkowa, ale warto się z nią zapoznać jeżeli chcesz zostać ekspertem.</p>
+<h3>Cztery rodziny wyszukiwania repo</h3>
+<p>Kiedy pracujesz z dużym repo, pytanie "jak szukać?" jest ważniejsze niż "jakiego narzędzia użyć?".</p>
+<p>Masz cztery rodziny. Każda odpowiada na inny typ pytania.</p>
+<p><strong>Lexical / pattern search</strong> (<strong>rg</strong>, <strong>grep</strong>) to tekstowe szukanie wzorców. Szybkie i tanie, ale wymaga znajomości słownictwa projektu. <strong>rg "handler|controller|route"</strong> zwróci dużo, ale nie odróżni rejestracji routera od komentarza ani importu z testów.</p>
+<p><strong>Structural / symbol search</strong> szuka po strukturze kodu albo symbolach — Probe, <strong>universal-ctags</strong>, SCIP, LSP i podobne indeksy kodu. To właściwy krok, gdy pytasz: "gdzie definiujemy ten symbol?", "które funkcje mają taką sygnaturę?", "gdzie jest kontrakt tej warstwy?". W tej lekcji traktujemy tę rodzinę jako pomocniczą orientację; główny sygnał struktury pochodzi z grafu zależności.</p>
+<p><strong>Semantic / RAG search</strong> korzysta z embeddingów nad chunkami kodu. Może pomóc, gdy nie znasz dokładnej nazwy, ale ma własne koszty: indeks może być nieświeży, chunk może odciąć istotny kontekst, a wynik zawsze wymaga weryfikacji w kodzie.</p>
+<p><strong>Agentic search</strong> to iteracyjne zawężanie przez agenta: stawia hipotezę, odpala narzędzie, czyta wynik, zmienia kierunek. To jest właściwe w Deep Focus. W Wide Scan musi być kontrolowane, bo inaczej agent zbacza w losowy obszar i zużywa budżet kontekstowy na czytanie starego adaptera.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-5-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-5-10x.png</a></p></blockquote>
+<p>Nie traktuj tych rodzin jak rankingu. Jeśli pytasz "gdzie są endpointy?", zacznij od lexical albo structural. Jeśli pytasz "kto importuje moduł płatności?", weź graf zależności. Jeśli pytasz "gdzie jest definicja tego typu?", użyj symbol search. Jeśli pytasz "który feature przepływa przez te warstwy?" — to już temat kolejnej lekcji, Analiza feature z AI (M4L3).</p>
+<h3>Granice każdej składowej</h3>
+<p>Żadna z trzech składowych Mapy projektu nie jest wyrocznią.</p>
+<p><strong>Terytorium z historii gita</strong> pokazuje, gdzie projekt był dotykany — nie dlaczego, nie czy słusznie. Obszar z dużą liczbą zmian może być centrum produktu albo miejscem, w którym przez rok naprawiano jeden trudny bug. Kwartalne rozbicie pomaga odróżnić stałe centrum od kampanii zmian, ale wniosek nadal jest hipotezą. Jest tu też pułapka świeżości: historia to dowód <em>w oknie czasowym</em>, nie zdjęcie stanu na dziś. Plik, który przez rok mocno się zmieniał, mógł już zostać usunięty albo przepisany — zanim oprzesz na nim wniosek, sprawdź, czy nadal istnieje w repo. I ostatnie ograniczenie współzmian: pokazują, co zmienia się <em>razem</em>, ale nigdy nie pokażą kontraktu, który <em>powinien</em> być zsynchronizowany, a w historii nie jest (klasyk: model na backendzie i jego ręcznie utrzymywany odpowiednik na froncie). Takie rzeczy zostają jako <strong>unknown</strong> do sprawdzenia w Deep Focus.</p>
+<p><strong>Struktura z grafu zależności</strong> pokazuje importy w danym momencie. Nie pokazuje intencji: <strong>shared/utils</strong> używany przez osiem modułów może być przemyślanym cross-cutting concern albo workiem na wszystko, czego nikt nie umiał nazwać. Cykl między modułami może być realnym problemem architektonicznym albo artefaktem konfiguracji buildowej. Ty to rozstrzygasz.</p>
+<p><strong>Kontekst kontrybutorów z historii commitów</strong> pokazuje, kto dotykał obszaru — nie kto jest formalnym właścicielem, nie kto nadal jest w firmie, nie czy decyzje z tamtych PR-ów są nadal słuszne. To punkt wejścia do rozmowy i przeczytania PR-ów, nie lista autorytetów.</p>
+<p>Najlepszy workflow:</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-6-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m4-l2-lesson-draft-6-10x.png</a></p></blockquote>
+<h3>Dwa znaczenia "semantic search"</h3>
+<p>Łatwo o jedną pomyłkę przy wyborze narzędzia.</p>
+<p>Część narzędzi mówi o "semantic code search", ale nie zawsze oznacza to embeddingi i wyszukiwanie wektorowe.</p>
+<p>Probe jest dobrym przykładem: reklamuje się jako "semantic code search engine", ale jego "semantic" oznacza zwracanie <strong>kompletnych funkcji i klas</strong> zamiast pojedynczych linii tekstu — opartych o parsowanie AST przez tree-sitter, nie o embeddingi. To jest wyszukiwanie strukturalne, nie RAG.</p>
+<p>To rozróżnienie ma znaczenie praktyczne:</p>
+
+<ul>
+<li><strong>Rodzina</strong>: Structural (Probe, ctags, LSP) | <strong>Mechanizm</strong>: Dopasowanie do symbolu, funkcji albo struktury kodu | <strong>Ryzyko</strong>: Wymaga dobrego wzorca albo indeksu; wynik nadal wymaga weryfikacji</li>
+<li><strong>Rodzina</strong>: Semantic / RAG (embeddingi) | <strong>Mechanizm</strong>: Podobieństwo wektorowe chunków | <strong>Ryzyko</strong>: Nieświeży indeks, złe chunkowanie, wynik probabilistyczny</li>
+</ul>
+<p>Jeśli podasz agentowi wynik z narzędzia structural search i powiesz "to jest semantic search", agent może zacząć traktować go jak przybliżone podobieństwo zamiast jak precyzyjne dopasowanie struktury. Mapa dostanie zły rodzaj pewności.</p>
+<h3>Jak klasyfikować moduły na mapie</h3>
+<p>Sama lista modułów nie wystarczy. Dobra Mapa projektu potrzebuje etykiet, które pomagają podjąć decyzję: gdzie czytać dalej, czego nie dotykać przypadkiem, które obszary są tylko tłem i które miejsca mają wysoką wrażliwość na zmianę.</p>
+<p>W części głównej lekcji używasz grafu zależności, historii zmian i mapy kontrybutorów, żeby zebrać sygnały. Tutaj chodzi o następny krok: odróżnić sygnał ważny od szumu i zapisać go tak, żeby agent mógł użyć mapy w kolejnej sesji.</p>
+<p>Nie chodzi o akademicką klasyfikację architektury. Chodzi o proste robocze oznaczenia, które wynikają z dowodów:</p>
+<ul>
+<li><strong>core / supporting / peripheral</strong> - czy moduł jest blisko głównej wartości produktu, wspiera ją, czy jest dodatkiem,</li>
+<li><strong>deep / shallow</strong> - czy moduł zawiera realną logikę i wiele wewnętrznych rozgałęzień, czy jest cienką warstwą wejścia albo adapterem,</li>
+<li><strong>stable / volatile / seasonal</strong> - czy obszar zmienia się regularnie, prawie wcale, czy tylko w kampaniach,</li>
+<li><strong>load-bearing / contained</strong> - czy wiele części systemu zależy od tego modułu albo jego kontraktów,</li>
+<li><strong>high / medium / low sensitivity</strong> - jak ostrożnie trzeba podchodzić do zmian w tym obszarze.</li>
+</ul>
+<p>Najważniejsza zasada: <strong>etykieta bez dowodu jest domysłem</strong>. Jeśli agent pisze, że <strong>billing</strong> jest core, powinien pokazać, skąd to wie: entry pointy, importy, historię zmian, ścieżki zależności, publiczne typy, workspace package, konfigurację runtime albo powtarzające się co-change.</p>
+<p>W praktyce najbardziej istotne są cztery pytania.</p>
+<p>Pierwsze: <strong>czy to jest core?</strong> Core to nie "największy folder" ani "najładniejsza nazwa". Core to obszar, przez który przechodzi główna wartość produktu albo krytyczny przepływ operacyjny: uwierzytelnianie, płatności, dane, komunikacja, zamówienia, posty, uprawnienia, synchronizacja, rozliczenia. Dowodem może być entry point, publiczny kontrakt, endpoint, komenda, job, model domenowy, częste użycie przez inne moduły albo powiązanie z głównym user flow.</p>
+<p>Drugie: <strong>jaki ma coupling?</strong> Coupling, czyli sprzężenie, oznacza stopień powiązania modułu z resztą systemu. W Mapie projektu nie chodzi o abstrakcyjny osąd "dobry/zły coupling", tylko o pytanie: co może się poruszyć, gdy dotknę tego miejsca?</p>
+<p>Masz kilka typów sprzężenia, które warto odróżniać:</p>
+<ul>
+<li><strong>incoming coupling</strong> - ile miejsc zależy od tego modułu; jeśli dużo, zmiana kontraktu może mieć szeroki blast radius,</li>
+<li><strong>outgoing coupling</strong> - od ilu miejsc zależy ten moduł; jeśli dużo, jego zachowanie może być kruche wobec zmian w sąsiadach,</li>
+<li><strong>contract coupling</strong> - czy moduł wystawia typy, API, eventy, schemat danych albo wspólny pakiet używany przez inne warstwy,</li>
+<li><strong>runtime coupling</strong> - zależności niewidoczne w zwykłym imporcie: feature flagi, DI, konfiguracja, kolejki, webhooks, refleksja, dynamic import, codegen,</li>
+<li><strong>co-change coupling</strong> - częste współzmiany w commitach; w tej lekcji traktujemy to jako sygnał do mapy, a pełną analizę zostawiamy na kolejną lekcję.</li>
+</ul>
+<p>Trzecie: <strong>co mówią metryki z narzędzia?</strong> Narzędzia typu <strong>dependency-cruiser</strong> nie mówią, czy moduł jest "ważny biznesowo". One mierzą graf importów. To nadal bardzo użyteczne, ale trzeba czytać metryki jako sygnały:</p>
+
+<ul>
+<li><strong>Sygnał</strong>: <strong>Ca</strong> / afferent coupling | <strong>Co oznacza praktycznie</strong>: ile modułów zależy od badanego modułu | <strong>Jak używać w Mapie projektu</strong>: wysokie <strong>Ca</strong> sugeruje kontrakt albo element nośny systemu</li>
+<li><strong>Sygnał</strong>: <strong>Ce</strong> / efferent coupling | <strong>Co oznacza praktycznie</strong>: od ilu modułów zależy badany moduł | <strong>Jak używać w Mapie projektu</strong>: wysokie <strong>Ce</strong> sugeruje moduł, który składa wiele cudzych zależności</li>
+<li><strong>Sygnał</strong>: <strong>instability</strong> | <strong>Co oznacza praktycznie</strong>: relacja zależności wychodzących do sumy zależności | <strong>Jak używać w Mapie projektu</strong>: niska wartość przy wysokim <strong>Ca</strong> może wskazywać stabilny rdzeń; wysoka wartość może wskazywać cienki adapter albo orkiestrację</li>
+<li><strong>Sygnał</strong>: cycles | <strong>Co oznacza praktycznie</strong>: cykle importów między plikami lub modułami | <strong>Jak używać w Mapie projektu</strong>: kandydat na obszar ostrożności, bo granice są splątane</li>
+<li><strong>Sygnał</strong>: orphan / leaf modules | <strong>Co oznacza praktycznie</strong>: elementy bez widocznych zależności albo bez zależnych | <strong>Jak używać w Mapie projektu</strong>: możliwe peryferia, martwy kod albo osobny entry point; wymaga weryfikacji</li>
+</ul>
+<p>Nie zapisuj w mapie samej tabeli metryk. Zapisz decyzję, którą metryka wspiera:</p>
+<pre><code class="language-text">Module: server/public
+role: supporting / contract layer
+evidence:
+- wysokie incoming coupling w grafie importów
+- częste współzmiany z backendem i frontendem
+inference:
+- zmiana publicznych typów może przejść przez kilka warstw
+caution:
+- przed większą zmianą sprawdzić użycia w webapp i server/channels
+unknowns:
+- graf statyczny nie pokazuje zależności runtime ani zgodności API po stronie klientów
+</code></pre>
+<p>Czwarte: <strong>co liczy się przy statycznej analizie legacy?</strong> Statyczna analiza pokazuje kształt kodu bez uruchamiania systemu. W legacy liczą się przede wszystkim:</p>
+<ul>
+<li>entry pointy: endpointy, strony, komendy CLI, joby, event handlery, webhooks,</li>
+<li>kierunek zależności: kto importuje kogo i czy warstwy nie są odwrócone,</li>
+<li>kontrakty: publiczne typy, DTO, schema, shared packages, API clients,</li>
+<li>centra grafu: węzły z dużą liczbą krawędzi wchodzących lub wychodzących,</li>
+<li>cykle: miejsca, gdzie granice modułów są splątane,</li>
+<li>adaptery i cienkie wejścia: pliki, które wyglądają ważnie, ale tylko delegują dalej,</li>
+<li>luki statycznej analizy: dynamiczne importy, DI, refleksja, konfiguracja runtime, generowany kod, feature flagi.</li>
+</ul>
+<p>Agent powinien dostać nie tylko wyniki, ale też pytania, które wymuszają rozróżnienie dowodu od interpretacji.</p>
+<p>Przy statycznej analizie legacy pytaj agenta przede wszystkim o decyzje, nie o opis katalogów:</p>
+<pre><code class="language-text">Na podstawie grafu zależności wypisz tylko moduły, które realnie wpływają na ryzyko zmiany. Dla każdego pokaż: evidence, inference, caution, unknowns.
+</code></pre>
+<pre><code class="language-text">Które moduły są prawdopodobnie core, ale dowód jest słaby? Wypisz, jaką komendą albo jakim dodatkowym źródłem można to zweryfikować.
+</code></pre>
+<pre><code class="language-text">Które entry pointy są cienkimi wejściami, a gdzie zaczyna się realna logika? Nie wybieraj pierwszego pliku tylko dlatego, że ma dobrą nazwę.
+</code></pre>
+<pre><code class="language-text">Gdzie graf statyczny może kłamać przez runtime coupling:
+DI, dynamic import, feature flagi, konfigurację, webhooks albo codegen? Zapisz te miejsca jako unknowns w Mapie projektu.
+</code></pre>
+<p>Dobry prompt do klasyfikacji po zebraniu sygnałów:</p>
+<pre><code class="language-text">Na podstawie wyników Wide Scan sklasyfikuj tylko obszary istotne z perspektywy ryzyka zmiany.
+
+Dla każdego obszaru określ:
+- role: core / supporting / peripheral,
+- depth: deep / shallow,
+- change profile: stable / volatile / seasonal,
+- blast radius: load-bearing / contained,
+- sensitivity: high / medium / low,
+- contract layer / implementation layer, jeśli taki podział widać.
+
+Sensitivity oceniaj na podstawie dowodów:
+- dużo zależnych modułów,
+- publiczny kontrakt,
+- częste zmiany,
+- co-change z innymi warstwami,
+- cykle,
+- runtime config,
+- integracje,
+- auth / dane / cache / migracje / build.
+
+Jeśli obszar jest ciekawy, ale nie wygląda na wrażliwy, zapisz go krótko albo pomiń. Jeśli etykieta jest tylko hipotezą, oznacz ją jako `unknown` albo `needs verification`. Nie diagnozuj jeszcze hotspotów i nie proponuj refaktoryzacji.
+</code></pre>
+<p>Możesz też rozbić to na węższe pytania, kiedy wynik agenta robi się zbyt ogólny:</p>
+<pre><code class="language-text">Które moduły wyglądają na core, supporting i peripheral? Uzasadnij to entry pointami, importami i nazwami przepływów produktowych. Nie używaj samej nazwy folderu jako dowodu.
+</code></pre>
+<pre><code class="language-text">Które moduły są deep, a które shallow? Oznacz `deep` tylko tam, gdzie widać wiele wewnętrznych zależności, reguły domenowe, delegacje albo rozgałęzienia. Oznacz `shallow`, jeśli plik lub katalog jest głównie routerem, adapterem, wrapperem albo cienkim wejściem do innej warstwy.
+</code></pre>
+<pre><code class="language-text">Porównaj aktywność katalogów z ostatnich 12 miesięcy z podziałem na kwartały. Oznacz moduły jako stable, volatile albo seasonal. Odfiltruj lockfile'y, lokalizacje, snapshoty i pliki generowane.
+</code></pre>
+<pre><code class="language-text">Znajdź moduły load-bearing: importowane przez wiele obszarów, zawierające publiczne kontrakty albo dotykające auth, danych, cache, integracji, konfiguracji runtime lub migracji. Nie oceniaj jeszcze, czy to dobrze czy źle.
+Dla każdego zapisz:
+- evidence,
+- inference,
+- caution przed zmianą,
+- unknowns.
+</code></pre>
+<p>W Mattermost takie oznaczenia zaczynają się wyłaniać już z pierwszych sygnałów. <strong>server/channels</strong> i <strong>webapp/channels</strong> wyglądają na core, bo są aktywnymi centrami pracy. <strong>server/public</strong> wygląda jak contract layer, bo często zmienia się razem z backendem i frontendem. <strong>post_view.tsx</strong> wygląda na shallow entry point, a <strong>post_list_virtualized</strong> i <strong>post_list_row</strong> są głębszym centrum lokalnego grafu.</p>
+<p>To nadal nie jest analiza jakości. To legenda do mapy.</p>
+<h2>📚 Materiały dodatkowe</h2>
+<ul>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/09">[3.1]</a> <em>LLMy i ich wpływ na codzienną pracę programisty</em> — przypomnienie, dlaczego okno kontekstowe jest zasobem, a pełny zrzut repo nie gwarantuje zrozumienia.</li>
+<li>Prework <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/11">[3.3]</a> <em>Cykl życia wątku i zarządzanie kontekstem</em> — źródło strategii <strong>Write</strong>, <strong>Select</strong>, <strong>Compress</strong>, <strong>Isolate</strong>, z których ta lekcja rozwija praktyczne <strong>Select</strong>.</li>
+<li><a href="https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them">What are tokens and how to count them?</a> — OpenAI Help Center o tokenach, łącznym limicie wejścia i wyjścia oraz przybliżeniu 1 token ≈ 4 znaki dla angielskiego tekstu.</li>
+<li><a href="https://support.claude.com/en/articles/8606394-how-large-is-claude-pro-s-context-window">How large is the context window on paid Claude plans?</a> — aktualny opis okien kontekstowych Claude i praktycznych kosztów narzędzi, konektorów oraz instrukcji.</li>
+<li><a href="https://arxiv.org/abs/2601.11518">How Long Is a Piece of String? A Brief Empirical Analysis of Tokenizers</a> — arXiv, Roberts/Han/Albanie; pokazuje, dlaczego token count nie jest stabilną miarą między modelami i domenami tekstu.</li>
+<li><a href="https://github.com/sverweij/dependency-cruiser">dependency-cruiser</a> — JS/TS dependency graph, reguły architektoniczne, wykrywanie cykli i outputy przyjazne dla agenta, w tym JSON i Mermaid.</li>
+<li><a href="https://github.com/pahen/madge">madge</a> — szybkie narzędzie do grafu zależności, cykli, orphan modules i leaf modules w projektach JS.</li>
+<li><a href="https://github.com/antoine-coulon/skott">skott</a> — nowoczesny analizator zależności JS/TS, przydatny zwłaszcza tam, gdzie TypeScript path aliases utrudniają prostsze mapowanie.</li>
+<li><a href="https://github.com/probelabs/probe">Probe</a> — AI-friendly code search, które zwraca kompletne funkcje i klasy; pamiętaj, że jego "semantic" nie oznacza embeddingowego RAG.</li>
+<li><a href="https://github.com/sourcegraph/scip">SCIP Code Intelligence Protocol</a> — format indeksowania kodu dla go-to-definition i find-references; praktyczny przykład "code as data".</li>
+<li><a href="https://docs.oracle.com/en/java/javase/13/docs/specs/man/jdeps.html">jdeps</a> — narzędzie z JDK do analizy zależności klas i pakietów w projektach Java.</li>
+<li><a href="https://github.com/loov/goda">goda</a> — toolkit do analizy zależności w Go, przydatny do grafów pakietów i wariantu cross-stack.</li>
+</ul>

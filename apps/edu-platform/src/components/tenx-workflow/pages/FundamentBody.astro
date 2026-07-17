@@ -1,0 +1,491 @@
+---
+/**
+ * Tresc strony Modul 1: Fundament. Zrodlo: kampania 10xdevs-fundament.html;
+ * hud-top, xnav, footer i wspolny CSS renderuje TenxCosmicLayout.
+ * Teksty (pl+en, w tym kroki DeepDive) w i18n/fundament.ts; markup, SVG
+ * i geometria wspolne - zmiana tresci = zmiana obu jezykow w slowniku.
+ */
+import { UNIVERSES, universeName } from '../universes';
+import { lessonUrl } from '../config';
+import { pageHref } from '../pages';
+import type { Lang } from '../i18n';
+import { FUNDAMENT } from '../i18n/fundament';
+import DeepDive from '../DeepDive.astro';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+}
+
+const { base, lang = 'pl' } = Astro.props;
+const t = FUNDAMENT[lang];
+---
+
+<style is:global>
+/* Reguly specyficzne dla strony (diff vs CSS wspolny w TenxCosmicLayout) */
+@media print{
+  #l-01{break-before:auto}
+}
+</style>
+
+<header>
+  <p class="eyebrow" style="--acc:var(--indigo)"><span class="ico ico-cube" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1>{t.h1Pre}<span class="glow"><span class="sf-only">{t.h1GlowSf}</span><span class="neutral-only">{t.h1GlowNeutral}</span></span></h1>
+  <p class="sub sf-only" set:html={t.subSfHtml} />
+  <p class="sub neutral-only" set:html={t.subNeutralHtml} />
+
+  <div class="chainwrap">
+    <svg class="chain" viewBox="0 0 960 250" role="img" aria-label={t.heroAria}>
+      <path d="M30,224 H200 V206 H390 V161 H580 V116 H930" stroke="#7c8cff" opacity=".18" fill="none"/>
+      <g stroke="#7c8cff" fill="none" opacity=".65" stroke-width="1.4">
+        <path class="anim-dash" stroke-dasharray="4 5" d="M150,179 H196"/><path d="M196,174 l7,5 -7,5"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M340,179 C 362,179 364,134 386,134"/><path d="M386,129 l7,5 -7,5"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M530,134 C 552,134 554,89 576,89"/><path d="M576,84 l7,5 -7,5"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M720,89 C 745,89 748,108 764,108"/><path d="M764,103 l7,5 -7,5"/>
+      </g>
+      <a href="#skrot" style="color:#7c8cff" aria-label={t.heroNodeAria.idea}>
+        <text class="ann" x="102" y="128" text-anchor="middle">{t.hero.ideaAnn}</text>
+        <path d="M64,194 C46,194 40,170 58,164 C58,146 82,140 96,150 C104,134 132,136 138,152 C158,150 164,172 150,180 C156,192 142,198 132,193 Z" fill="none" stroke="currentColor" opacity=".6" stroke-width="1.4"/>
+        <text class="knum" x="102" y="176" text-anchor="middle">{t.hero.idea}</text>
+      </a>
+      <a href="#l-01" style="color:#f0a64a" aria-label={t.heroNodeAria.step1}>
+        <rect class="kbox" x="200" y="152" width="140" height="54" stroke-width="1.4"/>
+        <text class="knum" x="270" y="171" text-anchor="middle">{t.hero.step1}</text>
+        <text class="klbl" x="270" y="192" text-anchor="middle">{t.hero.shape}</text>
+        <text class="ann" x="270" y="240" text-anchor="middle">{t.hero.shapeAnn}</text>
+      </a>
+      <a href="#l-01" style="color:#f0a64a" aria-label={t.heroNodeAria.step2}>
+        <rect class="kbox" x="390" y="107" width="140" height="54" stroke-width="1.4"/>
+        <text class="knum" x="460" y="126" text-anchor="middle">{t.hero.step2}</text>
+        <text class="klbl" x="460" y="147" text-anchor="middle">{t.hero.prd}</text>
+        <text class="ann" x="460" y="240" text-anchor="middle">{t.hero.prdAnn}</text>
+      </a>
+      <a href="#l-05" style="color:#ffd166" aria-label={t.heroNodeAria.step3}>
+        <rect class="kbox" x="580" y="62" width="140" height="54" stroke-width="1.4"/>
+        <text class="knum" x="650" y="81" text-anchor="middle">{t.hero.step3}</text>
+        <text class="klbl" x="650" y="102" text-anchor="middle">{t.hero.roadmap}</text>
+        <text class="ann" x="650" y="240" text-anchor="middle">{t.hero.roadmapAnn}</text>
+      </a>
+      <a href="#dalej" style="color:#7c8cff" aria-label={t.heroNodeAria.csc}>
+        <text class="ann" x="852" y="52" text-anchor="middle">{t.hero.cscAnn}</text>
+        <path d="M852,60 V92" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <path d="M796,108 h16 M828,108 h16 M860,108 h16 M892,108 h16" stroke="currentColor" opacity=".4" fill="none"/>
+        <rect x="780" y="100" width="16" height="16" fill="none" stroke="#4ade9b" stroke-width="1.4"/>
+        <rect x="812" y="100" width="16" height="16" fill="none" stroke="#4cc9f0" stroke-width="1.4"/>
+        <rect x="844" y="100" width="16" height="16" fill="none" stroke="#a78bfa" stroke-width="1.4"/>
+        <rect x="876" y="100" width="16" height="16" fill="none" stroke="#3ddad0" stroke-width="1.4"/>
+        <rect x="908" y="100" width="16" height="16" fill="none" stroke="#e2564a" stroke-width="1.4" class="anim-pulse"/>
+      </a>
+      <circle r="7" fill="#7c8cff" opacity=".25"><animateMotion dur="8s" repeatCount="indefinite" path="M64,179 H340 C 362,179 364,134 390,134 H530 C 552,134 554,89 580,89 H720 C 745,89 748,108 776,108 H920"/></circle>
+      <circle r="3" fill="#dce2f5" class="anim-pulse"><animateMotion dur="8s" repeatCount="indefinite" path="M64,179 H340 C 362,179 364,134 390,134 H530 C 552,134 554,89 580,89 H720 C 745,89 748,108 776,108 H920"/></circle>
+    </svg>
+    <p class="map-cap"><span class="sf-only">{t.mapCapSf}</span><span class="neutral-only">{t.mapCapNeutral}</span></p>
+  </div>
+
+  <nav class="route" aria-label={t.routeAria}>
+    <a href="#l-01" style="--hov:#f0a64a">{t.route[0]}</a>
+    <a href="#l-02" style="--hov:#ff4f6e">{t.route[1]}</a>
+    <a href="#l-03" style="--hov:#3ddad0">{t.route[2]}</a>
+    <a href="#l-04" style="--hov:#4ade9b">{t.route[3]}</a>
+    <a href="#l-05" style="--hov:#ffd166">{t.route[4]}</a>
+    <a href="#dalej">{t.route[5]}</a>
+  </nav>
+</header>
+
+<!-- ============ SKRÓT ============ -->
+<section id="skrot">
+  <div class="rv">
+    <p class="eyebrow" style="--acc:var(--indigo)"><span class="ico ico-star" aria-hidden="true"></span>{t.sumEyebrow}</p>
+  </div>
+  <div class="sum-grid rv">
+    <a class="sum-card" href="#l-01" style="--acc:#f0a64a">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="1.5"><path d="M5,10 h9 M5,20 h9 M5,30 h9" opacity=".7"/><path d="M16,10 L24,17 M16,20 H24 M16,30 L24,23" opacity=".5"/><rect x="26" y="10" width="10" height="20"/><path d="M28.5,15 h5 M28.5,20 h5 M28.5,25 h3"/></g></svg>
+      <span class="num">{t.cards[0].num}</span>
+      <h3>{t.cards[0].h3}</h3>
+      <p>{t.cards[0].p}</p>
+    </a>
+    <a class="sum-card" href="#l-02" style="--acc:#ff4f6e">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="1.5"><path d="M22,18 a7,7 0 0 1 14,0"/><rect x="22" y="18" width="14" height="14"/><circle cx="29" cy="14" r="1.6"/><rect x="4" y="15" width="9" height="7"/><path d="M13,18.5 h6 m-3,-3 3,3 -3,3" opacity=".8"/></g></svg>
+      <span class="num">{t.cards[1].num}</span>
+      <h3>{t.cards[1].h3}</h3>
+      <p>{t.cards[1].p}</p>
+    </a>
+    <a class="sum-card" href="#l-03" style="--acc:#3ddad0">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="1.5"><path d="M6,8 h18 M6,32 h18 M6,8 v24 M24,8 v6 M24,26 v6" opacity=".6"/><path d="M14,16 h14 l7,4 -7,4 h-14 z"/></g></svg>
+      <span class="num">{t.cards[2].num}</span>
+      <h3>{t.cards[2].h3}</h3>
+      <p>{t.cards[2].p}</p>
+    </a>
+    <a class="sum-card" href="#l-04" style="--acc:#4ade9b">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="1.5"><rect x="6" y="8" width="28" height="24"/><path d="M6,16 h28 M6,24 h28 M15.3,8 v24 M24.6,8 v24" opacity=".25"/><circle cx="20" cy="20" r="2.5"/><circle cx="29" cy="12" r="2.5"/><circle cx="11" cy="28" r="2.5"/></g></svg>
+      <span class="num">{t.cards[3].num}</span>
+      <h3>{t.cards[3].h3}</h3>
+      <p>{t.cards[3].p}</p>
+    </a>
+    <a class="sum-card" href="#l-05" style="--acc:#ffd166">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="1.5"><circle cx="8" cy="31" r="4"/><circle cx="32" cy="9" r="4"/><path d="M12,28 C 18,24 24,17 28,12" stroke-dasharray="3 3" opacity=".7"/><path d="M14,10 h7 M10,15 h8" opacity=".4"/></g></svg>
+      <span class="num">{t.cards[4].num}</span>
+      <h3>{t.cards[4].h3}</h3>
+      <p>{t.cards[4].p}</p>
+    </a>
+  </div>
+  <div class="epigraph finis rv" style="--acc:var(--indigo)">
+    <p>{t.sumEpigraph}</p>
+    <cite>{t.sumEpigraphCite}</cite>
+  </div>
+</section>
+
+<!-- ============ LEKCJA 01 OD POMYSŁU DO PRD ============ -->
+<section class="sector" id="l-01" style="--acc:#f0a64a">
+  <div class="sec-top rv">
+    <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.l1.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.diuna.glyph} />{universeName(UNIVERSES.diuna, lang)}{t.l1.uniSuffix}</span>
+    </div>
+    <h2>{t.l1.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.l1.epigraphSf}</p>
+      <cite>{t.l1.epigraphCiteSf}</cite>
+    </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.l1.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <rect x="48" y="66" width="96" height="28"/>
+            <rect x="48" y="136" width="96" height="28"/>
+            <rect x="48" y="206" width="96" height="28"/>
+            <path d="M228,60 V128 M228,172 V240" stroke-width="1.5"/>
+            <path d="M228,128 V172" opacity=".25" stroke-dasharray="3 4"/>
+            <path d="M144,80 C 190,90 205,125 224,142" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <path d="M144,150 H224" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <path d="M144,220 C 190,210 205,175 224,158" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <path d="M232,150 H296" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <path d="M290,145 l7,5 -7,5" stroke-width="1.5"/>
+            <rect x="300" y="95" width="90" height="110" stroke-width="1.5"/>
+            <path d="M314,117 h62 M314,135 h62 M314,153 h44" opacity=".4"/>
+          </g>
+          <circle cx="228" cy="150" r="5" fill="currentColor" class="anim-pulse"/>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="4s" repeatCount="indefinite" path="M144,80 C 190,90 205,125 224,142"/></circle>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="4s" begin="1.3s" repeatCount="indefinite" path="M144,150 H296"/></circle>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="4s" begin="2.6s" repeatCount="indefinite" path="M144,220 C 190,210 205,175 224,158"/></circle>
+          <text x="96" y="84" text-anchor="middle">{t.l1.fig.q1}</text>
+          <text x="96" y="154" text-anchor="middle">{t.l1.fig.q2}</text>
+          <text x="96" y="224" text-anchor="middle">{t.l1.fig.q3}</text>
+          <text x="228" y="262" text-anchor="middle" class="acc">{t.l1.fig.test}</text>
+          <text x="345" y="230" text-anchor="middle" class="acc">{t.l1.fig.prd}</text>
+          <text x="36" y="42" class="dim">{t.l1.fig.answers}</text>
+        </svg>
+      </div>
+      <figcaption>{t.l1.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.l1.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.l1.leadNeutralHtml} />
+      <p class="lead" set:html={t.l1.leadHtml} />
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.mechDt.q}</dt><dd class="v" style="margin:0">{t.l1.mechQ}</dd></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.mechDt.g}</dt><dd class="v" style="margin:0">{t.l1.mechG}</dd></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.mechDt.a}</dt><dd class="v" style="margin:0"><Fragment set:html={t.l1.mechAHtml} /></dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mechDt.l}</dt><dd class="v" style="margin:0"><a href={lessonUrl('01', lang)} style="color:var(--acc)">{t.l1.lessonLabel}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.l1.targetHtml} />
+  </div>
+  <DeepDive skill="10x-shape" items={t.dd.shape} lang={lang} />
+</section>
+
+<!-- ============ LEKCJA 02 OD CHATBOTA DO AGENTA ============ -->
+<section class="sector" id="l-02" style="--acc:#ff4f6e">
+  <div class="sec-top rv">
+    <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.l2.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.redrising.glyph} />{universeName(UNIVERSES.redrising, lang)}{t.l2.uniSuffix}</span>
+    </div>
+    <h2>{t.l2.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.l2.epigraphSf}</p>
+      <cite>{t.l2.epigraphCiteSf}</cite>
+    </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.l2.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <g opacity=".3">
+              <rect x="48" y="60" width="84" height="22"/>
+              <rect x="62" y="92" width="84" height="22"/>
+              <rect x="48" y="124" width="84" height="22"/>
+            </g>
+            <rect x="60" y="190" width="76" height="34" stroke-width="1.5"/>
+            <path d="M70,224 v8 M84,224 v8 M98,224 v8 M112,224 v8 M126,224 v8" opacity=".6"/>
+            <path d="M136,207 C 200,207 230,192 280,182" stroke-dasharray="4 5" opacity=".65" class="anim-dash"/>
+            <path d="M278,140 a34,34 0 0 1 68,0" stroke-width="1.5"/>
+            <rect x="278" y="140" width="68" height="92" stroke-width="1.5"/>
+            <path d="M264,150 h14 M346,150 h14 M268,150 v70 M356,150 v70" opacity=".5"/>
+            <rect x="288" y="172" width="18" height="18" stroke-width="1.5"/>
+          </g>
+          <circle cx="312" cy="122" r="5" fill="currentColor" class="anim-pulse"/>
+          <rect x="-8" y="-5" width="16" height="10" fill="none" stroke="currentColor" stroke-width="1.5">
+            <animateMotion dur="4.5s" repeatCount="indefinite" path="M136,207 C 200,207 230,192 297,181"/>
+          </rect>
+          <text x="36" y="42" class="dim">{t.l2.fig.prompt}</text>
+          <text x="98" y="180" text-anchor="middle" class="acc">{t.l2.fig.module}</text>
+          <text x="312" y="262" text-anchor="middle" class="acc">{t.l2.fig.carve}</text>
+          <text x="404" y="42" text-anchor="end" class="dim">{t.l2.fig.after}</text>
+        </svg>
+      </div>
+      <figcaption>{t.l2.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.l2.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.l2.leadNeutralHtml} />
+      <p class="lead" set:html={t.l2.leadHtml} />
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.mechDt.q}</dt><dd class="v" style="margin:0">{t.l2.mechQ}</dd></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.mechDt.g}</dt><dd class="v" style="margin:0">{t.l2.mechG}</dd></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.mechDt.a}</dt><dd class="v" style="margin:0"><Fragment set:html={t.l2.mechAHtml} /></dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mechDt.l}</dt><dd class="v" style="margin:0"><a href={lessonUrl('02', lang)} style="color:var(--acc)">{t.l2.lessonLabel}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.l2.targetHtml} />
+  </div>
+</section>
+
+<!-- ============ LEKCJA 03 AI-POWERED BOOTSTRAP ============ -->
+<section class="sector" id="l-03" style="--acc:#3ddad0">
+  <div class="sec-top rv">
+    <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.l3.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.expanse.glyph} />{universeName(UNIVERSES.expanse, lang)}{t.l3.uniSuffix}</span>
+    </div>
+    <h2>{t.l3.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.l3.epigraphSf}</p>
+      <cite>{t.l3.epigraphCiteSf}</cite>
+    </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.l3.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <rect x="48" y="70" width="180" height="160" stroke-width="1.5"/>
+            <path d="M48,110 h180 M48,190 h180 M93,70 v160 M138,70 v160 M183,70 v160" opacity=".25"/>
+            <path d="M228,130 H392 M228,170 H392" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <path d="M258,132 h84 l30,18 -30,18 h-84 z" stroke-width="1.5"/>
+            <path d="M258,150 h84" opacity=".3"/>
+            <path d="M256,142 l-14,8 14,8" opacity=".6" class="anim-flicker"/>
+          </g>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="3.5s" repeatCount="indefinite" path="M232,130 H388"/></circle>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="3.5s" begin="1.7s" repeatCount="indefinite" path="M232,170 H388"/></circle>
+          <text x="138" y="56" text-anchor="middle">{t.l3.fig.yard}</text>
+          <text x="312" y="120" text-anchor="middle" class="acc">{t.l3.fig.hull}</text>
+          <text x="36" y="262" class="dim">{t.l3.fig.plating}</text>
+          <text x="404" y="262" text-anchor="end" class="dim">{t.l3.fig.tolerances}</text>
+        </svg>
+      </div>
+      <figcaption>{t.l3.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.l3.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.l3.leadNeutralHtml} />
+      <p class="lead" set:html={t.l3.leadHtml} />
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.mechDt.q}</dt><dd class="v" style="margin:0">{t.l3.mechQ}</dd></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.mechDt.g}</dt><dd class="v" style="margin:0">{t.l3.mechG}</dd></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.mechDt.a}</dt><dd class="v" style="margin:0"><Fragment set:html={t.l3.mechAHtml} /></dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mechDt.l}</dt><dd class="v" style="margin:0"><a href={lessonUrl('03', lang)} style="color:var(--acc)">{t.l3.lessonLabel}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.l3.targetHtml} />
+  </div>
+  <DeepDive skill="10x-bootstrapper" items={t.dd.bootstrapper} lang={lang} />
+</section>
+
+<!-- ============ LEKCJA 04 AGENT ONBOARDING ============ -->
+<section class="sector" id="l-04" style="--acc:#4ade9b">
+  <div class="sec-top rv">
+    <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.l4.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.ender.glyph} />{universeName(UNIVERSES.ender, lang)}{t.l4.uniSuffix}</span>
+    </div>
+    <h2>{t.l4.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.l4.epigraphSf}</p>
+      <cite>{t.l4.epigraphCiteSf}</cite>
+    </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.l4.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <rect x="48" y="60" width="180" height="180" stroke-width="1.5"/>
+            <path d="M48,105 h180 M48,150 h180 M48,195 h180 M93,60 v180 M138,60 v180 M183,60 v180" opacity=".2"/>
+            <circle cx="93" cy="105" r="7" stroke-width="1.5" class="anim-pulse"/>
+            <circle cx="160" cy="172" r="7" stroke-width="1.5" class="anim-pulse"/>
+            <circle cx="115" cy="218" r="7" stroke-width="1.5" class="anim-pulse"/>
+            <path d="M100,105 C 200,105 240,120 296,132" stroke-dasharray="4 5" opacity=".55" class="anim-dash"/>
+            <path d="M167,172 C 230,172 250,160 296,150" stroke-dasharray="4 5" opacity=".55" class="anim-dash"/>
+            <path d="M122,218 C 220,218 250,185 296,168" stroke-dasharray="4 5" opacity=".55" class="anim-dash"/>
+            <rect x="300" y="95" width="90" height="110" stroke-width="1.5"/>
+            <path d="M314,120 h62 M314,140 h62 M314,160 h40" opacity=".4"/>
+          </g>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="4s" repeatCount="indefinite" path="M100,105 C 200,105 240,120 296,132"/></circle>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="4s" begin="2s" repeatCount="indefinite" path="M122,218 C 220,218 250,185 296,168"/></circle>
+          <text x="138" y="52" text-anchor="middle">{t.l4.fig.field}</text>
+          <text x="345" y="230" text-anchor="middle" class="acc">{t.l4.fig.doc}</text>
+          <text x="36" y="266" class="dim">{t.l4.fig.obvious}</text>
+          <text x="404" y="266" text-anchor="end" class="acc">{t.l4.fig.nonObvious}</text>
+        </svg>
+      </div>
+      <figcaption>{t.l4.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.l4.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.l4.leadNeutralHtml} />
+      <p class="lead" set:html={t.l4.leadHtml} />
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.mechDt.q}</dt><dd class="v" style="margin:0">{t.l4.mechQ}</dd></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.mechDt.g}</dt><dd class="v" style="margin:0">{t.l4.mechG}</dd></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.mechDt.a}</dt><dd class="v" style="margin:0"><Fragment set:html={t.l4.mechAHtml} /></dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mechDt.l}</dt><dd class="v" style="margin:0"><a href={lessonUrl('04', lang)} style="color:var(--acc)">{t.l4.lessonLabel}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.l4.targetHtml} />
+  </div>
+  <DeepDive skill="10x-agents-md" items={t.dd.agentsMd} lang={lang} />
+</section>
+
+<!-- ============ LEKCJA 05 Z LOCALHOSTA NA PRODUKCJĘ ============ -->
+<section class="sector" id="l-05" style="--acc:#ffd166">
+  <div class="sec-top rv">
+    <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.l5.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.starwars.glyph} />{universeName(UNIVERSES.starwars, lang)}{t.l5.uniSuffix}</span>
+    </div>
+    <h2>{t.l5.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.l5.epigraphSf}</p>
+      <cite>{t.l5.epigraphCiteSf}</cite>
+    </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.l5.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <circle cx="70" cy="230" r="16" stroke-width="1.5"/>
+            <circle cx="376" cy="70" r="16" stroke-width="1.5"/>
+            <circle cx="376" cy="70" r="26" opacity=".35" class="anim-pulse"/>
+            <path d="M86,222 C 150,196 190,170 216,150" stroke-dasharray="4 5" opacity=".65" class="anim-dash-slow"/>
+            <path d="M216,150 C 260,120 320,92 360,78" stroke-dasharray="2 8" opacity=".8" class="anim-dash"/>
+            <rect x="150" y="86" width="96" height="44"/>
+            <path d="M158,100 h80 M158,112 h56" opacity=".4"/>
+            <path d="M198,130 V146" opacity=".4" stroke-dasharray="2 4"/>
+            <path d="M250,200 h40 M280,220 h48 M262,240 h30" opacity=".3" class="anim-flicker"/>
+          </g>
+          <path d="M0,-6 5,4 0,1 -5,4 z" fill="currentColor">
+            <animateMotion dur="6s" repeatCount="indefinite" rotate="auto" path="M86,222 C 150,196 190,170 216,150 C 260,120 320,92 360,78"/>
+          </path>
+          <text x="70" y="266" text-anchor="middle">{t.l5.fig.localhost}</text>
+          <text x="376" y="116" text-anchor="middle" class="acc">{t.l5.fig.prod}</text>
+          <text x="198" y="76" text-anchor="middle" class="acc">{t.l5.fig.calc}</text>
+          <text x="36" y="42" class="dim">{t.l5.fig.note}</text>
+        </svg>
+      </div>
+      <figcaption>{t.l5.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.l5.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.l5.leadNeutralHtml} />
+      <p class="lead"><Fragment set:html={t.l5.leadPreHtml} /><span class="sf-only">{t.l5.leadCalcSf}</span>{t.l5.leadPost}</p>
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.mechDt.q}</dt><dd class="v" style="margin:0">{t.l5.mechQ}</dd></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.mechDt.g}</dt><dd class="v" style="margin:0">{t.l5.mechG}</dd></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.mechDt.a}</dt><dd class="v" style="margin:0"><Fragment set:html={t.l5.mechAHtml} /></dd></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mechDt.l}</dt><dd class="v" style="margin:0"><a href={lessonUrl('05', lang)} style="color:var(--acc)">{t.l5.lessonLabel}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.l5.targetHtml} />
+  </div>
+  <DeepDive skill="10x-deployment" items={t.dd.deployment} lang={lang} />
+</section>
+
+<!-- ============ DALEJ: ŁAŃCUCH ============ -->
+<section class="sector" id="dalej" style="--acc:var(--indigo)">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.next.num}</span>
+      <span class="sec-uni sf-only"><span class="ico ico-star" aria-hidden="true"></span>{t.next.uniSf}</span>
+    </div>
+    <h2>{t.next.h2}</h2>
+  </div>
+
+  <div class="duo rv">
+    <div class="tx">
+      <span class="mono"><span class="ico ico-cube" aria-hidden="true"></span>{t.next.leftMono}<span class="sf-only">{t.next.leftMonoSf}</span></span>
+      <p class="lead">{t.next.leftLead}</p>
+      <dl class="mech">
+        <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.next.leftMech.d1t}</dt><dd class="v" style="margin:0">{t.next.leftMech.d1d}</dd></div>
+        <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.next.leftMech.d2t}</dt><dd class="v" style="margin:0">{t.next.leftMech.d2d}</dd></div>
+        <div><dt><span class="ico ico-cli" aria-hidden="true"></span>{t.next.leftMech.d3t}</dt><dd class="v" style="margin:0">{t.next.leftMech.d3d}</dd></div>
+      </dl>
+    </div>
+    <div class="tx">
+      <span class="mono"><span class="ico ico-fast" aria-hidden="true"></span>{t.next.rightMono}</span>
+      <p class="lead">{t.next.m2LeadPre}<span class="sf-only">{t.next.m2LeadSf}</span><span class="neutral-only">{t.next.m2LeadNeutral}</span><Fragment set:html={t.next.m2LeadPostHtml} /></p>
+      <dl class="mech">
+        <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.next.cscDt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'csc', lang)} style="color:var(--indigo)">{t.next.cscLink}</a></dd></div>
+        <div><dt><span class="ico ico-up" aria-hidden="true"></span>{t.next.previewDt}</dt><dd class="v" style="margin:0">{t.next.previewDd}</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="epigraph finis rv sf-only">
+    <p>{t.next.finisSf}</p>
+    <cite>{t.next.finisCiteSf}</cite>
+  </div>
+  <div class="epigraph finis rv neutral-only">
+    <p>{t.next.finisNeutral}</p>
+    <cite>{t.next.finisCiteNeutral}</cite>
+  </div>
+</section>

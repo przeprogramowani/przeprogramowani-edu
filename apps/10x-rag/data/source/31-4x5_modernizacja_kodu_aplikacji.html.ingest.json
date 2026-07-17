@@ -1,0 +1,372 @@
+{
+  "lessonId": "[4x5] Modernizacja kodu aplikacji",
+  "file": "31-4x5_modernizacja_kodu_aplikacji.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 4,
+      "order": 1
+    },
+    {
+      "slug": "jezyk-programowania-a-jakosc-wspopracy-z-ai",
+      "title": "Język programowania a jakość współpracy z AI",
+      "blocks": 24,
+      "order": 2
+    },
+    {
+      "slug": "translacje-miedzy-jezykami-programowania",
+      "title": "Translacje między językami programowania",
+      "blocks": 12,
+      "order": 3
+    },
+    {
+      "slug": "codemods-vs-ai-mods-transformacje-w-duzej-skali",
+      "title": "Codemods vs AI Mods: Transformacje w dużej skali",
+      "blocks": 13,
+      "order": 4
+    },
+    {
+      "slug": "codemods---precyzja-skalowalnosc-i-przewidywalnosc",
+      "title": "Codemods - precyzja, skalowalność i przewidywalność",
+      "blocks": 6,
+      "order": 5
+    },
+    {
+      "slug": "ai-jako-rozszerzenie-codemodow",
+      "title": "AI jako rozszerzenie Codemodów",
+      "blocks": 7,
+      "order": 6
+    },
+    {
+      "slug": "case-study-slacka-konwersja-z-enzyme-do-react-testing-library",
+      "title": "Case study Slacka: Konwersja z Enzyme do React Testing Library",
+      "blocks": 12,
+      "order": 7
+    },
+    {
+      "slug": "codeconcise-od-thoughtworks",
+      "title": "CodeConcise od Thoughtworks",
+      "blocks": 6,
+      "order": 8
+    },
+    {
+      "slug": "drugie-zycie-dokumentacji-oraz-ai-czyli-migration-guides",
+      "title": "Drugie życie dokumentacji (oraz AI), czyli migration guides",
+      "blocks": 17,
+      "order": 9
+    },
+    {
+      "slug": "architektura-llmow-a-modernizacja-kodu",
+      "title": "Architektura LLMów a modernizacja kodu",
+      "blocks": 7,
+      "order": 10
+    },
+    {
+      "slug": "podsumowanie-lekcji",
+      "title": "🏁 Podsumowanie lekcji",
+      "blocks": 3,
+      "order": 11
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 0,
+      "order": 12
+    },
+    {
+      "slug": "zadanie-1-konwersja-do-typescriptu",
+      "title": "Zadanie 1: Konwersja do TypeScriptu",
+      "blocks": 4,
+      "order": 13
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:75bca1bd:43cc23fa",
+      "tokenEstimate": 76,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:43cc23fa:0-1",
+      "tokenEstimate": 76,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:24701484",
+      "tokenEstimate": 184,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:24701484:0-3",
+      "tokenEstimate": 257,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:4970b9bd",
+      "tokenEstimate": 214,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:4970b9bd:0-8",
+      "tokenEstimate": 390,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:4970b9bd:8-14",
+      "tokenEstimate": 424,
+      "span": [
+        8,
+        14
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:4970b9bd:14-16",
+      "tokenEstimate": 424,
+      "span": [
+        14,
+        16
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:4970b9bd:16-23",
+      "tokenEstimate": 306,
+      "span": [
+        16,
+        23
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:8a59fc85",
+      "tokenEstimate": 212,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:8a59fc85:0-7",
+      "tokenEstimate": 534,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:8a59fc85:7-11",
+      "tokenEstimate": 319,
+      "span": [
+        7,
+        11
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:883f8660",
+      "tokenEstimate": 204,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:883f8660:0-10",
+      "tokenEstimate": 373,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:883f8660:9-12",
+      "tokenEstimate": 130,
+      "span": [
+        9,
+        12
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:179e6dcf",
+      "tokenEstimate": 211,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:179e6dcf:0-5",
+      "tokenEstimate": 370,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:5237619f",
+      "tokenEstimate": 124,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:5237619f:0-6",
+      "tokenEstimate": 329,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:add6595c",
+      "tokenEstimate": 192,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:add6595c:0-5",
+      "tokenEstimate": 409,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:add6595c:5-11",
+      "tokenEstimate": 325,
+      "span": [
+        5,
+        11
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:81f9ef98",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:81f9ef98:0-5",
+      "tokenEstimate": 235,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:066ec4be",
+      "tokenEstimate": 204,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:066ec4be:0-12",
+      "tokenEstimate": 401,
+      "span": [
+        0,
+        12
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:066ec4be:11-16",
+      "tokenEstimate": 251,
+      "span": [
+        11,
+        16
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:bfc82d34",
+      "tokenEstimate": 167,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:bfc82d34:0-4",
+      "tokenEstimate": 406,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:bfc82d34:4-6",
+      "tokenEstimate": 259,
+      "span": [
+        4,
+        6
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:7eabec50",
+      "tokenEstimate": 149,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:7eabec50:0-2",
+      "tokenEstimate": 283,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:dcc8ec86",
+      "tokenEstimate": 72,
+      "span": [
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "sec:75bca1bd:704eee2a",
+      "tokenEstimate": 89,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:75bca1bd:704eee2a:0-3",
+      "tokenEstimate": 178,
+      "span": [
+        0,
+        3
+      ]
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+<meta name="lesson-id" content="Zarządzanie stanem lokalnym i współdzielonym"><html><head></head><body><div><img loading="lazy" src="https://assets-v3.circle.so/f87955tuby6nh7s5cechfeiu62tm" style="width: 100%; max-width: 100%;"><img loading="lazy" src="https://assets-v2.circle.so/bsh7y3drbggjsbv27at9nf4mlo9q" style="width: 100%; max-width: 100%;"><h2><strong>Zarządzanie stanem lokalnym</strong></h2><p>Teraz, gdy rozumiesz już podstawowe koncepcje zarządzania stanem, czas zagłębić się w praktyczne aspekty stanu lokalnego i współdzielonego. W poprzedniej lekcji poznałeś różne rodzaje stanu, a w tej skupimy się na konkretnych technikach i wzorcach ich implementacji w popularnych frameworkach. Zobaczysz też, jak nowoczesne podejścia, takie jak Signals, upraszczają pracę z reaktywnym stanem.</p><p>W ramach przypomnienia: stan lokalny służy do przechowywania i zarządzania danymi, które są istotne dla pojedynczego komponentu aplikacji. Umożliwia to komponentom reagowanie na interakcje użytkownika, aktualizacje danych oraz inne zmiany w aplikacji poprzez dynamiczne aktualizacje interfejsu użytkownika. Zarządzanie stanem lokalnym obejmuje zwykle dane formularzy, stan UI komponentu (np. czy dialog jest otwarty czy zamknięty), dane tymczasowe, które nie są częścią globalnego stanu aplikacji.</p><p>Zróbmy sobie teraz szybki przegląd podobieństw i różnic pomiędzy frameworkami na znanym i lubianym przykładzie komponentu <em>Counter</em>.</p><p><strong>React</strong></p><p>W Reactcie stan lokalny jest zarządzany za pomocą hooka<a href="https://react.dev/reference/react/useState" target="_blank" rel="noopener noreferrer"> </a><a href="https://react.dev/reference/react/useState" target="_blank" rel="noopener noreferrer"><em>useState</em></a> w komponentach funkcyjnych lub <em>this.state </em>w komponentach klasowych. Dzięki jawnemu wywołaniu settera zwróconego przez <em>useState</em>, React wie że doszło do aktualizacji stanu i samodzielnie dba o aktualizację DOM.</p><p><strong>Przykład z </strong><strong><em>useState</em></strong>:</p><pre><code>import React, { useState } from 'react';
+
+function Counter() {
+&nbsp;&nbsp;const [count, setCount] = useState(0);
+
+&nbsp;&nbsp;return (
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Current count: {count}&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;button onClick={() =&gt; setCount(count + 1)}&gt;Increment&lt;/button&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+&nbsp;&nbsp;);
+}</code></pre><p><strong>Angular</strong></p><p>W Angularze zarządzanie stanem lokalnym jest realizowane poprzez właściwość klasy komponentu. Angular automatycznie śledzi zależności między stanem aplikacji a DOM, zapewniając aktualizacje.</p><p><strong>Przykład z właściwością klasy</strong>:</p><pre><code>import { Component } from '@angular/core';
+
+@Component({
+&nbsp;&nbsp;selector: 'app-counter',
+&nbsp;&nbsp;template: `
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Current count: {{ count }}&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;button (click)="increment()"&gt;Increment&lt;/button&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+&nbsp;&nbsp;`
+})
+
+export class Counter {
+&nbsp;&nbsp;count = 0;
+
+&nbsp;&nbsp;increment() {
+&nbsp;&nbsp;&nbsp;&nbsp;this.count++;
+&nbsp;&nbsp;}
+}</code></pre><p><strong>Vue</strong></p><p>W Vue stan lokalny jest zarządzany przez reaktywne właściwości danych komponentu. Vue automatycznie śledzi zależności między stanem aplikacji a DOM, zapewniając aktualizacje.</p><p><strong>Przykład z Vue 3 Composition API</strong>:</p><pre><code>&lt;template&gt;
+&nbsp;&nbsp;&lt;div&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Current count: {{ count }}&lt;/p&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;button @click="increment"&gt;Increment&lt;/button&gt;
+&nbsp;&nbsp;&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import { ref } from 'vue';
+
+export default {
+&nbsp;&nbsp;setup() {
+&nbsp;&nbsp;&nbsp;&nbsp;const count = ref(0);
+&nbsp;&nbsp;&nbsp;&nbsp;const increment = () =&gt; {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count.value++;
+&nbsp;&nbsp;&nbsp;&nbsp;};
+
+&nbsp;&nbsp;&nbsp;&nbsp;return { count, increment };
+&nbsp;&nbsp;}
+}
+
+&lt;/script&gt;</code></pre><p><br><strong>Podobieństwa i różnice</strong></p><p>- <strong>Podobieństwa</strong>: Wszystkie trzy frameworki oferują proste mechanizmy do deklaratywnego zarządzania stanem lokalnym.</p><p>- <strong>Różnice</strong>: Główna różnica polega na sposobie, w jaki frameworki reagują na zmiany stanu i podchodzą do aktualizacji DOM. Wejdziemy w temat głębiej w sekcji poświęconej relacji pomiędzy zarządzaniem stanem a wydajnością. Tymczasem, wbrew obiegowej opinii, lecz zgodnie ze zdrowym rozsądkiem, uznamy to za nieistotne z punktu widzenia wzorców zarządzania stanem.</p><h3><strong>Kiedy stan lokalny to za mało?</strong></h3><p>Rozumiemy już podstawy zarządzania stanem lokalnym, czas wykorzystać tę wiedzę w praktyce. Założmy, że Product Manager zleca nam budowę widoku, który pozwoli na wyszukiwanie i wyświetlanie postaci z serialu Rick and Morty na podstawie jej imienia oraz płci.</p><p><br></p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1027327226?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2><strong>Komponenty kontenerowe i prezentacyjne</strong></h2><p>Skorzystamy z prostego, lecz kluczowego wzorca jakim jest podzielenie komponentu <em>CharacterSearch na komponent kontenerowy i komponenty prezentacyjne.</em></p><p>Podział na komponenty kontenerowe i prezentacyjne to frontendowy wzorzec projektowy, który pomaga organizować kod i oddzielać logikę aplikacji od jej warstwy prezentacji.</p><p><strong>Komponenty kontenerowe</strong> zajmują się logiką, taką jak pobieranie danych z API i obsługa stanu, podczas gdy <strong>komponenty prezentacyjne</strong> skupiają się na wyświetlaniu UI w oparciu o dane wejściowe (<a href="https://react.dev/learn/passing-props-to-a-component" target="_blank" rel="noopener noreferrer"><em>props</em></a>).</p><p>Do komponentu kontenerowego <em>CharacterSearchContainer</em> wydzielimy nasze operacje związane z zarządzaniem stanem: pobieranie danych oraz sortowanie:</p><pre><code>import {useEffect, useState} from "react";
+
+function CharacterSearchContainer() {
+  const [name, setName] = useState("");
+
+  const [gender, setGender] = useState("");
+
+  const [characters, setCharacters] = useState([]);
+
+  const [sortOption, setSortOption] = useState("");
+
+  useEffect(() =&gt; {
+    if (name || gender) {
+      fetch(
+        `https://rickandmortyapi.com/api/character/?name=${name}&amp;gender=${gender}`
+      )
+        .then((response) =&gt; response.json())
+        .then((data) =&gt; setCharacters(data.results || []))
+        .catch((error) =&gt; console.error("Error fetching data:", error));
+    }
+  }, [name, gender]);
+
+  const sortedCharacters = [...characters].sort((a, b) =&gt; {
+    if (sortOption === "name") {
+      return a.name.localeCompare(b.name);
+    } else if (sortOption === "created") {
+      return new Date(a.created) - new Date(b.created);
+    }
+
+    return 0;
+  }); // Nie wiemy jakich komponentów prezentacyjnych potrzebujemy :c
+
+  return &lt;div /&gt;;
+}</code></pre><p>Aby prawidłowo wydzielić komponenty prezentacyjne, musimy spojrzeć na nasz UI i zadecydować jakich komponentów potrzebujemy:</p><p>Na dobry początek powinno wystarczyć, podzielimy więc naszą warstę prezentacyjną na trzy komponenty:</p><ul><li><p><strong>SearchTitle</strong></p></li></ul><pre><code>function SearchTitle() {
+&nbsp;&nbsp;return &lt;h1 className="pt-24 text-xl"&gt;Wyszukiwarka postaci Rick and Morty&lt;/h1&gt;;
+}</code></pre><ul><li><p><strong>SearchForm</strong></p></li></ul><pre><code>function SearchForm({
+  name,
+  setName,
+  gender,
+  setGender,
+  sortOption,
+  setSortOption,
+}) {
+  return (
+    &lt;form className='space-x-4'&gt;
+      &lt;input
+        type='text'
+        placeholder='Insert name'
+        value={name}
+        onChange={(e) =&gt; setName(e.target.value)}
+      /&gt;
+
+      &lt;select value={gender} onChange={(e) =&gt; setGender(e.target.value)}&gt;
+        &lt;option value=''&gt;Any Gender&lt;/option&gt;
+        &lt;option value='female'&gt;Female&lt;/option&gt;
+        &lt;option value='male'&gt;Male&lt;/option&gt;
+        &lt;option value='genderless'&gt;Genderless&lt;/option&gt;
+        &lt;option value='unknown'&gt;Unknown&lt;/option&gt;
+      &lt;/select&gt;
+
+      &lt;select
+        value={sortOption}
+        onChange={(e) =&gt; setSortOption(e.target.value)}
+      &gt;
+        &lt;option value='' disabled&gt;
+          Sort by
+        &lt;/option&gt;
+        &lt;option value='name'&gt;Name&lt;/option&gt;
+        &lt;option value='created'&gt;Created Date&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/form&gt;
+  );
+}</code></pre><p>Zauważ, że <em>SearchForm</em> oczekuje od rodzica propsów <em>setName</em>, <em>setGender</em> oraz <em>setSortOption</em>. Z punktu widzenia tego komponentu to funkcje przekazane jako wartość, które komponent wywołuje po wystąpieniu eventu<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/change_event" target="_blank" rel="noopener noreferrer"> change</a> w powiązanych polach formularza (nazwa, płeć i sortowanie). <em>SearchForm</em> nie interesuje jak działa logika sortowania, deleguje tę odpowiedzialność do rodzica-kontenera <em>CharacterSearchContainer.</em></p><ul><li><p><strong>CharacterList</strong></p></li></ul><pre><code>function CharacterList({characters}) {
+  return (
+    &lt;ol className='grid grid-cols-1 gap-4 list-none md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'&gt;
+      {characters.map((character) =&gt; (
+        &lt;li key={character.id} className='flex flex-col items-center'&gt;
+          &lt;h3&gt;{character.name}&lt;/h3&gt;
+          &lt;img src={character.image} alt={character.name} /&gt;
+        &lt;/li&gt;
+      ))}
+    &lt;/ol&gt;
+  );
+}</code></pre><p>Kod po zrealizowaniu podziału na komponenty kontenerowe i prezentacyjne znajdziesz w <strong>examples/module1/lesson2/container-components</strong></p><p><strong>💪 Ćwiczenie praktyczne z dalszej refaktoryzacji:</strong></p><ol start="1"><li><p>Wydziel logikę wyszukiwania postaci do zewnętrznego modułu - zadecyduj czy potrzebujesz customowego hooka/serwisu czy zwykłej funkcji</p></li><li><p>Wydziel logikę sortowania postaci do zewnętrznego modułu - zadecyduj czy potrzebujesz customowego hooka/serwisu czy zwykłej funkcji</p></li><li><p>Zezwól na wyświetlanie dowolnej nazwy wyszukiwarki, np. <em>“Wyszukiwarka postaci Pokemon”</em></p></li><li><p>Podziel komponent <em>CharacterList</em> na <em>komponent listy oraz karty postaci</em></p></li><li><p>Podziel komponent <em>SearchForm</em> na komponenty dedykowane poszczególnym polom formularza</p></li></ol><p>Nasze rozwiązanie:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1027327445?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2><strong>Prop drilling</strong></h2><p><br>Naszym punktem wyjścia jest <strong>examples/module1/lesson2/prop-drilling-start </strong>czyli wyszukiwarka po wykonaniu refaktoryzacji z ćwiczenia powyżej, dzięki czemu kod jest znacznie lepiej zorganizowany oraz czytelny.</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1027327358?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Kod po zmianach z pozbyciem się prop drillingu znajdziesz w <strong>examples/module1/lesson2/prop-drilling-finish.</strong></p><img loading="lazy" src="https://assets-v2.circle.so/pymogm33xuad8q664xavny0m9hl3" style="width: 100%; max-width: 100%;"><p>                                                                       Źródło ilustacji:<a href="https://react.dev/learn/passing-data-deeply-with-context" target="_blank" rel="noopener noreferrer"> react.dev</a><br><br><strong>Pozbywanie się prop-drillingu dzięki Context API (React), serwisom (Angular) lub provide/inject (Vue)</strong></p><p>Każdy z frameworków oferuje nam wbudowany sposób na udostępnianie danych w dół drzewa komponentów bez konieczności prop-drillingu. Jednak warto mieć na uwadze jak działają te mechanizmy, aby uniknąć problemów z wydajnością aplikacji i reaktywnością danych.</p><h3><strong>Context API (React)</strong></h3><p><a href="https://react.dev/learn/passing-data-deeply-with-context" target="_blank" rel="noopener noreferrer">Context API</a> w React to mechanizm, który umożliwia przekazywanie danych w dół drzewa komponentów, bez konieczności manualnego przekazywania propsów przez każdy poziom hierarchii.</p><p>Można to porównać do systemu poczty pneumatycznej, który bezpośrednio przesyła informacje z punktu A do punktu B, niezależnie od tego, ile pięter dzieli te dwa punkty w budynku.</p><img loading="lazy" src="https://assets-v2.circle.so/orqi8rc3bkr5gm1j7gr5ba8kybzo" style="width: 100%; max-width: 100%;"><p>                                                                       Źródło ilustacji:<a href="https://react.dev/learn/passing-data-deeply-with-context" target="_blank" rel="noopener noreferrer"> react.dev</a></p><p>W skrócie, Context API składa się z trzech głównych elementów:</p><ol start="1"><li><p><strong>React.createContext</strong> - Tworzy obiekt Context. Kiedy React renderuje komponent, który subskrybuje ten Context, odczytuje on wartość kontekstu od najbliższego pasującego <strong>Provider</strong> powyżej w drzewie.</p></li><li><p><strong>Provider</strong> - Komponent <strong>Provider</strong> "dostarcza" wartość kontekstu do komponentów potomnych, które tego potrzebują. Możesz mieć wielu Providerów w aplikacji i każdy z nich może przekazywać różne wartości.</p></li><li><p><strong>Consumer</strong> - Komponenty, które potrzebują danych z kontekstu, mogą subskrybować kontekst i otrzymywać w ten sposób dane.</p></li></ol><p>Korzystając z tej wiedzy moglibyśmy przebudować naszą aplikację, aby wykorzystywała context do zarządzania stanem i udostępniania go w dół drzewa komponentów:</p><pre><code>import {sortCharacters} from "../utils/sortCharacters";
+
+interface CharacterContextValues {
+  characters: Character[];
+  name: string;
+  setName: React.Dispatch&lt;React.SetStateAction&lt;string&gt;&gt;;
+  gender: string;
+  setGender: React.Dispatch&lt;React.SetStateAction&lt;string&gt;&gt;;
+  sortOption: string;
+  setSortOption: React.Dispatch&lt;React.SetStateAction&lt;string&gt;&gt;;
+}
+
+const defaultValues: CharacterContextValues = {
+  characters: [],
+  name: "",
+  setName: () =&gt; {},
+  gender: "",
+  setGender: () =&gt; {},
+  sortOption: "",
+  setSortOption: () =&gt; {},
+};
+
+const CharacterContext = createContext&lt;CharacterContextValues&gt;(defaultValues);
+
+export const CharacterProvider = ({children}: {children: React.ReactNode}) =&gt; {
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [sortOption, setSortOption] = useState("");
+  const characters = useCharacterSearch(name, gender);
+
+  const value = {
+    name,
+    setName,
+    gender,
+    setGender,
+    sortOption,
+    setSortOption,
+    characters: sortCharacters(characters, sortOption),
+  };
+
+  return (
+    &lt;CharacterContext.Provider value={value}&gt;
+      {children}
+    &lt;/CharacterContext.Provider&gt;
+  );
+};
+
+export const useCharacterContext = () =&gt; useContext(CharacterContext);</code></pre><p>Następnie podmienilibyśmy nasz komponent kontenerowy na <em>CharacterProvider </em>i voila, każdy z komponentów dzieci mógłby uzyskać dostęp do stanu za pomocą customowego hooka <em>useCharacterContext</em>.</p><p>Jednak <strong>zastosowanie kontekstu dla tego typu danych niesie za sobą konsekwencje związane z wydajnością aplikacji.</strong></p><h3><strong>Co musisz wiedzieć zanim zastosujesz Context API?</strong></h3><p><strong>Zmiana wartości kontekstu =&gt; Re-renderowanie konsumentów</strong></p><p>Kiedy wartość stanu przechowywanego w <strong>Context.Provider</strong> zmienia się, wszystkie komponenty konsumujące ten kontekst są ponownie renderowane. W dużych drzewach komponentów, gdzie wielu komponentów konsumuje dane z kontekstu, może to prowadzić do znacznej liczby niepotrzebnych re-renderowań.</p><p><strong>Zbyt duży zakres kontekstu</strong></p><p>Z uwagi na mechanizm re-renderowanie komponentów przy zmianach w kontekście, używanie jednego kontekstu na samym szczycie drzewa komponentów, tak aby udostępnić zróżnicowane dane dla całej aplikacji, nie jest dobrą decyzją. W takim przypadku, nawet niewielka zmiana jednej części danych w kontekście może prowadzić do re-renderowania wszystkich komponentów konsumujących ten kontekst, niezależnie od tego, czy te konkretne dane są dla nich istotne.</p><h3><strong>Najlepsze praktyki stosowania Context API</strong></h3><p>Aby uniknąć problemów z wydajnością, ważne jest, aby stosować się do kilku najlepszych praktyk przy używaniu React Context API:</p><p><strong>Rozdrobnienie kontekstów</strong></p><p>Zamiast tworzyć jeden, globalny kontekst dla całej aplikacji, lepiej jest tworzyć mniejsze, bardziej skoncentrowane konteksty dla różnych części danych. Pozwala to na bardziej precyzyjne kontrolowanie re-renderowania komponentów w oparciu o rzeczywiste zmiany stanu, które ich dotyczą.</p><p><strong>Rodzaje danych dla Context API</strong></p><p>Context API najlepiej nadaje się do przekazywania danych, które nie zmieniają się często, ale muszą być dostępne w wielu miejscach aplikacji. Oto kilka przykładów:</p><ul><li><p><strong>Ustawienia globalne</strong> aplikacji, takie jak motyw, preferencje językowe czy preferencje dostępności.</p></li><li><p><strong>Dane uwierzytelniające użytkownika</strong>, takie jak status zalogowania i uprawnienia, które są potrzebne w różnych częściach aplikacji do zarządzania sesją i uprawnieniami dostępowymi użytkownika.</p></li><li><p><strong>UI state</strong>, który musi być dostępny globalnie, ale zmienia się rzadko, na przykład status połączenia internetowego, tryb ciemny/jasny.</p></li></ul><p>Wracając do naszej aplikacji, która jest prosta i nie posiada wielu poziomów zagnieżdżenia co uzasadniałoby wprowadzanie kontekstu. Dane formularza, które siłą rzeczy zmieniają się często, nie są rekomendowanym typem danych dla Context API. Czy z tego powodu mamy związane ręce i musimy chwytać za bibliotekę do zarządzania stanem? Bynajmniej! Więcej na ten temat w kolejnej lekcji #cliffhanger.</p><p>Jak to wygląda w pozostałych frameworkach? Nie da się ukryć, że korzystniej 🙈</p><h3><strong>Provide / inject we Vue 3</strong></h3><p>Vue oferuje podobny mechanizm do Context API o nazwie<a href="https://vuejs.org/guide/components/provide-inject" target="_blank" rel="noopener noreferrer"> Provide / Inject</a>. Jednak API Vue jest prostsze, nie powoduje problemów związanych z wydajnością i daje większą kontrolę nad reaktywnością.</p><p>Jak sama nazwa wskazuje, provide / inject składa się z dwóch elementów:</p><ol start="1"><li><p><strong>Provide:</strong> Komponent "dostarczający" może udostępniać dane lub metody, wykorzystując opcję <strong>provide</strong>. Te dane stają się dostępne dla dowolnego komponentu potomnego, który zdecyduje się ich użyć. Dzięki metodom <em>ref()</em> i <em>reactive() </em>sprawiamy, że komponenty potomne wykorzystujące kontekst automatycznie zareagują na zmianę stanu<em> - </em>bez tych metod będzie on statyczny<em>.</em></p></li></ol><pre><code>// RandomParentComponent
+&lt;script&gt;
+import { provide } from 'vue';
+
+export default {
+&nbsp;&nbsp;setup() {
+&nbsp;&nbsp;&nbsp;&nbsp;const theme = ref('material');
+&nbsp;&nbsp;&nbsp;&nbsp;const darkMode = ref(false);
+&nbsp;&nbsp;&nbsp;&nbsp;provide('theme', theme);
+&nbsp;&nbsp;&nbsp;&nbsp;provide('darkMode', darkMode);
+&nbsp;&nbsp;}
+}
+&lt;/script&gt;</code></pre><ol start="2"><li><p><strong>Inject:</strong> Komponenty potomne mogą "wstrzyknąć" te dane do swojego zakresu, korzystając z opcji <strong>inject</strong>, co pozwala im na dostęp do dostarczonych danych bez potrzeby przekazywania propsów przez każdy poziom drzewa komponentów.</p></li></ol><pre><code>// RandomChildComponent
+
+&lt;script&gt;
+import { inject } from 'vue';
+
+export default {
+&nbsp;&nbsp;setup() {
+&nbsp;&nbsp;&nbsp;&nbsp;const darkMode = inject('darkMode');
+&nbsp;&nbsp;&nbsp;&nbsp;return { darkMode };
+&nbsp;&nbsp;}
+}
+&lt;/script&gt;</code></pre><p>Co ważne zmiana <em>theme, </em>którym nie jest zainteresowany <em>RandomChildComponent,</em> nie spowoduje jego rerendera, jakby to się stało domyślnie przy zastosowaniu React Context API (bez zastosowania React.memo w <em>RandomChildComponent</em>).</p><p>Z tego powodu <em>provide / inject</em> stanowią istotną alternatywę dla bibliotek do zarządzania stanem, które omówimy w kolejnej lekcji.</p><h3><strong>Serwisy w Angularze</strong></h3><p>Serwis (ang. Service) w Angularze to klasa z dekoratorem <strong>@Injectable</strong>, która zapewnia sposób na dzielenie się danymi i logiką biznesową między różnymi częściami aplikacji. Angular wykorzystuje wstrzykiwanie zależności (Dependency Injection, DI), aby umożliwić łatwe i efektywne udostępnianie serwisów w różnych komponentach i modułach aplikacji. Serwisy mogą być używane do wielu celów, takich jak wykonywanie zapytań HTTP, zarządzanie stanem aplikacji, autentykacja użytkownika itd. Można powiedzieć, że łączą w sobie możliwości customowych hooków oraz Context API.</p><pre><code>// character-search.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Character } from '../models/character.model';&nbsp;
+
+@Injectable({
+&nbsp;&nbsp;providedIn: 'root'
+})
+export class CharacterSearchService {
+&nbsp;&nbsp;private nameSubject = new BehaviorSubject&lt;string&gt;('');
+&nbsp;&nbsp;private genderSubject = new BehaviorSubject&lt;string&gt;('');
+&nbsp;&nbsp;private sortOptionSubject = new BehaviorSubject&lt;string&gt;('');
+&nbsp;&nbsp;private apiBaseUrl = 'https://rickandmortyapi.com/api/character/';
+
+&nbsp;&nbsp;constructor(private http: HttpClient) {}
+
+&nbsp;&nbsp;setName(name: string) {
+&nbsp;&nbsp;&nbsp;&nbsp;this.nameSubject.next(name);
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;setGender(gender: string) {
+&nbsp;&nbsp;&nbsp;&nbsp;this.genderSubject.next(gender);
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;setSortOption(sortOption: string) {
+&nbsp;&nbsp;&nbsp;&nbsp;this.sortOptionSubject.next(sortOption);
+&nbsp;&nbsp;}
+
+
+&nbsp;&nbsp;getCharacters(): Observable&lt;Character[]&gt; {
+&nbsp;&nbsp;&nbsp;&nbsp;return this.http.get&lt;{ results: Character[] }&gt;(`${this.apiBaseUrl}?name=${this.nameSubject.value}&amp;gender=${this.genderSubject.value}`)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.pipe(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map(response =&gt; response.results || [])
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);
+&nbsp;&nbsp;}
+}</code></pre><p>Następnie taki serwis możemy wstrzyknąć w dowolny komponent, który jest zainteresowany stanem i metodami obsługiwanymi przez ten serwis.</p><p>Podobnie jak Provide / Inject z Vue 3, serwisy z Angulara są wolne od wyzwań, które wymieniliśmy omawiając Context API i stanowią istotną alternatywę dla bibliotek do zarządzania stanem, które omówimy w kolejnej lekcji.</p><h2><strong>Signals, czyli “nowe” podejście do zarządzania stanem lokalnym i współdzielonym</strong></h2><p>W ostatnich latach za sprawą frameworka<a href="https://www.solidjs.com/" target="_blank" rel="noopener noreferrer"> Solid.js</a> rosnącą popularność zyskują Sygnały (ang. Signals), czyli kolejne podejście do reaktywnego zarządzania stanem lokalnym i wspódzielonym.</p><p>Przyjrzyjmy prostemu przykładowi z zastosowaniem Angulara:</p><pre><code>// Inicjalizacja sygnału
+const count = signal(0);
+
+// Sygnały są getterami - wywołanie powoduje odczytanie ich wartości.
+console.log('The count is: ' + count());
+
+// Wartość sygnału możemy zaktualizować za pomocą metody set()
+count.set(1);
+
+// Lub za pomocą metody update, która udostępnia nam domknięcie na aktualnej wartości
+count.update(value =&gt; value + 1);
+
+// Inicjalizacja sygnału zależnego, automatycznie aktualizowanego przy zmianie wartości count
+const doubleCount = computed(() =&gt; count() * 2);</code></pre><p>Co raz więcej programistów jest przekonanych, że to właśnie TEN sposób za kilka lat stanie się standardem pośród frameworków frontendowych. Nie są to przypuszczenia bezzasadne, ponieważ w krótkim czasie oficjalnej implementacji sygnałów doczekały się:<a href="https://angular.io/guide/signals" target="_blank" rel="noopener noreferrer"> Angular</a>,<a href="https://vuejs.org/guide/extras/reactivity-in-depth.html#connection-to-signals" target="_blank" rel="noopener noreferrer"> Vue</a>,<a href="https://svelte.dev/blog/runes#signal-boost" target="_blank" rel="noopener noreferrer"> Svelte</a>,<a href="https://qwik.dev/docs/components/state/#usesignal" target="_blank" rel="noopener noreferrer"> Qwik</a> i<a href="https://preactjs.com/guide/v10/signals" target="_blank" rel="noopener noreferrer"> Preact</a>.</p><p>Ale o co chodzi i skąd te wszystkie zachwyty? Już tłumaczę!</p><p>Znaczna część bólu związanego z zarządzaniem stanem w JavaScript polega na reagowaniu na zmiany dla danej wartości, ponieważ wartości nie są bezpośrednio obserwowalne. Frameworki zazwyczaj obchodzą to poprzez przechowywanie wartości w zmiennej i ciągłe sprawdzanie, czy uległa one zmianie, co jest uciążliwe i suboptymalne pod kątem wydajności.</p><p>Najlepiej byłoby, gdybyśmy mieli sposób na wyrażenie wartości, który samodzielnie poinformuje nas o jej zmianie. To właśnie robią Sygnały.</p><p>Sygnał to wrapper wartości, który automatycznie powiadamia zainteresowanych konsumentów o zmianie tej wartości. Sygnały mogą zawierać dowolne wartości, od prostych prymitywów (string, number) po złożone struktury danych (obiekty). Wartość sygnału jest zawsze odczytywana za pomocą<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get" target="_blank" rel="noopener noreferrer"> gettera</a>, co pozwala frameworkom śledzić, czy i gdzie sygnał jest używany.</p><p>Implementacje Signals różnią się pomiędzy frameworkami, ale łączy je:</p><ul><li><p><strong>Domyślne lenistwo</strong> - tylko sygnały, które faktycznie są używane przez jakikolwiek komponent są obserwowane i aktualizowane.</p></li><li><p><strong>Optymalne aktualizacje </strong>- jeśli wartość sygnału nie uległa zmianie, komponenty i efekty, które używają tej wartości, nie zostaną zaktualizowane, nawet jeśli zależności sygnału uległy zmianie.</p></li><li><p><strong>Optymalne śledzenie zależności</strong> - framework sam śledzi komponenty zależne od danego sygnału, w przeciwieństwie do architektury React Hooks, która opiera się na jawnych tablicach zależności.</p></li><li><p><strong>Bezpośredni dostęp</strong> - dostęp do wartości sygnału w komponencie automatycznie subskrybuje aktualizacje bez potrzeby stosowania selektorów lub hooków.</p></li></ul><p>Dzięki temu Sygnały wyróżniają się niespotykaną wydajnością, prostotą użycia i świetną skalowalnością - można je stosować w małych i dużych aplikacjach bez doktoryzowania się z API konkretnego frameworka.</p><p>Co ciekawe tak naprawdę nie jest to żadna nowość, ponieważ takie podejście do reaktywności sięga lat 60’tych, a w świecie JavaScript z takiego rozwiązania korzystał zapomniany już Knockout.js (2010) - więcej o ewolucji sygnałów w JavaScript dowiesz się z tego<a href="https://dev.to/this-is-learning/the-evolution-of-signals-in-javascript-8ob" target="_blank" rel="noopener noreferrer"> artykułu</a>.</p><h3><strong>React, do you even signal?</strong></h3><p>Wielkim nieobecnym jeżeli chodzi o wsparcie dla Sygnałów jest React. Co prawda mamy do dyspozycji<a href="https://www.npmjs.com/package/@preact/signals-react" target="_blank" rel="noopener noreferrer"> @preact/signals-react</a>, ale względu na brak przystosowania frameworka do obsługi sygnałów biblioteka ma swoje problemy (wymienione w readme) i nie cieszy się dużą popularnością. Dan Abramov, jeden z frontmanów Reacta,<a href="https://github.com/facebook/react/issues/26704#issuecomment-1522044060" target="_blank" rel="noopener noreferrer"> wprost odradza korzystania z tej biblioteki</a>.</p><p>Nie ma żadnych oficjalnych zapowiedzi wsparcia sygnałów w React.<a href="https://twitter.com/acdlite/status/1628811935088013314?lang=en" target="_blank" rel="noopener noreferrer"> Wypowiedzi członków core team’u</a> wskazują na ich sceptyczne podejście do tego rozwiązania. Ich zdaniem sygnały kłócą się z “filozofią Reacta”, skoncentrowanej na tworzeniu frameworka, które nie wymaga od nas myślenia o wydajności - kto wie, obyśmy w przyszłości doczekali się takiej wersji Reacta 😉</p><h3><strong>Angular jest za trudny? Sygnały na ratunek!</strong></h3><p>Anyways, zobaczmy jak sygnały potrafią uprościć kod w Angularze, pozwalając nam zrezygnować z części kodu opartego o RxJS, który w dużej części odpowiada za wysoki próg wejścia do tego frameworka.<br><br>Punktem wyjścia dla tego przykładu jest kod <strong>examples/module1/lesson2/signals-angular-start</strong></p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1027327502?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Sygnały to obiecująca “nowość”. To czy staną się nowym standardem w reaktywnym zarządzeniu stanem, będzie w dużej mierze zależne od popularności największych konkurentów Reacta czyli Angulara, Vue oraz Svelte. Czas pokaże!</p><h2><strong>👨‍💻 Ćwiczenia praktyczne</strong></h2><h3>Countries Search: Zbuduj wyszukiwarkę informacji o państwach</h3><p>Zbuduj aplikację wyszukiwarki wykorzystującą <a href="https://restcountries.com/" target="_blank" rel="noopener noreferrer">REST Countries API</a>, która umożliwi użytkownikom wyszukiwanie i filtrowanie informacji o państwach. Aplikacja powinna zapewniać intuicyjny interfejs do wyszukiwania krajów i wyświetlania istotnych informacji o nich. Wykonaj pracę pod ścieżką <strong>examples/module1/lesson2/countries-search. </strong>Twoje zadania są następujące:</p><p><strong>🔍 Funkcjonalność wyszukiwania i filtrowania</strong></p><ul><li><p>Zaimplementuj funkcjonalność wyszukiwania po nazwie kraju</p></li><li><p>Dodaj możliwość filtrowania po nazwie, walucie, języku oraz stolicy</p></li><li><p>Wyświetl karty krajów zawierające:</p><ul><li><p>Nazwę kraju (z data-testid="country-name")</p></li><li><p>Flagę kraju (z atrybutem alt “{country.name} flag")</p></li><li><p>Informację o populacji (z data-testid="country-population")</p></li></ul></li></ul><p><strong>📊 Sortowanie i paginacja</strong></p><ul><li><p>Zaimplementuj alfabetyczne sortowanie krajów</p></li><li><p>Dodaj funkcjonalność sortowania według populacji</p></li><li><p>Stwórz paginację z przyciskiem "Next", “Previous” i licznikiem stron</p></li></ul><p><strong>🔧 Obsługa Błędów</strong></p><ul><li><p>Zaimplementuj właściwą obsługę błędów API</p><ul><li><p>Wyświetlaj komunikat "No countries found" w przypadku braku wyników</p></li><li><p>Wyświetlaj komunikat “Failed to fetch” w przypadku błędów technicznych</p></li></ul></li></ul><p>👉 Do weryfikacji Twojego rozwiązania wykorzystaj komendę <strong><em>npm run verify countries-search</em></strong>, która uruchamia ./tests/countries-search.spec.ts:</p><p><strong>✅ Kryteria sukcesu </strong></p><ul><li><p>Poprawne ładowanie interfejsu wyszukiwania ze wszystkimi widocznymi elementami</p></li><li><p>Działanie filtrowania krajów zarówno po nazwie jak i walucie</p></li><li><p>Poprawne działanie sortowania alfabetycznego i według populacji</p></li><li><p>Prawidłowe działanie nawigacji stron</p></li><li><p>Właściwą obsługę błędów API</p></li></ul><p><strong>🎯 Wymagane selektory i elementy</strong></p><p>Placeholder’y inputa wyszukiwarki:</p><ul><li><p>Dla wyszukiwania po nazwie: "Search by country's name..."</p></li><li><p>Dla wyszukiwania po walucie: "Search by country's currency..."</p></li></ul><p>Labelki selectów:</p><ul><li><p>"Filter By:"</p></li><li><p>"Sort By:"</p></li></ul><p>Atrybuty data:</p><ul><li><p>data-testid="country-name" dla nazw krajów</p></li><li><p>data-testid="country-population" dla wartości populacji</p></li></ul><p>Nawigacja:</p><ul><li><p>Przycisk "Next" i “Previous”</p></li><li><p>Licznik stron pokazujący "Page X of Y"</p></li></ul><p>🏁 Przykładowe rozwiązanie znajdziesz pod ścieżką <strong>examples/module1/lesson2/_solutions/countries-search. </strong>Możesz je uruchomić za pomocą <strong><em>npm run example _solutions/countries-search</em></strong>.</p><h3><strong>Signal all the things</strong>: refaktoryzacja z RxJS do sygnałów</h3><p>Odziedziczyłeś aplikację do przeglądania postaci z Rick and Morty w <strong>examples/module1/lesson2/signals-angular-finish</strong>, która obecnie używa RxJS Subjects do zarządzania stanem. Twoim zadaniem jest unowocześnienie aplikacji poprzez refaktoryzację z wykorzystaniem sygnałów. Twoje zadania są następujące:</p><p><strong>🔄 Refaktoryzacja zarządzania stanem</strong></p><ul><li><p>Przekonwertuj nameSubject na sygnał do filtrowania po nazwie postaci</p></li><li><p>Przekonwertuj genderSubject na sygnał do filtrowania po płci</p></li><li><p>Przekonwertuj sortOptionSubject na sygnał do funkcjonalności sortowania</p></li><li><p>Przekonwertuj showRickOnlySubject na sygnał do filtrowania "tylko Rick"</p></li><li><p>Upewnij się, że wszystkie filtry mogą działać w kombinacji</p></li></ul><p>👉 Aby zweryfikować swoje rozwiązanie, użyj komendy <strong>npm run verify signals-angular-finish</strong>, które uruchamia testy ./tests/signals-refactoring.spec.ts:</p><p>✅ Kryteria sukcesu</p><ul><li><p>Filtrowanie po nazwie pokazuje prawidłową liczbę wyników (np. "Rick" powinien pokazać 21 postaci)</p></li><li><p>Filtrowanie po płci działa (np. filtr "female" powinien pokazać kilka postaci "Beth")</p></li><li><p>Sortowanie po nazwie daje wyniki w kolejności alfabetycznej</p></li><li><p>Przełącznik "Pokaż tylko Ricka" filtruje, pokazując tylko postacie z "Rick" w nazwie</p></li><li><p>Wiele filtrów może być stosowanych jednocześnie i działa poprawnie</p></li></ul><p>⚒️ Wymagania Techniczne:</p><p>Wymagane Selektory (używane w testach):</p><ul><li><p>Input nazwy postaci: [placeholder="Enter character name"]</p></li><li><p>Select płci: [aria-label="Gender"]</p></li><li><p>Select sortowania: [aria-label="Sort by"]</p></li><li><p>Checkbox "Pokaż tylko Ricka": [aria-label="Show Rick Only"]</p></li></ul><p>🏁 Przykładowe rozwiązanie znajdziesz pod ścieżką <strong>examples/module1/lesson2/_solutions/signals-angular. </strong>Możesz je uruchomić za pomocą <strong><em>npm run example _solutions/signals-angular</em></strong>.</p><h2><strong>📚 Materiały Dodatkowe</strong></h2><ol start="1"><li><p><a href="https://angular.io/guide/observables" target="_blank" rel="noopener noreferrer">Sekcja “Observables &amp; RxJS” w dokumentacji Angulara</a></p></li><li><p><a href="https://dev.to/this-is-learning/the-evolution-of-signals-in-javascript-8ob" target="_blank" rel="noopener noreferrer">The Evolution of Signals in JavaScript</a></p></li><li><p><a href="https://reactjs.org/docs/lifting-state-up.html" target="_blank" rel="noopener noreferrer">Lifting State Up</a></p></li></ol><img loading="lazy" src="https://assets-v3.circle.so/g2l2mq3ct4vs6xen0q8vet43g8ie" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 1844px; position: relative;"><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeuNNK_JHWlJ4JFLwVc4bDtn_72Iq87feaVpBD45xImX6We_Q/viewform?usp=sf_link&amp;embedded=true&amp;usp=embed_googleplus" width="360" height="1844" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen=""></iframe></div></div><p>Świetna robota! Opanowałeś praktyczne aspekty zarządzania stanem lokalnym i współdzielonym. Poznałeś wzorce takie jak komponenty kontenerowe i prezentacyjne oraz nowoczesne podejścia jak Signals. Wykonałeś również ćwiczenia praktyczne, które pomogły Ci utrwalić nowo nabytą wiedzę. </p><p>W następnej lekcji przeniesiemy się na wyższy poziom abstrakcji i przyjrzymy się globalnemu zarządzaniu stanem poprzez architekturę Flux i bibliotekę Redux.</p><img loading="lazy" src="https://assets-v3.circle.so/aye6a6a1f2fi61lju367msc9k0em" style="width: 100%; max-width: 100%;"></div></body></html>

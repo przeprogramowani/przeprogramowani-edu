@@ -1,0 +1,93 @@
+<meta name="lesson-id" content="Monitoring client-side z Sentry"><html><head></head><body><div><img loading="lazy" src="https://assets-v3.circle.so/uwrp55x1sewtr88kbha6unvjr8lt" style="width: 100%; max-width: 100%;"><img loading="lazy" src="https://assets-v2.circle.so/0x47tpcimr742x0u70nxygcpsobz" style="width: 100%; max-width: 100%;"><h2>Przechwytywanie błędów w przeglądarce</h2><p>Aby dowiedzieć się jak popularne usługi do monitorowania aplikacji wykrywają błędy na produkcji, zróbmy mały reverse engineering biblioteki <a href="https://sentry.io/" target="_blank" rel="noopener noreferrer">Sentry</a>.</p><p>Po wykonaniu krótkiego rozpoznania jej metod inicjalizacyjnych, odnajdujemy w środku dwie kluczowe funkcje dostępne na obiekcie <em>window:</em> </p><img loading="lazy" src="https://assets-v3.circle.so/iufe5rvapcab706fyylk0mxuw0g0" style="width: 100%; max-width: 100%;"><blockquote><p><a href="https://github.com/getsentry/sentry/blob/8bc643a80566012510109eeb5fbc04b6a20a6631/src/sentry/templates/sentry/js-sdk-loader.ts#L233-L234" target="_blank" rel="noopener noreferrer">https://github.com/getsentry/sentry/blob/8bc643a80566012510109eeb5fbc04b6a20a6631/src/sentry/templates/sentry/js-sdk-loader.ts#L233-L234</a></p></blockquote><p>Sentry, popularna biblioteka do monitoringu i alertingu, nadpisuje dwie dostępne w przeglądarce funkcje do obsługi błędów:</p><ul><li><p><strong>window.onerror</strong> - wywoływany w momencie wystąpienia błędu w kodzie client-side</p></li><li><p><strong>window.onunhandledrejection</strong> - wywoływany w momencie odrzucenia Promise’a</p></li></ul><p>Dzięki temu Sentry (jak i wszystkie popularne alternatywy, np. <a href="https://newrelic.com/" target="_blank" rel="noopener noreferrer">NewRelic</a> czy <a href="https://trackjs.com/" target="_blank" rel="noopener noreferrer">TrackJS</a>) może przechwytywać występujące w przeglądarce błędy, zapisywać je w bazie danych, agregować i prezentować w docelowym interfejsie użytkownika.</p><p>Nic nie stoi na przeszkodzie, żebyś te funkcje wykorzystywał również&nbsp;ty. Jeśli w twojej firmie masz dostęp do chmury, ale trudno będzie wynegocjować dodatkowe subskrypcje, to usługi takie jak Lambda czy CloudWatch mogą służyć za fundamenty systemu do monitoringu aplikacji.</p><p>Poniższy przykład prezentuje mechanizm nadpisywania funkcji <em>window.onerror</em> tak, aby możliwe było przekazanie błędów do dowolnej usługi zewnętrznej. (Ważne: w przypadku nadpisywania wspomnianej funkcji, błąd nie może pochodzić z konsoli DevTools, a samego kodu aplikacji).</p><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Custom error processor&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Otwórz konsolę i zobacz niestandardowe powiadomienie o błędzie&lt;/h1&gt;
+    &lt;script&gt;
+      // Nadpisanie domyślnego mechanizmu obsługi błędów kodem użytkownika
+      (() =&gt; {
+        const originalOnError = window.onerror;
+
+        window.onerror = function (message, source, lineno, colno, error) {
+          const errorData = {
+            message: typeof message === "string" ? message : message.toString(),
+            url: source,
+            lineNumber: lineno,
+            columnNumber: colno,
+            errorStack:
+              error &amp;&amp; error.stack ? error.stack : "Stack trace not available",
+          };
+
+          console.warn("🚨 Widać mnie? 👀");
+          // Wyślij informacje o błędzie do usługi agregującej powiadomienia
+          // fetch(..., { method: 'POST', body: JSON.stringify(errorData) })
+
+          if (originalOnError) {
+            return originalOnError.apply(this, [
+              message,
+              source,
+              lineno,
+              colno,
+              error,
+            ]);
+          }
+
+          return true;
+        };
+      })();
+
+      throw new Error("Testing custom error processor");
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre><p>Jeśli chciałbyś popularny dylemat “buy vs build” rozwiązać w ten pierwszy sposób, to poniżej znajdziesz krótki opis instalacji Sentry w ramach twojej aplikacji. Gotowe SDK pod popularne frameworki czynią ten proces stosunkowo prostym.</p><blockquote><p>🚨 Niestety, w przypadku tego narzędzia darmowy trial trwa wyłącznie 14 dni, więc nie chcemy z płatnego narzędzia jednej konkretnej firmy robić głównego aktora w kursie. Potraktuj tę sekcję jak kilka rekomendacji, które możesz wykorzystać w rozwiązaniach tego samego segmentu, a decyzję o integracji z Sentry podejmij po własnej analizie zarówno planu jak i oferowanych funkcjonalności.</p><p>Z naszego doświadczenia na produkcji dobrze sprawdziły się zarówno Sentry, jak i wspomniany New Relic czy TrackJS.</p></blockquote><h3>Pierwsze kroki z Sentry</h3><p>Instalacja Sentry na darmowym planie rozpoczyna się na stronie <a href="https://sentry.io/signup/" target="_blank" rel="noopener noreferrer">https://sentry.io/signup/</a>. Po wprowadzeniu danych wybieramy platformę, której dotyczy integracja:</p><img loading="lazy" src="https://assets-v3.circle.so/lysxp7vbt3trugo7mqa3zzsiujiu" style="width: 100%; max-width: 100%;"><p>Wybierając konkretny framework, Sentry podpowiada jak zintegrować go z systemem do monitoringu:</p><img loading="lazy" src="https://assets-v3.circle.so/r1ggiku2lfx5k3x0c6kqjbn7431u" style="width: 100%; max-width: 100%;"><p>Po wyborze Reacta lub innego preferowanego frameworka, Sentry ma dla nas gotową paczkę, która powinna dostarczyć niezbędne narzędzia do instrumentacji “out of the box”:</p><pre><code>npm install --save @sentry/react</code></pre><p>Sama paczka zawiera w sobie trzy składowe - monitoring błędów, wydajności oraz sesji użytkownika. Dla przetestowania możliwości samej biblioteki wystarczy nam podstawowy monitoring:</p><img loading="lazy" src="https://assets-v3.circle.so/x5g2b5k72r0h2yqbpl6b15abeac8" style="width: 100%; max-width: 100%;"><p>Instalacja biblioteki powinna odbyć się jeszcze przed załadowaniem właściwej części aplikacji, więc dobrym miejscem na instalację będzie plik main.tsx lub inny, od którego zaczyna działanie kod client-side.</p><p>Na potrzeby integracji produkcyjnej wprowadzam dodatkowy moduł (sentry.ts), który zawiera funkcję&nbsp;do inicjalizacji biblioteki, a także weryfikację środowiska produkcyjnego i mój unikalny identyfikator przekazywany jako zmienna środowiskowa (<a href="https://docs.sentry.io/product/sentry-basics/concepts/dsn-explainer/" target="_blank" rel="noopener noreferrer">SENTRY_DSN</a>):</p><pre><code>// sentry.ts
+import * as Sentry from '@sentry/react';
+
+export function initSentry() {
+  if (import.meta.env.VITE_ENV_NAME !== 'production') {
+    return;
+  }
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    integrations: [],
+  });
+}
+// -------------------------------------
+// main.tsx
+import { initSentry } from './sentry';
+
+...
+
+initSentry();</code></pre><p>Wdrażając Sentry na produkcję, domyślnie biblioteka nie będzie mieć dostępu do pełnej wersji naszego kodu, w związku z czym analiza błędów i stack trace’u może być utrudniona. Na szczęście na npm znajdziesz oficjalny plugin do Vite i innych popularnych bundlerów, dzięki którym zbudujesz mapowanie pomiędzy kodem źródłowym, a minifikowanymi plikami na produkcji:</p><pre><code>npm install @sentry/vite-plugin --save-dev</code></pre><p>Dodanie pluginu uwarunkujemy od konkretnego środowiska:</p><pre><code># vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
+
+export default defineConfig({
+  build: {
+    sourcemap: true,
+  },
+  server: {
+    port: 3000,
+  },
+  plugins: [
+    react(),
+    process.env.VITE_ENV_NAME === 'production' &amp;&amp;
+      sentryVitePlugin({
+        org: 'przeprogramowani-34',
+        project: 'rm-catalog',
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+      }),
+  ],
+});</code></pre><p>Token do API wygenerujesz <a href="https://docs.sentry.io/platforms/javascript/sourcemaps/uploading/vite/" target="_blank" rel="noopener noreferrer">na tej stronie</a>.</p><p>Podobnie jak w przypadku monitoringu, wrażliwe dane zostaną przekazane w scenariuszu CI/CD poprzez zmienne środowiskowe i sekrety:</p><pre><code># deploy-aws.yml
+
+- name: Build app
+  run: npm run build
+  env:
+    VITE_AWS_MONITORING_API: ${{ secrets.AWS_MONITORING_API }}
+    SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+    VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+    VITE_ENV_NAME: 'production'</code></pre><p>Jeśli konfiguracja przebiegnie poprawnie, to już na etapie produkcyjnego budowania aplikacji zobaczysz na GitHub Actions odpowiedni fragment logów:</p><pre><code>[sentry-vite-plugin] Info: Successfully uploaded source maps to Sentry</code></pre><p>Po wywołaniu błędu na stronie, chociażby poprzez rzucenie wyjątku, dashboard Sentry przedstawi ci pełne informacje o zaistniałym wydarzeniu wraz z miejscem w kodzie, gdzie ten błąd wystąpił:</p><img loading="lazy" src="https://assets-v3.circle.so/arznsj5q6zgw0bu33dq0y6lgenpi" style="width: 100%; max-width: 100%;"><p>Od tego momentu podstawową instalację monitoringu poprzez Sentry możesz uznać za zakończoną. Dalsza konfiguracja tego narzędzia zależy tak naprawdę od twoich potrzeb. Jeśli chcesz, możesz do projektu wprowadzić nowych członków zespołu, zbudować alerty, wprowadzić śledzenie na innych środowiskach albo określić reguły grupowania błędów (szczególnie istotne w dużej skali).</p><h3>Monitoring a prywatność</h3><p>W lekcji o monitoringu z wykorzystaniem zewnętrznych usług nie możemy pominąć tematu bezpiecznego przetwarzania danych i prywatności naszych użytkowników.</p><p>Zanim zintegrujesz się z jakimkolwiek zewnętrznym serwisem koniecznie zweryfikuj jego politykę prywatności i warunki użytkowania. Sprawdź, w jakim regionie przechowywane będą wysyłane przez ciebie dane oraz co planuje z nimi robić właściciel usługi. </p><p>Aby zminimalizować ryzyko naruszenia prywatności nie zbieraj ich ponad miarę. Zadbaj o to, żeby przekazywane dane były anonimizowane - szczególnie przy zbieraniu danych wrażliwych lub identyfikujących, które mogą przypadkowo znaleźć się chociażby w logach aplikacji. </p><p>Zapoznaj się z <a href="https://docs.sentry.io/platforms/javascript/data-management/sensitive-data/" target="_blank" rel="noopener noreferrer">funkcjami Sentry</a>, które mogą ci pomóc przetwarzać dane w <a href="https://docs.sentry.io/product/data-management-settings/scrubbing/advanced-datascrubbing/" target="_blank" rel="noopener noreferrer">bardziej bezpieczny</a> sposób.</p><img loading="lazy" src="https://assets-v3.circle.so/ivbopgbpd3j10wd5nodq5b76mtcl" style="width: 100%; max-width: 100%;"><p>W materiałach dodatkowych znajdziesz też opracowanie ról i odpowiedzialności podmiotów, które wg RODO biorą udział w przetwarzaniu danych.</p><p>Jeśli szukasz wsparcia w konkretnym aspekcie pracy z Sentry, dodaj wpis na kanale <a class="entity" href="https://przeprogramowani.circle.so/c/praktyka" target="_blank" rel="noopener noreferrer">#Praktyka</a>, a my tymczasem przechodzimy do kolejnego tematu w tej sekcji, czyli alertingu.</p><img loading="lazy" src="https://assets-v3.circle.so/kwkkmyoxj4k74lj06y9nqv5ij68j" style="width: 100%; max-width: 100%;"></div></body></html>

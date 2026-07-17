@@ -1,0 +1,121 @@
+<meta name="lesson-id" content="Compound Components"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/2elr8jecw5k9wicko0nrf3kd8bau" style="width: 100%; max-width: 100%;"><p><strong>Compound Components</strong> to wzorzec projektowy w React, który umożliwia tworzenie elastycznych i złożonych interfejsów użytkownika poprzez komponowanie mniejszych, współpracujących ze sobą komponentów. Zamiast przekazywać wiele propsów do pojedynczego komponentu, dzielimy funkcjonalność na mniejsze, bardziej specjalizowane komponenty, które współdzielą stan i logikę poprzez kontekst.</p><p><strong>Zalety:</strong></p><ul><li><p><strong>Modularność:</strong> Łatwiejsze zarządzanie i ponowne użycie.</p></li><li><p><strong>Elastyczność:</strong> Użytkownicy mogą komponować komponenty zgodnie z potrzebami.</p></li><li><p><strong>Czystość API:</strong> Mniej propsów do przekazywania w jednym komponencie, bardziej czytelny kod.</p></li></ul><pre><code>&lt;Tabs&gt;
+    &lt;Tabs.Title&gt;Admin&lt;/Tabs.Title&gt;
+    &lt;Tabs.Item id="overview"&gt;Overview&lt;/Tabs.Item&gt;
+    &lt;Tabs.Item id="settings"&gt;Settings&lt;/Tabs.Item&gt;
+&lt;/Tabs&gt;</code></pre><h3>Podstawowa implementacja</h3><p>Zaczynamy od zdefiniowania typów dla głównego komponentu (Tabs) oraz jego podkomponentów (Tabs.Title i Tabs.Item).</p><pre><code>// Typy dla głównego komponentu Tabs
+interface TabsProps {
+    children: React.ReactNode;
+}
+
+// Typy dla Tabs.Title
+interface TitleProps {
+    children: React.ReactNode;
+}
+
+// Typy dla Tabs.Item
+interface ItemProps {
+    id: string;
+    isActive?: boolean;
+    onClick?: () =&gt; void;
+    children: React.ReactNode;
+}
+
+// Interfejs komponentu głownego, który wymusi zdefiniowanie podkomponentów
+interface TabsComponent {
+  (props: TabsProps): JSX.Element;
+  Title: React.ComponentType&lt;TitleProps&gt;;
+  Item: React.ComponentType&lt;ItemProps&gt;;
+}</code></pre><p>Następnie definiujemy główny komponent Tabs jako funkcjonalny komponent, który może zawierać dodatkowe właściwości (Title i Item).</p><pre><code>// Główny komponent Tabs
+const Tabs: TabsComponent = ({children, ...props}) =&gt; {
+  const [activeTab, setActiveTab] = useState&lt;string&gt;();
+
+  return (
+    &lt;div className='tabs'&gt;
+      {Children.map(children, (child) =&gt; {
+        const item = child as ReactElement&lt;ItemProps&gt;;
+
+        if (item.type === Tabs.Item) {
+          const isActive = item.props.id === activeTab;
+          const onClick = () =&gt; {
+            setActiveTab(item.props.id);
+            item.props.onClick?.();
+          };
+          return cloneElement(item, {isActive, onClick});
+        } else {
+          return child;
+        }
+      })}
+    &lt;/div&gt;
+  );
+};</code></pre><p>Zostało nam zdefiniowanie komponentów podrzędnych Title i Item. Dzięki typowi TabsComponent dopóki tego nie zrobimy Tabs będzie zwracał błąd kompilacji - podkomponenty są częścią jego interfejsu.</p><pre><code>// Definiowanie podkomponentów
+const Title = ({children}: TitleProps) =&gt; (
+  &lt;div className='tabs-title'&gt;{children}&lt;/div&gt;
+);
+
+const Item = ({children, isActive, onClick}: ItemProps) =&gt; (
+  &lt;div className={`tabs-item ${isActive ? "active" : ""}`} onClick={onClick}&gt;
+    {children}
+  &lt;/div&gt;
+);
+
+// Przypisywanie podkomponentów do głównego komponentu
+Tabs.Title = Title;
+Tabs.Item = Item;
+
+export {Tabs};</code></pre><h3>Szczegółowe omówienie React.Children.map i cloneElement</h3><p>Skupmy się na najbardziej nieoczywistym elemencie implementacji wzorca Compound Components:</p><pre><code>{Children.map(children, (child) =&gt; {
+        const item = child as ReactElement&lt;ItemProps&gt;;
+
+        if (item.type === Tabs.Item) {
+          const isActive = item.props.id === activeTab;
+          const onClick = () =&gt; {
+            setActiveTab(item.props.id);
+            item.props.onClick?.();
+          };
+          return cloneElement(item, {isActive, onClick});
+        } else {
+          return child;
+        }
+})}</code></pre><p><strong>React.Children.map</strong> pozwala na iterację po dzieciach komponentu, niezależnie od tego, czy są one pojedynczym elementem, tablicą czy innym typem.</p><p><strong>React.cloneElement</strong> umożliwia klonowanie elementu React i przekazywanie do niego dodatkowych propsów.</p><p>Aby zapewnić poprawne typowanie dzieci, musimy skorzystać z asercji typu na ReactElement przekazując ItemProps jako generyka</p><pre><code>const element = child as ReactElement&lt;ItemProps&gt;;</code></pre><p>Następnie weryfikujemy czy dany element jest faktycznie TabsItem za pomocą właściwości item.type. Jeżeli tak, to dodajemy do niego propsy isActive oraz onClick za pomocą cloneElement. Dzięki TS mamy pewność, że przekazujemy propsy zgodnie z interfejsem TabsItemProps.</p><h3>Compound Components z forwardRef</h3><p>W kontekście <strong>Compound Components</strong>, gdzie mamy zestaw powiązanych komponentów współdzielących stan lub logikę, <em>forwardRef</em> odgrywa kluczową rolę z kilku powodów:</p><ol start="1"><li><p><strong>Bezpośredni dostęp do elementów DOM - </strong>umożliwia rodzicowi lub zewnętrznym komponentom bezpośredni dostęp do elementów DOM wewnątrz podkomponentów. Przykładowo, może to być potrzebne do ustawiania fokusu na konkretnym elemencie, mierzenia jego rozmiaru czy manipulowania przewijaniem.</p></li><li><p><strong>Integracja z bibliotekami zewnętrznymi - </strong>czasami konieczne jest zintegrowanie komponentów z zewnętrznymi bibliotekami, które wymagają bezpośredniego dostępu do elementów DOM. forwardRef umożliwia przekazywanie ref do odpowiedniego elementu wewnątrz podkomponentu.</p></li><li><p><strong>Zachowanie elastyczności API - </strong>dzięki forwardRef, API komponentów staje się bardziej elastyczne i przejrzyste, umożliwiając użytkownikom komponentów bardziej zaawansowane manipulacje bez konieczności modyfikowania struktury komponentów.</p></li></ol><p>Rozważmy przykład z wcześniejszego komponentu <em>Tabs</em>, gdzie podkomponenty <em>Tabs.Title</em> i <em>Tabs.Item</em> mogą potrzebować dostępu do elementów DOM.</p><pre><code>export interface TabsItemProps {
+  id: string;
+  isActive?: boolean;
+  onClick?: () =&gt; void;
+  children: React.ReactNode;
+}
+
+export const TabsItem = forwardRef&lt;HTMLDivElement, TabsItemProps&gt;(
+  ({children, isActive = false, onClick}, ref) =&gt; (
+    &lt;div
+      ref={ref}
+      className={`${styles.item} ${isActive ? styles.active : ""}`}
+      onClick={onClick}
+    &gt;
+      {children}
+    &lt;/div&gt;
+  )
+);
+
+TabsItem.displayName = "TabsItem";</code></pre><p>Przy stosowaniu forwardRef musimy zmienić definicję TabsComponent, aby TypeScript brał pod uwagę refa w interfejsie komponentu:</p><pre><code>interface TabsComponent {
+  (props: TabsProps): JSX.Element;
+  Title: React.ComponentType&lt;TitleProps&gt;;
+  Item: typeof TabsItem;
+}</code></pre><p>Teraz możemy skorzystać z refa w następujący sposób:</p><pre><code>const SimpleTabsApp = () =&gt; {
+    const overviewRef = useRef&lt;HTMLDivElement&gt;(null); // TypeScript wskaże nam jakiego HTMLElement oczekuje ref w Tabs.Item
+
+    const handleClick = () =&gt; {
+        if (overviewRef.current) {
+            overviewRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+
+    return (
+        &lt;Tabs&gt;
+            &lt;Tabs.Title&gt;Admin&lt;/Tabs.Title&gt;
+            &lt;Tabs.Item id="overview" ref={overviewRef} onClick={handleClick}&gt;
+                Overview
+            &lt;/Tabs.Item&gt;
+            &lt;Tabs.Item id="settings"&gt;Settings&lt;/Tabs.Item&gt;
+        &lt;/Tabs&gt;
+    );
+};
+
+export default TabsDemo;</code></pre><p>Więcej informacji o forwardRef znajdziesz w lekcji <a class="entity" href="https://przeprogramowani.circle.so/c/o-ts-react-pro/sections/388740/lessons/1487361" target="_blank" rel="noopener noreferrer">#useRef</a>.</p><h2>Ćwiczenia praktyczne</h2><ol start="1"><li><p><strong>631-survey</strong> - W oparciu o wzorzec Compound Components dokończ implementację aplikacji do tworzenia ankiet. Wprowadź wsparcie dla trzech rodzajów odpowiedzi - krótkich, długich oraz opartych o wybór jednej z opcji. Projekt zawiera już kontekst, który powinieneś współdzielić aby ułatwić przepływ danych między kontrolkami i reagować na akcje użytkownika.</p></li></ol><h3></h3></div></body></html>

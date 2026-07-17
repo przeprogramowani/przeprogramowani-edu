@@ -1,0 +1,157 @@
+<meta name="lesson-id" content="Wbudowane typy pomocnicze"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>W ramach swojej biblioteki standardowej, TypeScript oferuje zestaw typów wbudowanych, które oszczędzają czas programisty i pozwalają dynamicznie sterować&nbsp;strukturą typów obiektów. Typy wbudowane pozwalają na bardziej deklaratywne opisywanie zachowania typu, z czego warto korzystać aby utrzymać kod w spójnym kształcie.</p><p>W tej lekcji przedstawimy ci kilka z takich typów, a w kolejnych lekcjach nauczymy cię, jak budować je od zera z wykorzystaniem operatorów i zaawansowanej algebry typów TypeScript.</p><p><strong>Kolejne spotkanie z typami generycznymi</strong></p><p>W tej lekcji opieramy się o poznane wcześniej typy generyczne. Dla przypomnienia - o ich działaniu możesz myśleć jak o “funkcjach w świecie typów”:</p><pre><code>// W świecie wartości - wykonaj operację z pomocą argumentu typu T
+function foo(param: T) { ... }
+
+// W świecie typów - zbuduj nową strukturę w oparciu o typ T
+type Foo&lt;T&gt; = ...</code></pre><p>Poniżesz zobaczysz nowe scenariusze, w których generyki wykazują swój potencjał i pozwalają budować prawdziwie reużywalne i skalowalne struktury.</p><h2>Readonly&lt;T&gt; <strong>i ReadonlyArray&lt;T&gt;</strong></h2><p>Dzięki słowu kluczowemu <em>readonly</em>, Typescript umożliwia tworzenie obiektów, których pola po inicjalizacji służą tylko do odczytu:</p><pre><code>type PersonalDetails = {
+  readonly name: string;
+};
+
+const person: PersonalDetails = {
+  name: "John Doe",
+};
+
+person.name = "Jane Doe";
+  // ^ - Cannot assign to 'name' because it is a read-only property.ts(2540</code></pre><p>Czasami zdarza się, że tego typu konstrukcję chcemy utworzyć w locie, bo nie mamy dostępu do oryginalnej definicji typu (lub nie chcemy jej modyfikować).</p><p>Dzięki wbudowanemu typowi <em>Readonly&lt;T&gt;</em>, który stosujemy na istniejącym typie <em>T</em> możesz sprawić, że wszystkie jego właściwości będą tylko do odczytu (ang. readonly). Dzięki temu obiekt nie może być modyfikowany po jego utworzeniu, co zwiększa bezpieczeństwo i przewidywalność kodu:</p><pre><code>type PersonalDetails = {
+  name: string;
+};
+
+const person: Readonly&lt;PersonalDetails&gt; = {
+  name: "John Doe",
+};
+
+person.name = "Jane Doe";
+// ^ - Cannot assign to 'name' because it is a read-only property.ts(2540</code></pre><p>Readonly jest przydatny, gdy chcemy upewnić się, że obiekty nie zostaną zmodyfikowane po ich utworzeniu. To szczególnie użyteczne w przypadku danych, które powinny być traktowane jako immutable, np. ustawienia konfigurowane tylko raz, przy starcie aplikacji.</p><p>TypeScript daje nam również odpowiednik tej funkcjonalności dla tablic:</p><pre><code>let readonlyNumbers: ReadonlyArray&lt;number&gt; = [1, 2, 3, 4, 5];
+// readonlyNumbers.push(6); // Błąd: metoda push nie jest dostępna</code></pre><h2>Partial&lt;T&gt;</h2><p>Czasami zdarza się, że dwa typy muszą mieć podobną strukturę, ale jeden z nich procesujemy tylko we fragmentach. Przykładowo, kiedy aktualizujemy istniejące dane w systemie i udostępniamy użytkownikowi formularz, nie mamy gwarancji, jakie elementy zostaną wypełnione.</p><p>Bez typu wbudowanego taką relację można osiągnąć poprzez znak zapytania dodawany do nazwy pola, co zmienia go w pole opcjonalne:</p><pre><code>type PersonalDetails = {
+  name: string;
+  age: number;
+  email: string;
+  phone: string;
+};
+
+const person: PersonalDetails = {
+  name: "John Doe",
+  age: 20,
+  email: "john.doe@example.com",
+  phone: "1234567890",
+};
+
+type PersonalDetailsUpdatePayload = {
+  name?: string;
+  age?: number;
+  email?: string;
+  phone?: string;
+};
+
+const payload: PersonalDetailsUpdatePayload = {
+  name: "John Doe",
+};
+
+const updatedPerson: PersonalDetails = {...person, ...payload};
+</code></pre><p>Zamiast tworzenia kopii obiektu, którą dodatkowo będziemy musieli synchronizować ręcznie, możemy wykorzystać typ <em>Partial&lt;T&gt;:</em></p><pre><code>const person: PersonalDetails = {
+  name: "John Doe",
+  age: 20,
+  email: "john.doe@example.com",
+  phone: "1234567890",
+};
+
+type PersonalDetailsUpdatePayload = Partial&lt;PersonalDetails&gt;;</code></pre><p>Dzięki temu uzyskujemy typ o podobnym kształcie jak typ bazowy, którego wszystkie pola stają się opcjonalne.</p><h2>Required&lt;T&gt;</h2><p>Typ <em>Required&lt;T&gt;</em> działa odwrotnie do <em>Partial&lt;T&gt;</em>, wymuszając, aby wszystkie właściwości typu T były wymagane. Jest przydatny, gdy chcemy mieć pewność, że wszystkie pola obiektu będą zdefiniowane.</p><pre><code>type User = {
+  id: number;
+  name?: string;
+  email?: string;
+  address?: string;
+};
+
+// Funkcja do aktualizacji częściowych danych użytkownika
+function updateUser(data: Partial&lt;User&gt;) {
+  // ...logika aktualizacji formularza, gdzie tylko część pól jest wymagana
+}
+
+// Funkcja do zapisywania pełnych danych użytkownika w bazie
+function createUser(user: Required&lt;User&gt;) {
+  // Możemy założyć, że wszystkie właściwości (name, email, address) są tutaj obecne
+  console.log(`Saving user: ${user.name}, ${user.email}, ${user.address}`);
+}</code></pre><p>Required pomaga uniknąć sytuacji, w których obiekt nie ma zdefiniowanych wszystkich potrzebnych właściwości. Może być używany do doprecyzowania typów i zmniejszenia ryzyka błędów wynikających z brakujących wartości. W przypadku zapisywania danych w bazie, wymusza dodatkowy krok związany z zapewnieniem wartości domyślnych dla brakujących pól.</p><h2>Record&lt;K, V&gt;</h2><p>Typ <em>Record&lt;K, V&gt;</em> pozwala na tworzenie obiektów, gdzie klucze są typu K, a wartości typu V. Jest często używany do definiowania struktur, które pełnią rolę map lub obiektów przechowujących wartości przypisane do konkretnych kluczy.</p><p>Taki typ można wykorzystać chociażby do przedstawienia uprawnień użytkownika względem poszczególnych sekcji na stronie:</p><pre><code>type AppSections = "home" | "settings" | "profile" | "search";
+type SectionVisibility = boolean;
+
+type NavigationPermissions = Record&lt;AppSections, SectionVisibility&gt;;
+
+const permissions: NavigationPermissions = {
+  home: true,
+  settings: false,
+  profile: true,
+  search: true,
+};</code></pre><p>Co ważne, typ Record połączony z literałami (jak powyżej) dba o to, żeby kluczami obiektu były wszystkie dostępne wartości, a nie tylko kilka z nich:</p><pre><code>const permissions: NavigationPermissions = {
+  home: true,
+  settings: false,
+};
+// ^ - Type '{ home: true; settings: false; }' is missing the following properties from type 'NavigationPermissions': profile, search</code></pre><p>Co ważne, pierwszym z parametrów rekordu musi być typ prosty - <em>string, number </em>lub<em> symbol (lub literały)</em>:</p><pre><code>type User = {
+  name: string;
+  email: string;
+  age: number;
+};
+
+type Permission = boolean;
+
+type NavigationPermissions = Record&lt;User, Permission&gt;;
+                                 // ^ - Type 'User' does not satisfy the 
+                                 //     constraint 'string | number | symbol'.ts(2344)</code></pre><p><strong>👉 Dla ciekawskich</strong>: TypeScript zawiera wbudowany typ <strong>PropertyKey, </strong>który jest aliasem na dopuszczalne typy kluczy obiektów i rekordów. Dzięki temu nie musimy ich budować ręcznie:</p><pre><code>type Permission = boolean;
+// type PropertyKey = string | number | symbol
+
+type NavigationPermissions = Record&lt;PropertyKey, Permission&gt;;</code></pre><p>Chociaż Record ma swoje ograniczenia, to wciąż&nbsp;jest to świetne rozwiązanie do typowania obiektów, które przechowują dane zależne od wartości klucza, np. uprawnienia użytkowników lub ustawienia aplikacji, a do tego wszystkie klucze powinny być wzięte pod uwagę.</p><h2>Pick&lt;T, K&gt;</h2><p>Typ Pick&lt;T, K&gt; tworzy nowy typ zawierający tylko wybrane właściwości z istniejącego typu T. To szczególnie przydatne, gdy pracujemy z dużymi obiektami, a interesuje nas tylko część ich właściwości.</p><pre><code>type User = {
+  id: number;
+  name: string;
+  email: string;
+  gender: "male" | "female";
+  age: number;
+  isActive: boolean;
+  role: "admin" | "user";
+  externalId: string;
+};
+
+type MetadataProps = "id" | "name";
+type UserMetadata = Pick&lt;User, MetadataProps&gt;;
+
+const preview: UserMetadata = {
+  id: 1,
+  name: "Alice",
+};</code></pre><p>Pick ułatwia tworzenie nowych typów, które są podzbiorem istniejących typów.</p><p>Przydaje się, gdy chcemy ograniczyć ilość danych przekazywanych do komponentów lub funkcji.</p><h2>Omit&lt;T, K&gt;</h2><p>Typ Omit&lt;T, K&gt; jest odwrotnością Pick – tworzy nowy typ na podstawie typu T, ale z pominięciem wybranych właściwości. To użyteczne, gdy chcemy pracować z typem bez określonych właściwości.</p><pre><code>type User = {
+  id: number;
+  name: string;
+  email: string;
+  gender: "male" | "female";
+  age: number;
+  isActive: boolean;
+  role: "admin" | "user";
+  externalId: string;
+};
+
+type HiddenDetails = "id" | "age" | "gender" | "email";
+type SafeUser = Omit&lt;User, HiddenDetails&gt;;
+
+const user: SafeUser = {
+  name: "John",
+  isActive: true,
+  role: "admin",
+  externalId: "123",
+};
+</code></pre><p>Omit pomaga tworzyć wersje typów bez pewnych, wrażliwych właściwości, takich jak hasło.</p><p>Jest używany, gdy potrzebujemy typów do API lub UI, które nie muszą zawierać wszystkich danych danego obiektu.</p><h3>Obiekty zagnieżdżone</h3><p>Zarówno <em>Pick&lt;T, K&gt; </em>jak i <em>Omit&lt;T, K&gt; </em>działają jedynie na polach bezpośrednio znajdujących się na najwyższym poziomie w strukturze obiektu. Nie mają one możliwości modyfikacji pól zagnieżdżonych, czyli właściwości potomnych.</p><p>W poniższym przykładzie usunięcie zagnieżdżonego pola <em>name</em> nie jest możliwe z wykorzystaniem tych typów - zamiast tego powinniśmy zastosować dedykowany typ o mniejszym zakresie pól i przemapowanie odpowiednich wartości:</p><pre><code>type UserWithRole = {
+  id: number;
+  role: {
+    id: number;
+    name: string;
+  };
+};
+
+type AnonymousUser = Omit&lt;UserWithRole, "name"&gt;;
+
+const user: AnonymousUser = {
+  id: 1,
+  // ❌ Property 'name' is missing in type '{ id: number; }' but required in type '{ id: number; name: string; }'
+  role: {
+    id: 1
+  },
+};</code></pre><h2>Exclude&lt;T, K&gt;</h2><p>Exclude pozwala na usuwanie określonych składowych z unii typów:</p><pre><code>type UnionOfTypes = string | number | symbol | undefined | null;
+
+type ExcludeNulls = Exclude&lt;UnionOfTypes, undefined | null&gt;; // string | number | symbol</code></pre><h2>NonNullable&lt;T&gt;</h2><p>Przydatny typ pomocniczy, który z unii typów pozbywa się undefined oraz null. Można powiedzieć, że jest to szczególna wersja typu <em>Exclude</em>, która domyślnie usuwa warianty “null | undefined”.</p><pre><code>type UnionOfTypes = string | number | symbol | undefined | null;
+
+type NoNullableTypes = NonNullable&lt;UnionOfTypes&gt;; // string | number | symbol</code></pre><h2>Pozostałe typy wbudowane</h2><p>Pełna lista typów wbudowanych znajduje się w oficjalnej dokumentacji - znajdziesz tam więcej przykładów typów, które pomogą ci realizować najważniejsze operacje na typach gwarantując bezpieczeństwo i przewidywalność wykonywanego kodu.</p><p>Link znajdziesz poniżej:</p><p><a href="https://www.typescriptlang.org/docs/handbook/utility-types.html" target="_blank" rel="noopener noreferrer">https://www.typescriptlang.org/docs/handbook/utility-types.html</a></p><h2>Podsumowanie</h2><p>W tej lekcji poznałeś przydatne typy wbudowane w język TypeScript, które, w zależności od potrzeb, mogą wpłynąć na tworzenie bardziej elastycznego lub spójnego kodu:</p><ul><li><p>Readonly&lt;T&gt; i ReadonlyArray&lt;T&gt;</p></li><li><p>Partial&lt;T&gt;</p></li><li><p>Required&lt;T&gt;</p></li><li><p>Record&lt;K, V&gt;</p></li><li><p>Pick&lt;T, V&gt;</p></li><li><p>Omit&lt;T, V&gt;</p></li><li><p>Exclude&lt;T,K&gt;</p></li><li><p>NonNullable&lt;T&gt;</p></li></ul><p>Każdy z tych typów jest <strong>typem generycznym, </strong>czyli typem powstałym w oparciu o istniejący typ bazowy.<strong> </strong>Generyki to jedna&nbsp;z najbardziej istotnych konstrukcji możliwych do wykorzystania w języku TypeScript i właśnie poznałeś kolejny argument przemawiający za tą tezą.</p><p>Czas na kolejne zaawansowane scenariusze typowania danych - zapraszamy do następnej lekcji!</p><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>331-generics-mergable</strong> - Wykorzystaj typy wbudowane <a href="https://www.typescriptlang.org/docs/handbook/utility-types.html#excludeuniontype-excludedmembers" target="_blank" rel="noopener noreferrer"><em>Exclude</em></a> oraz <a href="https://www.typescriptlang.org/docs/handbook/utility-types.html#nonnullabletype" target="_blank" rel="noopener noreferrer"><em>NonNullable</em></a> żeby zbudować drugą wersję poznanego wcześniej typu <em>MergeableObject</em>. Powinien on pozwalać na przekazywanie obiektów, ale zakazywać posługiwania się funkcjami, typami prostymi i typami pustymi.</p></li></ol><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

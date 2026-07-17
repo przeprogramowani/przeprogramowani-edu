@@ -1,0 +1,574 @@
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m5-l2/assets/cover.jpg">https://images.przeprogramowani.pl/lessons/m5-l2/assets/cover.jpg</a></p></blockquote>
+<p>W poprzedniej lekcji rozmawialiśmy o tym, jakie wewnętrzne narzędzia i automatyzacje warto wdrażać w zespole i na poziomie organizacji.</p>
+<p>Teraz skupimy się na czysto technicznej stronie takich projektów.</p>
+<p>Przez ostatnie cztery moduły sterowałeś agentem w IDE i terminalu. Wpisywałeś polecenia w Cursorze, delegowałeś zadania Claude Code, oglądałeś jak Codex łata testy. Za każdym razem to był jednak czyjś agent. Czyjaś pętla, czyjeś narzędzia, czyjeś domyślne ustawienia no i ręczne sterowanie, zależne od dostępności operatora.</p>
+<p>A teraz potrzebujesz czegoś, co działa dokładnie po waszemu i w sposób bardziej autonomiczny, dopasowany do <strong>cyklu życia zespołu</strong> a nie pojedynczej sesji jednego z was. Agenta, który robi review w stylu twojego zespołu, którego odpalisz tam, gdzie chcesz, i który nie wymaga od reszty zespołu otwierania konkretnego edytora.</p>
+<p>Kolejne dwie lekcje biorą na warsztat problem, który jest jednym z najczęstszych objawów „agentowego przyspieszenia". Kodu powstaje tyle, że ludzie przestają nadążać z jego przeglądaniem. Review robi się wąskim gardłem - to przy nim wytraca się cała prędkość, którą dał wam agent.</p>
+<p>Co więc zrobić? Wynająć kolejnego wirtualnego pracownika - ale nie takiego, który generuje kod, ale który stoi na straży jego jakości, bezpośrednio na drodze na produkcję.</p>
+<p>W tej lekcji poznamy pierwsze kroki w całym procesie budowania takiego asystenta — jak go złożyć z dostępnych SDK, jak uruchomić lokalnie, no i oszacować koszt działania. W następnej zepniemy go w prawdziwy system review z człowiekiem w pętli (human-in-the-loop) - agent przygotuje wstępną ocenę, ale ostatnie słowo będzie miał człowiek.</p>
+<p>W tej lekcji rezygnujemy z zakupów <em>z półki z napisem "gotowe"</em>. Nasz dostosowany do potrzeb zespołu agent będzie czymś, co <em>złożysz</em> samodzielnie z dostępnych klocków.</p>
+<p>Te klocki to właśnie SDK (Software Development Kit). I tu pojawia się pierwsza decyzja, która zaważy na wszystkim, co zrobisz dalej: czy bierzesz SDK, które daje ci wstępnie uformowanego agenta w pakiecie (np. Codex, Claude, Cursor), czy SDK, które daje ci jego składowe, gdzie narzędzia i mechanizmy kontroli dokładasz sam (np. OpenRouter SDK, Vercel AI SDK).</p>
+<h3>Gotowy agent kontra agent do złożenia</h3>
+<p>Badając rynek można odnieść wrażenie, że wszystkie "agentowe SDK" to mniej więcej to samo, tylko z inną naklejką producenta. To założenie potrafi cię kosztować sporo czasu, bo SDK dzielą się na dwie kategorie, które rozwiązują różne problemy.</p>
+<p><strong>SDK z gotowym agentem</strong> dają ci całego agenta sterowanego programatycznie (skryptowo). Pętlę, narzędzia do plików, basha, sandboxing, czytanie repozytorium — wszystko spięte w działający harness. Podajesz cel ("zrób review tego diffa") i... to w zasadzie wszystko, żeby praca agenta się&nbsp;rozpoczęła. Tak działają <a href="https://code.claude.com/docs/en/agent-sdk/overview">Claude Agent SDK</a>, <a href="https://developers.openai.com/codex/sdk">Codex SDK</a> i <a href="https://cursor.com/blog/typescript-sdk">Cursor SDK</a>.</p>
+<p>Cena za wygodę: jesteś przywiązany do modeli, runtime'u i cennika danego producenta.</p>
+<p><strong>SDK do złożenia agenta</strong> dają ci składowe agenta i punkty montażu: zawołaj model, uruchom narzędzie, dołącz wynik, powtórz, zatrzymaj. Harness, który po drugiej stronie dostajesz gotowy, tutaj <em>składasz sam</em> — narzędzia dokładasz własne, a w zamian masz interfejs niezależny od modelu. Tak działają <a href="https://openrouter.ai/docs/agent-sdk/overview">OpenRouter Agent SDK</a> i <a href="https://ai-sdk.dev/docs/ai-sdk-core/overview">Vercel AI SDK</a>.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m5-l2-lesson-draft-1-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m5-l2-lesson-draft-1-10x.png</a></p></blockquote>
+<p>Pytanie "które SDK jest najlepsze?" jest źle postawione. Dobre pytanie brzmi: "chcę gotowego agenta kodującego czy framework, z którego sam go złożę?". Prawie każda różnica między tymi narzędziami wynika z tego jednego podziału.</p>
+<p>I najlepiej poczuć to na własnej skórze, zapoznając się&nbsp;z oboma kierunkami integracji, na które możemy się&nbsp;tutaj zdecydować.</p>
+<h3>Ten sam agent na dwóch SDK</h3>
+<p>Aby poczuć różnicę między dwoma rodzajami SDK, omówimy teraz dwa podejścia do utworzenia minimalnego agenta do code review, na ten moment <strong>działającego lokalnie i w niezależnej lokalizacji</strong>. Poznamy podobieństwa i różnice, a na koniec tego etapu wdrożymy jedną&nbsp;z opcji w naszym projekcie.</p>
+<p>Agent dostanie na wejściu diff z gita, a zwróci ustrukturyzowaną ocenę w formacie JSON: pięć kryteriów z punktacją w skali 1-10 (poprawność implementacji, idiomatyczność, złożoność, pokrycie testami, bezpieczeństwo), wiążący werdykt (pass/fail) i krótkie podsumowanie.</p>
+<p>Wszystko lokalnie, jednym poleceniem <strong>git diff | npx tsx review.ts</strong>.</p>
+<p>Scenariusz jest stały — ten sam diff na wejściu, ten sam JSON na wyjściu. Zmienną jest kategoria SDK, no i - jako efekt uboczny wybranej opcji - liczba decyzji, jakie musisz podjąć po drodze. Wykorzystamy TypeScript - to obecnie język programowania dający nam najwięcej możliwości w tej konkretnej kategorii narzędzi.</p>
+<blockquote>
+<p>Wszystkie snippety z tej lekcji — w pełnej, uruchamialnej wersji z importami, schematami i obsługą błędów, które tu dla zwięzłości pomijamy, przejrzysz i odpalisz, pobierając repozytorium <a href="https://github.com/przeprogramowani/agent-sdk-examples">agent-sdk-examples</a>. Wystarczy je sklonować, zrobić <strong>npm install</strong> i uruchamiać kolejne przykłady jednym poleceniem (<strong>npm run ...</strong>).</p>
+</blockquote>
+<p>Zacznijmy od tego, co w obu wersjach jest <strong>identyczne</strong>: prompt systemowy, kalibrujący dalsze działanie agenta, no i wyjściowy schemat wyniku. Wydzielamy je raz, do osobnego modułu (w repozytorium <strong>agent-sdk-examples</strong> to <strong>common/review-schema.ts</strong>), żeby obie implementacje korzystały z jednej definicji.</p>
+<p>Schemat wyjścia piszemy w oparciu o bibliotekę <strong>zod</strong> — to nasze jedno źródło prawdy, z którego wyprowadzamy też typ <strong>Review</strong>. Na ten moment nie skupiamy się stricte na jakości prompta do review, a raczej chcemy wszystko złożyć w jedną całość i dalej nad tym iterować.</p>
+<pre><code class="language-typescript">import { z } from "zod";
+
+const SYSTEM_PROMPT = `Jesteś precyzyjnym, konstruktywnym recenzentem kodu oceniającym pull request.
+Oceń podany diff w pięciu kryteriach w skali 1-10 (1 = poważne braki, 10 = wzorowo):
+poprawność implementacji, idiomatyczność, złożoność, pokrycie testami względem ryzyka, bezpieczeństwo.
+Następnie wydaj wiążący werdykt (pass/fail) dla całej zmiany i dołącz krótkie podsumowanie (2-3 zdania)
+w Markdown, na podstawie którego autor PR-a będzie mógł działać.`;
+
+// Score'y trzymamy jako zwykłe z.number(): structured output Anthropica odrzuca
+// minimum/maximum na typie integer, więc zakres 1-10 wymuszamy opisem pola i promptem,
+// a nie samym schematem.
+const REVIEW_SCHEMA = z.object({
+  implementationCorrectness: z.number().describe("Poprawność implementacji: czy kod robi to, co deklaruje (skala 1-10)"),
+  idiomaticity: z.number().describe("Idiomatyczność: zgodność z konwencjami języka i projektu (skala 1-10)"),
+  complexity: z.number().describe("Złożoność: prostota rozwiązania względem problemu (skala 1-10)"),
+  testRiskCoverage: z.number().describe("Pokrycie testami proporcjonalne do ryzyka zmienianych ścieżek (skala 1-10)"),
+  securitySafety: z.number().describe("Bezpieczeństwo: brak podatności i wycieków sekretów (skala 1-10)"),
+  verdict: z.enum(["pass", "fail"]).describe("Wiążący werdykt dla całej zmiany"),
+  summary: z.string().describe("Podsumowanie w Markdown, gotowe jako komentarz do PR-a"),
+});
+
+// Konfiguracja pola target zapewnia zgodność między zodem a Claude Agent SDK
+const REVIEW_JSON_SCHEMA = z.toJSONSchema(REVIEW_SCHEMA, { target: "draft-07" });
+
+type Review = z.infer&lt;typeof REVIEW_SCHEMA&gt;;
+</code></pre>
+<p>AI SDK weźmie definicję wyjścia prosto od obiektów zoda, a Claude Agent SDK dostanie JSON Schema wyprowadzony z tego samego obiektu przez <strong>z.toJSONSchema()</strong>.</p>
+<p>Zwróć uwagę, że każde pole opisaliśmy przez <strong>.describe()</strong>. To nie kosmetyka — opis pola to <strong>istotna dźwignia</strong> sterowania modelem przy generowaniu oczekiwanego formatu odpowiedzi. Działa z dużą skutecznością, więc to właśnie tutaj doprecyzowujesz dwuznaczne nazwy, jednostki czy format. W naszym schemacie opis niesie nawet zakres oceny (skala 1-10) — bo, jak w komentarzu wyżej, nie wymuszamy go przez sam schemat.</p>
+<p>Tę dźwignię można dociskać dalej. Zamiast jednozdaniowego opisu możesz wstawić całą rubrykę, która tłumaczy modelowi, jak wygląda ocena skrajna:</p>
+<pre><code class="language-typescript">const REVIEW_SCHEMA = z.object({
+  implementationCorrectness: z.number().describe(
+    "Poprawność implementacji: czy kod robi to, co deklaruje (skala 1-10). " +
+    "1: logika jest błędna lub po cichu psuje istniejące zachowania. " +
+    "10: poprawny na ścieżce głównej, w przypadkach brzegowych i w obsłudze błędów."
+  ),
+  // ...
+});
+</code></pre>
+<p>Wpływ tego pola na działanie agenta można testować iteracyjnie, na podstawie instrukcji z kolejnej lekcji.</p>
+<h3>Wersja z gotowym agentem (Claude Agent SDK)</h3>
+<p>W tym scenariuszu instalujesz jedną paczkę agenta (plus <strong>zod</strong> na wspólny schemat) i... to w zasadzie tyle (przynajmniej na początek). Posługując się dokumentacją konfigurujesz core agenta (prompt lub tzw. preset, liczbę tur obsługi narzędzi, same ich definicje czy format wyjściowy), przekazujesz parametr wejściowy no i zaczyna się właściwy proces oceny.</p>
+<p>Zanim odpalisz poniższy kod, potrzebujesz minimalnego setupu: projekt Node jako ES Module i jedna paczka runtime plus narzędzia deweloperskie do uruchomienia TypeScriptu.</p>
+<pre><code class="language-bash">npm init -y &amp;&amp; npm pkg set type=module       # projekt jako ESM
+npm install @anthropic-ai/claude-agent-sdk zod # SDK z gotowym agentem + zod na kontrakt typu danych
+npm install -D tsx @types/node                # uruchamianie TS + typy Node
+</code></pre>
+<p>Uwierzytelnienie kluczem zostawiamy na potem — jeśli masz aktywną sesję Claude Code, skrypt podejmie twoje credentiale bez jawnego klucza (wracamy do tego w sekcji o kosztach). Jeśli rozwijasz kod w repo, w którym masz zmiany robocze, obecny diff możesz przekazać wprost do reviewera:</p>
+<pre><code class="language-bash">git diff | npx tsx review.ts
+</code></pre>
+<p>Alternatywnie, diff możesz też&nbsp;wczytywać z pliku lub z dowolnego innego źródła. Dalsza część&nbsp;to wykorzystanie dostępnych funkcji z pobranego SDK:</p>
+<pre><code class="language-typescript">import { query } from "@anthropic-ai/claude-agent-sdk";
+import { z } from "zod"; // tylko po to, by skonwertować wspólny schemat
+
+// Czytanie argumentów z stdin
+async function readDiff(): Promise&lt;string&gt; {
+  const chunks: Buffer[] = [];
+  for await (const chunk of process.stdin) chunks.push(chunk as Buffer);
+  return Buffer.concat(chunks).toString("utf8");
+}
+
+// Proces review na podstawie git diffa
+async function review(diff: string): Promise&lt;Review&gt; {
+
+  // Konfiguracja agenta
+  const result = query({
+    prompt: `Zrecenzuj ten diff:\n\n${diff}`,
+    options: {
+      systemPrompt: SYSTEM_PROMPT,
+      model: "claude-sonnet-4-6",
+      tools: [],
+      maxTurns: 2,
+      outputFormat: { type: "json_schema", schema: REVIEW_JSON_SCHEMA },
+    },
+  });
+
+  // Procesowanie odpowiedzi i ew. obsługa błędów
+  for await (const message of result) {
+    if (message.type !== "result") continue;
+    if (message.subtype === "success") {
+      const parsed = REVIEW_SCHEMA.safeParse(message.structured_output);
+      if (!parsed.success) throw new Error(`Niepoprawny structured output: ${parsed.error.message}`);
+      return parsed.data;
+    }
+    throw new Error(`Review nie powiodło się (${message.subtype}): ${message.errors.join("; ")}`);
+  }
+  throw new Error("Agent nie zwrócił wyniku");
+}
+
+// Entry point całego procesu
+const diff = await readDiff();
+console.log(JSON.stringify(await review(diff), null, 2));
+</code></pre>
+<p>Zwróć uwagę, co dostałeś za darmo, a o czym musisz pamiętać:</p>
+<ul>
+<li><strong>Cały workflow agenta jest w <strong>query()</strong>.</strong> Nie składasz tego ręcznie — podajesz cel i opcje deklaratywnie, resztę robi harness.</li>
+<li><strong>Format wyjścia.</strong> Wystarczy podać <strong>outputFormat</strong>, a SDK sam waliduje wynik względem schematu. Samo <strong>structured_output</strong> jest jednak typowane jako <strong>unknown</strong>, więc na koniec przepuszczamy je jeszcze przez <strong>REVIEW_SCHEMA.safeParse()</strong> aby uzyskać gwarancję&nbsp;typu wejściowego.</li>
+<li><strong>Co najmniej dwie tury.</strong> Ustawiamy <strong>maxTurns: 2</strong>, bo przebieg dzieli się na dwa kroki: w pierwszej turze model czyta diff i formułuje ocenę, a w drugiej emituje ją jako ustrukturyzowany JSON zgodny ze schematem.</li>
+<li><strong>Kilkanaście narzędzi w zapasie.</strong> Ale tutaj <em>wyłączasz</em> je przez <strong>tools: []</strong>, bo chcemy ograniczyć przypadkowe wywołania.</li>
+<li><strong>Rola recenzenta.</strong> Definiowana przez pole <strong>systemPrompt</strong> - jeszcze do tego wrócimy.</li>
+<li><strong>Błąd łapiesz sam.</strong> Kiedy <strong>subtype</strong> to nie <strong>success</strong>, czytasz <strong>errors</strong> i kończysz po swojemu. Jak tego nie zrobisz, a pętla poleci dalej, SDK rzuci surowym wyjątkiem zamiast czytelnego komunikatu.</li>
+<li><strong>Start bez klucza.</strong> Jeśli na twojej maszynie masz aktywną sesję Claude Code, w Claude Agent SDK nie musisz (na start) podawać klucza jawnie - skrypt wykorzysta twoje credentiale. To musi się jednak zmienić np. integrując agenta w CI/CD - do tego jeszcze wrócimy.</li>
+</ul>
+<h3>Wersja do złożenia (Vercel AI SDK 6)</h3>
+<p>Ten sam scenariusz, ten sam JSON na wyjściu. Ale instalujesz trzy oddzielne paczki - to baza (<strong>ai</strong>), model (<strong>@openrouter/ai-sdk-provider</strong>) i schemat (<strong>zod</strong>), działające jako trzy wymienne kawałki dające ci więcej elastyczności.</p>
+<pre><code class="language-bash">npm init -y &amp;&amp; npm pkg set type=module
+npm install ai zod @openrouter/ai-sdk-provider
+npm install -D tsx @types/node
+</code></pre>
+<p>I od razu z tej elastyczności korzystamy: zamiast LLMa od Anthropica wskazujemy model spoza tego ekosystemu (GLM przez OpenRouter).</p>
+<pre><code class="language-typescript">import { ToolLoopAgent, Output, stepCountIs } from "ai";
+import { openrouter } from "@openrouter/ai-sdk-provider";
+
+// Czytanie argumentów z stdin
+async function readDiff(): Promise&lt;string&gt; {
+  const chunks: Buffer[] = [];
+  for await (const chunk of process.stdin) chunks.push(chunk as Buffer);
+  return Buffer.concat(chunks).toString("utf8");
+}
+
+// Proces review na podstawie git diffa
+async function review(diff: string): Promise&lt;Review&gt; {
+
+  // Wykorzystanie tzw. pętli agentowej z AI SDK
+  const reviewer = new ToolLoopAgent({
+    model: openrouter("z-ai/glm-5.1"),
+    instructions: SYSTEM_PROMPT,
+    tools: {},
+    output: Output.object({ schema: REVIEW_SCHEMA }),
+    stopWhen: stepCountIs(2),
+  });
+
+  const { output } = await reviewer.generate({
+    prompt: `Zrecenzuj ten diff:\n\n${diff}`,
+  });
+  return output;
+}
+
+const diff = await readDiff();
+console.log(JSON.stringify(await review(diff), null, 2));
+</code></pre>
+<p>Koncepcyjnie, praca z <strong>ai-sdk</strong> w wersji 6 przypomina deklaratywne rozwiązania w stylu Claude Agent SDK. Wszystko dzięki nowości w postaci <strong>ToolLoopAgent</strong>. To API trafiło do biblioteki dopiero w AI SDK 6 (stabilnym od grudnia 2025) — w AI SDK 5 ta sama klasa była eksperymentalna i nazywała się <strong>Experimental_Agent</strong> (z polem <strong>system</strong> zamiast <strong>instructions</strong>). O konsekwencjach tej zmiany w dalszej części lekcji.</p>
+<p>A co uzyskujemy w tej konfiguracji?</p>
+<ul>
+<li><strong>Model importujesz jawnie.</strong> Tu od razu korzystamy ze wspomnianej swobody, wskazując model z szerokiego katalogu OpenRoutera. Podmiana dostawcy to zmiana jednej linijki: zamiast <strong>@openrouter/ai-sdk-provider</strong> wstawiasz <strong>@ai-sdk/anthropic</strong> albo <strong>@ai-sdk/openai</strong>.</li>
+<li><strong>Workflow startuje z klasy <strong>ToolLoopAgent</strong>.</strong> Sam podajesz <strong>tools</strong> — na ten moment nie potrzebujemy niestandardowych definicji.</li>
+<li><strong>Ten sam schemat, bez konwersji.</strong> <strong>Output.object</strong> bierze nasz <strong>REVIEW_SCHEMA</strong> (zod) wprost, bez dodatkowej konwersji.</li>
+<li><strong>Warunek stopu ustawiasz ręcznie.</strong> <strong>stopWhen: stepCountIs(2)</strong> to twój odpowiednik <strong>maxTurns</strong>. Sama pętla i tak stanęłaby wg ustawień&nbsp;domyślnych po <strong>stepCountIs(20)</strong> — my świadomie skracamy ją do dwóch kroków, bo recenzja nie potrzebuje więcej.</li>
+<li><strong>Klucz API musi być wczytany jawnie.</strong> Bez <strong>OPENROUTER_API_KEY</strong> ten kod nie ruszy: <strong>@openrouter/ai-sdk-provider</strong> potrzebuje twoich credentiali.</li>
+</ul>
+<p>Mając przed oczami obie implementacje, pojawia się pytanie - na którą opcję się zdecydować?</p>
+<p>Żadne z tych SDK nie jest "lepsze". SDK z gotowym agentem to sposób na szybkie wdrożenie agenta kodującego pracującego na twoim systemie plików. Po SDK w stylu Vercela sięgasz wtedy, gdy wybór modelu, podmiana dostawcy albo pełna dowolność podmiany narzędzi znaczą dla ciebie więcej niż wbudowany config i harness.</p>
+<p>Tu właśnie czai się najczęstszy błąd: ktoś wybiera SDK po znajomości marki ("używam Claude, to wezmę Claude SDK"), traktuje wybór jak kosmetykę i odbija się od ściany, gdy zadanie potrzebowało drugiej kategorii.</p>
+<p>Stąd warto zacząć od pytania ile elastyczności potrzebujesz i na ile chciałbyś iterować z różnymi modelami, a dopiero potem przejść do "które rozwiązanie wybrać?". Jeśli nie liczą się koszta, masz zaufanie do dostawcy i chcesz korzystać z tego samego silnika co Codex CLI czy Claude Code, wtedy gotowe paczki z agentami (Codex SDK, Claude Agent SDK) będą dla ciebie lepszym wyjściem. Jeśli natomiast chcesz mieć kontrolę nad całym procesem lub trwać w procesie ciągłej optymalizacji każdej składowej - wtedy lepiej agenta złożyć samemu.</p>
+<p>W 10xCards rozpoczniemy od wystawienia prostego agenta do review na podstawie <strong>Vercel AI SDK</strong> aby być w stanie na bieżąco żonglować modelami. Zaczniemy od wstępnej integracji agenta, a następnie zrefaktoryzujemy go pod integrację z CI:CD</p>
+<p>Zaczynamy od dodania AI SDK do projektu:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1200970790?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1200970790?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<p>A następnie sprzątamy po pierwszych krokach Agenta:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1200970789?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1200970789?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<blockquote>
+<p>Jeśli chcesz, możesz teraz wystawić podobną wersję&nbsp;agenta u siebie - na razie wciąż&nbsp;lokalnie, bez integracji CI/CD i dodatkowych narzędzi.</p>
+</blockquote>
+<h3>Co tak naprawdę robi pętla agenta</h3>
+<p>W obu wersjach skryptu pracę agenta umownie określaliśmy jako "workflow" - w pierwszym przypadku ukrywało go <strong>query</strong> a w drugim <strong>ToolLoopAgent</strong>. Trzeba to jednak doprecyzować wskazując, że workflow agenta to tzw. <strong>pętla narzędziowa</strong> albo <strong>tool loop</strong>. Co to oznacza? Pracując z agentami w IDE lub Terminalu widziałeś&nbsp;to na żywo - to wszystkie pośrednie operacje reasoningu i wywoływania zewnętrznych narzędzi, które wykonują się pomiędzy twoim zapytaniem a finalną odpowiedzią agenta.</p>
+<p>Tutaj, w wersji skryptowej, nie jest to proces poboczny, a w zasadzie <strong>core</strong> tego co budujemy. Wpływa na koszta, możliwości i odporność agenta.</p>
+<p>Anthropic opisuje to na pięciu krokach:</p>
+<ol>
+<li><strong>Wejście.</strong> Model dostaje twój prompt razem z promptem systemowym, definicjami narzędzi i dotychczasową historią rozmowy.</li>
+<li><strong>Decyzja.</strong> Model ocenia stan i wybiera, co dalej: odpowiada tekstem, prosi o wywołanie jednego lub kilku narzędzi, albo jedno i drugie naraz.</li>
+<li><strong>Wykonanie narzędzi.</strong> Uruchamiane zostają żądane narzędzia i zbierane są ich wyniki.</li>
+<li><strong>Powrót.</strong> Wyniki wracają do modelu jako wejście do kolejnej rundy. Kroki 2-3 powtarzają się w kółko.</li>
+<li><strong>Wynik.</strong> Gdy model odpowie samym tekstem, bez żądania narzędzi, pętla się kończy i oddaje wynik — razem z kosztem i zużyciem tokenów.</li>
+</ol>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m5-l2-lesson-draft-2-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m5-l2-lesson-draft-2-10x.png</a></p></blockquote>
+<p>Jedno pełne okrążenie (decyzja modelu, wykonanie narzędzi, powrót wyniku) to jedna <strong>tura</strong> (stąd ustawienia typu <strong>maxTurns</strong>). Proste pytanie zamyka się w jednej czy dwóch turach; złożone zadanie potrafi nawiązać kilkanaście tur (czyta pliki, edytuje kod, odpala testy), aż model uzna, że skończył. W naszym review świadomie ścinamy to do 2-3 kroków, bo recenzja diffa nie potrzebuje więcej.</p>
+<p>Cała różnica między gotowym agentem a wersją do złożenia sprowadza się do jednego pytania: <strong>kto pisze kroki 3 i 4 całej pętli?</strong></p>
+<p><strong>Pętla schowana za gotowymi funkcjami i klasami.</strong> Im więcej klocków dostajesz w pakiecie, tym bardziej pętla agenta będzie samoobsługowa. W Claude Agent SDK całą tę mechanikę chowa wywołanie <strong>query()</strong>. Gotowy agent sam uruchamia żądane narzędzia, sam dokleja ich wyniki do rozmowy i sam zawraca do modelu — i robi to bez oddawania sterowania, dopóki agent nie skończy. W AI SDK 6 przejmuje to <strong>ToolLoopAgent</strong>, który również bazuje już na bardziej deklaratywnym setupie.</p>
+<p><strong>Pętle pisane ręcznie, do AI SDK 5.</strong> Zanim w Vercel AI SDK pojawił się <strong>ToolLoopAgent</strong>, pętlę na AI SDK pisało się z ręki — i to jest dokładnie ten kod, który decyduje o jakości agenta, a właściwie jego harnessu.</p>
+<p>W uproszczeniu wyglądało to tak:</p>
+<pre><code class="language-typescript">const messages: ModelMessage[] = [{ role: "user", content: prompt }];
+let step = 0;
+while (true) {
+  const result = await generateText({ model, messages, tools }); // Generuj odpowiedź modelu
+  messages.push(...result.response.messages);  // Dopisz wiadomość&nbsp;do historii
+  if (result.finishReason !== "tool-calls") break; // Brak potrzeb korzystania z narzędzi
+  for (const call of result.toolCalls) {
+    const output = await runTool(call); // Wyszukaj i wywołaj narzędzie
+    messages.push({ // Procesuj wynik kolejnego narzędzia
+      role: "tool",
+      content: [{ type: "tool-result", toolCallId: call.toolCallId, toolName: call.toolName, output }],
+    });
+  }
+  if (++step &gt;= MAX_STEPS) break;                         // sam pilnujesz warunku stopu
+}
+</code></pre>
+<p>Policz, ile rzeczy musisz kontrolować tu samemu: tablicę <strong>messages</strong> i jej dopisywanie po każdej turze, samą pętlę <strong>while</strong>, odczyt <strong>finishReason</strong>, ręczne wywołanie każdego narzędzia, sformatowanie wyniku jako wiadomości <strong>tool</strong> i odesłanie go z powrotem do modelu, wreszcie własny licznik kroków jako warunek stopu. Pomyłka w którymkolwiek z tych miejsc daje albo agenta, który nie reaguje na wynik narzędzia, albo pętlę, która nie chce się zatrzymać.</p>
+<p><strong>Co robi teraz <strong>ToolLoopAgent</strong>.</strong> AI SDK 6 zawija dokładnie ten szkielet w jedną klasę. Cały <strong>while</strong>, dopisywanie wiadomości, odczyt <strong>finishReason</strong>, uruchamianie narzędzi i odsyłanie ich wyników dzieją się pod spodem <strong>generate()</strong>. Ty deklarujesz już tylko części składowe: <strong>model</strong>, <strong>tools</strong>, <strong>output</strong> i <strong>stopWhen</strong> — a pętla, którą wcześniej składałeś ręcznie, jest gotowa w środku. Dlatego nasza wersja do złożenia jest tak samo krótka jak ta z gotowym agentem.</p>
+<p>Gotowy agent (Claude Agent SDK, Codex SDK) i <strong>ToolLoopAgent</strong> ukrywają tę samą pętlę; różnią się tym, ile jeszcze <em>poza</em> pętlą dostajesz w pakiecie (narzędzia, sandbox, compaction w gotowym agencie) kontra ile zostaje po twojej stronie (wybór modelu, własne narzędzia, persystencja przy wersji do złożenia). Pętla jest wspólnym mianownikiem — reszta to dokładnie ta różnica kategorii, od której zaczęliśmy.</p>
+<h3>Czy agent pamięta poprzedni przebieg sesji</h3>
+<p>Pamięć naszego recenzenta jest ulotna - odpalasz, zwraca JSON, kończy. Następne <strong>npx tsx review.ts</strong> startuje od zera — nie wie nic o poprzednim. Przy recenzji diffa to nawet wygodne, bo każdy przebieg jest czysty. Ale gdy tylko agent wchodzi w prawdziwy obieg pracy, wraca pytanie: review przychodzi po poprawkach, ktoś dopytuje, zmiana ewoluuje. <strong>Czy agent pamięta, co już przeanalizował, czy za każdym razem czyta wszystko od nowa?</strong></p>
+<p>To jedna z najgrubszych różnic między obiema kategoriami i biegnie dokładnie wzdłuż naszej głównej osi „gotowy kontra do złożenia". Chodzi o to, <em>gdzie mieszka stan</em>: czy trzyma go za ciebie harness, czy twój własny kod.</p>
+<p><strong>Gotowy agent trzyma sesję sam.</strong> Claude Agent SDK zapisuje stan przebiegu na dysk i pozwala go wznowić. Z pierwszej wiadomości (<strong>init</strong>) łapiesz <strong>session_id</strong>, a potem oddajesz go przy kolejnym wywołaniu — i cały kontekst (przeczytane pliki, dotychczasowa analiza, historia rozmowy) wraca na stół, bez wczytywania diffa po raz drugi:</p>
+<pre><code class="language-typescript">// pierwszy przebieg: zapamiętaj id sesji
+let sessionId: string | undefined;
+for await (const message of query({ prompt: `Zrecenzuj ten diff:\n\n${diff}`, options })) {
+  if (message.type === "system" &amp;&amp; message.subtype === "init") sessionId = message.session_id;
+  // ...odbiór wyniku jak wcześniej
+}
+
+// kolejny przebieg (np. po poprawkach): wznów ten sam kontekst
+query({
+  prompt: "Autor naniósł poprawki. Sprawdź, czy adresują twoje wcześniejsze uwagi.",
+  options: { ...options, resume: sessionId },   // agent pamięta, co już widział
+});
+</code></pre>
+<p>Możesz nawet sesję <em>rozszczepić</em> (<strong>fork</strong>), żeby sprawdzić alternatywną ścieżkę, nie psując oryginału. Stan żyje w harnessie — ty operujesz tylko jego identyfikatorem. Tak samo działają pozostałe gotowe agenty: Codex trzyma wątki w <strong>~/.codex/sessions</strong> i wznawiasz je po id (<strong>resumeThread</strong>).</p>
+<p><strong>Wersja do złożenia nie ma czego wznawiać — bo nie ma sesji.</strong> Vercel AI SDK nie zna pojęcia „sesji" zapisanej na dysku. Każde <strong>generate()</strong> to osobny strzał; klasa <strong>ToolLoopAgent</strong> przechowuje <em>konfigurację</em> (model, narzędzia, warunek stopu), ale nie <em>historię</em>. Jeśli kolejny przebieg ma cokolwiek pamiętać, to ty wieziesz historię ze sobą — trzymasz tablicę <strong>messages</strong> i podajesz ją z powrotem:</p>
+<pre><code class="language-typescript">// brak sesji: historię prowadzisz sam i podajesz przy każdym wywołaniu
+const messages: ModelMessage[] = [{ role: "user", content: `Zrecenzuj ten diff:\n\n${diff}` }];
+const first = await reviewer.generate({ messages });
+messages.push(...first.response.messages);                    // dopisz, co odpowiedział model
+
+messages.push({ role: "user", content: "Sprawdź, czy poprawki adresują twoje uwagi." });
+const second = await reviewer.generate({ messages });         // kontynuacja = ty doniosłeś kontekst
+</code></pre>
+<blockquote>
+<p><strong>Uwaga:</strong> <strong>output</strong> ustawiasz na agencie (w konstruktorze <strong>ToolLoopAgent</strong>), nie na pojedynczym <strong>generate()</strong>. Dlatego ten sam <strong>reviewer</strong> ze structured output wymusiłby schemat również na pytaniu uzupełniającym — jeśli druga tura ma wrócić zwykłym tekstem, użyj do niej osobnego agenta bez <strong>output</strong>, podając mu tę samą tablicę <strong>messages</strong>.</p>
+</blockquote>
+<p>Gotowy agent robi część roboty za ciebie (persystencja, wznawianie, forkowanie sesji), a w zamian wiążesz się z jego runtime'em; wersja do złożenia nie robi nic sama, ale za to <em>ty</em> decydujesz, co przetrwa do następnego przebiegu, gdzie to zapiszesz (plik, baza, kolejka) i kiedy wczytasz. Przy jednorazowym review ta różnica nie boli. Robi się kluczowa przy agentach asynchronicznych i długo żyjących, którym poświęcona jest lekcja <em>Async &amp; Remote Agents</em> (M5L5): cały sens polega tam na tym, że agent wraca do zadania po godzinach i musi wiedzieć, na czym skończył.</p>
+<h3>Co twój agent dziedziczy z repo: reguły, skille, bezpieczeństwo</h3>
+<p>Skoro przez cztery moduły obkładałeś repo regułami dla agenta — <strong>CLAUDE.md</strong>, <strong>AGENTS.md</strong>, skille w <strong>.claude/skills</strong>, hooki, reguły uprawnień — to <strong>czy agent, którego właśnie składasz z SDK, w ogóle to wszystko czyta?</strong></p>
+<p>Odpowiedź jest dokładnie tej samej natury, co cała lekcja: zależy od kategorii. Te reguły to nie magia wbudowana w model — to pliki na dysku, które <em>ktoś</em> musi wczytać i wstrzyknąć agentowi. Gotowy agent potrafi je podnieść sam, bo to ten sam harness, który czyta je, gdy sterujesz nim ręcznie z terminala. W wersji do złożenia nie ma żadnego „samo". Jeśli chcesz, żeby twój agent znał reguły repo, <strong>wczytujesz je własnym kodem.</strong></p>
+<p><strong>Gotowy agent dziedziczy konfigurację repo — bo to ten sam harness.</strong> Claude Agent SDK to dosłownie Claude Code zapakowany w bibliotekę, więc zna te same miejsca, do których zaglądasz, pracując w terminalu:</p>
+
+<ul>
+<li><strong>Co</strong>: Pamięć projektu (instrukcje) | <strong>Skąd ładuje gotowy agent (Claude Agent SDK)</strong>: <strong>CLAUDE.md</strong> lub <strong>.claude/CLAUDE.md</strong></li>
+<li><strong>Co</strong>: Skille (auto albo <strong>/nazwa</strong>) | <strong>Skąd ładuje gotowy agent (Claude Agent SDK)</strong>: <strong>.claude/skills/*/SKILL.md</strong></li>
+<li><strong>Co</strong>: Komendy (legacy) | <strong>Skąd ładuje gotowy agent (Claude Agent SDK)</strong>: <strong>.claude/commands/*.md</strong></li>
+<li><strong>Co</strong>: Hooki (np. <strong>PreToolUse</strong>, <strong>PostToolUse</strong>) | <strong>Skąd ładuje gotowy agent (Claude Agent SDK)</strong>: konfiguracja + callbacki w opcjach</li>
+<li><strong>Co</strong>: Uprawnienia / tryb edycji | <strong>Skąd ładuje gotowy agent (Claude Agent SDK)</strong>: <strong>allowedTools</strong>, <strong>permissionMode</strong></li>
+<li><strong>Co</strong>: Serwery MCP, pluginy | <strong>Skąd ładuje gotowy agent (Claude Agent SDK)</strong>: <strong>mcpServers</strong>, <strong>plugins</strong></li>
+</ul>
+<p>Domyślnie SDK ładuje ustawienia z <strong>.claude/</strong> w katalogu roboczym i z <strong>~/.claude/</strong> (zawężasz to opcją <strong>settingSources</strong> — <strong>user</strong> / <strong>project</strong> / <strong>local</strong>). Ale jest tu jeden niuans, na którym łatwo się przejechać, i nasz <strong>review.ts</strong> jest tego idealnym przykładem: <strong>żeby agent faktycznie wciągnął <strong>CLAUDE.md</strong>, musisz włączyć preset systemowy <strong>claude_code</strong>.</strong> W naszym review podaliśmy <em>własny</em> <strong>systemPrompt</strong> (rola recenzenta) i <strong>tools: []</strong> — czyli świadomie odcięliśmy się od pamięci projektu, skilli i wbudowanych narzędzi. To było celowe: recenzja diffa ma być wąska i przewidywalna, a nie sterowana przypadkowym <strong>CLAUDE.md</strong>. Gdybyś chciał odwrotnie — agenta, który respektuje konwencje repo tak samo jak twój Claude Code — sięgasz po preset i ładowanie ustawień:</p>
+<pre><code class="language-typescript">// Gotowy agent dziedziczy reguły, skille i pamięć repo
+const result = query({
+  prompt: `Zrecenzuj ten diff:\n\n${diff}`,
+  options: {
+    systemPrompt: { type: "preset", preset: "claude_code" }, // wciąga CLAUDE.md + konwencje
+    settingSources: ["project"],                              // .claude/ z repo: skille, ustawienia
+    skills: "all",                                            // udostępnij modelowi odkryte skille
+    allowedTools: ["Read", "Glob", "Grep"],                   // niech zajrzy do sąsiednich plików
+  },
+});
+</code></pre>
+<p>Dwie rzeczy decydują tu o tym, czy skill faktycznie zadziała. <strong>skills: "all"</strong> to w SDK jedyne miejsce, w którym udostępniasz modelowi odkryte skille (możesz też podać listę nazw, np. <strong>["greeting"]</strong>) — sam preset i <strong>settingSources</strong> udostępniają pliki, ale to ta opcja wpuszcza je do listy widzianej przez model. A <strong>settingSources: ["project"]</strong> ładuje <strong>.claude/</strong> z <em>katalogu roboczego</em> — jeśli twój <strong>.claude/skills</strong> leży gdzie indziej niż miejsce, z którego odpalasz skrypt, wskaż ten katalog jawnie opcją <strong>cwd</strong>.</p>
+<p>Pozostałe gotowe agenty działają tak samo, każdy w swoim ekosystemie. <strong>Codex SDK</strong> odpala binarkę <strong>codex</strong> jako podproces, więc dziedziczy dokładnie to, co CLI: pliki <strong>AGENTS.md</strong> z repo, konfigurację z <strong>~/.codex/config.toml</strong> i presety sandboxa — a przez opcję <strong>config</strong> w SDK dorzucasz nadpisania (lecą do CLI jako flagi <strong>--config</strong>). <strong>Cursor SDK</strong> podnosi skille z <strong>.cursor/skills/</strong> i hooki z <strong>.cursor/hooks.json</strong> — ten sam config projektu, który napędza edytor Cursor. We wszystkich trzech zasada jest ta sama: <em>to ten sam harness</em>, więc reguły, które spisałeś dla ręcznej pracy, jadą z agentem za darmo.</p>
+<p><strong>Agent do złożenia nie dziedziczy niczego — bo nie ma harnessu, który by to czytał.</strong> Vercel AI SDK i OpenRouter Agent SDK nie mają pojęcia <strong>CLAUDE.md</strong>, <strong>AGENTS.md</strong>, <strong>.claude/skills</strong> ani <strong>.cursor/hooks.json</strong>. Dostają tylko to, co podasz im jawnie w <strong>instructions</strong> / <strong>system</strong>. Twoje reguły repo dla takiego agenta po prostu nie istnieją, dopóki sam ich nie wczytasz:</p>
+<pre><code class="language-typescript">// Wersja do złożenia: reguły nie wczytają się same — sam je czytasz i wstrzykujesz
+import { readFileSync } from "node:fs";
+
+const projectRules = readFileSync("CLAUDE.md", "utf8"); // konwencje repo, wczytane ręcznie
+const reviewer = new ToolLoopAgent({
+  model: openrouter("z-ai/glm-5.1"),
+  instructions: `${SYSTEM_PROMPT}\n\nKonwencje projektu:\n${projectRules}`,
+  // ...
+});
+</code></pre>
+<p>Wersja do złożenia oddaje ci pełną kontrolę nad tym, <em>co</em> trafia do promptu, w zamian za to, że nic nie dzieje się samo. Skille jako auto-ładowane zdolności, hooki cyklu życia, pamięć projektu — w tym świecie to wzorce, które implementujesz sam (regułę dokleisz do <strong>instructions</strong>, „hook" zrobisz własnym <strong>StopCondition</strong> albo logiką wokół pętli), a nie pliki, które framework znajdzie za ciebie.</p>
+<p><strong>Bezpieczeństwo idzie tym samym podziałem.</strong> Reguły dla agenta to nie tylko „jak ma pisać kod" — to też „czego mu nie wolno". I tu gotowy agent znów daje ci gotowy mechanizm: listę dozwolonych narzędzi (<strong>allowedTools</strong>), tryb uprawnień (<strong>permissionMode</strong>), hook <strong>PreToolUse</strong>, który potrafi <em>zablokować</em> ryzykowne wywołanie zanim się wykona, a w Codeksie presety sandboxa ustawiane per tura (<strong>read_only</strong> na planowanie, <strong>workspace_write</strong> na zmiany). To te same zabezpieczenia, które chronią cię, gdy agent działa w terminalu — tyle że teraz konfigurujesz je z kodu. W wersji do złożenia żadnego sandboxa ani systemu uprawnień nie ma: agent może dotknąć tylko tych narzędzi, które sam mu napisałeś, a jedyną bramką jest twój własny gate zatwierdzenia (<strong>needsApproval</strong> w Vercelu, tryby HITL w OpenRouterze).</p>
+<p>Praktyczny wniosek na wybór SDK: jeśli twój zespół już zainwestował w reguły, skille i config dla konkretnego narzędzia (<strong>CLAUDE.md</strong>, <strong>AGENTS.md</strong>, <strong>.cursor/</strong>), gotowy agent z <em>tego samego</em> ekosystemu zabierze tę robotę ze sobą bez przepisywania. Jeśli stawiasz na podmianę modeli i niezależność od dostawcy, godzisz się, że spójność reguł utrzymujesz sam — i właśnie ta praca, czyli zamiana repo-lokalnych reguł we <strong>wspólny, zespołowy rejestr</strong> skilli i konwencji, którym dzieli się cały zespół, to temat lekcji <em>Shared AI Registry: skille, komendy i reguły dla zespołu</em> (M5L4).</p>
+<h3>Kto teraz widzi twój diff</h3>
+<p>Samo SDK bezpośrednio nie wpływa na polityki prywatności poszczególnych rozwiązań. To, czy twój kod może trafić do procesu treningu, jak długo jest przechowywany i gdzie fizycznie ląduje, rozstrzyga się&nbsp;na backendzie, a konkretniej: wynika ze <strong>ścieżki uwierzytelnienia</strong>, którą wybierzesz.</p>
+<p>Claude Agent SDK ma dwa różne reżimy danych zależnie od tego, jak się zalogujesz:</p>
+<ul>
+<li><strong>Klucz z konsoli (komercyjny).</strong> Warunki komercyjne mówią wprost, że Anthropic nie trenuje modeli na twojej treści, a sam producent kieruje twórców agentów właśnie na ten klucz. To bezpieczny domyślny wybór dla kodu firmowego.</li>
+<li><strong>Login subskrypcyjny (konsumencki).</strong> Gdy nie ustawisz klucza, agent po cichu sięga po twój login Claude Code — a <strong>claude -p</strong> i całe Agent SDK na subskrypcji Pro/Max podpadają pod warunki konsumenckie. Tam od 28 sierpnia 2025 trening jest <strong>domyślnie włączony</strong> (wyłączasz go w ustawieniach prywatności Claude), a retencja sięga 5 lat, dopóki go nie zdejmiesz — wobec 30 dni i braku treningu na kluczu komercyjnym (<a href="https://www.anthropic.com/news/updates-to-our-consumer-terms">warunki konsumenckie Anthropic</a>).</li>
+</ul>
+<p>Reguła powtarza się u każdego dostawcy: <strong>najtańsza i najwygodniejsza ścieżka bywa najbardziej „przeciekająca".</strong> Login konsumencki Claude, logowanie Codeksa przez darmowy ChatGPT, darmowe modele na OpenRouterze. Każde z nich oddaje trochę ochrony danych w zamian za niższy koszt albo mniej formalności. Ścieżkę dobierasz więc pod wrażliwość danych, nie odwrotnie.</p>
+<p>W wersji do złożenia jest jeszcze jeden zwrot akcji: biblioteka <strong>ai</strong> (Vercel) domyślnie <strong>w ogóle nie stoi na drodze twoich danych</strong>. Żądanie idzie wprost do dostawcy, którego zaimportowałeś, i obowiązują wyłącznie jego warunki. Dostawca SDK i podmiot przetwarzający twój kod to mogą być dwie zupełnie różne firmy. Dopiero włączenie opcjonalnego proxy (<a href="https://vercel.com/ai-gateway">Vercel AI Gateway</a>) wpina Vercela w tę ścieżkę.</p>
+<p>A jeśli wiążą cię wymogi rezydencji danych w UE, dobrze wiedzieć z góry, gdzie są dziury: AI Gateway Vercela działa tylko w USA, a Cursor nie ma samoobsługowej rezydencji w UE. W obu przypadkach wyjściem bywa wskazanie własnego dostawcy w regionie UE. To znów ta sama dźwignia: w wersji do złożenia kontrolę trzymasz po swojej stronie.</p>
+<h3>Kontrola kosztów</h3>
+<p>Skoro agent ma chodzić często, dochodzą dwa pytania operacyjne: ile to kosztuje i jak ten koszt kontrolować. Ta sama ścieżka uwierzytelnienia, która przed chwilą decydowała o danych, decyduje też o rachunku. Poza nią odpowiedź znów zależy od kategorii SDK — i znów gotowy agent robi część roboty za ciebie.</p>
+<p><strong>Tokeny pobierasz wprost z obiektu odpowiedzi.</strong> W Claude Agent SDK, ta sama wiadomość <strong>result</strong>, z której wyjmujesz <strong>structured_output</strong>, niesie też pole <strong>usage</strong> (tokeny wejścia i wyjścia, z rozbiciem na cache):</p>
+<pre><code class="language-typescript">if (message.subtype === "success") {
+  message.usage.input_tokens; // tokeny (snake_case, z rozbiciem na cache)
+  message.total_cost_usd;     // gotowy koszt w USD — bez tabeli stawek
+  message.modelUsage;         // rozbicie per model (camelCase: inputTokens, costUSD…)
+}
+</code></pre>
+<p>W wersji do złożenia (AI SDK) funkcja <strong>generate()</strong> zwraca obok wyniku <strong>totalUsage</strong> — w naszym kodzie destrukturyzujemy tylko <strong>{ output }</strong>, ale tokeny czekają tuż obok:</p>
+<pre><code class="language-typescript">const { output, totalUsage } = await reviewer.generate({ prompt });
+// totalUsage.inputTokens, totalUsage.outputTokens, totalUsage.totalTokens
+</code></pre>
+<p><strong>Zużycie na bieżąco.</strong> Przy dłuższej pętli czasem chcesz widzieć zużycie narastająco — choćby po to, żeby wyłapać przebieg, który zaczął się zapętlać, zanim algorytm dobije do <strong>stepCountIs</strong>. Wersja do złożenia daje ci na to hook: <strong>onStepFinish</strong> odpala się po każdej turze i wręcza numer kroku, zużycie tokenów i powód zakończenia, więc telemetrię per krok składasz sam:</p>
+<pre><code class="language-typescript">await reviewer.generate({
+  prompt,
+  onStepFinish: ({ stepNumber, usage, finishReason }) =&gt; {
+    console.log(`krok ${stepNumber}: ${usage.inputTokens} in / ${usage.outputTokens} out (${finishReason})`);
+  },
+});
+</code></pre>
+<p><strong>Koszt w dolarach to już inna historia.</strong> Claude Agent SDK liczy go za ciebie — <strong>result</strong> ma gotowe pole <strong>total_cost_usd</strong>, a do tego <strong>modelUsage</strong> (rozbicie per model), <strong>num_turns</strong> i <strong>duration_ms</strong>. Komplet metryk operacyjnych dostajesz bez żadnej tabeli stawek.</p>
+<p>Wersja do złożenia daje ci same tokeny, a koszt składasz sam. I tu znów to provider, nie SDK, wnosi część rozwiązania: provider OpenRoutera, którego użyliśmy, zwraca realny, rozliczony koszt w <strong>providerMetadata.openrouter.usage.cost</strong> — pod warunkiem, że włączysz raportowanie zużycia (<strong>usage: { include: true }</strong>). Z providerem, który kosztu nie raportuje, zostaje ci pomnożenie tokenów z <strong>totalUsage</strong> przez stawki modelu.</p>
+<p><strong>Twardy limit kosztu wyłamuje się z tego podziału.</strong> Przy tokenach i koszcie w dolarach regułą było „gotowy agent robi część roboty za ciebie". Przy twardym suficie tej reguły już nie ma: to, czy dostajesz gotowy prymityw, zależy od konkretnego SDK, a nie od tego, czy to gotowy agent, czy wersja do złożenia. Gotowy agent daje go przez opcję <strong>maxBudgetUsd</strong> — po przekroczeniu zatrzymuje przebieg i zwraca <strong>error_max_budget_usd</strong>, ten sam subtyp błędu, który łapiesz w bloku wyżej.</p>
+<p>Po stronie do złożenia gotowy prymityw <strong>maxCost</strong> ma <strong>OpenRouter Agent SDK</strong>. I tu uważaj na nazwę: w naszym kodzie review używamy OpenRoutera jako <em>providera</em> pod Vercel AI SDK — a to zupełnie co innego niż OpenRouter Agent SDK, osobne SDK do złożenia agenta. Ta sama marka, dwie różne rzeczy:</p>
+<pre><code class="language-typescript">// gotowy agent (Claude Agent SDK):  options: { maxBudgetUsd: 0.5, ... }
+stopWhen: maxCost(0.5) // OpenRouter Agent SDK: twardy sufit 50 centow na przebieg
+</code></pre>
+<p>Wyjątkiem jest Vercel AI SDK 6: nazwanego <strong>maxCost</strong> tu nie ma, a samo podłączenie OpenRoutera jako providera tego nie zmienia. Ten sam efekt nadal osiągniesz, ale musisz dopisać własny <strong>StopCondition</strong>, który zlicza koszt po krokach.</p>
+<p>Jedna rzecz, o której warto wiedzieć z wyprzedzeniem: od 15 czerwca 2026 użycie programistyczne Claude na planach subskrypcyjnych (<strong>claude -p</strong> i Claude Agent SDK) zużywa budżet z nowego, osobnego <strong>miesięcznego kredytu Agent SDK</strong>, oddzielonego od limitów pracy interaktywnej — czyli agent w pętli nie zjada ci już budżetu na ręczne sesje w terminalu i odwrotnie. Mechanika i kwoty potrafią się zmieniać, więc przed wdrożeniem zerknij do <a href="https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan">opisu kredytu Agent SDK</a> i aktualnego cennika.</p>
+<p>Same stawki za tokeny też są ruchome. Na połowę 2026 utrzymuje się ten sam wzorzec, do którego przywykłeś z preworku: model mocniejszy (Opus) kosztuje wyraźnie więcej za tokeny niż codzienny (Sonnet) czy tani (Haiku). Dlatego w przykłądzie z gotowym agentem zostawiliśmy Sonneta jako model domyślny. To ta sama logika doboru modelu do roli, którą poznałeś w preworku <a href="https://platforma.przeprogramowani.pl/external/10xdevs-3-prework/pl/13">[3.5]</a>.</p>
+<p>Cały czas trzymamy się tu lokalnego uruchomienia: agent chodzi na twojej maszynie, a tokeny i koszt czytasz wprost z jego odpowiedzi.</p>
+<h2>🧑🏻‍💻 Zadania praktyczne</h2>
+<p>Zanim wejdziesz w zadania, jedna uwaga organizacyjna o odznace <strong>10xChampion</strong>: zaliczasz ją <strong>jednym</strong> projektem praktycznym — albo pipeline'em do review kodu (zadania z M5L2 i M5L3), albo rejestrem artefaktów AI (M5L4). Wybierz ścieżkę bliższą twojej codziennej pracy. Twój pipeline domknie się dopiero w M5L3 — tam też zbierzesz zrzuty ekranu, które są dowodem na 10xChampion (kategorie: M5L1, Krok 4).</p>
+<p>Budujemy pierwszą wersję prostego, oskryptowanego agenta do code review, którego w kolejnej lekcji wdrożymy i rozbudujemy na CI/CD.</p>
+<ol>
+<li><strong>Wybierz jedną z prezentowanych w tej lekcji opcji</strong></li>
+</ol>
+<ul>
+<li>Claude Agent SDK</li>
+<li>Codex SDK</li>
+<li>Cursor SDK</li>
+<li>Vercel AI SDK</li>
+<li>OpenRouter Agent SDK</li>
+</ul>
+<ol start="2">
+<li><strong>Zintegruj ją z twoim projektem jako niezależna paczka</strong></li>
+</ol>
+<ul>
+<li>W przypadku Vercel AI SDK wykorzystaj gotowy skill <strong>npx skills add vercel/ai</strong></li>
+<li>W przypadku innych dostawców, pobierz dokumentację jako kontekst i poproś agenta o konfigurację</li>
+</ul>
+<ol start="3">
+<li><strong>Potwierdź udaną komunikację z wybranym modelem</strong></li>
+</ol>
+<ul>
+<li>Wykorzystaj podstawowy prompt do code review oraz symulowany diff (wygeneruj przez agenta)</li>
+<li>Sprawdź, czy model odpowiada poprawnie (jeśli nie, przeanalizuj z agentem logi i upewnij się, że ustawiłeś klucz do API)</li>
+</ul>
+<h2>Odbierz odznakę za tę lekcję</h2>
+<p>Po ukończeniu tej lekcji odbierz odznakę za lekcję w sekcji <a href="https://platforma.przeprogramowani.pl/10xdevs-3/mission-log">10xDevs Mission Log</a> a następnie pochwal się swoim osiągnięciem!</p>
+<h2>🔎 Deep Dive</h2>
+<p>Ta sekcja zawiera dodatkowe pogłębienie wiedzy na temat wybranych zagadnień związanych z lekcją. W tym Deep Dive znajdziesz:</p>
+<ul>
+<li><strong>Co można z tego zbudować</strong> — krótkie omówienie potencjalnych zastosowań Agent SDK w twoich projektach.</li>
+<li><strong>Cheatsheet agentowych SDK</strong> — przegląd pięciu SDK przez pryzmat kategorii, mocnej strony i pułapek, a do tego krótki przekrój język/runtime każdego z nich.</li>
+<li><strong>Ten sam model, inne efekty?</strong> - jak harness i opakowanie modelu wpływają całościowo na wyniki realizowanego zadania</li>
+<li><strong>Agent jako samodzielna, wdrażalna jednostka</strong> — kluczowe koncepty Cloudflare Agents SDK: co się zmienia, gdy agent nie żyje na twojej maszynie, tylko na krawędzi sieci.</li>
+</ul>
+<p>Ta sekcja lekcji nie jest obowiązkowa, ale warto się z nią zapoznać jeżeli chcesz zostać ekspertem.</p>
+<h3>Co można z tego zbudować</h3>
+<p>Recenzent diffa to tylko pierwszy przykład, bo akurat review najszybciej robi się wąskim gardłem. Ale skoro umiesz już złożyć agenta z SDK, ten sam schemat — <em>weź zdarzenie z cyklu wytwarzania, oddaj agentowi żmudny kawałek, zbierz ustrukturyzowany wynik</em> — przykłada się do większości miejsc, w których ludzie tracą czas na powtarzalną robotę. Kilka wpięć w SDLC, które realnie zdejmują obciążenie z zespołu:</p>
+<ul>
+<li><strong>Code review jako pierwszy przebieg.</strong> Agent ocenia diff zanim zrobi to człowiek: wyłapuje oczywiste błędy, luki w testach i odstępstwa od konwencji, a recenzentowi zostawia decyzje, które naprawdę wymagają głowy. To dokładnie nasz agent, tylko wpięty w pull requesta — jak to zrobić z człowiekiem w pętli, pokazuje lekcja <em>Code Review w erze AI</em> (M5L3).</li>
+<li><strong>Self-heal czerwonego builda lub ticketa.</strong> Agent dostaje log nieudanego CI albo zgłoszenie, reprodukuje problem zdalnie, proponuje poprawkę i otwiera szkic PR-a do akceptacji. Zamiast „ktoś musi to przysiąść jutro rano" dostajesz gotowy punkt startowy.</li>
+<li><strong>Triage backlogu i bug reportów.</strong> Nowe zgłoszenia agent etykietuje, dorzuca kroki reprodukcji, wskazuje prawdopodobne duplikaty i podpina powiązany kod — żmudna segregacja, która zwykle blokuje na wejściu.</li>
+<li><strong>Migracje i codemody.</strong> Mechaniczne przepisanie tego samego wzorca w setkach plików (zmiana API biblioteki, ujednolicenie importów, refaktor pod nową konwencję) — robota nudna dla człowieka, idealna do delegowania do agenta.</li>
+<li><strong>Uzupełnianie testów, docstringów i changelogów.</strong> Agent okresowo dopisuje brakujące przypadki testowe, generuje opisy funkcji albo składa notki do release'u z samego diffa — drobne zaległości, które same z siebie nigdy nie trafiają na szczyt priorytetów.</li>
+</ul>
+<p>Jedno zastrzeżenie, zanim wyobrazisz sobie agenta, który pilnuje repo non stop: <strong>agent chodzący 24/7 to przepalanie budżetu.</strong> Każdy przebieg to tokeny, a pętla, która kręci się bez przerwy „na wszelki wypadek", spala budżet na robocie, której nikt nie zamawiał. Dlatego dwie reguły zdrowego rozsądku. Po pierwsze, odpalaj agenta na <em>zdarzenie, które ma znaczenie</em> (otwarcie PR-a, czerwony build, nowe zgłoszenie). Po drugie, do każdego zadania dobieraj <strong>najtańszy model, który zrobi je wystarczająco dobrze</strong> — triage czy etykietowanie spokojnie pociągnie tani model, a mocny (i drogi) zostaw tam, gdzie naprawdę trzeba rozumować nad kodem. Dodatkowo, wykonuj eksperymenty i optymalizuj środowisko - szczegóły poznasz w kolejnej lekcji, na przykładzie pogłębionego Code Review.</p>
+<h3>Cheatsheet agentowych SDK</h3>
+<p>Pokazaliśmy dwa SDK, ale w grze jest ich więcej. Decyzję najłatwiej podjąć w dwóch ruchach: najpierw kategoria (gotowy agent czy agent do złożenia?), potem ekosystem (czego potrzebujesz na przyszłość?). Poniższa ściągawka to pomoc do tego drugiego ruchu, a nie ranking.</p>
+<h3>Claude Agent SDK</h3>
+<ul>
+<li><strong>Kategoria:</strong> gotowy agent</li>
+<li><strong>Mocna strona:</strong> topowy agent kodujący, 14+ narzędzi, natywny structured output, gotowy <strong>total_cost_usd</strong> i wbudowany cap <strong>maxBudgetUsd</strong></li>
+<li><strong>Na co uważać:</strong> modele Anthropic; wersja TypeScript V2 ze streamingiem jest na etapie preview</li>
+</ul>
+<h3>Codex SDK</h3>
+<ul>
+<li><strong>Kategoria:</strong> gotowy agent</li>
+<li><strong>Mocna strona:</strong> opakowuje CLI <strong>codex</strong> (JSONL przez stdio), presety sandboxa per tura (plan w read-only, zmiany w workspace-write)</li>
+<li><strong>Na co uważać:</strong> wymaga obecnego CLI; SDK i CLI aktualizuj razem</li>
+</ul>
+<h3>Cursor SDK</h3>
+<ul>
+<li><strong>Kategoria:</strong> gotowy agent</li>
+<li><strong>Mocna strona:</strong> runtime cloud/self-host/local, indeksowanie repozytorium, kontynuacja pracy w IDE</li>
+<li><strong>Na co uważać:</strong> publiczna beta, payloady i typy mogą się zmieniać; brak pierwszorzędnego structured output</li>
+</ul>
+<h3>OpenRouter Agent SDK</h3>
+<ul>
+<li><strong>Kategoria:</strong> do złożenia</li>
+<li><strong>Mocna strona:</strong> 400+ modeli za jednym <strong>callModel</strong>, fallback routing, twardy <strong>maxCost</strong></li>
+<li><strong>Na co uważać:</strong> to SDK OpenRoutera (nie Anthropic); narzędzia dokładasz sam</li>
+</ul>
+<h3>Vercel AI SDK 6</h3>
+<ul>
+<li><strong>Kategoria:</strong> do złożenia</li>
+<li><strong>Mocna strona:</strong> standard w świecie TS/Next.js, najlepszy streaming do UI, czysty structured output, stabilny od grudnia 2025</li>
+<li><strong>Na co uważać:</strong> brak nazwanego <strong>maxCost</strong> (własny <strong>StopCondition</strong>); v7 już w canary</li>
+</ul>
+<p>Skróty decyzyjne, które działają w praktyce:</p>
+<ul>
+<li>Chcesz agenta kodującego edytującego prawdziwy system plików? Bierzesz gotowego agenta i wybierasz po ekosystemie: Anthropic to Claude, OpenAI/Codex to Codex, a flota agentów w chmurze z auto-PR to Cursor.</li>
+<li>Liczy się wybór modelu plus twardy sufit kosztu? OpenRouter Agent SDK, jako jedyne SDK do złożenia z wbudowanym <strong>maxCost</strong>, fallback routingiem i 400+ modelami za jednym wywołaniem (<strong>callModel</strong>) — twardy cap ma też gotowy agent (<strong>maxBudgetUsd</strong>); bez gotowca zostaje tylko Vercel AI SDK.</li>
+<li>Budujesz w TypeScript/Next.js i chcesz standardowego frameworka do złożenia agenta? Vercel AI SDK 6.</li>
+</ul>
+<p>Jeśli wybór zależy też od tego, w czym piszesz, oto cała piątka w przekroju język/runtime (stan na połowę 2026 — wersje i tak przypnij w kodzie):</p>
+<ul>
+<li><strong>Claude Agent SDK</strong> — Python, TypeScript</li>
+<li><strong>Codex SDK</strong> — TypeScript/JavaScript (Node 18+), Python (3.10+)</li>
+<li><strong>Cursor SDK</strong> — wyłącznie TypeScript</li>
+<li><strong>OpenRouter Agent SDK</strong> — TypeScript, Python (Go w klienckich SDK)</li>
+<li><strong>Vercel AI SDK 6</strong> — TypeScript/JavaScript, integracje z UI są uniwersalne (Node, Next.js, React, Svelte, Vue, Expo)</li>
+</ul>
+<h3>Ten sam model, inne efekty?</h3>
+<p>W wersji do złożenia podmieniliśmy dostawcę jedną linijką i poszliśmy dalej. Łatwo wyjść z tego z wnioskiem, że model to przenośny towar: przelej dowolne wagi do dowolnego harnessu, a dostaniesz ten sam efekt. To uproszczenie, o którym warto wiedzieć, zanim zacznie cię zaskakiwać w praktyce.</p>
+<p>Bo model do kodowania nie powstaje w próżni. Duże laby trenują go z własnym harnessem w pętli: Anthropic dostraja Claude pod Claude Code, OpenAI uczy Codeksa przez reinforcement learning na realnych zadaniach w środowiskach, które odwzorowują jego produkcyjny runtime. Model nie uczy się więc samego „kodowania" w oderwaniu — uczy się też konwencji konkretnego harnessu: nazw narzędzi, kształtu schematów, protokołu „najpierw zrób plan" albo "na koniec spróbuj uruchomić testy". Te nawyki wsiąkają w wagi, a nie tylko w prompt systemowy.</p>
+<p>Konsekwencja jest taka, że te same wagi potrafią zachować się różnie zależnie od tego, co je opakowuje — i decyduje tu w dużej mierze <em>konfiguracja</em> harnessu, nie sam model. Najczystszy dowód widać, gdy zostawić model w spokoju i ruszyć tylko ustawienia: na benchmarku Terminal-Bench 2.0 ten sam Claude Opus dostał w Claude Code <strong>77% na domyślnej konfiguracji i 92,1% z dostrojonym <strong>CLAUDE.md</strong></strong> (społecznościowy config „Mythos") — ponad 15 punktów procentowych z samego pliku z instrukcjami, bez zmiany modelu i bez dotykania prompta.</p>
+<p>Dla porównania ten sam Opus w Cursorze zrobił aż <strong>93%</strong> — i tu łatwo o mylny wniosek, że „Cursor ma lepszy model". Nie ma: to ten sam model. Twórcy Cursora również wkładają mnóstwo wysiłku w odpowiednie opakowanie modelu dodatkowymi instrukcjami i narzędziami, zanim znajdzie się on w finalnym produkcie.</p>
+<p>Ten sam wzorzec widać gołym okiem na publicznej tablicy Terminal-Bench 2.0, gdzie kolumna „Agent" to po prostu harness, a „Model" — wagi. Te same wagi potrafią wylądować kilka–kilkanaście miejsc od siebie zależnie od tego, kto je opakował.</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m5-l2/assets/terminal-bench.png">https://images.przeprogramowani.pl/lessons/m5-l2/assets/terminal-bench.png</a></p></blockquote>
+<ul>
+<li><strong>Claude Opus 4.6</strong> w harnessie Terminus 2 (zespół Terminal-Bench) dostał <strong>62,9%</strong>, a w „firmowym" Claude Code — <strong>58,0%</strong>.</li>
+<li><strong>GPT-5.3-Codex</strong>: <strong>75,1%</strong> w Simple Codex kontra <strong>64,7%</strong> w Terminus 2 — ponad 10 punktów różnicy na tych samych wagach.</li>
+<li><strong>Gemini 3 Pro</strong>: <strong>69,4%</strong> (agent Ante) kontra <strong>56,9%</strong> (Terminus 2).</li>
+<li><strong>GPT-5.2</strong>: <strong>62,9%</strong> (Codex CLI) kontra <strong>54,0%</strong> (Terminus 2).</li>
+</ul>
+<p>Gdyby ktoś czytał tę tabelę „po modelu", wyciągnąłby zupełnie inny ranking niż czytając ją „po agencie". Ta sama nazwa w kolumnie „Model" nie gwarantuje ani tego samego miejsca, ani tego samego wyniku — bo część roboty robi harness wokół wag. Jak widać, w zależności od modelu, czasami to twórcy, a czasami społeczność potrafią wycisnąć maksa z danego setupu.</p>
+<p>Jest tu jeszcze jedno dno, które każe czytać takie tabele z rezerwą: część pozycji to <strong>customowi agenci dostrojeni wprost pod benchmarki</strong> — czyjś autorski harness, którego jedynym zadaniem było wycisnąć maksimum z konkretnego zestawu zadań. To często <strong>nieoficjalne przebiegi</strong> (zgłoszone przez społeczność, nie przez laby od modelu), więc wynik tym bardziej mówi o jakości i strojeniu harnessu niż o samym modelu. Innymi słowy: wysoka pozycja potrafi <em>zamydlać</em> obraz — łatwo ją wziąć za „lepszy model", gdy w rzeczywistości patrzysz na lepiej dopasowany (czasem wręcz przeoptymalizowany pod benchmark) wrapper.</p>
+<p>Jest w tym też dobra wiadomość: skoro o wyniku decyduje strojenie, to jest to dźwignia, którą trzymasz w ręku — w wersji do złożenia domyślny config dostrajasz właśnie <em>ty</em> (twój odpowiednik dopisania własnego <strong>CLAUDE.md</strong>). Stąd praktyczny odruch: model i harness dobieraj jak parę, a po podmianie modelu w wersji do złożenia <strong>zmierz wynik ponownie</strong>, zamiast zakładać, że będzie identyczny. Czym tę jakość mierzyć systematycznie — w kolejnej lekcji, przy ewaluacjach.</p>
+<h3>Agent jako samodzielna, wdrażalna jednostka</h3>
+<p>Przez całą lekcję agent chodził lokalnie: <strong>npx tsx review.ts</strong>, wypisz wynik, koniec. Wiesz już, jak go złożyć i uruchomić. Ale co, jeśli agent ma reagować na żądania HTTP, trzymać stan między wywołaniami, mieć pod ręką własną bazę danych i działać bez przerwy, bez zarządzania infrastrukturą?</p>
+<p><strong>Cloudflare Agents SDK</strong> (<strong>npm install agents</strong>) odpowiada na taką potrzebę. To biblioteka, która umożliwia ci tworzenie agentów opartych na tzw. Durable Objects, z własną bazą SQLite, harmonogramem wzbudzeń i adresem URL dostępnym globalnie na Cloudflare.</p>
+<h3>Durable Objects jako fundament</h3>
+<p>Cloudflare Workers to bezstanowe skrypty. Każde żądanie zaczyna od zera — bez pamięci poprzedniego wywołania.</p>
+<p><strong>Durable Objects</strong> działają inaczej. Każda instancja to:</p>
+<ul>
+<li>globalnie unikalny, adresowalny obiekt z trwałą tożsamością,</li>
+<li>pojedynczy wątek wykonania (brak race conditions),</li>
+<li>wbudowana baza SQLite kolokowana z instancją,</li>
+<li>możliwość uśpienia i obudzenia bez utraty stanu.</li>
+</ul>
+<p>Cloudflare Agents SDK buduje na tym fundamencie klasę <strong>Agent&lt;Env, State&gt;</strong>. Każda klasa agenta to Durable Object class. Każda nazwana instancja (np. <strong>user-abc123</strong> albo <strong>review-bot-default</strong>) jest niezależnym bytem z własną bazą danych i stanem.</p>
+<h3>Klasa <strong>Agent</strong> — co dostajesz w pakiecie</h3>
+<pre><code class="language-typescript">import { Agent, routeAgentRequest } from "agents";
+
+export class ReviewAgent extends Agent&lt;Env, { reviewCount: number }&gt; {
+  initialState = { reviewCount: 0 };
+
+  async onRequest(request: Request) {
+    const diff = await request.text();
+    const result = await runReview(diff, this.env.AI);
+    this.setState({ reviewCount: this.state.reviewCount + 1 });
+    return Response.json(result);
+  }
+}
+
+export default {
+  fetch(request: Request, env: Env) {
+    return routeAgentRequest(request, env) ?? new Response("Not found", { status: 404 });
+  },
+};
+</code></pre>
+<p>Trzy rzeczy zmieniają się w stosunku do lokalnego skryptu:</p>
+<ul>
+<li><strong><strong>this.state</strong></strong> — stan persystowany w SQLite; <strong>setState()</strong> zapisuje, wysyła do podłączonych WebSocketów i wyzwala <strong>onStateChanged()</strong>.</li>
+<li><strong><strong>this.env</strong></strong> — bindingi Cloudflare: Workers AI bez klucza, KV, R2, kolejki, inne agenty.</li>
+<li><strong><strong>routeAgentRequest</strong></strong> — kieruje żądania HTTP do właściwej instancji agenta po URL: <strong>https://twój-worker.dev/agents/review-agent/nazwa-instancji</strong>.</li>
+</ul>
+<h3>Stan, który przeżywa hibernację</h3>
+<p>Instancja może zapaść w uśpienie po ok. 70–140 sekundach bezczynności i obudzić się automatycznie przy kolejnym żądaniu. Ale uwaga - nie wszystko przez to przeżywa:</p>
+<p>W SQLite przeżywa wszystko, co przez nią przeszło. Kluczowe tutaj jest pole agenta <strong>this.state</strong> i zaplanowane zadania (<strong>this.schedule</strong>).</p>
+<p>Przepadają natomiast zmienne in-memory klasy (np. <strong>this.cache</strong>) i aktywne timery (setTimeout, setInterval).</p>
+<p>Reguła jest prosta: <strong>co ma przeżyć, ląduje w <strong>this.state</strong> lub SQL. Zmienne klasowe to cache, nie źródło prawdy.</strong></p>
+<h3>WebSockety z hibernacją</h3>
+<p>Agent obsługuje połączenia WebSocket przez całe ich życie, zwalniając wątek między wiadomościami:</p>
+<pre><code class="language-typescript">async onConnect(connection: Connection) {
+  connection.send(JSON.stringify({ type: "welcome" }));
+}
+
+async onMessage(connection: Connection, message: string) {
+  const data = JSON.parse(message);
+  this.broadcast(JSON.stringify({ from: connection.id, ...data }));
+}
+</code></pre>
+<ul>
+<li><strong>this.broadcast(msg, exclude?)</strong> — wysyła do wszystkich podłączonych klientów (opcjonalnie z pominięciem wybranych ID)</li>
+<li><strong>getConnectionTags(connection)</strong> — przypisuje tagi do połączeń; umożliwia rozgłaszanie do podgrup (maks. 9 tagów na połączenie)</li>
+<li>Stan per-połączenie przeżywa hibernację</li>
+</ul>
+<p>Dla agenta do code review to nie jest pierwsza potrzeba — ale dla agenta streamującego status przebiegu PR-a do klienta w czasie rzeczywistym to gotowa infrastruktura.</p>
+<h3>Harmonogram per-instancja</h3>
+<p>Zamiast globalnych triggerów na poziomie Workera, każda instancja agenta ma własny harmonogram:</p>
+<pre><code class="language-typescript">// uruchom za 10 minut
+this.schedule(600, "runReview", { prId: "123" });
+
+// co godzinę, wyrażenie cron
+this.schedule("0 * * * *", "syncStats", {});
+
+// co 30 sekund
+this.scheduleEvery(30, "heartbeat", {});
+</code></pre>
+<p>Zaplanowane zadania przeżywają restarty — są zapisywane w SQLite. Identyczne wywołania (<strong>callback + wyrażenie + payload</strong>) są idempotentne domyślnie, więc przy każdym ponownym podłączeniu nie tworzysz duplikatów.</p>
+<h3>Konfiguracja wdrożenia (wrangler.toml)</h3>
+<p>Agent wymaga dwóch deklaracji poza typowym Workerem:</p>
+<pre><code class="language-toml">name = "review-agent"
+main = "src/server.ts"
+compatibility_date = "2026-06-12"
+compatibility_flags = ["nodejs_compat"]
+
+[ai]
+binding = "AI"  # Workers AI bez klucza API
+
+[[durable_objects.bindings]]
+name = "ReviewAgent"
+class_name = "ReviewAgent"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ReviewAgent"]  # uruchamia kolokowaną bazę SQLite
+</code></pre>
+<ul>
+<li><strong>new_sqlite_classes</strong> — jednorazowa migracja aktywująca SQLite dla klasy; bez niej <strong>this.state</strong> i <strong>this.sql</strong> nie działają.</li>
+<li><strong>nodejs_compat</strong> — wymagane dla większej zgodności SDK z runtime Node.</li>
+<li><strong>[ai]</strong> binding — opcjonalny; daje <strong>this.env.AI</strong> do wywołania Workers AI bez zarządzania kluczami.</li>
+</ul>
+<p>Po <strong>wrangler deploy</strong> agent jest dostępny pod automatycznie generowanym URL: <strong>https://review-agent.nazwa.workers.dev/agents/review-agent/{nazwa-instancji}</strong>. Nazwa instancji to dowolny string: <strong>user-id</strong>, <strong>pr-123</strong>, <strong>default</strong>.</p>
+<h3>Gdzie to ma sens</h3>
+<p>Lokalny skrypt <strong>npx tsx review.ts</strong> jest łatwy w konfiguracji, ale ubogi w zasoby i cykl życia. Cloudflare Agent wchodzi do gry, gdy:</p>
+<ul>
+<li>agent ma być wywoływany przez dowolnego zewnętrznego aktora (webhook, programistę, system na żądanie),</li>
+<li>musi przechowywać i pamiętać poprzedni stan (ile PR-ów przejrzał, jakie były wyniki),</li>
+<li>ma reagować asynchronicznie (przyjmij żądanie, odpowiedz „w toku", wyślij wynik, gdy gotowy),</li>
+<li>potrzebujesz harmonogramu per-instancja bez oddzielnej usługi cron</li>
+<li>nie chcesz budować dedykowanej infrastruktury pod długożyjące agenty</li>
+</ul>
+<p>Cloudflare Agents SDK, Durable Objects i Workers AI to ciekawe rozwiązanie w sytuacjach, kiedy poza prostą komunikacją i kilkoma krokami pętli narzędziowej liczy się dla nas pełny cykl życia agenta i trwałość jego wiedzy. No i środowisko globalne, a nie zdalne.</p>
+<h2>📚 Materiały dodatkowe</h2>
+<ul>
+<li><a href="https://ai-sdk.dev/docs/agents/building-agents">AI SDK 6 — Building Agents</a> — dokumentacja SDK do złożenia agenta: <strong>ToolLoopAgent</strong>, <strong>tool()</strong> z Zod, <strong>stopWhen</strong>.</li>
+<li><a href="https://ai-sdk.dev/cookbook/node/manual-agent-loop">AI SDK — Manual Agent Loop</a> — pętla pisana ręcznie (<strong>while</strong>, <strong>finishReason</strong>, wykonanie narzędzi, dopisywanie wiadomości), czyli to, co <strong>ToolLoopAgent</strong> zawija w AI SDK 6.</li>
+<li><a href="https://ai-sdk.dev/docs/foundations/tools">AI SDK — Tools i tool calling</a> — pomocnik <strong>tool()</strong> (<strong>description</strong>, <strong>inputSchema</strong>, <strong>execute</strong>) i wielokrokowa pętla narzędzi</li>
+<li><a href="https://platform.claude.com/docs/en/agent-sdk/typescript">Claude Agent SDK — TypeScript reference</a> — oficjalna dokumentacja SDK z gotowym agentem użytego w przykładzie (built-in tools, <strong>query()</strong>, structured output).</li>
+<li><a href="https://platform.claude.com/docs/en/agent-sdk/custom-tools">Claude Agent SDK — Custom tools</a> — własne narzędzie w gotowym agencie: <strong>createSdkMcpServer</strong>, <strong>tool()</strong>, rejestracja przez <strong>mcpServers</strong>, dopuszczenie w <strong>allowedTools</strong> i wymuszony tryb streaming input.</li>
+<li><a href="https://code.claude.com/docs/en/agent-sdk/agent-loop">Claude Agent SDK — How the agent loop works</a> — pięć kroków pętli, tury, co gotowy agent robi za ciebie (wykonanie narzędzi, compaction, limity tur i kosztu).</li>
+<li><a href="https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts">Claude Agent SDK — Modifying system prompts</a> — preset <strong>claude_code</strong> plus <strong>settingSources</strong>, czyli jak gotowy agent wciąga <strong>CLAUDE.md</strong> i config repo (źródło do sekcji „Co twój agent dziedziczy z repo”).</li>
+<li><a href="https://code.claude.com/docs/en/agent-sdk/skills">Claude Agent SDK — Skills</a> — auto-ładowane skille z <strong>.claude/skills/*/SKILL.md</strong>, które gotowy agent dzieli z Claude Code.</li>
+<li><a href="https://developers.openai.com/codex/sdk">Codex SDK — Overview</a> — gotowy agent opakowujący CLI <strong>codex</strong> z presetami sandboxa per tura.</li>
+<li><a href="https://cursor.com/blog/typescript-sdk">Cursor SDK — TypeScript SDK</a> — gotowy agent jako infrastruktura: trwałe agenty i runtime cloud/self-host/local (publiczna beta).</li>
+<li><a href="https://openrouter.ai/docs/agent-sdk/overview">OpenRouter Agent SDK — Overview</a> — SDK do złożenia agenta z bramką na 400+ modeli, fallback routingiem i <strong>maxCost</strong>.</li>
+<li><a href="https://developers.cloudflare.com/agents/">Cloudflare Agents SDK — Overview</a> — Agent jako Durable Object: <strong>Agent&lt;Env, State&gt;</strong>, <strong>routeAgentRequest</strong>, stan, WebSockety, harmonogram.</li>
+<li><a href="https://developers.cloudflare.com/agents/api-reference/store-and-sync-state/">Cloudflare Agents SDK — State Management</a> — <strong>setState</strong>, <strong>this.state</strong>, <strong>this.sql</strong>, co przeżywa hibernację a co nie.</li>
+<li><a href="https://developers.cloudflare.com/agents/api-reference/scheduling/">Cloudflare Agents SDK — Scheduling</a> — per-instancja harmonogram: delay, absolutny czas, cron, interwał; persystencja w SQLite.</li>
+<li><a href="https://thoughts.jock.pl/p/ai-coding-harness-agents-2026">Which AI Coding Harness Actually Works Without You? (Paweł Józefiak)</a> — praktyczne porównanie harnessów (Claude Code, Codex CLI, Aider, OpenCode, Cursor)</li>
+</ul>

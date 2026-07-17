@@ -1,0 +1,6 @@
+{
+  "lessonId": "[1x1] Wybór modelu do programowania wspomaganego AI",
+  "displayName": "[1x1] Wybór modelu do programowania wspomaganego AI",
+  "summary": "1) Jak rozdzielić role modeli do pracy produkcyjnej — kiedy używać „Kodera” (asystenta) a kiedy „Architekta” (modelu rozumującego)?  \n2) Które konkretne modele rekomendowane są jako „Koder” do codziennego generowania i modyfikowania kodu (w tym wariant ekonomiczny)?  \n3) Które konkretne modele rekomendowane są jako „Architekt” do złożonego rozumowania, analizy wymagań i planowania (w tym wariant ekonomiczny)?  \n4) Jakie praktyczne kryteria stosować przy strategicznym doborze modeli w modelu rozliczeń Usage-Based (co używać do zadań codziennych, a co do zadań złożonych)?  \n5) Jak oblicza się koszt konwersacji w modelach rozliczanych za zużycie — jakie tokeny się liczą i jak sumuje się Tokens (In) + Tokens (Out)?  \n6) Jak porównać koszty dwóch modeli (np. grok-code-fast-1 vs GPT-5-Codex) na podstawie ceny za milion tokenów?  \n7) Gdzie w ustawieniach Copilot włączyć najnowsze modele (gdzie znaleźć przełączniki modeli) i co zrobić, gdy modele nie są dostępne na koncie firmowym?  \n8) Jaka praktyczna zasada zarządzania wyborami modeli powinna zastąpić poszukiwanie „jednego najlepszego modelu”?",
+  "tokenEstimate": 186
+}

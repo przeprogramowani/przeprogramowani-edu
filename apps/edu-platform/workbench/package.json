@@ -1,0 +1,21 @@
+{
+  "name": "workbench-scripts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "transport": "node scripts/transport-lesson.mjs",
+    "transport:dry": "node scripts/transport-lesson.mjs --dry-run",
+    "render": "node scripts/render-mermaid.mjs",
+    "render:dry": "node scripts/render-mermaid.mjs --dry-run",
+    "transform": "node scripts/transform-diagrams-10x.mjs",
+    "transform:dry": "node scripts/transform-diagrams-10x.mjs --dry-run",
+    "upload": "node scripts/upload-assets.mjs",
+    "upload:dry": "node scripts/upload-assets.mjs --dry-run",
+    "upload:urls": "node scripts/upload-assets.mjs --urls",
+    "lesson:context": "node scripts/lesson-context.mjs",
+    "pipeline:assets": "npm run render && npm run transform && npm run upload",
+    "pipeline:assets:dry": "npm run render:dry && npm run transform:dry && npm run upload:dry",
+    "pipeline:publish": "npm run transport && npm run generate:lesson-html --prefix ../",
+    "pipeline:full": "node scripts/pipeline-full.mjs"
+  }
+}

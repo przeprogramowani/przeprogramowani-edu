@@ -1,0 +1,195 @@
+---
+/**
+ * Tresc strony "Dziennik pokladowy" (LOG // BACKSTORY) - jak powstal ten portal.
+ * Fakty od autora: kilka tygodni nieudanych podejsc do cheatsheetow, intensywny
+ * okres i mniej energii, urlop na Teneryfie, przelamanie z modelem Claude Fable 5
+ * (Anthropic) i portal w 24 godziny; puenta = teza kursu w praktyce.
+ * Strona publiczna, czyta sie w 100% w trybie neutralnym; konwencja dziennika
+ * pokladowego siedzi w sf-only. Akcent: teal Expanse (#3ddad0) - zapis logu
+ * statku, spojny z Rocinante z kanonu. Wpisy: id="w-01".."w-05".
+ * hud-top, xnav, footer i wspolny CSS renderuje TenxCosmicLayout.
+ * PILOT i18n: teksty w i18n/log.ts (pl+en), markup i SVG wspolne;
+ * zmiana tresci = zmiana obu jezykow w slowniku.
+ */
+import type { Lang } from '../i18n';
+import { LOG } from '../i18n/log';
+import { pageHref } from '../pages';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+}
+
+const { base, lang = 'pl' } = Astro.props;
+const t = LOG[lang];
+
+const TEAL = '#3ddad0';
+---
+
+<header>
+  <p class="eyebrow" style={`--acc:${TEAL}`}><span class="ico ico-sig" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1 set:html={t.h1Html} />
+  <p class="sub" set:html={t.subHtml} />
+
+  <div class="chainwrap">
+    <svg class="chain" viewBox="0 0 960 300" role="img" aria-label={t.svgAria}>
+      <g fill="#8a93b8" opacity=".35">
+        <circle cx="70" cy="40" r="1.3"/><circle cx="300" cy="26" r="1"/><circle cx="520" cy="44" r="1.2"/>
+        <circle cx="770" cy="30" r="1"/><circle cx="906" cy="70" r="1.3"/><circle cx="140" cy="272" r="1"/>
+        <circle cx="470" cy="282" r="1.2"/><circle cx="700" cy="266" r="1"/><circle cx="880" cy="256" r="1.2"/>
+      </g>
+
+      <path d="M50,170 L910,170" stroke={TEAL} fill="none" opacity=".28" stroke-dasharray="6 6" class="anim-dash"/>
+      <path d="M50,164 v12 M910,164 v12" stroke={TEAL} fill="none" opacity=".4"/>
+
+      <a href="#w-01" style="color:#8a93b8" aria-label={t.svgNodeAria.attempts}>
+        <rect x="90" y="70" width="330" height="130" fill="transparent"/>
+        <g stroke="currentColor" fill="none">
+          <circle cx="150" cy="170" r="12" stroke-dasharray="3 4" opacity=".5"/>
+          <circle cx="255" cy="170" r="12" stroke-dasharray="3 4" opacity=".5"/>
+          <circle cx="360" cy="170" r="12" stroke-dasharray="3 4" opacity=".5"/>
+          <path d="M150,158 V120 M255,158 V120 M360,158 V120" stroke-dasharray="2 4" opacity=".35"/>
+          <path d="M120,104 H392" opacity=".25"/>
+        </g>
+        <text class="knum" x="255" y="96" text-anchor="middle">{t.svg.weeks}</text>
+        <text x="255" y="114" text-anchor="middle" class="dim">{t.svg.weeksSub}</text>
+        <text x="150" y="196" text-anchor="middle" class="dim">{t.svg.attempts[0]}</text>
+        <text x="255" y="196" text-anchor="middle" class="dim">{t.svg.attempts[1]}</text>
+        <text x="360" y="196" text-anchor="middle" class="dim">{t.svg.attempts[2]}</text>
+      </a>
+
+      <a href="#w-02" style={`color:${TEAL}`} aria-label={t.svgNodeAria.stop}>
+        <rect x="500" y="150" width="120" height="120" fill="transparent"/>
+        <g stroke="currentColor" fill="none">
+          <circle cx="560" cy="170" r="12" opacity=".7"/>
+          <path d="M560,182 V214" stroke-dasharray="2 4" opacity=".4"/>
+          <path d="M554,164 a6,7 0 0 1 12,0 c0,5 -6,10 -6,10 s-6,-5 -6,-10 z" opacity=".8"/>
+        </g>
+        <text class="knum" x="560" y="236" text-anchor="middle">{t.svg.stop}</text>
+        <text x="560" y="254" text-anchor="middle" class="dim">{t.svg.stopSub}</text>
+      </a>
+
+      <a href="#w-03" style={`color:${TEAL}`} aria-label={t.svgNodeAria.model}>
+        <rect x="640" y="70" width="120" height="130" fill="transparent"/>
+        <g stroke="currentColor" fill="none">
+          <circle cx="700" cy="170" r="12" opacity=".8"/>
+          <circle cx="700" cy="170" r="19" stroke-dasharray="3 5" opacity=".45"/>
+          <path d="M700,158 V122" stroke-dasharray="2 4" opacity=".45"/>
+        </g>
+        <text class="knum" x="700" y="98" text-anchor="middle">{t.svg.t0}</text>
+        <text x="700" y="116" text-anchor="middle" class="dim">{t.svg.t0Sub}</text>
+      </a>
+
+      <a href="#w-05" style={`color:${TEAL}`} aria-label={t.svgNodeAria.portal}>
+        <rect x="790" y="90" width="140" height="120" fill="transparent"/>
+        <g style={`color:${TEAL}`}>
+          <rect class="kbox" x="812" y="112" width="96" height="46" stroke-width="1.4"/>
+          <text class="knum" x="860" y="131" text-anchor="middle">{t.svg.t24}</text>
+          <text class="klbl" x="860" y="150" text-anchor="middle">{t.svg.portal}</text>
+        </g>
+        <circle cx="860" cy="170" r="6" fill={TEAL} class="anim-pulse"/>
+        <path d="M860,158 V164" stroke={TEAL} fill="none" opacity=".6"/>
+      </a>
+
+      <circle r="6" fill={TEAL} opacity=".22"><animateMotion dur="11s" repeatCount="indefinite" path="M50,170 L910,170"/></circle>
+      <circle r="2.6" fill="#dce2f5" class="anim-pulse"><animateMotion dur="11s" repeatCount="indefinite" path="M50,170 L910,170"/></circle>
+    </svg>
+    <p class="map-cap">{t.mapCapPre}<span class="sf-only">{t.mapCapSf}</span><span class="neutral-only">{t.mapCapNeutral}</span>{t.mapCapPost}</p>
+  </div>
+
+  <nav class="route" aria-label={t.routeAria}>
+    <a href="#w-01" style={`--hov:${TEAL}`}>{t.route[0]}</a>
+    <a href="#w-02" style={`--hov:${TEAL}`}>{t.route[1]}</a>
+    <a href="#w-03" style={`--hov:${TEAL}`}>{t.route[2]}</a>
+    <a href="#w-04" style={`--hov:${TEAL}`}>{t.route[3]}</a>
+    <a href="#w-05" style={`--hov:${TEAL}`}>{t.route[4]}</a>
+  </nav>
+</header>
+
+<!-- ============ WPIS 01 CHEATSHEETY ============ -->
+<section class="sector" id="w-01" style={`--acc:${TEAL}`}>
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.e1.num}</span>
+      <span class="sec-uni"><span class="sf-only">{t.e1.uniSf}</span><span class="neutral-only">{t.e1.uniNeutral}</span></span>
+    </div>
+    <h2>{t.e1.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.e1.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.e1.pHtml[1]} />
+    <p class="lead" style="margin-top:14px" set:html={t.e1.pHtml[2]} />
+  </div>
+</section>
+
+<!-- ============ WPIS 02 TŁO ============ -->
+<section class="sector" id="w-02" style={`--acc:${TEAL}`}>
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.e2.num}</span>
+      <span class="sec-uni"><span class="sf-only">{t.e2.uniSf}</span><span class="neutral-only">{t.e2.uniNeutral}</span></span>
+    </div>
+    <h2>{t.e2.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.e2.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.e2.pHtml[1]} />
+    <p class="lead" style="margin-top:14px" set:html={t.e2.pHtml[2]} />
+  </div>
+</section>
+
+<!-- ============ WPIS 03 PRZEŁAMANIE ============ -->
+<section class="sector" id="w-03" style={`--acc:${TEAL}`}>
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.e3.num}</span>
+      <span class="sec-uni"><span class="sf-only">{t.e3.uniSf}</span><span class="neutral-only">{t.e3.uniNeutral}</span></span>
+    </div>
+    <h2>{t.e3.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.e3.epigraphSf}</p>
+      <cite>{t.e3.epigraphCiteSf}</cite>
+    </div>
+    <p class="lead" style="margin-top:22px" set:html={t.e3.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.e3.pHtml[1]} />
+    <p class="lead" style="margin-top:14px" set:html={t.e3.pHtml[2]} />
+  </div>
+</section>
+
+<!-- ============ WPIS 04 SCI-FI ============ -->
+<section class="sector" id="w-04" style={`--acc:${TEAL}`}>
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.e4.num}</span>
+      <span class="sec-uni"><span class="sf-only">{t.e4.uniSf}</span><span class="neutral-only">{t.e4.uniNeutral}</span></span>
+    </div>
+    <h2>{t.e4.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.e4.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.e4.pHtml[1]} />
+  </div>
+</section>
+
+<!-- ============ WPIS 05 PUENTA ============ -->
+<section class="sector" id="w-05" style={`--acc:${TEAL}`}>
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.e5.num}</span>
+      <span class="sec-uni"><span class="sf-only">{t.e5.uniSf}</span><span class="neutral-only">{t.e5.uniNeutral}</span></span>
+    </div>
+    <h2>{t.e5.h2}</h2>
+    <p class="lead" style="margin-top:22px" set:html={t.e5.pHtml[0]} />
+    <p class="lead" style="margin-top:14px" set:html={t.e5.pHtml[1]} />
+    <p class="lead" style="margin-top:14px" set:html={t.e5.pHtml[2]} />
+  </div>
+  <div class="rv">
+    <dl class="mech">
+      <div><dt><span class="ico ico-radar" aria-hidden="true"></span><span class="sf-only">{t.mech.bridgeDtSf}</span><span class="neutral-only">{t.mech.bridgeDtNeutral}</span></dt><dd class="v" style="margin:0"><a href={pageHref(base, 'index', lang)} style={`color:${TEAL}`}><span class="sf-only">{t.mech.bridgeLinkSf}</span><span class="neutral-only">{t.mech.bridgeLinkNeutral}</span></a>{t.mech.bridgeRest}</dd></div>
+      <div><dt><span class="ico ico-fast" aria-hidden="true"></span>{t.mech.methodDt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'csc', lang)} style={`color:${TEAL}`}>{t.mech.methodLink}</a>{t.mech.methodRest}</dd></div>
+      <div class="sf-only"><dt><span class="ico ico-star" aria-hidden="true"></span>{t.mech.themeDt}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'kanon', lang)} style={`color:${TEAL}`}>{t.mech.themeLink}</a>{t.mech.themeRest}</dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.targetHtml} />
+  </div>
+  <div class="epigraph finis rv" style={`--acc:${TEAL}`}>
+    <p>{t.finisHtml}</p>
+    <cite><span class="sf-only">{t.finisCiteSf}</span><span class="neutral-only">{t.finisCiteNeutral}</span></cite>
+  </div>
+</section>

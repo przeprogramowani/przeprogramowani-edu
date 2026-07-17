@@ -1,0 +1,45 @@
+---
+/**
+ * MarkdownDownloadButton - Reusable download button for markdown content
+ *
+ * Displays a styled button that downloads markdown files. Used across
+ * different content types (lessons, checklists, etc.)
+ *
+ * @component
+ * @example
+ * ```astro
+ * <MarkdownDownloadButton
+ *   markdownUrl="/external/10xdevs-2/checklists/bootstrap/markdown"
+ *   slugifiedName="bootstrap-checklist"
+ *   buttonText="📄 Markdown"
+ * />
+ * ```
+ */
+interface Props {
+  /** URL to the markdown endpoint */
+  markdownUrl: string;
+  /** Slugified filename for download */
+  slugifiedName: string;
+  /** Text to display on button (can include emoji) */
+  buttonText: string;
+  /** Optional title text for hover tooltip */
+  titleText?: string;
+  /** Optional aria-label for accessibility (defaults to generic description) */
+  ariaLabel?: string;
+}
+
+const { markdownUrl, slugifiedName, buttonText, titleText, ariaLabel } = Astro.props;
+const defaultAriaLabel = 'Download content in Markdown format';
+const defaultTitleText = 'Pobierz w formacie Markdown - czyste formatowanie tekstowe bez HTML';
+---
+
+<a
+  href={`${markdownUrl}?filename=${slugifiedName}`}
+  class="lesson-markdown-button inline-flex items-center gap-2 rounded px-4 py-2 font-semibold transition-colors duration-150"
+  target="_blank"
+  rel="noopener noreferrer"
+  title={titleText || defaultTitleText}
+  aria-label={ariaLabel || defaultAriaLabel}
+  download>
+  {buttonText}
+</a>

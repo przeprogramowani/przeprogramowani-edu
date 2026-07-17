@@ -1,0 +1,17 @@
+---
+import ChatApp from '../components/ChatApp';
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>10x Assistant</title>
+  </head>
+  <body class="h-full bg-slate-950">
+    <ChatApp client:only="react" />
+  </body>
+</html>

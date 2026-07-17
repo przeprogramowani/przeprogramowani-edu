@@ -1,0 +1,6 @@
+{
+  "lessonId": "[1x2] Współpraca z AI w IDE",
+  "displayName": "[1x2] Współpraca z AI w IDE",
+  "summary": "1) Jaką subskrypcję Cursora wybrać do regularnej pracy z AI (w tym rekomendowany plan i dlaczego)?\n2) Jak wyłączyć indeksowanie konkretnych plików i folderów w Cursorze (jak utworzyć i używać pliku .cursorignore)?\n3) Jakie są ograniczenia pliku .cursorignore i dlaczego nie zastępuje on usuwania sekretów z repozytorium (zasada „security by obscurity” i dostęp Agenta na żądanie)?\n4) Jakie pliki ignore użyć dla narzędzi JetBrains i Cline (odpowiednio .aiignore i .clineignore)?\n5) Jakie ustawienia prywatności należy wyłączyć w GitHub Copilot i JetBrains AI (np. udostępnianie danych, uczestnictwo w treningu, Detailed Data Collection)?\n6) Jak działa Cline pod względem prywatności komunikacji z modelami (client-side, bez dodatkowego backendu; polityki prywatności dostawców)?\n7) Jakie tryby Inline Edit wspiera Cursor i jaki jest skrót klawiszowy do tego trybu (edycja zaznaczenia, edycja całego pliku, pytanie o zaznaczony fragment; Ctrl+\\ / Cmd+\\)?\n8) Gdzie przechowywać reużywalne prompty projektowe i jak je wczytywać w Cursorze (folder .github/prompts, Custom Commands) oraz które zmienne kontekstowe obsługuje obecnie Copilot (np. ${selection}, ${file}, ${input:variableName})?",
+  "tokenEstimate": 194
+}

@@ -1,0 +1,92 @@
+<meta name="lesson-id" content="Higher Order Components (HOC)"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/r3mlio8j3nvp9fb0yr4jv22q0ouj" style="width: 100%; max-width: 100%;"><p>Higher Order Components (HOC) to zaawansowany wzorzec projektowy w React, który umożliwia ponowne wykorzystanie logiki komponentów poprzez dekorację. HOC to funkcje, które przyjmują komponent jako argument i zwracają nowy komponent z dodatkowymi funkcjonalnościami. </p><p>Chociaż hooki przejęły wiele dawnych przypadków użycia Higher Order Components, zwłaszcza tych związanych z  zarządzania stanem i obsługą efektów ubocznych, ten wzorzec nadal jest wykorzystywany w wielu bibliotekach i dobrze sprawdza się w aplikacjach w następujących sytuacjach:</p><ul><li><p>HOC może weryfikować czy użytkownik jest uwierzytelniony przed renderowaniem lub w celu ograniczenia dostępu na podstawie ról użytkownika.</p></li><li><p>HOC może warunkowo renderować komponenty w oparciu o flagi funkcji lub testy A/B.</p></li><li><p>HOC może zapewnić funkcjonalność tłumaczenia komponentów.</p></li><li><p>HOC może dodawać logowanie lub analitykę do komponentów w transparentny sposób.</p></li></ul><p>Spotkasz się z dwoma rodzajami Higher Order Components: </p><ul><li><p><em>Enhancers</em>, które rozszerzają komponent o nową funkcjonalność</p></li><li><p><em>Injectors</em>, które wstrzykują wymagane propsy do komponentu</p></li></ul><p>Poniżej omówimy przykłady tych dwóch kategorii wraz z opisem ich typowania.</p><h2>Przykład enhancera: withAuth</h2><p>HOC mogą dekorować komponenty w celu sprawdzenia, czy użytkownik jest uwierzytelniony przed renderowaniem, lub ograniczyć dostęp na podstawie ról użytkownika. Dzięki temu można łatwo zarządzać dostępem do różnych części aplikacji bez konieczności modyfikowania samego komponentu:</p><pre><code>// src/hoc/with-auth.tsx
+import React from "react";
+import {Redirect} from "react-router-dom";
+import {useAuth} from "../hooks/use-auth";
+
+export function withAuth&lt;P extends object&gt;(
+  WrappedComponent: React.ComponentType&lt;P&gt;
+) {
+  const ComponentWithAuth = (props: P) =&gt; {
+    const isAuthenticated = useAuth();
+
+    if (!isAuthenticated) {
+      return &lt;Redirect to='/login' /&gt;;
+    }
+
+    return &lt;WrappedComponent {...props} /&gt;;
+  };
+
+  ComponentWithAuth.displayName = `withAuth(${
+    WrappedComponent.displayName || WrappedComponent.name || "Component"
+  })`; // Ustawianie czytelnego displayName dla React DevTools
+
+  return ComponentWithAuth;
+}
+
+// src/components/UserProfile.tsx
+function UserProfile {
+ // zawartość komponentu
+}
+
+const UserProfileWithAuth = withAuth(UserProfile)
+
+export default UserProfileWithAuth;</code></pre><p>Typowanie enhancera withAuth wygląda następująco:</p><ol start="1"><li><p> <strong>Parametr generyczny typu P:</strong></p><ol start="1"><li><p><em>P extends object</em> oznacza, że P jest typem obiektowym, co pozwala na przekazanie dowolnych propsów.</p></li><li><p>Dzięki temu <em>withAuth</em> może być używany z dowolnym komponentem.</p></li></ol></li><li><p><strong>Typ React.ComponentType&lt;P&gt;: </strong></p><ol start="1"><li><p><em>WrappedComponent: React.ComponentType&lt;P&gt;</em> oznacza, że WrappedComponent jest komponentem React, który przyjmuje propsy typu <em>P</em>.</p></li><li><p><em>React.ComponentType&lt;P&gt;</em> to unia typów, która obejmuje zarówno komponenty funkcyjne, jak i klasowe.</p></li></ol></li><li><p><strong>Zwracany typ ComponentWithAuth:</strong></p><ol start="1"><li><p>ComponentWithAuth jest komponentem funkcyjnym, który również przyjmuje propsy typu P.</p></li><li><p>ComponentWithAuth opakowuje Redirect do strony logowania, jeśli użytkownik nie jest uwierzytelniony, lub WrappedComponent z przekazanymi propsami, jeśli użytkownik jest uwierzytelniony.</p></li></ol></li><li><p><strong>displayName - </strong>ComponentWithAuth.displayName jest ustawiany dla lepszej czytelności w React DevTools, co ułatwia debugowanie.</p></li></ol><h2>Przykład injectora: withTranslation</h2><p>HOC mogą zapewniać funkcje tłumaczenia i internacjonalizacji komponentom poprzez wstrzykiwanie funkcji tłumaczenia i zarządzanie ustawieniami regionalnymi. Ten wzorzec pozwala komponentom pozostać niezależnymi od języków, podczas gdy logika tłumaczenia jest scentralizowana i wielokrotnego użytku:</p><pre><code>export interface TranslationProps {
+  t: (key: string, params?: Record&lt;string, string | number&gt;) =&gt; string;
+  currentLocale: string;
+}
+
+type Subtract&lt;T, K&gt; = Omit&lt;T, keyof K&gt;;
+
+// Translation HOC
+export const withTranslation = &lt;P extends TranslationProps&gt;(
+  WrappedComponent: React.ComponentType&lt;P&gt;
+) =&gt; {
+  return function WithTranslation(props: Subtract&lt;P, TranslationProps&gt;) {
+    const [dictionary, setDictionary] = useState&lt;Record&lt;string, string&gt;&gt;({});
+    const [locale, setLocale] = useState('en');
+
+    const loadTranslations = async (locale: string) =&gt; {
+      const response = await fetch(`/api/translations/${locale}`);
+      setDictionary(await response.json());
+    };
+
+    useEffect(() =&gt; {
+      loadTranslations(locale);
+    }, [locale]);
+
+    const translate = useCallback((key: string, params?: Record&lt;string, string | number&gt;): string =&gt; {
+      const template = dictionary[key] || key;
+      if (!params) return template;
+      
+      return Object.entries(params).reduce(
+        (text, [param, value]) =&gt; text.replace(`{{${param}}}`, String(value)),
+        template
+      );
+    }, [dictionary]);
+
+    const injectedProps = {
+      t: translate,
+      currentLocale: locale
+    } as TranslationProps;
+
+    return &lt;WrappedComponent {...props} {...injectedProps} /&gt;;
+  };
+};
+
+// Example usage showing language-agnostic component
+interface GreetingProps extends TranslationProps {
+  name: string;
+}
+
+const Greeting = ({ name, t, currentLocale }): GreetingProps =&gt; (
+  &lt;div&gt;
+    &lt;h1&gt;{t('greeting', { name })}&lt;/h1&gt;
+    &lt;p&gt;{t('current_locale')}: {currentLocale}&lt;/p&gt;
+  &lt;/div&gt;
+);
+
+// Component wrapped with translation capabilities
+const TranslatedComponent = withTranslation(MyComponent);
+
+// Usage without needing to handle translations directly
+&lt;TranslatedComponent name="John" /&gt;</code></pre><p>Typowanie injectora withTranslation wygląda następująco:</p><ol start="1"><li><p><strong>Podstawowy interfejs tłumaczenia:</strong></p><ol start="1"><li><p><em>TranslationProps</em> definiuje wstrzykiwany interfejs tłumaczenia</p></li><li><p><em>t</em> to funkcja, która przyjmuje klucz w słowniku tłumaczeń i zwraca wartość będącą przypisanym tłumaczeniem</p></li><li><p><em>currentLocale</em>: ciąg znaków reprezentujący aktywny język (np. “pl”)</p></li></ol></li><li><p><strong>Typy manipulacji propsami:</strong></p><ol start="1"><li><p>Subtract&lt;T, K&gt; usuwa propsy tłumaczenia z propsów komponentów.</p></li><li><p>Subtract wykorzystuje wbudowany utility type Omit</p></li><li><p>W ten sposób zapobiegamy duplikowaniu deklaracji i przekazywania propsów</p></li></ol></li><li><p><strong>Generyk P:</strong></p><ol start="1"><li><p><em>P extends TranslationProps</em> wymusza akceptację propsów translacji przez wrappowany komponent</p></li><li><p><em>React.ComponentType&lt;P&gt;</em> zezwala na komponenty klasowe/funkcjonalne</p></li><li><p>Generyczny typ P przepływa przez całą implementację HOC</p></li><li><p>Taka konstrukcja utrzymuje informacje o typie dla propsów niezwiązanych z translacją</p></li></ol></li></ol><ol start="5"><li><p><strong>Zwracany typy funkcji:</strong></p><ol start="1"><li><p>Wyklucza propsy związane z tłumaczeniem z zewnętrznego interfejsu komponentu</p></li><li><p>Wnioskowanie poprawnie wskazuje bazowe propsy komponetów</p></li><li><p>Wstrzyknięte propsy są dodawane za pomocą asercji <em>as TranslationProps</em></p></li></ol></li><li><p>Typy we wrappowanych komponentach:</p><ol start="1"><li><p>Interfejs propsów komponentu rozszerza TranslationProps udostępniany przez HOC</p></li><li><p>Bazowe propsy komponenty są łączone z propsami tłumaczenia za pomocą przecięcia (&amp;)</p></li><li><p>Sprawdzanie typu odbywa się zarówno na poziomie HOC, jak i na poziomie użycia</p></li><li><p>TypeScript wymusza poprawne użycie propsów we wrappowanych komponentach</p></li></ol></li></ol><h2>Podsumowanie</h2><p>Higher Order Components (HOC) to zaawansowany wzorzec projektowy w React, który pozwala na ponowne wykorzystanie logiki komponentów poprzez ich dekorację, gdzie funkcja przyjmuje komponent jako argument i zwraca nowy komponent z dodatkowymi funkcjonalnościami. </p><p>Mimo że hooki przejęły wiele tradycyjnych zastosowań HOC, wzorzec ten nadal jest przydatny w sytuacjach takich jak zarządzanie autoryzacją, testy A/B, tłumaczenia czy dodawanie analityki. </p><p>HOC występują w dwóch głównych wariantach: enhancery, które rozszerzają funkcjonalność komponentu, oraz injektory, które wstrzykują do niego dodatkowe propsy. </p><p>Dzięki odpowiedniemu typowaniu w TypeScript, HOC zapewniają bezpieczną pod względem typów kompozycję i wielokrotne wykorzystanie kodu, co sprawia, że wciąż są cenną techniką w nowoczesnym rozwoju aplikacji React.</p><h2>Ćwiczenia praktyczne</h2><ol start="1"><li><p><strong>621-text-tooling</strong> - Rozwijasz innowacyjny edytor tekstu oparty o Reacta. Edytor pozwala na łączenie styli takich jak nowe kolory oraz pogrubienie i pochylenie tekstu z wykorzystaniem wzorca Higher Order Components. Wstępna struktura elementów została już przygotowana, ale finalny ruch w postaci przygotowania samych narzędzi należy do ciebie. Czy poradzisz sobie z tym zadaniem?</p></li></ol></div></body></html>

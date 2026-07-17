@@ -1,0 +1,403 @@
+<meta name="lesson-id" content="Wzorce projektowe w warstwie client-side"><html><head></head><body><div><img loading="lazy" src="https://assets-v3.circle.so/ddho6wx6ottiniqv9smz5i3bf5zj" style="width: 100%; max-width: 100%;"><img loading="lazy" src="https://assets-v2.circle.so/dyr9gcjd31uwy6om1zl9vchztofj" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>W tej lekcji przedstawimy ci kilka klasycznych wzorców projektowych, które znajdują swoje zastosowanie na frontendzie - szczególnie w bibliotekach i frameworkach, które dostarczają określony zestaw rozwiązań dla innych programistów. Podobnie jak w przypadku dobrych praktyk, wzorce potraktuj z odpowiednim dystansem i traktuj je jako opcje, a nie ścisłe reguły rozwoju oprogramowania.</p><p>Wracaj do tej listy wraz z nabywaniem nowego doświadczenia - każdy zrealizowany projekt pozwoli ci spojrzeć na tematykę wzorców z nowej strony, a ty zyskasz więcej wprawy w ich stosowaniu.</p><h3>Wzorce, czyli nawyki programisty</h3><p>Temat wzorców projektowych w żadnym wypadku nie jest nowy - już trzy dekady temu, w książce “Design Patterns: Elements of Reusable Object-Oriented Software” zauważono, że tworząc oprogramowanie, większość problemów i wyzwań można sprowadzić do trzech kategorii. Są to:</p><ul><li><p>Jak “coś” tworzyć w spójny i powtarzalny sposób</p></li><li><p>Jak “coś” działa i jak kontrolować to zachowanie</p></li><li><p>Jak to “coś” może się&nbsp;komunikować z innymi elementami systemu</p></li></ul><p>Lista brzmi sensownie - to faktycznie opis typowych operacji, które musimy kontrolować tworząc nasze projekty i aplikacje. Powołanie do życia nowego elementu (np. komponentu lub obiektu), kontrola nad jego zachowaniem (np. cykl życia) oraz komunikacja pomiędzy wieloma elementami aplikacji (np. nasłuchiwanie na zmiany aby odświeżyć widok aplikacji) to zadania, które realizuje niemal każdy programista.</p><p>W związku z tym, autorzy przywołanej książki zaproponowali trzy główne kategorie wzorców, które warto stosować w każdym z tych aspektów:</p><ul><li><p>Wzorce kreacyjne (obsługa tworzenia elementów systemu)</p></li><li><p>Wzorce strukturalne (obsługa zachowania elementów systemu)</p></li><li><p>Wzorce behawioralne (obsługa komunikacji między elementami systemu)</p></li></ul><p>👉 Celem poznania wzorców <strong>nie jest</strong> wkuwanie tych kategorii na pamięć, ale wyrobienie sobie nawyków tego, <strong>jak szybko i sprawnie rozwiązywać typowe, opisywane 30 lat temu problemy programowania</strong>.</p><p>Gdzie w takim razie można je spotkać myśląc o warstwie client-side?</p><img loading="lazy" src="https://assets-v3.circle.so/qzq2c8qcp0fws755n5h8h7u49i38" style="width: 100%; max-width: 100%;"><ul><li><p><strong>Zarządzanie stanem</strong> - Frontend często musi radzić sobie z dynamicznie zmieniającym się stanem aplikacji, który jest reakcją na interakcje użytkownika oraz dane przychodzące z backendu. Wzorce takie jak Flux pomagają w organizacji i przewidywaniu zmian w stanie, zapewniając jednokierunkowy przepływ danych. To z kolei ułatwia śledzenie, debugowanie i testowanie stanu aplikacji.</p></li><li><p><strong>Reakcja na zdarzenia</strong> - Frontend wymaga obsługi zdarzeń generowanych przez użytkownika (np. kliknięcia, przewijanie) oraz na skutek śledzenia zewnętrznych źródeł danych. Wzorce takie jak Obserwator lub Pub/Sub umożliwiają zarządzanie tymi zdarzeniami w sposób zdecentralizowany, bez konieczności tworzenia skomplikowanych łańcuchów zależności między komponentami.</p></li><li><p><strong>Asynchroniczność - </strong>Środowisko przeglądarki jest z natury asynchroniczne i zdarzeniowe. Przeglądarka musi równocześnie obsługiwać wiele zadań, takich jak renderowanie interfejsu użytkownika, przetwarzanie zdarzeń od użytkownika oraz wykonywanie kodu JavaScript. Asynchroniczny kod staje się niezbędny w sytuacjach, gdy działania, takie jak zapytania sieciowe, odczytywanie plików lub inne operacje I/O, mogą trwać dłużej. Wzorce pracy z asynchronicznym kodem pozwalają zachować nad nim kontrolę.</p></li><li><p><strong>Złożoność projektów</strong> - Współczesne aplikacje frontendowe składają się z wielu modułów i komponentów. Nikogo nie dziwi już realizowanie pełnoprawnych, rozbudowanych aplikacji z logiką biznesową w warstwie przeglądarki. Wzorce projektowe takie jak Kompozycja, Moduł, czy Fabryka pozwalają na projektowanie kodu w sposób modularny, co ułatwia jego ponowne wykorzystanie i utrzymanie. Dzięki temu, możesz tworzyć bardziej zorganizowane, skalowalne i łatwiejsze w utrzymaniu aplikacje, co jest kluczowe przy pracy nad dużymi projektami.</p></li><li><p><strong>Wybór stacku technologicznego</strong> - Zrozumienie wzorców projektowych w praktyce frontendowej może znacznie ułatwić dobór odpowiedniego narzędzia do problemu, który próbujesz rozwiązać. Widać to chociażby na przykładzie reaktywności i śledzenia zmian, gdzie konkurują ze sobą podejścia oparte o Virtual DOM, RxJS albo Signals. Możesz decydować się na frameworki wprost korzystające z systemu wstrzykiwania zależności, albo takie, które tego rozwiązania nie stosują. </p></li></ul><p>W dalszej części lekcji przedstawimy ci kilka popularnych wzorców, które warto opanować&nbsp;w swojej pracy frontend developera.</p><p>👉 Ważne: W omówieniu wzorców celowo wykorzystamy JavaScript i TypeScript - będziemy trzymać się uniwersalnych przykładów, które możesz stosować niezależnie od wykorzystywanego frameworka. Przede wszystkim zwracaj uwagę na mechanizmy i ogólny koncept wzorców projektowych, a nie ich detale związane z określoną implementacją lub składnią (dzięki temu unikniesz złudzenia, że wzorce na frontendzie nie mają sensu - to dość powszechne i błędne założenie).</p><h2>1. Wzorzec Obserwator (<em>Observer</em>)</h2><h3>Scenariusz</h3><p>Wyobraź sobie aplikację, w której obiekt globalny (np. koszyk zakupowy) powinien być obserwowany przez różne części interfejsu użytkownika. Chcemy, aby dostępne komponenty automatycznie reagowały na zmiany tego stanu i aktualizowały się w czasie rzeczywistym.</p><p>Bez zastosowania odpowiedniego wzorca, możesz próbować ręcznie odświeżać każdy komponent po zmianie stanu. Prowadziłoby to do prawdziwego spaghetti, gdzie komponenty są silnie ze sobą powiązane, a każda zmiana wymaga modyfikacji wielu miejsc w kodzie.</p><h3>Rozwiązanie z użyciem wzorca Obserwator</h3><p>Wzorzec Obserwator pozwala komponentom (obserwatorom) subskrybować na zmiany w obiekcie obserwowanym (np. store). Gdy stan się zmienia, obiekt obserwowany powiadamia wszystkich subskrybentów o zmianie.</p><p><strong>Przykład kodu w TypeScript:</strong></p><pre><code>// Typy zdarzeń
+type Listener&lt;T&gt; = (state: T) =&gt; void;
+
+// Klasa obserwowana (np. Store)
+class ObservableStore&lt;T&gt; {
+  private state: T;
+  private listeners: Listener&lt;T&gt;[] = [];
+
+  constructor(initialState: T) {
+    this.state = initialState;
+  }
+
+  public subscribe(listener: Listener&lt;T&gt;): () =&gt; void {
+    this.listeners.push(listener);
+    // Zwracamy funkcję do odsubskrybowania
+    return () =&gt; {
+      this.listeners = this.listeners.filter(l =&gt; l !== listener);
+    };
+  }
+
+  public update(newState: T): void {
+    this.state = newState;
+    this.notify();
+  }
+
+  private notify(): void {
+    this.listeners.forEach(listener =&gt; listener(this.state));
+  }
+
+  public getState(): T {
+    return this.state;
+  }
+}
+
+// Użycie
+interface CartItem {
+  name: string;
+  price: number;
+}
+
+interface CartState {
+  items: CartItem[];
+}
+
+const store = new ObservableStore&lt;CartState&gt;({ items: [] });
+
+// Subskrybent 1 - Wypisanie nazw produktów
+const renderCart = (state: CartState) =&gt; {
+  const itemNames = state.items.map(item =&gt; item.name).join(", ");
+  console.log("Aktualny koszyk: ", itemNames);
+};
+
+// Subskrybent 2 - Wypisanie łącznej ceny
+const renderTotalPrice = (state: CartState) =&gt; {
+  const totalPrice = state.items.reduce((total, item) =&gt; total + item.price, 0);
+  console.log("Łączna cena: ", totalPrice);
+};
+
+// Subskrybuj na zmiany - w odpowiedzi otrzymasz funkcję&nbsp;do anulowania subskrypcji
+const unsubscribeRenderCart = store.subscribe(renderCart);
+const unsubscribeRenderTotalPrice = store.subscribe(renderTotalPrice);
+
+// Aktualizuj stan
+store.update({ items: [
+  { name: "Apple", price: 2 },
+  { name: "Banana", price: 3 }
+] });
+
+// Aktualny koszyk: Apple, Banana
+// Łączna cena: 5
+
+// Odsubskrybuj, gdy nie jest już potrzebne wypisywanie nazw
+unsubscribeRenderCart();
+
+// Aktualizuj stan po raz drugi
+store.update({ items: [
+  { name: "Apple", price: 10 }
+]});
+
+// Łączna cena: 10
+</code></pre><h3>Obserwator w akcji</h3><p>Obserwator to jeden z najpopularniejszych wzorców wykorzystywanych na frontendzie. Zarówno na poziomie dużych obiektów, jak i pojedynczych zmiennych, obserwowanie zmian danego elementu aplikacji to fundament interaktywnych, nowoczesnych rozwiązań client-side.</p><p>Co ciekawe, popularna biblioteka Redux niemal w całości opiera się na obserwatorze. Zachęcamy do zapoznania się z <a href="https://github.com/reduxjs/redux" target="_blank" rel="noopener noreferrer">detalami</a>, bo dzięki temu zauważysz jak niewiele linijek kodu potrzeba aby rozwiązywać problemy milionów programistów na całym świecie (a to dzięki wzorcom projektowym).</p><h2>2. Wzorzec Dekorator (<em>Decorator</em>)</h2><h3>Scenariusz</h3><p>Złożone systemy to mnóstwo powiązań pomiędzy poszczególnymi składowymi. Zdarza się, że chcemy modyfikować zachowanie jednego elementu w taki sposób, aby system cały czas działał stabilnie i przewidywalnie.</p><p>Modyfikowanie oryginalnego komponentu za każdym razem, gdy potrzebujemy nowej funkcjonalności, prowadzi do trudnego w utrzymaniu kodu i łamie zasadę otwarte-zamknięte (Open/Closed Principle).</p><p>Zamiast tego warto wprowadzić nowy obiekt (np. komponent lub funkcję dekorującą), którą będziemy stosować na żądanie, w ściśle określonych przypadkach.</p><h3>Rozwiązanie z użyciem wzorca Dekorator</h3><p>Wzorzec Dekorator pozwala na dynamiczne dodawanie nowych funkcjonalności do obiektów, komponentów lub funkcji poprzez "dekorowanie" ich elementami nadrzędnymi.</p><p><strong>Przykład kodu w TypeScript:</strong></p><pre><code>// Interfejs komponentu
+interface Component {
+  render(): void;
+}
+
+// Konkretny komponent
+class Button implements Component {
+  render() {
+    console.log("Renderowanie przycisku");
+  }
+}
+
+// Dekorator bazowy
+class ComponentDecorator implements Component {
+  protected component: Component;
+
+  constructor(component: Component) {
+    this.component = component;
+  }
+
+  render() {
+    this.component.render();
+  }
+}
+
+// Konkretne dekoratory
+class LoggingDecorator extends ComponentDecorator {
+  render() {
+    console.log("Log: Przed renderowaniem");
+    super.render();
+    console.log("Log: Po renderowaniu");
+  }
+}
+
+class AuthDecorator extends ComponentDecorator {
+  render() {
+    if (this.checkAccess()) {
+      super.render();
+    } else {
+      console.log("Brak dostępu");
+    }
+  }
+
+  private checkAccess(): boolean {
+    // Sprawdzenie dostępu użytkownika
+    return true;
+  }
+}
+
+// Użycie
+const button = new Button();
+const loggedButton = new LoggingDecorator(button);
+const securedButton = new AuthDecorator(loggedButton);
+
+securedButton.render();
+</code></pre><h3>Dekorator w akcji</h3><p>Na frontendzie wzorzec Dekorator może mieć kilka znaczeń. We frameworkach, które przede wszystkim stawiają na klasy i obiekty, wzorzec można wykorzystywać korzystając z dekoratorów TypeScripta (np. dekorator @Injectable - sprawienie, aby serwis angularowy był zauważalny przez system do wstrzykiwania zależności). Z kolei w tych frameworkach, które stawiają na bardziej funkcyjne podejście, dekoratorami będą komponenty wyższego rzędu (Higher-Order Components) lub uniwersalne hooki - są to rozszerzenia istniejących komponentów, które nie modyfikują ich podstawowego działania.</p><h2>3. Wzorzec Proxy (<em>Proxy</em>)</h2><h3>Scenariusz</h3><p>Zastosowanie wzorca Proxy przypomina to związane z Dekoratorem. Mówimy o sytuacjach, w których jeden z obiektów (np. serwis do pobierania danych lub implementacja algorytmu) powinien zachowywać się inaczej niż do tej pory, ale musimy to osiągnąć bez naruszania jego struktury.</p><p>Zobaczmy to na przykładzie komunikacji z API.</p><h3>Rozwiązanie z użyciem wzorca Proxy</h3><p>Wzorzec Proxy wprowadza pośrednika między klientem (np. komponentem aplikacji) a rzeczywistym źródłem danych (np. backendem z API). W poniższym przykładzie obiekt Proxy przechowuje wyniki zapytań i zwraca je z pamięci podręcznej (cache), jeśli dane zostały już pobrane, zamiast wykonywać kolejne zapytania do API. Dzięki temu optymalizujemy wydajność aplikacji i zmniejszamy liczbę zapytań do serwera.</p><p><strong>Przykład kodu w TypeScript:</strong></p><pre><code>// Interfejs API
+interface UserService {
+  fetchUsers(): Promise&lt;string[]&gt;;
+}
+
+// Implementacja rzeczywistej usługi
+class RealUserService implements UserService {
+  async fetchUsers(): Promise&lt;string[]&gt; {
+    console.log("Fetching users from API...");
+    // Symulacja zapytania do API
+    return new Promise((resolve) =&gt;
+      setTimeout(() =&gt; resolve(["Alice", "Bob", "Charlie"]), 1000)
+    );
+  }
+}
+
+// Proxy dla usługi
+class UserServiceProxy implements UserService {
+  private realService: UserService;
+  private cache: string[] | null = null;
+
+  constructor(realService: UserService) {
+    this.realService = realService;
+  }
+
+  async fetchUsers(): Promise&lt;string[]&gt; {
+    if (this.cache) {
+      console.log("Returning cached users...");
+      return this.cache;
+    }
+    console.log("No cache found. Fetching from real service...");
+    this.cache = await this.realService.fetchUsers();
+    return this.cache;
+  }
+}
+
+// Użycie Proxy w aplikacji
+(async () =&gt; {
+  const realService = new RealUserService();
+  const proxy = new UserServiceProxy(realService);
+
+  console.log(await proxy.fetchUsers()); // Fetching from API
+  console.log(await proxy.fetchUsers()); // Using cache
+})();
+</code></pre><p>Dla twórców reużywalnych bibliotek i narzędzi ten wzorzec jest na tyle istotny, że w standardzie ECMAScript pojawił się jakiś czas temu natywny obiekt o tej samej nazwie. </p><p>Obiekt Proxy pozwala nam przechwytywać posługiwanie się&nbsp;konkretnymi właściwościami obiektu bazowego - w naszym przypadku zareagujemy na użycie funkcji do pobierania danych i wprowadzimy dodatkową warstwę zapisywania odpowiedzi:</p><pre><code>// Rzeczywista usługa
+class RealUserService {
+  async fetchUsers(): Promise&lt;string[]&gt; {
+    console.log("Fetching users from API...");
+    // Symulacja zapytania do API
+    return new Promise((resolve) =&gt;
+      setTimeout(() =&gt; resolve(["Alice", "Bob", "Charlie"]), 1000)
+    );
+  }
+}
+
+// Tworzenie proxy z cache
+const createUserServiceProxy = (realService: RealUserService) =&gt; {
+  const cache: { [key: string]: any } = {};
+
+  // Wykorzystanie natywnego obiektu Proxy
+  return new Proxy(realService, {
+    get(target, property) {
+      if (property === "fetchUsers") {
+        // Jeśli dane są w cache, zwracamy je
+        if (cache[property]) {
+          console.log("Returning cached users...");
+          return () =&gt; Promise.resolve(cache[property]);
+        }
+
+        // Jeśli dane nie są w cache, wykonujemy rzeczywiste wywołanie
+        return async (...args: any[]) =&gt; {
+          console.log("No cache found. Fetching from real service...");
+          const result = await target[property as keyof RealUserService](...args);
+          cache[property] = result; // Zapisujemy dane w cache
+          return result;
+        };
+      }
+
+      // Dla innych właściwości delegujemy wywołanie do rzeczywistego obiektu
+      return target[property as keyof RealUserService];
+    },
+  });
+};
+
+// Użycie Proxy
+(async () =&gt; {
+  const realService = new RealUserService();
+  const userServiceProxy = createUserServiceProxy(realService);
+
+  console.log(await userServiceProxy.fetchUsers()); // Fetching from API
+  console.log(await userServiceProxy.fetchUsers()); // Using cache
+})();
+</code></pre><h3>Proxy a Dekorator</h3><p>Jak często bywa w programowaniu, oba wzorce mogą być wykorzystywane do realizowania podobnych zadań. Główna różnica polega na tym, jaką wiedzę o obiekcie bazowym będą one posiadać. Proxy jest zdecydowanie mocniej powiązane z tym, co kontroluje lub rozszerza, a Dekoratory budowane są w sposób bardziej uniwersalny aby akceptować różne argumenty.</p><p>W teorii zwykło się powtarzać, że Proxy służy do “kontroli” zachowania lub dostępu do obiektu a Dekorator do “rozszerzania obiektu”, ale w praktyce trudno ustawić tutaj jasną granicę.</p><p>To, co oba wzorce wyróżnia, to jawność ich stosowania - Proxy ma być niewidoczną czarną skrzynką, którą można zawsze podstawić w miejsce obiektu bazowego, a Dekorator zawsze będzie się wyróżniał jako coś nowego:</p><ul><li><p>Proxy - odświeżona wersja tego samego modelu samochodu (Fiat z 2023 → Fiat z 2024)</p></li><li><p>Dekorator - zamiana aktualnego samochodu na model z wyższej półki (Fiat → Ferrari)</p></li></ul><h3>Proxy w akcji</h3><p>Zastosowanie wzorca Proxy poznasz w lekcjach o bezpiecznej komunikacji z API. Obiekt Proxy posłuży nam do modyfikowania klientów HTTP - to jedno z najbardziej powszechnych zastosowań tego wzorca.</p><h2>4. Wzorzec Adapter (<em>Adapter</em>)</h2><h3>Scenariusz</h3><p>Wyobraź sobie scenariusz, w którym jeden z członków zespołu chce do projektu wprowadzić nową praktykę komunikacji z API. Przykładowo, jeszcze kilka lat temu było to przejście z popularnego modelu opartego o tzw. callbacki na obiekt Promise.</p><p>Jak to zrobić, kiedy w kodzie roi się&nbsp;od funkcji zrealizowanych w starszy sposób, z których korzystają już inne zespoły i produkty? Czy twój pomysł pozostanie w sferze marzeń?</p><h3>Rozwiązanie z użyciem wzorca Adapter</h3><p>Zastosowanie wzorca Adapter pozwala na integrację dwóch różnych komponentów lub sposobów na realizację podobnego zadania. Przykładowo, aby umożliwić komunikację z API opartą o Promise, bez zależności na callbacki, można wprowadzić tymczasowy Adapter i wypromować jego stosowanie w firmie.</p><p>W momencie, kiedy cała organizacja zacznie z niego korzystać, wystarczy podmienić wewnętrzną implementację i usunąć stary kod z callbackami.</p><p><strong>Przykład kodu w TypeScript:</strong></p><pre><code>// Istniejąca klasa, w której do obsługi asynchroniczności wykorzystujemy callbacki
+class LegacyAPIClient {
+  fetchData(endpoint: string, callback: (data: any) =&gt; void): void {
+    // Symulacja pobierania danych
+    setTimeout(() =&gt; {
+      callback({ data: "Dane z zewnętrznego API" });
+    }, 1000);
+  }
+}
+
+// Nowy interfejs oparty na Promisach
+interface ModernAPIClient {
+  get(url: string): Promise&lt;any&gt;;
+}
+
+// Adapter - komunikacja z API oparta na Promisach, ukrywająca starsze podejście
+class APIClient implements ModernAPIClient {
+  private externalApi: LegacyAPIClient;
+
+  constructor() {
+    this.externalApi = new LegacyAPIClient();
+  }
+
+  get(url: string): Promise&lt;any&gt; {
+    return new Promise((resolve) =&gt; {
+      this.externalApi.fetchData(url, (data) =&gt; {
+        resolve(data);
+      });
+    });
+  }
+}
+
+// Użycie nowego rozwiązania
+const httpClient: ModernAPIClient = new APIClient();
+
+(async () =&gt; {
+  const data = await httpClient.get("/endpoint");
+  console.log(data);
+})();
+</code></pre><h3>Adapter w akcji</h3><p>Na frontendzie adapter sprawdzi się wszędzie tam, kiedy integrujemy ze sobą dwa konfliktowe podejście do realizacji określonego zadania. Może to być sposób komunikacji z API, może to być nowy format komponentów lub fragment logiki biznesowej, gdzie zależy nam na kluczowej zmianie. Wprowadzenie tymczasowego adaptera pozwoli przykryć różnice w dwóch elementach i przeprowadzić proces migracji z bezproblemowy sposób.</p><h2>5. Wzorzec Fasada (<em>Facade</em>)</h2><h3>Scenariusz</h3><p>Twoja aplikacja korzysta z wielu złożonych modułów, funkcji lub bibliotek do komunikacji z backendem. Nie masz kontroli nad tym kto i kiedy komunikuje się z API, przez co wprowadzanie nowości takich jak logowanie czy monitoring, które poznasz w kolejnych lekcjach, wymaga zmian w wielu miejscach jednocześnie.</p><p>Akceptowanie takiego sposobu rozwijania projektu może prowadzić do trudniejszego wdrażania nowych programistów, mniej efektywnego analizowania błędów produkcyjnych i powolnego implementowania usprawnień. Potrzebujesz czegoś, co ujednolici komunikację między frontendem i backendem na przestrzeni całego projektu.</p><h3>Rozwiązanie z użyciem wzorca Fasada</h3><p>Wzorzec Fasada pozwoli nam wprowadzić jednolitego klienta (zwyczajowa nazwa takich modułów) do API, który przejmie odpowiedzialność za wykonywanie zapytań. Od teraz każdy, kto będzie chciał pobrać dane ze zdalnego źródła, będzie robił to w jednolity sposób.</p><p>W przypadku wprowadzania rozszerzeń służących do monitoringu, logowania czy analizy wydajności zapytań, cała praca ograniczy się do jednej klasy lub serwisu.</p><p><strong>Przykład kodu w TypeScript:</strong></p><pre><code>// Rozproszone moduły do komunikacji z backendem
+class AuthenticationService {
+  login(user: string, pass: string): Promise&lt;boolean&gt; {
+    // Logika logowania
+    return Promise.resolve(true);
+  }
+}
+
+class DataService {
+  fetchData(): Promise&lt;any&gt; {
+    // Pobieranie danych
+    return Promise.resolve({ data: "Dane" });
+  }
+}
+
+class LoggingService {
+  log(message: string): void {
+    console.log("Log:", message);
+  }
+}
+
+// Jednolity klient API (Fasada)
+class ApiClient {
+  private authService = new AuthenticationService();
+  private dataService = new DataService();
+  private loggingService = new LoggingService();
+
+  /**
+   * Logowanie użytkownika
+   * @param user - nazwa użytkownika
+   * @param pass - hasło użytkownika
+   */
+  async login(user: string, pass: string): Promise&lt;void&gt; {
+    this.loggingService.log("Próba logowania");
+    const success = await this.authService.login(user, pass);
+    if (!success) {
+      this.loggingService.log("Logowanie nieudane");
+      throw new Error("Nieprawidłowe dane logowania");
+    }
+    this.loggingService.log("Logowanie zakończone sukcesem");
+  }
+
+  /**
+   * Pobranie danych po zalogowaniu
+   */
+  async getData(): Promise&lt;any&gt; {
+    this.loggingService.log("Rozpoczęto pobieranie danych");
+    const data = await this.dataService.fetchData();
+    this.loggingService.log("Dane zostały pobrane");
+    return data;
+  }
+
+  /**
+   * Logowanie i pobieranie danych w jednej operacji
+   * @param user - nazwa użytkownika
+   * @param pass - hasło użytkownika
+   */
+  async loginAndFetchData(user: string, pass: string): Promise&lt;any&gt; {
+    await this.login(user, pass);
+    return this.getData();
+  }
+}
+
+// Użycie
+const apiClient = new ApiClient();
+
+apiClient.loginAndFetchData("user", "pass")
+  .then((data) =&gt; {
+    console.log("Otrzymane dane:", data);
+  })
+  .catch((error) =&gt; {
+    console.error("Błąd:", error.message);
+  });
+
+</code></pre><h3>Fasada w akcji</h3><p>Na pierwszy rzut oka Fasada może ograniczać możliwości programistów w porównaniu do pracy z jej składowymi, ale wbrew pozorom wiele aplikacji może na tym skorzystać. Wszędzie tam, gdzie zauważasz różne podejścia do rozwiązania tego samego problemu, rozważ wprowadzenie opisywanego wzorca.</p><h2>6. Wzorzec Strategia (<em>Strategy</em>)</h2><h3>Scenariusz </h3><p>Zdarza się, że aby zapewnić interaktywność aplikacji frontendowych, ich zachowanie musi zmieniać się w locie, bez przeładowania strony lub bez zapisywania nowego stanu w bazie. Przykładową zmianą może być chociażby filtrowanie list w zgodzie z wieloma różnymi kryteriami, na które zdecyduje się użytkownik.</p><p>Naiwne podejście do rozwiązania tego problemu będzie polegało na wprowadzeniu wielu instrukcji warunkowych (if, switch) wewnątrz komponentu. W efekcie doprowadzi to do skomplikowanego i trudnego w utrzymaniu kodu.</p><h3>Rozwiązanie z użyciem wzorca Strategia</h3><p>Wzorzec Strategia pozwala zdefiniować rodzinę algorytmów, umieścić je w osobnych klasach lub funkcjach i uczynić je wymienialnymi w czasie działania programu.</p><p><strong>Przykład kodu w TypeScript:</strong></p><pre><code>// Model produktu
+interface Product {
+  name: string;
+  price: number;
+  popularity: number;
+}
+
+// Funkcje jako strategie sortowania
+const sortByPriceAsc = (products: Product[]): Product[] =&gt;
+  products.slice().sort((a, b) =&gt; a.price - b.price);
+
+const sortByPriceDesc = (products: Product[]): Product[] =&gt;
+  products.slice().sort((a, b) =&gt; b.price - a.price);
+
+const sortByPopularity = (products: Product[]): Product[] =&gt;
+  products.slice().sort((a, b) =&gt; b.popularity - a.popularity);
+
+const sortByName = (products: Product[]): Product[] =&gt;
+  products.slice().sort((a, b) =&gt; a.name.localeCompare(b.name));
+
+// Klasa kontekstowa lub docelowy komponent
+class ProductList {
+  private products: Product[];
+  private sortStrategy: (products: Product[]) =&gt; Product[];
+
+  constructor(
+    products: Product[],
+    sortStrategy: (products: Product[]) =&gt; Product[]
+  ) {
+    this.products = products;
+    this.sortStrategy = sortStrategy;
+  }
+
+  // Ustawienie strategii sortowania
+  setSortStrategy(sortStrategy: (products: Product[]) =&gt; Product[]) {
+    this.sortStrategy = sortStrategy;
+  }
+
+  // Pobranie posortowanych produktów
+  getSortedProducts(): Product[] {
+    return this.sortStrategy(this.products);
+  }
+}
+
+// Użycie wzorca Strategia
+const products: Product[] = [
+  { name: "Laptop", price: 1200, popularity: 95 },
+  { name: "Smartphone", price: 800, popularity: 120 },
+  { name: "Headphones", price: 200, popularity: 300 },
+  { name: "Keyboard", price: 100, popularity: 150 },
+];
+
+// Tworzymy listę produktów z domyślną strategią sortowania
+const productList = new ProductList(products, sortByPriceAsc);
+console.log("Sortowanie według ceny (rosnąco):", productList.getSortedProducts());
+
+// Zmieniamy strategię na sortowanie według popularności
+productList.setSortStrategy(sortByPopularity);
+console.log("Sortowanie według popularności:", productList.getSortedProducts());
+
+// Zmieniamy strategię na sortowanie według nazwy
+productList.setSortStrategy(sortByName);
+console.log("Sortowanie według nazwy:", productList.getSortedProducts());</code></pre><h3><strong>Strategia w akcji</strong></h3><p>Zauważ jak łatwo skaluje się&nbsp;taki kod - nowe reguły sortowania sprowadzą się do tworzenia nowych funkcji o dedykowanej nazwie, zamiast rozbudowywania jednego “wyifowanej” funkcji do obsługi całego algorytmu.</p><p>Wykorzystanie strategii w połączeniu z ulubionym frameworkiem może być realizowane na wiele sposobów:</p><ul><li><p>możesz sterować strategiami na poziomie serwisów</p></li><li><p>możesz przekazywać strategie jako propsy do komponentów</p></li><li><p>możesz wykorzystywać dynamicznie zmieniające się komponenty o podobnym interfejsie, które będą przedstawiać tę samą&nbsp;porcję danych w różny sposób</p></li></ul><h2>7. Wzorzec Dusiciel (<em>Strangler Fig</em>)</h2><p>To wzorzec, który nie jest ściśle powiązany ze strukturą kodu, ale może być przydatny w momencie realizowania bardziej strategicznych inicjatyw. Jego nazwa inspirowana jest <a href="https://en.wikipedia.org/wiki/Strangler_fig" target="_blank" rel="noopener noreferrer">tropikalną roślinnością</a> (dosłownie figowiec dusiciel), która słynie ze swojego unikalnego sposobu wzrostu, polegającego na oplataniu się wokół drzewa-gospodarza.</p><p>Strangler Pattern polega na stopniowym zastępowaniu fragmentów starego systemu (tzw. monolitu lub legacy code) nowym kodem, aż do całkowitej eliminacji starej implementacji. </p><h3>Scenariusz</h3><p>Jeśli będziesz miał szansę popracować w firmie, która rozwija jeden projekt przez wiele lat, być może twoim zadaniem stanie się stopniowe migrowanie przestarzałej technologii do nowego stacku technicznego, bez przerywania działania aplikacji.</p><p>Przepisywanie całej aplikacji od zera to domyślny pomysł wielu początkujących, ale jest to niezmiernie ryzykowne i może prowadzić do długich przestojów oraz błędów wynikających z tzw. “big bang release”.</p><p>Do tego, wyrównanie funkcjonalności nowej aplikacji, kiedy stara jest wciąż utrzymywana, może zamienić się w wyścig bez mety na horyzoncie.</p><h3>Rozwiązanie z użyciem wzorca Strangler Fig</h3><p>Wyobraźmy sobie aplikację frontendową napisaną w przestarzałej technologii (np. jQuery), którą chcemy stopniowo migrować do Reacta lub innego nowoczesnego frameworka, bez jednorazowego przepisywania całego projektu.</p><img loading="lazy" src="https://assets-v2.circle.so/v7w7vkcan3gnhqigbc88rvngp70f" style="width: 100%; max-width: 100%;"><p>Kluczem do przeprowadzenia takiej migracji będzie stopniowe wprowadzanie nowej technologii, która nie będzie zaburzać działania pozostałej części aplikacji, a przy okazji pozwoli na rozwijanie kodu w nowy sposób. W naszym przykładzie może to być mikro-aplikacja Reactowa, wprowadzana stopniowo od pojedynczej strony:</p><img loading="lazy" src="https://assets-v2.circle.so/kgke284c24s0x4y5gvbpmek2r1ms" style="width: 100%; max-width: 100%;"><p>Nowa technologia może być wdrażana stopniowo, a nawigacja, która była wcześniej realizowana po stronie serwera, może być zastąpiona przez router client-side. Dzięki temu React będzie odpowiedzialny za więcej niż jedną stronę.</p><img loading="lazy" src="https://assets-v2.circle.so/ohn3fz2n8l6a37s8webtiqk3asyl" style="width: 100%; max-width: 100%;"><p>Cały proces można kontynuować aż do zamiany całego stacku na nowy, zgodny z odświeżonymi standardami i praktykami tworzenia frontendu. W docelowej aplikacji za nawigację może odpowiadać router sterujący widocznością poszczególnych stron-kontenerów (de facto komponentów, które definiują układ i hierarchię informacji na stronie).</p><img loading="lazy" src="https://assets-v2.circle.so/xoj3t7ac6jy6v51ggw7hj11rq54h" style="width: 100%; max-width: 100%;"><p>Rozbicie migracji na mniejsze składowe będzie skutkować częstszym dowożeniem gotowej funkcjonalności a także dopasowaniem trybu pracy do praktyk zwinnych, gdzie oczekuje się&nbsp;bardziej iteracyjnego podejścia do rozwiązywania problemów.</p><p>Co ważne, jeśli mamy dostęp do routera server-side, nowe strony mogą być tworzone pod zupełnie innymi adresami URL, dzięki czemu ewentualny rollback wykonamy na żądanie.</p><blockquote><p>💡 Przykładem takiej migracji jest usługa <a href="https://v0.dev/" target="_blank" rel="noopener noreferrer">v0.dev</a> od Vercela - pierwsza wersja usługi była rozwijana właśnie pod adresem “v0.dev”, a druga pod “v0.dev/chat”. Po ukończeniu migracji i wprowadzeniu drugiej wersji globalnie, router na poziomie infrastruktury automatycznie kieruje wszystkich klientów na stronę “/chat”.</p></blockquote><p>Interesujący przykład wykorzystania tego wzorca pojawił się&nbsp;niedawno na blogu <a href="https://martinfowler.com/articles/strangler-fig-mobile-apps.html" target="_blank" rel="noopener noreferrer">ThoughtWorks</a> - zachęcamy do zapoznania się&nbsp;z wybranymi fragmentami, nawet bez wchodzenia w szczegóły.</p><h2>Podsumowanie</h2><p>Wiele nieporozumień związanych ze stosowaniem wzorców projektowych na frontendzie wynika z traktowania ich w zbyt dosłowny sposób.</p><p>Jeszcze raz podkreślamy, że wzorce nie powinny działać jak wyuczone na pamięć formułki, ale jak ustandaryzowane mechanizmy lub akcje, które można implementować w dowolnej technologii.</p><p>Przy pracy z frontendem kluczowe jest rozumienie celu, jaki dany wzorzec ma osiągnąć, oraz kontekstu, w jakim jest stosowany. Dla przykładu:</p><ul><li><p><strong>Wzorzec Obserwator</strong> może być realizowany za pomocą natywnych zdarzeń JavaScript, bibliotek takich jak RxJS, czy też w kontekście frameworków jak Angular lub React.</p></li><li><p><strong>Wzorzec Strategia</strong> pozwala na budowanie elastycznych rozwiązań, na przykład w zarządzaniu różnymi strategiami walidacji formularzy.</p></li><li><p><strong>Wzorzec Adapter</strong> przydaje się do porządkowania warstwy komunikacji z API, która w wielu projektach jest najmniej uporządkowanym elementem całej układanki.</p></li></ul><p>Niektóre wzorce mogą być wbudowane w dany framework (np. Dependency Injection w Angularze), podczas gdy inne trzeba implementować manualnie, uwzględniając ograniczenia środowiska. Ważne, by patrzeć na wzorce projektowe jak na narzędzia, a nie jak na obowiązkowe schematy do implementacji. </p><p>Warto jednak pamiętać, że tego typu zbiór narzędzi istnieje i co więcej, rozwijany jest zdecydowanie dłużej niż to, co uznajemy za współczesny frontend epoki Angulara, Vue czy Reacta.</p><h2>🧑‍💻 Ćwiczenia praktyczne</h2><h3><strong>Validate-It: Walidacja z wzorcami i najlepszymi praktykami</strong></h3><p>Odziedziczyłeś aplikację <strong>examples/module1/lesson1/validate-it</strong> do sprawdzania poprawności liczb, która wymaga refaktoryzacji. Aplikacja sprawdza poprawność liczb w oparciu o określone reguły, ale jej implementacja staje się trudna w utrzymaniu i rozszerzaniu. Aplikację uruchomisz za pomocą komendy <strong><em>npm run example validate-it</em></strong></p><p>Twoje zadania są następujące:</p><p><strong>🔍 Analiza kodu</strong></p><ul><li><p>Określenie przyczyny nieprawidłowego działania aplikacji</p></li><li><p>Rozpisz przyczyny problemów oraz zasady walidacji liczb</p></li></ul><p><strong>🧑🏻‍💻 Refaktoryzacja kodu, poprawienie rozszerzalności reguł</strong></p><ul><li><p>Przepisz aplikację na TypeScript. Nie musisz przejmować się konfiguracją, jedyne co musisz zmienić to ścieżkę do skryptu wejściowego w index.html (index.js → index.ts)</p></li><li><p>Rozważ użycie wzorców projektowych do zarządzania logiką walidacji</p></li><li><p>Każda reguła walidacji powinna być niezależna, aby ułatwić dodawanie/usuwanie reguł</p></li><li><p>Dodawanie nowych reguł nie powinno wymagać modyfikowania istniejących funkcji walidacji</p></li></ul><p>👉 Do weryfikacji rozwiązania wykorzystaj komendę <strong><em>npm run verify validate-it</em></strong>, która uruchamia testy ./tests/validate-it.spec.ts:</p><p><strong>✅ Kryteria sukcesu</strong></p><ul><li><p>Wszystkie testy przechodzą </p></li><li><p>Kod jest dobrze zorganizowany i łatwy do zrozumienia</p></li><li><p>Nowe reguły walidacji można dodawać bez modyfikowania istniejącego kodu</p></li></ul><p><strong>⚒️ Wymagania techniczne</strong></p><ul><li><p>Wykorzystaj identyfikatory elementów HTML używane w testach (tests/validate-it.spec.ts): </p><ul><li><p>Input (#input)</p></li><li><p>Przycisk walidacji (#validation-btn)</p></li><li><p>Przycisk czyszczenia inputa (#cleanup-btn)</p></li><li><p>Obszar do wyświetlania wyniku walidacji (#result)</p></li></ul></li><li><p>Zachowaj/rozbuduj komunikaty o błędów zgodnie z wzorcem określonym w testach.</p></li></ul><p>🏁 Przykładowe rozwiązanie znajdziesz pod ścieżką <strong>examples/module1/lesson1/_solutions/validate-it. </strong>Możesz je uruchomić za pomocą <strong><em>npm run example _solutions/validate-it</em></strong>.</p><p><br></p><h3>Solver: Budowanie solidnego interfejsu operacji arytmetycznych</h3><p>Odziedziczyłeś aplikację kalkulatora, która wymaga refaktoryzacji i ulepszeń. Aplikacja wykonuje podstawowe operacje arytmetyczne, ale wymaga ulepszeń w zakresie obsługi błędów, sprawdzania poprawności danych wejściowych i organizacji kodu. Aplikację uruchomisz przy użyciu polecenia <strong>npm run example solver</strong>. Twoje zadania są następujące:</p><p><strong>🧑🏻‍💻 Wymagania implementacyjne</strong></p><ul><li><p>Popraw nazewnictwo i organizację kodu obsługującego podstawowe operacje: dodawanie (+), odejmowanie (-), mnożenie (*<em>), and dzielenie (/)</em></p></li><li><p>Dodaj walidację danych oraz obsługę błędów</p></li><li><p>Zadbaj o obsługę liczb dziesiętnych (z wartością po przecinku)</p></li><li><p>Obsłuż edge case’y takie jak dzielenie przez 0 oraz puste inputy </p></li></ul><p>👉 Do weryfikacji rozwiązania wykorzystaj komendę <strong>npm run verify solver</strong>, która uruchamia testy ./tests/solver.spec.ts:</p><p><strong>✅ Kryteria sukcesu</strong></p><p>Wszystkie scenariusze testowe muszą zostać zaliczone.</p><p>Obsługa podstawowych operacje arytmetycznych:</p><ul><li><p>Dodawanie: 10 + 5 = 15</p></li><li><p>Odejmowanie: 10 - 5 = 5</p></li><li><p>Mnożenie: 10 * 5 = 50</p></li><li><p>Dzielenie: 10 / 5 = 2</p></li></ul><p>Obsługa błędów:</p><ul><li><p>Dzielenie przez zero powinno wyświetlać „Cannot divide by zero”.</p></li><li><p>Puste wejścia powinny być obsługiwane (traktowane jako 0).</p></li></ul><p>Obsługa liczb dziesiętnych</p><ul><li><p>Kalkulator powinien poprawnie obsługiwać liczby dziesiętne (np. 3.5 + 2.1 = 5.6)</p></li></ul><p><strong>⚒️ Wymagania techniczne</strong></p><p>Wymagania co do struktury:</p><ul><li><p>Dwa inputy numeryczne: input[type="number"]</p></li><li><p>Dwa przyciski do operacji: Selektory testowe dla "+", "-", "*<em>", "/"</em></p></li><li><p>Wyświetlanie rezultatów: Tekst rozpoczynający się od "Result: " lub komunikatu błędu</p></li></ul><p>Pozostałe oczekiwania:</p><ul><li><p>Rezultaty powinny być wyświetlane w formacie "Result: {value}"</p></li></ul><ul><li><p>Puste inputy powinny być traktowane jak 0</p></li><li><p>Kalkulacje na liczbach dziesiętnych powinny zachować precyzję (bez zaokrąglania do liczb całkowitych)</p></li></ul><p>🏁 Przykładowe rozwiązanie znajdziesz pod ścieżką <strong>examples/module1/lesson1/_solutions/solver. </strong>Możesz je uruchomić za pomocą <strong><em>npm run example _solutions/solver</em></strong>.</p><h2>🛟 Pomoc</h2><p>Jeśli potrzebujesz pomocy, skorzystaj z sekcji komentarzy do tej lekcji lub napisz wiadomość na ogólnym czacie dla uczestników kursu - <a class="entity" href="https://przeprogramowani.circle.so/c/czat-c4ffdc" target="_blank" rel="noopener noreferrer">#Czat - Opanuj Frontend</a>.</p><p>Pomożemy tak szybko, jak to możliwe - powodzenia!</p><h2>📚 Materiały dodatkowe</h2><p>Poniżej znajdziesz materiały poszerzające wiedzę zawartą w tej lekcji:</p><ul><li><p>Czym jest ECMA Script? - <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/JavaScript_technologies_overview" target="_blank" rel="noopener noreferrer">https://developer.mozilla.org/en-US/docs/Web/JavaScript/JavaScript_technologies_overview</a></p></li><li><p>Dependency Inversion - <a href="https://blog.logrocket.com/dependency-inversion-principle-typescript/" target="_blank" rel="noopener noreferrer">https://blog.logrocket.com/dependency-inversion-principle-typescript/</a></p></li><li><p>Zdroworozsądkowe zasady programowania - <a href="https://grugbrain.dev/" target="_blank" rel="noopener noreferrer">https://grugbrain.dev/</a></p></li><li><p>Zrozumieć filozofię oprogramowania - <a href="https://lubimyczytac.pl/ksiazka/4902573/a-philosophy-of-software-design" target="_blank" rel="noopener noreferrer">https://lubimyczytac.pl/ksiazka/4902573/a-philosophy-of-software-design</a></p></li><li><p>Struktura komponentów kontra złożoność - <a href="https://epicreact.dev/one-react-mistake-thats-slowing-you-down/" target="_blank" rel="noopener noreferrer">https://epicreact.dev/one-react-mistake-thats-slowing-you-down/</a></p></li></ul><img loading="lazy" src="https://assets-v3.circle.so/g2l2mq3ct4vs6xen0q8vet43g8ie" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 1880px; position: relative;"><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSf48qUAiNVELp1rjKI7MCM8pG8XIvBc8junh7TkVXsxY7WK5A/viewform?usp=sf_link&amp;embedded=true&amp;usp=embed_googleplus" width="360" height="1880" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen=""></iframe></div></div><p>Gratulacje! Zakończyłeś sekcję "Dobre praktyki i wzorce", zdobywając solidne podstawy profesjonalnego programowania frontendowego.<br><br>Poznałeś kluczowe wzorce projektowe, które pomogą Ci rozwiązywać typowe problemy w aplikacjach webowych, a dzięki praktycznym ćwiczeniom miałeś okazję zastosować te wzorce w rzeczywistych scenariuszach. Teraz potrafisz świadomie wybierać odpowiednie narzędzia do konkretnych wyzwań, pisać kod, który jest nie tylko funkcjonalny, ale również łatwy w utrzymaniu i rozbudowie. </p><img loading="lazy" src="https://assets-v3.circle.so/h8kam2rxj8lxqffu5qqmcu1rdlue" style="width: 100%; max-width: 100%;"></div></body></html>

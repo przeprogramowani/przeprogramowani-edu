@@ -1,0 +1,159 @@
+<meta name="lesson-id" content="[2x5] Generowanie interfejsu użytkownika"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/f8rp0efgz3453pkhzeul6cksyd3q" style="width: 100%; max-width: 100%;"><p>👉 Wersja Focus Mode (Markdown) <a href="https://platforma.przeprogramowani.pl/external/10xdevs-2/2580252" target="_blank" rel="noopener noreferrer">w tym miejscu</a>.</p><h2>Wprowadzenie</h2><p>Programowanie z modelami językowymi to szansa na łatwiejsze tworzenie interfejsów użytkownika - ekspercki poziom znajomości CSSów nie jest wymagany!</p><p>Nie oznacza to jednak, że model - tak jak programista - może na własne oczy zobaczyć, poczuć i na bieżąco korygować efekty swojej pracy. Paradoksalnie, to ograniczenie LLMów jest najbardziej odczuwalne w warstwie UI, a tak trudne w interpretacji polecenia jak “utwórz ładny formularz” daje bardzo różne efekty i ma więcej wspólnego z ruletką niż frontend engineeringiem.</p><p>Aby ten problem zaadresować, pracę nad UI/UX sprowadzimy do jasnych poleceń względem elementów interfejsu, ich relacji, interakcji i wykorzystywanych bibliotek. Przy okazji postaramy się minimalizować liczbę niepowiązanych reguł CSS które łatwo pominąć, stawiając na spójne komponenty zawierające zarówno strukturę jak i określony sposób opisywania stylu (dzięki <a href="https://ui.shadcn.com/" target="_blank" rel="noopener noreferrer">shadcn/ui</a> oraz <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">bibliotece Tailwind</a>).</p><p>Na początku kilka słów o fundamentach tej lekcji.</p><h2>Tailwind</h2><img loading="lazy" src="https://assets-v2.circle.so/g226bj8chccw0uf5hk6omf3hmqj8" style="width: 100%; max-width: 100%;"><p>Tailwind CSS to framework utility-first, który pozwala na budowanie nowoczesnych interfejsów za pomocą predefiniowanych klas CSS stosowanych bezpośrednio w HTML. Zamiast pisać własne style, używasz gotowych klas jak flex, pt-4, text-center czy bg-blue-500.</p><h3>Korzyści ze stosowania Tailwind:</h3><ul><li><p><strong>Szybkość tworzenia</strong> - projektowanie interfejsu bezpośrednio w HTML bez przełączania się między plikami</p></li><li><p><strong>Spójność</strong> - predefiniowany system designu z ustalonymi wielkościami, kolorami i odstępami</p></li><li><p><strong>Mała objętość CSS</strong> - produkcyjny build zawiera tylko wykorzystane klasy</p></li><li><p><strong>Wysoka konfigurowalność</strong> - możliwość dostosowania kolorów, breakpointów, fontów i innych elementów za pomocą własnej konfiguracji (kiedyś w tailwind.config.js, od wersji 4 w pliku global.css)</p></li><li><p><strong>Świetna dokumentacja</strong> - łatwo znajdziesz potrzebne klasy i ich zastosowanie</p></li></ul><h3>Przykładowy fragment interfejsu z Tailwind:</h3><pre><code>&lt;div class="p-4"&gt;
+  &lt;button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"&gt;
+    Kliknij mnie
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre><img loading="lazy" src="https://assets-v2.circle.so/ufg93asmadxi5p0kmz6sjj4ny40s" style="width: 100%; max-width: 100%;"><p>Zwróć uwagę jak poszczególne klasy CSS składają się&nbsp;na finalny wygląd danego elementu:</p><ul><li><p>p-4 - to padding, czyli “wewnętrzny margines”</p></li><li><p>bg-blue-500 - niebieskie tło, 500 oznacza środek palety (dostępny zakres to 50-950)</p></li><li><p>hover:bg-blue-700 - konfiguracja tła z modyfikatorem hover - najechanie kursorem</p></li><li><p>rounded - zaokrąglone rogi elementu, itd.</p></li></ul><p>Tailwind doskonale współpracuje z LLMami, ponieważ nazwy klas są intuicyjne i samodzielnie dokumentujące się (np. text-center, mt-4). Dodatkowo, wygląd elementu opisywany jest w tym samym miejscu, w którym znajduje się jego struktura. Ułatwia to zarządzanie kontekstem dla AI.</p><p>Instrukcję instalacji Tailwinda w frameworkach webowych znajdziesz <a href="https://tailwindcss.com/docs/installation/framework-guides" target="_blank" rel="noopener noreferrer">pod tym linkiem</a>. </p><p>Piaskownicę do testowania klas Tailwinda znajdziesz <a href="https://play.tailwindcss.com/" target="_blank" rel="noopener noreferrer">pod tym linkiem</a>.</p><p><strong>👉 W szablonie 10x-astro-starter konfiguracja Tailwinda została przeprowadzona już wcześniej - teraz możesz po prostu korzystać z potencjału frameworka.</strong></p><h2>Shadcn/ui</h2><p>Shadcn/ui to rekomendowana przez nas kolekcja gotowych, dostosowywanych komponentów zbudowanych na React, <a href="https://www.radix-ui.com/" target="_blank" rel="noopener noreferrer">Radix UI</a> i Tailwind.</p><p>W przeciwieństwie do tradycyjnych bibliotek, z których zaciągamy elementy bez wiedzy o szczegółach, shadcn/ui stosuje podejście oparte o generator komponentów wewnątrz projektu.</p><img loading="lazy" src="https://assets-v2.circle.so/37lizwzxbx4i7c7zwhwk88f5776z" style="width: 100%; max-width: 100%;"><h3>Cechy biblioteki:</h3><ul><li><p><strong>Dostęp do kodu</strong> - komponenty stają się częścią twojego projektu, co daje pełną kontrolę nad ich modyfikacją</p></li><li><p><strong>Przystępna złożoność</strong> - komponenty są zbudowane jak klocki, które można łatwo rozbudowywać</p></li><li><p><strong>Dostępność</strong> - zbudowane na Radix UI, zapewniają dostępność (a11y) bez dodatkowej pracy</p></li><li><p><strong>Elastyczność</strong> - łatwa zmiana stylów, kolorów i zachowań poprzez global.css, bez walki z abstrakcjami</p></li><li><p><strong>Spójny design</strong> - wszystkie komponenty współpracują ze sobą wizualnie i funkcjonalnie</p></li></ul><p>Połączenie Tailwind i shadcn/ui tworzy potężny ekosystem, który pozwala programistom (a także LLMom) tworzyć spójne, dostępne i estetyczne interfejsy użytkownika bez konieczności pisania tysięcy linijek własnego kodu HTML/CSS/JS - łatwego do pominięcia przez programistę i błędnie interpretowanego przez AI.</p><h3>🚀 Konfiguracja shadcn/ui</h3><p>Shadcn/ui wymaga odpowiedniej konfiguracji przed rozpoczęciem używania komponentów. Proces instalacji i konfiguracji składa się z kilku kluczowych kroków, w których centralną rolę odgrywa komenda init. </p><p><strong>👉 W 10x-astro-starter shadcn/ui jest już skonfigurowane i gotowe do pracy.</strong></p><h3>Proces inicjalizacji shadcn/ui</h3><p>Pierwszym krokiem jest inicjalizacja shadcn/ui w projekcie za pomocą komendy:</p><pre><code>npx shadcn@latest init</code></pre><p>Po uruchomieniu tej komendy, narzędzie przechodzi przez weryfikację bieżącej konfiguracji projektu, w tym sprawdzenia instalacji Tailwinda oraz dodania aliasów ścieżek w tsconfig.json.</p><p>Instrukcję instalacji shadcn/ui w frameworkach webowych znajdziesz <a href="https://ui.shadcn.com/docs/installation" target="_blank" rel="noopener noreferrer">tutaj</a>.</p><p>Ważne: wykonując komendę init nie korzystaj z flagi `—defaults`, chwilowo prowadzi ona do błędu, który jest powiązany z nowym Tailwind 4 (<a href="https://github.com/shadcn-ui/ui/issues/6446" target="_blank" rel="noopener noreferrer">Github Issue</a>).</p><h3>Po inicjalizacji</h3><p>Po zakończeniu procesu init, projekt jest gotowy do dodawania poszczególnych komponentów za pomocą komendy:</p><pre><code>npx shadcn@latest add button card avatar</code></pre><p>Każdy zainstalowany w ten sposób komponent trafia bezpośrednio do katalogu komponentów w projekcie, gdzie można go dowolnie modyfikować zgodnie z potrzebami.</p><p>Warto podkreślić, że shadcn/ui, w przeciwieństwie do tradycyjnych bibliotek komponentów, <strong>nie jest zależnością projektu</strong> - to raczej zbiór szablonów, które po instalacji stają się integralną częścią kodu aplikacji. To właśnie dlatego inicjalizacja jest tak ważnym krokiem - ustawia ona cały ekosystem projektu pod kątem spójnego designu i organizacji kodu.</p><h2>Sesja planistyczna interfejsu użytkownika</h2><div class="embed"><div style="max-width: 2304px;"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 14.7917%;"><iframe src="https://cdn.iframe.ly/api/iframe?url=https%3A%2F%2Fplatforma.przeprogramowani.pl%2F10xdevs%2Fmodels%2Fmodel-reasoning.jpg&amp;key=b296eb571984a62dbe756cc8946b7cd1" width="360" height="53" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen=""></iframe></div></div></div><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1072998313?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Do sesji planistycznej wykorzystaj prompt z 10xRules.ai Prompt Library - <a href="https://10xrules.ai/prompts?org=10xdevs&amp;collection=m2-bootstrap&amp;segment=l5-ui&amp;prompt=c7bfd30d-e413-41b7-85ee-026b092514bb" target="_blank" rel="noopener noreferrer">Asystent planowania architektury UI</a>.</p><p>Następnie, wykorzystaj prompt - <a href="https://10xrules.ai/prompts?org=10xdevs&amp;collection=m2-bootstrap&amp;segment=l5-ui&amp;prompt=e4457a5f-2c9c-4828-97f2-81a67f920fa3" target="_blank" rel="noopener noreferrer">Podsumowanie sesji planowania architektury UI</a>.</p><h2>Generowanie wysokopoziomowego planu UI</h2><div class="embed"><div style="max-width: 2304px;"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 14.7917%;"><iframe src="https://cdn.iframe.ly/api/iframe?url=https%3A%2F%2Fplatforma.przeprogramowani.pl%2F10xdevs%2Fmodels%2Fmodel-reasoning.jpg&amp;key=b296eb571984a62dbe756cc8946b7cd1" width="360" height="53" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen=""></iframe></div></div></div><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1072991790?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Do wygenerowania ui-plan.md, wykorzystaj prompt - <a href="https://10xrules.ai/prompts?org=10xdevs&amp;collection=m2-bootstrap&amp;segment=l5-ui&amp;prompt=c0f17d5a-0dc2-40da-b129-f69e838343c4" target="_blank" rel="noopener noreferrer"><strong>Generowanie wysokopoziomowego planu UI</strong></a><strong>.</strong></p><h2>Szczegółowy plan implementacji widoku do generowania fiszek</h2><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1072991739?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Do wygenerowania szczegółowego planu implementacji widoku wykorzystaj prompt - <a href="https://10xrules.ai/prompts?org=10xdevs&amp;collection=m2-bootstrap&amp;segment=l5-ui&amp;prompt=629e6ff0-3fac-44d2-abc1-aa90c161a845" target="_blank" rel="noopener noreferrer"><strong>Szczegółowy plan implementacji widoku</strong></a><strong>.</strong></p><h2>Implementacja widoku generowania fiszek z shadcn/ui i Tailwind</h2><div class="embed"><div style="max-width: 2304px;"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 14.7917%;"><iframe src="https://cdn.iframe.ly/api/iframe?url=https%3A%2F%2Fplatforma.przeprogramowani.pl%2F10xdevs%2Fmodels%2Fmodel-high-coding.jpg&amp;key=b296eb571984a62dbe756cc8946b7cd1" width="360" height="53" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen=""></iframe></div></div></div><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1072991671?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Do zaimplementowania widoku wykorzystaj prompt - <a href="https://10xrules.ai/prompts?org=10xdevs&amp;collection=m2-bootstrap&amp;segment=l5-ui&amp;prompt=60599924-a4e8-482f-b882-fbae38a77817" target="_blank" rel="noopener noreferrer">Implementacja widoku</a>.</p><p>Poniżej załączam również helpera, który pomaga agentowi efektywnie korzystać z biblioteki komponentów shadcn/ui (ui-shadcn-helper.mdc):</p><pre><code># Shadcn UI Components
+
+Ten projekt wykorzystuje @shadcn/ui dla komponentów interfejsu użytkownika. Są to pięknie zaprojektowane, dostępne komponenty, które można dostosować do swojej aplikacji.
+
+## Odszukiwanie zainstalowanych komponentów
+
+Komponenty są dostępne w folderze `src/components/ui`, zgodnie z aliasami z pliku `components.json`
+
+## Wykorzystanie komponentu
+
+Zaimportuj komponent zgodnie ze skonfigurowanym aliasem `@/`
+
+```tsx
+import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+```
+
+Przykładowe wykorzystanie komponnetów:
+
+```tsx
+&lt;Button variant="outline"&gt;Click me&lt;/Button&gt;
+
+&lt;Card&gt;
+  &lt;CardHeader&gt;
+    &lt;CardTitle&gt;Card Title&lt;/CardTitle&gt;
+    &lt;CardDescription&gt;Card Description&lt;/CardDescription&gt;
+  &lt;/CardHeader&gt;
+  &lt;CardContent&gt;
+    &lt;p&gt;Card Content&lt;/p&gt;
+  &lt;/CardContent&gt;
+  &lt;CardFooter&gt;
+    &lt;p&gt;Card Footer&lt;/p&gt;
+  &lt;/CardFooter&gt;
+&lt;/Card&gt;
+```
+
+## Instalowanie dodatkowych komponentów
+
+Wiele innych komponentów jest dostępnych, ale nie są one obecnie zainstalowane. Pełną listę można znaleźć na stronie https://ui.shadcn.com/r
+
+Aby zainstalować nowy komponent, wykorzystaj shadcn CLI
+
+
+```bash
+npx shadcn@latest add [component-name]
+```
+
+Przykładowo, aby dodać komponent accordion
+
+```bash
+npx shadcn@latest add accordion
+```
+
+Ważne: `npx shadcn-ui@latest` zostało wycofane, korzystaj z `npx shadcn@latest`
+
+Niektóre popularne komponenty to:
+
+- Accordion
+- Alert
+- AlertDialog
+- AspectRatio
+- Avatar
+- Calendar
+- Checkbox
+- Collapsible
+- Command
+- ContextMenu
+- DataTable
+- DatePicker
+- Dropdown Menu
+- Form
+- Hover Card
+- Menubar
+- Navigation Menu
+- Popover
+- Progress
+- Radio Group
+- ScrollArea
+- Select
+- Separator
+- Sheet
+- Skeleton
+- Slider
+- Switch
+- Table
+- Textarea
+- Sonner (previously Toast)
+- Toggle
+- Tooltip
+
+## Component Styling
+
+Ten projekt wykorzystuje wariant stylu „new-york” z kolorem bazowym "neutral" i zmiennymi CSS do tworzenia motywów, zgodnie z konfiguracją w sekcji `components.json`.</code></pre><h3>Model zaczyna się gubić? Podsumowanie i nowy wątek!</h3><p>W przypadku bardziej skomplikowanych scenariuszy, gdzie potrzebujemy więcej niż 5-6 kroków działania modelu, okno kontekstowe może być wypełnione powyżej progu skuteczności modelu. Kiedy zauważysz taki problem, cofnij się do checkpointa, w którym zaczęły się problemy. </p><p>Zamień poprzedniego prompta na prośbę o zatrzymanie implementacji i utworzenie pliku ze statusem prac <em> .ai/{view-name}-implementation-status</em>, który wykorzystasz w nowym wątku:</p><pre><code>Podsumuj swoją pracę w pliku .ai/{nazwa-zadania}-implementation-status.md w formacie markdown:
+
+```markdown
+# Status implementacji widoku {nazwa widoku}
+
+## Zrealizowane kroki
+[Szczegółowa lista zrealizowanych kroków]
+
+## Kolejne kroki
+[Lista dalszych kroków, zgodna z planem implementacji]
+```
+
+Po utworzeniu pliku ze statusem, napisz "Gotowe". Na tym zakończ pracę w tym wątku. </code></pre><p>Przeanalizuj też plik ze statusem - warto zwrócić uwagę na kolejne kroki gdzie może pojawić się scope creep, czyli aspiracyjne pomysły modelu, które wykraczają poza oryginalny zakres planu implementacji.</p><p>Pozbądź się tego co nie jest kluczowe. Ulepszenia i refaktoryzacje lepiej wprowadzać w dedykowanych konwersacjach skupionych na konkretnym celu (więcej o tym w module 2). Na tym etapie warto skupić się na zrealizowaniu głównego celu jakim jest działający moduł, który spełnia kluczowe standardy. </p><p>W nowym wątku wykorzystaj wariację poprzedniego prompta, który dodatkowo zawiera odniesienie do statusu implementacji:</p><pre><code>Twoim zadaniem jest zaimplementowanie widoku frontendu w oparciu o podany plan implementacji i zasady implementacji. Twoim celem jest stworzenie szczegółowej i dokładnej implementacji, która jest zgodna z dostarczonym planem, poprawnie reprezentuje strukturę komponentów, integruje się z API i obsługuje wszystkie określone interakcje użytkownika.
+
+Najpierw przejrzyj plan implementacji:
+
+&lt;implementation_plan&gt;
+{{implementation-plan}} &lt;- zamień na referencję do planu implementacji widoku (np. @generations-view-implementation-plan.md)
+&lt;/implementation_plan&gt;
+
+Teraz przejrzyj zasady implementacji:
+
+&lt;implementation_rules&gt;
+{{frontend-rules}}  &lt;- zamień na referencję do reguł frontendowych (np. @shared.mdc, @frontend.mdc, @astro.mdc, @react.mdc, @ui-shadcn-helper.mdc)
+&lt;/implementation_rules&gt;
+
+Przejrzyj zdefiniowane typy:
+
+&lt;types&gt;
+{{types}} &lt;- zamień na referencję do definicji DTOsów (np. @types.ts)
+&lt;/types&gt;
+
+Wdrażaj plan zgodnie z następującym podejściem:
+
+&lt;implementation_approach&gt;
+Realizuj maksymalnie 3 kroki planu implementacji, podsumuj krótko co zrobiłeś i opisz plan na 3 kolejne działania - zatrzymaj w tym momencie pracę i czekaj na mój feedback.
+&lt;/implementation_approach&gt;
+
+Nie zaczynaj pracy od poczatku kroków implementacji, weź pod uwagę obecny status:
+
+&lt;implementation_status&gt;
+{{implementation-status}} &lt;- zamień na referencję do utworzonego statusu implementacji 👈
+&lt;/implementation_status&gt;
+
+Dokładnie przeanalizuj plan wdrożenia, zasady i jego obecny status (zacznij od "Następne kroki"). Zwróć szczególną uwagę na strukturę komponentów, wymagania dotyczące integracji API i interakcje użytkownika opisane w planie.
+
+// reszta prompta taka sama jak w oryginalnym poleceniu implementacji</code></pre><p>Takie podejście zaoszczędzi Ci dużo straconego czasu i frustracji.</p><h2>🎨 Kreatywne inspiracje</h2><p>Współpracując z AI nad budowaniem interfejsu użytkownika możesz wspomagać się też odniesieniami do popularnych stron i design systemów takich jak:</p><ul><li><p><a href="https://m3.material.io/" target="_blank" rel="noopener noreferrer">Google Material Design</a></p></li><li><p><a href="https://developer.apple.com/design/human-interface-guidelines" target="_blank" rel="noopener noreferrer">Apple Human Interface Guidelines</a></p></li><li><p><a href="https://fluent2.microsoft.design/" target="_blank" rel="noopener noreferrer">Microsoft Fluent Design System</a> </p></li><li><p><a href="https://carbondesignsystem.com/" target="_blank" rel="noopener noreferrer">Carbon Design System od IBM</a></p></li><li><p>Airbnb / Booking / Uber / etc.</p></li></ul><p>Pamiętaj jednak, że AI przede wszystkim bazuje na słownych opisach tego, jak wyglądają poszczególne elementy. Stąd, aby zainspirować się danym stylem, rozpocznij od planu opisującego cechy twojego idealnego projektu i wymagane korekty, a następnie wykonaj docelowe wdrożenie.</p><p>Taką formę edycji UI (oraz klasyczną, opartą o <a href="https://tweakcn.com/editor/theme" target="_blank" rel="noopener noreferrer">generator motywów</a>) prezentujemy poniżej:</p><div class="embed"><div style="max-width: 2304px;"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 14.7917%;"><iframe src="https://cdn.iframe.ly/api/iframe?url=https%3A%2F%2Fplatforma.przeprogramowani.pl%2F10xdevs%2Fmodels%2Fmodel-low-coding.jpg&amp;key=b296eb571984a62dbe756cc8946b7cd1" width="360" height="53" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen=""></iframe></div></div></div><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;"><iframe src="https://player.vimeo.com/video/1124327863?app_id=122963" width="360" height="202" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media *;"></iframe></div></div><h3>Generowanie nowych komponentów</h3><p>Jeśli w twojej aplikacji nie bazujesz na shadcn/ui, nowy motyw może wymagać przejścia na komponenty zaprojektowane w określony sposób.</p><p>Najpierw w trybie “Chat with AI” możesz poprosić o charakterystykę danego rozwiązania:</p><pre><code>Jesteś specjalistą frontend developmentu tworzącym nowoczesne i przystępne interfejsy użytkownika.
+
+Opisz cechy design systemu {{Microsoft Fluent 2.0 | Google Material 3}} pod kątem elementów takich jak:
+
+1. Button
+2. Input
+3. Typography
+4. Card
+5. Modal/Dialog
+6. Form
+7. Navigation
+8. List
+9. Feedback
+10. Layout</code></pre><p>Na podstawie wygenerowanego opisu, w kolejnym prompcie możesz utworzyć zestaw gotowych do użycia komponentów (powyższą listę możesz modyfikować aby otrzymać inne komponenty):</p><pre><code>W folderze src/components utwórz zestaw komponentów opartych o React/Tailwind w oparciu o te rekomendacje.
+
+Implementacja powinna wykorzystywać najlepsze praktyki stylowania aplikacji Tailwind 4 (css variables i design tokens).</code></pre><p>Po wygenerowaniu komponentów, całość można zaprezentować na tzw. stronach “kitchen sink”, które w jednym miejscu zbierają wszystkie elementy w formie demo:</p><pre><code>Utwórz stronę typu "kitchen sink" (src/pages/kitchen-sink) prezentując nowo dodane komponenty w jednym miejscu.</code></pre><p>“<a href="https://conversionswp.com/bootstrap-5-kitchen-sink/" target="_blank" rel="noopener noreferrer">Kitchen sink</a>” to zwyczajowa nazwa strony, która ułatwia prezentację wszystkich elementów wchodzących w skład danego design systemu. Może być przydatna do szybkiej oceny komponentów, które utworzyliśmy przy współpracy z AI.</p><p>Poniżej przykłady działania tego scenariusza:</p><p><strong>Microsoft Fluent 2.0:</strong></p><img loading="lazy" src="https://assets-v2.circle.so/b3ezjsg1vw0sncxr3e5eg5t625aj" style="width: 100%; max-width: 100%;"><p><strong>Apple Human Interface Guidelines:</strong></p><img loading="lazy" src="https://assets-v2.circle.so/vbnwfaxoz658buvgsse5792z8x58" style="width: 100%; max-width: 100%;"><p><strong>Airbnb:</strong></p><img loading="lazy" src="https://assets-v2.circle.so/xhisx8eokmrb4jq4rhay10g1dppm" style="width: 100%; max-width: 100%;"><p><strong>Uber:</strong></p><img loading="lazy" src="https://assets-v2.circle.so/6t0at4o7066uewbnkc3m06rf0hfx" style="width: 100%; max-width: 100%;"><p>Dzięki komponentom wygenerowanym w ten sposób otrzymujesz swój lokalny, oparty o komponenty design system, którego cechy możesz dodatkowo zachować w pliku Markdown (opis z pierwszego prompta) i wykorzystywać do rozszerzania o nowe elementy. Im bardziej popularną inspirację wybierzesz, tym lepsze efekty już za pierwszym razem.</p><p>Przy generowaniu komponentu możesz dodatkowo wskazać na “rules for AI” pod Reacta i Tailwinda, aby zadbać o poprawną konstrukcję każdego elementu. To szybki sposób na udany UI!</p><h2>🏁 Podsumowanie</h2><p>W tej lekcji poznaliśmy kluczowe aspekty budowania interfejsów użytkownika z wykorzystaniem nowoczesnych narzędzi i bibliotek:</p><ul><li><p><strong>Tailwind CSS</strong> - framework utility-first, który pozwala na tworzenie interfejsów za pomocą predefiniowanych klas CSS bez pisania własnych styli. Oferuje szybkość tworzenia, spójność, małą objętość kodu oraz wysoką konfigurowalność.</p></li><li><p><strong>Shadcn/ui</strong> - kolekcja gotowych komponentów zbudowanych na React, Radix UI i Tailwind, które stają się częścią projektu. Daje to pełną kontrolę nad kodem, zapewnia dostępność, elastyczność i spójny design.</p></li><li><p><strong>Planowanie architektury UI</strong> - metodyczne podejście do projektowania interfejsu, wykorzystujące sesje planistyczne, generowanie wysokopoziomowego planu UI oraz tworzenie szczegółowych planów implementacji poszczególnych widoków.</p></li><li><p><strong>Implementacja widoków</strong> - strukturyzowany proces obejmujący budowę komponentów, integrację z API, obsługę interakcji użytkownika, zarządzanie stanem, stylowanie oraz obsługę błędów zgodnie z przyjętymi zasadami i specyfikacją.</p></li><li><p><strong>Kreatywne inspiracje</strong> - możliwość wykorzystania popularnych systemów projektowych (Material Design, Human Interface Guidelines, Fluent Design) jako inspiracji przy tworzeniu własnych komponentów, z wykorzystaniem stron typu "kitchen sink" do prezentacji elementów.</p></li></ul><p>Pamiętaj, że programowanie z LLM w kontekście UI to szansa na szybsze tworzenie interfejsów użytkownika, ale wymaga jasnych poleceń i strukturyzowanego podejścia. Najlepsze rezultaty osiąga się łącząc AI z dobrze zdefiniowanymi komponentami i frameworkami CSS, które minimalizują potrzebę generowania skomplikowanych, niepowiązanych reguł stylowania.</p><h2>👨‍💻 Ćwiczenia praktyczne</h2><p><strong>Zadanie 1: Zaincjalizuj bibliotekę komponentów</strong> <br><strong>Cel:</strong> Skonfigurowanie biblioteki komponentów w swoim projekcie. <br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Jeśli korzystasz z Reacta, zaincjalizuj shadcn/ui w swoim projekcie</p></li><li><p>Jeśli korzystasz z innego frameworka, wybierz i zainstaluj odpowiednią bibliotekę komponentów</p></li><li><p>Upewnij się, że podstawowe komponenty (Button, Card, Input) są dostępne do użycia</p></li><li><p>Sprawdź poprawność konfiguracji tworząc prosty przykład wykorzystujący te komponenty</p></li><li><p>Zapoznaj się z dokumentacją wybranej biblioteki, aby zrozumieć dostępne opcje konfiguracji<br></p></li></ol><p><strong>Zadanie 2: Przeprowadź sesję planistyczną dla interfejsu użytkownika</strong> <br><strong>Cel:</strong> Zdefiniowanie założeń i struktury interfejsu użytkownika dla Twojej aplikacji. <br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Wykorzystaj prompt z sekcji "Sesja planistyczna interfejsu użytkownika"</p></li><li><p>Przeprowadź minimum dwie rundy pytań i odpowiedzi dotyczących planowanego interfejsu</p></li><li><p>Wygeneruj podsumowanie sesji planistycznej</p></li><li><p>Zapisz wyniki jako punkt odniesienia do dalszych prac</p></li></ol><p><strong>Zadanie 3: Wygeneruj wysokopoziomowy plan UI</strong> <br><strong>Cel:</strong> Stworzenie kompleksowego planu architektury interfejsu użytkownika. <br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Wykorzystaj prompt z sekcji "Generowanie wysokopoziomowego planu UI"</p></li><li><p>Wygeneruj i poddaj rewizji plan UI za pomocą modelu reasoningowego</p></li><li><p>Zapisz wygenerowany plan jako .ai/ui-plan.md</p></li><li><p>Upewnij się, że plan zawiera wszystkie kluczowe widoki, mapę podróży użytkownika oraz strukturę nawigacji<br></p></li></ol><p><strong>Zadanie 4: Stwórz szczegółowy plan implementacji widoku</strong> <br><strong>Cel:</strong> Opracowanie szczegółowego planu wdrożenia kluczowego widoku aplikacji. <br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Wybierz kluczowy widok dla Twojej aplikacji z wysokopoziomowego planu UI</p></li><li><p>Wykorzystaj prompt z sekcji "Szczegółowy plan implementacji widoku"</p></li><li><p>Dostosuj prompt, uwzględniając specificzne endpointy API i typy danych</p></li><li><p>Wygeneruj szczegółowy plan implementacji widoku</p></li><li><p>Zapisz plan jako .ai/{nazwa-widoku}-view-implementation-plan.md</p></li><li><p>Upewnij się, że plan zawiera kluczowe komponenty, warunki walidacji, typy, obsługę stanu oraz sensowny plan implementacji krok po kroku<br></p></li></ol><p><strong>Zadanie 5: Zaimplementuj widok</strong> <br><strong>Cel:</strong> Pełna implementacja widoku zgodnie z wygenerowanym planem. <br><strong>Instrukcje:</strong></p><ol start="1"><li><p>Wykorzystaj prompt z sekcji "Implementacja widoku z shadcn/ui i Tailwind"</p></li><li><p>Jeśli korzystasz z shadcn/ui, dołącz ui-shadcn-helper.mdc do implementation_rules</p></li><li><p>Etapowo wdrażaj plan implementacji, korzystając z workflow 3×3 (3 kroki implementacji, feedback, kolejne 3 kroki)</p></li><li><p>Upewnij się, że implementacja obejmuje wszystkie komponenty, integrację z API oraz obsługę interakcji użytkownika</p></li><li><p>Przetestuj zaimplementowany widok pod kątem funkcjonalności i zgodności z planem</p></li><li><p>W razie potrzeby wprowadź poprawki lub rozszerzenia</p></li></ol><p><br></p><img loading="lazy" src="https://assets-v2.circle.so/bhe5tn2ay37vnkh8spzbevyv6jp5" style="width: 100%; max-width: 100%;"></div></body></html>

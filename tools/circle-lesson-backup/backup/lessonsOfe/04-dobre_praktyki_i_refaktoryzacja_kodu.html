@@ -1,0 +1,156 @@
+<meta name="lesson-id" content="Dobre praktyki i refaktoryzacja kodu"><html><head></head><body><div><img loading="lazy" src="https://assets-v3.circle.so/ddho6wx6ottiniqv9smz5i3bf5zj" style="width: 100%; max-width: 100%;"><img loading="lazy" src="https://assets-v2.circle.so/eu7f3j1veiass3hilm0kal6ep2pk" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>Po zrozumieniu fundamentalnych zasad czystego kodu, czas zastosować te koncepcje w kontekście frontendu. W tej lekcji przejdziemy od teorii do praktyki, pokazując jak klasyczne zasady inżynierii oprogramowania przekładają się na komponenty UI i strukturę aplikacji webowych. Poznasz DRY (Don't Repeat Yourself), SOLID i CUPID - trzy zbiory zasad, które pomogą Ci projektować kod łatwy do rozszerzania, ale odporny na przypadkowe błędy. Zobaczysz również, jak refaktoryzować istniejący kod, aby spełniał te standardy.</p><p>Jako programiści często zmagamy się z wyzwaniami utrzymania i rozwoju kodu, który musi pozostać czytelny, łatwy do zrozumienia i gotowy na zmiany. W tej lekcji przybliżymy ci zasady i podejścia, które pomogą ci osiągnąć założony cel. </p><p>Rozpoczniemy od zasady DRY, czyli "Don’t Repeat Yourself," która ma na celu eliminowanie zbędnych powtórzeń kodu i budowanie rozwiązań wielokrotnego użytku. Następnie przyjrzymy się pięciu zasadom SOLID, które wskazują, jak projektować kod, aby był łatwy w rozszerzaniu, ale odporny na zmiany, które mogłyby powodować nieoczekiwane problemy. Z kolei CUPID to zestaw mniej sztywnych wytycznych, które pozwolą ci ocenić jakość kodu pod kątem jego prostoty, przewidywalności i zgodności z ekosystemem.</p><p>Dowiesz się również, kiedy warto sięgać po zaawansowaną refaktoryzację, a kiedy wystarczy mała zmiana na poziomie komponentów.</p><h3>Klasyczne praktyki czystego kodu - DRY, SOLID, CUPID</h3><p><strong>DRY</strong>, czyli “Don’t Repeat Yourself” to jedna z najbardziej popularnych rekomendacji w świecie programowania. </p><p>W założeniu jej przesłanie jest jak najbardziej rozsądne - unikaj powtórzeń, buduj możliwe do ponownego użycia funkcje, moduły i biblioteki, oszczędzaj czas wprowadzając zmiany tylko w jednym miejscu. W przypadku prostych projektów to powinno zdecydowanie wystarczyć.</p><p>W praktyce okazuje się jednak, że do DRY powinniśmy podchodzić pragmatycznie. Okazjonalne powielenie fragmentu kodu nie jest natychmiastowym przepisem na porażkę, a sposobem na unikanie niepotrzebnych powiązań i tzw. “couplingu”. Zdarza się, że powtórzony w dwóch miejscach fragment kodu tylko przez chwilę pozostaje identyczny, a po chwili jeden z wariantów zaczyna ewoluować w nowym kierunku. Budowanie abstrakcji i gotowych na wszystkie przyszłe rozszerzenia modułów nie zawsze jest rozwiązaniem optymalnym.</p><p>DRY można też wprowadzać&nbsp;stopniowo. Nie zawsze trzeba zaczynać od budowania prawdziwie reużywalnej, możliwej do pobrania biblioteki, którą umieścimy na zewnątrz projektu. Jeśli algorytm w projekcie powtarza się dwa razy, to można zacząć od przesunięcia go do dedykowanego modułu, który następnie dwukrotnie zaimportujemy. Oszczędzimy czas, unikniemy duplikacji i zyskamy moment na lepszą ocenę sytuacji.</p><p><strong>SOLID</strong> to z kolei zestaw pięciu zasad projektowania oprogramowania, które mówią o tym, że:</p><ul><li><p>Funkcja lub moduł powinny realizować&nbsp;jedno zadanie (Single Responsibility Principle)</p></li><li><p>Kod powinien być&nbsp;otwarty na rozszerzenia i zamknięty na zmiany (Open-Closed Principle)</p></li><li><p>Wymiana mniejszych fragmentów aplikacji nie powinna wymuszać aktualizacji całej architektury (Liskov Substitution Principle)</p></li><li><p>Zamiast jednego ogólnego interfejsu stosuj kilka niezależnych od siebie (Interface Segregation Principle)</p></li><li><p>Zewnętrzne zależności powinny być luźno powiązane z konsumentami i gotowe na wymianę (Dependency Inversion Principle)</p></li></ul><p>O regułach SOLID napisano już dziesiątki artykułów i zakładamy, że prawdopodobnie nie spotykasz się z nimi po raz pierwszy w naszym kursie. Aby jednak sprawdzić, czy na pewno rozumiesz ich działanie, ćwiczenia na końcu tej lekcji pozwolą ci przetestować frontendowy SOLID w praktyce.</p><p>Jeśli reguły <strong>SOLID</strong> uważasz za mało przekonujące lub nie do końca odpowiadające twoim codziennym zadaniom, przyjrzyj się&nbsp;bliżej podejściu <a href="https://dannorth.net/cupid-for-joyful-coding/" target="_blank" rel="noopener noreferrer"><strong>CUPID</strong></a>, które stawia na pierwszym miejscu przyjemność z kodowania.</p><p>W przeciwieństwie do mocno określonych zasad SOLIDnej piątki, CUPID to przede wszystkim “doświadczenia” i kierunek, w którym możesz stopniowo podążać refaktoryzując twój kod.</p><p>Autor podejścia CUPID, Dan North, wyjaśnia to w ten sposób:</p><blockquote><p>“Properties define a goal or centre to move towards. Your code is only closer to or further from the centre, and there is always a clear direction of travel. You can use properties as a lens or filter to assess your code and you can decide which ones to address next.” - Dan North</p></blockquote><p>Zobacz czym charakteryzuje się kod zgodny z CUPID:</p><ul><li><p>Composable - Kod łatwy do wykorzystania ponownie, z określonym przeznaczeniem</p></li><li><p><a href="http://www.catb.org/~esr/writings/taoup/html/ch01s06.html" target="_blank" rel="noopener noreferrer">Unix Philosophy</a> - Kod opierający się o małe, precyzyjne, łączące się ze sobą moduły</p></li><li><p>Predictable - Kod robiący to, co na pierwszy rzut oka sugeruje jego architektura</p></li><li><p>Idiomatic - Kod zgodny z ekosystemem i tradycją, w której powstał</p></li><li><p>Domain-based - Kod korzystający z terminologii problemu, który rozwiązuje</p></li></ul><p>W przeciwieństwie do reguł SOLID, CUPID nie skupia się na czarno-białym określeniu jakości kodu względem konkretnych praktyk. Jest to raczej pragmatyczny zestaw rekomendacji i celów, które powinniśmy sobie stawiać budując możliwe do utrzymania oprogramowanie, który zrozumie inny programista na podobnym do nas stanowisku.</p><p>Podobnie jak w przypadku reguł SOLID, zalecenia CUPID przetestujemy w sekcji ćwiczeń do tej lekcji.</p><h3>Zastosowanie na frontendzie</h3><p>Wobec praktyk takich jak SOLID czy CUPID czasami pojawia się zarzut, że ich obiektowe (?) pochodzenie nie do końca łączy się z mocno funkcyjnym frontendem. Ile w tym prawdy?</p><p><strong>Komponenty wysokiej jakości</strong></p><p>Zacznijmy od komponentów, czyli podstawowej składowej współczesnych interfejsów użytkownika. W ich przypadku zdecydowanie powinniśmy stosować&nbsp;regułę “realizacji jednego zadania” oraz kompozycji w większą całość. Trudno wyobrazić sobie profesjonalną aplikację z jednym komponentem, który odpowiada za synchronizację całego interfejsu użytkownika. Nasz UI zwykle rozbijamy na mniejsze, możliwe do wymiany elementy. Zazwyczaj staramy się też odwzorować nazewnictwo domeny, w której te komponenty działają.</p><p>To nic innego jak trzy rekomendacje w jednym:</p><ul><li><p>Single Responsibility Principle (SOLID)</p></li><li><p>Composability (CUPID)</p></li><li><p>Domain-based naming (CUPID)</p></li></ul><img loading="lazy" src="https://assets-v3.circle.so/vm0613rjz45p06ecfodz8bcumjq5" style="width: 100%; max-width: 100%;"><p>Planowanie nawet najprostszej struktury aplikacji to ćwiczenie, na które warto zdecydować się na początkowych etapach projektu. Pozwoli nam to określić konsekwencje takiego, a nie innego układu komponentów. Odkryjemy również wymagania związane ze stanem i przepływem danych, a cały zespół uzyska wspólne zrozumienie decyzji wpływających na skuteczne realizowanie projektu. Tę tematykę pogłębimy w ostatnim module poświęconym architekturze na frontendzie, a już w kolejnych lekcjach zobaczysz różne podejścia do zarządzania stanem, wynikające wprost z układu komponentów względem siebie.</p><p>A jeśli budujemy komunikację z API? Czy naprawdę biblioteki takie jak <em>axios </em>lub <em>superagent </em>powinny na nas wymuszać związanie się z nimi już na zawsze? Co w przypadku natywnego API <em>fetch</em>, które w pewnym momencie zaczęło być&nbsp;obowiązującym standardem? To właśnie czysty kod i wspomniane wyżej wzorce decydują o łatwości migracji do nowych standardów.</p><p>Jeśli nasze komponenty będą mocno powiązane z zewnętrznymi zależnościami, takimi jak konkretna biblioteka http, to przy jej ewentualnej aktualizacji będziemy mieć do wykonania mnóstwo pracy. Reguła odwrócenia zależności mówi, że tego typu zależności powinny być luźno powiązane z corem aplikacji i dostarczane z zewnątrz.</p><p>W przypadku Angulara, złamaniem tej zasady byłoby tworzenie instancji klienta http wewnątrz komponentu:</p><pre><code>class MyComponent {
+
+  // Złamanie Dependency Inversion - MyComponent staje się mocno powiązany z AxiosService
+  private http: HttpService = new AxiosService();
+
+}</code></pre><p>Zamiast tego, możemy polegać na wbudowanym systemie Dependency Injection, który umożliwia rozłączenie deklarowania zależności i korzystania z nich wewnątrz komponentów.</p><pre><code>class MyComponent {
+
+  // MyComponent otrzyma instancję HttpService - konfiguracja znajduje się poza nim
+  constructor(private http: HttpService) { ... }
+
+}
+
+// Tworzenie nowej instancji wraz z zastosowaniem Dependency Injection
+// jest realizowane automatycznie na poziomie frameworka.
+const cmp = new MyComponent(new AxiosService());</code></pre><p>W przeciwieństwie do Angulara, React nie dostarcza natywnego systemu Dependency Injection, ale podobną separację komponentów i zależności możemy osiągnąć przez własne hooki.</p><p>W poniższym przykładzie komponent <em>ArticlesList </em>korzysta z hooka <em>useArticlesClient </em>który enkapsuluje (ukrywa) szczegóły implementacyjne pobierania danych. Dzięki temu zarówno sam hook można wykorzystać ponownie w innym komponencie, jak i sam komponent można w razie potrzeby łatwo przepiąć na inną bibliotekę http.</p><pre><code>import { ArticlePreview } from './ArticlePreview';
+import { useArticlesClient } from './useArticlesClient';
+
+export function ArticlesList() {
+  const { articles, loading, error } = useArticlesClient();
+
+  return (
+    &lt;&gt;
+      &lt;h1 className="font-bold text-xl mb-4 text-gray-800"&gt;Articles&lt;/h1&gt;
+      {loading &amp;&amp; &lt;div&gt;Loading...&lt;/div&gt;}
+      {error &amp;&amp; &lt;div&gt;{error}&lt;/div&gt;}
+      &lt;div className="flex flex-col space-y-2"&gt;
+        {articles.map((article) =&gt; (
+          &lt;ArticlePreview key={article.id} {...article} /&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/&gt;
+  );
+}</code></pre><p>Wspomniany hook zobaczysz na przykładzie poniżej:</p><pre><code>import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Article, ArticleResponse } from './types';
+
+export function useArticlesClient() {
+  const [articles, setArticles] = useState&lt;Article[]&gt;([]);
+  const [loading, setLoading] = useState&lt;boolean&gt;(false);
+  const [error, setError] = useState&lt;string&gt;();
+
+  useEffect(() =&gt; {
+    setLoading(true);
+    axios
+      .get&lt;ArticleResponse&gt;(
+        'http://localhost:3000/api/data/articles?timeout=2000'
+      )
+      .then(({ data: { articles } }) =&gt; {
+        setArticles(articles);
+      })
+      .catch((error) =&gt; {
+        setError('Cannot fetch articles!');
+        console.error(error);
+      })
+      .finally(() =&gt; {
+        setLoading(false);
+      });
+  }, []);
+
+  return { articles, loading, error };
+}
+</code></pre><p>Dodatkową zaletą rozdzielania logiki biznesowej (hook) od warstwy widoku (komponent) jest refaktoryzacja kodu w kierunku jego testowalności. W ten wątek wejdziemy głębiej w drugim module, natomiast już teraz możesz zauważyć korzyści budowania funkcji, które nie są ściśle związane z konkretnym komponentem. W przypadku testowania pozwoli ci to unikać złożonej konfiguracji i inicjalizacji komponentów w testach, skupiając się na tym, co istotne z punktu widzenia wymagań biznesowych.</p><p>📝 Ten przykład znajdziesz w folderze <strong><em>examples/module1/lesson1/react-hooks</em></strong>.</p><p>W przypadku Vue, odwrócenie zależności realizowane jest poprzez funkcje <a href="https://vuejs.org/guide/components/provide-inject" target="_blank" rel="noopener noreferrer"><em>provide</em></a><a href="https://vuejs.org/guide/components/provide-inject" target="_blank" rel="noopener noreferrer"> oraz </a><a href="https://vuejs.org/guide/components/provide-inject" target="_blank" rel="noopener noreferrer"><em>inject</em></a> - pierwsza odpowiada za rejestrację zależności w drzewie komponentów, a druga za wstrzyknięcie jej w odpowiednie miejsce w komponencie potomnym:</p><pre><code>&lt;script setup&gt;
+// Parent component
+import { provide } from 'vue';
+
+provide('httpClient', new AxiosService());
+&lt;/script&gt;</code></pre><pre><code>&lt;script setup&gt;
+// Child component
+import { inject } from 'vue';
+
+const httpClient = inject('httpClient'); // instancja AxiosService
+&lt;/script&gt;</code></pre><p>Zastanawiając się nad takim sposobem przekazywania danych możesz zapytać:</p><blockquote><p>-A dlaczego nie przez propsy?</p></blockquote><p>Wyobraź sobie, że pomiędzy powyższymi komponentami jest sześć, osiem lub dziesięć dodatkowych warstw. W takim scenariuszu każdą porcję danych musielibyśmy przekazać z wykorzystaniem tzw. <em>prop drillingu</em>, czyli “przewiercania się” przez kolejne warstwy w drzewie komponentów (więcej o tym problemie w kolejnych lekcjach). Dzięki wstrzykiwaniu zależności, pracę wykonuje za nas framework, a funkcje provide/inject pozwalają uniknąć powtórzeń.</p><p>Jeśli zajdzie potrzeba wymiany Axiosa na innego klienta HTTP, całą operację możemy przeprowadzić na górze drzewa komponentów. Przy zachowaniu tego samego interfejsu dostępnych metod, komponenty potomne mogą zostać nienaruszone. Wrócimy do tego tematu w kolejnych lekcjach.</p><p>W każdym z trzech opisywanych frameworków szczegóły implementacyjne się różnią, ale końcowy cel, czyli luźne powiązanie zależności z komponentami jest stosunkowo proste do osiągnięcia.</p><p><strong>Komponent otwarty i zamknięty (jednocześnie)</strong></p><p>W teoretycznej części praktyk SOLID czytamy, że zgodność z Open-Closed Principle to tworzenie kodu:</p><ul><li><p>otwartego na rozszerzenia</p></li><li><p>zamkniętego na zmiany</p></li></ul><p>W jaki sposób jeden komponent może realizować oba te założenia jednocześnie? Czy nowe wymagania biznesowe nie powinny każdorazowo zmuszać programisty do modyfikacji wcześniej napisanych linijek kodu?</p><p>Okazuje się, że istnieją techniki łączące te pozornie sprzeczne wymagania. Zobacz, jak technika <em>render props </em>pozwala zaimplementować rekomendację Open-Closed Principle:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1047817992?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Render props to jedna z wielu technik implementacji Open-Closed Principle w praktyce. Jak rozpoznać, kiedy ta praktyka przyda się w twoich projektach? Zawsze wtedy, kiedy w projekcie dana nowość lub rozszerzenie ma zależność czasową, rozważ zastosowanie tej zasady. Przykładowo:</p><ul><li><p>“Dzisiaj dodajemy 5 filtrów do tabeli, ale w kolejnych kwartałach będą nowe”</p></li><li><p>“Dzisiaj dodajemy 3 widgety, ale w przyszłości musi być ich więcej”</p></li><li><p>“Dzisiaj na dashboardzie są 4 typy wykresów, ale chcemy wspierać 8”</p></li></ul><p>W każdym z tych scenariuszy element “Open” dotyczy pozostawania otwartym na nowości, a “Closed” dotyczy spójnego mechanizmu, które zaimplementujesz na samym początku. Zamknięcie danej funkcjonalności może chociażby polegać na zdefiniowaniu jednego interfejsu, którego będą musiały się trzymać wszystkie kolejne rozszerzenia:</p><pre><code>// Format danych w tabeli
+interface TableRow {
+  name: string;
+  age: number;
+  city: string;
+}
+
+// Generyczny interfejs do obsługi filtrowania danych
+interface TableFilter&lt;T extends TableRow&gt; {
+  apply(data: T[]): T[];
+}
+
+// Implementacja filtrowania po nazwie
+class NameFilter implements TableFilter&lt;TableRow&gt; {
+  private name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  apply(data: TableRow[]): TableRow[] {
+    return data.filter((row) =&gt; row.name === this.name);
+  }
+}
+
+// Implementacja filtrowania po wieku
+class AgeFilter implements TableFilter&lt;TableRow&gt; {
+  private age: number;
+
+  constructor(age: number) {
+    this.age = age;
+  }
+
+  apply(data: TableRow[]): TableRow[] {
+    return data.filter((row) =&gt; row.age === this.age);
+  }
+}
+
+// Przykładowe dane do tabeli
+const data: TableRow[] = [
+  {name: "Alice", age: 30, city: "New York"},
+  {name: "Bob", age: 25, city: "San Francisco"},
+  {name: "Alice", age: 29, city: "Los Angeles"},
+];
+
+// Open - zestaw filtrów jest otwarty na rozszerzenia i jest to zadanie niskiego ryzyka
+const filters: TableFilter&lt;TableRow&gt;[] = [
+  new NameFilter("Alice"),
+  new AgeFilter(30),
+];
+
+// Closed - jednolita obsługa filtrowania - warte przetestowania i zabezpieczenia
+function applyFilters&lt;T extends TableRow&gt;(
+  data: T[],
+  filters: TableFilter&lt;T&gt;[]
+): T[] {
+  return filters.reduce(
+    (filteredData, filter) =&gt; filter.apply(filteredData),
+    data
+  );
+}
+
+let filteredData = applyFilters(data, filters);
+console.log(filteredData);</code></pre><p>W obu przypadkach <em>TableFilter </em>wprowadza regułę - jeśli chcesz wspierać nowy typ filtrowania danych, zaimplementuj klasę z funkcją “apply”, która przyjmie pewien zestaw danych i odpowiednio go ograniczy. Od strony konsumenta filtrów wiesz, że cały wysiłek sprowadzi się wtedy do jednorazowej implementacji funkcji “applyFilters”, która przetworzy bazowy zestaw danych i konfigurację filtrów. Takie podejście pozwoli ci z łatwością rozszerzać kod i udostępniać go innym osobom.</p><p>Najważniejszy element tej rekomendacji dotyczy określenia tego, jakie fragmenty interfejsu użytkownika, modułu lub komponentu powinny być ukryte przed światem zewnętrznym, a jakie można konfigurować w dowolny sposób. Pisząc nasz kod w ten sposób minimalizujemy ryzyko wprowadzania błędów przy jednoczesnym zachowaniu oczekiwanej elastyczności. Win-win!</p><p><strong>Inspiracje systemami Unix</strong></p><p>CUPID wspomina o rozwijaniu kodu zgodnie z tzw. filozofią Unixa (Unix Philosophy). W systemach UNIXowych promowane są małe programy (awk, grep, tr, itd.), które przy pomocy operatora <em>pipe</em> mogą przekazywać sobie nawzajem dane i łączyć się w realizacji większego zadania:</p><pre><code>echo "1 4 6 8 10" | 
+  tr ' ' '\n' |                  # Podział na wiele wierszy
+  awk '{print $1*2}' |           # Mnożenie przez 2
+  awk '$1&lt;=10' |                 # Filtrowanie
+  awk '{sum+=$1} END {print sum}' # Sumowanie</code></pre><p>Naprawdę warto zastanowić się przez chwilę jak eleganckie jest to rozwiązanie. Narzędzia mają ściśle określoną rolę, muszą być odpowiednio elastyczne i otwarte na różne konteksty użycia, a wymiana lub ulepszenie jednego z nich nie zmusza nas do modyfikacji reszty (im mniej kodu musimy zmieniać, tym mniejsza szansa na wprowadzenie potencjalnych błędów).</p><p>Jak możemy się inspirować Unix Philosophy na frontendzie? Zamiast imperatywnych poleceń opisywanych krok po kroku (wyrażenia warunkowe, pętle for, etc.), na frontendzie przyjętą&nbsp;konwencją jest korzystanie z mikro-narzędzi i funkcji wyższego rzędu (<em>map, filter, reduce</em>), które możemy ze sobą łączyć.</p><p>Dzięki temu z kodu o takim kształcie…</p><pre><code>const numbers = [1, 4, 6, 8, 10];
+let sum = 0;
+
+for (let i = 0; i &lt; numbers.length; i++) {
+    const doubled = numbers[i] * 2;
+    if (doubled &lt;= 10) {
+        sum += doubled;
+    }
+}
+
+console.log(sum);</code></pre><p>…możemy przejść na elegancki, deklaratywny łańcuch możliwych do łączenia funkcji:</p><pre><code>const numbers = [1, 4, 6, 8, 10];
+
+const result = numbers
+  .map(num =&gt; num * 2)
+  .filter(num =&gt; num &lt;= 10)
+  .reduce((sum, num) =&gt; sum + num, 0);
+
+console.log(result);</code></pre><p>Pisząc kod w ten sposób, detale takie jak indeksy, warunki zatrzymania funkcji czy zmienne pomocnicze nie są nam potrzebne. Znowu - im mniejsza złożoność kodu, tym mniej okazji do popełniania błędów.</p><p>Nie zawsze uzyskamy w ten sposób kod bardziej wydajny (liczba wykonań pętli się&nbsp;zwiększa), ale często zdecydowanie łatwiejszy w utrzymaniu.</p><p>Korzyści wynikające ze stosowania praktyk takich jak SOLID czy CUPID docenia z biegiem czasu niemal każdy programista. Chociaż nie są to zasady wymuszane przez środowisko programistyczne, a ich złamanie nie grozi odebraniem licencji na programowanie, przyjmuje się je za wskaźnik oprogramowania wysokiej jakości.</p><h2>Refaktoryzacja kodu zastanego</h2><p>Wraz ze wzrostem doświadczenia będziesz poznawał kolejne wzorce i dobre praktyki, które pozytywnie wpływają na całościową jakość projektu. W pewnym momencie może pojawić się dylemat - czy wprowadzać je stopniowo, zaczynając od najmniejszych możliwych części projektu, czy może postawić na duży refaktoring (czyli proces podnoszenia jakości kodu w aplikacji), który zacznie się już na samej górze drzewa komponentów?</p><p>Oba podejścia mają swoje plusy i minusy, a szczegóły poznasz poniżej:</p><h3><strong>Podejście “Top-down”</strong></h3><p>Na całościowe przepisanie aplikacji decydujemy się zazwyczaj wtedy, kiedy sytuacja jest naprawdę&nbsp;poważna, lub kiedy chcemy wprowadzić radykalne usprawnienia np. na poziomie stacku technologicznego (wymiana frameworka). W tym podejściu nowa, ulepszona wersja aplikacji powstaje niezależnie od tej wdrożonej na produkcji. W momencie, kiedy funkcjonalności są odwzorowane 1:1 można zadecydować o zastąpieniu poprzedniej wersji aplikacji tą nową, z lepszą architekturą lub nowoczesnymi fundamentami.</p><img loading="lazy" src="https://assets-v3.circle.so/uyf24cb798ny1hk1mf9n444yw390" style="width: 100%; max-width: 100%;"><p><strong>Plusy tego podejścia:</strong></p><ul><li><p>przestrzeń na wdrożenie istotnej zmiany architektury i stosu technologicznego</p></li><li><p>kontynuacja pracy nad aktualną wersją&nbsp;aplikacji przebiega bez zakłóceń</p></li><li><p>część zespołu może skupić się na nowym, niezależnym projekcie</p></li></ul><p><strong>Minusy tego podejścia:</strong></p><ul><li><p>długi czas trwania całego projektu, od jego rozpoczęcia do wdrożenia na produkcję</p></li><li><p>wymagane utrzymywanie dwóch spójnych wersji aplikacji - starej i nowej</p></li><li><p>ryzyko zmiany planów i porzucenia projektu przed wdrożeniem na produkcję</p></li></ul><h3><strong>Podejście “Bottom-up”</strong></h3><p>W tym podejściu core naszej aplikacji pozostaje stabilny, a my skupiamy się na ulepszaniu najmniejszych możliwych elementów aplikacji. W przypadku frontendu i interfejsów użytkownika, dobrze rozumianą&nbsp;granicą zmian jest poziom pojedynczego komponentu. Oczywiście nie musimy pozostać na jednym komponencie, ale możemy tutaj zmieniać zestaw kilku współpracujących ze sobą elementów.</p><img loading="lazy" src="https://assets-v3.circle.so/9jtgehpz5zlaab36l5n8fjebz0wx" style="width: 100%; max-width: 100%;"><p><strong>Plusy tego podejścia:</strong></p><ul><li><p>możliwość ciągłego i regularnego wdrażania usprawnień aplikacji na produkcję</p></li><li><p>mniejsze ryzyko “rozjazdu” dwóch alternatywnych wersji aplikacji (por. podejście top-down)</p></li><li><p>łatwiejszy model pracy dla mniejszych zespołów o ograniczonych zasobach</p></li></ul><p><strong>Minusy tego podejścia:</strong></p><ul><li><p>duże błędy na poziomie architektury mogą być niemożliwe do usunięcia</p></li><li><p>skupiając się na lokalnych usprawnieniach możemy stracić z oczu całościowy obraz projektu</p></li><li><p>czas przeznaczany na zmiany lokalne może nie dawać odczuwalnych korzyści dla użytkownika</p></li></ul><h3><strong>Które podejście wybrać?</strong></h3><p>Chociaż oba podejścia mają swoje plusy i minusy, to zgodnie ze zwinnymi praktykami rozwoju oprogramowania zdecydowanie łatwiej realizować refaktoryzację w podejściu bottom-up. Pozwala ona na bardziej elastyczny model wdrażania zmian, nie wymaga tak dużego narzutu komunikacyjnego jak podejście top-down i zmniejsza wymagany próg wejścia dla tych programistów, którzy chcą w projekcie dodać coś od siebie. Model komponentowy, który jest obecnym standardem budowania frontendu, ułatwia wdrażanie zmian właśnie w tym modelu, a komponenty wyznaczają granicę refaktoryzacji, nad którą pracujemy.</p><p>Radykalne zmiany architektury, wymiana frameworka lub całych fundamentów aplikacji (tak jak w top-down) to zdecydowanie większe ryzyko, trudniejsze dyskusje z przełożonymi i potencjalnie oddalająca się linia mety, której czasami nigdy nie uda się przekroczyć. Właśnie dlatego przepisywanie i wymiana całych aplikacji to najbardziej radykalny krok, którego wielu doświadczonych programistów stara się&nbsp;zupełnie unikać.</p><h2>Podsumowanie</h2><p>W naszym kursie podkreślamy, że opisywane tutaj praktyki to tylko i wyłącznie narzędzia, a nie cele twojej przygody z programowaniem. Można je traktować jak obszerne notatki i podsumowania eksperymentów, które pozostawili po sobie bardziej doświadczeni programiści z przeszłości.</p><p>Poznając i stosując te najbardziej użyteczne rekomendacje, oszczędzasz cenny czas i energię. Zamiast odkrywać koło na nowo, możesz w swoich projektach stosować gotowe przepisy na rozwiązania problemów z którymi spotykano się już&nbsp;wielokrotnie.</p><p>Zanim zdecydujesz się z nich zrezygnować, ważne jest abyś rozumiał, dlaczego zostały one opracowane i jaka była oryginalna intencja autora. Ta wiedza pozwoli Ci dokonać przemyślanych wyborów na poziomie stacku technologicznego, projektowania architektury czy implementowania nowych wymagań biznesowych.</p><p>W kolejnej lekcji poznasz zestaw najbardziej popularnych wzorców projektowych, które na szeroką skalę stosują autorzy najpopularniejszych bibliotek i frameworków.</p></div></body></html>

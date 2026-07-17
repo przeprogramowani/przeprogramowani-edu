@@ -1,0 +1,61 @@
+{
+  "plans": {
+    "thoughts/shared/plans/2026-04-16-topbar-button-blink-fix.md": {
+      "title": "ContentTopBar Prev/Next Blink Fix Implementation Plan",
+      "status": "completed",
+      "totalPhases": 2,
+      "completedPhases": 2,
+      "completedAt": "2026-04-16T08:18:37Z"
+    },
+    "thoughts/shared/plans/2026-04-28-course-lesson-progress.md": {
+      "title": "Course Lesson Progress Implementation Plan",
+      "status": "in_progress",
+      "totalPhases": 6,
+      "completedPhases": 5,
+      "updatedAt": "2026-04-28T08:28:41Z"
+    },
+    "thoughts/shared/plans/2026-04-28-explorers-localization-content-remediation.md": {
+      "title": "Space Explorers Localization — Content Migration Remediation Plan",
+      "status": "completed",
+      "totalPhases": 3,
+      "completedPhases": 3,
+      "completedAt": "2026-04-29T05:07:17Z"
+    },
+    "thoughts/shared/plans/2026-04-29-explorers-localization-phase3-shipping.md": {
+      "title": "Space Explorers Localization — Phase 3 Shipping Plan",
+      "status": "in_progress",
+      "totalPhases": 6,
+      "completedPhases": 6,
+      "updatedAt": "2026-04-29T08:19:19Z"
+    },
+    "thoughts/shared/plans/2026-04-29-10xdevs-3-prework-on-course-list.md": {
+      "title": "10xDevs 3.0 Prework on /courses Implementation Plan",
+      "status": "in_progress",
+      "totalPhases": 2,
+      "completedPhases": 2,
+      "updatedAt": "2026-04-29T17:58:34Z"
+    },
+    "thoughts/shared/plans/2026-04-30-game-position-reset-support.md": {
+      "title": "Game Position Reset — Support Fix Implementation Plan",
+      "status": "completed",
+      "totalPhases": 4,
+      "completedPhases": 4,
+      "completedAt": "2026-05-01T07:45:46Z"
+    },
+    "thoughts/shared/plans/2026-05-08-user-profile-page.md": {
+      "title": "User Profile Page Implementation Plan",
+      "status": "completed",
+      "totalPhases": 5,
+      "completedPhases": 5,
+      "completedAt": "2026-05-08T11:50:39Z"
+    },
+    "thoughts/shared/plans/2026-05-21-server-sentry-mission-log.md": {
+      "title": "Server-side Sentry Integration + Mission-Log Route Instrumentation",
+      "status": "completed",
+      "totalPhases": 4,
+      "completedPhases": 4,
+      "completedAt": "2026-05-21T10:55:16Z"
+    }
+  },
+  "lastWorkedOn": "thoughts/shared/plans/2026-05-21-server-sentry-mission-log.md"
+}

@@ -1,0 +1,566 @@
+{
+  "ebook": "10xdevs3-ebook",
+  "assetBasePath": "/assets/10xdevs/ebook-evals",
+  "stylePreset": "dark-cosmic-10xdevs",
+  "paletteHex": [
+    "#F68F09",
+    "#CD84FF",
+    "#1F36E4"
+  ],
+  "sharedStylePrefixPl": "Ciemne granatowo-fioletowe tło kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu.",
+  "sharedNegativePromptPl": "zadnych nazw modeli lub firm niewymienionych w danym fragmencie, zadnych logotypow, znakow wodnych, stock photo, clipartu, plaskich ikonek, jasnego tla, agresywnego cyberpunku, losowego tekstu po angielsku, blednych liczb, przeladowanych wykresow, memow, przemocy, realistycznych twarzy znanych osob",
+  "assets": [
+    {
+      "id": "hero-overview",
+      "anchorHeading": "Wstep: Dlaczego ten przewodnik powstal",
+      "anchorLine": 43,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Hero illustration do ebooka o wyborze modeli AI do kodowania. Pokaz jednego anonimowego bohatera w nowoczesnym skafandrze kosmicznym patrzacego na chaotyczna sciane rankingow i metryk zawieszona w glebokiej kosmicznej przestrzeni, z ktorej wylania sie spokojna, uporzadkowana sciezka ewaluacji prowadzaca do celu opisanego jako 'Twoje evale'. Kontrast pomiedzy szumem publicznych rankingow a grounded evaluation na wlasnych zadaniach. Scena ma byc wyraznie bardziej kosmiczna niz ziemska: gwiazdy, mglawice, swietlne orbity i przestrzen bez skojarzen z nocnym krajobrazem Ziemi. Bez nazw narzedzi, bez konkretnych liczb, bez dodatkowych faktow. Format szeroki hero, centralna kompozycja, minimalny tekst lub bez tekstu poza 'Twoje evale'.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych nazw modeli lub firm niewymienionych w danym fragmencie, zadnych logotypow, znakow wodnych, stock photo, clipartu, plaskich ikonek, jasnego tla, agresywnego cyberpunku, losowego tekstu po angielsku, blednych liczb, przeladowanych wykresow, memow, przemocy, realistycznych twarzy znanych osob, zadnych ziemskich pejzazy nocnych, zadnego wygladu jak ciemna Ziemia widziana po zmroku, zadnego tekstu 'Twoje testy'",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "hero-overview.webp",
+      "altTextPl": "Ilustracja otwierajaca ebook: bohater w skafandrze kosmicznym kieruje sie przez chaos rankingow AI w strone wlasnych evali",
+      "styleReferenceIds": [
+        "698eee61bd0cba7404e03d70_hero-image-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "6993049b959c28628759a2af_tempo-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "ch1-metric-reductionism",
+      "anchorHeading": "Problem 5: Redukcjonizm metryczny",
+      "anchorLine": 138,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja pulapki pojedynczej liczby benchmarkowej: jedna wielka swiecaca liczba lub medal zaslania zlozony krajobraz jakosci, niezawodnosci, kosztu i bezpieczenstwa. Ma byc jasne, ze pojedyncza metryka upraszcza rzeczywistosc i ukrywa wazne wymiary. Bez konkretnych liczb i bez logotypow.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych tabel z wymyslonymi danymi, zadnych nieopisanych wykresow finansowych, zadnych realnych twarzy, zadnych memicznych trofeow, clipartu ani stock photo",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "ch1-metric-reductionism.webp",
+      "altTextPl": "Ilustracja pokazujaca, jak pojedyncza metryka zaslania koszt, niezawodnosc i jakosc",
+      "styleReferenceIds": [
+        "698eee61bd0cba7404e03d70_hero-image-webp.webp",
+        "69930442ade6530f1db4282c_mvp-image-v2-webp.webp",
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp"
+      ]
+    },
+    {
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "assetType": "illustration",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "id": "ch1-benchmark-lifecycle-orbit",
+      "anchorHeading": "Cykl zycia benchmarku",
+      "anchorLine": 147,
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja cyklu zycia benchmarku jako swiecacej orbity z piecioma stacjami: start nowego benchmarku, poprawa modeli, wyciek danych treningowych, utrata zaufania i pojawienie sie nastepcy. To ma wygladac jak jedna kosmiczna trajektoria lub stacja orbitalna, bardziej ilustracyjnie niz infograficznie. Bez dodatkowych etapow, bez nazw benchmarkow i bez nowych dat.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych dodatkowych etapow, zadnych nazw benchmarkow spoza fragmentu, zadnych liczb, zadnego wykresu procesowego jak prezentacja korporacyjna, bez stock photo i clipartu",
+      "outputFilename": "ch1-benchmark-lifecycle-orbit.webp",
+      "altTextPl": "Ilustracja cyklu zycia benchmarku jako orbitalnej trasy od startu do utraty zaufania i pojawienia sie nastepcy",
+      "styleReferenceIds": [
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "ch2-maturity-spectrum",
+      "anchorHeading": "Spektrum dojrzalosci (marzec 2026)",
+      "anchorLine": 184,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja pokazujaca cztery stany benchmarkow opisane w tabeli: zsaturowane lub wycofane, skontaminowane, aktywne i roznicujace, wschodzace. Przedstaw to jako pasmo dojrzalosci albo cztery sasiadujace strefy z krotkimi polskimi etykietami, tak aby obraz pozostal bardziej ilustracyjny niz tabelaryczny. Nie dodawaj benchmarkow ani dat, ktorych nie ma w tym fragmencie.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych dodatkowych kategorii, zadnych cudzych logo, zadnego przeladowanego dashboardu, zadnych liczb poza samymi nazwami statusow, bez stock photo",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "ch2-maturity-spectrum.webp",
+      "altTextPl": "Ilustracja pokazujaca spektrum dojrzalosci benchmarkow od wycofanych po wschodzace",
+      "styleReferenceIds": [
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp",
+        "6993049b959c28628759a2af_tempo-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "ch2-benchmark-landscape",
+      "anchorHeading": "Benchmarki warte sledzenia",
+      "anchorLine": 196,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna mapa krajobrazu benchmarkow dla kodowania: osobne wyspy lub stacje reprezentujace bug fixing, feature development, reliability, terminal tasks, tool use i real-world preference data, polaczone subtelnymi sciezkami. To ma byc mapa ekosystemu, nie tabela rankingowa. Bez logotypow i bez konkretnych wynikow.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych falszywych nazw benchmarkow, zadnych wykresow gieldowych, zadnych strzalek sugerujacych nieopisane zaleznosci przyczynowe, bez stock photo i clipartu",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "ch2-benchmark-landscape.webp",
+      "altTextPl": "Ilustracja mapujaca rozne rodziny benchmarkow uzywanych do oceny narzedzi AI dla programistow",
+      "styleReferenceIds": [
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "ch3-agent-vs-inline",
+      "anchorHeading": "Code completion vs ewaluacja agentowa",
+      "anchorLine": 451,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja roznicy miedzy code completion a ewaluacja agentowa. Po jednej stronie pokaz blyskawiczna, bliska kursorowi sugestie w pojedynczym pliku. Po drugiej stronie pokaz wielokrokowego agenta przemieszczajacego sie miedzy wieloma plikami, narzedziami i etapami rozwiazywania. Scena ma jasno komunikowac, ze to dwa rozne problemy i dwa rozne tryby pracy, bez konkretnych nazw modeli i bez dodatkowych metryk.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych logotypow IDE, zadnych nazw narzedzi, zadnych falszywych zrzutow ekranu, zadnego losowego kodu niezwiazanego z tematem, bez stock photo",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "ch3-agent-vs-inline.webp",
+      "altTextPl": "Ilustracja pokazujaca roznice miedzy szybkim code completion a wielokrokowa praca agenta",
+      "styleReferenceIds": [
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "69930442ade6530f1db4282c_mvp-image-v2-webp.webp"
+      ]
+    },
+    {
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "assetType": "illustration",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "id": "ch3-cost-vs-value",
+      "anchorHeading": "Metryki kosztowe",
+      "anchorLine": 376,
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja napiecia miedzy kosztem za zadanie a kosztem za poprawne rozwiazanie. Pokaz kilka swiecacych tras lub modulow, z ktorych tylko niektore prowadza do prawdziwej wartosci. Ma byc czytelne, ze sama dokladnosc nie wystarcza bez kontekstu kosztowego. Bez konkretnych cen, nazw modeli i bez tabel.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych konkretnych cen, nazw modeli, rankingow ani slupkow finansowych, zadnych dashboardow z mikrotekstem, bez stock photo i clipartu",
+      "outputFilename": "ch3-cost-vs-value.webp",
+      "altTextPl": "Ilustracja pokazujaca roznice miedzy kosztem a prawdziwa wartoscia poprawnego rozwiazania",
+      "styleReferenceIds": [
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp",
+        "69930442ade6530f1db4282c_mvp-image-v2-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "ch4-harness-system-model",
+      "anchorHeading": "Koncepcja harnessu",
+      "anchorLine": 481,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja analogii model = CPU, context window = RAM, harness = system operacyjny, agent = aplikacja. Pokaz warstwowy system kokpitu lub maszyny, w ktorym kolejne poziomy steruja kolejnymi funkcjami. Calosc ma sugerowac, ze wynik agenta zalezy od calego systemu, nie tylko od modelu.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych konkretnych marek sprzetu, zadnych logotypow narzedzi, zadnego tekstu dluzszego niz pojedyncze etykiety, bez stock photo",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "ch4-harness-system-model.webp",
+      "altTextPl": "Ilustracja warstwowego systemu pokazujaca role modelu, pamieci kontekstowej, harnessu i agenta",
+      "styleReferenceIds": [
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "69930442ade6530f1db4282c_mvp-image-v2-webp.webp",
+        "6993049b959c28628759a2af_tempo-image-v2-webp.webp"
+      ]
+    },
+    {
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "assetType": "illustration",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "id": "ch4-architecture-paradigms",
+      "anchorHeading": "Paradygmaty architektoniczne",
+      "anchorLine": 495,
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja trzech paradygmatow agentowych: workflow, agentic i hybrid jako trzy sasiednie strefy lub trzy statki o roznych charakterach ruchu i kontroli. Ma byc widac roznice w przewidywalnosci, autonomii i udziale czlowieka, ale bez zamieniania tego w tabele. Bez nazw firm i bez dodatkowych kategorii.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych nazw narzedzi, logo, tabel porownawczych z drobnym tekstem, zadnych nowych paradygmatow, bez stock photo",
+      "outputFilename": "ch4-architecture-paradigms.webp",
+      "altTextPl": "Ilustracja pokazujaca trzy paradygmaty agentowe: workflow, agentic i hybrid",
+      "styleReferenceIds": [
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "6993049b959c28628759a2af_tempo-image-v2-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "ch5-technique-spectrum",
+      "anchorHeading": "Spektrum technik",
+      "anchorLine": 586,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja spektrum technik pracy z AI: od chaotycznego vibe codingu po uporzadkowane plan-then-implement, spec-driven i TDAID. Pokaz jedna droge lub platformy rosnace od improwizacji do dyscypliny inzynierskiej, z minimalnymi polskimi etykietami. Ma sugerowac wzrost jakosci i bezpieczenstwa dzieki strukturze, bez dodawania nieopisanych metryk.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych dodatkowych technik, zadnych koderskich memow, zadnych logotypow IDE, zadnego komicznego chaosu, bez stock photo",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "ch5-technique-spectrum.webp",
+      "altTextPl": "Ilustracja pokazujaca droge od vibe codingu do bardziej ustrukturyzowanych technik pracy z AI",
+      "styleReferenceIds": [
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "69930442ade6530f1db4282c_mvp-image-v2-webp.webp",
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp"
+      ]
+    },
+    {
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "assetType": "illustration",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "id": "ch5-perception-gap",
+      "anchorHeading": "Co mowia badania",
+      "anchorLine": 600,
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja luki miedzy percepcja a rzeczywistoscia przy pracy z AI: zespol widzi swietlisty wzrost produktywnosci, ale prawdziwa trajektoria w tle pokazuje spowolnienie i koszt jakosci. Ma byc jasne, ze intuicja moze wprowadzac w blad. Bez konkretnych procentow i bez cytowania badan wprost.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych procentow, nazw badan, logotypow firm ani wykresow prezentacyjnych z mikrotekstem, bez stock photo",
+      "outputFilename": "ch5-perception-gap.webp",
+      "altTextPl": "Ilustracja pokazujaca roznice miedzy odczuwana a rzeczywista produktywnoscia przy pracy z AI",
+      "styleReferenceIds": [
+        "698eee61bd0cba7404e03d70_hero-image-webp.webp",
+        "6993049b959c28628759a2af_tempo-image-v2-webp.webp",
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "ch6-hybrid-eval-stack",
+      "anchorHeading": "Konsensus branżowy: wzorzec hybrydowy",
+      "anchorLine": 741,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja wzorca hybrydowego w ewaluacji: solidna gotowa warstwa bazowa pod spodem, a nad nia bardziej elastyczna warstwa tworzona przez zespol z wlasnymi scorerami, datasetami i logika domenowa. Pokaz wyrazne polaczenie stabilnych gotowych modulow z niestandardowa warstwa robocza, tak aby bylo czytelne ze sens polega na laczeniu gotowej bazy z tym, co unikalne dla domeny. Uzyj prostych ksztaltow, blokow i przeplywow energii zamiast etykiet. Minimalny tekst lub brak tekstu. Bez logo narzedzi i bez konkretnych nazw frameworkow.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych nazw frameworkow niewymienionych w promptcie, zadnych dashboardow z drobnym tekstem, zadnych logotypow vendorow, zadnych powtorzonych etykiet, zadnych sloganow typu kupuj infrastrukture, bez stock photo",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "ch6-hybrid-eval-stack.webp",
+      "altTextPl": "Ilustracja pokazujaca polaczenie gotowej infrastruktury ewaluacyjnej z wlasna logika domenowa",
+      "styleReferenceIds": [
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "69930442ade6530f1db4282c_mvp-image-v2-webp.webp",
+        "6993049b959c28628759a2af_tempo-image-v2-webp.webp"
+      ]
+    },
+    {
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "assetType": "illustration",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "id": "ch6-framework-selector",
+      "anchorHeading": "Szybki przewodnik wyboru",
+      "anchorLine": 661,
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja wyboru odpowiedniego narzedzia AI do kodowania albo agenta do sytuacji: jedna droga prowadzi do lekkiego porownywania promptow, inna do pracy agentowej w sandboxie, inna do monitoringu i pracy zespolowej. Ma to wygladac jak elegancki kokpit decyzyjny albo rozgalezienie tras dla roznych trybow pracy z AI, a nie jak enterprise pipeline produkcyjny. Minimalny tekst lub brak tekstu.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych nazw narzedzi spoza fragmentu, zadnych logo, zadnych rozbudowanych diagramow pipeline produkcyjnego, zadnych drobnych etykiet i mikrotekstu, bez stock photo",
+      "outputFilename": "ch6-framework-selector.webp",
+      "altTextPl": "Ilustracja wyboru odpowiedniego narzedzia AI lub agenta do kodowania w zaleznosci od sytuacji",
+      "styleReferenceIds": [
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "69930442ade6530f1db4282c_mvp-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "ch7-10xbench-criteria",
+      "anchorHeading": "Studium przypadku: 10x-bench - budowanie praktycznego niestandardowego benchmarku",
+      "anchorLine": 871,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja hybrydowej oceny 10x-bench: jedna wielostronicowa strona internetowa w centrum, otoczona przez warstwy automatycznych i ludzkich kryteriow, ktore wychwytuja build, tresc, SEO, spojnosc UI i responsywnosc. Pokaz, ze benchmark ocenia realny artefakt z wielu stron. Bez dodawania nowych kryteriow i bez zmyslonych ekranow marek.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych logotypow firm, zadnych zmyslonych nazw stron, zadnych rickrolli ani placeholderow, bez stock photo i bez przeladowania drobnym tekstem",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "ch7-10xbench-criteria.webp",
+      "altTextPl": "Ilustracja pokazujaca wielowarstwowa ocene benchmarku 10x-bench dla gotowej strony internetowej",
+      "styleReferenceIds": [
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "6993049b959c28628759a2af_tempo-image-v2-webp.webp"
+      ]
+    },
+    {
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "assetType": "illustration",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "id": "ch7-quality-gate",
+      "anchorHeading": "Co sprawdzac w wygenerowanym kodzie",
+      "anchorLine": 781,
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja bramki jakosci dla kodu AI: build, testy, analiza statyczna, bezpieczenstwo i review jako kolejne swiecace segmenty jednej sciezki kontrolnej. Ma to wygladac jak sekwencja kontroli lotu albo liniowa procedura walidacji, bardziej ilustracyjnie niz infograficznie. Bez nowych etapow.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych dodatkowych etapow, zadnych nazw narzedzi, drobnych checklist ani korporacyjnych ikon, bez stock photo",
+      "outputFilename": "ch7-quality-gate.webp",
+      "altTextPl": "Ilustracja pokazujaca wieloetapowa bramke jakosci dla kodu generowanego przez AI",
+      "styleReferenceIds": [
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "ch8-price-frontier",
+      "anchorHeading": "Granica Pareto",
+      "anchorLine": 985,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja granicy Pareto dla jakosci i kosztu: krajobraz z wyrazna swiecaca linia frontier oraz kilka opcji ponizej tej linii. Ma byc czuc napiecie miedzy jakoscia, kosztem i szybkoscia bez uzywania konkretnych cen lub nazw modeli. Subtelny edukacyjny klimat, bez przesadnej technicznej doslownosci.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych konkretnych cen, nazw modeli ani dostawcow, zadnych zbyt finansowych wykresow gieldowych, zadnego stock photo lub clipartu",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "ch8-price-frontier.webp",
+      "altTextPl": "Ilustracja granicy Pareto pokazujaca kompromis miedzy jakoscia a kosztem",
+      "styleReferenceIds": [
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "69930442ade6530f1db4282c_mvp-image-v2-webp.webp"
+      ]
+    },
+    {
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "assetType": "illustration",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "id": "ch8-tier-routing",
+      "anchorHeading": "Ktory tier do jakiego zadania",
+      "anchorLine": 991,
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja routingu zadan do roznych tierow modeli: lekkie poprawki ida najkrotsza sciezka, srednie zadania trafiaja do bardziej zlozonych modulow, a trudna architektura do najciezszych jednostek. Ma byc widoczne dopasowanie poziomu mocy do typu pracy, bez nazw modeli i bez konkretnych kosztow.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych nazw modeli, cen, vendorow ani rozpisanych tabel, zadnych korporacyjnych ikon, bez stock photo",
+      "outputFilename": "ch8-tier-routing.webp",
+      "altTextPl": "Ilustracja pokazujaca dopasowanie poziomu modelu do typu zadania programistycznego",
+      "styleReferenceIds": [
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp",
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "ch9-decision-scorecard",
+      "anchorHeading": "Karta oceny wyboru modelu",
+      "anchorLine": 1051,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja zespolu podejmujacego decyzje przy swiecacej karcie oceny, ktora wywaza trafnosc na wlasnych zadaniach, koszt, niezawodnosc, dopasowanie do stacku i latencje. Pokaz proces wazenia kryteriow i obronnej decyzji, bez konkretnych nazw modeli, bez rankingow i bez dodatkowych liczb.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych nazw modeli, zadnych logotypow vendorow, zadnych falszywych dashboardow biznesowych, zadnego korporacyjnego stock photo",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "ch9-decision-scorecard.webp",
+      "altTextPl": "Ilustracja pokazujaca zespol wazacy kryteria wyboru modelu na swiecacej karcie oceny",
+      "styleReferenceIds": [
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "6993049b959c28628759a2af_tempo-image-v2-webp.webp",
+        "69930442ade6530f1db4282c_mvp-image-v2-webp.webp"
+      ]
+    },
+    {
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "assetType": "illustration",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "id": "ch9-decision-tree",
+      "anchorHeading": "Co chcesz ustalic?",
+      "anchorLine": 1026,
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja drzewa decyzyjnego zaczynajacego sie od pytania, czego chcesz ustalic, a potem prowadzacego do publicznych benchmarkow, testow na wlasnym codebase, porownania starego i nowego modelu albo analizy kosztow. Ma wygladac jak kokpit nawigacyjny z kilkoma glownymi odnogami, bez przeladowania tekstem.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych dodatkowych galezi, nazw modeli, logotypow czy malych etykiet nieczytelnych w ebooku, bez stock photo",
+      "outputFilename": "ch9-decision-tree.webp",
+      "altTextPl": "Ilustracja drzewa decyzyjnego pomagajacego wybrac podejscie do ewaluacji modeli i narzedzi",
+      "styleReferenceIds": [
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp",
+        "6993049b959c28628759a2af_tempo-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "ch10-rollout-mission",
+      "anchorHeading": "Krok 1: Przetestuj na prawdziwych zadaniach (jedno popoludnie)",
+      "anchorLine": 1147,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja trzyetapowego rolloutu: pierwszy szybki test na prawdziwych zadaniach, potem pomiar w skali zespolu, potem cykliczna optymalizacja. Pokaz trzy kolejne punkty kontrolne lub orbity misji, z minimalnymi polskimi etykietami odnoszacymi sie do krokow z rozdzialu. Ma byc widac przejscie od eksperymentu do powtarzalnego procesu.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych dodatkowych krokow, zadnych dashboardow z drobnym tekstem, zadnych nazw narzedzi, bez stock photo",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "outputFilename": "ch10-rollout-mission.webp",
+      "altTextPl": "Ilustracja pokazujaca trzyetapowy rollout testowania i wdrazania narzedzi AI do kodowania",
+      "styleReferenceIds": [
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp",
+        "6993049b959c28628759a2af_tempo-image-v2-webp.webp"
+      ]
+    },
+    {
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "assetType": "illustration",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": true,
+      "id": "ch10-daily-quality-workflow",
+      "anchorHeading": "Weryfikacja jakosci kodu AI w codziennym workflow",
+      "anchorLine": 1194,
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja codziennego workflow weryfikacji kodu AI: generowanie, build, testy, analiza statyczna, skan bezpieczenstwa, review i merge jako sekwencja kontroli. Ma byc bardziej jak elegancki tor lotu lub procedura operacyjna niz literalna checklista. Bez nowych etapow i bez nazw narzedzi.",
+      "negativePromptPl": "zadnych nowych faktow poza ebookiem, zadnych dodatkowych etapow, zadnych logo, wielkich blokow tekstu i dashboardow, bez stock photo",
+      "outputFilename": "ch10-daily-quality-workflow.webp",
+      "altTextPl": "Ilustracja codziennego workflow weryfikacji kodu AI od generacji do merge",
+      "styleReferenceIds": [
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "prework-03-generator-vs-korepetytor",
+      "anchorHeading": "[1.3] Jak uczyć się i rozwijać z AI — Te same narzędzia, dwa różne wyniki",
+      "anchorLine": 59,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja pokazujaca dwa tryby pracy z tym samym AI. Po lewej szybki generator: gotowy wynik, zamknieta sciezka, minimalne zaangazowanie czlowieka. Po prawej AI jako korepetytor: dialog, pytania sprawdzajace, rozkladanie problemu na etapy i widoczny wzrost zrozumienia. To ma byc kontrast dwoch workflowow, nie ranking narzedzi. Bez logotypow, bez nazw vendorow, bez konkretnych metryk i bez dodatkowych faktow.",
+      "negativePromptPl": "zadnych nowych faktow poza materialem, zadnych nazw narzedzi, logotypow, falszywych benchmarkow, przeladowanych paneli z mikrotekstem, stock photo, clipartu, memow",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": false,
+      "outputFilename": "prework-03-generator-vs-korepetytor.webp",
+      "altTextPl": "Ilustracja pokazujaca kontrast miedzy AI jako generatorem gotowych odpowiedzi a AI jako korepetytorem prowadzacym do zrozumienia",
+      "styleReferenceIds": [
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "6993045f4289b5784c42764e_legacy-image-v2-webp.webp",
+        "6993049b959c28628759a2af_tempo-image-v2-webp.webp"
+      ]
+    },
+    {
+      "id": "prework-03-approve-bez-obrony",
+      "anchorHeading": "[1.3] Jak uczyć się i rozwijać z AI — approve bez obrony",
+      "anchorLine": 15,
+      "assetType": "illustration",
+      "stylePreset": "dark-cosmic-10xdevs",
+      "paletteHex": [
+        "#F68F09",
+        "#CD84FF",
+        "#1F36E4"
+      ],
+      "promptPl": "Styl referencyjny dark cosmic 10xDevs inspirowany paczka referencyjna: ciemne granatowo-fioletowe tlo kosmiczne, mocne krawedziowe swiatlo, neonowe poswiaty w kolorach #F68F09, #CD84FF i #1F36E4, filmowa glebia, warstwowa kompozycja, subtelna siatka lub panele sci-fi UI, neutralny edukacyjny ton, wysoki kontrast, premium web illustration, bez brandingu. Koncepcyjna ilustracja failure mode'u 'approve bez obrony'. Pokaz programiste patrzacego na gotowy, swiecacy diff lub panel z zaakceptowana zmiana, podczas gdy za nim pojawia sie druga warstwa sceny: review, pytania o trade-offy i luki w zrozumieniu. Obraz ma jasno komunikowac rozdzwiek miedzy dowiezionym wynikiem a brakiem mentalnego modelu. Bez nazw narzedzi, bez logotypow, bez konkretnych liczb, bez realistycznych twarzy znanych osob.",
+      "negativePromptPl": "zadnych nowych faktow poza materialem, zadnych nazw modeli lub firm, zadnych logotypow, watermarkow, stock photo, clipartu, przeladowanych dashboardow, falszywych fragmentow kodu, losowego tekstu po angielsku, memow",
+      "modelPrimary": "google/gemini-3.1-flash-image-preview",
+      "modelFallback": "openai/gpt-5-image",
+      "mustHave": false,
+      "outputFilename": "prework-03-approve-bez-obrony.webp",
+      "altTextPl": "Ilustracja pokazujaca rozdzwiek miedzy zaakceptowanym wynikiem AI a brakiem zdolnosci obrony decyzji technicznych",
+      "styleReferenceIds": [
+        "6993040a9d74c9dcd05be204_proces-image-v2-x2-webp.webp",
+        "6993041f2f30d8bcc5abeb5c_system-image-v2-webp.webp",
+        "69930442ade6530f1db4282c_mvp-image-v2-webp.webp"
+      ]
+    }
+  ]
+}

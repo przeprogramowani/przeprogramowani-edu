@@ -1,0 +1,34 @@
+{
+  "lessonPrefix": "14-4x1",
+  "updatedAt": "2026-04-28T16:38:56.681Z",
+  "entries": [
+    {
+      "key": "5ec9c48caaafc68828feaf1660fb5af83c1fc0941414f115ec99fe93c6cf4db6",
+      "blockHash": "a079ec50e999ffa812c9a9ca2605cd45c35cbab62010912a6abc20b1a56b7f6d",
+      "promptVersion": "prework-code-block-v2",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 0,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "<div class=\"flex items-center gap-4 p-6 bg-white rounded-lg shadow\">\n  <h2 class=\"text-lg font-semibold text-gray-900\">Card title</h2>\n</div>\n",
+      "translatedText": "<div class=\"flex items-center gap-4 p-6 bg-white rounded-lg shadow\">\n  <h2 class=\"text-lg font-semibold text-gray-900\">Card title</h2>\n</div>",
+      "status": "translated",
+      "createdAt": "2026-04-28T16:38:56.681Z"
+    },
+    {
+      "key": "ce7cebf3b9902cc147f171adeb38b425d91a569c1087dd88cc5236054b76f33b",
+      "blockHash": "a079ec50e999ffa812c9a9ca2605cd45c35cbab62010912a6abc20b1a56b7f6d",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 0,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "<div class=\"flex items-center gap-4 p-6 bg-white rounded-lg shadow\">\n  <h2 class=\"text-lg font-semibold text-gray-900\">Card title</h2>\n</div>\n",
+      "translatedText": "<div class=\"flex items-center gap-4 p-6 bg-white rounded-lg shadow\">\n  <h2 class=\"text-lg font-semibold text-gray-900\">Tytuł karty</h2>\n</div>",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:36.886Z"
+    }
+  ]
+}

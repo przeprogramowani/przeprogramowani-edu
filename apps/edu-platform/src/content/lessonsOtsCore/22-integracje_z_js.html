@@ -1,0 +1,161 @@
+<meta name="lesson-id" content="Integracje z JS"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>Przedstawione w naszym kursie elementy języka TypeScript niemal jednoznacznie wskazują, że w projektach typu “greenfield” powinien być&nbsp;to domyślny wybór większości programistów. Zdajemy sobie jednak sprawę, że wielu z was pracuje w tzw. “kodzie zastanym”, wciąż rozwijanym w oparciu o JavaScript, gdzie migracja w trybie “wszystko na raz” jest niemożliwa do zrealizowania.</p><p>Właśnie dlatego jedną z lekcji naszego szkolenia poświęcimy dedykowanym poradom na temat migracji i integracji ekosystemów TS i JS, aby przejście w kierunku “typowanego JavaScriptu” odbyło się tak płynnie i szybko, jak to możliwe.</p><h2>Integracja z JavaScriptem</h2><p>Typowe kroki migracji zasymulujemy w oparciu o testowy projekt służący do konwersji HTMLa w postaci <em>stringa</em> na tzw. drzewo składniowe (w tej lekcji konkretna funkcjonalność nie jest istotna).</p><p>Struktura projektu wygląda następująco - src/parser to nasz “kod legacy”:</p><pre><code>html-ast-parser/
+└── src/
+    ├── parser/
+    │   ├── HTMLParser.js
+    │   ├── NodeParser.js
+    │   ├── AttributeParser.js
+    │   └── TokenStream.js
+    └── tests/
+        ├── HTMLParser.test.js
+        ├── NodeParser.test.js
+        ├── AttributeParser.test.js
+        └── TokenStream.test.js</code></pre><p>Na tym przykładzie będziemy obserwować zachowanie kompilatora TypeScript w momencie, kiedy obok naszego modułu <em>parser</em> zaczynamy budować nową&nbsp;aplikację w oparciu o TS.</p><h3>Kompilacja z JavaScriptem</h3><p>Na początku musimy oczywiście zainstalować sam typescript (<em>npm install typescript -DE</em>) i dodać do projektu prostą konfigurację kompilatora i skrypt pomocniczy do kompilacji:</p><p><strong>tsconfig.json</strong></p><pre><code>{
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "src/tests"],
+  "compilerOptions": {
+    "outDir": "./dist"
+  }
+}</code></pre><p><strong>package.json</strong></p><pre><code>{
+  "build": "rm -rf dist &amp;&amp; tsc"
+}</code></pre><p>Nasza nowa aplikacja od początku rozwijana będzie w języku TypeScript - na razie składa się z dwóch modułów, gdzie korzystamy z naszego parsera napisanego w języku JavaScript.</p><p><strong>src/index.ts</strong></p><pre><code>import HTMLParser from "./parser/HTMLParser.js";
+import {HTML_INPUT} from "./input";
+
+const parser = new HTMLParser();
+const ast = parser.parse(HTML_INPUT);
+
+console.log(JSON.stringify(ast, null, 2));</code></pre><p><strong>src/input.ts</strong></p><pre><code>export const HTML_INPUT =
+  '&lt;div class="container"&gt;&lt;p&gt;Hello &lt;span&gt;World&lt;/span&gt;!&lt;/p&gt;&lt;/div&gt;';</code></pre><h3>Pierwsza kompilacja</h3><p>Kiedy w oparciu o istniejącą konfigurację uruchomimy polecenie <em>npm run build</em>, w folderze <em>dist</em> zauważymy tylko dwa pliki:</p><pre><code>html-ast-parser/
+└── dist/
+    ├── index.js
+    └── input.js</code></pre><p>Nowa aplikacja zostanie skompilowana poprawnie, ale bariera “TS/JS” będzie nie do przejścia - jak widać poniżej, w pliku wyjściowym znajduje się odwołanie do importowanego parsera, ale sam kompilator ten plik ignoruje - nie ma go w folderze <em>dist</em>.</p><p><strong>dist/index.js</strong></p><pre><code>"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var HTMLParser_js_1 = require("./parser/HTMLParser.js");
+var input_1 = require("./input");
+var parser = new HTMLParser_js_1.default();
+var ast = parser.parse(input_1.HTML_INPUT);
+console.log(JSON.stringify(ast, null, 2));
+</code></pre><p><em>(Zwróć również uwagę na sam format importów, którym na razie jest CommonJS)</em></p><p>Żeby kompilator TS brał pod uwagę wszystkie dostępne pliki, musimy dodać ustawienie <em>allowJS: true</em>.</p><p><strong>tsconfig.json</strong></p><pre><code>{
+  ...
+  "compilerOptions": {
+    "outDir": "./dist",
+    "allowJs": true
+  }
+}</code></pre><p>Nowe ustawienie powoduje, że odwołania do JavaScriptu z plików .ts są brane pod uwagę i po kompilacji umieszczane w folderze docelowym:</p><pre><code>dist
+├── parser
+│   ├── AttributeParser.js
+│   ├── HTMLParser.js
+│   ├── NodeParser.js
+│   └── TokenStream.js
+├── index.js
+└── input.js</code></pre><p>Jeśli chcemy dodatkowo zaktualizować&nbsp;sam format docelowego JavaScriptu, w sekcji “compilerOptions” możemy dodać ustawienie:</p><pre><code>{
+  "module": "ES2022" // wartość przykładowa
+}</code></pre><p><strong>dist/index.js</strong></p><pre><code>import HTMLParser from "./parser/HTMLParser.js";
+import { HTML_INPUT } from "./input";
+var parser = new HTMLParser();
+var ast = parser.parse(HTML_INPUT);
+console.log(JSON.stringify(ast, null, 2));</code></pre><p>Problemem obecnej konfiguracji jest to, że chociaż światy TS i JS są pozornie zintegrowane, to nic nie stoi na przeszkodzie aby wywołanie parsera wyglądało w ten sposób:</p><p><strong>src/index.ts</strong></p><pre><code>const parser = new HTMLParser();
+const ast1 = parser.parse(false);
+const ast2 = parser.parse(32);
+const ast3 = parser.parse({hello: "world"});</code></pre><p>TypeScript ogranicza swoją prace do weryfikowania tego, na czym się zna, czyli modułów .ts - o błędnym wywołaniu parsera dowiemy się dopiero wtedy, kiedy uruchomimy skompilowaną aplikację:</p><pre><code>file:///js-to-ts/dist/parser/TokenStream.js:21
+            result += this.next();
+                           ^
+RangeError: Invalid string length
+    at TokenStream.consumeWhile (file:///Users/przemek/dev/js-to-ts/dist/parser/TokenStream.js:21:28)
+    at NodeParser.parseText (file:///Users/przemek/dev/js-to-ts/dist/parser/NodeParser.js:56:34)</code></pre><h2>Bezpieczeństwo typów</h2><p>Warunki naszego projektu sprawiają, że naszego parsera nie możemy modyfikować w sposób inwazyjny (np. przepisując go całościowo na TypeScript). Jak w takim razie sprawić, żeby migracja przebiegała stopniowo, a nowa aplikacja pisana już w języku TypeScript była świadoma oczekiwanych typów?</p><h3>Komentarze JSDoc</h3><p>Bezpieczną metodą zapewniającą częściową zgodność typów jest oznaczenie fragmentów kodu JavaScript komentarzami w formacie <a href="https://jsdoc.app/" target="_blank" rel="noopener noreferrer">JSDoc</a>. Jeśli oznaczymy typy wejściowe i wyjściowe, kompilator TS zacznie brać je pod uwagę, uniemożliwiając niepoprawną kompilację.</p><p><strong>src/parser/HTMLParser.js</strong></p><pre><code>class HTMLParser {
+  /**
+   * Creates AST from html string
+   * @param {string} html - Input string
+   * @returns {Object} Final AST
+   */
+  parse(html) {
+    const tokenStream = new TokenStream(html);
+    const nodeParser = new NodeParser(tokenStream);
+    return nodeParser.parseNode();
+  }
+}</code></pre><p><strong>src/index.ts</strong></p><pre><code>const parser = new HTMLParser();
+const ast1 = parser.parse(HTML_INPUT); // ✅ OK
+const ast2 = parser.parse(32); 
+// ❌ Błąd - Argument of type 'number' is not assignable to parameter of type 'string'.</code></pre><p>W przypadku typów złożonych możemy wykorzystać kolejny element standardu dokumentacji JSDoc, a mianowicie tagi <a href="https://jsdoc.app/tags-typedef" target="_blank" rel="noopener noreferrer">@</a><a href="https://jsdoc.app/tags-typedef" target="_blank" rel="noopener noreferrer"><em>typedef</em></a><em>. </em>Dzięki nim,<em> </em>na poziomie JavaScriptu możemy opisywać bardziej znaczące definicje typów (np. zwracanych) niż ogólny <em>Object</em>:</p><p><strong>src/parser/HTMLParser.js</strong></p><pre><code>/**
+ * AST Returned by HTMLParser
+ * @typedef {Object} AST
+ * @property {string} id - Some identifier
+ * @property {number} quantity - Some quantity
+ */
+
+class HTMLParser {
+  /**
+   * Creates AST from html string
+   * @param {string} html - Input string
+   * @returns {AST} Final AST
+   */
+  parse(html) {
+    const tokenStream = new TokenStream(html);
+    const nodeParser = new NodeParser(tokenStream);
+    return nodeParser.parseNode();
+  }
+}
+
+export default HTMLParser;</code></pre><p>Jak możesz zauważyć, praca z <em>@typedef</em> wygląda podobnie do typów w TypeScript - najpierw musimy opisać szczegóły nowego typu, a następnie możemy go zastosować w wybranym miejscu (np. jako typ zwracany) na funkcji <em>parse</em>.</p><p>W efekcie, po stronie TS otrzymamy znacznie lepsze podpowiadanie składni i możliwość weryfikacji typów złożonych:</p><img loading="lazy" src="https://assets-v2.circle.so/o9tofabz2vpsrazq4t38njkbqla7" style="width: 100%; max-width: 100%;"><p>Co najważniejsze, zmiana polegająca na dodawaniu komentarzy JSDoc nie będzie inwazyjna z punktu widzenia innych konsumentów modułu <em>parser</em>, które nadal będą mogłby współpracować z kodem JavaScript bez potrzeby migracji na TypeScript.</p><h3>Zabezpieczanie plików JS w obrębie kodu JS</h3><p>Wprowadzone komentarze pozwoliły nam zwiększyć bezpieczeństwo typów na granicy JavaScriptu i TypeScriptu. Niestety, na poziomie samej biblioteki JavaScript wciąż mogą znajdować się błędy, które przez brak integracji z TSem pozostają niewykryte.</p><p>Przykładowo, niech TokenStream określa poprzez JSDoc, że w jego konstruktorze zawsze powinien być przekazywany typ string:</p><p><strong>src/parser/TokenStream.js</strong></p><pre><code>class TokenStream {
+  /**
+   * Creates a token stream from a string
+   * @param {string} input - Input string
+   */
+  constructor(input) {
+    this.input = input;
+    this.pos = 0;
+  }</code></pre><p>Przez pomyłkę, w innym pliku JavaScript ktoś próbuje go wywoływać z typem <em>number</em> i zastanawia się, czemu cały kod nie działa:</p><p><strong>src/parser/HTMLParser.js</strong></p><pre><code>const tokenStream = new TokenStream(10);</code></pre><p>Co gorsza, tak zbudowany kod możemy teraz zbudować, a TypeScript - dopóki go o to nie poprosimy - nie wskaże tego błędu. Można to jednak zmienić.</p><p>Tworzona przez nas integracja z TypeScriptem sprawia, że kompilator może się zaopiekować nie tylko kodem TypeScript, ale również importowanymi zależnościami JavaScript.</p><p>Służy do tego flaga - <em>checkJS</em>:</p><pre><code>"compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    // ...
+}</code></pre><p>To ustawienie sprawia, że kompilator TypeScript zacznie weryfikować typy nie tylko na granicy JS/TS, ale również <strong>w obrębie całego drzewa zależności JavaScript</strong>. Kiedy spróbujemy skompilować taki kod, otrzymamy błąd kompilacji:</p><pre><code>src/parser/HTMLParser.js:11:41 - error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+
+11     const tokenStream = new TokenStream(10);</code></pre><p>To rozwiązanie to prawdziwy game-changer. Dzięki niemu kompilator TypeScript może wprowadzić do projektu nowy poziom bezpieczeństwa bez wymuszania radykalnych zmian w strukturze projektu. Nasza biblioteka <em>parser</em> wciąż w 100% tworzona jest w czystym JSie, ale od teraz mamy nad nią nowego opiekuna w postaci kompilatora <em>tsc.</em></p><h3>Kiedy błędów jest zbyt dużo</h3><p>Może się zdarzyć, że na skutek włączenia “opieki” tsc nad kodem JavaScript, odkrytych błędów będzie na tyle dużo, że w projekcie nastąpi paraliż. Aby tym zarządzić, mamy kilka opcji.</p><p><strong>👉 Wybór plików do weryfikacji - @ts-check</strong></p><p>Zamiast włączania flagi “checkJs” w obrębie całego projektu, możemy precyzyjnie wybierać&nbsp;te pliki, które powinny być weryfikowane. Służy do tego komentarz @ts-check dodawany na początku pliku JavaScript. Po jego dodaniu, TypeScript będzie oceniał&nbsp;dany moduł pod kątem zgodności typów.</p><p><strong>src/parser/HTMLParser.js:</strong></p><pre><code>// @ts-check
+class HTMLParser {
+...</code></pre><p><strong>👉 Ignorowanie weryfikacji plików -  @ts-nocheck</strong></p><p>Jeśli natomiast flaga <em>checkJs</em> powinna pozostać włączona, a wybrany plik jest szczególnie problematyczny, możemy go wyłączyć z procesu weryfikacji przez komentarz @ts-nocheck.</p><p><strong>src/parser/HTMLParser.js:</strong></p><pre><code>// @ts-nocheck
+class HTMLParser {
+...</code></pre><p>Czas życia takiego komentarza powinien być stosunkowo krótki - możemy nim np. odblokować development w obrębie projektu, równolegle pracując nad jego usunięciem na osobnym branchu.</p><p><strong>👉 Lokalne wyłączanie kontroli typów -  @ts-ignore</strong></p><p>Komentarz @ts-ignore pozwala wyłączyć sprawdzanie typów na poziomie jednej linijki. To bardzo radykalne podejście, które spełnia swoje założenia, ale nie polegamy się do niego przyzwyczajać:</p><pre><code>// @ts-ignore
+const tokenStream = new TokenStream(10);</code></pre><p><strong>👉 Tymczasowe oczekiwanie na błąd -  @ts-expect-error</strong></p><p>Polecaną alternatywą do <em>@ts-ignore</em> jest komentarz <em>@ts-expect-error, </em>którego działanie można zdecydowanie łatwiej odwrócić (a przynajmniej - nie zapomnieć o jego stosowaniu). Jak to działa? </p><p>Działanie tego komentarza można sprowadzić do następującego rozumowania:</p><ol start="1"><li><p>Wiem, że psuję wymagania względem typów</p></li><li><p>Pomimo tego gwarantuję, że ten kod zadziała</p></li><li><p>W momencie, kiedy “po drugiej stronie” typy będą naprawione, daj mi znać</p></li></ol><p>To właśnie @ts-expect-error - pozwala nam unikać błędów kompilacji tylko do czasu, kiedy te błędy faktycznie występują.</p><pre><code>// @ts-expect-error
+const tokenStream = new TokenStream(10);</code></pre><p>Kiedy po czasie okazałoby się, że TokenStream akceptuje wartości typu <em>number</em>, w tym samym miejscu otrzymamy powiadomienie, że błąd już nie występuje a nasz komentarz można usunąć:</p><pre><code>// TokenStream przyjmuje teraz typ "string | number"
+class TokenStream {
+  /**
+   * Creates a token stream from a string
+   * @param {string|number} input - Input string
+   */
+  constructor(input) {
+
+// ---------- Po stronie konsumenta:
+
+// @ts-expect-error
+const tokenStream = new TokenStream(10); // ❌ Błąd - Unused '@ts-expect-error' directive.</code></pre><p>Jeśli korzystamy z eslinta, reguły związane z powyższymi komentarzami możemy kontrolować przy pomocy dyrektywy ban-ts-comment - wbrew nazwie, nie ogranicza się ona wyłącznie do zablokowania ich stosowania (<a href="https://typescript-eslint.io/rules/ban-ts-comment" target="_blank" rel="noopener noreferrer">https://typescript-eslint.io/rules/ban-ts-comment</a>).</p><p><strong>👉 Sterowanie ustawieniami kompilatora</strong></p><p>Jeśli lokalne oznaczenia i komentarze są zbyt uciążliwe, a określony rodzaj problemu powtarza się w zbyt wielu miejscach, możesz rozważyć poluzowanie reguł kompilacji. Przede wszystkim dotyczy to ustawienia “strict”, które omawialiśmy w pierwszej lekcji tego kursu.</p><p>W momencie tworzenia tej lekcji, ustawienie “strict” odpowiada za 7 różnych aspektów systemu typów:</p><ul><li><p><a href="https://www.typescriptlang.org/tsconfig/#strictNullChecks" target="_blank" rel="noopener noreferrer">strictNullChecks</a></p></li><li><p><a href="https://www.typescriptlang.org/tsconfig/#strictBindCallApply" target="_blank" rel="noopener noreferrer">strictBindCallApply</a></p></li><li><p><a href="https://www.typescriptlang.org/tsconfig/#strictFunctionTypes" target="_blank" rel="noopener noreferrer">strictFunctionTypes</a></p></li><li><p><a href="https://www.typescriptlang.org/tsconfig/#strictPropertyInitialization" target="_blank" rel="noopener noreferrer">strictPropertyInitialization</a></p></li><li><p><a href="https://www.typescriptlang.org/tsconfig/#noImplicitAny" target="_blank" rel="noopener noreferrer">noImplicitAny</a></p></li><li><p><a href="https://www.typescriptlang.org/tsconfig/#noImplicitThis" target="_blank" rel="noopener noreferrer">noImplicitThis</a></p></li><li><p><a href="https://www.typescriptlang.org/tsconfig/#useUnknownInCatchVariables" target="_blank" rel="noopener noreferrer">useUnknownInCatchVariable</a></p></li></ul><p>W nowych projektach zdecydowanie łatwiej trzymać się wszystkich wspomnianych tutaj reguł. Jeśli natomiast weryfikację typów włączamy na setkach albo tysiącach plików w kodzie legacy, rygorystyczne zasady mogą zablokować development.</p><p>TypeScript zezwala nam na to, żeby zamiast jednej flagi <em>“strict”: “true”</em>, w naszym <em>tsconfig</em> pozostawić podzbiór reguł z powyższej listy, a część jawnie wyłączyć. Czasami może to być niezbędne aby proces migracji do TypeScriptu posuwał się do przodu (np. dedykowany programista), bez zablokowania reszty projektu błędami, na które wcześniej zespół przymykał oko bo były bardziej stylistyczne, a nie funkcjonalne.</p><p>W tym samym momencie powinniśmy sobie postawić za cel (np. czasowy) przywrócenie pełnego trybu zgodności, np. na koniec kwartału. Tutaj liczy się odpowiedzialność i dojrzałość zespołu - jeśli twoje środowisko spełnia te warunki, warto przetestować strategię luzowania reguł.</p><h2>Brakujące deklaracje</h2><p>Opisywane do tej pory narzędzia do integracji JS i TS zakładały, że do pewnego stopnia możemy wpływać na zawartość modułów JavaScript. W praktyce, w przypadku zewnętrznych bibliotek lub zależności, jest to po prostu niemożliwe. Tutaj łatwo o problemy:</p><ul><li><p>1) Włączamy <em>allowJs </em>aby korzystać z istniejących modułów JavaScript</p></li><li><p>2) Reszta projektu TypeScript działa w oparciu o tryb <em>strict</em></p></li><li><p>3) Funkcje i zawartość modułów JS jest nieznana i określana jako <em>any</em>, co generuje konflikt z ustawieniem <em>noImplicitAny (tryb strict)</em></p></li></ul><p>Wyobraźmy sobie, że w naszym projekcie korzystamy z biblioteki legacy-utils.js, która eksportuje funkcje obliczeniowe:</p><pre><code>// legacy-utils.js
+exports.calculateTax = function (amount, rate) {
+  return amount * rate;
+};
+
+exports.isPrime = function (number) {
+  if (number &lt; 2) return false;
+  for (let i = 2; i &lt; Math.sqrt(number); i++) {
+    if (number % i === 0) return false;
+  }
+  return true;
+};</code></pre><p>Importując tę bibliotekę w projekcie TypeScript, możemy napotkać problem:</p><pre><code>import { calculateTax, isPrime } from 'legacy-utils';
+
+const tax = calculateTax(100, 0.2); // Could not find a declaration file for module 'legacy-utils'.js. Module implicitly has an 'any' type</code></pre><p>TypeScript nie wie, jakiego rodzaju dane calculateTax i isPrime przyjmują, ani co zwracają. Bez deklaracji typów kompilator nie pozwoli na użycie tych funkcji, ponieważ niezgodność z zasadą noImplicitAny uniemożliwia bezpieczną integrację.</p><h3>Rozwiązanie: użycie słowa kluczowego declare</h3><p>Słowo kluczowe declare pozwala na zdefiniowanie typów dla kodu, który jest zewnętrzny i nieznany TypeScriptowi. Nie wymaga ono modyfikacji oryginalnego kodu, co czyni je idealnym rozwiązaniem w przypadku zewnętrznych bibliotek lub modułów JS. Możemy utworzyć dedykowany plik deklaracyjny <em>legacy-utils.d.ts</em>, który opisze funkcje eksportowane przez bibliotekę:</p><pre><code>// legacy-utils.d.ts
+declare module 'legacy-utils' {
+  export function calculateTax(amount: number, rate: number): number;
+  export function isPrime(number: number): boolean;
+}</code></pre><p>Warto zwrócić uwagę, że plik deklaracyjny nie dodaje żadnej funkcjonalności do modułu – jego jedyną rolą jest poinformowanie TypeScriptu, jakie typy są obsługiwane przez funkcje.</p><p>Jeżeli spróbujemy dodać implementację do pliku d.ts, kompilator zgłosi błąd.</p><h3>Mechanika declare</h3><p>Słowo kluczowe declare informuje TypeScript, że deklarowany element istnieje w kodzie w czasie działania aplikacji (runtime), ale szczegóły jego implementacji są pomijane. Deklaracja jest „obietnicą” wobec TypeScriptu, że taki element rzeczywiście istnieje, i opisuje jego typy. Ważne jest zrozumienie, że TypeScript <strong>nie weryfikuje</strong>, czy deklaracje są zgodne z rzeczywistą implementacją. Jeśli na przykład w deklaracji podamy błędne typy:</p><pre><code>// legacy-utils.js
+exports.calculateTax = function (amount, rate) {
+  return amount * rate;
+};
+
+// legacy-utils.d.ts
+declare module './legacy-utils' {
+  export function calculateTax(amount: string, rate: string): string; // Błędne typy
+}</code></pre><p>TypeScript nie zgłosi błędu przy kompilacji, ale nasz kod może zakończyć się błędem w czasie działania aplikacji, ponieważ calculateTax rzeczywiście oczekuje liczb, a nie ciągów znaków. Stąd warto wzbogacać pliki JS o JSDoc, które zapewnia nam informacje o typach.</p><p><strong>Automatyczne generowanie plików deklaracyjnych</strong></p><p>Zamiast manualnie tworzyć pliki d.ts warto skorzystać z narzędzi automatyzujących to zadanie. Dla pojedynczych modułów JS wewnątrz naszego projektu wystarczy skorzystać z tsc:</p><pre><code>npx -p typescript tsc src/*.js --declaration --allowJs --emitDeclarationOnly --outDir @types</code></pre><p>Dla zewnętrznych bibliotek warto skorzystać z narzędzia <a href="https://www.npmjs.com/package/dts-gen" target="_blank" rel="noopener noreferrer">dts-gen</a>. </p><p>Niestety musimy liczyć się z tym, że automatyczne generowanie plików deklaracyjnych z modułów pozbawionych JSDoc prowadzi do dużej ilości “any”, które będziemy musieli ręcznie zastąpić.</p><h3>Rozszerzanie istniejących modułów</h3><p>Słowo kluczowe declare jest również używane, gdy chcemy rozszerzyć lub zmodyfikować typy istniejących modułów. Załóżmy, że korzystamy z biblioteki <em>express</em>, która udostępnia interfejs <em>Request</em>, ale potrzebujemy dodać do niego dodatkowe pole <em>user (</em>obiekt dodawany przez jeden z napisanych przez nas middleware’ów do autoryzacji<em>)</em>. Możemy to zrobić, tworząc plik express-augment.d.ts:</p><pre><code>// @types/express-augment.d.ts
+import 'express';
+
+declare module 'express' {
+  export interface Request {
+    user?: { id: string; role: string };
+  }
+}</code></pre><p>Teraz pole user jest dostępne w całym projekcie jako część interfejsu Request, bez potrzeby modyfikowania oryginalnych plików biblioteki. </p><p>Tworząc pliki deklaracyjne, warto pamiętać o kilku zasadach:</p><ul><li><p>Deklaracje powinny być minimalne, tj. zawierać tylko te funkcje i obiekty, które są używane w projekcie. Nie ma potrzeby deklarowania całej biblioteki, jeśli korzystamy tylko z jednej funkcji.</p></li><li><p>Typy powinny być tak dokładne, jak to możliwe, aby uniknąć problemów z bezpieczeństwem typów. W razie wątpliwości warto używać ogólnych typów, takich jak unknown czy Record&lt;string, any&gt;, zamiast any.</p></li><li><p>Dobrą praktyką jest trzymanie plików deklaracyjnych w dedykowanym katalogu, np. <em>@types</em>, co ułatwia ich organizację i utrzymanie.</p></li></ul><h2>Automatyzacja</h2><p>Jeśli w nadchodzącym projekcie twoim zadaniem będzie migrowanie kodu JavaScript na TypeScript, spróbuj rozpocząć od narzędzia, które wstępny szkic migracji przygotuje za ciebie. Takie rozwiązanie przygotowała jakiś&nbsp;czas temu firma AirBnB. Jak sama przyznaje - efekty nie są idealne i często opierają się o komentarze ignorujące błędy, ale może być to łatwiejszy start, dzięki któremu nabierzesz rozpędu.</p><p>TS-migrate znajdziesz na GitHubie: <a href="https://github.com/airbnb/ts-migrate" target="_blank" rel="noopener noreferrer">https://github.com/airbnb/ts-migrate</a></p><h2>Dobre praktyki migracji</h2><p>Jak każda zmiana w obrębie projektu, migracja kodu JavaScript na TypeScript wiąże się z wyzwaniami wychodzącymi poza aspekty techniczne. Na koniec tej lekcji dzielimy się kilkoma poradami, które zwiększą twoje szanse na sukces:</p><ul><li><p>Inicjatywy związane z migracją całego projektu w jednym podejściu to duże ryzyko. Zamiast tego określ taką taktykę migracji, która umożliwi zmianę plików JS→TS na żądanie, bez wymuszania zmian w modułach, które nie są na to gotowe.</p></li><li><p>Konfiguracja kompilatora TypeScript powinna być na tyle elastyczna, żeby brać pod uwagę nie tylko dobre praktyki nowego kodu, ale również akceptować pewne wady kodu istniejącego. Pamiętaj, że ostatecznym celem jest ukończenie migracji, a nie zwiększenie frustracji na działanie TypeScriptu.</p></li><li><p>W zależności od dojrzałości zespołu i stanu samego projektu, tryb <em>strict</em> może być ustawiony bardziej lub mniej precyzyjnie. Niektórzy radzą wymuszanie pełnej zgodności od pierwszego migrowanego pliku, inni decydują się na więcej swobody aż do końca procesu. Od ciebie będą zależeć priorytety, a wynikają one ze środowiska, w którym pracujesz.</p></li><li><p>Refaktoryzacja może działać w dwóch kierunkach - do istniejącej aplikacji JavaScript możemy chcieć dołączać moduły TypeScript, albo odwrotnie, budować aplikacje TypeScript w oparciu o istniejące moduły JavaScript. Każdy z przypadków będzie wiązał się z nieco inną konfiguracją kompilacji, więc warto przeanalizować konsekwencje obu strategii.</p></li><li><p>Dla osób, które wcześniej nie pracowały z TypeScriptem, wprowadzanie rygorystycznych reguł kompilacji może kojarzyć się z ograniczeniami i odbieraniem swobody programowania. Zadbaj o to, aby zespół odpowiednio przygotować - pokazać narzędzia, dobre praktyki i przede wszystkim korzyści, które TypeScript może wnieść do projektu. Zdecydowanie ważniejsze od aspektów technicznych będzie takie przygotowanie zespołu, żeby wszyscy “brali udział w migracji”, a nie narzekali na zaskakujące pomysły jednego inżyniera.</p></li></ul><p>Rekomendujemy także zapoznanie się z poradami od Addy’ego Osmani, znanego inżyniera Google, który jako lider zespołów musiał uczyć się przeprowadzania skutecznych migracji (wpis pod ilustracją):</p><img loading="lazy" src="https://assets-v2.circle.so/6j1zdm3lsj2pooybcg8gjcte1ovq" style="width: 100%; max-width: 100%;"><p>Źródło: <a href="https://addyosmani.com/blog/managing-complex-change/" target="_blank" rel="noopener noreferrer">https://addyosmani.com/blog/managing-complex-change/</a></p><h2>Podsumowanie</h2><p>Integracja JavaScript z TypeScript, podobnie jak migracja w kierunku TSa, wymaga początkowego nakładu pracy — dostosowania projektu, skonfigurowania narzędzi i zrozumienia różnic między tymi językami. Naszym zdaniem cały wysiłek jest zdecydowanie opłacalny. TypeScript wnosi do projektu większą przejrzystość kodu, bezpieczeństwo typowania i skalowalność budowanych rozwiązań, co jest szczególnie widoczne w większych projektach i zespołach.</p><p>Przeprowadzając zespół przez proces migracji pamiętaj, że cała inicjatywa dotyczy aspektów technicznych ale i czysto ludzkich. Zarządzanie zmianą powinno dotyczyć zbudowania odpowiednich kompetencji, podzielenia się wiedzą, korzyściami i sposobami na problemy, które mogą się pojawić już po starcie. Pomimo tego jest to inicjatywa warta swoich kosztów, a my przez cały ten kurs staraliśmy się to udowodnić.</p><p>Jeśli w swoim portfolio posiadasz tego typu inicjatywy, to koniecznie podziel się feedbackiem w komentarzu do lekcji - chętnie rozbudujemy jej zawartość o nowe porady, które zadziałały w twoim projekcie.</p><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>731-js-to-ts</strong> - Rozwijasz nowoczesną aplikację TypeScript, którą należy zintegrować z przestarzałym backendem sklepu e-commerce. W module <em>product-catalog.js </em>znajdziesz funkcję zwracającą dostępne produkty z JSONa, który został udostępniony w trybie tylko do odczytu. Twoim zadaniem jest umożliwienie integracji kodu z obu systemów w taki sposób, aby zarówno sam katalog, jak i typy z kodu JavaScript były widoczne po stronie nowoczesnej aplikacji. </p></li></ol><h2>Kolejny krok</h2><p>Gratulujemy! To już ostatnia lekcja modułu “Core Pro” który skupiał się na zaawansowanych aspektach pracy z językiem TypeScript. Druga część naszego programu czeka na ciebie w sekcji <a class="entity" href="https://przeprogramowani.circle.so/c/o-ts-react-pro" target="_blank" rel="noopener noreferrer">#O:TS React Pro</a> <br><br>PS. Poniżej umieszczamy krótką ankietę, gdzie możesz podzielić się przemyśleniami na temat modułu Core Pro. Wspieraj szkolenia Przeprogramowanych dzieląc się feedbackiem, który podniesie ich jakość i pozwoli nam dostarczać najbardziej użyteczne aktualizacje - dziękujemy!</p><div class="embed"><div style="left: 0; width: 100%; height: 600px; position: relative;"><iframe src="https://tally.so/embed/mZG05o?hideTitle=1&amp;alignLeft=1" width="360" height="600" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen=""></iframe></div></div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

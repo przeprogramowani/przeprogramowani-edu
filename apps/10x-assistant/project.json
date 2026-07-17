@@ -1,0 +1,19 @@
+{
+  "name": "10x-assistant",
+  "targets": {
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "wrangler pages deploy dist --project-name 10x-assistant",
+        "cwd": "apps/10x-assistant"
+      }
+    },
+    "deploy:preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "wrangler pages deploy dist --project-name 10x-assistant --branch {args.branch}",
+        "cwd": "apps/10x-assistant"
+      }
+    }
+  }
+}

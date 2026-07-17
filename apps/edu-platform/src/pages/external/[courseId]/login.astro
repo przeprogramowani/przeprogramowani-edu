@@ -1,0 +1,128 @@
+---
+import logo from '@/images/generic/logo-white.png';
+import Layout from '@/layouts/BaseLayout.astro';
+import ExternalLogin from '@/components/ExternalLogin.svelte';
+import { getExternalAuthConfig, getCourseDisplayName } from '@/server/circle/externalAuthConfig';
+import { resolveExternalAuthLanguage, resolveExternalAuthReturnUrl } from '@/server/urlValidation';
+
+const { courseId } = Astro.params;
+
+if (!courseId) {
+  return Astro.redirect('/external/not-found');
+}
+
+// Validate courseId exists in config
+const config = getExternalAuthConfig(courseId);
+if (!config) {
+  return Astro.redirect('/external/not-found');
+}
+
+const courseName = getCourseDisplayName(courseId);
+const env = Astro.locals.runtime.env;
+const langHint = Astro.url.searchParams.get('lang');
+const returnUrl = resolveExternalAuthReturnUrl(
+  Astro.url.searchParams.get('returnUrl'),
+  courseId,
+  env.SITE_URL,
+  langHint
+);
+const lang = resolveExternalAuthLanguage(returnUrl, langHint);
+
+const CF_SITE_KEY = env.CF_CAPTCHA_SITE_KEY || '1x00000000000000000000AA';
+
+const copy = {
+  pl: {
+    heading: 'Zaloguj się',
+    intro: 'Wpisz adres email powiązany z Twoim kontem Circle',
+    unknownError: 'Wystąpił nieznany błąd.',
+    errors: {
+      NOT_MEMBER: 'Nie jesteś członkiem tej społeczności w Circle. Sprawdź, czy używasz właściwego adresu email.',
+      NO_ACCESS: 'Nie masz aktywnego dostępu do tego kursu dla tego adresu email. Sprawdź, czy używasz właściwego adresu.',
+      MISSING_TOKEN: 'Token wygasł lub nie istnieje. Zaloguj się ponownie.',
+      EMAIL_FAILED: 'Nie udało się wysłać wiadomości email. Spróbuj ponownie.',
+      RATE_LIMITED: 'Zbyt wiele prób. Spróbuj ponownie za chwilę.',
+      INVALID_EMAIL: 'Nieprawidłowy adres email.',
+      INVALID_COURSE: 'Nieprawidłowy identyfikator kursu.',
+      ACCESS_REVOKED: 'Twój dostęp został cofnięty. Skontaktuj się z pomocą techniczną.',
+      AUTH_ERROR: 'Wystąpił błąd serwera. Spróbuj ponownie później.',
+      INVALID_CAPTCHA: 'Weryfikacja captcha nie powiodła się. Spróbuj ponownie.',
+      MISSING_TOKEN_CONFIG: 'Konfiguracja uwierzytelniania nie jest dostępna dla tego kursu.',
+    },
+    successes: {
+      EMAIL_SENT: 'Na Twój adres email wysłaliśmy link do logowania. Sprawdź swoją skrzynkę.',
+    },
+  },
+  en: {
+    heading: 'Sign in',
+    intro: 'Enter the email address connected to your Circle account',
+    unknownError: 'An unknown error occurred.',
+    errors: {
+      NOT_MEMBER: 'You are not a member of this Circle community. Check that you are using the right email address.',
+      NO_ACCESS: 'You do not have active access to this course for this email address. Check that you are using the right address.',
+      MISSING_TOKEN: 'The token has expired or does not exist. Sign in again.',
+      EMAIL_FAILED: 'We could not send the email. Try again.',
+      RATE_LIMITED: 'Too many attempts. Try again in a moment.',
+      INVALID_EMAIL: 'Invalid email address.',
+      INVALID_COURSE: 'Invalid course identifier.',
+      ACCESS_REVOKED: 'Your access has been revoked. Contact support.',
+      AUTH_ERROR: 'A server error occurred. Try again later.',
+      INVALID_CAPTCHA: 'Captcha verification failed. Try again.',
+      MISSING_TOKEN_CONFIG: 'Authentication is not configured for this course.',
+    },
+    successes: {
+      EMAIL_SENT: 'We sent a sign-in link to your email address. Check your inbox.',
+    },
+  },
+};
+
+const currentCopy = copy[lang];
+
+const error = Astro.url.searchParams.get('error');
+const success = Astro.url.searchParams.get('success');
+const errorMessage = error ? currentCopy.errors[error as keyof typeof currentCopy.errors] || currentCopy.unknownError : null;
+const successMessage = success ? currentCopy.successes[success as keyof typeof currentCopy.successes] || '' : null;
+
+// Check if already logged in with external token for this course
+const cookieName = `external_token_${courseId}`;
+const externalToken = Astro.cookies.get(cookieName)?.value;
+if (externalToken) {
+  // User has a token - let them proceed (verify page will check validity)
+  return Astro.redirect(returnUrl);
+}
+---
+
+<Layout>
+  <div class="min-h-screen flex flex-col items-center justify-center bg-gray-900">
+    <img src={logo.src} alt="Logo" class="w-64 mx-auto mb-4 pb-4" />
+    <div class="max-w-md w-full space-y-8 p-8 bg-gray-800 rounded-lg">
+      <div class="text-center">
+        <h2 class="text-2xl font-main text-white">{currentCopy.heading}</h2>
+        <p class="mt-2 text-lg font-medium text-indigo-400">{courseName}</p>
+        <p class="mt-2 text-sm text-gray-400">
+          {currentCopy.intro}
+        </p>
+      </div>
+
+      {errorMessage && (
+        <div class="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded text-sm">
+          {errorMessage}
+        </div>
+      )}
+
+      {successMessage && (
+        <div class="bg-green-900/50 border border-green-700 text-green-300 px-4 py-3 rounded text-sm">
+          {successMessage}
+        </div>
+      )}
+
+      <ExternalLogin
+        client:only="svelte"
+        cfSiteKey={CF_SITE_KEY}
+        courseId={courseId}
+        returnUrl={returnUrl}
+        lang={lang}
+      />
+    </div>
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback"></script>
+  </div>
+</Layout>

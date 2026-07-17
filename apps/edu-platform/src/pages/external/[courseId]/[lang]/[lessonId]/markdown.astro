@@ -1,0 +1,56 @@
+---
+import { buildAttachmentContentDisposition } from '@/utils/contentDisposition';
+import { slugify } from '@/utils/slugify';
+import { verifyExternalAuth } from '@/server/externalAuth';
+import {
+  getPreworkLesson,
+  isPreworkLanguage,
+  PREWORK_COURSE_ID,
+} from '@/server/content/preworkContent';
+import {
+  getMainCourseLesson,
+  isMainCourseLanguage,
+  MAIN_COURSE_ID,
+} from '@/server/content/mainCourseContent';
+import { buildLocalizedPreworkMarkdownExport } from '@/server/content/preworkMarkdownExport';
+import { buildExternalCourseLoginUrl } from '@/server/urlValidation';
+
+const { courseId, lang, lessonId } = Astro.params;
+const env = Astro.locals.runtime.env;
+
+const isPrework = courseId === PREWORK_COURSE_ID && isPreworkLanguage(lang);
+const isMainCourse = courseId === MAIN_COURSE_ID && isMainCourseLanguage(lang);
+
+if ((!isPrework && !isMainCourse) || !lessonId) {
+  return new Response(null, { status: 404 });
+}
+
+const authResult = await verifyExternalAuth(Astro.cookies, courseId, env);
+if (!authResult.isAuthenticated) {
+  return Astro.redirect(buildExternalCourseLoginUrl(courseId, Astro.url.pathname));
+}
+
+const lesson = isPrework
+  ? await getPreworkLesson(lang, lessonId)
+  : await getMainCourseLesson(lang, lessonId);
+
+if (!lesson) {
+  return new Response(null, { status: 404 });
+}
+
+const url = new URL(Astro.request.url);
+const filename = url.searchParams.get('filename') || slugify(lesson.data.name);
+const markdownContent = buildLocalizedPreworkMarkdownExport({
+  title: lesson.data.name,
+  courseId,
+  language: lang,
+  htmlContent: lesson.data.content,
+});
+
+return new Response(markdownContent, {
+  headers: {
+    'Content-Type': 'text/markdown; charset=utf-8',
+    'Content-Disposition': buildAttachmentContentDisposition(filename),
+  },
+});
+---

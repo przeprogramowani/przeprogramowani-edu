@@ -1,0 +1,17 @@
+---
+interface Props {
+  content: string;
+  lessonName: string;
+}
+
+const {content, lessonName}: Props = Astro.props;
+---
+
+<div class='lesson-surface rounded-xl shadow max-w-7xl mx-auto'>
+  <div class='lesson-content lesson-prose prose prose-invert mx-auto max-w-[800px] space-y-8 py-6 md:py-8'>
+    <h1 class='text-4xl font-bold'>{lessonName}</h1>
+    <slot name="topControls" />
+    <div set:html={content} />
+    <slot name="bottomControls" />
+  </div>
+</div>

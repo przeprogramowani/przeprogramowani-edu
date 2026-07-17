@@ -1,0 +1,7 @@
+interface:
+  display_name: "Video Scenario"
+  short_description: "Plan a recording-ready lesson video scenario"
+  default_prompt: "Use $video-scenario to build the recording scenario for lesson <lessonId>."
+
+policy:
+  allow_implicit_invocation: true

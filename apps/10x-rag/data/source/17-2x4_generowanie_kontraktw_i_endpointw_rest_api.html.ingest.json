@@ -1,0 +1,304 @@
+{
+  "lessonId": "[2x4] Generowanie kontraktów i endpointów Rest API ",
+  "file": "17-2x4_generowanie_kontraktw_i_endpointw_rest_api.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 1,
+      "order": 1
+    },
+    {
+      "slug": "inicjalizacja-supabase-w-warstwie-api",
+      "title": "Inicjalizacja Supabase w warstwie API",
+      "blocks": 12,
+      "order": 2
+    },
+    {
+      "slug": "definiowanie-specyfikacji-api",
+      "title": "Definiowanie specyfikacji API",
+      "blocks": 3,
+      "order": 3
+    },
+    {
+      "slug": "generowanie-typow-na-podstawie-schematu-bazy-danych",
+      "title": "Generowanie typów na podstawie schematu bazy danych",
+      "blocks": 3,
+      "order": 4
+    },
+    {
+      "slug": "plan-implementacji-endpointa-post-generations",
+      "title": "Plan implementacji endpointa POST /generations",
+      "blocks": 2,
+      "order": 5
+    },
+    {
+      "slug": "poprawiamy-niespojne-nazewnictwo",
+      "title": "Poprawiamy niespójne nazewnictwo",
+      "blocks": 1,
+      "order": 6
+    },
+    {
+      "slug": "implementujemy-endpoint-generations",
+      "title": "Implementujemy endpoint /generations",
+      "blocks": 3,
+      "order": 7
+    },
+    {
+      "slug": "workflow-3x3",
+      "title": "Workflow 3x3",
+      "blocks": 7,
+      "order": 8
+    },
+    {
+      "slug": "szybkie-testy-endpointa-z-generowanym-curlem",
+      "title": "Szybkie testy endpointa z generowanym curlem",
+      "blocks": 2,
+      "order": 9
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 3,
+      "order": 10
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 22,
+      "order": 11
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:82dea6fe:43cc23fa",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:43cc23fa:0-1",
+      "tokenEstimate": 70,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:82dea6fe:24701484",
+      "tokenEstimate": 104,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:24701484:0-0",
+      "tokenEstimate": 104,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:82dea6fe:1e130fa5",
+      "tokenEstimate": 212,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:1e130fa5:0-5",
+      "tokenEstimate": 457,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:1e130fa5:5-6",
+      "tokenEstimate": 445,
+      "span": [
+        5,
+        6
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:1e130fa5:5-7",
+      "tokenEstimate": 480,
+      "span": [
+        5,
+        7
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:1e130fa5:6-11",
+      "tokenEstimate": 178,
+      "span": [
+        6,
+        11
+      ]
+    },
+    {
+      "id": "sec:82dea6fe:d5784110",
+      "tokenEstimate": 59,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:d5784110:0-2",
+      "tokenEstimate": 76,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:82dea6fe:fd51dad8",
+      "tokenEstimate": 104,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:fd51dad8:0-2",
+      "tokenEstimate": 104,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:82dea6fe:33422285",
+      "tokenEstimate": 90,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:33422285:0-1",
+      "tokenEstimate": 90,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:82dea6fe:efb8a170",
+      "tokenEstimate": 60,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:efb8a170:0-0",
+      "tokenEstimate": 60,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:82dea6fe:f330c1e3",
+      "tokenEstimate": 62,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:f330c1e3:0-2",
+      "tokenEstimate": 78,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:82dea6fe:773c77d2",
+      "tokenEstimate": 211,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:773c77d2:0-6",
+      "tokenEstimate": 353,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:82dea6fe:08e78750",
+      "tokenEstimate": 101,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:08e78750:0-1",
+      "tokenEstimate": 101,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:82dea6fe:33c7f0dd",
+      "tokenEstimate": 84,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:33c7f0dd:0-2",
+      "tokenEstimate": 299,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:82dea6fe:dcc8ec86",
+      "tokenEstimate": 200,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:dcc8ec86:0-13",
+      "tokenEstimate": 362,
+      "span": [
+        0,
+        13
+      ]
+    },
+    {
+      "id": "chk:82dea6fe:dcc8ec86:12-21",
+      "tokenEstimate": 268,
+      "span": [
+        12,
+        21
+      ]
+    }
+  ]
+}

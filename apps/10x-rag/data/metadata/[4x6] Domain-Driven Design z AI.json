@@ -1,0 +1,6 @@
+{
+  "lessonId": "[4x6] Domain-Driven Design z AI",
+  "displayName": "[4x6] Domain-Driven Design z AI",
+  "summary": "1) Jak przeprowadzić eksplorację domeny biznesowej z wykorzystaniem AI, aby wydobyć kluczowe pojęcia i wymagania?  \n2) Jak krok po kroku budować model dziedzinowy wspierany przez AI (elementy, relacje, granice kontekstów)?  \n3) W jaki sposób traktować AI jako „uśrednioną wiedzę z dostępnych źródeł treningowych” i jakie praktyczne konsekwencje ma to dla decyzji projektowych?  \n4) Jak stosować taktyczne wzorce DDD (entities, value objects, agregaty) w kontekście wsparcia AI?  \n5) Jak rozróżnić entity od value object i kiedy zamienić prymitywy na value objects?  \n6) Jak definiować agregaty i kryteria ich granic, aby zachować spójność modelu dziedzinowego?  \n7) Jak wprowadzać i utrzymywać język wszechobecny (ubiquitous language) oraz jakie „gotchas” naprawić lub zmienić w istniejącym kodzie?  \n8) Jak odkrywać reguły walidacji domenowej (przydatne walidacje) i inkorporować je jako value objects zamiast prostych prymitywów?",
+  "tokenEstimate": 154
+}

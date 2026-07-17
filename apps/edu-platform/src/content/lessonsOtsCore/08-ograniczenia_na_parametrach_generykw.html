@@ -1,0 +1,104 @@
+<meta name="lesson-id" content="Ograniczenia na parametrach generyków"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>W poprzedniej lekcji zaprezentowaliśmy ci jeden z potencjalnych scenariuszy na wykorzystanie generyków - była to funkcja służąca do łączenia dwóch obiektów:</p><pre><code>function mergeObjects&lt;T, U&gt;(obj1: T, obj2: U): T &amp; U {
+    return { ...obj1, ...obj2 };
+}</code></pre><p>Spostrzegawczy zauważą, że bezpieczne wykorzystanie tej funkcji zależy wyłącznie od dobrej woli programisty, bo na teraz można z niej skorzystać na wiele sposobów:</p><pre><code>mergeObjects({ name: 'john' }, { surname: 'doe' }); // { name: 'john', surname: 'doe' }
+mergeObjects('john', 'doe'); // { '0': 'd', '1': 'o', '2': 'e', '3': 'n' }
+mergeObjects(12, false); // {}</code></pre><p>Nie musimy chyba dodawać, że w założeniach chcieliśmy wspierać wyłącznie pierwszy przypadek?</p><p>Kompilator TypeScript nie blokuje naszych zamiarów, bo parametry generyczne są zdefiniowane na tyle szeroko, że do funkcji można przekazać dowolną wartość. Poszukajmy więc sposobu na to, aby funkcja była możliwa do wywołania wyłącznie z obiektami (a przy okazji poznajmy inne sposoby na bardziej precyzyjne definiowanie generyków).</p><h2>Ograniczenia parametrów</h2><p>Ograniczenie typu generycznego (<em>type constraint)</em> wprowadzimy przez słowo kluczowe <em>extends </em>dodawane do symbolu, który określa parametr funkcji generycznej:</p><pre><code>// Typ argumentu "str" powinien pasować do zbioru stringów
+function toUpper&lt;T extends string&gt;(str: T): string {
+  return str.toUpperCase();
+}
+
+// ✅ Poprawne wywołanie
+toUpper("hello");
+
+type States = "hot" | "cold" | "warm";
+const state: States = "hot";
+
+// ✅ Poprawne wywołanie - literał to nadal pochodna stringa
+toUpper(state);
+
+// ❌ Błąd - typ number nie ma związku ze stringami
+toUpper(123);
+// ^ - Argument of type 'number' is not assignable to parameter of type 'string'.ts(2345)</code></pre><p>W przypadku typów złożonych, na generykach możemy wymuszać rozszerzanie określonego interfejsu:</p><pre><code>interface HasNumericValue {
+  value: number;
+}
+
+function logValue&lt;T extends HasNumericValue&gt;(param: T) {
+  console.log(param.value);
+}
+
+// ✅ Poprawne wywołanie - argument implementuje interfejs HasNumericValue
+logValue({ value: 5 });
+
+// ❌ Błąd - argument nie implementuje interfejsu HasNumericValue
+logValue({ value: "hello" });</code></pre><p><strong>👉 Zwróć uwagę:</strong> Staraj się pisać swój kod w taki sposób, aby generyki nie stały się nadmiarowe. Dobra praktyka z dokumentacji TypeScriptu mówi o tym, że generyki maja&nbsp;sens wtedy, kiedy na poziomie deklaracji pojawiają się co najmniej dwa razy (np. jako argument i wartość zwracana). W powyższym przykładzie nie ma to zastosowania i okazuje się, że istnieje prostszy sposób na wymuszenie tego samego kształtu funkcji:</p><pre><code>interface HasNumericValue {
+  value: number;
+}
+
+function logParam(param: HasNumericValue) {
+  console.log(param.value);
+}
+
+logParam({ value: 5});</code></pre><h3>Relacje między parametrami</h3><p>Załóżmy, że chcemy zbudować funkcję, która z obiektu o określonym kształcie pobierze wartość pola o podanej nazwie. Wprowadźmy nowy interfejs <em>Person</em> i funkcję, do której można przekazać nazwę klucza:</p><pre><code>interface Person {
+  name: string;
+  age: number;
+  gender: "male" | "female";
+}
+
+function getProperty(obj: Person, key: string) {
+  return obj[key];
+      // ❌ - Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'Person'.
+}</code></pre><p>Jak widać, TypeScript tego nie akceptuje. Nazwa klucza o typie <em>string</em> jest zdefiniowana zbyt luźno, a konsument takiej funkcji mógłby wywołać ją z czymś, co nie istnieje w obiekcie typu Person.</p><p>Rozwiążmy ten problem wprowadzając nowy typ (<em>PersonKeys</em>) przechowujący pola obiektu <em>Person - </em>możemy je wypisać ręcznie, ale zdecydowanie lepsze będzie słowo kluczowe <em>keyof, </em>które zbuduje dla nas dynamicznie aktualizowaną unię pól, które istnieją w interfejsie Person:</p><pre><code>interface Person {
+  name: string;
+  age: number;
+  gender: "male" | "female";
+}
+
+type PersonKeys = keyof Person; // "name" | "age" | "gender"
+
+function getProperty(obj: Person, key: PersonKeys) {
+  // ✅ Sukces - gwarantujemy pobieranie znanych pól
+  return obj[key];
+}</code></pre><p>Dzięki temu już na etapie wywoływania funkcji dowiemy się, czy pobieramy właściwe dane:</p><pre><code>const p: Person = {name: "John", age: 30, gender: "male"};
+
+getProperty(p, "age"); // ✅ =&gt; 30
+getProperty(p, "id"); // ❌ Błąd - pole "id" nie istnieje w interfejsie Person</code></pre><p>Powyższy przykład można uogólnić wykorzystując typy generyczne, co pozwoli nam wykorzystać ten sam mechanizm w wielu innych obiektach i interfejsach.</p><p>Zamiast interfejsu <em>Person i </em>typu<em> PersonKeys </em>wprowadźmy parametry T i K. Ich relacja będzie taka sama jak wcześniej - typ K będzie zawierał nazwy pól z obiektu T, co wyrazimy poprzez <em>extends keyof T:</em></p><pre><code>function getProperty&lt;T, K extends keyof T&gt;(obj: T, key: K): T[K] {
+  return obj[key];
+}
+
+const x = { a: 1, b: 2, c: 3, d: 4 };
+
+getProperty(x, 'a'); // ✅ =&gt; 1
+getProperty(x, 'm'); // ❌ Błąd - pole "m" nie istnieje w zmiennej x</code></pre><h3>Generyki z konstruktorem</h3><p>W przypadku bardziej złożonej logiki biznesowej może się okazać, że potrzebujemy generycznej funkcji tworzącej instancje określonej klasy.</p><p>Przykładowo, utworzymy w kodzie centralną fabrykę obiektów, która poza utworzeniem instancji klasy zaloguje ten fakt na konsoli. Tutaj pojawia się pytanie - jak określić typ parametru <em>c</em>, aby przy jego pomocy tworzyć obiekty typu <em>T</em> i zablokować możliwość przekazywania typów prostych?</p><pre><code>function createInstance&lt;T&gt;(c: ???): T {
+  console.log('Creating instance of', c.name);
+  return new c();
+}</code></pre><p>W języku TypeScript mamy do wyboru dwie opcje:</p><pre><code>function createInstance&lt;T&gt;(c: new () =&gt; T): T {
+  console.log('Creating instance of', c.name);
+  return new c();
+}
+
+// lub
+
+function createInstance&lt;T&gt;(c: { new (): T }): T {
+  console.log('Creating instance of', c.name);
+  return new c();
+}</code></pre><p>W obu przypadkach <em>T</em> reprezentuje typ instancji, która zostanie utworzona przez konstruktor przekazany jako argument c. Typ T jest określany automatycznie na podstawie typu zwracanego przez konstruktor.</p><p>Obie wersje funkcji <em>createInstance</em> są równoważne pod względem funkcjonalności. Różnica polega na sposobie zapisu typu konstruktora:</p><ol start="1"><li><p><strong>new () =&gt; T</strong> to skrócona notacja dla funkcji konstruktora.</p></li><li><p><strong>{ new(): T }</strong> to pełna notacja obiektu z sygnaturą konstruktora.</p></li></ol><p>Wybór między tymi dwoma zapisami jest kwestią preferencji stylistycznych. Obie wersje pozwalają na to samo: przekazanie klasy jako argumentu i utworzenie jej instancji.</p><pre><code>class Person {
+  constructor() {}
+}
+
+interface Human {}
+
+const p1 = createInstance(Person); // ✅ const p1: Person
+const p2 = createInstance(Human); // ❌ - Nie można utworzyć instancji interfejsu</code></pre><h2>Funkcja łącząca obiekty</h2><p>Zobacz teraz, jak wykorzystać nową&nbsp;wiedzę do ulepszenia funkcji łączącej dwa obiekty:</p><pre><code>function mergeObjects&lt;T, U&gt;(obj1: T, obj2: U): T &amp; U {
+    return { ...obj1, ...obj2 };
+}</code></pre><p>Jakiego rodzaju typu potrzebujemy? Musi on spełniać następujące wymagania:</p><ul><li><p>Musi akceptować tylko obiekty (w domyśle - zabraniać typów prostych)</p></li><li><p>Nie może akceptować wartości null i undefined</p></li><li><p>Nie może akceptować tablic ani funkcji</p></li><li><p>Powinien działać z interfejsami i aliasami typów</p></li></ul><p>Sprawa nie jest tak oczywista, jak mogłoby się wydawać, ale na kolejnym filmie zobaczysz, jak te reguły wprowadzić:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1034468457?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>Zaktualizowana funkcja wraz z nowym typem znajduje się poniżej:</p><pre><code>function mergeObjects&lt;T, U&gt;(
+  obj1: MergeableObject&lt;T&gt;,
+  obj2: MergeableObject&lt;U&gt;
+): T &amp; U {
+  return {...obj1, ...obj2};
+}
+
+type MergeableObject&lt;T&gt; = T extends object
+  ? T extends any[] | Function
+    ? never
+    : T
+  : never;</code></pre><h2>Podsumowanie</h2><p>Mechanizm ograniczenia typów (<em>type constraints)</em> pozwala na pełniejsze wykorzystanie generyków, dając możliwość definiowania bardziej precyzyjnych, bezpiecznych i reużywalnych funkcji oraz struktur danych. Dzięki ograniczeniom typów, generyki mogą operować tylko na wybranych typach, co pozwala na eliminację błędów i zwiększa bezpieczeństwo kodu.</p><p>Warto jednak zachować umiar, ponieważ nadmiarowe stosowanie generyków może skutkować kodem trudnym do odczytania i utrzymania. Generyki mają sens głównie wtedy, gdy istnieje realna potrzeba stosowania dynamicznie określanych typów lub budowania powiązań pomiędzy nimi – w przeciwnym razie warto trzymać się konstrukcji, które będą łatwiejsze w utrzymaniu.</p><h2>Ćwiczenia</h2><ol start="1"><li><p><strong>321-generics-identity</strong> - Pracujesz nad nową wersją systemu do autoryzacji użytkowników. Nowa wersja zachowuje możliwość logowania się przez konta społecznościowe, ale ujednolica logikę wyszukiwania użytkowników ze wspólnej bazy. Spraw, aby nowopowstający <em>IdentityProcessor </em>mógł być wykorzystany do pobierania danych tak samo jak poprzednia wersja systemu.</p></li><li><p><strong>322-generics-messaging</strong> - Twój współpracownik zajmował się migracją systemu do zarządzania zamówieniami na język TypeScript. Niestety, z przyczyn prywatnych musiał przerwać pracę zostawiając kod pełen typów “any”, ze wstępnymi założeniami co do dalszego kierunku ale bez finalnej implementacji. Rozpocznij od analizy kodu i dostępnych testów, a następnie dokończ cały proces z wykorzystaniem typów generycznych.</p></li></ol><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

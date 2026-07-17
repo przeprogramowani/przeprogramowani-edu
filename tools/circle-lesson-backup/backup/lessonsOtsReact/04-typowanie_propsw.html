@@ -1,0 +1,44 @@
+<meta name="lesson-id" content="Typowanie propsów"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/008ph5u1mty69qlt8q38a9oeczcg" style="width: 100%; max-width: 100%;"><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 52.5822%;"><iframe src="https://player.vimeo.com/video/1035544811?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="189" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><p>W tej sekcji omówimy szczegóły i podejścia do typowania propsów w komponentach React z TypeScriptem, porównując dwa główne podejścia: bezpośrednie typowanie oraz wykorzystanie wbudowanego typu React.FC. Wyjaśnimy różnice między tymi podejściami, wskażemy ich zalety oraz naszą rekomendację: z czego korzystać.</p><p>Po ukończeniu tej sekcji będziesz w stanie:</p><ul><li><p>Typować propsy komponentów React z wykorzystaniem bezpośredniego typowania oraz React.FC</p></li><li><p>Wybrać odpowiednie podejście do typowania w zależności od specyfiki projektu</p></li></ul><h3>Typowanie propsów z React.FC</h3><p>React.FC (skrót od React.FunctionComponent) jest wbudowanym typem TypeScript dostępnym w bibliotece React, który pozwala na szybkie typowanie komponentów funkcyjnych. Dzięki React.FC, komponent automatycznie posiada typ ReactNode dla zwracanej wartości oraz obsługę domyślnej właściwości children.</p><pre><code>// Definicja typu propsów
+type ButtonProps = {
+  label: string;
+  onClick: () =&gt; void;
+};
+
+// Typowanie komponentu z React.FC
+const Button: React.FC&lt;ButtonProps&gt; = ({ label, onClick }) =&gt; (
+  &lt;button onClick={onClick}&gt;{label}&lt;/button&gt;
+);
+
+// Dodanie właściwości statycznych z automatycznym typowaniem
+Button.defaultProps = {
+  label: 'Click Me',
+};</code></pre><p><strong>Zalety React.FC:</strong></p><ol start="1"><li><p><strong>Podpowiedzi  dla statycznych właściwości komponentu</strong><br>Dzięki React.FC, TypeScript automatycznie rozpoznaje statyczne właściwości komponentów, takie jak <em>defaultProps</em> czy <em>displayName</em>. Jako że z tych właściwości korzysta się sporadycznie, nie jest to istotna zaleta.</p></li></ol><pre><code>// Bezpośrednie typowanie - brak autocompletiona
+const Button = (props: ButtonProps) =&gt; &lt;button {...props} /&gt;;
+
+Button.defaultProps = { // TypeScript nie podpowiada
+  variant: 'primary'
+};
+
+// React.FC - działający autocomplete
+const Button: React.FC&lt;ButtonProps&gt; = (props) =&gt; &lt;button {...props} /&gt;;
+
+Button.defaultProps = { // TypeScript podpowiada dostępne propsy
+  variant: 'primary'
+};</code></pre><ol start="2"><li><p><strong>Elastyczne typowanie zwracanych wartości</strong><br>Od <em>TypeScript 5.1/React 18</em>, React.FC poprawnie obsługuje zwracanie różnych wartości, takich jak undefined, string czy number, bez powodowania błędów typowania. Tak samo działa to dla bezpośredniego typowania, które omówimy zaraz.</p></li><li><p><strong>Brak wymuszonych children</strong><br>Przed <em>TypeScript 5.1/React 18, </em>React.FC również automatycznie dodawał children do typu propsów, co mogło prowadzić do błędów, jeśli komponent ich nie przyjmował. Teraz ta właściwość została usunięta, co pozwala na precyzyjniejsze typowanie komponentów bez obawy o niechciane <em>children</em>. Tak samo działa to dla bezpośredniego typowania.</p></li></ol><h3>Bezpośrednie typowanie propsów</h3><p>Bezpośrednie typowanie propsów pozwala na precyzyjne określenie struktury i typów wymaganych w komponencie React bez dodatkowego narzutu wynikającego ze stosowania React.FC. W tym podejściu definiujemy typy propsów, a następnie stosujemy je bezpośrednio w parametrze komponentu.</p><pre><code>// Definicja typu propsów
+type SelectProps = {
+  value: string;
+  onChange: (value: string) =&gt; void;
+};
+
+// Bezpośrednie typowanie propsów w komponencie
+const Select = ({ value, onChange }: SelectProps) =&gt; {
+  return &lt;input value={value} onChange={(e) =&gt; onChange(e.target.value)} /&gt;;
+};</code></pre><p><strong>Zalety bezpośredniego typowania propsów:</strong></p><ol start="1"><li><p><strong>Czytelność i prostota</strong><br>Bezpośrednie typowanie zapewnia intuicyjną i czytelną strukturę. Łatwo jest zrozumieć, jakie propsy przyjmuje komponent, bez dodatkowych obiektów lub właściwości domyślnie dodawanych przez React.FC. Komponent jest jasno typowany, co zwiększa przejrzystość kodu dla innych programistów.</p></li><li><p><strong>Lepsza obsługa generyków</strong><br>Przy tworzeniu <a class="entity" href="https://przeprogramowani.circle.so/c/o-ts-react-pro/sections/381451/lessons/1443847" target="_blank" rel="noopener noreferrer">#Komponenty generyczne</a> bezpośrednie typowanie jest bardziej naturalne i wymaga mniej skomplikowanej składni niż React.FC, co poprawia czytelność typowania.</p><pre><code>// Bezpośrednie typowanie - naturalna składnia
+function Select&lt;T,&gt;(props: SelectProps&lt;T&gt;) {
+  return &lt;select {...props} /&gt;;
+}
+
+// React.FC - bardziej złożona składnia
+const Select: React.FC&lt;SelectProps&lt;T,&gt;&gt; = &lt;T&gt;(props) =&gt; {
+  return &lt;select {...props} /&gt;;
+};</code></pre></li><li><p><strong>Unikanie nadmiarowego typowania</strong><br>Bezpośrednie typowanie nie dodaje dodatkowych właściwości, takich jak children czy domyślny typ zwracanej wartości. Dzięki temu jest bardziej efektywne pod względem wydajności edytora (różnica jest zauważalna w dużych projektach) i zmniejsza szansę na przypadkowe dodanie nadmiarowych danych do komponentu.</p></li></ol><h3>Z czego korzystać?</h3><p>Dla wersji TypeScript 5.1/React 18, <em>React.FC</em> jest akceptowalnym sposobem typowania komponentów, pozbawionym wcześniejszych problemów, takich jak domyślnie dołączane children i błędy przy zwracaniu typów innych niż ReactElement. </p><p>Mimo to, <strong>rekomendujemy</strong> <strong>bezpośrednie typowanie propsów</strong> w większości przypadków, ze względu na następujące korzyści:</p><ol start="1"><li><p><strong>Prostsza składnia i łatwość refaktoryzacji- b</strong>ezpośrednie typowanie wymaga mniej dodatkowych konstrukcji i jest łatwiejsze do refaktoryzacji. Dzięki temu to rozwiązanie jest bardziej zrozumiałe dla programistów, którzy dopiero zaczynają pracę z TypeScriptem.</p></li><li><p><strong>Większa elastyczność dla komponentów generycznych - </strong>bezpośrednie typowanie lepiej obsługuje komponenty generyczne, eliminując potrzebę stosowania złożonej składni, która bywa nieczytelna przy użyciu React.FC.</p></li></ol><p>Jednak warto mieć na uwadze, że React.FC można stosować bez obaw o błędy czy problemy. Stąd jeżeli pracujesz nad projektem z wersją React 18/TypeScript 5.1+ i spotkasz tam React.FC nie warto poświęcać czasu na refaktoryzację do bezpośredniego typowania propsów. </p><p>Jednak w nowych projektach, ze względu na elastyczność i prostotę kodu, <strong>bezpośrednie typowanie propsów jest rozsądniejszym podejściem</strong>.</p><h2>Podsumowanie</h2><p>W kolejnej lekcji skupimy się w typowaniu propsa children. Jest to kluczowa cecha, która wpływa na elastyczność i reużywalność komponentów. Omówimy różne sposoby definiowania typów children, w tym scenariusze, gdy children są elementami Reacta, funkcjami lub strukturami danych.</p><h2>Ćwiczenia</h2><ul><li><p><strong>211-type-props</strong> - zastosuj rekomendowane podejście do typowania propsów w komponencie Card. Dodatkowo, zadbaj o domyślne wartości propsów:</p><ul><li><p>title = “Witamy w React Pro!”</p></li><li><p>content = “Ciesz się procesem nauki TSa z Reactem 🧑🏻‍💻”</p></li></ul></li></ul></div></body></html>

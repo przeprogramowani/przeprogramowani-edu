@@ -1,0 +1,83 @@
+---
+description: Tech stack rules for 10x-assistant project
+alwaysApply: true
+---
+
+# Tech Stack Configuration
+
+## Core Technologies
+
+This project uses the following tech stack:
+
+- **Astro 5.14.4** - Static site generator with islands architecture
+- **React 19.2.0** - UI component library (used within Astro islands)
+- **Tailwind CSS 4.1.14** - Utility-first CSS framework
+- **TypeScript** - Type-safe JavaScript (via Astro and React types)
+- **ES Modules** - Modern JavaScript module system
+
+## Framework-Specific Guidelines
+
+### Astro
+
+- Use `.astro` files for pages and layouts
+- Leverage Astro's islands architecture for interactive components
+- Keep static content in `.astro` files, use React only for interactive UI
+- Follow Astro's file-based routing in `src/pages/`
+- Use Astro's built-in optimizations (image optimization, CSS bundling)
+
+### React Integration
+
+- Use React 19 features (latest stable version)
+- Create React components in `.tsx` files
+- Use `client:*` directives appropriately in Astro files:
+  - `client:load` - Load immediately on page load
+  - `client:idle` - Load when browser is idle
+  - `client:visible` - Load when component is visible
+  - `client:only` - Only render on client-side
+- Prefer functional components with hooks
+- Use TypeScript for all React components
+
+### Tailwind CSS
+
+- Use Tailwind CSS 4.x (latest version) utility classes
+- Follow Tailwind's utility-first approach
+- Use `@apply` sparingly, prefer utility classes in markup
+- Leverage Tailwind's responsive design utilities
+- Use Tailwind's color palette and spacing scale consistently
+
+## Code Style & Best Practices
+
+### TypeScript
+
+- Enable strict type checking
+- Define proper types/interfaces for props and data structures
+- Avoid `any` type, use `unknown` when type is truly unknown
+- Use type inference where appropriate
+
+### File Organization
+
+- Pages go in `src/pages/`
+- React components in `src/components/`
+- Styles in `src/styles/`
+- Static assets in `public/`
+- Use clear, descriptive file names
+
+### Performance
+
+- Minimize JavaScript sent to client (leverage Astro's static generation)
+- Use React islands only where interactivity is needed
+- Optimize images and assets
+- Keep bundle sizes small
+
+## Development Commands
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run astro` - Run Astro CLI commands
+
+## Module System
+
+- Project uses ES Modules (`"type": "module"`)
+- Use `import/export` syntax (not `require`)
+- Ensure all imports use proper extensions where needed

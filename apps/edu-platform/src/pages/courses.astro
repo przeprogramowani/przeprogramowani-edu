@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/BaseLayout.astro';
+import AccountStrip from '../components/AccountStrip.astro';
+import CourseList from '../components/CourseList.astro';
+import { verifyAuth } from '@/server/verifyAuth';
+import { getAccessibleCourseSlugs } from '@/server/access/courseAccess';
+
+const authResult = await verifyAuth(Astro);
+
+if (!authResult.isAuthenticated) {
+  return Astro.redirect('/login');
+}
+
+const env = Astro.locals.runtime.env;
+const accessibleCourseSlugs = await getAccessibleCourseSlugs(authResult.email!, env);
+---
+
+<Layout>
+  <AccountStrip
+    email={authResult.email!}
+    firstName={authResult.firstName}
+    lastName={authResult.lastName}
+    avatarUrl={authResult.avatarUrl}
+  />
+  <div class="max-w-7xl mx-auto p-4">
+    <CourseList accessibleCourseSlugs={accessibleCourseSlugs} userEmail={authResult.email!} />
+  </div>
+</Layout>

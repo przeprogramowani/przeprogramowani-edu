@@ -1,0 +1,63 @@
+---
+import { getEntry } from 'astro:content';
+import { COLLECTION_MAPPINGS } from '@/models/CollectionMappings';
+import { getLessonByGuid } from '@/models/GuidMappings';
+import { htmlToMarkdown } from '@/utils/htmlToMarkdown';
+import { sanitizeForYaml } from '@/utils/decodeHtmlEntities';
+import { buildAttachmentContentDisposition } from '@/utils/contentDisposition';
+
+const guid = Astro.params.guid as string;
+
+if (!guid) {
+  return Astro.redirect('/shared/not-found');
+}
+
+const lessonMapping = getLessonByGuid(guid);
+
+if (!lessonMapping) {
+  return Astro.redirect('/shared/not-found');
+}
+
+const { courseSlug, lessonId } = lessonMapping;
+const courseCollection = COLLECTION_MAPPINGS[courseSlug];
+
+const lesson = await getEntry(courseCollection, lessonId);
+if (!lesson) {
+  return Astro.redirect('/shared/not-found');
+}
+
+let markdownContent = htmlToMarkdown(lesson.data.content);
+
+// Extra safety: ensure no DOCTYPE or HTML structure at the start
+markdownContent = markdownContent.replace(/^<!DOCTYPE[^>]*>/i, '').trim();
+markdownContent = markdownContent.replace(/^<html[^>]*>/i, '').trim();
+
+// Get filename from query parameter, default to 'lesson' if not provided
+const url = new URL(Astro.request.url);
+const filename = url.searchParams.get('filename') || 'lesson';
+
+// Clean lesson name from HTML entities for frontmatter
+const cleanTitle = sanitizeForYaml(lesson.data.name);
+
+// Add YAML frontmatter with metadata
+const frontmatter = `---
+title: "${cleanTitle}"
+course: "${courseSlug}"
+source: "Przeprogramowani.pl"
+exported: "${new Date().toISOString().split('T')[0]}"
+format: "markdown"
+---
+
+`;
+
+const finalContent = frontmatter + markdownContent;
+
+// Return raw Response to bypass Astro's HTML rendering
+// This prevents Astro from adding <!DOCTYPE html> and HTML-escaping quotes
+return new Response(finalContent, {
+  headers: {
+    'Content-Type': 'text/markdown; charset=utf-8',
+    'Content-Disposition': buildAttachmentContentDisposition(filename),
+  },
+});
+---

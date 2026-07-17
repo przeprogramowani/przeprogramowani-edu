@@ -1,0 +1,382 @@
+{
+  "lessonId": "[0x6] Full-Stack Environment dla 10xDeva",
+  "file": "02-0x6_fullstack_environment_dla_10xdeva.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 3,
+      "order": 1
+    },
+    {
+      "slug": "cechy-dobrego-srodowiska-dla-ai",
+      "title": "Cechy dobrego środowiska dla AI",
+      "blocks": 2,
+      "order": 2
+    },
+    {
+      "slug": "1-jawne-typowanie-i-spojne-modele-danych",
+      "title": "1. Jawne typowanie i spójne modele danych",
+      "blocks": 1,
+      "order": 3
+    },
+    {
+      "slug": "2-pliki-i-moduy-jednego-przeznaczenia",
+      "title": "2. Pliki i moduły jednego przeznaczenia",
+      "blocks": 2,
+      "order": 4
+    },
+    {
+      "slug": "3-konwencje-nad-konfiguracja",
+      "title": "3. Konwencje nad konfiguracją",
+      "blocks": 2,
+      "order": 5
+    },
+    {
+      "slug": "4-semantyczne-nazewnictwo",
+      "title": "4. Semantyczne nazewnictwo",
+      "blocks": 2,
+      "order": 6
+    },
+    {
+      "slug": "5-testy-automatyczne",
+      "title": "5. Testy automatyczne",
+      "blocks": 2,
+      "order": 7
+    },
+    {
+      "slug": "6-formattery-lintery-i-statyczna-analiza-kodu",
+      "title": "6. Formattery, lintery i statyczna analiza kodu",
+      "blocks": 1,
+      "order": 8
+    },
+    {
+      "slug": "7-zrozumiaa-historia-zmian",
+      "title": "7. Zrozumiała historia zmian",
+      "blocks": 2,
+      "order": 9
+    },
+    {
+      "slug": "8-komentarze-kontekstowe",
+      "title": "8. Komentarze kontekstowe",
+      "blocks": 3,
+      "order": 10
+    },
+    {
+      "slug": "9-popularny-stack-technologiczny",
+      "title": "9. Popularny stack technologiczny",
+      "blocks": 2,
+      "order": 11
+    },
+    {
+      "slug": "10-instrukcje-dla-ai",
+      "title": "10. Instrukcje dla AI",
+      "blocks": 6,
+      "order": 12
+    },
+    {
+      "slug": "poznaj-nasz-10x-astro-starter",
+      "title": "Poznaj nasz 10x Astro Starter 🚀",
+      "blocks": 11,
+      "order": 13
+    },
+    {
+      "slug": "faq-wasny-stos-technologiczny",
+      "title": "FAQ: Własny stos technologiczny",
+      "blocks": 2,
+      "order": 14
+    },
+    {
+      "slug": "dokumentacja",
+      "title": "Dokumentacja",
+      "blocks": 7,
+      "order": 15
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "Podsumowanie",
+      "blocks": 6,
+      "order": 16
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:7bd3d834:43cc23fa",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:43cc23fa:0-1",
+      "tokenEstimate": 64,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:24701484",
+      "tokenEstimate": 196,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:24701484:0-2",
+      "tokenEstimate": 196,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:8183e529",
+      "tokenEstimate": 131,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:8183e529:0-1",
+      "tokenEstimate": 131,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:0575b364",
+      "tokenEstimate": 164,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:0575b364:0-0",
+      "tokenEstimate": 164,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:8ec26a0b",
+      "tokenEstimate": 205,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:8ec26a0b:0-1",
+      "tokenEstimate": 205,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:ba252779",
+      "tokenEstimate": 166,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:ba252779:0-1",
+      "tokenEstimate": 166,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:8fcf135b",
+      "tokenEstimate": 154,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:8fcf135b:0-1",
+      "tokenEstimate": 154,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:c56a85ff",
+      "tokenEstimate": 202,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:c56a85ff:0-1",
+      "tokenEstimate": 202,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:830bc4a6",
+      "tokenEstimate": 143,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:830bc4a6:0-0",
+      "tokenEstimate": 143,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:f403d2e6",
+      "tokenEstimate": 163,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:f403d2e6:0-1",
+      "tokenEstimate": 163,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:dae79867",
+      "tokenEstimate": 190,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:dae79867:0-2",
+      "tokenEstimate": 190,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:55f9c20d",
+      "tokenEstimate": 144,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:55f9c20d:0-1",
+      "tokenEstimate": 235,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:3296ff19",
+      "tokenEstimate": 196,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:3296ff19:0-5",
+      "tokenEstimate": 210,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:9f021e56",
+      "tokenEstimate": 182,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:9f021e56:0-10",
+      "tokenEstimate": 205,
+      "span": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:545d211b",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:545d211b:0-1",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:85f08954",
+      "tokenEstimate": 121,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:85f08954:0-6",
+      "tokenEstimate": 121,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:7bd3d834:33c7f0dd",
+      "tokenEstimate": 184,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:7bd3d834:33c7f0dd:0-5",
+      "tokenEstimate": 184,
+      "span": [
+        0,
+        5
+      ]
+    }
+  ]
+}

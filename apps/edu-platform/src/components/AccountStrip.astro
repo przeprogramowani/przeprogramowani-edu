@@ -1,0 +1,79 @@
+---
+import { LogOutIcon } from 'lucide-svelte';
+import logo from '@/images/generic/logo-white.png';
+import logoSmall from '@/images/generic/logo-white-mobile.png';
+
+interface Props {
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  avatarUrl?: string | null;
+  courseName?: string;
+  showLogout?: boolean;
+}
+
+const {
+  email,
+  firstName = null,
+  lastName = null,
+  avatarUrl = null,
+  courseName,
+  showLogout = true,
+}: Props = Astro.props;
+
+function computeInitials(): string {
+  const first = firstName?.trim();
+  const last = lastName?.trim();
+  if (first && last) {
+    return (first.charAt(0) + last.charAt(0)).toUpperCase();
+  }
+  if (first) {
+    return first.charAt(0).toUpperCase();
+  }
+  return email.charAt(0).toUpperCase();
+}
+
+const initials = computeInitials();
+const greeting = firstName && firstName.trim().length > 0 ? `Cześć, ${firstName.trim()}` : email;
+---
+
+<header class="flex items-center justify-between px-4 py-3 bg-gray-800 border-b border-gray-700">
+  <a href="/courses" class="flex items-center gap-3 min-w-0">
+    <img src={logo.src} alt="Logo" class="hidden md:block h-8" />
+    <img src={logoSmall.src} alt="Logo" class="block md:hidden h-8" />
+    {courseName && <span class="hidden lg:inline text-white font-medium truncate">{courseName}</span>}
+  </a>
+
+  <div class="flex items-center gap-3 min-w-0">
+    <span class="hidden sm:inline text-sm text-gray-300 truncate max-w-[200px]">{greeting}</span>
+    <a
+      href="/profile"
+      class="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-600 text-white text-sm font-medium overflow-hidden hover:ring-2 hover:ring-rose-400 transition"
+      title="Profil"
+      aria-label="Profil"
+    >
+      {
+        avatarUrl ? (
+          <>
+            <img
+              src={avatarUrl}
+              alt="Avatar"
+              class="w-full h-full object-cover"
+              onerror="this.style.display='none'; const fb = this.parentElement.querySelector('[data-initials]'); if (fb) fb.style.display='inline-flex';"
+            />
+            <span data-initials style="display: none;">{initials}</span>
+          </>
+        ) : (
+          <span>{initials}</span>
+        )
+      }
+    </a>
+    {
+      showLogout && (
+        <a href="/api/logout" class="text-sm text-gray-300 hover:text-rose-400" title="Wyloguj" aria-label="Wyloguj">
+          <LogOutIcon class="size-6" />
+        </a>
+      )
+    }
+  </div>
+</header>

@@ -1,0 +1,468 @@
+{
+  "lessonId": "[2x2] Przygotowanie reguł dla AI i bootstrap projektu",
+  "file": "15-2x2_przygotowanie_regu_dla_ai_i_bootstrap_projektu.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 5,
+      "order": 1
+    },
+    {
+      "slug": "generowanie-szkieletu-aplikacji",
+      "title": "Generowanie szkieletu aplikacji",
+      "blocks": 7,
+      "order": 2
+    },
+    {
+      "slug": "dwie-sciezki-do-wyboru",
+      "title": "Dwie ścieżki do wyboru",
+      "blocks": 10,
+      "order": 3
+    },
+    {
+      "slug": "konfiguracja-reczna-w-stacku-astro-react-typescript",
+      "title": "Konfiguracja ręczna w stacku Astro + React + TypeScript",
+      "blocks": 6,
+      "order": 4
+    },
+    {
+      "slug": "srodowisko-przyjazne-ai",
+      "title": "Środowisko przyjazne AI",
+      "blocks": 1,
+      "order": 5
+    },
+    {
+      "slug": "statyczna-analiza-kodu-i-jej-wpyw-na-prace-modeli",
+      "title": "Statyczna analiza kodu i jej wpływ na pracę modeli",
+      "blocks": 9,
+      "order": 6
+    },
+    {
+      "slug": "reguy-dla-ai-czyli-personalizacja-modeli",
+      "title": "Reguły dla AI, czyli personalizacja modeli",
+      "blocks": 14,
+      "order": 7
+    },
+    {
+      "slug": "reguy-dla-ai-na-przykadzie-cursora",
+      "title": "Reguły dla AI na przykładzie Cursora",
+      "blocks": 10,
+      "order": 8
+    },
+    {
+      "slug": "przykadowa-organizacja-regu-dla-cursora",
+      "title": "Przykładowa organizacja reguł dla Cursora",
+      "blocks": 14,
+      "order": 9
+    },
+    {
+      "slug": "dobre-praktyki-rozwijania-regu-wg-tworcow-cursora",
+      "title": "Dobre praktyki rozwijania reguł wg twórców Cursora",
+      "blocks": 1,
+      "order": 10
+    },
+    {
+      "slug": "dedykowane-reguy-vs-agentsmd",
+      "title": "Dedykowane reguły vs AGENTS.md",
+      "blocks": 3,
+      "order": 11
+    },
+    {
+      "slug": "zobacz-nasz-poradnik-personalizacji-cursor-copilot-claude-code-jetbrains",
+      "title": "Zobacz nasz poradnik personalizacji (Cursor, Copilot, Claude Code, JetBrains)",
+      "blocks": 2,
+      "order": 12
+    },
+    {
+      "slug": "definiowanie-rules-for-ai",
+      "title": "Definiowanie Rules for AI",
+      "blocks": 8,
+      "order": 13
+    },
+    {
+      "slug": "aktualizacja-dokumentacji-ze-wsparciem-ai",
+      "title": "Aktualizacja dokumentacji ze wsparciem AI",
+      "blocks": 4,
+      "order": 14
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 3,
+      "order": 15
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 21,
+      "order": 16
+    },
+    {
+      "slug": "zadanie-3-generowanie-readme-z-wykorzystaniem-prd-i-tech-stack",
+      "title": "Zadanie 3: Generowanie README z wykorzystaniem PRD i tech-stack",
+      "blocks": 7,
+      "order": 17
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:d1019a11:43cc23fa",
+      "tokenEstimate": 73,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:43cc23fa:0-1",
+      "tokenEstimate": 73,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d1019a11:24701484",
+      "tokenEstimate": 211,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:24701484:0-4",
+      "tokenEstimate": 251,
+      "span": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "sec:d1019a11:c59ace4f",
+      "tokenEstimate": 175,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:c59ace4f:0-6",
+      "tokenEstimate": 197,
+      "span": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": "sec:d1019a11:8e078b24",
+      "tokenEstimate": 203,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:8e078b24:0-9",
+      "tokenEstimate": 342,
+      "span": [
+        0,
+        9
+      ]
+    },
+    {
+      "id": "sec:d1019a11:0328bc95",
+      "tokenEstimate": 232,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:0328bc95:0-5",
+      "tokenEstimate": 232,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:d1019a11:337b4ba9",
+      "tokenEstimate": 100,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d1019a11:337b4ba9:0-0",
+      "tokenEstimate": 100,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d1019a11:03ab6eaf",
+      "tokenEstimate": 206,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:03ab6eaf:0-8",
+      "tokenEstimate": 385,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "sec:d1019a11:74b34d7a",
+      "tokenEstimate": 198,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:74b34d7a:0-8",
+      "tokenEstimate": 385,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "chk:d1019a11:74b34d7a:7-13",
+      "tokenEstimate": 275,
+      "span": [
+        7,
+        13
+      ]
+    },
+    {
+      "id": "sec:d1019a11:ca19f287",
+      "tokenEstimate": 162,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:ca19f287:0-8",
+      "tokenEstimate": 379,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "chk:d1019a11:ca19f287:6-9",
+      "tokenEstimate": 203,
+      "span": [
+        6,
+        9
+      ]
+    },
+    {
+      "id": "sec:d1019a11:a7d2cc46",
+      "tokenEstimate": 227,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:a7d2cc46:0-5",
+      "tokenEstimate": 445,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "chk:d1019a11:a7d2cc46:5-7",
+      "tokenEstimate": 389,
+      "span": [
+        5,
+        7
+      ]
+    },
+    {
+      "id": "chk:d1019a11:a7d2cc46:6-9",
+      "tokenEstimate": 478,
+      "span": [
+        6,
+        9
+      ]
+    },
+    {
+      "id": "chk:d1019a11:a7d2cc46:9-10",
+      "tokenEstimate": 404,
+      "span": [
+        9,
+        10
+      ]
+    },
+    {
+      "id": "chk:d1019a11:a7d2cc46:9-11",
+      "tokenEstimate": 628,
+      "span": [
+        9,
+        11
+      ]
+    },
+    {
+      "id": "chk:d1019a11:a7d2cc46:11-13",
+      "tokenEstimate": 329,
+      "span": [
+        11,
+        13
+      ]
+    },
+    {
+      "id": "sec:d1019a11:e911a690",
+      "tokenEstimate": 77,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "chk:d1019a11:e911a690:0-0",
+      "tokenEstimate": 138,
+      "span": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sec:d1019a11:b311bbba",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:b311bbba:0-2",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:d1019a11:bdc8431c",
+      "tokenEstimate": 102,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:bdc8431c:0-1",
+      "tokenEstimate": 102,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:d1019a11:c9b46265",
+      "tokenEstimate": 143,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:c9b46265:0-7",
+      "tokenEstimate": 319,
+      "span": [
+        0,
+        7
+      ]
+    },
+    {
+      "id": "sec:d1019a11:f73697ee",
+      "tokenEstimate": 103,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:f73697ee:0-3",
+      "tokenEstimate": 103,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:d1019a11:33c7f0dd",
+      "tokenEstimate": 80,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:33c7f0dd:0-2",
+      "tokenEstimate": 277,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:d1019a11:dcc8ec86",
+      "tokenEstimate": 192,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:dcc8ec86:0-15",
+      "tokenEstimate": 377,
+      "span": [
+        0,
+        15
+      ]
+    },
+    {
+      "id": "chk:d1019a11:dcc8ec86:14-20",
+      "tokenEstimate": 271,
+      "span": [
+        14,
+        20
+      ]
+    },
+    {
+      "id": "sec:d1019a11:32433d3d",
+      "tokenEstimate": 133,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:d1019a11:32433d3d:0-6",
+      "tokenEstimate": 133,
+      "span": [
+        0,
+        6
+      ]
+    }
+  ]
+}

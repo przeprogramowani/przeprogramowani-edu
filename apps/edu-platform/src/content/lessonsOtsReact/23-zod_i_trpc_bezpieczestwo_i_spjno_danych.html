@@ -1,0 +1,186 @@
+<meta name="lesson-id" content="Zod i tRPC - bezpieczeństwo i spójność danych"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/nfqf8upv54fiifqaszba7fuevy70" style="width: 100%; max-width: 100%;"><p><br></p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 52.5822%;"><iframe src="https://player.vimeo.com/video/1035544995?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="189" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h2>Wprowadzenie</h2><p>Wymiana danych pomiędzy wieloma warstwami aplikacji nie jest łatwym zadaniem. Niezależnie od tego, czy korzystasz z automatycznych albo ręcznie tworzonych klientów HTTP, nie dają one pełnej gwarancji co do formatu przesyłanych danych w runtime. Tym problemem zajmiemy się w tej lekcji, poznając dwa popularne elementy ekosystemu TypeScripta, czyli biblioteki Zod i tRPC.</p><p>Pierwsza zapewni nam dodatkową warstwę walidacji danych przy jednoczesnym wsparciu systemu typów TypeScript, a druga pokaże jak pisać spójne aplikacje full-stackowe, gdzie kontrakty między backendem i frontendem muszą być określane w precyzyjny sposób.</p><h2>Walidacja w runtime - Zod (<a href="https://zod.dev/" target="_blank" rel="noopener noreferrer">https://zod.dev/</a>)</h2><p>Aby zapewniać spójność i stabilność rozwijanego systemu, w złożonych projektach webowych często implementujemy walidację danych pochodzących z zewnętrznych źródeł - może to być zewnętrzne API, dane użytkownika z formularza, czy pliki konfiguracyjne. Mimo iż TypeScript dostarcza statyczną kontrolę typów podczas kompilacji, to po stronie runtime dane nadal mogą być niepoprawne. Wyobraźmy sobie scenariusz:</p><ul><li><p>Frontend i backend developer rozwijają&nbsp;moduł do obsługi produktów w sklepie e-commerce,</p></li><li><p>Wspólnie określają typ danych, który akceptują obie warstwy aplikacji (kontrakt),</p></li><li><p>Backend developer rozwija endpoint zaczynając od akceptacji parametru o umówionym typie,</p></li><li><p>Frontend developer deklaruje typ w swojej aplikacji, określa wymagane pola, ale zapomina o poprawnej konfiguracji formularza - chociaż na poziomie TypeScriptu wszystko jest “required”, to jednak z punktu widzenia użytkownika część pól jest “optional”,</p></li><li><p>Po wdrożeniu formularza system zaczyna zwracać błędy - użytkownicy nie wypełniają pól, które powinny być oznaczone jako wymagane.</p></li></ul><p>Rozwiązaniem problemu jest zaimplementowanie dodatkowej warstwy walidacji, która oceni poprawność wpisywanych przez użytkownika danych. W tej lekcji pokażemy ci bibliotekę <strong>Zod</strong>, która rozwiązuje ten problem i która w nowoczesnych projektach TypeScriptowych błyskawicznie zyskuje na popularności.</p><img loading="lazy" src="https://assets-v2.circle.so/xo55thqus2ug1gk53xqj4xnvr4nc" style="width: 100%; max-width: 100%;"><h3>Pierwsze kroki z biblioteką Zod</h3><p>Zacznijmy od instalacji korzystając z preferowanego managera paczek:</p><pre><code>npm install zod 
+# yarn install zod
+# pnpm install zod</code></pre><p>Jak wskazuje dokumentacja, najlepsze efekty z Zodem uzyskasz przy włączonym trybie strict:</p><pre><code>// tsconfig.json
+{
+  // ...
+  "compilerOptions": {
+    // ...
+    "strict": true
+  }
+}</code></pre><p>Po zainstalowaniu Zoda, przejdźmy teraz do zbudowania pierwszego modelu i określenia reguł walidacji.</p><h3>Modele i reguły walidacji</h3><p>Budowanie modeli w oparciu o Zoda jest naprawdę intuicyjne - z modułu “zod” importujemy pomocniczy obiekt o nazwie “z”, który wystawia dla nas funkcje do budowania obiektów - zarówno typu prostego jak i złożonego.</p><p>W zależności od zadeklarowanego typu danego pola, zostają nam udostępnione rozmaite metody walidacji w oparciu o tzw. “fluent API”, gdzie przez łańcuch wywołań określamy nasze oczekiwania względem danych:</p><pre><code>import {z} from "zod";
+
+export const userSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, "Imię musi mieć co najmniej 2 znaki")
+    .max(50, "Imię musi mieć mniej niż 50 znaków"),
+  lastName: z
+    .string()
+    .min(2, "Nazwisko musi mieć co najmniej 2 znaki")
+    .max(50, "Nazwisko musi mieć mniej niż 50 znaków"),
+  email: z.string().email("Nieprawidłowy adres email"),
+  age: z
+    .number()
+    .min(18, "Musisz mieć co najmniej 18 lat")
+    .max(120, "Nieprawidłowy wiek"),
+  password: z
+    .string()
+    .min(8, "Hasło musi mieć co najmniej 8 znaków")
+    .regex(/[A-Z]/, "Hasło musi zawierać co najmniej jedną wielką literę")
+    .regex(/[a-z]/, "Hasło musi zawierać co najmniej jedną małą literę")
+    .regex(/[0-9]/, "Hasło musi zawierać co najmniej jedną cyfrę"),
+});</code></pre><p>Kiedy zdefiniujemy nasz szablon oczekiwanych danych, możemy do niego porównywać dane pochodzące z różnych źródeł (<a href="https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/" target="_blank" rel="noopener noreferrer">więcej</a> o tym podejściu).</p><p>W zależności od preferencji, mamy do wyboru metodę “parse” która potwierdzi zgodność lub rzuci wyjątek, albo metodę “safeParse”, która przekaże nam wyniki walidacji bez rzucania wyjątku:</p><pre><code>try {
+  const user1 = userSchema.parse({ ... }); // ✅ { ... } 
+  const user2 = userSchema.parse('Jacek Placek'); // ❌ =&gt; wyjątek typu ZodError
+} catch (error) {
+  if (error instanceof ZodError) { ... }
+}
+
+const user3 = userSchema.safeParse({ ... }); // ✅ { success: true; data: { ... } }
+const user4 = userSchema.safeParse('Jacek Placek'); // ❌ =&gt; { success: false; error: ZodError }</code></pre><p>Już na tym etapie zalety tej biblioteki są jasne i zrozumiałe, jednak Zod, jako narzędzie w pełni zintegrowane z ekosystemem TypeScriptu, idzie o krok dalej.</p><p>Zod wystawia dla nas generyczny typ pomocniczy “infer”, dzięki któremu nasz schemat danych przekonwertujemy w rzeczywisty typ, którym możemy się posługiwać w całej aplikacji:</p><pre><code>type UserType = z.infer&lt;typeof userSchema&gt;;</code></pre><p>Mechanizm dynamicznego tworzenia typów pozwala nam unikać sytuacji, w których wewnątrz aplikacji powstają dwie odrębne definicje obiektów - ta na potrzeby walidacji i ta wykorzystywana w ramach logiki biznesowej.</p><h3>Nowe reguły walidacji</h3><p>Jeśli okaże się, że standardowe metody walidacji nie są dla ciebie wystarczające, do rozszerzenia możliwości Zoda możesz wykorzystać wbudowaną funkcję <em>refine</em>. Wspiera ona dwa rodzaje argumentów, synchroniczne i asynchroniczne:</p><pre><code>export const workshopsRequest = z.object({
+  companyName: z.string().refine(async (data) =&gt; {
+    const blacklisted = await fetchBlacklistedCompanies();
+    return !blacklisted.includes(data)
+  }, { message: 'Ta firma jest na liście dłużników' }),
+  members: z.number().refine((data) =&gt; data &gt; 0 &amp;&amp; data % 2 === 0, {
+    message: "Liczba uczestników warsztatów musi być parzysta",
+  }),
+});
+
+export type WorkshopsRequest = z.infer&lt;typeof workshopsRequest&gt;;</code></pre><p>Ważna uwaga - korzystając z asynchronicznych reguł walidacji, parsowanie musimy wykonać metodą <em>parseAsync </em>(inaczej Zod rzuci wyjątek):</p><pre><code>const result = await workshopsRequest.parseAsync({
+  companyName: "Google",
+  members: 10,
+});</code></pre><h3>Funkcje pomocnicze</h3><p>Elastyczny interfejs Zoda jest czymś, co zasługuje na uznanie. Narzędzie udostępnia nam nie tylko mechanizmy walidacji, ale również rozmaite funkcje pomocnicze służące do wykonywania operacji na schematach.</p><p>Definicje obiektów można łączyć i modyfikować w dowolny sposób - chociażby tak jak poniżej, gdzie z istniejącej definicji modelu użytkownika wybieramy wyłącznie reguły dotyczące wieku:</p><pre><code>const ageSchema = userSchema.pick({age: true});
+type JustAge = z.infer&lt;typeof ageSchema&gt;;
+const age: JustAge = {age: 18}; // ✅ OK</code></pre><p>Takim precyzyjnym schematem możemy się posługiwać w mniejszych formularzach, gdzie użytkownik ma dostęp do edycji fragmentu obiektu - dzięki temu unikamy powielania walidacji i utrzymujemy jedno źródło prawdy o naszych danych.</p><h2>Zod na produkcji</h2><p>Zod zbudował już na tyle mocną markę w środowisku, że obecnie można go spotkać nie tylko w kodzie aplikacji, ale również w narzędziach i frameworkach, z których te aplikacje budujemy. Poniżej prezentujemy przykłady jego użycia.</p><h3>react-hook-form - Walidacja formularzy</h3><p>Wspomniana na początku walidacja formularzy może być udręką, ale w ekosystemie Reacta pojawiają się&nbsp;coraz bardziej dojrzałe rozwiązania pozwalające unikać wymyślania koła na nowo. Jedno z nich to react-hook-form (<a href="https://react-hook-form.com/" target="_blank" rel="noopener noreferrer">https://react-hook-form.com/</a>), którego rozszerzenia pozwalają na integrację z Zodem. </p><p>Formularze, które wykorzystują istniejące schematy Zoda, opierają się na hooku “useForm” - przekazujemy do nich resolver ze schematem danych oraz wartości domyślne. W odpowiedzi uzyskujemy dwie funkcje (register, handleSubmit) oraz obiekt z bieżącym stanem formularza:</p><pre><code>import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {userSchema, type UserType} from "../schemas/userSchema";
+
+export default function UserForm() {
+
+  const {
+    register,
+    handleSubmit,
+    formState: {errors},
+  } = useForm&lt;UserType&gt;({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      age: undefined,
+      password: "",
+    },
+  });
+
+  // ...
+
+}</code></pre><p>Dzięki wykorzystaniu Zoda, w komponencie nie musimy utrzymywać dodatkowej logiki walidacyjnej, co mogłoby wprowadzać dodatkową złożoność i problemy ze skalowaniem takiego komponentu. Intuicyjne mechanizmy do rejestrowania kontrolek (funkcja <em>register</em>) i obsługi gotowego formularza (funkcja <em>handleSubmit)</em> pozwalają na rozwijanie formularzy w naprawdę zrozumiały sposób.</p><h3>Astro - Content collections</h3><p>W popularnym frameworku Astro (<a href="https://astro.build/" target="_blank" rel="noopener noreferrer">https://astro.build/</a>) Zoda można wykorzystać do definiowania tzw. content collections - są to “kolekcje treści”, które zasilają statycznie renderowane strony w naszej aplikacji.</p><pre><code>import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
+
+const post = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/data/blog" }),
+  schema: z.object({
+    id: z.number(),
+    title: z.string(),
+    description: z.string(),
+    tags: z.array(z.string())
+  })
+});
+
+export const collections = { post }</code></pre><p>Tak zdefiniowany schemat będzie weryfikował to, czy dostarczane przez nas pliki Markdown zawierają wszystkie niezbędne informacje. Jeśli reguły złamiemy, to aplikacja nie przejdzie kompilacji.</p><pre><code>---
+id: 0
+title: Hello world
+description: Lorem ipsum dolor sit amet
+tags:
+ - one
+ - two
+
+---
+
+...</code></pre><p>Dodatkowo, definicje Zoda pozwalają nam nie tylko weryfikować schemat pobieranych danych, ale otrzymywać do nich dostęp w mocno typowanej formie w reszcie aplikacji: </p><pre><code>import { getCollection } from 'astro:content';
+
+const posts = await getCollection('post');
+
+posts[0]. // Podpowiadanie składnie - id, title, description, tags...</code></pre><h3>OpenAPI - Structured outputs</h3><p>Co ciekawe, opisywana przez nas biblioteka jest nawet w stanie kontrolować Sztuczną Inteligencję 😎</p><p>Twórcy oficjalnego SDK OpenAI od niedawna wspierają funkcję pomocniczą, która dopasowuje odpowiedzi modelu językowego do schematu definiowanego przez Zoda:</p><pre><code>import OpenAI from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
+import { z } from "zod";
+
+const openai = new OpenAI();
+
+const CalendarEvent = z.object({
+  name: z.string(),
+  date: z.string(),
+  participants: z.array(z.string()),
+});
+
+const completion = await openai.beta.chat.completions.parse({
+  model: "gpt-4o-2024-08-06",
+  messages: [
+    { role: "system", content: "Extract the event information." },
+    { role: "user", content: "Alice and Bob are going to a science fair on Friday." },
+  ],
+  response_format: zodResponseFormat(CalendarEvent, "event"),
+});
+
+const event = completion.choices[0].message.parsed;</code></pre><p>Ten przykład pochodzi ze strony: <a href="https://platform.openai.com/docs/guides/structured-outputs" target="_blank" rel="noopener noreferrer">https://platform.openai.com/docs/guides/structured-outputs</a></p><h2>tRPC – spójność kontraktów w całej aplikacji</h2><p>Na tym etapie wiesz już, jak biblioteka Zod zabezpiecza nas przed nieprawidłowymi danymi przekazywanymi w runtime. Zyskaliśmy możliwość walidacji danych z zewnętrznych źródeł, a także bezpośrednie mapowanie schematów na typy - dzięki temu unikamy duplikowanych definicji obiektów.</p><p>Jednak Zod to tylko część układanki o nazwie “bezpieczne kontrakty i wymiana danych”.</p><p>W dalszej części lekcji poznasz rozwiązanie, które pozwala jeszcze bardziej zbliżyć do siebie warstwy aplikacji full-stackowej. Oto właśnie pole do popisu dla <strong>tRPC</strong>.</p><h3>Czym jest tRPC? (<a href="https://trpc.io/" target="_blank" rel="noopener noreferrer">https://trpc.io/</a>)</h3><img loading="lazy" src="https://assets-v2.circle.so/cryk5un20zwbz7f3bjsdb6ssf0zt" style="width: 100%; max-width: 100%;"><p><a href="https://trpc.io/" target="_new" rel="noopener noreferrer">tRPC</a> to biblioteka, która upraszcza komunikację między frontendem i backendem w pełni typowany sposób, bez konieczności generowania klientów w stylu OpenAPI/Swagger czy GraphQL. Dzięki ścisłej integracji z TypeScriptem i Zodem, tRPC pozwala:</p><ul><li><p><strong>Deklarować endpointy backendowe ze schematami walidacji (Zod)</strong>, które precyzyjnie definiują kształt danych wejściowych i wyjściowych,</p></li><li><p><strong>Automatycznie generować po stronie frontendu typowane funkcje klienta</strong>, które w czasie kompilacji i działania programu uniemożliwią wykonanie zapytań niezgodnych z kontraktem,</p></li><li><p><strong>Zachować pełną spójność kontraktów</strong>: jeśli zmienimy schemat endpointu po stronie backendu, frontend natychmiast przestanie się kompilować - błąd będzie istniał dopóki nie zaktualizujemy kodu do nowych wytycznych.</p></li></ul><p>W efekcie, zwiększone bezpieczeństwo dostarczamy zarówno w runtime (dzięki bibliotece Zod) jak i w buildtime (dzięki TypeScriptowi i ścisłej integracji narzędzi). Zalety mają jednak swoją cenę - wymaganiem tRPC jest to, aby obie warstwy aplikacji były dla siebie widoczne już na etapie rozwoju kodu (np. monorepo / monolit).</p><h3>Filozofia RPC</h3><p>Biblioteka tRPC jest inspirowana podejściem o nazwie “<a href="https://pl.wikipedia.org/wiki/Zdalne_wywo%C5%82anie_procedury" target="_blank" rel="noopener noreferrer">Remote Procedure Call</a>” - to rozwiązanie, w którym dwa niezależne systemy (np. frontend i backend) stają się dla siebie widoczne, a jeden z nich może korzystać z publicznych funkcji drugiego.</p><p>Wprowadza to fundamentalną zmianę sposobu komunikacji - zamiast budowania klientów HTTP i odpytywania dostępnych endpointów, tRPC integruje ze sobą warstwy aplikacji poprzez definiowanie i wywoływanie standardowych funkcji.</p><pre><code>// Podejście klasyczne
+const response = await fetch('/api/movies/drama/5');
+const movie = await res.json();
+
+// Podejście "RPC"
+const movie = await api.movies.getById({ category: 'drama', id: 5 });</code></pre><p>W rzeczywistości, komunikacja między przeglądarką i serwerem nadal odbywa się w ten sam sposób, jednak z punktu widzenia programisty zyskujemy nową warstwę funkcji, które służą do wymiany danych.</p><p>W tRPC istnieje ustandaryzowane nazewnictwo na poszczególne operacje:</p><ul><li><p>Procedury - ogólna nazwa funkcji służących do komunikacji (read / write)</p></li><li><p>Query - funkcje służące do pobierania danych (read)</p></li><li><p>Mutacje - funkcje służące do modyfikacji stanu systemu (write) </p></li><li><p>Subskrypcje - funkcje umożliwiające nasłuchiwanie na zmiany stanu serwera</p></li><li><p>Router - zestaw Procedur </p></li></ul><p>Zobaczmy teraz jak zbudować podstawową integrację dwóch warstw aplikacji i jakie korzyści wnoszą do niej TypeScript oraz Zod.</p><h3>Konfiguracja backendu</h3><p>Załóżmy, że tworzymy prostą aplikację z listą produktów i chcemy zdefiniować endpoint, który zwróci nam dane o produkcie na podstawie jego identyfikatora. W tRPC wystawienie takiej procedury wygląda następująco:</p><pre><code>// server/router.ts
+import {initTRPC} from "@trpc/server";
+import {z} from "zod";
+
+const t = initTRPC.create();
+
+const productQueryParam = z.object({
+  id: z.number().min(1),
+});
+
+export const appRouter = t.router({
+  product: t.procedure.input(productQueryParam).query(({input}) =&gt; {
+    return {
+      id: input.id,
+      name: "Pineapple Vision 4",
+      price: 1899.99,
+      image: "/vision.png",
+    };
+  }),
+});
+
+export type AppRouter = typeof appRouter;
+</code></pre><p>Na tym przykładzie:</p><ul><li><p>Zaczynamy od definicji router tRPC (appRouter)</p></li><li><p>Rejestrujemy pierwszą procedurę o nazwie “product”, która służy do odczytu danych (.query()).</p></li><li><p>Wskazujemy oczekiwane parametry za pomocą Zoda</p></li></ul><p>Eksportowany na końcu pliku <em>AppRouter</em> pozwoli wywoływać tylko te metody, na które wskazuje nasza definicja routera. TypeScript i Zod zadbają o to, aby po stronie frontendu procedurę wywoływać tylko z obiektem żądanego kształtu.</p><p>Całość hostujemy na prostym serwerze, którego rozszerzymy o wsparcie dla CORS:</p><pre><code>// server/index.ts
+import cors from "cors";
+import {createHTTPServer} from "@trpc/server/adapters/standalone";
+import {appRouter} from "./router";
+
+const server = createHTTPServer({
+  router: appRouter,
+  middleware: cors(),
+});
+
+server.listen(3100);</code></pre><h3>Konfiguracja frontendu</h3><p>Na frontendzie korzystamy z biblioteki <em>@trpc/client</em> oraz definicji wcześniej wystawionego <em>AppRoutera</em>.</p><pre><code>// client/api/api-config.ts
+import {createTRPCProxyClient, httpBatchLink} from "@trpc/client";
+import type {AppRouter} from "../../server/router";
+
+export const trpc = createTRPCProxyClient&lt;AppRouter&gt;({
+  links: [httpBatchLink({url: "http://localhost:3100"})],
+});</code></pre><p>Użycie klienta tRPC sprowadza się&nbsp;do wywołania dostępnych funkcji z określonymi parametrami:</p><pre><code>import {useEffect, useState} from "react";
+import {trpc} from "./api/api-config";
+
+export default function App() {
+  
+  const [product, setProduct] =
+    useState&lt;Awaited&lt;ReturnType&lt;typeof trpc.product.query&gt;&gt;&gt;();
+
+  useEffect(() =&gt; {
+    const fetchProduct = async () =&gt; {
+      const result = await trpc.product.query({id: 1});
+      setProduct(result);
+    };
+
+    fetchProduct();
+  }, []);
+
+// ...</code></pre><p>Kiedy spróbujemy przekazać do .query() obiekt niewłaściwego typu, to TypeScript poinformuje nas o błędzie typowania jeszcze przed uruchomieniem aplikacji. Ten fakt eliminuje całą klasę problemów, które mogłyby pojawić się dopiero w runtime, a które przeoczymy na etapie budowania integracji.</p><p>Dodatkowe ułatwienia w integrowaniu tRPC z Reactem i react-query dostarczy ci <a href="https://www.npmjs.com/package/@trpc/react-query" target="_blank" rel="noopener noreferrer">@trpc/react-query</a>.</p><h3>Kiedy korzystać z tRPC</h3><p>Jeśli budujesz aplikacje full-stackowe oparte o TypeScripta, gdzie zachowanie spójności kontraktów jest kluczowe (lub same dane zmieniają się często), to tRPC może się okazać znakomitym wyborem. Połączenie systemu typów z TypeScripta oraz reguł walidacji Zoda pozwala budować spójne i przewidywalne projekty, gdzie błędy kontraktów praktycznie nie mogą wystąpić. </p><p>Skoro jednak zalety tRPC są tak znaczące, to dlaczego nie jest ona standardowym wyborem web developerów?</p><p>Na jej niekorzyść gra z pewnością fakt, że nie wszyscy mogą sobie pozwolić na budowanie wszystkich warstw w oparciu o ten sam stack. Liczby pobrań nie są tutaj tak imponujące jak w przypadku Zoda, jednak zdecydowanie widać trend rosnący i obiecującą przyszłość. 35k gwiazdek na GitHubie i majorowa wersja “10.x” wskazują na to, że z pewnością nie będziesz jej beta-testerem.</p><img loading="lazy" src="https://assets-v2.circle.so/00k5fxvay0hb6al918r8t5dyg14j" style="width: 100%; max-width: 100%;"><h2>Podsumowanie</h2><p>W tej lekcji poznałeś dwa rozwiązania, które mogą zwiększyć bezpieczeństwo twoich aplikacji opartych o   Reacta i TypeScript.</p><p>Pierwszy poziom to biblioteka Zod - umożliwia ona tworzenie schematów danych wraz z regułami walidacji, które są ściśle powiązane z typami poszczególnych obiektów. Zoda można stosować niezależnie od frameworka frontendowego, jednak co pokazała ta lekcja, ekosystem Reacta jest już&nbsp;świadomy jego zalet (np. react-form-hook).</p><p>Drugi poziom to biblioteka tRPC. W porównaniu do samej walidacji Zodem, tRPC daje nam:</p><ul><li><p>Automatyczne, pełne typowanie komunikacji między warstwami.</p></li><li><p>Wykrywanie niezgodności pomiędzy warstwami jeszcze przed uruchomieniem aplikacji.</p></li><li><p>Silne zabezpieczenie zarówno w runtime, jak i w buildtime.</p></li></ul><p>Warto pamiętać, że tRPC jest narzędziem ukierunkowanym na spójne wewnętrznie projekty full-stackowe, oparte o stack TypeScriptowy. W sytuacjach wymagających kompatybilności z innymi platformami lub klientami musimy pozostać przy innych rozwiązaniach (np. jawne deklaracje typów, standard OpenAPI, generowane klienty i dodatkowa walidacja danych).</p><h2>Ćwiczenia praktyczne</h2><ol start="1"><li><p><strong>711-zod-schema</strong> - Wprowadź schematy danych oparte o Zoda, które sprawią, że formularz do obsługi koszyka zakupowego zadziała zgodnie z oczekiwaniami. Sam formularz, oparty o react-hook-form, jest niemal ukończony, ale uwaga - plotka głosi, że gdzieś wewnątrz niego ukrył się&nbsp;mały bug.</p></li></ol></div></body></html>

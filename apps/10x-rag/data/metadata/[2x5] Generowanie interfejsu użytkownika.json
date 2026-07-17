@@ -1,0 +1,6 @@
+{
+  "lessonId": "[2x5] Generowanie interfejsu użytkownika",
+  "displayName": "[2x5] Generowanie interfejsu użytkownika",
+  "summary": "1) Jakiej komendy użyć, by zainicjalizować shadcn/ui w projekcie?\n2) Jak instalować pojedyncze komponenty shadcn/ui po inicjalizacji (np. button, card, avatar)?\n3) Jakiej flagi nie używać przy komendzie init i dlaczego (problem z Tailwind 4)?\n4) Do jakiego folderu trafiają zainstalowane komponenty shadcn/ui w projekcie (aliasy ścieżek)?\n5) Jak zaimportować komponenty z shadcn/ui (np. Button, Tabs, Card) zgodnie z aliasem \"@/components/ui\" i jak je przykładowo użyć w JSX/TSX?\n6) Jak zainstalować dodatkowy komponent (przykład: accordion) oraz jaką formę komendy stosować zamiast wycofanego npx shadcn-ui@latest?\n7) Jakie klasy Tailwind pokazano w przykładowym przycisku i co one oznaczają (p-4, bg-blue-500, hover:bg-blue-700, rounded)?\n8) Gdzie w projekcie 10x-astro-starter jest już skonfigurowany Tailwind i można od razu korzystać z jego klas?\n9) Jakie konkretne prompt’y z 10xRules.ai wykorzystać kolejno do planowania i implementacji UI (Asystent planowania architektury UI; Podsumowanie sesji planowania architektury UI; Generowanie wysokopoziomowego planu UI; Szczegółowy plan implementacji widoku; Implementacja widoku)?",
+  "tokenEstimate": 179
+}

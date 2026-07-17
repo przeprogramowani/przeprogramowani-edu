@@ -1,0 +1,90 @@
+{
+  "lessonPrefix": "09-3x1",
+  "updatedAt": "2026-04-29T05:05:02.083Z",
+  "entries": [
+    {
+      "key": "7be12d3daa4d6cb3445f0cc43eff5f189870c0cbe3de8c0f65d7d1a55cb0a1be",
+      "blockHash": "f48db8874f1a8169edf829678b64ee89db73d80d854d8f1b4b9c135ba8f4cf1b",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 0,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "function calculateTotal(items: Item) {\n  return items.reduce((sum, item) => sum + item. //jakie pole pobrać z obiektu item?\n",
+      "translatedText": "function calculateTotal(items: Item) {\n  return items.reduce((sum, item) => sum + item. //which field to get from the item object?",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:31.140Z"
+    },
+    {
+      "key": "d67d3e7cf74f9c8814756e8e7a67b35c3cb6c1c6200b571ca3370649d001e5c9",
+      "blockHash": "f48db8874f1a8169edf829678b64ee89db73d80d854d8f1b4b9c135ba8f4cf1b",
+      "promptVersion": "prework-code-block-v2",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 0,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "function calculateTotal(items: Item) {\n  return items.reduce((sum, item) => sum + item. //jakie pole pobrać z obiektu item?\n",
+      "translatedText": "function calculateTotal(items: Item) {\n  return items.reduce((sum, item) => sum + item. //which field to take from the item object?",
+      "status": "translated",
+      "createdAt": "2026-04-28T16:38:45.257Z"
+    },
+    {
+      "key": "5c5df1c70b31683c387adfcfa81d0994fdac639da18ccbe3c99d2ea8e7476856",
+      "blockHash": "7bb22829c4e71cd6c6fafab5ea9d044374be3e57ea49514a80a993a00ff2925b",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 1,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "function calculateTotal(items: Item) {\n  // Property 'price' does not exist on type 'Item'.\n  return items.reduce((sum, item) => sum + item.price;\n",
+      "translatedText": "function calculateTotal(items: Item) {\n  // Właściwość 'price' nie istnieje w typie 'Item'.\n  return items.reduce((sum, item) => sum + item.price;",
+      "status": "translated",
+      "createdAt": "2026-04-28T15:48:31.719Z"
+    },
+    {
+      "key": "7d529002dfa48801381342f59bfd44712b1e5af3a1712324329b113df5758cae",
+      "blockHash": "7bb22829c4e71cd6c6fafab5ea9d044374be3e57ea49514a80a993a00ff2925b",
+      "promptVersion": "prework-code-block-v2",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "code",
+      "ordinal": 1,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "function calculateTotal(items: Item) {\n  // Property 'price' does not exist on type 'Item'.\n  return items.reduce((sum, item) => sum + item.price;\n",
+      "translatedText": "function calculateTotal(items: Item) {\n  // Property 'price' does not exist on type 'Item'.\n  return items.reduce((sum, item) => sum + item.price;",
+      "status": "translated",
+      "createdAt": "2026-04-28T16:38:46.172Z"
+    },
+    {
+      "key": "8e425e901caf3fdd5a562a37358829bc8f9b42d42cbb1b5a39023d678c5f25da",
+      "blockHash": "d35e8119801844bf193626bf8841f85423266f9bd643af08d87e3c94097fa1f8",
+      "promptVersion": "prework-code-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "mermaid",
+      "ordinal": 2,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "graph TD\n    A[🟢 Świeże okno — orientacyjnie do ~40K tokenów] -->|\"Wysoka precyzja, pełna uwaga modelu\"| B[🟡 Strefa umiarkowana — orientacyjnie 40-80K tokenów]\n    B -->|\"Uwaga słabnie, rośnie ryzyko pomyłek\"| C[🔴 Strefa degradacji — 80-120K+ tokenów]\n\n    style A fill:#0d3320,stroke:#22c55e,color:#e2e8f0\n    style B fill:#332b00,stroke:#eab308,color:#e2e8f0\n    style C fill:#3b0f0f,stroke:#ef4444,color:#e2e8f0\n",
+      "translatedText": "graph TD\n    A[🟢 Świeże okno — orientacyjnie do ~40K tokenów] -->|\"Wysoka precyzja, pełna uwaga modelu\"| B[🟡 Strefa umiarkowana — orientacyjnie 40-80K tokenów]\n    B -->|\"Uwaga słabnie, rośnie ryzyko pomyłek\"| C[🔴 Strefa degradacji — 80-120K+ tokenów]\n\n    style A fill:#0d3320,stroke:#22c55e,color:#e2e8f0\n    style B fill:#332b00,stroke:#eab308,color:#e2e8f0\n    style C fill:#3b0f0f,stroke:#ef4444,color:#e2e8f0\n",
+      "status": "manual-translation-required",
+      "createdAt": "2026-04-28T15:48:31.720Z"
+    },
+    {
+      "key": "f60027b18b6d1ede40d3ca76d678b5200ee5b4fdd127a2e3134035c8d3b47c0b",
+      "blockHash": "d35e8119801844bf193626bf8841f85423266f9bd643af08d87e3c94097fa1f8",
+      "promptVersion": "prework-mermaid-block-v1",
+      "model": "google/gemini-2.5-flash",
+      "blockType": "mermaid",
+      "ordinal": 2,
+      "sourceLanguage": "pl",
+      "targetLanguage": "en",
+      "sourceText": "graph TD\n    A[🟢 Świeże okno — orientacyjnie do ~40K tokenów] -->|\"Wysoka precyzja, pełna uwaga modelu\"| B[🟡 Strefa umiarkowana — orientacyjnie 40-80K tokenów]\n    B -->|\"Uwaga słabnie, rośnie ryzyko pomyłek\"| C[🔴 Strefa degradacji — 80-120K+ tokenów]\n\n    style A fill:#0d3320,stroke:#22c55e,color:#e2e8f0\n    style B fill:#332b00,stroke:#eab308,color:#e2e8f0\n    style C fill:#3b0f0f,stroke:#ef4444,color:#e2e8f0\n",
+      "translatedText": "graph TD\n    A[🟢 Fresh window - approximately up to ~40K tokens] -->|\"High precision, full model attention\"| B[🟡 Moderate zone - approximately 40-80K tokens]\n    B -->|\"Attention weakens, risk of errors increases\"| C[🔴 Degradation zone - 80-120K+ tokens]\n\n    style A fill:#0d3320,stroke:#22c55e,color:#e2e8f0\n    style B fill:#332b00,stroke:#eab308,color:#e2e8f0\n    style C fill:#3b0f0f,stroke:#ef4444,color:#e2e8f0",
+      "status": "translated",
+      "createdAt": "2026-04-29T05:05:02.083Z"
+    }
+  ]
+}

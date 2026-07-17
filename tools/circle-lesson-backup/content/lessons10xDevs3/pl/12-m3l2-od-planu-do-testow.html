@@ -1,0 +1,386 @@
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/lessons/m3-l2/assets/cover.jpg">https://images.przeprogramowani.pl/lessons/m3-l2/assets/cover.jpg</a></p></blockquote>
+<p>Zanim napiszesz pierwszy test z agentem, warto być świadomym jednej rzeczy: pisanie testów to akurat ten obszar pracy z AI, w którym najłatwiej dać się oszukać.</p>
+<p>Start zawsze wygląda świetnie. Prosisz model o testy do wybranych funkcji, dostajesz nową porcję kodu, zielony raport, no i coverage, który skacze w górę. Łatwo uwierzyć, że to działa.</p>
+<p>Problem w tym, że testowanie prostych funkcji na sztucznych przykładach nie pomaga realnie zarządzać ryzykiem w projekcie. Do tego, skuteczność agentów w pisaniu testów wyraźnie się&nbsp;pogarsza, jeśli twoje funkcje nie są tak typowe jak te, które modele widziały w danych treningowych.</p>
+<p>Pierwszy z brzegu przykład. W pracy <em>Benchmarking LLMs for Unit Test Generation from Real-World Functions</em> (Huang i in., <em>ACM TOSEM</em> 2026) badacze najpierw zmierzyli jakość generowanych testów na popularnym benchmarku TestEval - i wyszło świetnie. Potem podmienili proste funkcje na realne, złożone przypadki z prawdziwych projektów i powtórzyli pomiar. Pokrycie spadło mniej więcej o połowę: z ~92% do ~45% linii i z ~82% do ~30% gałęzi.</p>
+<p>To powtarza się w wielu innych obszarach programowania z AI - wynik z benchmarku nie przenosi się automatycznie na twój projekt.</p>
+<p>Dlaczego tak się dzieje? Bo najtrudniejsza część testu to nie wygenerowanie kodu, tylko decyzja o tym, jaki test realnie wpłynie na jakość całego projektu. To poznany w poprzedniej lekcji <strong>problem wyroczni</strong> (<em>oracle problem</em>) - i to w nim, a nie w składni, siedzi większość błędów w testach pisanych przez LLM-y.</p>
+<p>W m3-l1 zobaczyłeś go na funkcji liczącej rabat, gdzie agent brał oczekiwany wynik wprost z implementacji. Teraz ta sama pułapka na realnej funkcji - takiej z aplikacji do fiszek, która wylicza odstęp do kolejnej powtórki karty:</p>
+<pre><code class="language-ts">  // grade: 0 = nie pamiętam, 1 = słabo, 2 = dobrze
+function getNextInterval(prevInterval: number, grade: number): number {
+  return prevInterval * grade;
+}
+</code></pre>
+<p>Na pierwszy rzut oka widać jedno: wynik to <strong>prevInterval * grade</strong>. Model napisze więc asercję wprost na tym wzorze - <strong>getNextInterval(10, 2)</strong> ma zwrócić <strong>20</strong>. Test przejdzie na zielono.</p>
+<p>Czego w kodzie nie widać? Reguły biznesowej i buga. Kiedy uczeń nie pamięta karty (<strong>grade</strong> równy 0), odstęp powinien zresetować się do jednego dnia - a nie spaść do zera, bo zero oznacza kartę, która już nigdy nie wróci do nauki. Funkcja ma tu błąd, ale model go nie zobaczy: zobaczy tylko, że dla <strong>grade</strong> równego 0 wychodzi <strong>0</strong>, i taką asercję zapisze.</p>
+<p>Model odwzorował to, co kod <em>robi</em>. Tego, co kod <em>powinien robić</em>, nie dało się wyczytać z samej implementacji - a to właśnie ono jest sednem testu.</p>
+<p>Stąd dwa wnioski, na których stoi cała ta lekcja:</p>
+<ul>
+<li><strong>Duży wskaźnik pokrycia testami nie jest dowodem ochrony.</strong> Badania konsekwentnie pokazują, że pokrycie kodu słabo koreluje z realnym wykrywaniem błędów. Zielony pasek mówi tylko, że linia się wykonała - nie, że asercja miała jakikolwiek sens.</li>
+<li><strong>Naiwne promptowanie to za mało.</strong> Testy, które faktycznie chronią kod, wynikają z analizy ryzyk, właściwego kontekstu i starannej dbałości o ich optymalną liczbę. Ani za mało, ani za dużo.</li>
+</ul>
+<p>Na szczęście mamy już&nbsp;dobre fundamenty. W poprzedniej lekcji uzyskaliśmy Test Plan - to kontrakt jakościowy projektu, który zawiera mapę ryzyk, opisuje fazowe wdrażanie usprawnień i porządkuje cykl <strong>/10x-new</strong> → <strong>/10x-research</strong> → <strong>/10x-plan</strong> → <strong>/10x-implement</strong>, którym realizujemy zmiany. To był ważny krok, choć sama mapa to dopiero początek.</p>
+<h2>Vibe Testing, czyli jak nie wprowadzać testów</h2>
+<p>Naiwne podejście do testowania może na początku współpracy z agentami wyglądać&nbsp;tak:</p>
+<pre><code class="language-text">Write tests for the auth module.
+</code></pre>
+<p>Problem polega na tym, że takie testy często sprawdzają kształt aktualnej implementacji, a nie zachowanie istotne dla użytkownika, które wynika choćby z dokumentacji.</p>
+<p>Zobacz uproszczony przykład:</p>
+<pre><code class="language-ts">it("authenticates user", async () =&gt; {
+  const result = await authenticate(input);
+
+  expect(result).toEqual(await authenticate(input));
+});
+</code></pre>
+<p>To wygląda jak test, ale nie chroni prawie niczego. Asercja pyta funkcję, co zwróciła, a potem sprawdza, czy zwróciła to, co zwróciła.</p>
+<p>W praktyce testy generowane przez najlepsze modele AI są zwykle mniej karykaturalne, ale mechanizm pozostaje ten sam. Można to opisać na trzech klasach problemów:</p>
+
+<ul>
+<li><strong>Antywzorzec</strong>: Mirror implementacji | <strong>Jak wygląda</strong>: Test sprawdza wywołanie wewnętrzne, prywatny szczegół albo wynik wyliczony tą samą logiką co cały moduł. | <strong>Co powinno się wydarzyć</strong>: Test opisuje obserwowalne zachowanie i oczekiwany wynik scenariusza biznesowego.</li>
+<li><strong>Antywzorzec</strong>: Happy paths | <strong>Jak wygląda</strong>: Agent tworzy łatwe testy na poprawnych danych. | <strong>Co powinno się wydarzyć</strong>: Pojawia się przynajmniej jeden edge case wynikający z ryzyka.</li>
+<li><strong>Antywzorzec</strong>: Brak przypadków brzegowych | <strong>Jak wygląda</strong>: Brakuje testu z <strong>null</strong>em, pustymi danymi, błędem środowiska albo niezgodnością bibliotek. | <strong>Co powinno się wydarzyć</strong>: Test łapie przypadek, który realnie mógłby uszkodzić doświadczenie użytkownika.</li>
+</ul>
+<p>Stąd dwa konkretne wymagania wobec całego procesu: daj agentowi <strong>konkretne wejście (opis, dane lub scenariusz) związane z ryzykiem</strong> (inaczej test nie dotknie groźnej ścieżki) i <strong>osobno zweryfikuj asercję</strong> (bo to ona jest najczęstszym słabym punktem).</p>
+<h2>Jak Test Plan rozbraja te pułapki</h2>
+<p>Nasz <strong>context/foundation/test-plan.md</strong> i łańcuch <strong>/10x-new</strong> → <strong>/10x-research</strong> → <strong>/10x-plan</strong> → <strong>/10x-implement</strong>, powstał właśnie po to, żeby rozbroić każdą z tych pułapek, zanim agent napisze pierwszą asercję. Przejdźmy je po kolei.</p>
+<p><strong>"Agent wygeneruje testy do każdego pliku" → ryzyko zamiast pliku.</strong> Test Plan to nie lista plików do pokrycia, tylko mapa ryzyk. Sekcja z ryzykami mówi, jaki scenariusz biznesowy nie może się zepsuć i dlaczego - z oszacowaniem wpływu, prawdopodobieństwa i źródła. Decyzja "co testować" jest więc już podjęta, i to na podstawie tego, co realnie boli, a nie tego, co najłatwiej wygenerować.</p>
+<p><strong>Problem wyroczni → research i opis oczekiwanego zachowania.</strong> Pamiętasz, że z samej implementacji nie dało się wyczytać, co kod <em>powinien</em> robić? Plan to uzupełnia. Przy każdym ryzyku trzyma nie tylko opis zagrożenia, ale też to, jakie zachowanie udowodniłoby ochronę (to jest twoja wyrocznia) i jakie wygodne założenie agent ma zakwestionować - na przykład „udane logowanie nie znaczy od razu, że użytkownik właściwą treść strony".</p>
+<p><strong>Coverage jako dowód → zasada cost × signal.</strong> Plan stoi na jednej regule: dla każdego ryzyka szukamy najtańszego testu, który daje realny sygnał. Nie promujemy skoków do e2e, bo „tak jest bezpieczniej", i nie gonimy procentu pokrycia. Coverage przestaje być celem - celem jest sygnał dla konkretnego ryzyka. Czym ten sygnał różni się od samego pokrycia, pokażemy dalej.</p>
+<p><strong>Trzy antywzorce → zabezpieczenie wbudowane w handoff.</strong> Kiedy faza trafia do <strong>/10x-plan</strong>, handoff z góry sugeruje, żeby każdy testowy etap określał: jakie zachowanie asercjonuje, jaką regresję łapie, skąd bierze kontekst z <strong>research.md</strong>, jaki ma co najmniej jeden przypadek brzegowy i jakiego antywzorca unika.</p>
+<blockquote>
+<p>Zwracaj uwagę na sugerowane parametry każdego ze skilli 10x-research i 10x-plan - praca ze skillem 10x-test-plan pozwoli ci je wykorzystać&nbsp;w najbardziej efektywny sposób.</p>
+</blockquote>
+<h2>Case study: od ryzyka do testów integracyjnych</h2>
+<p>Żeby to nie zostało teorią, prześledźmy jeden realny przebieg zabezpieczania istniejącego kodu na podstawie ryzyka z <strong>context/foundation/test-plan.md</strong>. Przykładem będzie 10xCards, czyli aplikacja do fiszek.</p>
+<p>Kiedy użytkownik przejrzy wygenerowane karty i część z nich zaakceptuje, operacja zapisu (<strong>save</strong>) promuje zaakceptowane drafty do prawdziwej talii. Bierzemy więc na warsztat ryzyko, że ten zapis uszkodzi talię.</p>
+<p>Zaczynamy od <strong>context/foundation/test-plan.md</strong>, a kończymy na działających testach, tym razem głównie integracyjnych. To dokładnie ta sama pętla, którą możesz wykonać w swoich zadaniach.</p>
+<h3>Punkt startowy: jedno ryzyko, zero testów na ścieżce zapisu</h3>
+<p>Skupimy się na jednym z ryzyk dotyczących zapisów danych, które nie było pokryte żadnym testem:</p>
+<ul>
+<li><strong>Ryzyko #2</strong> - zapis sesji uszkadza talię: drafty w stanie <strong>pending</strong>/<strong>rejected</strong> trafiają do talii razem z zaakceptowanymi albo częściowy zapis przy błędzie zostawia talię w niespójnym stanie. Kontrakt biznesowy jest prosty: tylko zaakceptowane karty mogą trafić do talii.</li>
+</ul>
+<p>Cała ścieżka zapisu - funkcja <strong>saveSession()</strong> w <strong>src/lib/save-session.ts</strong>, endpoint zapisu oraz sąsiednie endpointy draftów i fiszek - miała na starcie <strong>zero testów</strong>. Projekt miał już hermetyczny zestaw testów z wcześniejszej fazy, ale ani jednego testu dotykającego prawdziwej bazy danych.</p>
+<h3>Co odkrył research</h3>
+<p>Zanim padł pierwszy prompt o test, ruszył <strong>/10x-research</strong>. I znowu pojawił się najważniejszy zwrot całego przebiegu: <strong>research zmienił cel zadania</strong>, choć inaczej niż można by się spodziewać.</p>
+<p>Okazało się, że jedno ryzyko ma dwie zupełnie różne twarze:</p>
+<ul>
+<li><strong>„pending/rejected zostają promowane”</strong> to w praktyce ścieżka dobrze zabezpieczona. Zapis filtruje drafty przez <strong>.eq("state","accepted")</strong>, a dane wysyłane do bazy powstają wyłącznie z tego przefiltrowanego zbioru. Sama baza pilnuje stanów przez CHECK constraint. Żeby to popsuć, ktoś musiałby zmienić sam filtr. To nie jest ukryty bug, tylko inwariant do obrony.</li>
+<li><strong>„częściowy commit przy błędzie”</strong> to ryzyko realne i nietestowane. Tu research odkrył rzecz kluczową: zapis jest <strong>nieatomowy</strong>. <strong>saveSession()</strong> wykonuje po kolei trzy niezależne operacje Supabase: upsert do <strong>flashcards</strong>, upsert do <strong>review_states</strong>, a potem delete z <strong>flashcard_drafts</strong>. Klient Supabase JS nie opakuje tego za nas w jedną transakcję. Błąd w środku sekwencji zostawia stan częściowy.</li>
+</ul>
+<p>I jeszcze jeden niewygodny szczegół: te częściowe awarie <em>nie</em> są dziś naprawiane. Gdy padnie commit <strong>review_states</strong>, funkcja loguje <strong>orphan_review_state</strong> i mimo to zwraca <strong>ok: true</strong>. Gdy padnie delete draftów, loguje <strong>orphan_drafts</strong> i też zwraca <strong>ok: true</strong>. Nie ma rollbacku.</p>
+<p>To zmieniło zadanie w sposób, który łatwo przeoczyć: <strong>nie piszemy testu na rollback, którego nie ma.</strong> Decyzja, czy uszczelnić zapis przez jedną transakcję (np. Postgres RPC), jest decyzją produktową. Research wynotował ją jako otwarte ryzyko, ale nie udawał, że w kodzie istnieje ochrona, której tam nie ma.</p>
+<p>Zadanie fazy było więc inne: udowodnić reguły, które już są zabezpieczone, i przypiąć obecny, świadomie tolerowany kontrakt częściowych awarii. Dzięki temu przyszła zmiana nie popsuje go po cichu.</p>
+<p>Research dobrał też strategię testów - i tu pojawił się podział na dwie warstwy, każda dobrana po najtańszym sygnale:</p>
+<ul>
+<li><strong>Testy integracyjne na lokalnym Supabase</strong> - dla reguł, których uczciwie nie da się zasymulować mockiem: tylko zaakceptowane drafty trafiają do <strong>flashcards</strong>, powstaje dokładnie jeden wiersz <strong>review_states</strong> na promowaną kartę, po zapisie znikają wszystkie drafty sesji, a drugi zapis jest idempotentny (unikalny constraint nie tworzy duplikatów). To wymagało nowej infrastruktury: klienta z kluczem service-role, świeżego konta i świeżej sesji dla każdego testu. Klucz service-role omija RLS, ale w tym scenariuszu to akceptowalne, bo <strong>saveSession</strong> i tak filtruje po jawnym <strong>accountId</strong>.</li>
+<li><strong>Hermetyczne testy ze stubem klienta</strong> - dla częściowych awarii, których prawdziwej bazy nie da się łatwo zmusić do błędu w środku sekwencji. Konfigurowalny stub klienta pozwala sprawić, że konkretna operacja zwróci błąd, a reszta przejdzie. Wtedy asercja przypina zachowanie: „padł <strong>review_states</strong> → log <strong>orphan_review_state</strong> i <strong>ok: true</strong>".</li>
+</ul>
+<p>Na koniec research wyprodukował mapę „najtańszy test, który łapie dany kawałek ryzyka" - jeszcze przed pierwszym promptem.</p>
+<h3>Od researchu do planu</h3>
+<p>Wdrożenie testów przeszło z fazy researchu do fazy planowania. Skill <strong>10x-plan</strong> rozbił pracę na cztery fazy, ułożone w świadomej kolejności - według zależności:</p>
+
+<ul>
+<li><strong>Faza</strong>: 2.1 Środowisko integracyjne + reguła promocji | <strong>Co dostarcza</strong>: nowy zestaw pomocników dla lokalnego Supabase + test „tylko accepted promuje” | <strong>Dlaczego tu</strong>: bez tego nie da się pisać reszty testów integracyjnych</li>
+<li><strong>Faza</strong>: 2.2 Pozostałe reguły DB | <strong>Co dostarcza</strong>: parowanie <strong>review_states</strong>, czyszczenie draftów, idempotencja | <strong>Dlaczego tu</strong>: korzysta ze środowiska z 2.1</li>
+<li><strong>Faza</strong>: 2.3 Hermetyczne stuby + endpoint | <strong>Co dostarcza</strong>: gałęzie częściowych zapisów, wczesne zakończenia, mapowanie statusów HTTP | <strong>Dlaczego tu</strong>: nie wymaga bazy, ląduje w domyślnym <strong>npm test</strong></li>
+<li><strong>Faza</strong>: 2.4 Cookbook + korekta bramki | <strong>Co dostarcza</strong>: wypełnione wzorce w <strong>test-plan.md</strong>, bramka integracyjna oznaczona jako ad hoc | <strong>Dlaczego tu</strong>: trwały transfer wiedzy do kolejnych faz</li>
+</ul>
+<p>Kolejność odpowiadała realnym zależnościom w projekcie. Najpierw trzeba było zbudować brakujące środowisko integracyjne i od razu sprawdzić nim najważniejszą regułę, żeby Faza 2.1 dawała dowód, a nie samo rusztowanie. Dopiero potem miały sens kolejne reguły bazodanowe, tanie testy hermetyczne bez bazy i utrwalenie wzorców dla następnych faz.</p>
+<blockquote>
+<p>Uwaga - po wprowadzeniu środowiska do testów, warto zaktualizować AGENTS.md / CLAUDE.md opisująć jak testujemy kod w tym projekcie.</p>
+</blockquote>
+<h3>Gdzie to się zgadza z dobrymi zasadami testowania</h3>
+<p>Wdrażając testy w oparciu o mapę ryzyk, zadbaliśmy o kilka dobrych praktyk testowania:</p>
+<ul>
+<li><strong>Ryzyko, nie plik.</strong> Punktem wyjścia było Ryzyko #2 z mapy, a nie „pokryjmy <strong>save-session.ts</strong>”. Co więcej, research rozbił to ryzyko na część już dobrze zabezpieczoną i część realnie niepokrytą. Testy poszły tam, gdzie naprawdę bolało.</li>
+<li><strong>Wyrocznia z researchu, nie z implementacji.</strong> Tego, że zapis jest nieatomowy i że częściowe awarie kończą się <strong>ok: true</strong>, nie dało się zgadnąć z samego kształtu funkcji. Ocena brzmiała: pełna promocja albo policzalny, zalogowany stan częściowy - nigdy cicha korupcja talii.</li>
+<li><strong>Uczciwy kontrakt zamiast wymarzonego.</strong> Nie napisaliśmy testu na rollback, bo rollbacku nie ma. Przypięliśmy obecne zachowanie i wynotowaliśmy odwołanie do RPC jako otwarte ryzyko produktowe. Test pilnuje tego, co kod <em>robi dziś</em>, i złapie moment, w którym ktoś zmieni to bez świadomej decyzji.</li>
+<li><strong>Cost × signal zamiast pogoni za coverage.</strong> Integracja na lokalnym Supabase pojawiła się tylko tam, gdzie mock by skłamał: unikalny constraint, kaskady, realny SQL. Klient z kluczem serwisowym zastąpił logowanie użytkownika, bo autoryzacja przez RLS byłaby osobną fazą. Stub klienta obsłużył awarie, których prawdziwa baza nie wywoła w prosty sposób. Bramka integracyjna została ad hoc, nie na każdy commit, żeby nie zmuszać projektu do uruchamiania Supabase przy każdej drobnej zmianie.</li>
+<li><strong>Asercja behawioralna.</strong> Reguła „tylko accepted promuje” nie sprawdza, jak zbudowano zapytanie. Test seeduje mieszany zestaw draftów (<strong>accepted</strong> + <strong>pending</strong> + <strong>rejected</strong>) i sprawdza obserwowalny skutek: w <strong>flashcards</strong> lądują wyłącznie zaakceptowane karty, a po zapisie znika <em>każdy</em> draft sesji. Taki test łapie regresję, której jeszcze nie ma: poluzowany filtr stanu albo zawężony delete.</li>
+<li><strong>Weryfikacja asercji przez celowe psucie.</strong> Każda faza ma krok manualny w stylu „odwróć wynik jednej gałęzi <strong>saveSession</strong> i sprawdź, czy pada dokładnie ten jeden test endpointu” albo „zawęź delete draftów i sprawdź, czy asercja »wszystkie drafty znikają« faktycznie spada”. To uproszczona wersja testów mutacji rozwijanych w Deep Dive, tylko odpalona ręcznie: jeśli po zepsuciu kodu test nadal jest zielony, to asercja niczego nie chroni.</li>
+</ul>
+<p>Zwróć uwagę, że żaden krok nie brzmiał „wygeneruj testy do <strong>save-session.ts</strong>”. Każdy brzmiał: ten kawałek ryzyka, ta hipoteza, ten najtańszy test - integracyjny albo hermetyczny. To jest różnica między testem od agenta a procesem zapewniania jakości.</p>
+<h3>Opcjonalny skill dla nowych funkcjonalności: <strong>/10x-tdd</strong></h3>
+<p>Skill otrzymasz pobierając paczkę artefaktów dla tej lekcji:</p>
+<pre><code class="language-bash">npx @przeprogramowani/10x-cli@latest get m3l2
+</code></pre>
+<p>Ta paczka dostarcza skill: <strong>/10x-tdd</strong>. Poniżej opisujemy jego założenia i sposób działania.</p>
+<p>Do tej pory naszym wykonawcą wszelkiej maści planów był skill <strong>/10x-implement</strong>. To dobra ścieżka domyślna: mamy zatwierdzony <strong>plan.md</strong>, przechodzimy przez kolejne fazy i dowozimy zmianę razem z testami.</p>
+<p>Jest jednak sytuacja, w której warto zaostrzyć proces. Jeśli faza planu zakłada napisanie nowego kodu, a później dołożenie testów, możesz uruchomić opcjonalny skill <strong>/10x-tdd</strong>, który odwróci ten proces.</p>
+<p>To nie jest osobny workflow i nie jest obowiązkowa bramka jakości dla każdej zmiany. <strong>/10x-tdd</strong> czyta ten sam plik <strong>context/changes/&lt;change-id&gt;/plan.md</strong>, korzysta z tej samej sekcji <strong>## Progress</strong> i realizuje te same fazy co <strong>/10x-implement</strong>. Zmienia tylko kolejność pracy:</p>
+<pre><code class="language-text">RED -&gt; GREEN -&gt; REFACTOR
+</code></pre>
+<p>Najpierw agent pisze test, który musi spaść na czerwono. Potem dopisuje minimalny kod, który go zazielenia. Na końcu porządkuje rozwiązanie, ale bez zmiany zachowania (zwróć uwagę, że ta praktyka nie wymaga test-planu i możesz ją stosować do wdrażania testów na bieżąco).</p>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l2-lesson-draft-1-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l2-lesson-draft-1-10x.png</a></p></blockquote>
+<p>W klasycznym TDD to znany cykl. W pracy z agentem ma jeszcze jedną funkcję: zatrzymuje model na asercji, zanim zacznie produkować implementację.</p>
+<p>Zamiast pisać:</p>
+<pre><code class="language-text">Zaimplementuj promocję zaakceptowanych draftów do talii wg fazy XYZ, a potem pokryj to testami jednostkowymi.
+</code></pre>
+<p>wraz ze skillem <strong>10x-tdd</strong> idziesz ścieżką:</p>
+<pre><code class="language-text">Najpierw wprowadź test, który udowadnia, że zapis promuje wyłącznie drafty w stanie `accepted`,
+a `pending`/`rejected` nigdy nie trafiają do talii. Potem przejdź do implementacji założeń fazy XYZ.
+</code></pre>
+<p>Agent musi najpierw ujawnić, co uważa za dowód poprawnego zachowania. Dopiero potem dostaje prawo do pisania kodu.</p>
+<p>Właśnie dlatego <strong>/10x-tdd</strong> to warta uwagi alternatywa. Cały czas walczymy tu z testami, które tylko wyglądają dobrze: mają zielony raport, powodują rosnący coverage i asercję, która nie chroni ryzyka. Czerwony test na początku zmusza nas do wcześniejszego pytania o źródło prawdy:</p>
+<ul>
+<li>co dokładnie powinno się wydarzyć,</li>
+<li>jaki wynik widzimy z zewnątrz,</li>
+<li>co ma się zepsuć, jeśli ktoś naruszy ochronę,</li>
+<li>czy asercja opisuje zachowanie, czy tylko powtarza implementację.</li>
+</ul>
+<p>No właśnie. Jeśli nie potrafisz odpowiedzieć na te pytania, to nie masz jeszcze materiału na dobry test.</p>
+<p>Możesz więc trzymać się prostej reguły:</p>
+<blockquote>
+<p>Jeśli w danej fazie planu umiesz nazwać pierwszy czerwony test jednym zdaniem, rozważ <strong>/10x-tdd</strong>. Jeśli nie umiesz, zostań przy <strong>/10x-implement</strong> albo wróć do researchu.</p>
+</blockquote>
+<p>Dobre warunki startowe brzmią na przykład tak:</p>
+<ul>
+<li>"promuje wyłącznie drafty w stanie <strong>accepted</strong>, a <strong>pending</strong>/<strong>rejected</strong> nigdy nie trafiają do talii",</li>
+<li>"zwraca <strong>ok:true</strong> i loguje <strong>orphan_review_state</strong>, gdy upsert stanu powtórek padnie w trakcie zapisu",</li>
+<li>"zwraca 401, gdy użytkownik nie ma dostępu do kursu",</li>
+<li>"resetuje interwał powtórki do jednego dnia, gdy ocena wynosi 0".</li>
+</ul>
+<p>Każde z nich opisuje obserwowalny wynik. Nie mówi agentowi, jak ma nazwać funkcję, gdzie ma postawić mocka ani którą prywatną metodę wywołać. Mówi, jakie zachowanie ma zostać obronione.</p>
+<p><strong>/10x-tdd</strong> szczególnie dobrze sprawdza się przy:</p>
+<ul>
+<li>walidatorach, parserach i transformacjach danych,</li>
+<li>logice biznesowej z jasnym wejściem i wyjściem,</li>
+<li>kontraktach API: status, body odpowiedzi, auth, gating, obsługa błędu,</li>
+<li>reducerach, maszynach stanów i wyliczaniu flag,</li>
+<li>bugfixach, gdzie najpierw chcesz odtworzyć błąd,</li>
+<li>regression guardach dla ryzyk z <strong>test-plan.md</strong>.</li>
+</ul>
+<p>Są też przypadki, w których nie warto go forsować:</p>
+<ul>
+<li>czysty scaffolding katalogów i plików,</li>
+<li>konfiguracja narzędzi, runnerów, CI/CD, deploya albo zmiennych środowiskowych,</li>
+<li>dokumentacja i zmiany treści,</li>
+<li>kosmetyka UI bez sensownej ścieżki automatycznej asercji,</li>
+<li>cienkie okablowanie, gdzie test tylko przepisałby implementację,</li>
+<li>spike, w którym dopiero szukasz właściwego kontraktu.</li>
+</ul>
+<p>Jest jeszcze jeden warunek: <strong>/10x-tdd</strong> zakłada, że środowisko testowe już istnieje. Skill nie instaluje runnera, nie układa całej konfiguracji i nie buduje CI od zera. Jeśli repozytorium nie ma jeszcze testów, najpierw dowieź bootstrap. Dopiero potem wzorzec test-first zaczyna być użyteczny.</p>
+<p>W praktyce możesz mieszać oba tryby w ramach jednego planu:</p>
+<pre><code class="language-text">/10x-implement &lt;change-id&gt; phase 1   # środowisko testowe
+/10x-tdd &lt;change-id&gt; phase 2         # kontrakt wrappera
+/10x-tdd &lt;change-id&gt; phase 3         # kontrakt API
+/10x-implement &lt;change-id&gt; phase 4   # cookbook i synchronizacja planu
+</code></pre>
+<p>To działa, bo oba skille zapisują postęp w tym samym miejscu: <strong>## Progress</strong> w <strong>plan.md</strong>. Nie tworzysz drugiej listy zadań. Nie rozbijasz zmiany na dwa równoległe procesy. Po prostu wybierasz właściwy tryb dla konkretnej fazy.</p>
+<p>Największa wartość <strong>/10x-tdd</strong> polega na tym, że agent definiuje i pozwala ocenić asercję zanim napisze kod. Ty możesz wtedy zatrzymać się na czerwonym teście i zapytać: czy to naprawdę łapie ryzyko? Czy nie odwzorowuje implementacji? Czy ma niezbędne warunki brzegowe? Czy padnie, jeśli celowo popsujemy kod?</p>
+<p>To jest moment, w którym test przestaje być dodatkiem do implementacji. Staje się rozmową o zachowaniu, zanim implementacja w ogóle powstanie.</p>
+<h2>A co, jeśli koniecznie chcesz testować wg plików</h2>
+<p>Cała ta lekcja namawia cię, żeby wychodzić od ryzyka, a nie od pliku. Bywają jednak sytuacje, w których naprawdę masz jeden konkretny plik i chcesz go obłożyć testami od ręki - bez całego cyklu <strong>/10x-research</strong> → <strong>/10x-plan</strong> → <strong>/10x-implement</strong>. To podejście nie wykorzystuje całego potencjału zgromadzonego do tej pory kontekstu i wiedzy biznesowej, ale jeśli już je wybierasz, niech przynajmniej nie zsunie się w Vibe Testing i prompty w stylu <strong>napisz mi więcej testów</strong>.</p>
+<p>Poniższy surowy prompt (bez żadnego skilla) wymusza na agencie te same bezpieczniki, o których była mowa wyżej: wyrocznię ze źródeł zamiast z implementacji, asercje behawioralne, przypadki brzegowe wynikające z ryzyka i prawo do dopytania cię, gdy coś jest niejasne.</p>
+<p>Podmień placeholdery na ścieżki do kluczowych plików (w brownfieldach zamiast PRD możesz użyć innego dokumentu kontekstowego, a zamiast TECH_STACK wskazać choćby na <strong>package.json</strong> czy inny spis zainstalowanych bibliotek):</p>
+<pre><code class="language-text">Napisz testy jednostkowe dla @PLIK bazując na @TECH_STACK oraz wymaganiach z @PRD.
+</code></pre>
+<p>A następnie w tym samym prompcie wklej fragment:</p>
+<pre><code>Przejdź przez trzy etapy:
+
+1) Ustal oczekiwane zachowanie ze źródeł, a nie z samej implementacji: przeczytaj TECH_STACK
+oraz PRD i na tej podstawie zdecyduj, które zachowania tego pliku są istotne dla
+użytkownika i dla biznesu. Wypisz je przed wdrożeniem testów. Nie zakładaj, że to, co
+kod aktualnie robi, jest tym, co robić powinien - jeśli z PRD lub tech-stacku nie
+wynika jednoznacznie poprawne zachowanie (problem wyroczni), ZATRZYMAJ się i
+zadaj mi pytania, zamiast zgadywać i kopiować wynik z implementacji.
+
+2) Dla każdego istotnego zachowania napisz test behawioralny: asercja ma
+sprawdzać obserwowalny wynik scenariusza, a nie wewnętrzne wywołania, prywatne
+szczegóły czy wynik policzony tą samą logiką co testowany kod. Dołóż przynajmniej
+przypadki brzegowe wynikające z ryzyka (np. `null`, puste dane, błąd zależności,
+nieprawidłowe wejście). Pilnuj optymalnej liczby testów - bez kilku niemal
+identycznych kopii sprawdzających to samo; każdy test ma łapać inną regresję.
+
+3) Napisz podsumowanie zmian - opisz w formie tabeli, jaką regresję łapie każdy test i jaką
+zmianę w kodzie by wykrył. Jeśli dla jakiegoś fragmentu nie umiesz tego nazwać,
+oznacz go jako niepewny i dopytaj mnie o dodatkowy kontekst lub wymagania.
+</code></pre>
+<p>(Uwaga ten prompt zakłada, że wstępna konfiguracja środowiska testowego już istnieje - jeśli nie, zacznij od <strong>10x-research</strong> i wprowadź niezbędne biblioteki lub test runnery).</p>
+<p>Jeśli po wyniku nadal nie masz pewności, czy te testy faktycznie chronią kod, przejdź do Deep Dive - to dokładnie ten moment, w którym mutation testing odpowie ci na pytanie „czy asercja cokolwiek wyłapie", którego sam zielony raport nie rozstrzygnie.</p>
+<h2>🧑🏻‍💻 Zadania praktyczne</h2>
+<h3>Przepuść kluczowe ryzyko przez cykl research → plan → implement</h3>
+<p>Od ryzyka z planu do działającego testu, przez <strong>/10x-research</strong> → <strong>/10x-plan</strong> → <strong>/10x-implement</strong>.</p>
+<ol>
+<li>Otwórz <strong>context/foundation/test-plan.md</strong> i wybierz jedno z najwyższych niepokrytych ryzyk, które NIE WYMAGA testów e2e (kolejne lekcje).</li>
+<li>Uruchom <strong>/10x-research</strong> na tym ryzyku, <strong>zanim</strong> poprosisz o jakikolwiek test.</li>
+<li>Wyłów z researchu trzy rzeczy: gdzie ryzyko realnie przechodzi przez kod (plik / funkcja / moduł), jakie zachowanie udowodniłoby ochronę (to ma pochodzić z analizy, nie z kształtu implementacji) i jaki jest najtańszy test, który łapie to ryzyko.</li>
+<li>Przepuść to przez <strong>/10x-plan</strong> i sprawdź, czy plan rozbija pracę na etapy w sensownej kolejności, a każdy etap mówi, jakie zachowanie asercjonuje. Sprawdź również czy plan zawiera fazę setupu niezbędnej infrastruktury - jeśli nie, skoryguj agenta.</li>
+<li>Zrealizuj kolejne fazy przez <strong>/10x-implement</strong> i wygeneruj realny zestaw testów dla wybranego ryzyka.</li>
+</ol>
+<p>Po każdym ukończonym etapie możesz odpalić <strong>/10x-test-plan</strong>, żeby skill podpowiedział ci kolejny krok i utrzymał cię w obrębie fazy z planu.</p>
+<p>Pamiętaj - punktem wyjścia powinno być ryzyko i scenariusz biznesowy, a rzadko kiedy pojedynczy plik.</p>
+<h2>Odbierz swoją odznakę</h2>
+<p>Po ukończeniu tej lekcji odbierz odznakę w sekcji <a href="https://platforma.przeprogramowani.pl/10xdevs-3/mission-log">10xDevs Mission Log</a> a następnie pochwal się swoim osiągnięciem!</p>
+<h2>🔎 Deep Dive</h2>
+<p>Ta sekcja zawiera dodatkowe pogłębienie wiedzy na temat wybranych zagadnień związanych z lekcją. W tym Deep Dive znajdziesz:</p>
+<ul>
+<li><strong>Dlaczego coverage nie wystarczy jako bramka</strong> — czym różni się informacja "kod został pokryty testem" od informacji "test złapał regresję w kodzie", i dlaczego to luka akurat przy testach od AI.</li>
+<li><strong>Mutation testing jako quality gate</strong> — kluczowe pojęcia i ogólny przepływ pracy z tego typu testami, niezależnie od narzędzia.</li>
+<li><strong>Stryker krok po kroku</strong> — konkretna konfiguracja dla stacku JS/TS, od instalacji po czytanie raportu i zawężanie zakresu.</li>
+<li><strong>Stryker a 10x-Workflow</strong> — jak wpiąć mutation testing w fazy planu i rozmowę z agentem.</li>
+<li><strong>Co Stryker znalazł po dwóch sesjach z Test Planem</strong> — realny raport z 10xCards i wnioski o nadmiarowych testach, słabych asercjach oraz świadomie zostawionych mutantach.</li>
+<li><strong>Jak Stryker zarządza mutantami</strong> — dlaczego narzędzie nie musi odpalać całego zestawu testów dla każdego mutanta.</li>
+</ul>
+<p>Ta sekcja lekcji nie jest obowiązkowa, ale warto się z nią zapoznać jeżeli chcesz zostać ekspertem.</p>
+<h3>Dlaczego coverage nie wystarczy jako bramka</h3>
+<p>Cała ta lekcja wynika z jednego problemu - agent oddaje ci zielony raport i rosnący coverage, a ty nie wiesz, czy te testy cokolwiek chronią. Coverage tego nie rozstrzygnie, bo odpowiada na inne pytanie.</p>
+<p>Coverage mówi: czy dana linia, gałąź albo funkcja została wykonana w trakcie testów? To użyteczny sygnał, ale bardzo ograniczony. Możesz wykonać linię kodu i nie sprawdzić niczego istotnego. Możesz też trafić we właściwą funkcję, ale asercją tak słabą, że każdy błąd przejdzie. Dokładnie taki test pisze agent, który odwzorował implementację zamiast zachowania - linia się wykonała, coverage urósł, asercja nie chroni niczego.</p>
+<p>Potrzebujesz więc osobnej bramki, która sprawdzi nie "czy kod się wykonał", tylko "czy test by zauważył, gdyby wprowadzić zmianę". To właśnie robi mutation testing.</p>
+<h3>Mutation testing jako quality gate</h3>
+<p>Pomysł jest prosty: skoro nie ufamy asercjom napisanym przez agenta, to celowo popsujmy kod produkcyjny i sprawdźmy, czy testy w ogóle to zauważą.</p>
+<p>Narzędzia do testów mutacji działają według podobnego schematu - niezależnie od języka:</p>
+<ol>
+<li><strong>Parsują kod produkcyjny</strong> i dla każdego miejsca, które da się zmienić, generują <em>mutanta</em> - kopię kodu z jedną drobną, celową wadą. Typowe mutacje to zamiana <strong>&gt;</strong> na <strong>&gt;=</strong>, odwrócenie warunku, podmiana wartości logicznej na <strong>true</strong>/<strong>false</strong>, usunięcie fragmentu wyrażenia czy zmiana operatora arytmetycznego.</li>
+<li><strong>Uruchamiają testy dla każdego mutanta</strong> (w praktyce tylko te, które dotykają zmienionej linii - wrócimy do tego przy wydajności).</li>
+<li><strong>Klasyfikują wynik.</strong> Jeśli przy danym mutancie choć jeden test failuje - mutant został <em>zabity</em> (killed), czyli testy wykryły wadę. Jeśli wszystkie testy nadal przechodzą - mutant <em>przeżył</em> (survived), czyli masz konkretny dowód, że żadna asercja nie pilnuje tego fragmentu.</li>
+<li><strong>Liczą wskaźnik mutacji</strong> - szczegóły wskaźnika pokazującego stan testów poniżej.</li>
+</ol>
+<blockquote><p><strong>IMAGE</strong> — <a href="https://images.przeprogramowani.pl/diagrams/lessons-m3-l2-lesson-draft-2-10x.png">https://images.przeprogramowani.pl/diagrams/lessons-m3-l2-lesson-draft-2-10x.png</a></p></blockquote>
+<p>Stany mutantów, które możesz zobaczyć w raportach:</p>
+
+<ul>
+<li><strong>Stan</strong>: Killed | <strong>Co znaczy</strong>: Test nie działa przy zmianie - tego chcemy. | <strong>Czy liczy się do score</strong>: tak (wykryty)</li>
+<li><strong>Stan</strong>: Survived | <strong>Co znaczy</strong>: Testy przeszły mimo zmiany - słaba albo brakująca asercja. | <strong>Czy liczy się do score</strong>: tak (niewykryty)</li>
+<li><strong>Stan</strong>: No coverage | <strong>Co znaczy</strong>: Żaden test nawet nie wykonał tego kodu. | <strong>Czy liczy się do score</strong>: tak (niewykryty)</li>
+<li><strong>Stan</strong>: Timeout | <strong>Co znaczy</strong>: Mutacja prawdopodobnie jest zbyt złożona; testy nie dobiegły końca. | <strong>Czy liczy się do score</strong>: tak (liczony jak killed)</li>
+<li><strong>Stan</strong>: Runtime/Compile error | <strong>Co znaczy</strong>: Mutant dał niepoprawny albo wywalający się kod. | <strong>Czy liczy się do score</strong>: nie (wykluczony)</li>
+<li><strong>Stan</strong>: Ignored | <strong>Co znaczy</strong>: Mutacja świadomie odfiltrowana z konfiguracji. | <strong>Czy liczy się do score</strong>: nie (wykluczony)</li>
+</ul>
+<p><strong>Mutation score</strong> - na podstawie biblioteki Stryker - może być wyliczane w taki sposób:</p>
+<pre><code class="language-text">mutation score = (killed + timeout) / (killed + timeout + survived + no coverage) × 100%
+</code></pre>
+<p>Jak to czytać w praktyce? W liczniku siedzą mutanty, które twoje testy faktycznie wyłapały - <strong>killed</strong> (test się wywalił przy zmianie) plus <strong>timeout</strong> (mutacja zapętliła testy, co Stryker liczy jak wykrycie). W mianowniku jest cała pula mutantów, które w ogóle mogły zostać wykryte: te wyłapane plus te, które się prześlizgnęły - <strong>survived</strong> (test przeszedł mimo zmiany) i <strong>no coverage</strong> (żaden test nie dotknął tego kodu). Mutanty wykluczone (<strong>compile error</strong>, <strong>ignored</strong>) nie wchodzą do równania w ogóle, więc nie zaniżają ani nie zawyżają wyniku. Innymi słowy: mianownik to "ile realnie było do złapania", licznik to "ile złapaliśmy". Wynik 80% znaczy, że na pięć sensownych mutacji twoje testy przepuściłyby jedną bez mrugnięcia okiem - i to właśnie ta jedna jest sygnałem, gdzie asercja jest ślepa.</p>
+<p>Zapamiętaj - <strong>im wyższy mutation score</strong>, tym mniej zmian w kodzie twoje testy przepuszczają niezauważone - czyli tym trudniej coś zepsuć, nie zapalając przy tym czerwonego raportu.</p>
+<p>Czy ta metoda testowania sprawia, że o pokryciu kodu należy zupełnie zapomnieć? Nie - te metody odpowiadają na różne pytania - coverage znajduje martwe strefy ("tu w ogóle nie ma testu"), a mutation score znajduje słabe asercje ("tu jest test, ale ślepy"). Przy testach od AI tym ważniejszym sygnałem jest ten drugi, bo agent rzadko zostawia kod całkiem niepokryty - on zostawia kod pokryty pozornie.</p>
+<h3>Stryker krok po kroku</h3>
+<p>W ekosystemie JS/TS standardowym narzędziem do testów mutacji jest Stryker - <a href="https://stryker-mutator.io/docs/stryker-js/introduction/">pierwsze kroki pod tym linkiem</a>.</p>
+<p><strong>1. Instalacja i inicjalizacja.</strong> Stryker ma interaktywny kreator, który wykryje dla ciebie test runner, doda pluginy i zapisze plik konfiguracyjny:</p>
+<pre><code class="language-bash">npx stryker init
+</code></pre>
+<p>Kreator dopisze zależności do <strong>package.json</strong> (m.in. <strong>@stryker-mutator/core</strong> i runner) oraz utworzy <strong>stryker.config.json</strong>.</p>
+<p><strong>2. Konfiguracja dla Vitest.</strong> Minimalny, ale kompletny plik wygląda tak:</p>
+<pre><code class="language-json">{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "testRunner": "vitest",
+  "plugins": ["@stryker-mutator/vitest-runner"],
+  "mutate": [
+    "src/**/*.ts",
+    "!src/**/*.spec.ts",
+    "!src/**/*.test.ts"
+  ],
+  "reporters": ["progress", "clear-text", "html"],
+  "concurrency": 4,
+  "thresholds": { "high": 80, "low": 60, "break": null }
+}
+</code></pre>
+<p>Co tu jest istotne:</p>
+<ul>
+<li><strong>testRunner</strong> + <strong>plugins</strong> - Stryker uruchamia testy twoim realnym runnerem (poza Vitest wspiera m.in. Jest, Mocha, Karma).</li>
+<li><strong>mutate</strong> - lista plików <strong>produkcyjnych</strong> do mutowania (nigdy plików testowych). To tu zawężasz bramkę do tego, co naprawdę chcesz chronić.</li>
+<li><strong>reporters</strong> - <strong>clear-text</strong> wypisuje mutanty wprost w terminalu, <strong>html</strong> generuje klikalny raport z podświetleniem każdej mutacji w kodzie. Mogą się przydać dodatkowe opcje jak <strong>json</strong> oraz <strong>markdown</strong> jeśli wyniki mają interpretować agenci.</li>
+<li><strong>concurrency</strong> - ile mutantów liczyć równolegle; mutation testing jest z natury wolny, więc to realnie wpływa na czas.</li>
+<li><strong>thresholds</strong> - <strong>high</strong>/<strong>low</strong> sterują kolorami raportu; <strong>break</strong> to próg, poniżej którego build pada. Zostaw <strong>null</strong>, dopóki traktujesz to jako selektywną bramkę, a nie twardy gate w CI.</li>
+</ul>
+<p>Ponieważ mutation testing nadal nie jest standardowym elementem większości projektów webowych, dopisz agentowi krótką instrukcję w <strong>CLAUDE.md</strong> albo <strong>AGENTS.md</strong>. Niech wie, że w tym repo istnieje dodatkowa bramka jakości i że nie powinien traktować jej jak zwykłego coverage.</p>
+<p>Przykład:</p>
+<pre><code class="language-text">## Mutation testing
+
+Repo uses Stryker for selective mutation testing on risk-critical modules.
+Run it only for code covered by the current change or a risk from test-plan.md,
+prefer narrowed scope with --mutate "path/to/file.ts:start-end", and do not chase
+100% mutation score. Survived mutants should be reviewed one by one: add an
+assertion only when the mutant represents a user-visible or business-relevant bug.
+</code></pre>
+<p><strong>3. Uruchomienie:</strong></p>
+<pre><code class="language-bash">npx stryker run
+</code></pre>
+<p><strong>4. Czytanie raportu.</strong> Po zakończeniu pierwszej serii testów, otwórz wygenerowany raport HTML i szukaj mutantów w stanie <em>Survived</em>. Dla każdego zobaczysz dokładną linię, zastosowany mutator i diff przed/po, na przykład:</p>
+<pre><code class="language-text">Mutant survived: src/srs.ts: line 3:10
+Mutator: ArithmeticOperator
+-   return prevInterval * grade;
++   return prevInterval + grade;
+</code></pre>
+<p>Mutant, który przeżył, to dowód, że żaden test nie zauważyłby tej zmiany. To również konkretne zadanie: szukaj sposobów na to, aby przez aktualizację testów "go zabić" (np. lepsze asercje).</p>
+<p><strong>5. Zawężanie zakresu.</strong> Pierwsze pełne uruchomienie na większym projekcie jest wolne. Dwa sposoby, żeby trzymać to w ryzach:</p>
+<ul>
+<li><strong>Mutation range</strong> - mutuj tylko fragment pliku, podając zakres linii: <strong>--mutate "src/srs.ts:1-40"</strong>. Idealne, gdy chcesz uderzyć w jeden krytyczny moduł ze swojego <strong>context/foundation/test-plan.md</strong>.</li>
+<li><strong>Tryb przyrostowy</strong> - <strong>--incremental</strong> (albo <strong>"incremental": true</strong>) zapisuje wynik do <strong>reports/stryker-incremental.json</strong> i przy kolejnych uruchomieniach przelicza tylko zmienione pliki. Dzięki temu Stryker realnie da się odpalać przed mergem, a nie raz na kwartał.</li>
+</ul>
+<p>Pętla, w której to wszystko żyje, jest krótka:</p>
+<ol>
+<li>masz test dla ryzyka z <strong>context/foundation/test-plan.md</strong>,</li>
+<li>uruchamiasz testy i widzisz coverage,</li>
+<li>odpalasz Stryker na zawężonym, krytycznym module,</li>
+<li>otwierasz raport i wybierasz żywego mutanta (zmiana kodu, której nie zauważą testy),</li>
+<li>prosisz agenta o test, który zabije tę mutację bez odwzorowywania implementacji,</li>
+<li>uruchamiasz Stryker ponownie i patrzysz na mutation score (potencjalnie - poprawa wyniku).</li>
+</ol>
+<h3>Stryker a 10x-Workflow</h3>
+<p>Stryker nie zastępuje żadnego ze skilli. To dodatkowa pętla kontroli jakości testów pisanych z agentem.</p>
+<p>Możesz uruchomić go na końcu całego planu, kiedy wszystkie fazy są już gotowe. Możesz też zrobić to między fazami, szczególnie wtedy, gdy dana faza miała dostarczyć ważny regression guard.</p>
+<p>W praktyce wystarczy prosta instrukcja:</p>
+<pre><code class="language-text">Uruchom Strykera na wprowadzonych testach w ukończonej fazie.
+</code></pre>
+<p>Raport Strykera staje się wtedy materiałem do rozmowy z agentem. Pokazujesz żywego mutanta i pytasz, jakie zachowanie ujawnia, czy obecny test naprawdę chroni ryzyko i czy warto dopisać asercję.</p>
+<pre><code class="language-text">Jak oceniasz jakość testów względem wyników Strykera?
+</code></pre>
+<p>Dzięki temu nie oceniasz pracy tylko po zielonym <strong>npm test</strong>. Na bieżąco pogłębiasz zrozumienie testów i jakości tego, co właśnie powstaje.</p>
+<p>Zobacz teraz, jak połączyć test plan z poznanym wcześniej cyklem implementacji, a także jak działa <strong>/10x-tdd</strong> oraz jak korzystać ze Strykera i prowadzić z agentem konwersację o rezultatach pracy:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><blockquote><p><strong>IFRAME</strong> — <a href="https://player.vimeo.com/video/1197122876?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">https://player.vimeo.com/video/1197122876?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479</a></p></blockquote></div><script src="https://player.vimeo.com/api/player.js"></script>
+<h3>Co Stryker znalazł po dwóch sesjach z Test Planem</h3>
+<p>W naszym projekcie odpaliliśmy Strykera na 10xCards po dwóch realnych sesjach z Test Planem: Fazie 1 (generowanie fiszek + prywatność) i Fazie 2 (zapis sesji z draftów). Na stole było 50 zielonych testów.</p>
+<p>Wynik dobrze pokazuje problem z tej lekcji: <strong>coverage uspokaja, a około 38% celowych błędów przeszłoby niezauważenie.</strong> Kod jest <em>pokryty</em>, ale nie w pełni <em>obroniony</em> asercją.</p>
+<p>Mutation score według pliku (zestaw testów hermetycznych):</p>
+
+<ul>
+<li><strong>Plik źródłowy</strong>: <strong>src/pages/api/sessions/[sessionId]/save.ts</strong> | <strong>Mutation score</strong>: <strong>87,5%</strong> | <strong>killed / survived</strong>: 35 / 5 | <strong>Werdykt</strong>: Dobry - przeżyły mutacje równoważne (kosmetyka odpowiedzi)</li>
+<li><strong>Plik źródłowy</strong>: <strong>src/lib/save-session.ts</strong> | <strong>Mutation score</strong>: 69,5% | <strong>killed / survived</strong>: 66 / 29 | <strong>Werdykt</strong>: Luki w gałęziach (patrz zastrzeżenie o integracji)</li>
+<li><strong>Plik źródłowy</strong>: <strong>src/pages/api/generate.ts</strong> | <strong>Mutation score</strong>: 66,2% | <strong>killed / survived</strong>: 45 / 20 (+3 no-cov) | <strong>Werdykt</strong>: Asercje zbyt płytkie</li>
+<li><strong>Plik źródłowy</strong>: <strong>src/lib/openrouter.ts</strong> | <strong>Mutation score</strong>: 53,6% | <strong>killed / survived</strong>: 74 / 62 | <strong>Werdykt</strong>: Większość przeżytych mutacji to treść promptu</li>
+</ul>
+<p>Najciekawsza nie jest tu jednak żadna liczba, tylko trzy konkretne obserwacje.</p>
+<p><strong>1. Stryker pomaga oddzielić testy pracujące od pozornych.</strong> Odkryliśmy problem w testach, które wyglądały jak dodatkowa ochrona, ale nie wykrywały żadnej mutacji. Dobry przykład to blok „Risk #7” w <strong>generate.test.ts</strong>: <strong>6 niemal identycznych testów</strong> (<strong>timeout</strong>, <strong>http</strong>, <strong>parse</strong>, <strong>unexpected</strong>, <strong>persistence</strong>, <strong>happy</strong>). Każdy kopiował setup testu głównego i dokładał jedno <strong>assertSentinelAbsent()</strong>.</p>
+<p>Intencja była słuszna: strażnik prywatności ma pilnować, że nigdy nie logujemy wklejonego tekstu. Problem w tym, że żadna mutacja kodu nie powodowała wycieku sentinela, więc wszystkie 6 testów zabijało 0 mutantów. Ten sam kontrakt utrzyma <strong>jeden</strong> sparametryzowany test (<strong>it.each([...])</strong>) lub ogólne założenie, że to nie w rodzaju błędu OpenRoutera leży ryzyko wycieku danych wejściowych.</p>
+<p>Lekcja jest prosta: test może mieć sensowną intencję a pomimo tego nadal być nadmiarowy w formie. Jeśli sześć kopii sprawdza ten sam brak wycieku i żadna nie daje dodatkowego sygnału, to jedna dobrze nazwana asercja wystarczy.</p>
+<p><strong>2. Słabe asercje widać po tym, co przeżywa.</strong> Czasem test istnieje, uruchamia właściwy fragment kodu i nadal nie broni zachowania. Raport Strykera pokazuje to bardzo konkretnie: przeżywa mutacja, która zmienia istotną decyzję w logice, a testy dalej są zielone.</p>
+<p>W naszym przebiegu dotyczyło to trzech typów luk. Po pierwsze, test sprawdzał tylko ogólny kształt błędu, ale nie szczegóły, które odróżniają poprawną obsługę walidacji od zwykłego fallbacku. Po drugie, testy dotykały zapisu, ale za słabo dociskały warunek „utwórz stan powtórki tylko wtedy, gdy faktycznie powstała karta”. Po trzecie, idempotencja zapisu była ważnym inwariantem, ale część testów hermetycznych nie potrafiła wykryć zmiany w zachowaniu <strong>upsert</strong>.</p>
+<p>To jest praktyczny sygnał dla rozmowy z agentem: nie pytasz „czemu coverage jest niski?”, tylko „jaka decyzja w logice zmieniła się tak, że test powinien spaść, a nie spadł?”. Dopiero z tego wychodzi sensowna poprawka asercji.</p>
+<p><strong>3. Nie każdy przeżyty mutant zasługuje na nowy test.</strong> Raport Strykera nie jest listą zadań do automatycznego odhaczenia. To lista pytań: czy ta zmiana naprawdę psuje zachowanie, które obchodzi użytkownika albo biznes?</p>
+<p>W naszym przebiegu wiele mutacji dotyczyło tekstu promptu systemowego, nagłówka odpowiedzi albo drobnego kształtu obiektu technicznego. Dałoby się napisać testy, które sprawdzają dokładne brzmienie promptu albo konkretny detal odpowiedzi, ale to byłoby lustro implementacji. Taki test pęka przy każdej normalnej refaktoryzacji i niewiele mówi o jakości produktu.</p>
+<p>Dlatego część przeżytych mutacji świadomie zostawiasz. Nie dlatego, że ignorujesz raport, tylko dlatego, że po analizie uznajesz: „ta zmiana nie reprezentuje błędu, przed którym chcemy się bronić”. Właśnie na tym polega różnica między używaniem Strykera jako narzędzia do myślenia a gonieniem mutation score do 100%.</p>
+<p>Praktyczny wniosek z całego testu? Agent rzadko zostawia kod <em>niepokryty</em>. Częściej zostawia go <em>pokrytym, ale nieobronionym</em>. Stryker pokazuje tę różnicę liczbą i konkretnym mutantem, zamiast zielonego paska, który sam z siebie niewiele gwarantuje.</p>
+<h3>Jak Stryker zarządza mutantami</h3>
+<p>Pierwsze spotkanie z testami mutacji może rodzić obawy o wydajność całego procesu. Skoro każdy mutant to osobna wersja kodu, to czy Stryker odpala cały zestaw testów raz na każdego mutanta? Nie - konkretna optymalizacja sprawia, że mutation testing jest wykonalny.</p>
+<p>Zanim Stryker zacznie mutować, robi jeden <em>dry run</em> z analizą pokrycia w trybie <strong>perTest</strong> - mapuje, który test wykonuje które linie. Potem dla danego mutanta uruchamia <strong>tylko te testy, które dotykają zmienionej linii</strong>. Test, który nigdy nie wykonuje tego kodu, i tak nie ma szans go zabić. W praktyce na realnym module wychodzi rząd kilku-kilkunastu testów na mutanta, nie cały zestaw.</p>
+<p>Wniosek jest ważny dla intuicji o koszcie: czas nie bierze się z ponownego uruchamiania wszystkiego, tylko z <strong>liczby mutantów</strong>. Tych potrafią być setki na plik. To dlatego głównym pokrętłem prędkości jest <strong>concurrency</strong> (ile mutantów liczyć równolegle) i zawężanie zakresu przez <strong>--mutate</strong>, a nie cięcie liczby testów.</p>
+<p>Jedna pułapka przy zawężaniu: jeśli wskażesz <strong>--mutate</strong> na plik, który nie ma żadnego testu, Stryker zwróci błąd "No tests were executed". Runner Vitest szuka testów powiązanych z mutowanym plikiem - kieruj mutację na moduły, które realnie mają testy.</p>
+<h3>Mutation score to nie cel - liczą się żywe mutanty</h3>
+<p>Najczęstszy błąd początkujących: potraktować mutation score jak coverage i gonić go do 100%. To pułapka, bo żeby zabić każdego mutanta, zaczniesz pisać testy asercjonujące przypadkowe detale - czyli dokładnie te mirrory implementacji, przed którymi ostrzega cała ta lekcja. Pogoń za wynikiem produkuje kruche testy.</p>
+<p>Wynik jest tylko wskazówką. Prawdziwym produktem są <strong>żywi mutanci</strong>, a każdy z nich wymaga osobnej decyzji od strony testów. Dla każdego żywego mutanta zadaj jedno pytanie: "czy realny bug o tym kształcie zabolałby użytkownika?". Stąd trzy kategorie:</p>
+<ol>
+<li><strong>Realna luka → dopisz asercję.</strong> Mutacja zmienia zachowanie, które <em>powinno</em> coś popsuć, a nic nie psuje. To jedyny warunek, w którym faktycznie działasz - np. zamiana <strong>&gt;=</strong> na <strong>&gt;</strong> albo <strong>||</strong> na <strong>&amp;&amp;</strong> w obsłudze błędu.</li>
+<li><strong>Mutant równoważny → zignoruj.</strong> "Bug" nie zmienia obserwowalnego zachowania (wartość i tak nadpisana, inny komunikat w logu). Żaden test <em>nie jest w stanie</em> go zabić. Stryker tego nie wie - ty wiesz.</li>
+<li><strong>Realna zmiana, ale niewarta przypięcia → zignoruj świadomie.</strong> Zachowanie się zmieniło, ale asercja na nie byłaby krucha albo bezwartościowa.</li>
+</ol>
+<h3>Gdzie to się opłaca</h3>
+<p>Mutation testing w dużych projektach faktycznie może być odczuwalny czasowo, dlatego nie traktuj go jak linter do odpalania po każdym commicie. To selektywna bramka, którą uruchamiasz tam, gdzie ewentualni żywi mutanci najprawdopodobniej wymagają twojej akcji. Sensowne miejsca:</p>
+<ul>
+<li>krytyczna logika domenowa,</li>
+<li>kod o wysokim wpływie z <strong>context/foundation/test-plan.md</strong>,</li>
+<li>moduł, który często się zmienia,</li>
+<li>obszar, w którym coverage wygląda dobrze, ale nadal nie ufasz testom (typowe przy testach od agenta),</li>
+<li>moment review przed ważnym mergem.</li>
+</ul>
+<p>Odpowiedniki w innych ekosystemach to m.in. Stryker.NET (C#), Stryker4s (Scala), PIT (Java/JVM), mutmut (Python), cargo-mutants (Rust) czy mull (C/C++). Pojęcia są te same: mutant, killed/survived, mutation score.</p>
+<h2>📚 Materiały dodatkowe</h2>
+<p>Nie musisz czytać tych materiałów przed wykonaniem ćwiczeń. Wróć do nich, gdy chcesz pogłębić jakość testów albo odświeżyć decyzję o stacku.</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2508.00408">Benchmarking LLMs for Unit Test Generation from Real-World Functions</a> — recenzowane badanie (ACM TOSEM), które pokazuje, że dotychczasowe benchmarki zawyżały skuteczność LLM-ów, a na realnym kodzie jakość testów wyraźnie spada.</li>
+<li><a href="https://arxiv.org/abs/2511.21382">LLMs for Unit Test Generation: Achievements, Challenges, and Opportunities</a> — przegląd badań (Chu i in., 2025) tłumaczący, dlaczego problem wyroczni i słaba korelacja coverage z wykrywaniem błędów wymuszają pętlę z feedbackiem.</li>
+<li><a href="https://arxiv.org/abs/2506.14297">Quality Assessment of Python Tests Generated by LLMs</a> — badanie (Alves i in., 2025) pokazujące, że błędne asercje to najczęstszy błąd w testach generowanych przez LLM-y.</li>
+<li><a href="https://arxiv.org/abs/2601.08998">On the Flakiness of LLM-Generated Tests for DBMS</a> — badanie (Berndt i in., 2026) o przenoszeniu niestabilnych asercji z kontekstu i dominacji błędów z nieokreśloną kolejnością wyników.</li>
+<li><a href="https://arxiv.org/abs/2506.15227">Large Language Models for Unit Testing: A Systematic Literature Review</a> — przegląd badań pokazujący, że generowanie testów przez LLM-y jest użyteczne, ale nadal wymaga hybrydowych pętli i review.</li>
+<li><a href="https://arxiv.org/abs/2503.14713">TestForge: Feedback-Driven, Agentic Test Suite Generation</a> — przykład podejścia, w którym agent poprawia testy na podstawie feedbacku z uruchomień i metryk.</li>
+<li><a href="https://arxiv.org/abs/2602.08146">Test vs Mutant: Adversarial LLM Agents for Robust Unit Test Generation</a> — aktualny sygnał badawczy łączący LLM-y, testy i mutacje jako feedback dla lepszych edge case'ów.</li>
+</ul>

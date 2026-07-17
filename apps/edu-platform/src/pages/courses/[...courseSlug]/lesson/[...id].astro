@@ -1,0 +1,44 @@
+---
+import Course from '@/components/Course.astro';
+import { type CourseSlug, COLLECTION_MAPPINGS } from '@/models/CollectionMappings';
+import { getLessonFromCourseCollection } from '@/server/content/courseContent';
+import { verifyAuth } from '@/server/verifyAuth';
+
+const courseSlug = Astro.params.courseSlug as CourseSlug;
+const courseCollection = COLLECTION_MAPPINGS[courseSlug];
+
+if (courseSlug === '10xdevs-3-prework') {
+  const legacyLessonId = Astro.params.id as string | undefined;
+  const suffix = legacyLessonId ? `/pl/${legacyLessonId}` : '';
+  return Astro.redirect(`/external/10xdevs-3-prework${suffix}`);
+}
+
+if (courseSlug === '10xdevs-3') {
+  const legacyLessonId = Astro.params.id as string | undefined;
+  const suffix = legacyLessonId ? `/pl/${legacyLessonId}` : '';
+  return Astro.redirect(`/external/10xdevs-3${suffix}`);
+}
+
+if (!Object.keys(COLLECTION_MAPPINGS).includes(courseSlug)) {
+  return Astro.redirect('/');
+}
+
+const authResult = await verifyAuth(Astro, courseSlug);
+
+if (!authResult.isAuthenticated) {
+  return Astro.redirect('/login');
+}
+
+const lessonId = Astro.params.id as string;
+const lesson = await getLessonFromCourseCollection(courseCollection, lessonId);
+if (!lesson) {
+  return Astro.redirect(`/courses/${courseSlug}`);
+}
+---
+
+<Course
+  courseSlug={courseSlug}
+  collection={courseCollection}
+  lessonId={lessonId}
+  userEmail={authResult.email}
+/>

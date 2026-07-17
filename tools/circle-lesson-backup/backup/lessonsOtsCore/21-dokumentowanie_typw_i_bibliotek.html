@@ -1,0 +1,125 @@
+<meta name="lesson-id" content="Dokumentowanie typów i bibliotek"><html><head></head><body><div><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"><h2>Wprowadzenie</h2><p>Dokumentowanie kodu jest kluczowym elementem każdego projektu programistycznego. Dobrze napisana dokumentacja pomaga zespołom lepiej rozumieć kod, upraszcza proces wdrażania nowych członków oraz redukuje czas potrzebny na analizowanie i debugowanie kodu.</p><p>W ekosystemie TypeScript, gdzie złożoność typów może być wyzwaniem, jasne i precyzyjne komentarze w dokumentacji pozwalają programistom zrozumieć intencje autora kodu oraz właściwie używać dostarczonych narzędzi i bibliotek. Dlatego warto korzystać z narzędzi i standardów, takich jak TSDoc i TypeDoc, które ułatwiają tworzenie i zarządzanie dokumentacją.</p><p>Oba narzędzia znajdziesz pod następującymi linkami:</p><ul><li><p>TSDoc - <a href="https://tsdoc.org/" target="_blank" rel="noopener noreferrer">https://tsdoc.org/</a> </p></li><li><p>TypeDoc - <a href="https://typedoc.org/" target="_blank" rel="noopener noreferrer">https://typedoc.org/</a></p></li></ul><h2><strong>TSDoc - standard dokumentacji TypeScript</strong></h2><p>TSDoc to standard, który umożliwia programistom dokumentowanie kodu TypeScript w sposób spójny i zrozumiały. Jest inspirowany formatami używanymi w JSDoc, ale dostosowany do specyfiki TypeScript, uwzględniając zaawansowane mechanizmy typowania.</p><h3><strong>Główne cechy TSDoc</strong></h3><p>TSDoc definiuje strukturalny sposób dodawania komentarzy do kodu, które mogą być analizowane przez narzędzia do generowania dokumentacji. Dzięki temu programiści mogą pisać komentarze zgodne z najlepszymi praktykami, ułatwiając korzystanie z bibliotek czy API.</p><h3><strong>Składnia TSDoc</strong></h3><p>Komentarze TSDoc mogą być dodawane zarówno na poziomie całego elementu (np. opis enuma), jak i jego poszczególnych składowych (np. pola enuma):</p><pre><code>/**
+ * Reprezentuje dostępne statusy zamówienia.
+ */
+enum OrderStatus {
+  /** Zamówienie zostało złożone */
+  Pending,
+  /** Zamówienie jest w trakcie realizacji */
+  Processing,
+  /** Zamówienie zostało wysłane */
+  Shipped,
+  /** Zamówienie zostało dostarczone */
+  Delivered,
+}</code></pre><p>W komentarzach możesz zawierać usystematyzowane tagi (np. @beta lub @deprecated) przekazujące dodatkowe informacje kontekstowe - np. o stabilności elementu lub o tym, że istnieje jego nowsza wersja:</p><pre><code>/**
+ * Nowa wersja interfejsu opisującego strukturę produktu w sklepie.
+ *
+ * @beta
+ */
+interface ProductV2 {
+  /** Unikalny identyfikator produktu */
+  id: number;
+  /** Nazwa produktu */
+  name: string;
+  /** Cena produktu */
+  price: number;
+  /** Czy produkt jest dostępny w magazynie */
+  inStock: boolean;
+}</code></pre><p>Nawet najprostsze typy mogą czasami zawierać skomplikowane zawiłości domeny biznesowej, co z łatwością przekażesz poprzez rozszerzony komentarz z linkiem do zewnętrznych źródeł:</p><pre><code>/**
+ * Typ reprezentujący identyfikator produktu.
+ *
+ * Wsparcie systemu legacy wymaga obsługi dwóch typów.
+ * Wyjaśnienie: {@link https://docs.firma.com/types/product}
+ */
+type ProductIdentifier = number | string;</code></pre><p>Jednym z najbardziej popularnych zastosować komentarzy TSDoc są funkcje - to tutaj objaśniamy znaczenie parametrów, ich wpływ na przeprowadzenie całej operacji, ewentualne efekty uboczne no i oczywiście wartości zwracane:</p><pre><code>/**
+ * Oblicza całkowitą cenę zamówienia z uwzględnieniem podatku.
+ *
+ * @param {number} basePrice - Podstawowa cena zamówienia
+ * @param {number} taxRate - Stawka podatku (w procentach)
+ * @param {boolean} includeShipping - Czy doliczyć koszty wysyłki
+ *
+ * @returns {number} Całkowita cena z podatkiem (i opcjonalnie kosztami wysyłki)
+ */
+function calculateTotalPrice(
+  basePrice: number,
+  taxRate: number,
+  includeShipping: boolean = false
+): number {
+  const taxAmount = basePrice * (taxRate / 100);
+  const shippingCost = includeShipping ? 10 : 0;
+  return basePrice + taxAmount + shippingCost;
+}</code></pre><p>Dzięki mocnej integracji z ekosystemem TypeScript, TSDoc pozwoli ci udokumentować najbardziej złożone fragmenty twojego systemu - zarówno na poziomie ogółu, jak i szczegółu (przeznaczenie pól, ich widoczność, parametry, wartość zwracane czy możliwość dziedziczenia):</p><pre><code>/**
+ * Klasa reprezentująca koszyk zakupowy użytkownika.
+ */
+class ShoppingCart {
+  /** Lista produktów w koszyku */
+  private items: Product[];
+  /** Całkowita wartość koszyka */
+  private total: number;
+
+  /**
+   * Tworzy nowy koszyk zakupowy.
+   *
+   * @param {Product[]} initialItems - Początkowa lista produktów (opcjonalna)
+   */
+  constructor(initialItems: Product[] = []) {
+    this.items = initialItems;
+    this.total = 0;
+    this.calculateTotal();
+  }
+
+  /**
+   * Przelicza całkowitą wartość koszyka.
+   * @private
+   */
+  private calculateTotal(): void {
+    this.total = this.items.reduce((sum, item) =&gt; sum + item.price, 0);
+  }
+
+  /**
+   * Pobiera całkowitą wartość koszyka.
+   * @deprecated Użyj metody getTotalPrice() zamiast tej metody.
+   * Ta metoda zostanie usunięta w wersji 2.0.0
+   * @returns {number} Całkowita wartość koszyka
+   */
+  public getTotal(): number {
+    return this.total;
+  }
+}</code></pre><h3>Środowisko testowe</h3><p>Podobnie jak sam TypeScript, format TSDoc umożliwia szybkie testowanie tworzonych komentarzy na stronie głównej tego projektu. Znajduje się&nbsp;tam interaktywny playground, który znajdziesz pod tym linkiem: <a href="https://tsdoc.org/play/" target="_blank" rel="noopener noreferrer">https://tsdoc.org/play/</a></p><h3>Integracje z generatorami</h3><p>TSDoc sam w sobie nie jest w stanie generować dokumentacji, więc warto połączyć go z generatorami potrafiącymi interpretować jego składnię. Jednym z takich generatorów jest TypeDoc, którego omówimy w kolejnej sekcji.</p><h2><strong>TypeDoc - generowanie dokumentacji</strong></h2><p>TypeDoc to narzędzie do automatycznego generowania dokumentacji dla projektów TypeScript. Dzięki integracji z TSDoc umożliwia ono przekształcenie komentarzy w przejrzystą dokumentację HTML lub Markdown, którą można łatwo udostępniać.</p><h3><strong>Jak działa TypeDoc?</strong></h3><p>TypeDoc analizuje kod TypeScript, w tym komentarze TSDoc, aby stworzyć interaktywne i estetyczne strony dokumentacji. Pracę z tym narzędziem zobaczysz na kolejnym filmie:</p><div class="embed"><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.338%;"><iframe src="https://player.vimeo.com/video/1034753264?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" width="360" height="203" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen="" scrolling="no" allow="encrypted-media;"></iframe></div></div><h3>Publikowanie dokumentacji</h3><p>Narzędzie TypeDoc tworzy dokumentację w naprawdę uniwersalnym formacie - zestaw statycznych zasobów HTML, CSS i JS to coś, co potrafi interpretować każdy webowy hosting.</p><p>Jeśli wcześniej integrowałeś swoje repozytoria np. z CloudFlare Pages, Vercelem lub Netlify, ten sam model deploymentu może zadziałać dla dokumentacji. Główna różnica polega na tym, że zamiast typowego folderu “dist”, w scenariuszu deploymentu zlecisz wyszukiwanie folderu “docs”. Ten może się tworzyć w oparciu o skrypt lub fragment konfiguracji projektu.</p><p>Jeśli potrzebujesz niestandardowej konfiguracji, z pomocą mogą przyjść skrypty GitHub Actions o których więcej mówimy w <a href="https://opanujfrontend.pl/" target="_blank" rel="noopener noreferrer">Opanuj Frontend</a>.</p><p>Przykładowo, wystarczy jeden scenariusz w pliku .github/workflows/master.yml, żeby twoja dokumentacja była automatycznie publikowana na chmurę AWS:</p><pre><code>name: Sync Docs to S3
+
+on:
+  push:
+    branches:
+      - master # Skrypt uruchamiany po wykryciu zmian na branchu master
+  workflow_dispatch: # Dodatkowa możliwość uruchamiania ręcznego
+
+jobs:
+  sync-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Krok 1: Pobranie kodu
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Krok 2: Konfiguracja środowiska
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Krok 3: Instalacja zależności
+      - name: Install dependencies
+        run: npm ci
+
+      # Krok 4: Generowanie dokumentacji z TypeDoc
+      - name: Generate documentation
+        run: npm run docs:generate
+
+      # Krok 5: Upload dokumentacji na AWS S3
+      - name: Sync docs to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }} # Set this in your secrets, e.g., "us-east-1"
+        run: |
+          aws s3 sync ./docs s3://${{ secrets.S3_BUCKET_NAME }} --delete</code></pre><p>W takiej konfiguracji folder “docs” nie musi być śledzony przez system kontroli wersji, a jego czas życia ogranicza się wyłącznie do procesu budowania projektu na serwerach CI/CD.</p><h2>Podsumowanie</h2><p>Czytelna i przejrzysta dokumentacja to klucz do sukcesu narzędzi, które w założeniu mają być wykorzystywane przez innych programistów. To również fundament dużych projektów, które mają się skalować na nowe funkcje i opiekujące się nimi zespoły.</p><p>Pracując w ekosystemie TypeScript pamiętaj aby nie wymyślać koła na nowo - zarówno standard komentowania TSDoc jak i generator dokumentacji TypeDoc został przetestowany w dziesiątkach projektów, więc sprawdzi się również u ciebie. Polecamy!</p><img loading="lazy" src="https://assets-v2.circle.so/koeg1rle3x2k3orxxbm0b1mji8iz" style="width: 100%; max-width: 100%;"></div></body></html>

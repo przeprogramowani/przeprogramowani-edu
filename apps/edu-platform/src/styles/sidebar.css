@@ -1,0 +1,56 @@
+:root {
+  --sidebar-width: 300px;
+}
+
+/* Sidebar container base styles */
+.sidebar-container {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  transition:
+    width 0.3s ease,
+    min-width 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* Collapsed state */
+body.sidebar-collapsed .sidebar-container {
+  width: 0;
+  min-width: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+/* Hide toggle button until hydrated */
+html.sidebar-not-hydrated .sidebar-toggle-button {
+  display: none !important;
+}
+
+/* TOC Critical CSS - Hide until hydration */
+/* NOTE: .toc-toggle-mobile and .toc-toggle-desktop are intentionally NOT hidden here.
+   Those buttons render in SSR (no isHydrated guard) and become interactive after
+   hydration — hiding them pre-hydration would cause the exact pop-in this rule set
+   was meant to prevent elsewhere. Only the floating widgets/overlays that need JS
+   to render meaningfully remain gated by this class. */
+html.toc-not-hydrated .toc-desktop-widget,
+html.toc-not-hydrated .toc-fab-button,
+html.toc-not-hydrated .toc-mobile-overlay {
+  display: none !important;
+}
+
+/* Large screen TOC width variant */
+@media (min-width: 1536px) {
+  .toc-desktop-widget {
+    width: 20rem;
+  }
+}
+
+.toc-toggle-desktop svg,
+.toc-toggle-mobile svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.toc-toggle-mobile svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}

@@ -1,0 +1,192 @@
+{
+  "lessonId": "[2x6] Implementacja logiki biznesowej opartej o LLM",
+  "file": "19-2x6_implementacja_logiki_biznesowej_opartej_o_llm.html",
+  "sections": [
+    {
+      "slug": "document",
+      "title": "Document",
+      "blocks": 2,
+      "order": 0
+    },
+    {
+      "slug": "wprowadzenie",
+      "title": "Wprowadzenie",
+      "blocks": 4,
+      "order": 1
+    },
+    {
+      "slug": "poznaj-usuge-openrouter",
+      "title": "Poznaj usługę OpenRouter",
+      "blocks": 15,
+      "order": 2
+    },
+    {
+      "slug": "generujemy-plan-implementacji-serwisu-openrouter",
+      "title": "Generujemy plan implementacji serwisu OpenRouter",
+      "blocks": 3,
+      "order": 3
+    },
+    {
+      "slug": "implementacja-serwisu-openrouter",
+      "title": "Implementacja serwisu OpenRouter",
+      "blocks": 6,
+      "order": 4
+    },
+    {
+      "slug": "podsumowanie",
+      "title": "🏁 Podsumowanie",
+      "blocks": 4,
+      "order": 5
+    },
+    {
+      "slug": "cwiczenia-praktyczne",
+      "title": "👨💻 Ćwiczenia praktyczne",
+      "blocks": 14,
+      "order": 6
+    },
+    {
+      "slug": "podsumowanie-moduu-1-i-zapowiedz-moduu-2",
+      "title": "🏁 Podsumowanie modułu 1 i zapowiedź modułu 2",
+      "blocks": 9,
+      "order": 7
+    }
+  ],
+  "chunks": [
+    {
+      "id": "sec:9215383c:43cc23fa",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9215383c:43cc23fa:0-1",
+      "tokenEstimate": 74,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "sec:9215383c:24701484",
+      "tokenEstimate": 169,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9215383c:24701484:0-3",
+      "tokenEstimate": 169,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:9215383c:bca5e45d",
+      "tokenEstimate": 210,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9215383c:bca5e45d:0-8",
+      "tokenEstimate": 379,
+      "span": [
+        0,
+        8
+      ]
+    },
+    {
+      "id": "chk:9215383c:bca5e45d:7-14",
+      "tokenEstimate": 260,
+      "span": [
+        7,
+        14
+      ]
+    },
+    {
+      "id": "sec:9215383c:22c458ae",
+      "tokenEstimate": 88,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9215383c:22c458ae:0-2",
+      "tokenEstimate": 88,
+      "span": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "sec:9215383c:2e57ae38",
+      "tokenEstimate": 106,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9215383c:2e57ae38:0-5",
+      "tokenEstimate": 121,
+      "span": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": "sec:9215383c:33c7f0dd",
+      "tokenEstimate": 199,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9215383c:33c7f0dd:0-3",
+      "tokenEstimate": 259,
+      "span": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": "sec:9215383c:dcc8ec86",
+      "tokenEstimate": 196,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9215383c:dcc8ec86:0-13",
+      "tokenEstimate": 365,
+      "span": [
+        0,
+        13
+      ]
+    },
+    {
+      "id": "sec:9215383c:0f2c2c34",
+      "tokenEstimate": 176,
+      "span": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "chk:9215383c:0f2c2c34:0-8",
+      "tokenEstimate": 324,
+      "span": [
+        0,
+        8
+      ]
+    }
+  ]
+}

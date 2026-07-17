@@ -1,0 +1,6 @@
+{
+  "lessonId": "[4x5] Modernizacja kodu aplikacji",
+  "displayName": "[4x5] Modernizacja kodu aplikacji",
+  "summary": "1) Jakie zabezpieczenia testowe są niezbędne przed przeprowadzeniem modernizacji, aby uniknąć regresji i pogorszenia doświadczeń użytkownika?  \n2) Jaki podstawowy czynnik związany z modelem wpływa na jakość modernizacji kodu danego stacku?  \n3) Jakie trzy typy zadań (kategorie) ocenia McEval i co dodatkowo wprowadza ten benchmark względem testów w jednym języku?  \n4) Jak interpretować rozbieżności między wynikami modeli w zadaniach Autocomplete a Explain — jakie przykładowe różnice występują dla JS vs TS, C/C++/C#, deklaratywnych formatów (JSON/Markdown/HTML) oraz Rust vs Go?  \n5) Jakie trzy podejścia do translacji na poziomie klas testuje ClassEval-T (krótki opis każdego podejścia)?  \n6) Jakie cechy języka programowania zwiększają prawdopodobieństwo udanej translacji kodu przez AI?  \n7) Co mierzy Aider Polyglot Benchmark oprócz skuteczności i dlaczego metryka koszt/efekt jest istotna przy ocenie modeli do modernizacji?  \n8) Jakie praktyki benchmarkowe (np. wybór zadań względem cutoff date) minimalizują ryzyko data contamination i poprawiają rzetelność oceny przy testach generowania/naprawiania kodu?",
+  "tokenEstimate": 175
+}

@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import { sanitizeForYaml } from '@/utils/decodeHtmlEntities';
+import { verifyExternalAuth } from '@/server/externalAuth';
+import { buildAttachmentContentDisposition } from '@/utils/contentDisposition';
+
+// No prerendering - this endpoint must be server-rendered to preserve
+// Response headers (Content-Type, Content-Disposition) for proper markdown download
+
+const COURSE_ID = '10xdevs-2';
+const { slug } = Astro.params;
+
+if (!slug) {
+  return new Response('Checklist not found', { status: 404 });
+}
+
+const env = Astro.locals.runtime.env;
+
+// Auth check - verify external auth token and membership
+const authResult = await verifyExternalAuth(Astro.cookies, COURSE_ID, env);
+if (!authResult.isAuthenticated) {
+  return new Response('Unauthorized', { status: 401 });
+}
+
+// Fetch checklist at runtime
+const checklistEntries = await getCollection('checklists');
+const entry = checklistEntries.find((c) => c.id === slug);
+
+if (!entry) {
+  return new Response('Checklist not found', { status: 404 });
+}
+
+// Get filename from query parameter, default to entry.id if not provided
+const url = new URL(Astro.request.url);
+// Strip .md extension from entry.id to avoid .md.md in filename
+const defaultFilename = entry.id.replace(/\.md$/, '');
+const filename = url.searchParams.get('filename') || defaultFilename;
+
+// Get raw markdown content
+let markdownContent = entry.body;
+
+// Apply safety measures to strip any HTML artifacts
+// Extra safety: ensure no DOCTYPE or HTML structure at the start/end
+markdownContent = markdownContent.replace(/^<!DOCTYPE[^>]*>/i, '').trim();
+markdownContent = markdownContent.replace(/^<html[^>]*>/i, '').trim();
+markdownContent = markdownContent.replace(/<\/html>\s*$/i, '').trim();
+markdownContent = markdownContent.replace(/^<body[^>]*>/i, '').trim();
+markdownContent = markdownContent.replace(/<\/body>\s*$/i, '').trim();
+
+// Sanitize frontmatter fields (decode HTML entities)
+const cleanTitle = sanitizeForYaml(entry.data.title);
+const cleanModule = sanitizeForYaml(entry.data.module);
+const cleanDescription = sanitizeForYaml(entry.data.description);
+
+// Add YAML frontmatter with metadata
+const frontmatter = `---
+title: "${cleanTitle}"
+module: "${cleanModule}"
+description: "${cleanDescription}"
+source: "Przeprogramowani.pl - 10xDevs"
+exported: "${new Date().toISOString().split('T')[0]}"
+---
+
+`;
+
+const finalContent = frontmatter + markdownContent;
+
+// Return raw Response to bypass Astro's HTML rendering
+// This prevents Astro from adding <!DOCTYPE html> and HTML-escaping quotes
+return new Response(finalContent, {
+  headers: {
+    'Content-Type': 'text/markdown; charset=utf-8',
+    'Content-Disposition': buildAttachmentContentDisposition(filename),
+  },
+});
+---
