@@ -14,6 +14,8 @@
     "format": "prettier -w .",
     "lint": "eslint . --ext .js,.ts,.astro,.svelte",
     "lint:fix": "npm run lint -- --fix",
+    "dev": "npm run dev:edu",
+    "build": "npm run build:edu",
     "dev:edu": "npm run dev --workspace=apps/edu-platform",
     "build:edu": "npm run build --workspace=apps/edu-platform",
     "10x:publish": "node apps/edu-platform/workbench/scripts/pipeline-full.mjs",
