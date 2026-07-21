@@ -1,39 +1,35 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import type { TiledMap, LayerName, EditorMode, ZoneObject } from './types';
+  import type { TiledMap, EditorTool } from './types';
   import { ZONE_COLORS } from './types';
   import { TILE_SIZE } from '../config/constants';
 
   interface Props {
     mapData: TiledMap;
     tileImages: ImageBitmap[];
-    activeLayer: LayerName;
-    editorMode: EditorMode;
-    selectedTile: number;
+    tool: EditorTool;
     layerVisibility: Record<string, boolean>;
     selectedZoneId: number | null;
-    onTilePaint: (layerName: string, tileX: number, tileY: number, tileId: number) => void;
-    onZoneClick: (tileX: number, tileY: number) => void;
+    errorCells: [number, number][];
+    onCellPaint: (tileX: number, tileY: number, erase: boolean) => void;
+    onZoneAdd: (tileX: number, tileY: number) => void;
     onZoneSelect: (objectId: number) => void;
-    onZoneUpdate: (zone: ZoneObject) => void;
+    onZoneMove: (objectId: number, tileX: number, tileY: number) => void;
     onHover: (tileX: number, tileY: number) => void;
-    onFileDrop?: (file: File) => void;
   }
 
   let {
     mapData,
     tileImages,
-    activeLayer,
-    editorMode,
-    selectedTile,
+    tool,
     layerVisibility,
     selectedZoneId,
-    onTilePaint,
-    onZoneClick,
+    errorCells,
+    onCellPaint,
+    onZoneAdd,
     onZoneSelect,
-    onZoneUpdate,
+    onZoneMove,
     onHover,
-    onFileDrop,
   }: Props = $props();
 
   let canvasEl: HTMLCanvasElement | undefined = $state();
@@ -52,9 +48,7 @@
   let hoverTileX = $state(-1);
   let hoverTileY = $state(-1);
   let isPainting = $state(false);
-
-  // Drag-drop state
-  let isDragOver = $state(false);
+  let paintErase = false;
 
   // Zone drag state
   let isDraggingZone = $state(false);
@@ -101,16 +95,12 @@
     const endCol = Math.min(mapW, Math.ceil((w - panX) / zoom / TILE_SIZE));
     const endRow = Math.min(mapH, Math.ceil((h - panY) / zoom / TILE_SIZE));
 
-    // Draw tile layers in order: Ground, Walls, Above
-    const tileLayerNames = ['Ground', 'Walls', 'Above'] as const;
+    // Draw tile layers in order: Ground, Walls
+    const tileLayerNames = ['Ground', 'Walls'] as const;
     for (const layerName of tileLayerNames) {
       if (!layerVisibility[layerName]) continue;
       const layer = mapData.layers.find((l) => l.name === layerName);
       if (!layer || layer.type !== 'tilelayer') continue;
-
-      // Dim non-active layers so the edited layer stands out
-      const isActive = activeLayer === layerName;
-      ctx.globalAlpha = isActive ? 1.0 : 0.2;
 
       for (let row = startRow; row < endRow; row++) {
         for (let col = startCol; col < endCol; col++) {
@@ -122,7 +112,6 @@
         }
       }
     }
-    ctx.globalAlpha = 1.0;
 
     // Draw grid lines
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
@@ -171,6 +160,17 @@
       ctx.globalAlpha = 1.0;
     }
 
+    // Validation error overlay
+    if (errorCells.length) {
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.3)';
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2 / zoom;
+      for (const [ex, ey] of errorCells) {
+        ctx.fillRect(ex * TILE_SIZE, ey * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        ctx.strokeRect(ex * TILE_SIZE, ey * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+      }
+    }
+
     // Hover highlight
     if (isInBounds(hoverTileX, hoverTileY)) {
       ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
@@ -197,7 +197,7 @@
       const { tileX, tileY } = screenToTile(e.clientX, e.clientY);
       if (!isInBounds(tileX, tileY)) return;
 
-      if (activeLayer === 'Zones' || editorMode === 'zones') {
+      if (tool === 'zones') {
         // Check if clicking on an existing zone
         const zonesLayer = mapData.layers[3];
         const px = tileX * TILE_SIZE;
@@ -216,25 +216,23 @@
           dragZoneStartY = clickedZone.y;
           draggedZoneId = clickedZone.id;
         } else {
-          onZoneClick(tileX, tileY);
+          onZoneAdd(tileX, tileY);
         }
         return;
       }
 
-      // Paint mode
       isPainting = true;
-      const tileId = editorMode === 'erase' ? 0 : selectedTile;
-      onTilePaint(activeLayer, tileX, tileY, tileId);
+      paintErase = false;
+      onCellPaint(tileX, tileY, false);
     }
 
-    if (e.button === 2) {
-      // Right click = erase
+    if (e.button === 2 && tool !== 'zones') {
+      // Right click = erase (grid → outside, props → remove)
       const { tileX, tileY } = screenToTile(e.clientX, e.clientY);
       if (!isInBounds(tileX, tileY)) return;
-      if (activeLayer !== 'Zones') {
-        isPainting = true;
-        onTilePaint(activeLayer, tileX, tileY, 0);
-      }
+      isPainting = true;
+      paintErase = true;
+      onCellPaint(tileX, tileY, true);
     }
   }
 
@@ -248,7 +246,7 @@
       const dx = (e.clientX - dragStartScreenX) / zoom;
       const dy = (e.clientY - dragStartScreenY) / zoom;
 
-      // Only start visual drag after 4px threshold
+      // Only start the drag after a 4px threshold so plain clicks just select
       if (!hasDragMoved && Math.abs(dx) < 4 && Math.abs(dy) < 4) {
         return;
       }
@@ -256,9 +254,18 @@
 
       const zone = mapData.layers[3].objects.find((z) => z.id === draggedZoneId);
       if (zone) {
-        zone.x = dragZoneStartX + dx;
-        zone.y = dragZoneStartY + dy;
-        onZoneUpdate({ ...zone });
+        // The source model stores tile coordinates, so drags snap live to the grid.
+        const tilesW = Math.max(1, Math.round(zone.width / TILE_SIZE));
+        const tilesH = Math.max(1, Math.round(zone.height / TILE_SIZE));
+        const targetX = Math.max(
+          0,
+          Math.min(mapData.width - tilesW, Math.round((dragZoneStartX + dx) / TILE_SIZE)),
+        );
+        const targetY = Math.max(
+          0,
+          Math.min(mapData.height - tilesH, Math.round((dragZoneStartY + dy) / TILE_SIZE)),
+        );
+        onZoneMove(draggedZoneId, targetX, targetY);
       }
       return;
     }
@@ -271,22 +278,12 @@
       return;
     }
 
-    if (isPainting && isInBounds(tileX, tileY) && activeLayer !== 'Zones') {
-      const tileId = e.buttons === 2 ? 0 : editorMode === 'erase' ? 0 : selectedTile;
-      onTilePaint(activeLayer, tileX, tileY, tileId);
+    if (isPainting && isInBounds(tileX, tileY) && tool !== 'zones') {
+      onCellPaint(tileX, tileY, paintErase || e.buttons === 2);
     }
   }
 
   function handleMouseUp() {
-    if (isDraggingZone && draggedZoneId !== null && hasDragMoved) {
-      const zone = mapData.layers[3].objects.find((z) => z.id === draggedZoneId);
-      if (zone) {
-        // Snap to grid
-        zone.x = Math.round(zone.x / TILE_SIZE) * TILE_SIZE;
-        zone.y = Math.round(zone.y / TILE_SIZE) * TILE_SIZE;
-        onZoneUpdate({ ...zone });
-      }
-    }
     isDraggingZone = false;
     draggedZoneId = null;
     isPanning = false;
@@ -327,24 +324,6 @@
     e.preventDefault();
   }
 
-  function handleDragOver(e: DragEvent) {
-    e.preventDefault();
-    isDragOver = true;
-  }
-
-  function handleDragLeave() {
-    isDragOver = false;
-  }
-
-  function handleDrop(e: DragEvent) {
-    e.preventDefault();
-    isDragOver = false;
-    const file = e.dataTransfer?.files[0];
-    if (file && file.name.endsWith('.json') && onFileDrop) {
-      onFileDrop(file);
-    }
-  }
-
   function resizeCanvas() {
     if (!canvasEl || !containerEl) return;
     const dpr = window.devicePixelRatio || 1;
@@ -377,23 +356,19 @@
     mapData;
     layerVisibility;
     selectedZoneId;
+    errorCells;
     zoom;
     panX;
     panY;
     hoverTileX;
     hoverTileY;
-    activeLayer;
+    tool;
     tileImages;
     drawMap();
   });
 </script>
 
-<div
-  class="w-full h-full relative"
-  bind:this={containerEl}
-  ondragover={handleDragOver}
-  ondragleave={handleDragLeave}
-  ondrop={handleDrop}>
+<div class="w-full h-full relative" bind:this={containerEl}>
   <canvas
     bind:this={canvasEl}
     onmousedown={handleMouseDown}
@@ -405,13 +380,6 @@
     class="block cursor-crosshair"
     class:cursor-grab={spaceHeld && !isPanning}
     class:cursor-grabbing={isPanning}></canvas>
-
-  {#if isDragOver}
-    <div
-      class="absolute inset-0 bg-blue-500/20 border-2 border-dashed border-blue-400 flex items-center justify-center pointer-events-none">
-      <span class="text-blue-300 text-lg">Drop JSON file here</span>
-    </div>
-  {/if}
 
   <!-- Coordinate display -->
   {#if isInBounds(hoverTileX, hoverTileY)}

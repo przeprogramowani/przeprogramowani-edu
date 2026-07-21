@@ -246,11 +246,11 @@
         74,
         74,
         83,
-        74,
-        74,
+        88,
+        88,
         82,
         74,
-        83,
+        88,
         74,
         74,
         74,
@@ -268,7 +268,7 @@
         75,
         74,
         74,
-        78,
+        74,
         83,
         74,
         74,
@@ -283,7 +283,7 @@
         74,
         74,
         74,
-        83,
+        88,
         82,
         74,
         74,
@@ -694,7 +694,7 @@
         0,
         0,
         0,
-        85,
+        79,
         0,
         0,
         0,
@@ -732,17 +732,17 @@
         0,
         0,
         0,
-        87,
+        86,
         0,
         0,
         0,
         0,
-        87,
+        86,
         0,
         0,
         0,
         0,
-        87,
+        86,
         0,
         0,
         0,
@@ -750,42 +750,10 @@
         0,
         0,
         0,
-        80,
+        0,
         0,
         0,
         76,
-        81,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        84,
         81,
         0,
         0,
@@ -830,13 +798,6 @@
         0,
         0,
         0,
-        88,
-        0,
-        0,
-        0,
-        0,
-        0,
-        88,
         0,
         0,
         0,
@@ -846,7 +807,46 @@
         0,
         0,
         0,
-        80,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        76,
+        73,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        78,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        78,
         0,
         0,
         76,
@@ -968,7 +968,7 @@
         0,
         73,
         0,
-        79,
+        0,
         0,
         0,
         0,
@@ -1584,29 +1584,29 @@
       "name": "Zones",
       "objects": [
         {
-          "height": 128,
+          "height": 64,
           "id": 1,
-          "name": "Return to the Frozen Atrium",
+          "name": "Return to the Service Bay",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "door-to-planning"
+              "value": "service-door"
             },
             {
               "name": "targetMap",
               "type": "string",
-              "value": "m2-planning"
+              "value": "m2-drafting-hall"
             },
             {
               "name": "spawnX",
               "type": "int",
-              "value": 20
+              "value": 24
             },
             {
               "name": "spawnY",
               "type": "int",
-              "value": 9
+              "value": 7
             }
           ],
           "type": "door",
@@ -1618,58 +1618,61 @@
         {
           "height": 64,
           "id": 2,
-          "name": "Frozen Schedule Board",
+          "name": "Route to the Foundry",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "schedule-board"
+              "value": "foundry-door"
+            },
+            {
+              "name": "targetMap",
+              "type": "string",
+              "value": "m2-assembly-line"
+            },
+            {
+              "name": "spawnX",
+              "type": "int",
+              "value": 1
+            },
+            {
+              "name": "spawnY",
+              "type": "int",
+              "value": 3
+            },
+            {
+              "name": "requiredFlags",
+              "type": "string",
+              "value": "m2-deadlock-cleared"
             }
           ],
-          "type": "trigger",
+          "type": "door",
           "visible": true,
           "width": 64,
-          "x": 256,
-          "y": 320
+          "x": 1984,
+          "y": 448
         },
         {
           "height": 64,
           "id": 3,
-          "name": "Tram Alpha (Half-Loaded)",
+          "name": "Dispatcher Substation",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "tram-alpha"
+              "value": "dispatch-substation"
             }
           ],
           "type": "trigger",
           "visible": true,
           "width": 64,
-          "x": 640,
-          "y": 384
+          "x": 768,
+          "y": 576
         },
         {
           "height": 64,
           "id": 4,
-          "name": "Tram Beta (Half-Loaded)",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "tram-beta"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 960,
-          "y": 384
-        },
-        {
-          "height": 64,
-          "id": 5,
-          "name": "Tram Gamma (Half-Loaded)",
+          "name": "Tram Gamma (Frozen Mid-Move)",
           "properties": [
             {
               "name": "id",
@@ -1685,69 +1688,113 @@
         },
         {
           "height": 64,
-          "id": 6,
-          "name": "Frozen Loader Unit",
+          "id": 5,
+          "name": "Tram Beta (Frozen Mid-Move)",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "frozen-loader"
+              "value": "tram-beta"
             }
           ],
           "type": "trigger",
           "visible": true,
           "width": 64,
-          "x": 768,
-          "y": 576
-        },
-        {
-          "height": 64,
-          "id": 7,
-          "name": "Milestone Console",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "milestone-console"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 1792,
+          "x": 960,
           "y": 384
         },
         {
           "height": 64,
-          "id": 8,
-          "name": "Heat Plant Core",
+          "id": 6,
+          "name": "Tram Alpha (Frozen Mid-Move)",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "heat-plant"
+              "value": "tram-alpha"
             }
           ],
           "type": "trigger",
           "visible": true,
           "width": 64,
-          "x": 1408,
-          "y": 832
+          "x": 640,
+          "y": 384
         },
         {
           "height": 64,
-          "id": 9,
-          "name": "VOID Certification Terminal",
+          "id": 7,
+          "name": "Track-State Board",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "exam-mvp-milestones"
+              "value": "track-board"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 256,
+          "y": 320
+        },
+        {
+          "height": 64,
+          "id": 8,
+          "name": "Spilled Ore on the Rails",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "ore-spill"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 1152,
+          "y": 448
+        },
+        {
+          "height": 64,
+          "id": 9,
+          "name": "Sopel",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "sopel"
+            },
+            {
+              "name": "npcType",
+              "type": "string",
+              "value": "robot"
+            },
+            {
+              "name": "npcVariant",
+              "type": "string",
+              "value": "frosty-blue"
+            }
+          ],
+          "type": "npc",
+          "visible": true,
+          "width": 64,
+          "x": 832,
+          "y": 512
+        },
+        {
+          "height": 64,
+          "id": 10,
+          "name": "Expedition Protocol Terminal VIII",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "exam-protocol-8"
             },
             {
               "name": "examId",
               "type": "string",
-              "value": "m2-exam-mvp-milestones"
+              "value": "m2-exam-protocol-8"
             }
           ],
           "type": "exam",
@@ -1755,97 +1802,6 @@
           "width": 64,
           "x": 1792,
           "y": 576
-        },
-        {
-          "height": 64,
-          "id": 10,
-          "name": "Dispatcher D-2",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "dispatcher-d2"
-            },
-            {
-              "name": "npcType",
-              "type": "string",
-              "value": "robot"
-            },
-            {
-              "name": "npcVariant",
-              "type": "string",
-              "value": "hologram-blue"
-            }
-          ],
-          "type": "npc",
-          "visible": true,
-          "width": 64,
-          "x": 320,
-          "y": 64
-        },
-        {
-          "height": 64,
-          "id": 11,
-          "name": "Stoker B-6",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "stoker-b6"
-            },
-            {
-              "name": "npcType",
-              "type": "string",
-              "value": "robot"
-            },
-            {
-              "name": "npcVariant",
-              "type": "string",
-              "value": "hologram-blue"
-            }
-          ],
-          "type": "npc",
-          "visible": true,
-          "width": 64,
-          "x": 1600,
-          "y": 832
-        },
-        {
-          "height": 128,
-          "id": 12,
-          "name": "Route to the Drafting Hall",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "drafting-hall-door"
-            },
-            {
-              "name": "targetMap",
-              "type": "string",
-              "value": "m2-drafting-hall"
-            },
-            {
-              "name": "spawnX",
-              "type": "int",
-              "value": 1
-            },
-            {
-              "name": "spawnY",
-              "type": "int",
-              "value": 7
-            },
-            {
-              "name": "requiredFlags",
-              "type": "string",
-              "value": "m2-milestones-done"
-            }
-          ],
-          "type": "door",
-          "visible": true,
-          "width": 64,
-          "x": 1984,
-          "y": 448
         }
       ],
       "opacity": 1,
@@ -1856,7 +1812,7 @@
     }
   ],
   "nextlayerid": 5,
-  "nextobjectid": 13,
+  "nextobjectid": 11,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.10.2",

@@ -3,51 +3,60 @@ import { FLAGS } from '../../config/flags';
 
 export const exams: ExamDefinition[] = [
   {
-    id: 'm1-exam-prd-contract',
-    title: { pl: 'Przechwycony test VOID: Kontrakt PRD', en: 'Captured VOID Test: The PRD Contract' },
+    id: 'm1-exam-protocol-1',
+    title: { pl: 'Protokół Ekspedycyjny I — Najpierw pytania', en: 'Expedition Protocol I — Questions First' },
     description: {
-      pl: 'Test sprawdza, czy potrafisz wydobyć wymagania metodą sokratejską i zapisać je w PRD bez dopowiadania decyzji za użytkownika.',
-      en: 'This test checks whether you can elicit requirements with the Socratic method and record them in a PRD without making decisions for the user.',
+      pl: 'Doktryna otwarcia każdej ekspedycji: zbadaj, zanim zbudujesz; zapytaj, zanim zadziałasz. Protokół sprawdza, czy nie uzupełniasz luk domysłami.',
+      en: 'The opening doctrine of every expedition: investigate before you build; ask before you act. This protocol checks that you do not fill gaps with guesses.',
     },
-    passingScore: 3,
+    passingScore: 2,
     questions: [
       {
         id: 'q1',
-        text: { pl: 'Projektujesz panel obsługi stacji kosmicznej. Który zapis powinien trafić do PRD, ponieważ opisuje rezultat dla użytkownika, a nie sposób implementacji?', en: 'You are designing a space-station operations dashboard. Which statement belongs in a PRD because it describes an outcome for the user rather than an implementation approach?' },
+        text: {
+          pl: 'CORE AI jest ślepe i zaraz wygeneruje plan rozstawienia obozu — wyłącznie z tego, co mu przekażesz. O tej polanie nie ma żadnych danych. Co robisz najpierw, zgodnie z doktryną „najpierw pytania”?',
+          en: 'CORE AI is blind and is about to generate a camp-layout plan — using only what you feed it. It has no data about this clearing. What do you do first, following the "questions first" doctrine?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Dane telemetryczne zapiszemy w PostgreSQL z indeksem po identyfikatorze modułu', en: 'Telemetry data will be stored in PostgreSQL with an index on the module identifier' } },
-          { id: 'b', text: { pl: 'Operator widzi dzienny raport zasobów stacji i może zatwierdzić albo odrzucić proponowaną zmianę limitu', en: 'The operator sees a daily station-resource report and can approve or reject a proposed limit change' } },
-          { id: 'c', text: { pl: 'Panel stacji zbudujemy w Svelte, ponieważ zespół zna ten framework', en: 'The station dashboard will be built in Svelte because the team knows the framework' } },
-          { id: 'd', text: { pl: 'API wystawi endpoint GET /station/status zwracający dane w JSON', en: 'The API will expose a GET /station/status endpoint returning JSON data' } },
+          { id: 'a', text: { pl: 'Rozstawić sprzęt od razu w pierwszym równym miejscu — układ obozu i tak dopracujesz w kolejnych podejściach', en: 'Set up gear right away on the first level spot — you will refine the camp layout over the next passes anyway' } },
+          { id: 'b', text: { pl: 'Najpierw opisać maszynie realny teren — krawędzie, zagrożenia, przejścia — i dopiero z tego planować', en: 'First describe the real terrain to the machine — edges, hazards, passes — and only plan from that' } },
+          { id: 'c', text: { pl: 'Wgrać maszynie sprawdzony układ obozu z poprzedniej misji i rozstawić się według niego bez zmian', en: 'Load the machine the proven camp layout from the previous mission and set up by it unchanged' } },
+          { id: 'd', text: { pl: 'Kazać maszynie odtworzyć wygląd polany z tego, co już wie o podobnych księżycach', en: 'Have the machine reconstruct the clearing from what it already knows about similar moons' } },
         ],
         correctOptionIds: ['b'],
       },
       {
         id: 'q2',
-        text: { pl: 'W wymaganiach panelu stacji zapisano: „Operator ma szybko znaleźć właściwy raport”. Co trzeba zrobić, zanim agent potraktuje ten zapis jako kontrakt do implementacji?', en: 'The station-dashboard requirements say: "The operator must find the correct report quickly." What must happen before the agent treats this statement as an implementation contract?' },
+        text: {
+          pl: 'Dostajesz rozkaz: „Zabezpiecz przejście na wschód, szybko”. Zanim uznasz to za gotowe zadanie do wykonania, co robisz?',
+          en: 'You receive an order: "Secure the eastern pass, quickly." Before you treat it as a ready task to execute, what do you do?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Zostawić zapis bez zmian, bo PRD może opierać się na jakościowych oczekiwaniach', en: 'Leave it unchanged, because a PRD may rely on qualitative expectations' } },
-          { id: 'b', text: { pl: 'Samodzielnie przyjąć limit dwóch sekund na podstawie podobnych aplikacji', en: 'Assume a two-second limit based on similar applications' } },
-          { id: 'c', text: { pl: 'Przenieść zdanie bez zmian do specyfikacji technicznej, gdzie zajmie się nim wykonawca', en: 'Move the statement unchanged into the technical specification for the implementer to handle' } },
-          { id: 'd', text: { pl: 'Dopytać użytkownika o konkretny przepływ i akceptowalny czas, a odpowiedź zapisać jako mierzalne kryterium', en: 'Ask the user about the exact flow and acceptable time, then record the answer as a measurable criterion' } },
-        ],
-        correctOptionIds: ['d'],
-      },
-      {
-        id: 'q3',
-        text: { pl: 'Masz niepełny opis systemu obsługi stacji kosmicznej. Który przebieg pracy ogranicza ryzyko, że agent uzupełni luki prawdopodobnymi, ale nieuzgodnionymi założeniami?', en: 'You have an incomplete description of a space-station operations system. Which workflow reduces the risk of the agent filling gaps with plausible but unconfirmed assumptions?' },
-        type: 'single',
-        options: [
-          { id: 'a', text: { pl: '/10x-prd generuje dokument z niepełnego opisu, a człowiek sprawdza tylko styl i format', en: '/10x-prd generates the document from the incomplete description, and the human checks only its style and formatting' } },
-          { id: 'b', text: { pl: 'Człowiek podaje preferowane rozwiązanie, a /10x-shape szuka argumentów potwierdzających ten wybór', en: 'The human provides a preferred solution, and /10x-shape looks for arguments supporting that choice' } },
-          { id: 'c', text: { pl: '/10x-shape zadaje pytania pogłębiające i kwestionuje założenia, człowiek podejmuje decyzje, a /10x-prd zapisuje je w kontrakcie', en: '/10x-shape asks probing questions and challenges assumptions, the human makes the decisions, and /10x-prd records them in the contract' } },
-          { id: 'd', text: { pl: '/10x-prd tworzy kilka wersji kontraktu, a człowiek wybiera tę z najmniejszą liczbą pytań otwartych', en: '/10x-prd creates several contract variants, and the human selects the one with the fewest open questions' } },
+          { id: 'a', text: { pl: 'Sam przyjąć, co znaczy „zabezpiecz” i „szybko”, na podstawie tego, jak wyglądało to na wcześniejszych misjach', en: 'Decide for yourself what "secure" and "quickly" mean, based on how it looked on earlier missions' } },
+          { id: 'b', text: { pl: 'Ruszyć od razu i zabezpieczać najszybciej jak się da, a niejasności rozstrzygać już w trakcie', en: 'Move at once and secure as fast as you can, settling the ambiguities as you go' } },
+          { id: 'c', text: { pl: 'Dopytać, co znaczy „zabezpieczone” i jaki czas jest akceptowalny — i zapisać to jako mierzalny warunek', en: 'Ask what "secured" means and what timeframe is acceptable — and record it as a measurable condition' } },
+          { id: 'd', text: { pl: 'Przekazać rozkaz maszynie w tej samej formie i pozwolić jej samej rozstrzygnąć, o co chodziło', en: 'Hand the order to the machine as-is and let it decide for itself what was meant' } },
         ],
         correctOptionIds: ['c'],
       },
+      {
+        id: 'q3',
+        text: {
+          pl: 'Masz niepełny opis nieznanego stanowiska, a maszyna chętnie dopowie resztę. Co najskuteczniej chroni przed tym, że luki wypełni prawdopodobnym, ale niepotwierdzonym domysłem?',
+          en: 'You have an incomplete description of an unknown site, and the machine will happily fill in the rest. What best protects against it filling the gaps with a plausible but unconfirmed guess?',
+        },
+        type: 'single',
+        options: [
+          { id: 'a', text: { pl: 'Pozwolić maszynie samodzielnie dopowiedzieć wszystkie brakujące szczegóły i przyjąć je jako ustalony stan rzeczy', en: 'Let the machine fill in all the missing details entirely on its own and accept them as the established state of things' } },
+          { id: 'b', text: { pl: 'Niech maszyna wskaże luki i zada pytania, decyzje podejmujesz ty, a ustalenia zapisujecie jako kontrakt', en: 'Have the machine flag the gaps and ask questions, you make the decisions, and you record the findings as a contract' } },
+          { id: 'c', text: { pl: 'Wybrać pierwszą wersję opisu, która się spina, i już nie wracać do wątpliwości', en: 'Pick the first version of the description that holds together, and never revisit the doubts' } },
+          { id: 'd', text: { pl: 'Podać maszynie wniosek, który już ci pasuje, i poprosić o argumenty, które go potwierdzą', en: 'Give the machine the conclusion you already like, and ask it for arguments that confirm it' } },
+        ],
+        correctOptionIds: ['b'],
+      },
     ],
-    rewards: { xp: 50, flags: [FLAGS.M1_EXAM_PRD_CONTRACT_DONE] },
+    rewards: { xp: 100, flags: [FLAGS.M1_EXAM_PROTOCOL_1_DONE] },
   },
 ];

@@ -283,11 +283,11 @@ The `at` coordinates describe doorway wall art in the current map. `spawnX` and 
 | `npm run levels:check` | Validation only: geometry, sealed rooms, wall resolvability, props, zones, cross-map doors + spawn walkability, floor reachability, manifest references (interaction routes, exam/arcade ids). Exit 1 on errors. |
 | `npm run levels:render -- <key> [--zones] [--out <path>]` | Render the compiled map to a PNG (default: OS temp dir). `--zones` overlays zone rectangles with object-id labels and prints an id legend. |
 | `npm run levels:decompile -- --full <key>` | One-off: lift an existing JSON map into a yaml source (used for the m0 migration). |
-| `npm run levels:decompile -- --zones-only <key> [--from <json>]` | Lift zone edits made in `/explorers-editor` back into the yaml source, leaving theme/grid/props untouched. Comments above the `zones:` block survive; comments inside it don't. |
+| `npm run levels:decompile -- --zones-only <key> [--from <json>]` | Lift zone edits from a Tiled JSON back into the yaml source, leaving theme/grid/props untouched. Comments above the `zones:` block survive; comments inside it don't. |
 
-**The editor's role:** `/explorers-editor` is for zones authoring and visual preview. Draw/erase zones there, export the JSON, then run `levels:decompile --zones-only` to fold the change back into the source. Wall/floor changes belong in the yaml grid, not the editor. If a door zone moves, update the corresponding `D` cells in the grid too; validation rejects stale or mismatched placement.
+**The editor's role:** `/explorers-editor` (dev server only) edits `map.level.yaml` directly. It loads every level source through a dev-only Vite middleware (`scripts/levelEditorDevPlugin.mjs`), holds the parsed `LevelSource` as its model, and live-compiles it in the browser for rendering — grid painting (`~ # . o D` with live auto-tiling), themed prop placement, zone authoring with prop links, and inline validation. Save rewrites only the yaml (canonical formatting; explicit default `size: [1, 1]` is dropped) and refuses on validation errors — run `npm run levels:build` afterwards to regenerate the JSON artifact. If a door zone moves, update the corresponding `D` cells in the grid too; validation rejects stale or mismatched placement.
 
-`id`/`propId` is compile-time YAML syntax sugar: the parser resolves it to ordinary zone coordinates, and the Tiled JSON stores only those coordinates. Decompilation therefore emits an explicit `at` and does not restore the original `propId` reference.
+`id` on a prop and `propId` on a zone are authoring links: the parser resolves `propId` to ordinary zone coordinates and keeps both fields on the parsed source, so the visual editor and `serializeSource` preserve them; the compiled Tiled JSON stores only coordinates. Decompilation from JSON therefore emits an explicit `at` and cannot restore the original `propId` reference.
 
 **The agent loop:** author or edit `map.level.yaml` → `npm run levels:build` (runs validation) → `npm run levels:render -- <key> --zones` → view the PNG → iterate. An agent can ship a complete level without ever hand-writing a tile index.
 
@@ -1371,10 +1371,11 @@ conditionalIntros: [
 
 On the first visit the primary intro plays (the conditional one's `requiredFlags` are unmet); when the player returns after earning the required flags, the conditional intro plays once. `contentValidation` checks that the dialogue exists and all flags are registered in `flags.ts`.
 
-**Two variants:**
+**Variants:**
 
-- **With `introCinematicTitle`**: Full black-screen card with title + subtitle fades in, holds 2s, fades out. Then a spotlight overlay appears (small circle around the player) and the intro dialogue plays over the dimmed screen. When the dialogue is dismissed, the spotlight expands to reveal the full map. The spotlight effect is implemented in `src/explorers/effects/spotlightReveal.ts`.
-- **Without `introCinematicTitle`**: Sets the intro flag and immediately plays the intro dialogue, skipping the black-screen card and spotlight entirely.
+- **With `introCinematicTitle`**: Full black-screen card with title + subtitle fades in, holds 2s, fades out. Then the overlay fades to the visible map and the intro dialogue plays.
+- **With `introCinematicTitle` + `introSpotlight: true`**: After the title card, a spotlight overlay appears (small circle around the player) and the intro dialogue plays over the dimmed screen. When the dialogue is dismissed, the spotlight expands to reveal the full map. The spotlight effect is implemented in `src/explorers/effects/spotlightReveal.ts` and is reserved for the hibernation-bay awakening (`m0-awakening`) — do not enable it on other levels.
+- **Without `introCinematicTitle`**: Sets the intro flag and immediately plays the intro dialogue, skipping the black-screen card entirely.
 
 ### Fresh-start testing (important)
 
@@ -1400,6 +1401,7 @@ interface LevelManifest {
   introFlag?: string;                                // intro-seen flag (optional)
   introCinematicTitle?: string;                      // black-screen title card text (optional)
   introCinematicSubtitle?: string;                   // subtitle on the title card (optional)
+  introSpotlight?: boolean;                          // spotlight-in-darkness reveal (m0-awakening only)
 }
 
 interface InteractionRoute {
@@ -1482,8 +1484,8 @@ Each theme block in `placeholder.png` ships 8 theme-specific prop tiles, address
 | Theme | Slots 1 → 8 |
 |-------|-------------|
 | 1 — sci-fi | `console`, `hibernation-chamber`, `viewport`, `whiteboard`, `crate`, `radar`, `oscilloscope`, `button-panel` |
-| 2 — jungle | `ship-teleport`, `holographic-console`, `crystal-orb`, `synaptit-ore`, `ancient-portal`, `scout-drone`, `energy-barrier`, `energy-core` |
-| 3 — snow | `ship-teleport`, `yeti-footsteps`, `synaptit-ore`, `ice-crystals`, `energy-barrier`, `scout-drone`, `expedition-tent`, `snowman` |
+| 2 — jungle | `ship-teleport`, `holographic-console`, `void-node`, `synaptit-ore`, `ancient-portal`, `broken-scout-drone`, `energy-barrier`, `energy-core` |
+| 3 — snow (frozen facility) | `ship-teleport`, `frozen-console`, `holo-plan-board`, `server-monolith`, `fabricator-rig`, `cargo-tram`, `frozen-service-bot`, `synaptit-ore` |
 | 4 — volcanic | `ship-teleport`, `survey-lander`, `lava-geyser`, `lava-obelisk`, `magma-crystals`, `synaptit-ore`, `satellite-dish`, `exploration-rover` |
 | 5 — sand | `ship-teleport`, `buried-hatch`, `desert-cairn`, `signal-beacon`, `synaptit-ore`, `solar-panel`, `supply-canister`, `desert-well` |
 | 6 — oceanic | `ship-teleport`, `water-pump`, `seaweed`, `synaptit-ore`, `coral-shrine`, `pearl-orb`, `tidal-monolith`, `water-turbine` |

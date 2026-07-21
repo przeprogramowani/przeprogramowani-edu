@@ -141,7 +141,7 @@
         74,
         74,
         82,
-        78,
+        83,
         74,
         75,
         70,
@@ -291,7 +291,7 @@
         69,
         74,
         74,
-        82,
+        88,
         74,
         72,
         69,
@@ -320,7 +320,7 @@
         69,
         71,
         82,
-        75,
+        88,
         74,
         74,
         72,
@@ -411,40 +411,30 @@
         73,
         0,
         0,
-        87,
+        85,
         0,
         0,
-        87,
-        0,
-        0,
-        76,
-        73,
-        0,
-        0,
-        87,
-        0,
-        0,
-        0,
-        87,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        80,
+        85,
         0,
         0,
         76,
         73,
         0,
         0,
+        85,
+        0,
+        0,
+        0,
+        85,
         0,
         0,
         0,
         0,
+        0,
+        0,
+        0,
+        0,
+        78,
         0,
         0,
         76,
@@ -457,6 +447,8 @@
         0,
         0,
         0,
+        76,
+        73,
         0,
         0,
         0,
@@ -464,6 +456,14 @@
         0,
         0,
         0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        78,
         0,
         0,
         0,
@@ -498,7 +498,7 @@
         0,
         0,
         84,
-        81,
+        73,
         0,
         0,
         0,
@@ -510,7 +510,7 @@
         0,
         0,
         0,
-        85,
+        80,
         0,
         0,
         0,
@@ -527,7 +527,7 @@
         0,
         0,
         0,
-        84,
+        76,
         73,
         0,
         0,
@@ -536,7 +536,7 @@
         0,
         0,
         0,
-        88,
+        86,
         0,
         0,
         0,
@@ -549,42 +549,42 @@
         0,
         76,
         73,
-        0,
-        85,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        76,
-        73,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        76,
-        73,
-        0,
-        0,
-        0,
-        0,
         0,
         80,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        76,
+        73,
+        87,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        76,
+        73,
+        0,
+        0,
+        0,
+        0,
+        0,
+        78,
         0,
         0,
         76,
@@ -662,7 +662,7 @@
         0,
         0,
         73,
-        86,
+        88,
         0,
         0,
         0,
@@ -692,10 +692,10 @@
         0,
         0,
         73,
+        88,
         0,
         0,
-        0,
-        0,
+        88,
         76,
         0,
         0,
@@ -1128,24 +1128,24 @@
       "name": "Zones",
       "objects": [
         {
-          "height": 128,
+          "height": 64,
           "id": 1,
-          "name": "Return to the Drafting Hall",
+          "name": "Return to the Deadlock",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "door-to-drafting"
+              "value": "deadlock-door"
             },
             {
               "name": "targetMap",
               "type": "string",
-              "value": "m2-drafting-hall"
+              "value": "m2-staging-yard"
             },
             {
               "name": "spawnX",
               "type": "int",
-              "value": 24
+              "value": 30
             },
             {
               "name": "spawnY",
@@ -1162,207 +1162,12 @@
         {
           "height": 64,
           "id": 2,
-          "name": "Fabricator Line Station",
+          "name": "Route to the Dispatch Tower",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "fabricator-line"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 192,
-          "y": 64
-        },
-        {
-          "height": 64,
-          "id": 3,
-          "name": "Fabricator Line Station (Drifted)",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "fabricator-line-2"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 832,
-          "y": 64
-        },
-        {
-          "height": 64,
-          "id": 4,
-          "name": "Checkpoint Gate CP-3",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "checkpoint-gate-1"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 768,
-          "y": 256
-        },
-        {
-          "height": 64,
-          "id": 5,
-          "name": "Checkpoint Gate CP-4",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "checkpoint-gate-2"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 1408,
-          "y": 320
-        },
-        {
-          "height": 64,
-          "id": 6,
-          "name": "Line Archive Terminal",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "line-archive"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 896,
-          "y": 576
-        },
-        {
-          "height": 64,
-          "id": 7,
-          "name": "Line Control Console",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "control-console"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 1664,
-          "y": 64
-        },
-        {
-          "height": 64,
-          "id": 8,
-          "name": "Frozen Runner Unit",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "frozen-runner"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 512,
-          "y": 320
-        },
-        {
-          "height": 64,
-          "id": 9,
-          "name": "VOID Certification Terminal",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "exam-impl-control"
-            },
-            {
-              "name": "examId",
-              "type": "string",
-              "value": "m2-exam-impl-control"
-            }
-          ],
-          "type": "exam",
-          "visible": true,
-          "width": 64,
-          "x": 1664,
-          "y": 384
-        },
-        {
-          "height": 64,
-          "id": 10,
-          "name": "Foreman F-6",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "foreman-f6"
-            },
-            {
-              "name": "npcType",
-              "type": "string",
-              "value": "robot"
-            },
-            {
-              "name": "npcVariant",
-              "type": "string",
-              "value": "hologram-blue"
-            }
-          ],
-          "type": "npc",
-          "visible": true,
-          "width": 64,
-          "x": 832,
-          "y": 320
-        },
-        {
-          "height": 64,
-          "id": 11,
-          "name": "Controller CP-5",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "controller-cp5"
-            },
-            {
-              "name": "npcType",
-              "type": "string",
-              "value": "robot"
-            },
-            {
-              "name": "npcVariant",
-              "type": "string",
-              "value": "hologram-blue"
-            }
-          ],
-          "type": "npc",
-          "visible": true,
-          "width": 64,
-          "x": 1472,
-          "y": 192
-        },
-        {
-          "height": 128,
-          "id": 12,
-          "name": "Route to the Planning Core",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "planning-core-door"
+              "value": "dispatch-door"
             },
             {
               "name": "targetMap",
@@ -1382,7 +1187,7 @@
             {
               "name": "requiredFlags",
               "type": "string",
-              "value": "m2-impl-control-done"
+              "value": "m2-first-ingot"
             }
           ],
           "type": "door",
@@ -1390,6 +1195,162 @@
           "width": 64,
           "x": 1856,
           "y": 192
+        },
+        {
+          "height": 64,
+          "id": 3,
+          "name": "Foundry Control Console",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "foundry-console"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 1664,
+          "y": 64
+        },
+        {
+          "height": 64,
+          "id": 4,
+          "name": "Delivery Switchyard Station",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "switchyard-station"
+            },
+            {
+              "name": "arcadeGameId",
+              "type": "string",
+              "value": "arcade-switchyard"
+            }
+          ],
+          "type": "arcade",
+          "visible": true,
+          "width": 64,
+          "x": 1600,
+          "y": 128
+        },
+        {
+          "height": 64,
+          "id": 5,
+          "name": "Ice Gallery Neck",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "gallery-gate"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 960,
+          "y": 448
+        },
+        {
+          "height": 64,
+          "id": 6,
+          "name": "Synaptit Veins",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "ore-veins"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 1024,
+          "y": 576
+        },
+        {
+          "height": 64,
+          "id": 7,
+          "name": "Casting Crucible",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "crucible"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 768,
+          "y": 256
+        },
+        {
+          "height": 64,
+          "id": 8,
+          "name": "Gallery Ore Shuttle",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "ore-shuttle"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 512,
+          "y": 320
+        },
+        {
+          "height": 64,
+          "id": 9,
+          "name": "Sopel",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "sopel-foundry"
+            },
+            {
+              "name": "npcType",
+              "type": "string",
+              "value": "robot"
+            },
+            {
+              "name": "npcVariant",
+              "type": "string",
+              "value": "frosty-blue"
+            }
+          ],
+          "type": "npc",
+          "visible": true,
+          "width": 64,
+          "x": 256,
+          "y": 320
+        },
+        {
+          "height": 64,
+          "id": 10,
+          "name": "Expedition Protocol Terminal IX",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "exam-protocol-9"
+            },
+            {
+              "name": "examId",
+              "type": "string",
+              "value": "m2-exam-protocol-9"
+            }
+          ],
+          "type": "exam",
+          "visible": true,
+          "width": 64,
+          "x": 1664,
+          "y": 384
         }
       ],
       "opacity": 1,
@@ -1400,7 +1361,7 @@
     }
   ],
   "nextlayerid": 5,
-  "nextobjectid": 13,
+  "nextobjectid": 11,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.10.2",

@@ -42,6 +42,8 @@ describe('NPC color variants', () => {
   it('defines the named variants available to map authors', () => {
     expect(NPC_COLOR_VARIANTS).toEqual({
       'jungle-dark-green': { color: 0x8fa383, mode: 'multiply' },
+      'frosty-blue': { color: 0xa5cfe0, mode: 'multiply' },
+      'crimson-red': { color: 0xd97a7a, mode: 'multiply' },
       'hologram-blue': { color: 0x66ccff, mode: 'multiply' },
       'hologram-green': { color: 0x66ff99, mode: 'multiply' },
       'hologram-magenta': { color: 0xff66cc, mode: 'multiply' },

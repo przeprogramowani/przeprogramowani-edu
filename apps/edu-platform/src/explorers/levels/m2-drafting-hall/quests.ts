@@ -1,29 +1,30 @@
-import type { EventQuest } from '../../systems/QuestManager';
+import type { TextAnswerQuest } from '../../systems/QuestManager';
 import { FLAGS } from '../../config/flags';
 
-export const quests: EventQuest[] = [
+export const quests: TextAnswerQuest[] = [
   {
-    id: 'q-m2-agent-architecture',
-    completionType: 'event',
-    title: { pl: 'Narysuj architekturę operacji', en: 'Draw the Operation Architecture' },
+    id: 'q-m2-new-order',
+    completionType: 'text-answer',
+    title: { pl: 'Nowy Rozkaz', en: 'New Order' },
     briefing: {
-      pl: 'Rejestr nie dopuści wykonania planu BETA bez aneksu architektury. Z CORE AI i Draftsmanem A-3 rozpisz role jednostek-agentów, kontrakty interfejsów i granice mandatów, a potem zdobądź certyfikat Architektura z agentami, aby A-3 ostemplował aneks.',
-      en: 'The registry will not clear the BETA plan for execution without an architecture annex. With CORE AI and Draftsman A-3, lay out the agent-unit roles, interface contracts, and mandate boundaries, then earn the Architecture with Agents certificate so A-3 stamps the annex.',
+      pl: 'Wydobądź z logów hali właściwe zlecenie i klucz zwolnienia kolejki. Licz tylko zlecenia ze stemplem dyspozytora i tylko klucze z poprawną sumą kontrolną. Złóż odpowiedź w formacie zlecenie-klucz i podaj przez /solve, aby wydać S-0PL nowy rozkaz.',
+      en: 'Extract the correct work order and queue release key from the bay logs. Count only orders with a dispatcher stamp and only keys with a valid checksum. Assemble the answer in the order-key format and enter it via /solve to issue S-0PL a new order.',
     },
+    inputPayload: [
+      'KOLEJKA HALI SERWISOWEJ — ZRZUT AWARYJNY',
+      "[311] ZLECENIE: 'RW-77'   — stempel dyspozytora: BRAK → odrzuć",
+      "[312] ZLECENIE: 'RW-04'   — stempel dyspozytora: OK",
+      "[313] KLUCZ ZWOLNIENIA: 'SZRON'  — suma kontrolna BŁĄD → retransmisja",
+      "[314] KLUCZ ZWOLNIENIA: 'JUTRO'  — suma kontrolna OK",
+      'FORMAT ODPOWIEDZI: <zlecenie>-<klucz>',
+    ].join('\n'),
     hints: [
-      { pl: 'Terminal certyfikacyjny stoi przy północno-wschodniej ścianie kreślarni.', en: 'The certification terminal stands by the north-east wall of the drafting hall.' },
-      { pl: 'Architektura z agentami odpowiada na trzy pytania A-3: kto, czym i dokąd.', en: 'Architecture with agents answers A-3\'s three questions: who, with what, and up to where.' },
-      { pl: 'Jednostka, która przekracza swój mandat, to Entropia w wersji kieszonkowej.', en: 'A unit exceeding its mandate is Entropy, pocket edition.' },
+      { pl: 'Zlecenie bez stempla dyspozytora nie liczy się — zostaje tylko jedno.', en: 'An order without a dispatcher stamp does not count — only one remains.' },
+      { pl: 'Klucz z błędną sumą kontrolną to retransmisja, nie klucz. Weź ten oznaczony OK.', en: 'A key with a bad checksum is a retransmission, not a key. Take the one marked OK.' },
+      { pl: 'Format to <zlecenie>-<klucz>, małymi literami. Np. /solve rw-77-szron', en: 'The format is <order>-<key>, lowercase. E.g. /solve rw-77-szron' },
     ],
-    objectives: [
-      {
-        id: 'earn-agent-architecture-certificate',
-        label: { pl: 'Zdobądź certyfikat: Architektura z agentami', en: 'Earn certificate: Architecture with Agents' },
-        event: 'exam:completed',
-        matchPayload: { examId: 'm2-exam-agent-architecture', passed: true },
-        requireFlag: FLAGS.M2_EXAM_AGENT_ARCHITECTURE_DONE,
-      },
-    ],
-    rewards: { xp: 125, flags: [FLAGS.M2_ARCHITECTURE_DONE] },
+    solution: 'rw-04-jutro',
+    validation: 'exact-lowercase',
+    rewards: { xp: 100, flags: [FLAGS.M2_SOPEL_ONLINE, FLAGS.CMDS_SOPEL] },
   },
 ];

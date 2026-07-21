@@ -243,7 +243,7 @@
         74,
         74,
         74,
-        78,
+        74,
         74,
         75,
         74,
@@ -535,10 +535,10 @@
         0,
         0,
         0,
-        85,
         0,
         0,
         0,
+        80,
         76,
         0,
         0,
@@ -634,7 +634,7 @@
         66,
         66,
         68,
-        81,
+        73,
         0,
         0,
         0,
@@ -650,77 +650,77 @@
         0,
         0,
         0,
+        0,
+        0,
+        79,
+        0,
+        87,
+        94,
+        93,
+        0,
+        0,
+        78,
+        0,
+        76,
+        73,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        76,
+        73,
+        0,
+        0,
+        0,
+        0,
+        96,
+        95,
         0,
         0,
         87,
         0,
         0,
-        94,
-        93,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        96,
+        95,
+        0,
         0,
         0,
         80,
-        0,
-        76,
-        81,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
         76,
         73,
         0,
-        0,
-        0,
-        0,
-        96,
-        95,
-        0,
-        0,
-        88,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        96,
-        95,
-        0,
-        0,
-        0,
-        0,
-        76,
-        73,
-        0,
-        0,
+        77,
         0,
         0,
         76,
@@ -759,7 +759,7 @@
         0,
         0,
         0,
-        0,
+        80,
         0,
         0,
         0,
@@ -782,16 +782,16 @@
         0,
         73,
         0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         86,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        88,
         0,
         0,
         0,
@@ -923,9 +923,9 @@
         0,
         0,
         73,
+        78,
         0,
-        0,
-        80,
+        78,
         0,
         0,
         76,
@@ -1476,229 +1476,51 @@
       "name": "Zones",
       "objects": [
         {
-          "height": 128,
+          "height": 64,
           "id": 1,
-          "name": "Airlock to Moon One Shuttle Route",
+          "name": "Landed Shuttle",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "door-to-m1"
+              "value": "ship-teleport"
             },
             {
               "name": "targetMap",
               "type": "string",
-              "value": "m1-uplink-bay"
+              "value": "m0-core-ai"
             },
             {
               "name": "spawnX",
               "type": "int",
-              "value": 26
+              "value": 9
             },
             {
               "name": "spawnY",
               "type": "int",
-              "value": 11
+              "value": 5
             }
           ],
           "type": "door",
           "visible": true,
           "width": 64,
-          "x": 0,
-          "y": 320
-        },
-        {
-          "height": 64,
-          "id": 2,
-          "name": "Frozen Operations Board",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "ops-board"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 832,
-          "y": 64
-        },
-        {
-          "height": 64,
-          "id": 3,
-          "name": "Frozen VOID Unit (Mid-Stride)",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "frozen-unit-1"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 576,
-          "y": 448
-        },
-        {
-          "height": 64,
-          "id": 4,
-          "name": "Frozen VOID Unit (Mid-Gesture)",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "frozen-unit-2"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 1088,
-          "y": 640
-        },
-        {
-          "height": 64,
-          "id": 5,
-          "name": "Abandoned Duty Desk",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "frozen-desk"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 1152,
-          "y": 320
-        },
-        {
-          "height": 64,
-          "id": 6,
-          "name": "Odyssey Relay Console",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "comms-console"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 512,
-          "y": 640
-        },
-        {
-          "height": 64,
-          "id": 7,
-          "name": "Plan Registry",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "plan-registry"
-            }
-          ],
-          "type": "trigger",
-          "visible": true,
-          "width": 64,
-          "x": 1600,
-          "y": 320
-        },
-        {
-          "height": 64,
-          "id": 8,
-          "name": "VOID Certification Terminal",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "exam-plan-first"
-            },
-            {
-              "name": "examId",
-              "type": "string",
-              "value": "m2-exam-plan-first"
-            }
-          ],
-          "type": "exam",
-          "visible": true,
-          "width": 64,
-          "x": 704,
-          "y": 960
-        },
-        {
-          "height": 64,
-          "id": 9,
-          "name": "Usher U-1",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "usher-u1"
-            },
-            {
-              "name": "npcType",
-              "type": "string",
-              "value": "robot"
-            },
-            {
-              "name": "npcVariant",
-              "type": "string",
-              "value": "hologram-blue"
-            }
-          ],
-          "type": "npc",
-          "visible": true,
-          "width": 64,
-          "x": 512,
-          "y": 448
-        },
-        {
-          "height": 64,
-          "id": 10,
-          "name": "Registrar L-4",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "registrar-l4"
-            },
-            {
-              "name": "npcType",
-              "type": "string",
-              "value": "robot"
-            },
-            {
-              "name": "npcVariant",
-              "type": "string",
-              "value": "hologram-blue"
-            }
-          ],
-          "type": "npc",
-          "visible": true,
-          "width": 64,
-          "x": 1600,
-          "y": 384
+          "x": 128,
+          "y": 512
         },
         {
           "height": 128,
-          "id": 11,
-          "name": "Route to the Staging Yard",
+          "id": 2,
+          "name": "Route to the Service Bay",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "staging-yard-door"
+              "value": "service-door"
             },
             {
               "name": "targetMap",
               "type": "string",
-              "value": "m2-staging-yard"
+              "value": "m2-drafting-hall"
             },
             {
               "name": "spawnX",
@@ -1713,7 +1535,7 @@
             {
               "name": "requiredFlags",
               "type": "string",
-              "value": "m2-plan-contract-done"
+              "value": "m2-gate-online"
             }
           ],
           "type": "door",
@@ -1721,6 +1543,208 @@
           "width": 64,
           "x": 1344,
           "y": 576
+        },
+        {
+          "height": 64,
+          "id": 3,
+          "name": "Guardhouse Console",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "guardhouse-console"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 704,
+          "y": 960
+        },
+        {
+          "height": 64,
+          "id": 4,
+          "name": "Manual Heat Valve",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "valve"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 576,
+          "y": 896
+        },
+        {
+          "height": 64,
+          "id": 5,
+          "name": "Frozen Factory Roadmap",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "roadmap-board"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 1152,
+          "y": 320
+        },
+        {
+          "height": 64,
+          "id": 6,
+          "name": "Gate Heat Node 1",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "heat-node-1"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 1024,
+          "y": 64
+        },
+        {
+          "height": 64,
+          "id": 7,
+          "name": "Gate Heat Node 2",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "heat-node-2"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 1664,
+          "y": 448
+        },
+        {
+          "height": 64,
+          "id": 8,
+          "name": "Gate Heat Node 3",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "heat-node-3"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 832,
+          "y": 576
+        },
+        {
+          "height": 64,
+          "id": 9,
+          "name": "Gate Control Console",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "gate-console"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 1600,
+          "y": 320
+        },
+        {
+          "height": 64,
+          "id": 10,
+          "name": "Guardhouse Black Box",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "black-box"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 832,
+          "y": 960
+        },
+        {
+          "height": 64,
+          "id": 11,
+          "name": "Frozen Ingot Tram",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "ingot-tram"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 1088,
+          "y": 640
+        },
+        {
+          "height": 64,
+          "id": 12,
+          "name": "Dr Kern",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "kern"
+            },
+            {
+              "name": "npcType",
+              "type": "string",
+              "value": "scientist"
+            },
+            {
+              "name": "npcVariant",
+              "type": "string",
+              "value": "frosty-blue"
+            }
+          ],
+          "type": "npc",
+          "visible": true,
+          "width": 64,
+          "x": 768,
+          "y": 896
+        },
+        {
+          "height": 64,
+          "id": 13,
+          "name": "Expedition Protocol Terminal VI",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "exam-protocol-6"
+            },
+            {
+              "name": "examId",
+              "type": "string",
+              "value": "m2-exam-protocol-6"
+            }
+          ],
+          "type": "exam",
+          "visible": true,
+          "width": 64,
+          "x": 576,
+          "y": 960
         }
       ],
       "opacity": 1,
@@ -1731,7 +1755,7 @@
     }
   ],
   "nextlayerid": 5,
-  "nextobjectid": 12,
+  "nextobjectid": 14,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.10.2",

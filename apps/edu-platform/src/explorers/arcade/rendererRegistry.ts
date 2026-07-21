@@ -2,11 +2,17 @@ import type { ArcadeGameType, ArcadeGameRenderer } from '../systems/ArcadeTypes'
 import { AsteroidRangeRenderer } from './AsteroidRangeRenderer';
 import { MemoryMatrixRenderer } from './MemoryMatrixRenderer';
 import { OscilloscopeRenderer } from './OscilloscopeRenderer';
+import { DeepScanRenderer } from './DeepScanRenderer';
+import { SwitchyardRenderer } from './SwitchyardRenderer';
+import { FaultTraceRenderer } from './FaultTraceRenderer';
 
 const RENDERERS = new Map<ArcadeGameType, new () => ArcadeGameRenderer>([
   ['asteroid-range', AsteroidRangeRenderer],
   ['memory-matrix', MemoryMatrixRenderer],
   ['oscilloscope', OscilloscopeRenderer],
+  ['deep-scan', DeepScanRenderer],
+  ['switchyard', SwitchyardRenderer],
+  ['fault-trace', FaultTraceRenderer],
 ]);
 
 export function createRenderer(type: ArcadeGameType): ArcadeGameRenderer {

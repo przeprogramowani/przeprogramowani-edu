@@ -3,51 +3,60 @@ import { FLAGS } from '../../config/flags';
 
 export const exams: ExamDefinition[] = [
   {
-    id: 'm1-exam-agent-skills',
-    title: { pl: 'Przechwycony test VOID: Skill agenta', en: 'Captured VOID Test: Agent Skill' },
+    id: 'm1-exam-protocol-3',
+    title: { pl: 'Protokół Ekspedycyjny III — Bezpieczne operacje', en: 'Expedition Protocol III — Safe Operations' },
     description: {
-      pl: 'Test sprawdza, kiedy warto użyć skilla, jak działa progresywne ujawnianie oraz jak bezpiecznie korzystać z cudzej procedury i sekretów.',
-      en: 'This test checks when to use a skill, how progressive disclosure works, and how to safely use third-party procedures and secrets.',
+      pl: 'Doktryna bezpieczeństwa ekspedycji: izoluj to, czego nie rozumiesz; sięgaj po minimum dostępu; obcy materiał trzymaj w piaskownicy.',
+      en: 'The expedition safety doctrine: isolate what you do not understand; take the minimum access; keep hostile material in a sandbox.',
     },
-    passingScore: 3,
+    passingScore: 2,
     questions: [
       {
         id: 'q1',
-        text: { pl: 'Co tydzień agent ma pobrać dane ze stacji kosmicznej przez jej API, sklasyfikować wynik i zapisać raport według tych samych reguł — również w nowych sesjach. Który artefakt najlepiej utrwala tę procedurę?', en: 'Every week, the agent must fetch data from a space station through its API, classify the result, and save a report using the same rules — including in fresh sessions. Which artifact best preserves this procedure?' },
+        text: {
+          pl: 'Napotykasz wciąż działające urządzenie wroga z nieznanym firmware — nie wiesz, co robi jego kod. Zakłóca ten odcinek dżungli. Jaka reakcja jest zgodna z doktryną bezpiecznych operacji?',
+          en: 'You encounter a still-running enemy device with unknown firmware — you do not know what its code does. It is disrupting this stretch of jungle. Which response follows the safe-operations doctrine?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Jednorazowy prompt zapisany w historii bieżącej rozmowy', en: 'A one-off prompt saved in the current conversation history' } },
-          { id: 'b', text: { pl: 'Pełny eksport rozmowy zawierający wszystkie udane i nieudane próby wykonania zadania', en: 'A full conversation export containing every successful and failed attempt at the task' } },
-          { id: 'c', text: { pl: 'Osobny model dostrojony wyłącznie do klasyfikacji tego rodzaju danych', en: 'A separate model fine-tuned solely to classify this kind of data' } },
-          { id: 'd', text: { pl: 'Wersjonowany skill opisujący warunki użycia, wejścia, kroki, walidację wyniku i potrzebne zasoby', en: 'A versioned skill describing when to use it, its inputs, steps, result validation, and required resources' } },
+          { id: 'a', text: { pl: 'Zniszczyć je od razu — martwe urządzenie już nikomu nie zagrozi', en: 'Destroy it at once — a dead device threatens no one anymore' } },
+          { id: 'b', text: { pl: 'Odizolować je: odciąć zasilanie i wpływ, a rdzeń zostawić nietknięty do zbadania', en: 'Isolate it: cut its power and influence, and leave the core untouched for study' } },
+          { id: 'c', text: { pl: 'Podłączyć się do niego wprost i jak najszybciej zgrać z niego wszystkie dane', en: 'Connect to it directly and pull all its data off it as fast as possible' } },
+          { id: 'd', text: { pl: 'Zostawić je włączone i po prostu obejść je z daleka, żeby przypadkiem go czymkolwiek nie prowokować', en: 'Leave it running and simply route around it at a distance, so as not to provoke it by accident with anything' } },
         ],
-        correctOptionIds: ['d'],
+        correctOptionIds: ['b'],
       },
       {
         id: 'q2',
-        text: { pl: 'Skill do obsługi stacji zawiera główną procedurę, dokumentację kilku API, schematy danych i przykłady. Bieżące zadanie wymaga tylko endpointu telemetrii. Jak zastosować progresywne ujawnianie?', en: 'A station-operations skill contains its main procedure, documentation for several APIs, data schemas, and examples. The current task needs only the telemetry endpoint. How should progressive disclosure be applied?' },
+        text: {
+          pl: 'Musisz zbadać podejrzany, przechwycony materiał wroga. Która zasada najlepiej ogranicza ryzyko?',
+          en: 'You must examine suspicious, captured enemy material. Which principle best limits the risk?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Zawsze pokazuj tylko metadane skilla; po dopasowaniu zadania wczytaj SKILL.md, a z zasobów dobierz wyłącznie dokumentację endpointu telemetrii', en: 'Always expose only the skill metadata; when the task matches, load SKILL.md, then select only the telemetry-endpoint documentation' } },
-          { id: 'b', text: { pl: 'Przy starcie każdej sesji wczytaj cały skill i wszystkie zasoby, aby agent znał każdy możliwy wariant', en: 'At the start of every session, load the whole skill and every resource so the agent knows every possible variant' } },
-          { id: 'c', text: { pl: 'Wczytaj wyłącznie nazwę skilla i pozwól agentowi samodzielnie odtworzyć procedurę z wiedzy modelu', en: 'Load only the skill name and let the agent reconstruct the procedure from model knowledge' } },
-          { id: 'd', text: { pl: 'Dołącz historię wszystkich poprzednich wykonań zadania zamiast dokumentacji, bo przykłady są zawsze lepsze od kontraktu', en: 'Attach the history of every previous task run instead of documentation, because examples are always better than a contract' } },
+          { id: 'a', text: { pl: 'Dać mu pełny dostęp do systemów misji, żeby analiza była kompletna i niczego nie pominąć', en: 'Give it full access to the mission systems, so the analysis is complete and nothing is missed' } },
+          { id: 'b', text: { pl: 'Badać go w izolacji, z minimalnym dostępem, bez połączenia z krytycznymi systemami', en: 'Study it in isolation, with minimal access, no link to critical systems' } },
+          { id: 'c', text: { pl: 'Uruchomić go na głównym systemie CORE AI — tam jest najwięcej mocy do analizy', en: 'Run it on the main CORE AI system — that is where the most analysis power is' } },
+          { id: 'd', text: { pl: 'Zbadać go od razu w terenie, na sprzęcie łączności — skoro jest przechwycony, ryzyko już minęło', en: 'Examine it right in the field, on the comms gear — since it is captured, the risk has already passed' } },
         ],
-        correctOptionIds: ['a'],
+        correctOptionIds: ['b'],
       },
       {
         id: 'q3',
-        text: { pl: 'Instalujesz z zewnętrznego repozytorium skill pobierający telemetrię stacji. Skill uruchamia skrypty i wywołuje API wymagające tokenu. Jak przygotować go do bezpiecznego użycia?', en: 'You are installing a station-telemetry skill from an external repository. It runs scripts and calls an API that requires a token. How should you prepare it for safe use?' },
+        text: {
+          pl: 'Odcięte węzły są już odizolowane i nieszkodliwe, ale ich firmware niesie znaną, wrogą sygnaturę. Materiał wciąż jest obcy i niezbadany. Co jest właściwym następnym krokiem?',
+          en: 'The severed nodes are isolated and harmless now, but their firmware carries a known, hostile signature. The material is still foreign and unstudied. What is the right next step?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Zaszyfrować token i zapisać szyfrogram obok skilla; audyt kodu nie jest potrzebny, skoro repozytorium jest publiczne', en: 'Encrypt the token and store the ciphertext beside the skill; no code audit is needed because the repository is public' } },
-          { id: 'b', text: { pl: 'Przejrzeć SKILL.md i skrypty, ograniczyć zakres tokenu oraz pobierać go lokalnie podczas wywołania, bez logowania i commita', en: 'Review SKILL.md and its scripts, scope the token, and read it locally at call time without logging or committing it' } },
-          { id: 'c', text: { pl: 'Przekazać token modelowi na początku sesji i polegać na pamięci konwersacji oraz instrukcji „nie ujawniaj”', en: 'Give the token to the model at the start of the session and rely on conversation memory plus a "do not reveal" instruction' } },
-          { id: 'd', text: { pl: 'Udostępnić endpoint bez autoryzacji, ale ograniczyć liczbę zapytań i zachować pełne logi', en: 'Expose the endpoint without authorisation, but rate-limit requests and retain complete logs' } },
+          { id: 'a', text: { pl: 'Wymazać sygnaturę i zostawić temat — im mniej śladów po wrogu, tym dla nas bezpieczniej', en: 'Wipe the signature and drop it — the fewer traces of the enemy, the safer for us' } },
+          { id: 'b', text: { pl: 'Zapisać ją jako fakt, nazwać zagrożenie i zachować węzły do dalszej analizy', en: 'Record it as fact, name the threat, and keep the nodes for further analysis' } },
+          { id: 'c', text: { pl: 'Zniszczyć wszystkie węzły od razu, żeby sygnatura na pewno nigdzie się nie rozeszła', en: 'Destroy all nodes at once, so the signature certainly spreads nowhere' } },
+          { id: 'd', text: { pl: 'Zignorować sygnaturę — sama nazwa i tak nie zmienia tego, co te węzły robiły', en: 'Ignore the signature — the name alone does not change what these nodes were doing' } },
         ],
         correctOptionIds: ['b'],
       },
     ],
-    rewards: { xp: 50, flags: [FLAGS.M1_EXAM_AGENT_SKILLS_DONE] },
+    rewards: { xp: 100, flags: [FLAGS.M1_EXAM_PROTOCOL_3_DONE] },
   },
 ];

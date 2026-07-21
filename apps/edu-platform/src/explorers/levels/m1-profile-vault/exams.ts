@@ -3,51 +3,60 @@ import { FLAGS } from '../../config/flags';
 
 export const exams: ExamDefinition[] = [
   {
-    id: 'm1-exam-agent-onboarding',
-    title: { pl: 'Przechwycony test VOID: Kontekst i onboarding', en: 'Captured VOID Test: Context and Onboarding' },
+    id: 'm1-exam-protocol-4',
+    title: { pl: 'Protokół Ekspedycyjny IV — Dziennik zewnętrzny', en: 'Expedition Protocol IV — External Journal' },
     description: {
-      pl: 'Test sprawdza, co powinno trafić do AGENTS.md, jak zamieniać błędy agenta w reguły oraz kiedy rozpocząć świeżą sesję.',
-      en: 'This test checks what belongs in AGENTS.md, how to turn agent failures into rules, and when to start a fresh session.',
+      pl: 'Doktryna pamięci ekspedycji: dziennik obozowy jest pamięcią zewnętrzną misji. Zapisz ustalenia, albo zabierze je kolejna hibernacja.',
+      en: 'The expedition memory doctrine: the camp journal is the mission\'s external memory. Record your findings, or the next hibernation takes them.',
     },
-    passingScore: 3,
+    passingScore: 2,
     questions: [
       {
         id: 'q1',
-        text: { pl: 'Agent dołącza do repozytorium oprogramowania stacji. Zna język programowania, framework i potrafi czytać kod. Co powinno trafić do AGENTS.md?', en: 'An agent is joining a station-software repository. It knows the programming language and framework and can read the code. What belongs in AGENTS.md?' },
+        text: {
+          pl: 'Po długiej zmianie w wąwozie masz w głowie mnóstwo ustaleń o geologii i anomaliach. Zbliża się hibernacja — następna zmiana ruszy z zerową pamięcią tego, co tu ustaliłeś. Co jest zgodne z doktryną dziennika zewnętrznego?',
+          en: 'After a long shift in the ravine you hold a mass of findings about geology and anomalies in your head. Hibernation is coming — the next shift starts with zero memory of what you worked out here. What follows the external-journal doctrine?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Pełna kopia dokumentacji frameworka, aby żaden potencjalnie przydatny fakt nie został pominięty', en: 'A complete copy of the framework documentation so no potentially useful fact is omitted' } },
-          { id: 'b', text: { pl: 'Projektowe komendy, lokalne konwencje, granice bezpieczeństwa i decyzje, których nie da się pewnie wywnioskować z kodu', en: 'Project commands, local conventions, safety boundaries, and decisions that cannot be reliably inferred from the code' } },
-          { id: 'c', text: { pl: 'Podstawy języka programowania i opis wszystkich popularnych wzorców projektowych', en: 'Programming language fundamentals and descriptions of every popular design pattern' } },
-          { id: 'd', text: { pl: 'Surowy zapis wszystkich rozmów prowadzonych podczas tworzenia projektu', en: 'A raw transcript of every conversation held while building the project' } },
+          { id: 'a', text: { pl: 'Zaufać własnej pamięci — po przebudzeniu najważniejsze ustalenia i tak same do ciebie wrócą', en: 'Trust your own memory — the key findings will come back to you on their own after you wake anyway' } },
+          { id: 'b', text: { pl: 'Zapisać ustalenia w dzienniku obozowym tak, by zrozumiał je ktoś, kto ich nie przeżył', en: 'Record the findings in the camp journal so someone who did not live through them can understand' } },
+          { id: 'c', text: { pl: 'Zostawić ustalenia w otwartej konsoli i przekazać je ustnie następnej zmianie', en: 'Leave the findings in the open console and pass them to the next shift by word of mouth' } },
+          { id: 'd', text: { pl: 'Zapisać tylko własne skróty — w chwili pisania i tak wszystko jest oczywiste', en: 'Write down only your own shorthand — at the moment of writing it is all obvious anyway' } },
         ],
         correctOptionIds: ['b'],
       },
       {
         id: 'q2',
-        text: { pl: 'W świeżej sesji agent użył w module monitoringu stacji ogólnego formatu błędów zamiast formatu wymaganego w projekcie. Co robisz w pętli feedbacku?', en: 'In a fresh session, the agent used a generic error format in the station-monitoring module instead of the one required by the project. What do you do in the feedback loop?' },
+        text: {
+          pl: 'Które wpisy najlepiej działają jako zewnętrzna pamięć ekspedycji dla kolejnej zmiany?',
+          en: 'Which entries work best as external mission memory for the next shift?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Powtarzam identyczną próbę, dopóki losowo nie pojawi się poprawna odpowiedź', en: 'Repeat the identical trial until the correct answer appears by chance' } },
-          { id: 'b', text: { pl: 'Dodaję ogólną regułę „nigdy nie twórz błędów samodzielnie”, choć nie wskazuje poprawnego formatu', en: 'Add a broad rule saying "never create errors yourself," even though it does not specify the correct format' } },
-          { id: 'c', text: { pl: 'Dołączam całą dokumentację projektu, aby większa ilość kontekstu skompensowała pomyłkę', en: 'Attach all project documentation so that more context compensates for the mistake' } },
-          { id: 'd', text: { pl: 'Zapisuję konkretny tryb błędu, zamieniam go w testowalną instrukcję, poprawiam onboarding i ponawiam świeżą próbę', en: 'Record the specific failure mode, turn it into a testable instruction, revise the onboarding, and rerun a fresh trial' } },
+          { id: 'a', text: { pl: 'Same wnioski i decyzje, bez faktów i powodów, które za nimi stały', en: 'Only conclusions and decisions, without the facts and reasons behind them' } },
+          { id: 'b', text: { pl: 'Konkretne fakty, decyzje i ich powody — tak, by następna osoba mogła działać bez ciebie', en: 'Concrete facts, decisions, and their reasons — so the next person can act without you' } },
+          { id: 'c', text: { pl: 'Wszystko, co się wydarzyło, po kolei i w całości, bez wyróżniania, co jest ważne', en: 'Everything that happened, in full and in order, without marking what matters' } },
+          { id: 'd', text: { pl: 'Bieżący stan zapisany raz i pozostawiony bez zmian, nawet gdy ustalenia się zdezaktualizują', en: 'The current state written once and left unchanged, even as the findings go stale' } },
         ],
-        correctOptionIds: ['d'],
+        correctOptionIds: ['b'],
       },
       {
         id: 'q3',
-        text: { pl: 'Sesja pracy nad systemem stacji jest pełna nieudanych prób i sprzecznych wskazówek. Jak sprawdzić, czy poprawiony onboarding rzeczywiście działa?', en: 'A session working on the station system is full of failed attempts and conflicting hints. How do you test whether the revised onboarding actually works?' },
+        text: {
+          pl: 'W komorze, która powinna być zapieczętowana, znajdujesz świeże ślady po pobraniu próbek. Nie wiesz, kto ani po co. Co robisz z tą obserwacją?',
+          en: 'In a chamber that should be sealed, you find fresh sampling marks. You do not know who or why. What do you do with the observation?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Zapisuję potwierdzone decyzje i tryb błędu, uruchamiam świeżą sesję z poprawionym onboardingiem i powtarzam ten sam test', en: 'Save verified decisions and the failure mode, start a fresh session with the revised onboarding, and repeat the same test' } },
-          { id: 'b', text: { pl: 'Kontynuuję w tej samej sesji, aby agent zachował pełny ślad wszystkich wcześniejszych prób', en: 'Continue in the same session so the agent retains the full trace of every previous attempt' } },
-          { id: 'c', text: { pl: 'Wklejam całą historię do nowej sesji, łącznie ze sprzecznymi wskazówkami', en: 'Paste the entire history into a new session, including the contradictory guidance' } },
-          { id: 'd', text: { pl: 'Zwiększam temperaturę modelu i uznaję inną odpowiedź za dowód poprawy onboardingu', en: 'Increase the model temperature and treat a different answer as proof that onboarding improved' } },
+          { id: 'a', text: { pl: 'Pominąć ją — bez wyjaśnienia i tak nic z nią nie zrobisz', en: 'Skip it — without an explanation you cannot do anything with it anyway' } },
+          { id: 'b', text: { pl: 'Zapisać ją jako anomalię, z samymi faktami, nawet jeśli nie umiesz jej jeszcze wytłumaczyć', en: 'Record it as an anomaly, with just the facts, even if you cannot explain it yet' } },
+          { id: 'c', text: { pl: 'Dopisać własną teorię jako fakt, żeby wpis był kompletny i domknięty', en: 'Add your own theory as fact, so the entry is complete and closed' } },
+          { id: 'd', text: { pl: 'Zapisać ją dopiero, gdy uda się ją wytłumaczyć — niepewne obserwacje tylko zaśmiecają dziennik', en: 'Record it only once you can explain it — uncertain observations just clutter the journal' } },
         ],
-        correctOptionIds: ['a'],
+        correctOptionIds: ['b'],
       },
     ],
-    rewards: { xp: 50, flags: [FLAGS.M1_EXAM_AGENT_ONBOARDING_DONE] },
+    rewards: { xp: 100, flags: [FLAGS.M1_EXAM_PROTOCOL_4_DONE] },
   },
 ];

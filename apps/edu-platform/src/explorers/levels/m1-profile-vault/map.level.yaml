@@ -2,79 +2,86 @@ theme: 2
 grid: |
   ~~~~~~~~~~~~~~~~~~~~~~~~
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  ~~########~~~~########~~
-  ~~#......#~~~~#......#~~
-  ~~#......#~~~~#......#~~
-  ~~#......#~~~~#......#~~
-  ~~#......#~~~~#......#~~
-  ~~###.####~~~~###.####~~
-  #####.###########.######
+  ~~#######~~~~~########~~
+  ~~#.....#~~~~~#......#~~
+  ~~#.....#######......#~~
+  ~~#..................#~~
+  ~~#......######......#~~
+  ~~###..###~~~~###.####~~
+  #####..##########.######
   #......................D
-  D......................D
   D......................#
-  #......................#
-  ##########....##########
-  ~~~~~~~~~#....#~~~~~~~~~
-  ~~~~~~~~~######~~~~~~~~~
+  #........######........#
+  #........#~~~~#........#
+  ##########~~~~##########
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~
 props:
-  - { id: moreau-orb, prop: crystal-orb, at: [5, 3], solid: true }
   - { id: cert-terminal, prop: holographic-console, at: [7, 3], solid: true }
-  - { id: cache-console, prop: holographic-console, at: [16, 3], solid: true }
-  - { id: recall-core, prop: energy-core, at: [20, 6], solid: true }
-  - { id: wake-portal, prop: ancient-portal, at: [11, 14], solid: true }
+  - { id: kit-core, prop: energy-core, at: [5, 4], solid: true }
+  - { prop: synaptit-ore, at: [16, 4], solid: true }
+  - { prop: synaptit-ore, at: [19, 4], solid: true }
+  - { id: chamber-barrier, prop: energy-barrier, at: [17, 7], solid: false }
+  - { id: survey-rig, prop: holographic-console, at: [3, 9], solid: true }
+  - { id: deep-scan-station, prop: holographic-console, at: [4, 9], solid: true }
+  - { prop: synaptit-ore, at: [10, 10], solid: false }
+  - { prop: synaptit-ore, at: [7, 12], solid: true }
+  - { prop: synaptit-ore, at: [15, 12], solid: false }
+  - { prop: synaptit-ore, at: [20, 12], solid: false }
 zones:
-  - id: shaft-control-door
-    name: Return to Shaft Control
+  - id: silence-door
+    name: Return to the Silence Zone
     type: door
     at: [0, 10]
-    size: [1, 2]
     properties:
-      targetMap: m1-shaft-control
+      targetMap: m1-echo-depths
       spawnX: 20
-      spawnY: 7
-  - id: crew-profile-cache
-    name: VOID Crew Profile Cache
+      spawnY: 6
+  - id: survey-rig
+    name: Survey Rig
     type: trigger
-    propId: cache-console
-  - id: moreau-profile
-    name: Moreau Neural Profile
+    propId: survey-rig
+  - id: deep-scan-station
+    name: Deep Scan Console
+    type: arcade
+    at: [4, 9]
+    properties:
+      arcadeGameId: arcade-deep-scan
+  - id: kit-core
+    name: Kit Power Cell
     type: trigger
-    propId: moreau-orb
-  - id: recall-code
-    name: Dormant Recall Code
+    propId: kit-core
+  - id: chamber-barrier
+    name: Chamber Neck Field
     type: trigger
-    propId: recall-core
-  - id: wake-relay
-    name: Odyssey Wake Relay
+    propId: chamber-barrier
+  - id: pure-vein
+    name: Marked Pure Vein
     type: trigger
-    propId: wake-portal
-  - id: exam-agent-onboarding
-    name: VOID Certification Terminal
+    at: [17, 4]
+  - id: sample-marks
+    name: Fresh Core-Sampling Marks
+    type: trigger
+    at: [19, 3]
+  - id: swierszcz-vein
+    name: Świerszcz
+    type: npc
+    at: [20, 10]
+    properties:
+      npcType: robot
+      npcVariant: jungle-dark-green
+  - id: exam-protocol-4
+    name: Expedition Protocol Terminal IV
     type: exam
     propId: cert-terminal
     properties:
-      examId: m1-exam-agent-onboarding
-  - id: archive-echo
-    name: Archive Echo
-    type: npc
-    at: [6, 11]
-    properties:
-      npcType: orb
-      npcVariant: jungle-dark-green
-  - id: vault-indexer
-    name: Vault Indexer V-6
-    type: npc
-    at: [12, 10]
-    properties:
-      npcType: robot
-      npcVariant: hologram-blue
-  - id: uplink-bay-door
-    name: Reserve Uplink Bay
+      examId: m1-exam-protocol-4
+  - id: crest-door
+    name: Route to Relay Crest
     type: door
     at: [23, 9]
-    size: [1, 2]
     properties:
       targetMap: m1-uplink-bay
       spawnX: 2
       spawnY: 11
-      requiredFlags: m1-moreau-context-done
+      requiredFlags: m1-first-ore

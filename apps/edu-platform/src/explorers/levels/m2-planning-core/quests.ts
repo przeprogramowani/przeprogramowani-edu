@@ -3,30 +3,40 @@ import { FLAGS } from '../../config/flags';
 
 export const quests: ApiAnswerQuest[] = [
   {
-    id: 'q-m2-solo-review',
+    id: 'q-m2-master-plan',
     completionType: 'api-answer',
-    title: { pl: 'Przeprowadź samodzielną recenzję', en: 'Run the Solo Review' },
+    title: { pl: 'Plan Główny', en: 'The Master Plan' },
     briefing: {
-      pl: 'Ostatnia misja HQ Księżyca 2, przez łącze zapasowe Moreau: plan „WYDOBYCIE BETA" jest kompletny i czeka na zatwierdzenie. W Earth HQ przeczytaj pakiet recenzyjny jak plan obcego, któremu nie ufasz, znajdź prawdziwe defekty wśród pozorów i odeślij sam werdykt. Potem Dexo podejmie decyzję — ludzką.',
-      en: 'The final HQ mission of Moon 2, via Moreau\'s backup relay: the "EXTRACTION BETA" plan is complete and awaits approval. At Earth HQ, read the review packet like a stranger\'s plan you do not trust, find the genuine defects among the look-alikes, and send back the verdict alone. Then Dexo makes the decision — a human one.',
-    },
-    answerHash: '36b82bbfffbe6d5d0674bc641b3aae92527697e1bac112a66c83ac6fc3bc60f2',
-    hint: {
-      pl: 'W Earth HQ otwórz module-002-10xdevs-workflow/PROMPT_REVIEW.md. Odpowiedź to posortowane identyfikatory defektów, rozdzielone przecinkami, bez spacji.',
-      en: 'At Earth HQ, open module-002-10xdevs-workflow/PROMPT_REVIEW.md. The answer is the sorted defect ids, comma-separated, no spaces.',
+      pl: 'Rdzeń Harmonogramu jest wyczyszczony z zatrutego planu. Szkielet nowego planu głównego trzeba sprawdzić krzyżowo z archiwami budowy Odyssey-F po stronie Ziemi. Nawigator uruchamia procedurę w centrali, składa podpisany klucz planu i przesyła go przez earthctl — zatwierdzenie należy do człowieka.',
+      en: "The Schedule Core is scrubbed of the poisoned plan. The skeleton of the new master plan must be cross-checked against the Odyssey-F build archives on Earth's side. The Navigator runs the procedure at HQ, assembles the signed plan key, and submits it via earthctl — the human confirms.",
     },
     hints: [
-      { pl: 'Najpierw uzbrój kryteria z listy kontrolnej, dopiero potem czytaj pakiet.', en: 'Arm the checklist criteria first, and only then read the packet.' },
-      { pl: 'Sekcje A i B pakietu to kontekst dla kryteriów mandatów i zależności.', en: 'Packet sections A and B are the context for the mandate and dependency criteria.' },
-      { pl: 'Druga runda w roli adwokata planu: wartości graniczne i noty niewiążące to nie defekty.', en: 'A second pass as the plan\'s advocate: boundary values and non-normative notes are not defects.' },
+      {
+        pl: 'Procedurę prowadzi Nawigator w centrali (10x-explorers-hq), nie postać w grze.',
+        en: 'The Navigator runs the procedure at HQ (10x-explorers-hq), not an in-game character.',
+      },
+      {
+        pl: 'Liczą się tylko bloki harmonogramu z właściwym podpisem, statusem i rewizją budowy — reszta to wabiki.',
+        en: 'Only schedule blocks with the right signature, status, and build revision count — the rest are decoys.',
+      },
+      {
+        pl: 'Klucz ma format plan-<kod>-<kod>-<kod>, a kody układasz według rosnącego takt_index. Prześlij przez earthctl.',
+        en: 'The key format is plan-<code>-<code>-<code>, with codes ordered by ascending takt_index. Submit via earthctl.',
+      },
     ],
+    hint: {
+      pl: 'Zajrzyj do module-002-10xdevs-workflow/PROMPT_MASTER_PLAN.md w centrali i złóż klucz planu według polityki wyboru bloków.',
+      en: 'Open module-002-10xdevs-workflow/PROMPT_MASTER_PLAN.md at HQ and assemble the plan key per the block-selection policy.',
+    },
+    answerHash: 'e784b67db0dc4a5c97e8c9bdf0f238c840443099e4d8ff2493e2ee0905cd3f45',
     rewards: {
       xp: 225,
       flags: [
-        FLAGS.M2_SOLO_REVIEW_DONE,
-        FLAGS.M2_PLANNING_MODULE_RESTORED,
-        FLAGS.M2_VOID_INTERCEPT_PLAN_FOUND,
-        FLAGS.CMDS_PLANNER,
+        FLAGS.M2_PLANNING_ONLINE,
+        FLAGS.M2_SABOTAGE_TIMESTAMPED,
+        FLAGS.M2_PURSUIT_ON_MAP,
+        FLAGS.M2_CHECKSUM_MISMATCH_SEEN,
+        FLAGS.CMDS_PLAN,
       ],
     },
   },

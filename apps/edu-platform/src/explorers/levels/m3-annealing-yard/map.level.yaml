@@ -1,0 +1,101 @@
+# M3 L4 — Wyżarzalnia / The Annealing Yard
+# Cathedral scale: heat-cycle stations set in rows like a vineyard, a crystal
+# garden glittering along the eastern chimney line, a dead relay dish on the north
+# ridge, and the assay module anchoring the south. First controlled fire of the moon.
+theme: 4
+grid: |
+  ##################################
+  #................................#
+  #................................#
+  #................................#
+  #................................#
+  #................................#
+  #................................#
+  D................................D
+  #................................#
+  #................................#
+  #................................#
+  #................................#
+  #................................#
+  #................................#
+  #................................#
+  #................................#
+  #................................#
+  ##################################
+props:
+  - { id: ridge-antenna, prop: satellite-dish, at: [24, 2], solid: true }
+  - { prop: lava-geyser, at: [30, 3], solid: true }
+  - { prop: magma-crystals, at: [6, 5], solid: true }
+  - { prop: magma-crystals, at: [7, 5], solid: false }
+  - { prop: magma-crystals, at: [12, 5], solid: false }
+  - { prop: magma-crystals, at: [19, 5], solid: true }
+  - { prop: magma-crystals, at: [28, 5], solid: true }
+  - { prop: magma-crystals, at: [29, 5], solid: false }
+  - { prop: synaptit-ore, at: [31, 6], solid: false }
+  - { id: ore-veins, prop: synaptit-ore, at: [30, 7], solid: true }
+  - { id: anneal-row, prop: lava-geyser, at: [10, 8], solid: true }
+  - { prop: lava-obelisk, at: [31, 9], solid: true }
+  - { prop: magma-crystals, at: [6, 11], solid: true }
+  - { prop: magma-crystals, at: [12, 11], solid: false }
+  - { prop: magma-crystals, at: [20, 11], solid: true }
+  - { prop: synaptit-ore, at: [30, 11], solid: true }
+  - { prop: magma-crystals, at: [28, 12], solid: true }
+  - { prop: magma-crystals, at: [29, 12], solid: false }
+  - { prop: synaptit-ore, at: [31, 12], solid: false }
+  - { id: fault-trace-station, prop: satellite-dish, at: [14, 13], solid: true }
+  - { id: assay-rig, prop: survey-lander, at: [16, 13], solid: true }
+  - { id: assay-terminal, prop: survey-lander, at: [18, 13], solid: true }
+  - { prop: lava-geyser, at: [30, 14], solid: true }
+zones:
+  - id: trial-door
+    name: Return to the Fire Trial
+    type: door
+    at: [0, 7]
+    properties:
+      targetMap: m3-fire-trial
+      spawnX: 28
+      spawnY: 7
+  - id: assay-door
+    name: Route to the Assay Office
+    type: door
+    at: [33, 7]
+    properties:
+      targetMap: m3-assay-office
+      spawnX: 2
+      spawnY: 7
+      requiredFlags: m3-first-cert
+  - id: assay-rig
+    name: Assay Rig
+    type: trigger
+    propId: assay-rig
+  - id: fault-trace-station
+    name: Cooling-Loop Fault Trace
+    type: arcade
+    at: [14, 13]
+    properties:
+      arcadeGameId: arcade-fault-trace
+  - id: anneal-row
+    name: Anneal Row
+    type: trigger
+    at: [10, 8]
+  - id: ridge-antenna
+    name: Ridge Relay Antenna
+    type: trigger
+    propId: ridge-antenna
+  - id: ore-veins
+    name: Chimney Synaptit Veins
+    type: trigger
+    propId: ore-veins
+  - id: iskra-yard
+    name: Iskra
+    type: npc
+    at: [7, 14]
+    properties:
+      npcType: robot
+      npcVariant: crimson-red
+  - id: exam-protocol-14
+    name: Expedition Protocol Terminal XIV
+    type: exam
+    propId: assay-terminal
+    properties:
+      examId: m3-exam-protocol-14

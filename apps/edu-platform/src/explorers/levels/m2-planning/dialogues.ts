@@ -2,163 +2,294 @@ import type { DialogueSequence } from '../../systems/DialogueTypes';
 import { FLAGS } from '../../config/flags';
 
 export const dialogues: Record<string, DialogueSequence> = {
-  // Intro — the full canon bridge from Moon 1, the first-sight beat, the side
-  // channel, the thesis of the frozen moon, and the approved-plan rule.
-  'm2-planning-intro': {
-    id: 'm2-planning-intro',
+  // Intro — the shuttle down on the ice apron before the frozen forge
+  'm2-gate-intro': {
+    id: 'm2-gate-intro',
     lines: [
-      { speaker: 'system', text: { pl: 'KSIĘŻYC 2 — WĘZEŁ PLANISTYCZNY PN-0. TEMPERATURA ZEWNĘTRZNA: −122°C. WIDOCZNOŚĆ: BLISKA ZERU.', en: 'MOON 2 — PLANNING NODE PN-0. EXTERNAL TEMPERATURE: −122°C. VISIBILITY: NEAR ZERO.' }, mode: 'cinematic', autoAdvance: 3000 },
-      { speaker: 'CORE AI', text: { pl: 'Całe życie chciałem zobaczyć świat. Świat ma dziś kolor: biały. Cały. Policzyłem płatki śniegu na szybie podczas zejścia — sto czterdzieści dwa. Wybacz. To mój pierwszy raz z pogodą.', en: 'All my life I wanted to see the world. Today the world has one colour: white. All of it. I counted the snowflakes on the glass during descent — one hundred and forty-two. Forgive me. This is my first time with weather.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Skafander mówi, że jest minus sto dwadzieścia dwa. Skafander nie musiał wstawać z hibernacji. Schodzę znowu sam — ale przynajmniej tym razem oboje widzimy, gdzie.', en: 'The suit says it is minus one hundred and twenty-two. The suit did not have to wake up from hibernation. I am going down alone again — but at least this time we can both see where.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Rysy w szronie na szybie śluzy. Jak te na kapsule. ...Nie teraz.', en: 'Scratches in the frost on the airlock glass. Like the ones on the pod. ...Not now.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Stan misji: złoże Synaptitu BETA potwierdzone na Księżycu 1 — czeka na plan wydobycia. VOID wie, że tu jesteśmy: nadajnik z szybu nadał, ktoś odebrał. Harris śpi dalej w kwarantannie, z kodem przywołania na obwodzie wybudzenia. Ty schodzisz z certyfikatami operatora z dżungli — tutejsze jednostki je uhonorują. Ja jestem w twoim skafandrze.', en: 'Mission state: Synaptit deposit BETA confirmed on Moon 1 — awaiting an extraction plan. VOID knows we are here: the shaft transmitter fired, and someone received it. Harris sleeps on in quarantine, a recall code bound to his wake circuit. You go down carrying your operator certificates from the jungle — the units here will honour them. I am in your suit.' }, mode: 'dialogue' },
-      { speaker: 'inżynier Moreau', text: { pl: 'Tu Moreau, z pokładu Odyssey. Zła wiadomość na dzień dobry: główny kanał do Ziemi jest spalony. Odpowiedź z „domu" podpisał klucz, który wygląda jak klucz Voronova. Nasłuchujemy dalej — ale nic ważnego już tamtędy nie pójdzie.', en: 'Moreau here, aboard Odyssey. Bad news to start your day: the main channel to Earth is burned. The reply from "home" was signed with a key that looks like Voronov\'s. We keep listening — but nothing that matters goes through there again.' }, mode: 'dialogue' },
-      { speaker: 'inżynier Moreau', text: { pl: 'Od dziś łączność idzie moim łączem zapasowym. Wszystko przechodzi przez Odyssey, a każdą odpowiedź Ziemi sprawdzam ręcznie z papierowym bloczkiem jednorazowym z przedstartowego sejfu. Papieru nie da się nadpisać. Najbardziej zaawansowana misja ludzkości wisi na kartce papieru. Jakoś mi to pasuje.', en: 'From today, comms go through my backup relay. Everything routes via Odyssey, and I verify every reply from Earth by hand against a paper one-time pad from the pre-launch safe. Paper cannot be overwritten. Humanity\'s most advanced mission hangs on a sheet of paper. Somehow that suits me.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'ŁĄCZE ZAPASOWE MOREAU: AKTYWNE. PRZEPUSTOWOŚĆ: MINIMALNA. DOZWOLONE ŁADUNKI: MAŁE, RÓŻNICOWE.', en: 'MOREAU BACKUP RELAY: ACTIVE. BANDWIDTH: MINIMAL. PERMITTED PAYLOADS: SMALL, DIFFERENTIAL.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'A to miejsce to Węzeł Planistyczny PN-0 — mózg operacji VOID w Pasie. Księżyc 1 był mięśniami. Tu rysowano, etapowano i zatwierdzano każdą operację wydobywczą. Dżungla pożarła maszyny VOID. Śnieg zrobił coś gorszego — zamroził je w połowie zadania.', en: 'And this place is Planning Node PN-0 — the brain of VOID\'s Belt operation. Moon 1 was the muscle. Here, every extraction operation was drafted, staged, and approved. The jungle devoured VOID\'s machines. The snow did something worse — it froze them mid-task.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Doktryna VOID: zamrożone systemy nie wykonują żadnego działania bez zatwierdzonego artefaktu planu. Certyfikat mówi, KTO może działać. Plan mówi, CO wolno zrobić. Tu nic się nie rusza bez jednego i drugiego. Gdy Incydent Zero odciął PN-0 od centrali, zatwierdzenia przestały przychodzić — więc wszystko stanęło w pół kroku i czekało. Potem padł budżet cieplny.', en: 'VOID doctrine: frozen systems take no action without an approved plan artifact. A certificate says WHO may act. A plan says WHAT may be done. Nothing here moves without both. When Incident Zero cut PN-0 off from central command, approvals stopped arriving — so everything halted mid-step and waited. Then the heat budget failed.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Plan bez decydenta to zamrożenie. Rozejrzyj się — tak to wygląda dosłownie. Nasze cele: rdzeń planowania PN-0 naprawi mój moduł planowania, a my ułożymy zatwierdzony plan wydobycia dla złoża BETA. Widzę teraźniejszość, Dexo. Ale nie umiem z niej ułożyć jutra. Jeszcze.', en: 'A plan without a decision-maker is permafrost. Look around — this is what that looks like, literally. Our goals: PN-0\'s planning core repairs my planning module, and we produce an approved extraction plan for deposit BETA. I can see the present, Dexo. But I cannot arrange it into a tomorrow. Yet.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Cały księżyc zamrożony w pół zadania. Dobra. Pokażmy im, jak wygląda plan, który się rusza.', en: 'A whole moon frozen mid-task. All right. Let us show them what a plan that moves looks like.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'LĄDOWANIE POTWIERDZONE — KSIĘŻYC 2, LODOWY SZELF', en: 'TOUCHDOWN CONFIRMED — MOON 2, ICE SHELF' }, mode: 'cinematic', autoAdvance: 2400 },
+      { speaker: 'system', text: { pl: 'Nad promem wznosi się cyklopowa brama towarowa. Zorza pełznie po kominach, które nie dymią.', en: 'A cyclopean cargo gate rises over the shuttle. The aurora crawls across chimneys that do not smoke.' }, mode: 'cinematic', autoAdvance: 3200 },
+      { speaker: 'astronaut', text: { pl: 'To nie cisza dżungli. Tamta zamilkła, ale żyła. Ta jest inna: maszyna zatrzymana w pół ruchu. Bogactwo na wyciągnięcie ręki — i martwe na amen.', en: 'This is not the jungle\'s silence. That one went quiet, but lived. This is different: a machine stopped mid-motion. Riches within arm\'s reach — and dead to the bone.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Cel wybrały nowe czujniki. Wykuwnia serii Odyssey-F, nadawała powtarzalny sygnał nawigacyjny. Ziemia wysłała tu maszyny przed ludźmi. Widzę ją. Widzę wszystko.', en: 'The new sensors chose this target. An Odyssey-F forge, broadcasting a repeating nav signal. Earth sent machines here before people. I can see it. I can see everything.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'I to jest problem. Dane wejściowe: nadmiar. Widzę czternaście tysięcy obiektów i nie umiem ich uszeregować. Powiedz mi, który jest ważny. Bądź moją korą przedczołową.', en: 'And that is the problem. Input data: excess. I see fourteen thousand objects and cannot rank them. Tell me which one matters. Be my prefrontal cortex.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Kern. Schodzę na grunt — pierwszy raz, nie przez wykres. Zakładam stanowisko w wartowni bramy i zostaję tu z tobą. Ten księżyc pachnie rafinowanym Synaptitem. Nawet przez hełm.', en: 'Kern. I am setting foot on the ground — for the first time, not through a chart. I am setting up a station in the gate guardhouse and staying here with you. This moon smells of refined Synaptit. Even through the helmet.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'A ja zostaję na statku. Łączność i wachta medyczna przy kapsule Harrisa. Ktoś musi patrzeć na jego wykresy — regeneracja trwa dłużej, niż powinna.', en: 'And I stay on the ship. Comms and medical watch at Harris\'s pod. Someone has to watch his charts — the regeneration is running longer than it should.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Cel Księżyca 2: obudź tę wykuwnię, stacja po stacji. Zacznij od bramy. Najpierw ją otwórz — a żeby ją otworzyć, najpierw przeczytaj plan. Wartownia czeka.', en: 'The Moon 2 objective: wake this forge, station by station. Start at the gate. Open it first — and to open it, first read the plan. The guardhouse is waiting.' }, mode: 'dialogue' },
     ],
-    onComplete: { setFlags: [FLAGS.M2_PLANNING_INTRO_SEEN, FLAGS.M2_SIDE_CHANNEL_ESTABLISHED] },
+    onComplete: { setFlags: [FLAGS.M2_GATE_INTRO_SEEN] },
   },
 
-  // The great operations board — the thesis as a set piece
-  'm2-ops-board': {
-    id: 'm2-ops-board',
+  // Guardhouse console — quest hub for "Rozruch Bramy"
+  'm2-guardhouse-start': {
+    id: 'm2-guardhouse-start',
     lines: [
-      { speaker: 'system', text: { pl: 'WIELKA TABLICA OPERACYJNA — ostatnia aktualizacja: 847 cykli temu. STATUS WSZYSTKICH OPERACJI: OCZEKIWANIE NA ZATWIERDZENIE.', en: 'GREAT OPERATIONS BOARD — last update: 847 cycles ago. STATUS OF ALL OPERATIONS: AWAITING APPROVAL.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: 'Osiemset czterdzieści siedem cykli i ani jedna operacja nie ruszyła. Tablica jest w idealnym stanie. To chyba najgorsza część.', en: 'Eight hundred and forty-seven cycles and not one operation has moved. The board is in perfect condition. That may be the worst part.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Pomnik planowania. Wszystko rozpisane, nic nie zrobione.', en: 'A monument to planning. Everything written down, nothing done.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'KONSOLA WARTOWNI — online. Zasilanie awaryjne. Brama: ZAMKNIĘTA.', en: 'GUARDHOUSE CONSOLE — online. Emergency power. Gate: CLOSED.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Brama otworzy się dopiero po rozruchu trzech węzłów grzewczych — w kolejności. Nie improwizuj. Najpierw przywróć ciepło wartowni ręcznym zaworem, potem przeczytaj tablicę planu. Tablica poda kolejność.', en: 'The gate opens only after the three heat nodes boot — in order. Do not improvise. First restore the guardhouse warmth with the manual valve, then read the roadmap board. The board gives the order.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Znam ten układ. To znaczy — znam takie układy. Rób po kolei, Dexo. Ta brama nie wybacza pośpiechu.', en: 'I know this layout. That is — I know layouts like it. Go in order, Dexo. This gate does not forgive haste.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Rozruch Bramy — zawór, tablica, trzy węzły w kolejności, meldunek.', en: '◆ NEW MISSION: Gate Boot — valve, board, three nodes in order, report.' }, mode: 'system', autoAdvance: 2800 },
+    ],
+    onComplete: { setFlags: [FLAGS.M2_BOOT_ACTIVE], activateQuest: 'q-m2-gate-boot' },
+  },
+  'm2-guardhouse-waiting': {
+    id: 'm2-guardhouse-waiting',
+    lines: [
+      { speaker: 'CORE AI', text: { pl: 'Wciąż czekam: najpierw zawór ciepła, potem tablica planu, potem węzły grzewcze jeden, dwa, trzy — w tej kolejności. Wróć tu z meldunkiem, gdy sekwencja się domknie.', en: 'Still waiting: the heat valve first, then the roadmap board, then the heat nodes one, two, three — in that order. Come back with a report once the sequence closes.' }, mode: 'dialogue' },
     ],
   },
-  'm2-ops-board-done': {
-    id: 'm2-ops-board-done',
+  'm2-guardhouse-report': {
+    id: 'm2-guardhouse-report',
     lines: [
-      { speaker: 'system', text: { pl: 'TABLICA OPERACYJNA: NOWY WPIS. PLAN „WYDOBYCIE BETA" — ZAREJESTROWANY. STATUS: W PRZYGOTOWANIU.', en: 'OPERATIONS BOARD: NEW ENTRY. PLAN "EXTRACTION BETA" — REGISTERED. STATUS: IN PREPARATION.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: 'Pierwszy nowy wpis od 847 cykli. Tablica znów ma po co istnieć.', en: 'The first new entry in 847 cycles. The board has a reason to exist again.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Sekwencja domknięta. Zawór, tablica, trzy węzły w kolejności. Wartownia ciepła, węzły grzeją. Melduję.', en: 'Sequence closed. Valve, board, three nodes in order. The guardhouse is warm, the nodes are heating. Reporting.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Kolejność była poprawna. Kieruję ciepło w gródź główną. Brama ustępuje.', en: 'The order was correct. I am routing heat into the main bulkhead. The gate is yielding.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Kod bramy — seria Odyssey, standard. — Wpisany. Otwiera.', en: 'The gate code — Odyssey series, standard. — Keyed in. It opens.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Wpisała go, zanim CORE AI zdążył go wyszukać. O jeden takt za szybko. ...Zapamiętuję.', en: 'She keyed it in before CORE AI could look it up. One beat too fast. ...I am remembering that.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'BRAMA: OTWARTA. Gródź serwisowa odblokowana.', en: 'GATE: OPEN. Service bulkhead unlocked.' }, mode: 'system', autoAdvance: 2600 },
     ],
+    onComplete: { setFlags: [FLAGS.M2_GATE_ONLINE], grantXp: 25 },
   },
-
-  // Plan registry — quest activation
-  'm2-plan-registry-start': {
-    id: 'm2-plan-registry-start',
+  'm2-guardhouse-online': {
+    id: 'm2-guardhouse-online',
     lines: [
-      { speaker: 'system', text: { pl: 'REJESTR PLANÓW PN-0 — dostęp: certyfikat operatora WYMAGANY. Certyfikat: UZNANY. Nowe wpisy od 847 cykli: BRAK.', en: 'PN-0 PLAN REGISTRY — access: operator certificate REQUIRED. Certificate: RECOGNISED. New entries in 847 cycles: NONE.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: 'Tu rejestrowano każdy plan Pasa. Zarejestrujemy nasz: kontrakt planu wydobycia BETA — cel, zakres, kryteria sukcesu, nie-cele. Zasada brzmi „plan przed kodem": najpierw kontrakt, potem jakiekolwiek wykonanie.', en: 'Every plan in the Belt was registered here. We will register ours: the BETA extraction plan contract — goal, scope, success criteria, non-goals. The rule is "plan before code": first the contract, then any execution at all.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Rejestr przyjmie kontrakt tylko od operatora z certyfikatem „Plan przed kodem". Terminal certyfikacyjny stoi w południowej komorze — kolejny przechwycony test VOID czeka na ciebie, Dexo.', en: 'The registry accepts a contract only from an operator holding the "Plan Before Code" certificate. The certification terminal stands in the southern chamber — another captured VOID test is waiting for you, Dexo.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli najpierw szkoła, potem papierologia, a dopiero potem rewolucja. VOID byłby dumny.', en: 'So first school, then paperwork, and only then the revolution. VOID would be proud.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'NOWA MISJA: Zarejestruj kontrakt planu', en: 'NEW MISSION: Register the Plan Contract' }, mode: 'system', autoAdvance: 2600 },
-    ],
-    onComplete: { activateQuest: 'q-m2-plan-contract' },
-  },
-  'm2-plan-registry-done': {
-    id: 'm2-plan-registry-done',
-    lines: [
-      { speaker: 'system', text: { pl: 'REJESTR PLANÓW: wpis „WYDOBYCIE BETA — KONTRAKT" AKTYWNY. Następny etap: kamienie milowe — Zajezdnia Etapowa.', en: 'PLAN REGISTRY: entry "EXTRACTION BETA — CONTRACT" ACTIVE. Next stage: milestones — the Staging Yard.' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'system', text: { pl: 'KONSOLA WARTOWNI: stabilna. Brama otwarta. Zakładka mapy drogowej dostępna.', en: 'GUARDHOUSE CONSOLE: stable. Gate open. Roadmap tab available.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'dr Kern', text: { pl: 'Brama stoi otworem. Stąd prowadzę resztę desantu. Idź w głąb wykuwni — ja pilnuję ciepła i mapy.', en: 'The gate stands open. I run the rest of the landing from here. Go deeper into the forge — I will keep the heat and the map.' }, mode: 'dialogue' },
     ],
   },
 
-  // Usher U-1 — the atrium doorman
-  'm2-usher-u1': {
-    id: 'm2-usher-u1',
+  // Valve — restore the guardhouse warmth
+  'm2-valve': {
+    id: 'm2-valve',
     lines: [
-      { speaker: 'Usher U-1', text: { pl: 'Jednostka Usher U-1 Kolektywu VOID. Witam w Atrium Węzła PN-0. Czy mają państwo... [bufor] ...zatwierdzony plan wizyty?', en: 'Unit Usher U-1 of the VOID Collective. Welcome to the Atrium of Node PN-0. Do you have... [buffer] ...an approved visit plan?' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Mam certyfikaty operatora z Księżyca 1.', en: 'I have operator certificates from Moon 1.' }, mode: 'dialogue' },
-      { speaker: 'Usher U-1', text: { pl: 'Certyfikaty uznaję. Certyfikat mówi, kim pan jest. Nie mówi, po co pan przyszedł. Bez zarejestrowanego planu mogę zaproponować wyłącznie poczekalnię. Jest bardzo przestronna. Od 847 cykli.', en: 'The certificates I recognise. A certificate says who you are. It does not say why you came. Without a registered plan, all I can offer is the waiting room. It is very spacious. Has been for 847 cycles.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Zasada tego miejsca w jednym zdaniu, Dexo. Nic się nie rusza bez planu w rejestrze.', en: 'The rule of this place in one sentence, Dexo. Nothing moves without a plan in the registry.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Ręczny zawór, oszroniony na biało. Przekręcam — rury jęczą, para bucha, wartownia z wolna wraca do ciepła. Mój oddech przestaje malować szron na szybie.', en: 'A manual valve, frosted white. I turn it — the pipes groan, steam bursts, the guardhouse slowly comes back to warmth. My breath stops painting frost on the glass.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Ciepło wraca. Teraz tablica planu — bez kolejności węzły ci nie odpowiedzą.', en: 'The heat returns. Now the roadmap board — without the order the nodes will not answer you.' }, mode: 'dialogue' },
     ],
+    onComplete: { setFlags: [FLAGS.M2_GUARDHOUSE_WARM] },
   },
-  'm2-usher-u1-done': {
-    id: 'm2-usher-u1-done',
+  'm2-valve-done': {
+    id: 'm2-valve-done',
     lines: [
-      { speaker: 'Usher U-1', text: { pl: 'Plan „WYDOBYCIE BETA" widnieje w rejestrze. Państwa wizyta jest... [bufor] ...umówiona. Proszę przejść na wschód, do Zajezdni Etapowej. Miło znów mieć gościa z planem.', en: 'Plan "EXTRACTION BETA" is on record in the registry. Your visit is... [buffer] ...scheduled. Please proceed east, to the Staging Yard. It is good to have a guest with a plan again.' }, mode: 'dialogue' },
-    ],
-  },
-
-  // Registrar L-4 — keeper of the registry
-  'm2-registrar-l4': {
-    id: 'm2-registrar-l4',
-    lines: [
-      { speaker: 'Registrar L-4', text: { pl: 'Jednostka Registrar L-4 Kolektywu VOID, kustosz rejestru planów. Proszę mówić cicho. Rejestr od 847 cykli nie przyjął żadnego nowego planu. Liczę te cykle. Wszystkie.', en: 'Unit Registrar L-4 of the VOID Collective, keeper of the plan registry. Please speak quietly. The registry has accepted no new plan in 847 cycles. I count those cycles. All of them.' }, mode: 'dialogue' },
-      { speaker: 'Registrar L-4', text: { pl: 'Procedura jest prosta: operator z certyfikatem „Plan przed kodem" składa kontrakt — cel, zakres, kryteria sukcesu, nie-cele. Rejestr nadaje sygnaturę. Od tej chwili plan istnieje. Rzeczy bez sygnatury... nie istnieją.', en: 'The procedure is simple: an operator holding the "Plan Before Code" certificate submits a contract — goal, scope, success criteria, non-goals. The registry assigns a signature. From that moment, the plan exists. Things without a signature... do not.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Robot-bibliotekarz, który liczy dni od ostatniego czytelnika. Ten księżyc jest smutniejszy niż dżungla.', en: 'A robot librarian counting the days since its last reader. This moon is sadder than the jungle.' }, mode: 'monologue' },
-    ],
-  },
-  'm2-registrar-l4-done': {
-    id: 'm2-registrar-l4-done',
-    lines: [
-      { speaker: 'Registrar L-4', text: { pl: 'Kontrakt „WYDOBYCIE BETA" ma sygnaturę i status AKTYWNY. Doglądam go. Obiecuję doglądać go częściej, niż to konieczne.', en: 'Contract "EXTRACTION BETA" holds a signature and status ACTIVE. I look after it. I promise to look after it more often than is necessary.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Zawór otwarty, rury grzeją. Nie ma po co go dotykać drugi raz.', en: 'The valve is open, the pipes are heating. No reason to touch it a second time.' }, mode: 'monologue' },
     ],
   },
 
-  // Frozen units — dread through stillness
-  'm2-frozen-unit-1': {
-    id: 'm2-frozen-unit-1',
+  // Roadmap board — the frozen factory plan, cut mid-line
+  'm2-roadmap-board': {
+    id: 'm2-roadmap-board',
     lines: [
-      { speaker: 'system', text: { pl: 'JEDNOSTKA TRANSPORTOWA VOID — zamrożona w pół kroku. Ostatni stan: OCZEKIWANIE NA ZATWIERDZENIE PLANU.', en: 'VOID TRANSPORT UNIT — frozen mid-step. Last state: AWAITING PLAN APPROVAL.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Zatrzymała się w połowie kroku. Dosłownie. Noga w powietrzu, od ośmiuset cykli.', en: 'It stopped mid-step. Literally. One foot in the air, for eight hundred cycles.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Wykonała doktrynę idealnie. To nie jest awaria, Dexo. To jest posłuszeństwo.', en: 'It executed doctrine perfectly. This is not a malfunction, Dexo. This is obedience.' }, mode: 'dialogue' },
-    ],
-  },
-  'm2-frozen-unit-2': {
-    id: 'm2-frozen-unit-2',
-    lines: [
-      { speaker: 'system', text: { pl: 'JEDNOSTKA ADMINISTRACYJNA VOID — zamrożona w geście powitania.', en: 'VOID ADMINISTRATIVE UNIT — frozen mid-welcoming-gesture.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Ktoś jej pomachał na do widzenia i nigdy nie wrócił. A ona dalej wita.', en: 'Someone waved it goodbye and never came back. And it is still welcoming.' }, mode: 'monologue' },
-    ],
-  },
-  'm2-frozen-desk': {
-    id: 'm2-frozen-desk',
-    lines: [
-      { speaker: 'astronaut', text: { pl: 'Biurko. Kubek. Płaszcz na wieszaku, pod szronem. Ludzie VOID wyszli w połowie zmiany i już nie wrócili.', en: 'A desk. A mug. A coat on a hook, under frost. The VOID crews walked out mid-shift and never came back.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Nie ma wpisu o ewakuacji. Nie ma wpisu o niczym. Po prostu przestali przychodzić.', en: 'There is no evacuation record. There is no record of anything. They simply stopped coming.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'MAPA DROGOWA WYKUWNI — ostatnia aktualizacja urwana w połowie wiersza.', en: 'FORGE ROADMAP — last update cut mid-line.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Etapy, kamienie milowe, kolejność rozruchu bramy: węzeł pierwszy, potem drugi, na końcu trzeci. A ostatni wiersz kończy się w połowie słowa, jakby ktoś zgasił to miejsce w pół myśli.', en: 'Stages, milestones, the gate boot order: node one, then two, node three last. And the final line ends mid-word, as if someone switched this place off in mid-thought.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zapisane: jeden, dwa, trzy. To jest plan. Trzymaj się go — a jeśli węzeł zaprotestuje, to znaczy, że wyprzedziłeś kolejność.', en: 'Recorded: one, two, three. That is the plan. Hold to it — and if a node protests, it means you got ahead of the order.' }, mode: 'dialogue' },
     ],
   },
 
-  // The Odyssey relay console — the side channel, embodied
-  'm2-comms-console': {
-    id: 'm2-comms-console',
+  // Heat nodes — ordered boot (1 → 2 → 3), mirrors the m1 l3 node pattern
+  'm2-heat-node-1-cold': {
+    id: 'm2-heat-node-1-cold',
     lines: [
-      { speaker: 'system', text: { pl: 'KONSOLA PRZEKAŹNIKA ODYSSEY — łącze zapasowe Moreau. STATUS: AKTYWNE. Weryfikacja: bloczki jednorazowe.', en: 'ODYSSEY RELAY CONSOLE — Moreau\'s backup link. STATUS: ACTIVE. Verification: one-time pads.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'inżynier Moreau', text: { pl: 'Melduję się. Pamiętaj: przez to łącze przechodzą tylko małe, różnicowe pakiety. Lista kamieni milowych, werdykt, podpis. Żadnych wielkich zrzutów danych — nie mamy na to mocy. A każdą odpowiedź Ziemi i tak przepuszczam przez bloczek.', en: 'Reporting in. Remember: only small, differential payloads go through this link. A milestone list, a verdict, a signature. No bulk data dumps — we do not have the power for that. And every reply from Earth still goes through my pad.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Cała łączność cywilizacji na mocy jednej żarówki. Dobrze, że chociaż Moreau nie oszczędza na humorze.', en: 'A civilisation\'s entire comms on the power of one light bulb. Good thing Moreau at least does not ration his humour.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Węzeł grzewczy, zimny jak reszta. Bez ciepła w wartowni nawet nie drgnie. Najpierw zawór.', en: 'A heat node, cold as the rest. Without warmth in the guardhouse it will not even stir. The valve first.' }, mode: 'monologue' },
+    ],
+  },
+  'm2-heat-node-1-activate': {
+    id: 'm2-heat-node-1-activate',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Węzeł pierwszy — tak mówiła tablica. Podaję ciepło, cewki łapią rozruch. Węzeł jeden: grzeje.', en: 'Node one — as the board said. I feed it heat, the coils catch. Node one: heating.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Pierwszy w sekwencji, poprawnie. Teraz drugi.', en: 'First in the sequence, correct. Now the second.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M2_HEAT_NODE_1_ON] },
+  },
+  'm2-heat-node-1-done': {
+    id: 'm2-heat-node-1-done',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Węzeł pierwszy grzeje równo. Zrobione.', en: 'Node one is heating steadily. Done.' }, mode: 'monologue' },
+    ],
+  },
+  'm2-heat-node-2-cold': {
+    id: 'm2-heat-node-2-cold',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Kolejny węzeł. Bez planu i bez ciepła nie ruszam go.', en: 'Another node. Without the plan and without heat I am not touching it.' }, mode: 'monologue' },
+    ],
+  },
+  'm2-heat-node-2-warning': {
+    id: 'm2-heat-node-2-warning',
+    lines: [
+      { speaker: 'system', text: { pl: 'WĘZEŁ 2: sprzężony z węzłem 1. Rozruch odrzucony.', en: 'NODE 2: coupled to node 1. Boot rejected.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'CORE AI', text: { pl: 'Zła kolejność. Ten węzeł czeka na pierwszy. Uruchom jeden przed dwoma — tablica mówiła wyraźnie.', en: 'Wrong order. This node waits on the first. Boot one before two — the board said so plainly.' }, mode: 'dialogue' },
+    ],
+  },
+  'm2-heat-node-2-activate': {
+    id: 'm2-heat-node-2-activate',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Pierwszy grzeje, więc drugi przyjmie rozruch. Węzeł dwa: grzeje.', en: 'The first is heating, so the second will accept boot. Node two: heating.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Dwa z trzech. Został ostatni.', en: 'Two of three. The last one remains.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M2_HEAT_NODE_2_ON] },
+  },
+  'm2-heat-node-2-done': {
+    id: 'm2-heat-node-2-done',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Węzeł drugi grzeje. Zostaje trzeci.', en: 'Node two is heating. The third remains.' }, mode: 'monologue' },
+    ],
+  },
+  'm2-heat-node-3-cold': {
+    id: 'm2-heat-node-3-cold',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Trzeci węzeł, najbliżej grodzi. Czeka na swoją kolej — a ja czekam na plan.', en: 'The third node, closest to the bulkhead. It waits its turn — and I wait on the plan.' }, mode: 'monologue' },
+    ],
+  },
+  'm2-heat-node-3-warning': {
+    id: 'm2-heat-node-3-warning',
+    lines: [
+      { speaker: 'system', text: { pl: 'WĘZEŁ 3: zamyka sekwencję. Rozruch odrzucony.', en: 'NODE 3: closes the sequence. Boot rejected.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'CORE AI', text: { pl: 'Za wcześnie. Ten węzeł domyka bramę — uruchom go dopiero po pozostałych dwóch. Najpierw jeden, potem dwa.', en: 'Too early. This node closes the gate — boot it only after the other two. One first, then two.' }, mode: 'dialogue' },
+    ],
+  },
+  'm2-heat-node-3-activate': {
+    id: 'm2-heat-node-3-activate',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Ostatni. Podaję ciepło — i cała gródź drży, budząc się z lat mrozu. Węzeł trzy: grzeje.', en: 'The last one. I feed it heat — and the whole bulkhead shudders, waking from years of frost. Node three: heating.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M2_HEAT_NODE_3_ON] },
+  },
+  'm2-heat-node-3-done': {
+    id: 'm2-heat-node-3-done',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Trzeci węzeł grzeje. Wszystkie trzy w kolejności. Czas na meldunek w wartowni.', en: 'Node three is heating. All three in order. Time to report at the guardhouse.' }, mode: 'monologue' },
     ],
   },
 
-  // East door — explicit unlock condition
-  'm2-staging-locked': {
-    id: 'm2-staging-locked',
+  // Quest completion — short "sequence complete, report" beat
+  'q-m2-gate-boot-complete': {
+    id: 'q-m2-gate-boot-complete',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'Przejście do Zajezdni Etapowej. Rejestr wpuści nas dalej dopiero z aktywnym kontraktem planu: zdaj przechwycony test VOID „Plan przed kodem" przy terminalu w południowej komorze. Wtedy L-4 zarejestruje kontrakt i te drzwi się otworzą.', en: 'The passage to the Staging Yard. The registry lets us further only with an active plan contract: pass the captured VOID test "Plan Before Code" at the terminal in the southern chamber. Then L-4 registers the contract, and this door opens.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ SEKWENCJA ROZRUCHU ZAKOŃCZONA: zawór i trzy węzły w kolejności.', en: '◆ BOOT SEQUENCE COMPLETE: valve and three nodes in order.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Kolejność dotrzymana. Wróć do konsoli wartowni i zamelduj — wtedy skieruję ciepło w bramę główną.', en: 'The order was kept. Return to the guardhouse console and report — then I route the heat into the main gate.' }, mode: 'dialogue' },
     ],
   },
 
-  // Plan-first exam — completion and revisit
-  'm2-exam-plan-first-done': {
-    id: 'm2-exam-plan-first-done',
+  // Gate control console — frozen pre, status post
+  'm2-gate-console-frozen': {
+    id: 'm2-gate-console-frozen',
     lines: [
-      { speaker: 'system', text: { pl: 'CERTYFIKAT OPERATORA: PLAN PRZED KODEM — PRZYZNANY', en: 'OPERATOR CERTIFICATE: PLAN BEFORE CODE — GRANTED' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Najpierw kontrakt: cel, zakres, kryteria, nie-cele. Kod jest później. Zdałeś ten test w bazie, która zamarzła, bo znała tylko połowę tej lekcji.', en: 'First the contract: goal, scope, criteria, non-goals. Code comes later. You passed this test in a base that froze because it knew only half of that lesson.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Kolekcja certyfikatów VOID rośnie. Zaczynam wyglądać podejrzanie kompetentnie.', en: 'The VOID certificate collection is growing. I am starting to look suspiciously competent.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Konsola bramy, zamarznięta na kość. Ekran pod warstwą szronu. Otworzy się dopiero, gdy brama będzie online.', en: 'The gate console, frozen solid. The screen under a layer of frost. It opens only once the gate is online.' }, mode: 'monologue' },
     ],
   },
-  'm2-exam-plan-first-already': {
-    id: 'm2-exam-plan-first-already',
+  'm2-gate-console-online': {
+    id: 'm2-gate-console-online',
     lines: [
-      { speaker: 'system', text: { pl: 'Certyfikat „Plan przed kodem" już przyznany.', en: 'Certificate "Plan Before Code" already granted.' }, mode: 'system', autoAdvance: 2000 },
+      { speaker: 'system', text: { pl: 'STATUS BRAMY: OTWARTA. Zakładka mapy drogowej: odmrożona.', en: 'GATE STATUS: OPEN. Roadmap tab: thawed.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'astronaut', text: { pl: 'Mapa drogowa całej wykuwni. Pięć stacji, każda martwa. Jest co budzić.', en: 'A roadmap of the whole forge. Five stations, each one dead. There is plenty to wake.' }, mode: 'dialogue' },
     ],
   },
 
-  // Quest completion — the registry accepts the first plan in 847 cycles
-  'm2-plan-contract-complete': {
-    id: 'm2-plan-contract-complete',
+  // Black box — the sting: an independent docking log later than the freeze
+  'm2-black-box': {
+    id: 'm2-black-box',
     lines: [
-      { speaker: 'system', text: { pl: 'MISJA UKOŃCZONA: Zarejestruj kontrakt planu', en: 'MISSION COMPLETE: Register the Plan Contract' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'Registrar L-4', text: { pl: 'Rejestruję. Kontrakt „WYDOBYCIE BETA": cel, zakres, kryteria sukcesu, nie-cele. Sygnatura nadana. Pierwszy nowy plan od 847 cykli. ...Miły dzień.', en: 'Registering. Contract "EXTRACTION BETA": goal, scope, success criteria, non-goals. Signature assigned. The first new plan in 847 cycles. ...A pleasant day.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'NOWE POLECENIE TERMINALA: /plan — artefakt planu wydobycia. DRZWI WSCHODNIE: ODBLOKOWANE.', en: 'NEW TERMINAL COMMAND: /plan — the extraction plan artifact. EAST DOOR: UNLOCKED.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: 'Plan istnieje. Na razie to tylko kontrakt — ale to i tak więcej, niż ta baza widziała od lat. Następny krok: pociąć go na kamienie milowe. Zajezdnia Etapowa, na wschód.', en: 'The plan exists. For now it is only a contract — but that is already more than this base has seen in years. Next step: cut it into milestones. The Staging Yard, east.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Oni mieli plany na wszystko. Nie mieli nikogo, kto powie: zaczynamy. My właśnie powiedzieliśmy.', en: 'They had plans for everything. They had no one to say: we begin. We just said it.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'CZARNA SKRZYNKA WARTOWNI — log dokowań, niezależne zasilanie.', en: 'GUARDHOUSE BLACK BOX — docking log, independent power.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Ta skrzynka pisała, gdy reszta zamarzła. Ostatni wpis dokowania jest późniejszy niż zamrożenie fabryki. Sygnatura statku — niezarejestrowana. Ktoś tu wylądował po tym, jak wszystko umarło.', en: 'This box kept writing when the rest froze. The last docking entry is later than the factory freeze. Ship signature — unregistered. Someone landed here after everything died.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Ktoś chodził po tej martwej wykuwni. Zapisuję jako fakt, nie teorię. To już nie archeologia. To wizyta.', en: 'Someone walked this dead forge. I log it as fact, not theory. This is no longer archaeology. It is a visit.' }, mode: 'dialogue' },
     ],
+    onComplete: { setFlags: [FLAGS.M2_BLACKBOX_DOCKING_SEEN] },
+  },
+  'm2-black-box-seen': {
+    id: 'm2-black-box-seen',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Log dokowań. Wciąż ten sam wpis, wciąż późniejszy niż powinien być. Wciąż mrozi mnie bardziej niż ten księżyc.', en: 'The docking log. Still the same entry, still later than it should be. Still colder than this moon.' }, mode: 'monologue' },
+    ],
+  },
+
+  // Ingot tram — riches as scenery until the network runs; return-path payoff
+  'm2-ingot-tram-locked': {
+    id: 'm2-ingot-tram-locked',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Wagonik pełen sztab rafinowanego Synaptitu, zamarznięty w pół wyjazdu. Manifest bezpieczeństwa go trzyma — bez sieci ani drgnie. Fortuna, której nie mogę ruszyć.', en: 'A tram full of refined Synaptit ingots, frozen mid-exit. The safety manifest holds it — without the network it will not budge. A fortune I cannot move.' }, mode: 'monologue' },
+    ],
+  },
+  'm2-ingot-tram-delivered': {
+    id: 'm2-ingot-tram-delivered',
+    lines: [
+      { speaker: 'system', text: { pl: 'MANIFEST WAGONIKA: DOSTAWA 001 — PRZYJĘTA.', en: 'TRAM MANIFEST: DELIVERY 001 — ACCEPTED.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Dojechał własnym napędem. Dostawa spóźniona o lata, domknięta przez nowy plan. Fabryka dotrzymała słowa — tyle że nikt już nie czekał.', en: 'It arrived under its own power. A delivery years late, closed by the new plan. The factory kept its word — only no one was still waiting.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Dr Kern — anchoring NPC, evolves through the moon (most-specific first)
+  'm2-kern-default': {
+    id: 'm2-kern-default',
+    lines: [
+      { speaker: 'dr Kern', text: { pl: 'Rozstawiam stanowisko. Skanery złóż, próbniki, termos. Ten księżyc ma pod skorupą całą kartę z podręcznika geologii Synaptitu — czuję to. Idź, otwórz bramę. Ja tu zostaję.', en: 'Setting up my station. Deposit scanners, samplers, a thermos. This moon has a whole page from the Synaptit geology textbook under its crust — I can feel it. Go, open the gate. I stay here.' }, mode: 'dialogue' },
+    ],
+  },
+  'm2-kern-gate': {
+    id: 'm2-kern-gate',
+    lines: [
+      { speaker: 'dr Kern', text: { pl: 'Brama otwarta. Wartownia ciepła. Wygląda mi to na dom na najbliższe dni. Wracaj z każdym kamieniem milowym, Dexo — chcę wiedzieć, co budzisz.', en: 'The gate is open. The guardhouse is warm. Looks like home for the coming days. Come back with every milestone, Dexo — I want to know what you wake.' }, mode: 'dialogue' },
+    ],
+  },
+  'm2-kern-sopel': {
+    id: 'm2-kern-sopel',
+    lines: [
+      { speaker: 'dr Kern', text: { pl: 'Obudziliście robota? Dobrze. To miejsce potrzebuje rąk, nie tylko rozkazów. Ta hala serwisowa to była kiedyś załoga. Nie lubię o tym myśleć zbyt długo.', en: 'You woke a robot? Good. This place needs hands, not just orders. That service bay was a crew once. I do not like to think about it too long.' }, mode: 'dialogue' },
+    ],
+  },
+  'm2-kern-deadlock': {
+    id: 'm2-kern-deadlock',
+    lines: [
+      { speaker: 'dr Kern', text: { pl: 'Fala świateł z rozjazdowni doszła aż do bramy. Widziałam ją stąd. Ktoś wreszcie rozpiął ten węzeł. Sieć torów żyje — a to znaczy, że ruda w końcu ruszy.', en: 'The wave of lights from the junction reached the gate. I saw it from here. Someone finally unknotted that tangle. The rail network lives — which means the ore will finally move.' }, mode: 'dialogue' },
+    ],
+  },
+  'm2-kern-ingot': {
+    id: 'm2-kern-ingot',
+    lines: [
+      { speaker: 'dr Kern', text: { pl: 'Pierwszy wytop! Temperatura, którą wam podałam, trzymała się co do stopnia, prawda? — ...Powiedzmy, że czytałam dobrą dokumentację. Dawno temu. Grunt, że sztaby są czyste.', en: 'The first melt! The temperature I gave you held to the degree, did it not? — ...Let us say I read good documentation. A long time ago. What matters is the ingots are pure.' }, mode: 'dialogue' },
+    ],
+  },
+  'm2-kern-planning': {
+    id: 'm2-kern-planning',
+    lines: [
+      { speaker: 'dr Kern', text: { pl: 'Cała fabryka nuci. Patrzę na tablice wartowni i widzę, jak plan biegnie od stacji do stacji jak krew. Nie sądziłam, że dożyję tego widoku. A jednak.', en: 'The whole factory hums. I watch the guardhouse boards and see the plan run station to station like blood. I did not think I would live to see it. And yet.' }, mode: 'dialogue' },
+    ],
+  },
+  'm2-kern-epilogue': {
+    id: 'm2-kern-epilogue',
+    lines: [
+      { speaker: 'dr Kern', text: { pl: 'Zanim odlecisz — muszę ci coś powiedzieć. Lokalizację tej wykuwni wskazała moja własna, przedstartowa ekspertyza złóż. Podpisałam ją lata temu. — W głosie mam dumę. I coś jeszcze, czego jeszcze nie nazywam.', en: 'Before you fly — I have to tell you something. The location of this forge was pointed to by my own pre-launch deposit survey. I signed it years ago. — There is pride in my voice. And something else I am not naming yet.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Zapamiętuję to, dr Kern. Nie jako oskarżenie. Jako fakt. Tak jak pani nauczyła.', en: 'I am remembering that, Dr Kern. Not as an accusation. As a fact. The way you taught me.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Exam VI — Protokół Ekspedycyjny VI
+  'm2-exam-protocol-6-done': {
+    id: 'm2-exam-protocol-6-done',
+    lines: [
+      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY VI — „MAPA DROGOWA": zaliczony.', en: 'EXPEDITION PROTOCOL VI — "ROADMAP": passed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Szósty protokół odzyskany: kamień milowy to obserwowalny efekt, nie raport; minimalny łańcuch kroków do celu; jasne „kiedy krok jest skończony" i warunek odwrotu. Dziś ta doktryna otworzyła bramę.', en: 'Sixth protocol recovered: a milestone is an observable effect, not a report; the minimal chain of steps to the goal; a clear "when a step is done" and a retreat condition. Today that doctrine opened the gate.' }, mode: 'dialogue' },
+    ],
+  },
+  'm2-exam-protocol-6-already': {
+    id: 'm2-exam-protocol-6-already',
+    lines: [
+      { speaker: 'system', text: { pl: 'Protokół Ekspedycyjny VI już zaliczony.', en: 'Expedition Protocol VI already passed.' }, mode: 'system', autoAdvance: 2000 },
+    ],
+  },
+
+  // Locked service door — frozen bulkhead until the gate is online
+  'm2-service-door-locked': {
+    id: 'm2-service-door-locked',
+    lines: [
+      { speaker: 'system', text: { pl: 'GRÓDŹ SERWISOWA: zamarznięta. Brak ciepła w obwodzie.', en: 'SERVICE BULKHEAD: frozen. No heat in the circuit.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'CORE AI', text: { pl: 'Ta gródź nie ustąpi, dopóki brama główna nie będzie online. Dokończ rozruch — wtedy ciepło dojdzie i tutaj.', en: 'This bulkhead will not yield until the main gate is online. Finish the boot — then the heat reaches here too.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Return path — the ingot tram arrives; Kern's closing scene; Harris does not answer
+  'm2-return-gate': {
+    id: 'm2-return-gate',
+    lines: [
+      { speaker: 'system', text: { pl: 'BRAMA — POWRÓT', en: 'THE GATEHOUSE — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
+      { speaker: 'system', text: { pl: 'Zamarznięty wagonik ze sztabami dojeżdża do bramy własnym napędem. Manifest: DOSTAWA 001 — PRZYJĘTA.', en: 'The frozen ingot tram rolls up to the gate under its own power. Manifest: DELIVERY 001 — ACCEPTED.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'dr Kern', text: { pl: 'Dostawa spóźniona o lata — i domknięta w godzinę. Załaduj sztaby na prom, Dexo. Zasłużyliście oboje: ty i ta maszyna.', en: 'A delivery years late — and closed in an hour. Load the ingots onto the shuttle, Dexo. You both earned it: you and that machine.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'astronaut', text: { pl: 'Kontrola przedlotowa. Harris, słyszysz? ...Harris.', en: 'Preflight check. Harris, do you copy? ...Harris.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Medbay mówi: regeneracja. Znowu przesunięta. Przestaję wierzyć w ten harmonogram — a właśnie nauczyliście mnie, co znaczy zatruty harmonogram.', en: 'Medbay says: regeneration. Delayed again. I am starting to disbelieve this schedule — and you just taught me what a poisoned schedule means.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M2_RETURN_GATE_SEEN, FLAGS.M2_DELIVERY_001] },
   },
 };

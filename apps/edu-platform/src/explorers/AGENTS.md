@@ -6,7 +6,7 @@ This file applies to `src/explorers/**`. It supplements the repository-level `AG
 
 - `.ai/10x-devs/game/cookbook.md` is the primary how-to guide for working on Space Explorers. Consult it before implementing levels, NPCs, dialogues, quests, doors, exams, arcade games, progression, or audio. Follow its detailed procedures and checklists instead of inventing a parallel workflow.
 - `.ai/10x-devs/game/storyline.md`, `backstory.md`, and `player-progression.md` define narrative and progression constraints.
-- `src/explorers/game-m1.md` contains the Module 1 design context.
+- `src/explorers/levels/_arc-m1.md` contains the Module 1 narrative arc and design context.
 - For focused subsystems, check the matching document in `.ai/10x-devs/game/`, especially `movement-bounds.md`, `npc-behavior.md`, and `sprites-theme.md`.
 
 ## Architecture and ownership
@@ -103,4 +103,4 @@ npx vitest run
 npm run build
 ```
 
-For gameplay and visual changes, also test `/explorers` at desktop and mobile sizes. For editor changes, test `/explorers-editor` and confirm YAML/JSON import-export behavior does not bypass the canonical map-source pipeline.
+For gameplay and visual changes, also test `/explorers` at desktop and mobile sizes. For editor changes, test `/explorers-editor` under `npm run dev` (it loads and saves `map.level.yaml` through a dev-only Vite middleware) and confirm saves stay parse/serialize round-trip clean and never touch the compiled JSON artifacts directly.

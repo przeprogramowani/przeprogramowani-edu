@@ -53,5 +53,19 @@ export const manifest: LevelManifest = {
       cinematicTitle: 'Statek głębokiej przestrzeni Odyssey',
       cinematicSubtitle: 'Powrót z Księżyca 1',
     },
+    {
+      dialogue: 'm0-return-from-moon2',
+      flag: FLAGS.M0_RETURN_FROM_MOON2_SEEN,
+      requiredFlags: [FLAGS.M2_GATE_INTRO_SEEN],
+      cinematicTitle: 'Statek głębokiej przestrzeni Odyssey',
+      cinematicSubtitle: 'Powrót z Księżyca 2',
+    },
+    {
+      dialogue: 'm0-return-from-moon3',
+      flag: FLAGS.M0_RETURN_FROM_MOON3_SEEN,
+      requiredFlags: [FLAGS.M3_APRON_INTRO_SEEN],
+      cinematicTitle: 'Statek głębokiej przestrzeni Odyssey',
+      cinematicSubtitle: 'Powrót z Księżyca 3',
+    },
   ],
 };

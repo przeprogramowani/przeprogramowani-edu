@@ -3,51 +3,60 @@ import { FLAGS } from '../../config/flags';
 
 export const exams: ExamDefinition[] = [
   {
-    id: 'm2-exam-solo-review',
-    title: { pl: 'Przechwycony test VOID: Samodzielne code review', en: 'Captured VOID Test: Solo Code Review' },
+    id: 'm2-exam-protocol-10',
+    title: { pl: 'Protokół Ekspedycyjny X — Równoległe Tory', en: 'Expedition Protocol X — Parallel Tracks' },
     description: {
-      pl: 'Test sprawdza recenzowanie własnej pracy wykonanej z agentem: oddzielenie roli recenzenta od autora, priorytety przeglądu i dyscyplinę werdyktu.',
-      en: 'This test checks reviewing your own agent-assisted work: separating the reviewer role from the author, review priorities, and verdict discipline.',
+      pl: 'Doktryna dyspozytorska: wiele torów, jeden dyspozytor. Deleguj odnogi osobnym jednostkom, chroń tor główny, scalaj dopiero po przeglądzie — i mierz osobno tempo układania planów, osobno tempo ich wykonania.',
+      en: 'The dispatcher\'s doctrine: many tracks, one dispatcher. Delegate the branches to separate units, protect the main track, merge only after review — and measure planning tempo separately from execution tempo.',
     },
-    passingScore: 3,
+    passingScore: 2,
     questions: [
       {
         id: 'q1',
-        text: { pl: 'Pracujesz solo i musisz zrecenzować duży fragment kodu, który wczoraj napisał dla Ciebie agent. Jak podejść do recenzji, żeby nie była formalnością?', en: 'You work solo and must review a large piece of code an agent wrote for you yesterday. How do you approach the review so it is not a formality?' },
+        text: {
+          pl: 'Rozdzielasz kilka zadań na osobne jednostki wykonawcze, żeby jechały równolegle. Jak chronisz tor główny?',
+          en: 'You split several tasks across separate executor units to run in parallel. How do you protect the main track?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Przeczytać diff od góry do dołu i zatwierdzić, jeśli nic nie razi — autor zna kontekst najlepiej', en: 'Read the diff top to bottom and approve if nothing stands out — the author knows the context best' } },
-          { id: 'b', text: { pl: 'W osobnej sesji wejść w rolę recenzenta z jawną listą kontrolną i czytać zmianę jak cudzą pracę, której się nie ufa', en: 'In a separate session, take on the reviewer role with an explicit checklist and read the change like a stranger\'s work you do not trust' } },
-          { id: 'c', text: { pl: 'Poprosić tego samego agenta w tej samej sesji o ocenę, czy jego kod jest poprawny', en: 'Ask the same agent in the same session to assess whether its code is correct' } },
-          { id: 'd', text: { pl: 'Pominąć recenzję — przecież testy jednostkowe przechodzą', en: 'Skip the review — the unit tests pass, after all' } },
+          { id: 'a', text: { pl: 'Puszczam wszystko jednym torem, po kolei — równoległe zadania i tak weszłyby sobie w drogę', en: 'Route everything down one track, one after another — parallel tasks would only get in each other\'s way' } },
+          { id: 'b', text: { pl: 'Deleguję odnogi na osobne tory, a na główny wpuszczam wynik dopiero po przeglądzie', en: 'Delegate the branches onto separate tracks, and let a result onto the main only after review' } },
+          { id: 'c', text: { pl: 'Trzymam wszystkie odnogi wpięte w tor główny na bieżąco, żeby cały czas jechały zsynchronizowane', en: 'Keep every branch wired into the main track continuously, so they stay in sync the whole time' } },
+          { id: 'd', text: { pl: 'Prowadzę odnogi po torze głównym, tyle że w innych taktach — mniej rozjazdów, mniej kłopotu', en: 'Run the branches on the main track, just in different time-slots — fewer switches, less trouble' } },
         ],
         correctOptionIds: ['b'],
       },
       {
         id: 'q2',
-        text: { pl: 'Recenzujesz zmianę wygenerowaną przez agenta na podstawie planu. Na co zwrócić uwagę w pierwszej kolejności?', en: 'You are reviewing an agent-generated change based on a plan. What deserves attention first?' },
+        text: {
+          pl: 'Jednostka kończy swoją odnogę i zgłasza gotowy wynik. Kiedy wolno scalić go z torem głównym?',
+          en: 'A unit finishes its branch and reports a ready result. When may it merge into the main track?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Styl nazewnictwa i formatowanie — to najczęstsze problemy generowanego kodu', en: 'Naming style and formatting — the most common problems in generated code' } },
-          { id: 'b', text: { pl: 'Liczbę linii zmiany — im mniej, tym zawsze lepiej', en: 'The line count of the change — fewer is always better' } },
-          { id: 'c', text: { pl: 'Zgodność z planem i kryteriami sukcesu oraz to, czego w zmianie brakuje: przypadki brzegowe, obsługa błędów, testy', en: 'Conformance to the plan and success criteria, and what the change is missing: edge cases, error handling, tests' } },
-          { id: 'd', text: { pl: 'Czy agent użył najnowszych wersji bibliotek dostępnych na rynku', en: 'Whether the agent used the newest library versions on the market' } },
+          { id: 'a', text: { pl: 'Od razu — odnoga sama zgłosiła koniec, a oddelegowałem ją przecież właśnie po to, żeby już jej nie sprawdzać ręcznie', en: 'At once — the branch reported done itself, and I delegated it precisely so I would not have to check it by hand' } },
+          { id: 'b', text: { pl: 'Dopiero po przeglądzie wyniku wobec kryterium — scalenie bez przeglądu przenosi jej błąd wprost na tor główny', en: 'Only after reviewing the result against the criterion — merging without review carries its error straight onto the main track' } },
+          { id: 'c', text: { pl: 'Gdy wynik przejdzie automatyczną kontrolę na bocznicy — wtedy ręczny przegląd jest już zbędny', en: 'Once the result passes the automated check on the siding — then a manual review is redundant' } },
+          { id: 'd', text: { pl: 'Gdy trzeba ją domknąć, zanim urośnie i spowolni resztę — szybkie scalenie jest ważniejsze', en: 'When it has to be closed before it grows and slows the rest — a quick merge matters more' } },
         ],
-        correctOptionIds: ['c'],
+        correctOptionIds: ['b'],
       },
       {
         id: 'q3',
-        text: { pl: 'Podczas samodzielnej recenzji znajdujesz dwa realne defekty. Jest późno, a funkcja „w zasadzie działa". Co dalej?', en: 'During a solo review you find two real defects. It is late, and the feature "basically works". What next?' },
+        text: {
+          pl: 'Chcesz ocenić, czy rozdzielanie pracy na równoległe jednostki naprawdę pomaga. Co mierzysz?',
+          en: 'You want to judge whether splitting work across parallel units truly helps. What do you measure?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Zatwierdzić z notatką w głowie, żeby wrócić do defektów przy okazji', en: 'Approve, with a mental note to revisit the defects someday' } },
-          { id: 'b', text: { pl: 'Naprawić defekty, ponownie zrecenzować zmienione fragmenty i dopiero wtedy zatwierdzić', en: 'Fix the defects, re-review the changed parts, and only then approve' } },
-          { id: 'c', text: { pl: 'Wyłączyć testy wskazujące na defekty, żeby odblokować wdrożenie', en: 'Disable the tests that expose the defects, to unblock the release' } },
-          { id: 'd', text: { pl: 'Uznać, że skoro recenzent i autor to ta sama osoba, werdykt i tak nie ma znaczenia', en: 'Decide that since reviewer and author are the same person, the verdict does not matter anyway' } },
+          { id: 'a', text: { pl: 'Sam skrócony czas całości — jeśli cała fabryka kończy dzień wyraźnie szybciej niż wcześniej, to znaczy, że praca równoległa naprawdę się opłaca', en: 'Just the shorter total time — if the whole factory ends the day clearly sooner than before, parallel work really pays off' } },
+          { id: 'b', text: { pl: 'Osobno tempo układania planów, osobno tempo ich wykonania — inaczej nie odróżnisz, czy wąskim gardłem jest planowanie, czy robota', en: 'Planning tempo and execution tempo separately — otherwise you cannot tell whether the bottleneck is the planning or the work' } },
+          { id: 'c', text: { pl: 'Ile odnóg jedzie naraz — im więcej zajętych torów, tym większa przepustowość', en: 'How many branches run at once — the more tracks busy, the higher the throughput' } },
+          { id: 'd', text: { pl: 'Ile zadań zeszło z tablicy w ciągu dnia — przerób mówi wszystko o wydajności', en: 'How many tasks left the board in a day — throughput tells you everything about performance' } },
         ],
         correctOptionIds: ['b'],
       },
     ],
-    rewards: { xp: 50, flags: [FLAGS.M2_EXAM_SOLO_REVIEW_DONE] },
+    rewards: { xp: 100, flags: [FLAGS.M2_EXAM_PROTOCOL_10_DONE] },
   },
 ];

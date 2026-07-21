@@ -3,50 +3,66 @@ import { FLAGS } from '../../config/flags';
 import { dialogues } from './dialogues';
 import { exams } from './exams';
 import { quests } from './quests';
+import { arcadeGames } from './games';
 
 export const manifest: LevelManifest = {
   id: 'm2-assembly-line',
-  displayName: { pl: 'Hala Montażowa', en: 'The Assembly Hall' },
+  displayName: { pl: 'Huta', en: 'The Foundry' },
   dialogues,
   interactionRoutes: [
-    { zoneId: 'fabricator-line', defaultDialogue: 'm2-fabricator-line' },
     {
-      zoneId: 'fabricator-line-2',
-      defaultDialogue: 'm2-fabricator-line-2',
-      flagVariants: [{ flag: FLAGS.M2_IMPL_CONTROL_DONE, dialogue: 'm2-fabricator-line-2-done' }],
-    },
-    { zoneId: 'checkpoint-gate-1', defaultDialogue: 'm2-checkpoint-gate-1' },
-    { zoneId: 'checkpoint-gate-2', defaultDialogue: 'm2-checkpoint-gate-2' },
-    {
-      zoneId: 'control-console',
-      defaultDialogue: 'm2-control-console-start',
-      flagVariants: [{ flag: FLAGS.M2_IMPL_CONTROL_DONE, dialogue: 'm2-control-console-done' }],
+      zoneId: 'foundry-console',
+      defaultDialogue: 'm2-foundry-start',
+      flagVariants: [
+        { flag: FLAGS.M2_FIRST_INGOT, dialogue: 'm2-foundry-post' },
+        { flag: FLAGS.M2_CAST_DONE, dialogue: 'm2-foundry-wrap' },
+        { flag: FLAGS.M2_SWITCHYARD_DONE, dialogue: 'm2-foundry-finish-cast' },
+        { flag: FLAGS.M2_GALLERY_OPEN, dialogue: 'm2-foundry-briefing' },
+        { flag: FLAGS.M2_MELT_ACTIVE, dialogue: 'm2-foundry-open-gallery' },
+      ],
     },
     {
-      zoneId: 'line-archive',
-      defaultDialogue: 'm2-line-archive',
-      flagVariants: [{ flag: FLAGS.M2_INSIDER_WORK_ORDER_FOUND, dialogue: 'm2-line-archive-found' }],
+      zoneId: 'gallery-gate',
+      defaultDialogue: 'm2-gallery-gate-shut',
+      flagVariants: [{ flag: FLAGS.M2_GALLERY_OPEN, dialogue: 'm2-gallery-gate-open' }],
+    },
+    { zoneId: 'ore-veins', defaultDialogue: 'm2-ore-veins' },
+    {
+      zoneId: 'crucible',
+      defaultDialogue: 'm2-crucible-cold',
+      flagVariants: [
+        { flag: FLAGS.M2_CAST_DONE, dialogue: 'm2-crucible-post' },
+        { flag: FLAGS.M2_SWITCHYARD_DONE, dialogue: 'm2-crucible-cast' },
+      ],
     },
     {
-      zoneId: 'foreman-f6',
-      defaultDialogue: 'm2-foreman-f6',
-      flagVariants: [{ flag: FLAGS.M2_IMPL_CONTROL_DONE, dialogue: 'm2-foreman-f6-done' }],
+      zoneId: 'ore-shuttle',
+      defaultDialogue: 'm2-ore-shuttle-parked',
+      flagVariants: [{ flag: FLAGS.M2_SWITCHYARD_DONE, dialogue: 'm2-ore-shuttle-running' }],
     },
     {
-      zoneId: 'controller-cp5',
-      defaultDialogue: 'm2-controller-cp5',
-      flagVariants: [{ flag: FLAGS.M2_IMPL_CONTROL_DONE, dialogue: 'm2-controller-cp5-done' }],
+      zoneId: 'sopel-foundry',
+      defaultDialogue: 'm2-sopel-foundry',
+      flagVariants: [{ flag: FLAGS.M2_FIRST_INGOT, dialogue: 'm2-sopel-foundry-post' }],
     },
-    { zoneId: 'frozen-runner', defaultDialogue: 'm2-frozen-runner' },
-    { zoneId: 'planning-core-door', defaultDialogue: 'm2-core-locked' },
-    { zoneId: 'exam-impl-control', defaultDialogue: 'm2-exam-impl-control-already' },
+    { zoneId: 'dispatch-door', defaultDialogue: 'm2-dispatch-door-locked' },
+    { zoneId: 'exam-protocol-9', defaultDialogue: 'm2-exam-protocol-9-already' },
   ],
   quests,
+  questCompletionDialogues: { 'q-m2-first-melt': 'q-m2-first-melt-complete' },
   exams,
-  questCompletionDialogues: { 'q-m2-impl-control': 'm2-impl-control-complete' },
-  examCompletionDialogues: { 'm2-exam-impl-control': 'm2-exam-impl-control-done' },
-  introDialogue: 'm2-assembly-intro',
-  introFlag: FLAGS.M2_ASSEMBLY_INTRO_SEEN,
-  introCinematicTitle: 'Księżyc 2 — Hala Montażowa',
-  introCinematicSubtitle: 'Wykonanie pod kontrolą',
+  examCompletionDialogues: { 'm2-exam-protocol-9': 'm2-exam-protocol-9-done' },
+  arcadeGames,
+  introDialogue: 'm2-foundry-intro',
+  introFlag: FLAGS.M2_FOUNDRY_INTRO_SEEN,
+  introCinematicTitle: 'Księżyc 2 — Martwy Punkt',
+  introCinematicSubtitle: 'Huta',
+  conditionalIntros: [
+    {
+      dialogue: 'm2-return-foundry',
+      flag: FLAGS.M2_RETURN_FOUNDRY_SEEN,
+      requiredFlags: [FLAGS.M2_PLANNING_ONLINE],
+      cinematicTitle: 'Powrót — Huta',
+    },
+  ],
 };

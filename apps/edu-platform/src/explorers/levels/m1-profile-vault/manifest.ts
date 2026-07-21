@@ -3,51 +3,64 @@ import { FLAGS } from '../../config/flags';
 import { dialogues } from './dialogues';
 import { exams } from './exams';
 import { quests } from './quests';
+import { arcadeGames } from './games';
 
 export const manifest: LevelManifest = {
   id: 'm1-profile-vault',
-  displayName: { pl: 'Magazyn Profili', en: 'Profile Vault' },
+  displayName: { pl: 'Żyła', en: 'The Vein' },
   dialogues,
   interactionRoutes: [
     {
-      zoneId: 'crew-profile-cache',
-      defaultDialogue: 'm1-profile-cache-start',
-      flagVariants: [{ flag: FLAGS.M1_MOREAU_CONTEXT_DONE, dialogue: 'm1-profile-cache-done' }],
+      zoneId: 'survey-rig',
+      defaultDialogue: 'm1-survey-rig-start',
+      flagVariants: [
+        { flag: FLAGS.M1_FIRST_ORE, dialogue: 'm1-survey-rig-post' },
+        { flag: FLAGS.M1_DEEP_SCAN_DONE, dialogue: 'm1-survey-rig-unsealed' },
+        { flag: FLAGS.M1_RIG_POWERED, dialogue: 'm1-survey-rig-scan' },
+      ],
     },
     {
-      zoneId: 'moreau-profile',
-      defaultDialogue: 'm1-moreau-profile',
-      flagVariants: [{ flag: FLAGS.M1_MOREAU_AWAKE, dialogue: 'm1-moreau-profile-done' }],
+      zoneId: 'kit-core',
+      defaultDialogue: 'm1-kit-core',
+      flagVariants: [{ flag: FLAGS.M1_RIG_POWERED, dialogue: 'm1-kit-core-taken' }],
     },
     {
-      zoneId: 'recall-code',
-      defaultDialogue: 'm1-recall-code',
-      flagVariants: [{ flag: FLAGS.M1_HARRIS_RECALL_DISCOVERED, dialogue: 'm1-recall-code-done' }],
+      zoneId: 'chamber-barrier',
+      defaultDialogue: 'm1-chamber-barrier-sealed',
+      flagVariants: [{ flag: FLAGS.M1_DEEP_SCAN_DONE, dialogue: 'm1-chamber-barrier-released' }],
     },
     {
-      zoneId: 'wake-relay',
-      defaultDialogue: 'm1-wake-relay',
-      flagVariants: [{ flag: FLAGS.M1_MOREAU_AWAKE, dialogue: 'm1-wake-relay-done' }],
+      zoneId: 'pure-vein',
+      defaultDialogue: 'm1-pure-vein-sealed',
+      flagVariants: [
+        { flag: FLAGS.M1_VEIN_EXTRACTED, dialogue: 'm1-pure-vein-post' },
+        { flag: FLAGS.M1_DEEP_SCAN_DONE, dialogue: 'm1-pure-vein-extract' },
+      ],
     },
+    { zoneId: 'sample-marks', defaultDialogue: 'm1-sample-marks' },
     {
-      zoneId: 'archive-echo',
-      defaultDialogue: 'm1-archive-echo',
-      flagVariants: [{ flag: FLAGS.M1_MOREAU_AWAKE, dialogue: 'm1-archive-echo-done' }],
+      zoneId: 'swierszcz-vein',
+      defaultDialogue: 'm1-swierszcz-vein',
+      flagVariants: [{ flag: FLAGS.M1_FIRST_ORE, dialogue: 'm1-swierszcz-vein-post' }],
     },
-    {
-      zoneId: 'vault-indexer',
-      defaultDialogue: 'm1-vault-indexer',
-      flagVariants: [{ flag: FLAGS.M1_MOREAU_CONTEXT_DONE, dialogue: 'm1-vault-indexer-done' }],
-    },
-    { zoneId: 'uplink-bay-door', defaultDialogue: 'm1-uplink-door-locked' },
-    { zoneId: 'exam-agent-onboarding', defaultDialogue: 'm1-exam-agent-onboarding-already' },
+    { zoneId: 'exam-protocol-4', defaultDialogue: 'm1-exam-protocol-4-already' },
+    { zoneId: 'crest-door', defaultDialogue: 'm1-crest-door-locked' },
   ],
   quests,
-  questCompletionDialogues: { 'q-m1-moreau-onboarding': 'm1-moreau-onboarding-complete' },
+  questCompletionDialogues: { 'q-m1-first-vein': 'q-m1-first-vein-complete' },
   exams,
-  examCompletionDialogues: { 'm1-exam-agent-onboarding': 'm1-exam-agent-onboarding-done' },
-  introDialogue: 'm1-profile-intro',
-  introFlag: FLAGS.M1_PROFILE_INTRO_SEEN,
-  introCinematicTitle: 'Księżyc 1 — Magazyn Profili',
-  introCinematicSubtitle: 'Archiwum danych załogi ODYSSEY',
+  examCompletionDialogues: { 'm1-exam-protocol-4': 'm1-exam-protocol-4-done' },
+  arcadeGames,
+  introDialogue: 'm1-vein-intro',
+  introFlag: FLAGS.M1_VEIN_INTRO_SEEN,
+  introCinematicTitle: 'Księżyc 1 — Strefa Ciszy',
+  introCinematicSubtitle: 'Żyła',
+  conditionalIntros: [
+    {
+      dialogue: 'm1-return-vein',
+      flag: FLAGS.M1_RETURN_VEIN_SEEN,
+      requiredFlags: [FLAGS.M1_SENSORS_ONLINE],
+      cinematicTitle: 'Powrót — Żyła',
+    },
+  ],
 };

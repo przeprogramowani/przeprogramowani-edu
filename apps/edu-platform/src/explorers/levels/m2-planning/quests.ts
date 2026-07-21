@@ -3,27 +3,48 @@ import { FLAGS } from '../../config/flags';
 
 export const quests: EventQuest[] = [
   {
-    id: 'q-m2-plan-contract',
+    id: 'q-m2-gate-boot',
     completionType: 'event',
-    title: { pl: 'Zarejestruj kontrakt planu', en: 'Register the Plan Contract' },
+    title: { pl: 'Rozruch Bramy', en: 'Gate Boot' },
     briefing: {
-      pl: 'Rejestr PN-0 nie przyjął nowego planu od 847 cykli. Z CORE AI ułóż kontrakt planu wydobycia BETA — cel, zakres, kryteria sukcesu, nie-cele — i zdobądź certyfikat Plan przed kodem, aby Registrar L-4 nadał kontraktowi sygnaturę.',
-      en: 'The PN-0 registry has accepted no new plan in 847 cycles. With CORE AI, draft the BETA extraction plan contract — goal, scope, success criteria, non-goals — and earn the Plan Before Code certificate so Registrar L-4 assigns the contract its signature.',
+      pl: 'Brama towarowa jest zamarznięta. Przywróć ciepło wartowni ręcznym zaworem, odczytaj z tablicy planu kolejność rozruchu, a potem uruchom trzy węzły grzewcze w tej kolejności: jeden, dwa, trzy. Na końcu zamelduj przy konsoli wartowni.',
+      en: 'The cargo gate is frozen. Restore the guardhouse warmth with the manual valve, read the boot order off the roadmap board, then boot the three heat nodes in that order: one, two, three. Report at the guardhouse console last.',
     },
     hints: [
-      { pl: 'Terminal certyfikacyjny stoi w południowej komorze atrium.', en: 'The certification terminal stands in the southern chamber of the atrium.' },
-      { pl: 'Kontrakt planu opisuje cel, zakres, mierzalne kryteria sukcesu i jawne nie-cele — nie kod.', en: 'A plan contract describes the goal, scope, measurable success criteria, and explicit non-goals — not code.' },
-      { pl: 'Zmiany zakresu w trakcie pracy wracają do decydenta przed dalszą implementacją.', en: 'Scope changes mid-work return to the decision-maker before implementation continues.' },
+      { pl: 'Najpierw zawór ciepła, dopiero potem węzły — zimne nie odpowiedzą.', en: 'The heat valve first, only then the nodes — cold ones will not answer.' },
+      { pl: 'Kolejność jest na tablicy planu: jeden, dwa, trzy. Zła kolejność daje ostrzeżenie, nie porażkę.', en: 'The order is on the roadmap board: one, two, three. The wrong order gives a warning, not a failure.' },
+      { pl: 'Po trzech węzłach wróć do konsoli wartowni i złóż meldunek.', en: 'After all three nodes, return to the guardhouse console and file the report.' },
     ],
     objectives: [
       {
-        id: 'earn-plan-first-certificate',
-        label: { pl: 'Zdobądź certyfikat: Plan przed kodem', en: 'Earn certificate: Plan Before Code' },
-        event: 'exam:completed',
-        matchPayload: { examId: 'm2-exam-plan-first', passed: true },
-        requireFlag: FLAGS.M2_EXAM_PLAN_FIRST_DONE,
+        id: 'warm-guardhouse',
+        label: { pl: 'Przywróć ciepło wartowni', en: 'Restore guardhouse warmth' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M2_GUARDHOUSE_WARM },
+        requireFlag: FLAGS.M2_GUARDHOUSE_WARM,
+      },
+      {
+        id: 'heat-node-1',
+        label: { pl: 'Uruchom węzeł grzewczy 1', en: 'Boot heat node 1' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M2_HEAT_NODE_1_ON },
+        requireFlag: FLAGS.M2_HEAT_NODE_1_ON,
+      },
+      {
+        id: 'heat-node-2',
+        label: { pl: 'Uruchom węzeł grzewczy 2', en: 'Boot heat node 2' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M2_HEAT_NODE_2_ON },
+        requireFlag: FLAGS.M2_HEAT_NODE_2_ON,
+      },
+      {
+        id: 'heat-node-3',
+        label: { pl: 'Uruchom węzeł grzewczy 3', en: 'Boot heat node 3' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M2_HEAT_NODE_3_ON },
+        requireFlag: FLAGS.M2_HEAT_NODE_3_ON,
       },
     ],
-    rewards: { xp: 75, flags: [FLAGS.M2_PLAN_CONTRACT_DONE, FLAGS.CMDS_PLAN] },
+    rewards: { xp: 75, flags: [FLAGS.M2_BOOT_DONE] },
   },
 ];

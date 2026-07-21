@@ -1,75 +1,103 @@
 <script lang="ts">
-  import type { ZoneObject, TiledProperty } from './types';
-  import { NPC_COLOR_VARIANTS, TILE_SIZE } from '../config/constants';
+  import type { ZoneSource, ZoneType } from '../levels/mapAuthoring/types';
+  import { ZONE_TYPES } from '../levels/mapAuthoring/types';
+  import { NPC_COLOR_VARIANTS } from '../config/constants';
 
-  const ZONE_SIZE_OPTIONS = [1, 2, 3].map((n) => ({
-    value: TILE_SIZE * n,
-    label: `${n} ${n === 1 ? 'tile' : 'tiles'} (${TILE_SIZE * n}px)`,
-  }));
+  const SIZE_OPTIONS = [1, 2, 3];
 
   interface Props {
-    zone: ZoneObject | null;
+    zone: ZoneSource | null;
+    linkableProps: { id: string; at: [number, number] }[];
     knownEventIds: string[];
     knownTargetMaps: string[];
-    onUpdate: (zone: ZoneObject) => void;
-    onDelete: (zoneId: number) => void;
+    onUpdate: (zone: ZoneSource) => void;
+    onDelete: () => void;
   }
 
-  let { zone, knownEventIds, knownTargetMaps, onUpdate, onDelete }: Props = $props();
+  let { zone, linkableProps, knownEventIds, knownTargetMaps, onUpdate, onDelete }: Props = $props();
   let confirmDelete = $state(false);
 
   function getProp(name: string): string {
-    if (!zone) return '';
-    const prop = zone.properties.find((p) => p.name === name);
-    return prop ? String(prop.value) : '';
+    const value = zone?.properties[name];
+    return value === undefined ? '' : String(value);
   }
 
   function getIntProp(name: string): number {
-    if (!zone) return 0;
-    const prop = zone.properties.find((p) => p.name === name);
-    return prop ? Number(prop.value) : 0;
+    const value = zone?.properties[name];
+    return value === undefined ? 0 : Number(value);
   }
 
-  function setProp(name: string, value: string | number, type: TiledProperty['type'] = 'string') {
+  function setProp(name: string, value: string | number | boolean) {
     if (!zone) return;
-    const props = [...zone.properties];
-    const existing = props.findIndex((p) => p.name === name);
-    if (existing >= 0) {
-      props[existing] = { ...props[existing], value };
-    } else {
-      props.push({ name, type, value });
-    }
-    onUpdate({ ...zone, properties: props });
+    onUpdate({ ...zone, properties: { ...zone.properties, [name]: value } });
   }
 
-  function setType(newType: ZoneObject['type']) {
+  function removeProp(name: string) {
     if (!zone) return;
-    // Build default properties for the new type
-    const baseProps: TiledProperty[] = [
-      { name: 'id', type: 'string', value: getProp('id') || zone.name.toLowerCase().replace(/\s+/g, '-') },
-    ];
+    const { [name]: _removed, ...rest } = zone.properties;
+    onUpdate({ ...zone, properties: rest });
+  }
 
+  function setOptionalProp(name: string, value: string) {
+    if (value) setProp(name, value);
+    else removeProp(name);
+  }
+
+  function setId(value: string) {
+    if (!zone) return;
+    onUpdate({ ...zone, id: value });
+  }
+
+  function setName(value: string) {
+    if (!zone) return;
+    const { name: _name, ...rest } = zone;
+    onUpdate(value ? { ...rest, name: value } : rest);
+  }
+
+  function setSize(axis: 0 | 1, tiles: number) {
+    if (!zone) return;
+    const size: [number, number] = [...zone.size];
+    size[axis] = tiles;
+    onUpdate({ ...zone, size });
+  }
+
+  function setType(newType: ZoneType) {
+    if (!zone) return;
+    const p = zone.properties;
+    // Per-type defaults, carrying over values that survive the type switch.
+    const next: Record<string, string | number | boolean> = {};
     if (newType === 'trigger') {
-      baseProps.push({ name: 'eventId', type: 'string', value: getProp('eventId') || '' });
-      const reqFlag = getProp('requiredFlag');
-      if (reqFlag) baseProps.push({ name: 'requiredFlag', type: 'string', value: reqFlag });
-    } else if (newType === 'door') {
-      baseProps.push({ name: 'targetMap', type: 'string', value: getProp('targetMap') || '' });
-      baseProps.push({ name: 'spawnX', type: 'int', value: getIntProp('spawnX') });
-      baseProps.push({ name: 'spawnY', type: 'int', value: getIntProp('spawnY') });
-      const reqFlags = getProp('requiredFlags');
-      if (reqFlags) baseProps.push({ name: 'requiredFlags', type: 'string', value: reqFlags });
+      next.eventId = p.eventId ?? '';
+      if (p.requiredFlag) next.requiredFlag = p.requiredFlag;
     } else if (newType === 'terminal') {
-      baseProps.push({ name: 'eventId', type: 'string', value: getProp('eventId') || '' });
+      next.eventId = p.eventId ?? '';
+    } else if (newType === 'door') {
+      next.targetMap = p.targetMap ?? '';
+      next.spawnX = Number(p.spawnX ?? 0);
+      next.spawnY = Number(p.spawnY ?? 0);
+      if (p.requiredFlags) next.requiredFlags = p.requiredFlags;
     } else if (newType === 'npc') {
-      baseProps.push({ name: 'npcType', type: 'string', value: 'scientist' });
+      next.npcType = p.npcType ?? 'scientist';
+      if (p.npcVariant) next.npcVariant = p.npcVariant;
     } else if (newType === 'exam') {
-      baseProps.push({ name: 'examId', type: 'string', value: getProp('examId') || '' });
+      next.examId = p.examId ?? '';
     } else if (newType === 'arcade') {
-      baseProps.push({ name: 'arcadeGameId', type: 'string', value: getProp('arcadeGameId') || '' });
+      next.arcadeGameId = p.arcadeGameId ?? '';
     }
+    onUpdate({ ...zone, type: newType, properties: next });
+  }
 
-    onUpdate({ ...zone, type: newType, properties: baseProps });
+  function linkToProp(propId: string) {
+    if (!zone) return;
+    const prop = linkableProps.find((p) => p.id === propId);
+    if (!prop) return;
+    onUpdate({ ...zone, propId, at: [...prop.at] });
+  }
+
+  function detachProp() {
+    if (!zone) return;
+    const { propId: _propId, ...rest } = zone;
+    onUpdate(rest);
   }
 
   function handleDelete() {
@@ -78,7 +106,7 @@
       confirmDelete = true;
       return;
     }
-    onDelete(zone.id);
+    onDelete();
     confirmDelete = false;
   }
 
@@ -87,6 +115,9 @@
     zone;
     confirmDelete = false;
   });
+
+  const inputClass =
+    'bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none';
 </script>
 
 {#if zone}
@@ -94,87 +125,80 @@
     <div class="text-xs text-gray-400 mb-2 uppercase tracking-wider">Zone Properties</div>
 
     <div class="flex flex-col gap-2">
-      <!-- Name -->
+      <!-- Id (the interaction key) -->
       <label class="flex flex-col gap-0.5">
-        <span class="text-xs text-gray-500">Name</span>
+        <span class="text-xs text-gray-500">id</span>
+        <input type="text" value={zone.id} oninput={(e) => setId((e.target as HTMLInputElement).value)} class={inputClass} />
+      </label>
+
+      <!-- Name (optional display name) -->
+      <label class="flex flex-col gap-0.5">
+        <span class="text-xs text-gray-500">name (optional)</span>
         <input
           type="text"
-          value={zone.name}
-          oninput={(e) => onUpdate({ ...zone, name: (e.target as HTMLInputElement).value })}
-          class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
+          value={zone.name ?? ''}
+          oninput={(e) => setName((e.target as HTMLInputElement).value)}
+          class={inputClass}
         />
       </label>
 
       <!-- Type -->
       <label class="flex flex-col gap-0.5">
         <span class="text-xs text-gray-500">Type</span>
-        <select
-          value={zone.type}
-          onchange={(e) => setType((e.target as HTMLSelectElement).value as ZoneObject['type'])}
-          class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
-        >
-          <option value="trigger">trigger</option>
-          <option value="door">door</option>
-          <option value="terminal">terminal</option>
-          <option value="npc">npc</option>
-          <option value="exam">exam</option>
-          <option value="arcade">arcade</option>
-          <option value="navigation">navigation</option>
+        <select value={zone.type} onchange={(e) => setType((e.target as HTMLSelectElement).value as ZoneType)} class={inputClass}>
+          {#each ZONE_TYPES as zoneType}
+            <option value={zoneType}>{zoneType}</option>
+          {/each}
         </select>
       </label>
 
-      <!-- Position (read-only) -->
-      <div class="flex gap-2">
-        <label class="flex flex-col gap-0.5 flex-1">
-          <span class="text-xs text-gray-500">X (px)</span>
-          <input type="number" value={zone.x} readonly class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-gray-400 min-w-0 w-full" />
-        </label>
-        <label class="flex flex-col gap-0.5 flex-1">
-          <span class="text-xs text-gray-500">Y (px)</span>
-          <input type="number" value={zone.y} readonly class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-gray-400 min-w-0 w-full" />
-        </label>
+      <!-- Position + prop link -->
+      <div class="flex flex-col gap-0.5">
+        <span class="text-xs text-gray-500">Position (tiles)</span>
+        <div class="text-xs text-gray-300 px-2 py-1 bg-gray-900 border border-gray-700 rounded">
+          ({zone.at[0]}, {zone.at[1]})
+          {#if zone.propId}
+            <span class="text-cyan-400">· linked to prop “{zone.propId}”</span>
+          {/if}
+        </div>
+        {#if zone.propId}
+          <button
+            onclick={detachProp}
+            class="self-start px-2 py-0.5 rounded text-[11px] bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-600"
+          >
+            Detach from prop
+          </button>
+        {:else if linkableProps.length > 0}
+          <select value="" onchange={(e) => linkToProp((e.target as HTMLSelectElement).value)} class={inputClass}>
+            <option value="" disabled>Link to prop…</option>
+            {#each linkableProps as prop}
+              <option value={prop.id}>{prop.id} ({prop.at[0]}, {prop.at[1]})</option>
+            {/each}
+          </select>
+        {/if}
       </div>
 
       <!-- Size -->
       <div class="flex gap-2">
         <label class="flex flex-col gap-0.5 flex-1">
           <span class="text-xs text-gray-500">Width</span>
-          <select
-            value={zone.width}
-            onchange={(e) => onUpdate({ ...zone, width: Number((e.target as HTMLSelectElement).value) })}
-            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
-          >
-            {#each ZONE_SIZE_OPTIONS as opt}
-              <option value={opt.value}>{opt.label}</option>
+          <select value={zone.size[0]} onchange={(e) => setSize(0, Number((e.target as HTMLSelectElement).value))} class={inputClass}>
+            {#each SIZE_OPTIONS as n}
+              <option value={n}>{n} {n === 1 ? 'tile' : 'tiles'}</option>
             {/each}
           </select>
         </label>
         <label class="flex flex-col gap-0.5 flex-1">
           <span class="text-xs text-gray-500">Height</span>
-          <select
-            value={zone.height}
-            onchange={(e) => onUpdate({ ...zone, height: Number((e.target as HTMLSelectElement).value) })}
-            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
-          >
-            {#each ZONE_SIZE_OPTIONS as opt}
-              <option value={opt.value}>{opt.label}</option>
+          <select value={zone.size[1]} onchange={(e) => setSize(1, Number((e.target as HTMLSelectElement).value))} class={inputClass}>
+            {#each SIZE_OPTIONS as n}
+              <option value={n}>{n} {n === 1 ? 'tile' : 'tiles'}</option>
             {/each}
           </select>
         </label>
       </div>
 
       <hr class="border-gray-700" />
-
-      <!-- ID (all types) -->
-      <label class="flex flex-col gap-0.5">
-        <span class="text-xs text-gray-500">id</span>
-        <input
-          type="text"
-          value={getProp('id')}
-          oninput={(e) => setProp('id', (e.target as HTMLInputElement).value)}
-          class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
-        />
-      </label>
 
       <!-- Trigger fields -->
       {#if zone.type === 'trigger'}
@@ -185,7 +209,7 @@
             value={getProp('eventId')}
             oninput={(e) => setProp('eventId', (e.target as HTMLInputElement).value)}
             list="event-ids"
-            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
+            class={inputClass}
           />
           <datalist id="event-ids">
             {#each knownEventIds as eid}
@@ -198,12 +222,8 @@
           <input
             type="text"
             value={getProp('requiredFlag')}
-            oninput={(e) => {
-              const val = (e.target as HTMLInputElement).value;
-              if (val) setProp('requiredFlag', val);
-              else if (zone) onUpdate({ ...zone, properties: zone.properties.filter(p => p.name !== 'requiredFlag') });
-            }}
-            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
+            oninput={(e) => setOptionalProp('requiredFlag', (e.target as HTMLInputElement).value)}
+            class={inputClass}
           />
         </label>
       {/if}
@@ -212,11 +232,7 @@
       {#if zone.type === 'door'}
         <label class="flex flex-col gap-0.5">
           <span class="text-xs text-gray-500">targetMap</span>
-          <select
-            value={getProp('targetMap')}
-            onchange={(e) => setProp('targetMap', (e.target as HTMLSelectElement).value)}
-            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
-          >
+          <select value={getProp('targetMap')} onchange={(e) => setProp('targetMap', (e.target as HTMLSelectElement).value)} class={inputClass}>
             <option value="" disabled>-- select map --</option>
             {#each knownTargetMaps as tm}
               <option value={tm}>{tm}</option>
@@ -229,8 +245,8 @@
             <input
               type="number"
               value={getIntProp('spawnX')}
-              oninput={(e) => setProp('spawnX', Number((e.target as HTMLInputElement).value), 'int')}
-              class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none min-w-0 w-full"
+              oninput={(e) => setProp('spawnX', Number((e.target as HTMLInputElement).value))}
+              class="{inputClass} min-w-0 w-full"
             />
           </label>
           <label class="flex flex-col gap-0.5 flex-1">
@@ -238,8 +254,8 @@
             <input
               type="number"
               value={getIntProp('spawnY')}
-              oninput={(e) => setProp('spawnY', Number((e.target as HTMLInputElement).value), 'int')}
-              class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none min-w-0 w-full"
+              oninput={(e) => setProp('spawnY', Number((e.target as HTMLInputElement).value))}
+              class="{inputClass} min-w-0 w-full"
             />
           </label>
         </div>
@@ -248,13 +264,9 @@
           <input
             type="text"
             value={getProp('requiredFlags')}
-            oninput={(e) => {
-              const val = (e.target as HTMLInputElement).value;
-              if (val) setProp('requiredFlags', val);
-              else if (zone) onUpdate({ ...zone, properties: zone.properties.filter(p => p.name !== 'requiredFlags') });
-            }}
+            oninput={(e) => setOptionalProp('requiredFlags', (e.target as HTMLInputElement).value)}
             placeholder="flag-a,flag-b"
-            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
+            class={inputClass}
           />
         </label>
       {/if}
@@ -263,11 +275,7 @@
       {#if zone.type === 'npc'}
         <label class="flex flex-col gap-0.5">
           <span class="text-xs text-gray-500">npcType</span>
-          <select
-            value={getProp('npcType')}
-            onchange={(e) => setProp('npcType', (e.target as HTMLSelectElement).value)}
-            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
-          >
+          <select value={getProp('npcType')} onchange={(e) => setProp('npcType', (e.target as HTMLSelectElement).value)} class={inputClass}>
             <option value="scientist">scientist</option>
             <option value="alien">alien</option>
             <option value="robot">robot</option>
@@ -276,15 +284,7 @@
         </label>
         <label class="flex flex-col gap-0.5">
           <span class="text-xs text-gray-500">npcVariant</span>
-          <select
-            value={getProp('npcVariant')}
-            onchange={(e) => {
-              const value = (e.target as HTMLSelectElement).value;
-              if (value) setProp('npcVariant', value);
-              else if (zone) onUpdate({ ...zone, properties: zone.properties.filter(p => p.name !== 'npcVariant') });
-            }}
-            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
-          >
+          <select value={getProp('npcVariant')} onchange={(e) => setOptionalProp('npcVariant', (e.target as HTMLSelectElement).value)} class={inputClass}>
             <option value="">default</option>
             {#each Object.keys(NPC_COLOR_VARIANTS) as variant}
               <option value={variant}>{variant}</option>
@@ -301,7 +301,7 @@
             type="text"
             value={getProp('examId')}
             oninput={(e) => setProp('examId', (e.target as HTMLInputElement).value)}
-            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
+            class={inputClass}
           />
         </label>
       {/if}
@@ -314,7 +314,7 @@
             type="text"
             value={getProp('arcadeGameId')}
             oninput={(e) => setProp('arcadeGameId', (e.target as HTMLInputElement).value)}
-            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
+            class={inputClass}
           />
         </label>
       {/if}
@@ -328,7 +328,7 @@
             value={getProp('eventId')}
             oninput={(e) => setProp('eventId', (e.target as HTMLInputElement).value)}
             list="event-ids-terminal"
-            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
+            class={inputClass}
           />
           <datalist id="event-ids-terminal">
             {#each knownEventIds as eid}

@@ -11,7 +11,8 @@ function scalar(value: string | number | boolean): string {
 function propLine(prop: PropPlacement, theme: number): string {
   const alias = aliasForSlot(theme, prop.slot);
   const head = alias ? `prop: ${scalar(alias)}` : `slot: ${prop.slot}`;
-  return `  - { ${head}, at: [${prop.at[0]}, ${prop.at[1]}], solid: ${prop.solid} }`;
+  const idPart = prop.id !== undefined ? `id: ${scalar(prop.id)}, ` : '';
+  return `  - { ${idPart}${head}, at: [${prop.at[0]}, ${prop.at[1]}], solid: ${prop.solid} }`;
 }
 
 function zoneBlock(zone: ZoneSource): string {
@@ -20,7 +21,12 @@ function zoneBlock(zone: ZoneSource): string {
     lines.push(`    name: ${scalar(zone.name)}`);
   }
   lines.push(`    type: ${zone.type}`);
-  lines.push(`    at: [${zone.at[0]}, ${zone.at[1]}]`);
+  if (zone.propId !== undefined) {
+    // Authoring link wins over coordinates; `at` mirrors the prop and is re-resolved on parse.
+    lines.push(`    propId: ${scalar(zone.propId)}`);
+  } else {
+    lines.push(`    at: [${zone.at[0]}, ${zone.at[1]}]`);
+  }
   if (zone.size[0] !== 1 || zone.size[1] !== 1) {
     lines.push(`    size: [${zone.size[0]}, ${zone.size[1]}]`);
   }

@@ -1,32 +1,31 @@
-import type { EventQuest } from '../../systems/QuestManager';
+import type { TextAnswerQuest } from '../../systems/QuestManager';
 import { FLAGS } from '../../config/flags';
 
-export const quests: EventQuest[] = [
+export const quests: TextAnswerQuest[] = [
   {
-    id: 'q-m1-safe-bootstrap',
-    completionType: 'event',
-    title: { pl: 'Zabezpiecz i uruchom kontroler', en: 'Secure and Restart the Controller' },
+    id: 'q-m1-cricket',
+    completionType: 'text-answer',
+    title: { pl: 'Świerszcz', en: 'Cricket' },
     briefing: {
-      pl: 'Entropia zdjęła kontrolerowi Podstacji 03 politykę uprawnień — sprawny bootloader wykona każdy rozkaz, także sabotaż. Zdaj trzyczęściowy test w terminalu certyfikacyjnym, aby zastosować zatwierdzoną politykę, bezpiecznie zrestartować kontroler i otworzyć wschodni właz.',
-      en: 'Entropy stripped the Substation 03 controller of its permissions policy — the working bootloader will execute any command, sabotage included. Pass the certification terminal\'s three-part test to apply the approved policy, restart the controller safely, and open the east hatch.',
+      pl: 'Odzyskaj klucz rozruchowy z uszkodzonego dziennika sondy. Część wpisów była retransmitowana z błędną sumą kontrolną — licz tylko wersje oznaczone jako OK i złóż je w kolejności. Podaj klucz przez /solve, aby uruchomić drona.',
+      en: 'Recover the boot key from the probe\'s damaged log. Some entries were retransmitted with a bad checksum — count only the versions marked OK and assemble them in order. Enter the key via /solve to start the drone.',
     },
+    inputPayload: [
+      'DZIENNIK SONDY ODYSSEY-P7 — SEKWENCJA ROZRUCHOWA',
+      "[041] KLUCZ 1/3: 'P7'   — suma kontrolna OK",
+      "[042] KLUCZ 2/3: 'XR4'  — suma kontrolna BŁĄD → retransmisja",
+      "[043] KLUCZ 2/3: 'CYK'  — suma kontrolna OK",
+      "[044] KLUCZ 3/3: '090'  — suma kontrolna BŁĄD (duplikat)",
+      "[045] KLUCZ 3/3: '113'  — suma kontrolna OK",
+      'FORMAT KLUCZA: <1>-<2>-<3>',
+    ].join('\n'),
     hints: [
-      { pl: 'Terminal certyfikacyjny stoi w północno-zachodnim rogu podstacji.', en: 'The certification terminal is in the north-west corner of the substation.' },
-      { pl: 'Napraw najmniejszy uszkodzony element: politykę uprawnień wokół sprawnego bootloadera.', en: 'Fix the smallest broken part: the permissions policy around the working bootloader.' },
-      { pl: 'Bezpieczny przepływ to: sprawdź stan, wykonaj tylko dozwoloną operację, zweryfikuj wynik.', en: 'The safe flow is: check state, execute only an allowed operation, verify the result.' },
+      { pl: 'Ignoruj każdy wpis oznaczony jako BŁĄD — to retransmisje, nie klucz.', en: 'Ignore every entry marked BŁĄD (error) — those are retransmissions, not the key.' },
+      { pl: 'Zostają trzy wpisy OK, po jednym na każdą część klucza.', en: 'Three OK entries remain, one for each part of the key.' },
+      { pl: 'Format to <1>-<2>-<3>, małymi literami. Np. /solve p7-cyk-113', en: 'The format is <1>-<2>-<3>, lowercase. E.g. /solve p7-cyk-113' },
     ],
-    objectives: [
-      {
-        id: 'earn-safe-bootstrap-certificate',
-        label: { pl: 'Zdaj test i bezpiecznie uruchom kontroler', en: 'Pass the test and restart the controller safely' },
-        event: 'exam:completed',
-        matchPayload: { examId: 'm1-exam-safe-bootstrap', passed: true },
-        requireFlag: FLAGS.M1_EXAM_SAFE_BOOTSTRAP_DONE,
-      },
-    ],
-    rewards: {
-      xp: 125,
-      flags: [FLAGS.M1_SHAFT_POLICY_DONE, FLAGS.M1_VOID_AWARE_OF_ODYSSEY, FLAGS.CMDS_POLICY],
-    },
+    solution: 'p7-cyk-113',
+    validation: 'exact-lowercase',
+    rewards: { xp: 100, flags: [FLAGS.M1_SWIERSZCZ_ONLINE, FLAGS.CMDS_DRONE] },
   },
 ];

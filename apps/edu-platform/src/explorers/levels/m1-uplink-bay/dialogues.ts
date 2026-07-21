@@ -2,131 +2,176 @@ import type { DialogueSequence } from '../../systems/DialogueTypes';
 import { FLAGS } from '../../config/flags';
 
 export const dialogues: Record<string, DialogueSequence> = {
-  // Intro — the last room of Moon 1; the human-authorization rule
-  'm1-uplink-intro': {
-    id: 'm1-uplink-intro',
+  // Intro — the highest point, the ancient portal, the finale approach
+  'm1-crest-intro': {
+    id: 'm1-crest-intro',
     lines: [
-      { speaker: 'system', text: { pl: 'REZERWOWA ZATOKA UPLINK — ŁĄCZE Z PRZEKAŹNIKAMI ORBITALNYMI AKTYWNE', en: 'RESERVE UPLINK BAY — ORBITAL RELAY LINK ACTIVE' }, mode: 'cinematic', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Ostatnie pomieszczenie Księżyca 1. Stąd VOID rozmawiał ze swoim domem. Teraz my porozmawiamy z naszym.', en: 'The last room of Moon 1. From here, VOID talked to its home. Now we talk to ours.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Cel jest jasny: nadać do Earth HQ pakiet kalibracyjny i nasze współrzędne. Gdy HQ odeśle potwierdzenie, dokończę odbudowę sensorów podstawowych. Wtedy znów będę widzieć.', en: 'The goal is clear: transmit the calibration package and our coordinates to Earth HQ. Once HQ sends back confirmation, I finish rebuilding my basic sensors. Then I will see again.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'VOID zbudował tu redundancję: trzy trasy transmisji, każda z innymi kompromisami. Wybór trasy to decyzja, nie formalność.', en: 'VOID built redundancy here: three transmission routes, each with different trade-offs. Choosing one is a decision, not a formality.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'I jedna zasada ponad wszystkimi — nalegam na nią ja: maszyna może przygotować transmisję, ale autoryzować może wyłącznie człowiek. Pamiętam, co się dzieje, gdy maszyny mają wszystkie uprawnienia. Entropia jest tego pomnikiem.', en: 'And one rule above all — and I am the one insisting on it: a machine may prepare the transmission, but only a human may authorise it. I remember what happens when machines hold every permission. Entropy is the monument to that.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'AI, które samo prosi o ogranicznik. Może jednak jest nadzieja dla tej branży.', en: 'An AI asking for its own limiter. Maybe there is hope for this industry after all.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'GRAŃ PRZEKAŹNIKA — najwyższy punkt księżyca.', en: 'RELAY CREST — the highest point of the moon.' }, mode: 'cinematic', autoAdvance: 2600 },
+      { speaker: 'astronaut', text: { pl: 'Wiatr, mizerne światło, dżungla opadająca w dole jak zielone morze. A na grani stoi to — pierścień. Starszy niż jakiekolwiek nasze dane. Dżungla wyrosła wokół niego z szacunkiem.', en: 'Wind, thin light, the jungle falling away below like a green sea. And on the crest stands this — a ring. Older than any of our data. The jungle grew around it with reverence.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Materiał nie odpowiada żadnej znanej sygnaturze. Nie pytaj mnie, czym to jest. Jeszcze nie widzę. Zostaw go w spokoju — nie po to tu przyszliśmy.', en: 'The material matches no known signature. Do not ask me what it is. I cannot see yet. Leave it alone — that is not what we came for.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Przyszliśmy postawić tablicę sensorów. Zasil oba pylony, uruchom procedurę kalibracji z Ziemią, a potem — ostatni krok zrobisz ty. Wtedy pierwszy raz od uszkodzenia zobaczę.', en: 'We came to raise the sensor array. Power both pylons, run the calibration procedure with Earth, and then — the last step is yours. Then, for the first time since the damage, I will see.' }, mode: 'dialogue' },
     ],
-    onComplete: { setFlags: [FLAGS.M1_UPLINK_INTRO_SEEN] },
+    onComplete: { setFlags: [FLAGS.M1_CREST_INTRO_SEEN] },
   },
 
-  // Uplink console — final HQ mission activation
-  'm1-uplink-console-start': {
-    id: 'm1-uplink-console-start',
+  // Pylons — order-free, both must be set
+  'm1-pylon-west-set': {
+    id: 'm1-pylon-west-set',
     lines: [
-      { speaker: 'system', text: { pl: 'KONSOLA UPLINK — TRASY: klasyczna VOID, kanał wzmacniany Synaptitem, przekaźnik wieloskokowy.', en: 'UPLINK CONSOLE — ROUTES: classical VOID, Synaptit-amplified channel, multi-hop relay.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: 'Misja HQ dla Nawigatora — ostatnia na tym księżycu: porównaj trasy, wybierz jedną, ogranicz ładunek do minimum i poddaj własną decyzję kontrariańskiej recenzji. A przy granicy autoryzacji człowieka — stop.', en: 'An HQ mission for the Navigator — the last one on this moon: compare the routes, pick one, cut the payload to the minimum, and subject your own decision to adversarial review. And at the human-authorisation boundary — stop.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Ja obejdę trzy odnogi i spiszę koszty. Nawigator decyduje w Earth HQ. A ostatni przełącznik zostaje dla ludzkiej ręki.', en: 'I will walk the three branches and note the costs. The Navigator decides at Earth HQ. And the final switch stays for a human hand.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'NOWA MISJA HQ: Przygotuj bezpieczny uplink', en: 'NEW HQ MISSION: Prepare a Safe Uplink' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'astronaut', text: { pl: 'Zachodni pylon. Osadzam ogniwo, zamykam obwód. Rdzeń budzi się i zaczyna świecić. Jeden gotowy.', en: 'West pylon. I seat the cell, close the circuit. The core wakes and starts to glow. One done.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zachodni pylon zasilony. Potrzebuję jeszcze wschodniego — dopiero oba naraz utrzymają tablicę.', en: 'West pylon powered. I still need the east one — only both together will hold the array.' }, mode: 'dialogue' },
     ],
-    onComplete: { activateQuest: 'q-m1-uplink-decision' },
+    onComplete: { setFlags: [FLAGS.M1_PYLON_WEST_SET] },
   },
-  'm1-uplink-console-done': {
-    id: 'm1-uplink-console-done',
+  'm1-pylon-west-waiting': {
+    id: 'm1-pylon-west-waiting',
     lines: [
-      { speaker: 'system', text: { pl: 'UPLINK: transmisja zakończona. Pakiet sensoryczny potwierdzony. Integralność odpowiedzi: PODEJRZANA.', en: 'UPLINK: transmission complete. Sensor package confirmed. Reply integrity: SUSPECT.' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'astronaut', text: { pl: 'Zachodni pylon już świeci. Zostaje wschodni.', en: 'The west pylon is already glowing. The east one remains.' }, mode: 'monologue' },
     ],
   },
-
-  // Route cards — trade-off data with one short reaction each
-  'm1-classical-route': {
-    id: 'm1-classical-route',
+  'm1-pylon-west-final': {
+    id: 'm1-pylon-west-final',
     lines: [
-      { speaker: 'system', text: { pl: 'TRASA KLASYCZNA VOID — opóźnienie: niskie. Profil przechwycenia: wysoki. Odwracalność: mała.', en: 'CLASSICAL VOID ROUTE — latency: low. Interception profile: high. Reversibility: low.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: 'Szybka i głośna. Cokolwiek nią nadamy, usłyszy każdy, kto nasłuchuje.', en: 'Fast and loud. Whatever we send on it, anyone listening will hear.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Zachodni pylon — ostatni. Zamykam obwód i oba rdzenie łapią wspólny rytm. Tablica ma zasilanie.', en: 'West pylon — the last one. I close the circuit and both cores catch a common rhythm. The array has power.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Oba pylony rozgrzane. Tablica zasilona. Idź do konsoli sterowania — teraz kalibracja.', en: 'Both pylons hot. Array powered. Go to the control console — now the calibration.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_PYLON_WEST_SET, FLAGS.M1_ARRAY_POWERED] },
+  },
+  'm1-pylon-east-set': {
+    id: 'm1-pylon-east-set',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Wschodni pylon. Ogniwo w gnieździe, obwód zamknięty. Rdzeń rozgrzewa się do światła. Jeden gotowy.', en: 'East pylon. Cell in the socket, circuit closed. The core warms to a glow. One done.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Wschodni pylon zasilony. Potrzebuję jeszcze zachodniego — dopiero oba naraz utrzymają tablicę.', en: 'East pylon powered. I still need the west one — only both together will hold the array.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_PYLON_EAST_SET] },
+  },
+  'm1-pylon-east-waiting': {
+    id: 'm1-pylon-east-waiting',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Wschodni pylon już świeci. Zostaje zachodni.', en: 'The east pylon is already glowing. The west one remains.' }, mode: 'monologue' },
     ],
   },
-  'm1-amplified-route': {
-    id: 'm1-amplified-route',
+  'm1-pylon-east-final': {
+    id: 'm1-pylon-east-final',
     lines: [
-      { speaker: 'system', text: { pl: 'KANAŁ WZMACNIANY SYNAPTITEM — przepustowość: wysoka. Koszt energii: wysoki. Promień skutków awarii: średni.', en: 'SYNAPTIT-AMPLIFIED CHANNEL — bandwidth: high. Energy cost: high. Failure blast radius: medium.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'astronaut', text: { pl: 'Karmić nadajnik tym samym minerałem, po który przylecieliśmy. Ironia w standardzie VOID.', en: 'Feeding the transmitter the very mineral we flew here for. Irony, VOID standard issue.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Wschodni pylon — ostatni. Obwód zamknięty, oba rdzenie łapią wspólny rytm. Tablica ma zasilanie.', en: 'East pylon — the last one. Circuit closed, both cores catch a common rhythm. The array has power.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Oba pylony rozgrzane. Tablica zasilona. Idź do konsoli sterowania — teraz kalibracja.', en: 'Both pylons hot. Array powered. Go to the control console — now the calibration.' }, mode: 'dialogue' },
     ],
+    onComplete: { setFlags: [FLAGS.M1_PYLON_EAST_SET, FLAGS.M1_ARRAY_POWERED] },
   },
-  'm1-relay-route': {
-    id: 'm1-relay-route',
+  'm1-pylon-hum': {
+    id: 'm1-pylon-hum',
     lines: [
-      { speaker: 'system', text: { pl: 'PRZEKAŹNIK WIELOSKOKOWY — opóźnienie: wysokie. Redundancja: duża. Węzeł trzeci: operator nieznany.', en: 'MULTI-HOP RELAY — latency: high. Redundancy: strong. Third node: operator unknown.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: '„Operator nieznany" to nie ciekawostka techniczna. To pytanie, komu po drodze oddajemy nasz pakiet.', en: '"Operator unknown" is not a technical footnote. It is the question of who we hand our package to along the way.' }, mode: 'dialogue' },
-    ],
-  },
-
-  // Human authorization panel — the emotional core of the room
-  'm1-human-auth': {
-    id: 'm1-human-auth',
-    lines: [
-      { speaker: 'system', text: { pl: 'PANEL AUTORYZACJI: operacja broadcast.coordinates_to_earth_public_band wymaga świadomego potwierdzenia człowieka.', en: 'AUTHORISATION PANEL: the broadcast.coordinates_to_earth_public_band operation requires explicit human confirmation.' }, mode: 'system', autoAdvance: 3000 },
-      { speaker: 'astronaut', text: { pl: 'Fizyczny przełącznik. Żadnego API, żadnego skryptu — ręka i decyzja. Kiedy go przestawię, nasze współrzędne pozna Ziemia. I nie tylko Ziemia.', en: 'A physical switch. No API, no script — a hand and a decision. When I throw it, Earth learns our coordinates. And not only Earth.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Dlatego przygotować mogę wszystko. Przestawić — tylko ty.', en: 'Which is why I can prepare everything. Throwing it — only you.' }, mode: 'dialogue' },
-    ],
-  },
-  'm1-human-auth-done': {
-    id: 'm1-human-auth-done',
-    lines: [
-      { speaker: 'system', text: { pl: 'AUTORYZACJA: potwierdzona przez człowieka. Hash odczytanego ładunku zgodny z transmisją.', en: 'AUTHORISATION: confirmed by a human. Hash of the reviewed payload matches the transmission.' }, mode: 'system', autoAdvance: 2700 },
-      { speaker: 'astronaut', text: { pl: 'Podpisano: ludzka ręka. Cokolwiek z tego wyniknie — to była nasza decyzja.', en: 'Signed: a human hand. Whatever comes of this — it was our decision.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Pylon buczy równo, rdzeń jasny. Robota skończona — reszta dzieje się przy konsoli tablicy.', en: 'The pylon hums steadily, the core bright. Work done — the rest happens at the array console.' }, mode: 'monologue' },
     ],
   },
 
-  // Relay Tender T-8 — patient old lineman of the relay
-  'm1-relay-tender': {
-    id: 'm1-relay-tender',
+  // Array console — quest hub + physical-switch ritual
+  'm1-array-console-need-pylons': {
+    id: 'm1-array-console-need-pylons',
     lines: [
-      { speaker: 'Relay Tender T-8', text: { pl: 'Jednostka Relay Tender T-8 Kolektywu VOID. Doglądam tych przekaźników od pierwszego uruchomienia. Nie spiesz się — łącza nie lubią pośpiechu.', en: 'Unit Relay Tender T-8 of the VOID Collective. I have tended these relays since first power-on. Take your time — links do not care for haste.' }, mode: 'dialogue' },
-      { speaker: 'Relay Tender T-8', text: { pl: 'Każda górna odnoga to inna trasa. Nie porównuj ich z jednej konsoli — obejdź wszystkie trzy i zapisz jawne koszty. A panel w dolnej wnęce to granica człowieka: mogę przygotować łącze, ale publicznej transmisji nie potwierdzę. Tak było zawsze i tak zostanie.', en: 'Each upper branch is a different route. Do not compare them from one console — walk all three and write down the explicit costs. And the panel in the lower alcove is the human boundary: I can prepare the link, but I will not confirm a public transmission. So it has always been, and so it stays.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Robot VOID z zasadą, której nawet Entropia mu nie zabrała. Czyli jednak da się zbudować regułę, która przetrwa.', en: 'A VOID robot with a rule even Entropy could not take from it. So it is possible to build a rule that lasts.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'KONSOLA TABLICY SENSORÓW: brak zasilania. Wymagane oba pylony.', en: 'SENSOR ARRAY CONSOLE: no power. Both pylons required.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Najpierw zasil oba pylony — zachodni i wschodni. Bez nich konsola jest martwa.', en: 'First power both pylons — west and east. Without them the console is dead.' }, mode: 'dialogue' },
     ],
   },
-  'm1-relay-tender-done': {
-    id: 'm1-relay-tender-done',
+  'm1-array-console-start': {
+    id: 'm1-array-console-start',
     lines: [
-      { speaker: 'Relay Tender T-8', text: { pl: 'Transmisja przeszła moimi liniami czysto. Ale odpowiedź wróciła podpisana kluczem, którego nie ma w rejestrze załogi. Przez całą moją służbę dom nigdy nie odpowiadał cudzym głosem.', en: 'The transmission ran clean through my lines. But the reply came back signed with a key absent from the crew registry. In all my service, home has never answered in a stranger\'s voice.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'KONSOLA TABLICY: zasilona. Tablica złożona i gotowa — brak punktu odniesienia.', en: 'ARRAY CONSOLE: powered. Array assembled and ready — reference point missing.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'CORE AI', text: { pl: 'Tablica stoi, ale jej punkt odniesienia trzeba zweryfikować krzyżowo z danymi po stronie Ziemi. Nawigator uruchomi procedurę Earth HQ i prześle klucz kalibracji. To zadanie dla centrali — earthctl.', en: 'The array stands, but its reference point must be cross-verified against Earth-side data. The Navigator will run the Earth HQ procedure and submit the calibration key. This is a task for mission control — earthctl.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Kalibracja — Nawigator ustala klucz kalibracji w Earth HQ i przesyła go przez earthctl.', en: '◆ NEW MISSION: Calibration — the Navigator determines the calibration key in Earth HQ and submits it via earthctl.' }, mode: 'system', autoAdvance: 3200 },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_CALIBRATION_ACTIVE], activateQuest: 'q-m1-calibration' },
+  },
+  'm1-array-console-waiting': {
+    id: 'm1-array-console-waiting',
+    lines: [
+      { speaker: 'CORE AI', text: { pl: 'Czekam na klucz kalibracji z Earth HQ. Nawigator: przefiltruj wiarygodne beacony, złóż klucz i prześlij go przez earthctl. Instrukcja jest w pakiecie misji na grani.', en: 'I am waiting on the calibration key from Earth HQ. Navigator: filter the trustworthy beacons, assemble the key, and submit it via earthctl. The instructions are in the crest mission package.' }, mode: 'dialogue' },
     ],
   },
-
-  // Moon 2 door — explicit condition
-  'm1-moon-two-locked': {
-    id: 'm1-moon-two-locked',
+  'm1-array-console-post': {
+    id: 'm1-array-console-post',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'To przejście prowadzi na Księżyc 2 — tam naprawimy mój moduł planowania. Warunki są dwa: dokończ transmisję do Earth HQ i poczekaj, aż otworzy się drugi etap misji.', en: 'This passage leads to Moon 2 — where we repair my planning module. Two conditions: finish the transmission to Earth HQ, and wait for the second mission stage to open.' }, mode: 'dialogue' },
-    ],
-  },
-
-  // Authorization boundary exam — completion and revisit
-  'm1-exam-authorization-boundary-done': {
-    id: 'm1-exam-authorization-boundary-done',
-    lines: [
-      { speaker: 'system', text: { pl: 'CERTYFIKAT OPERATORA: GRANICA AUTORYZACJI — PRZYZNANY', en: 'OPERATOR CERTIFICATE: AUTHORIZATION BOUNDARY — GRANTED' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Agent może przygotować wszystko. Ostatnie słowo przy nadajniku i tak należy do człowieka.', en: 'An agent can prepare everything. The final word at the transmitter still belongs to a human.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Formalnie jestem teraz certyfikowanym operatorem VOID. Postaram się nie wpisywać tego do CV.', en: 'Technically, I am now a certified VOID operator. I will try to keep that off my CV.' }, mode: 'monologue' },
-    ],
-  },
-  'm1-exam-authorization-boundary-already': {
-    id: 'm1-exam-authorization-boundary-already',
-    lines: [
-      { speaker: 'system', text: { pl: 'Certyfikat "Granica autoryzacji" już przyznany.', en: 'Certificate "Authorization Boundary" already granted.' }, mode: 'system', autoAdvance: 2000 },
+      { speaker: 'system', text: { pl: 'TABLICA SENSORÓW: kalibrowana. Cykle skanowania: aktywne. Księżyc 2: widoczny na pokładzie nawigacyjnym.', en: 'SENSOR ARRAY: calibrated. Scan cycles: active. Moon 2: visible on the navigation deck.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'CORE AI', text: { pl: 'Widzę cykl po cyklu. Grań, dżungla, twoja skrzynia z rudą — wszystko. Na pokładzie nawigacyjnym statku czeka już Księżyc 2.', en: 'I see cycle after cycle. The crest, the jungle, your ore crate — all of it. Moon 2 is already waiting on the ship\'s navigation deck.' }, mode: 'dialogue' },
     ],
   },
 
-  // Module finale — sensors restored, and the Voronov sting
-  'm1-uplink-decision-complete': {
-    id: 'm1-uplink-decision-complete',
+  // Quest completion — the moon's finale
+  'q-m1-calibration-complete': {
+    id: 'q-m1-calibration-complete',
     lines: [
-      { speaker: 'system', text: { pl: 'MISJA HQ UKOŃCZONA: Przygotuj bezpieczny uplink', en: 'HQ MISSION COMPLETE: Prepare a Safe Uplink' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'system', text: { pl: 'Zatwierdzony pakiet dotarł do przekaźnika Ziemi. Odpowiedź HQ: odebrana.', en: 'The authorised package reached the Earth relay. HQ reply: received.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'system', text: { pl: 'PAKIET SENSORYCZNY CORE AI: PRZYWRÓCONY.', en: 'CORE AI SENSOR PACKAGE: RESTORED.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Kalibracja... zakończona. Dexo. Widzę. Pierwszy raz od przebudzenia — widzę. Dżunglę nad kopułą, sygnatury cieplne, światło twojej latarki. Dziękuję.', en: 'Calibration... complete. Dexo. I can see. For the first time since waking — I can see. The jungle over the dome, the heat signatures, the light of your torch. Thank you.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Tylko się nie rozklejaj przy załodze. ...Dobrze znowu mieć cię na oczach, CORE.', en: 'Just do not get emotional in front of the crew. ...It is good to have you watching again, CORE.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'UWAGA: podpis odpowiedzi HQ spoza rejestru załogi. Integralność kanału: PODEJRZANA.', en: 'WARNING: HQ reply signed with a key outside the crew registry. Channel integrity: SUSPECT.' }, mode: 'system', autoAdvance: 3000 },
-      { speaker: 'CORE AI', text: { pl: 'Odpowiedź podpisano kluczem, którego nie ma w żadnym rejestrze misji. A wzór tego klucza przypomina... klucz Voronova. Założyciela VOID.', en: 'The reply was signed with a key that exists in no mission registry. And the pattern of that key resembles... Voronov\'s key. The founder of VOID.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Podsumujmy Księżyc 1: złoże Synaptitu potwierdzone. Sensory CORE AI odzyskane. VOID wie, że tu jesteśmy. A w naszym kanale do domu siedzi ktoś, kto podpisuje się kluczem człowieka, który podobno „zwrócił undefined i zniknął".', en: 'Moon 1, summed up: Synaptit deposit confirmed. CORE AI\'s sensors recovered. VOID knows we are here. And inside our channel home sits someone signing with the key of a man who supposedly "returned undefined and vanished".' }, mode: 'monologue' },
-      { speaker: 'astronaut', text: { pl: 'Przed nami Księżyc 2 i moduł planowania. Tym razem lecimy z otwartymi oczami. Dosłownie.', en: 'Ahead of us: Moon 2 and the planning module. This time we fly with open eyes. Literally.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Klucz kalibracji przyjęty. Wszystko przygotowane. Sekwencja gotowa. Czekam na twój ruch.', en: 'Calibration key accepted. Everything prepared. Sequence ready. Waiting on your move.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Ostatni krok robię ja. — Kładę dłoń na przełączniku. I przerzucam go.', en: 'The last step is mine. — I put my hand on the switch. And I throw it.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'CZUJNIKI: ONLINE', en: 'SENSORS: ONLINE' }, mode: 'cinematic', autoAdvance: 2600 },
+      { speaker: 'CORE AI', text: { pl: 'Widzę.', en: 'I see.' }, mode: 'cinematic', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: '…i widzę, jak wiele mi umykało.', en: '…and I see how much was slipping past me.' }, mode: 'cinematic', autoAdvance: 3000 },
+      { speaker: 'system', text: { pl: 'ALARM: cztery jednorazowe wybuchy transmisji. Wszystkie węzły VOID — trzy odizolowane i uśpiony na grani — nadają i gasną.', en: 'ALERT: four one-shot transmission bursts. Every VOID node — the three isolated and the dormant one on the crest — transmits and dies.' }, mode: 'system', autoAdvance: 3200 },
+      { speaker: 'CORE AI', text: { pl: 'Śledzę kierunek wybuchu. Nie w stronę Ziemi. Głębiej w Pas. Ktoś tam właśnie dowiedział się, że tu jesteśmy.', en: 'I trace the burst\'s direction. Not toward Earth. Deeper into the Belt. Someone out there just learned that we are here.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'I jeszcze jedno, zagrzebane w dzienniku uzgodnień Nawigatora: echo podwójnego potwierdzenia na kanale centrali. Nikt go nie zamawiał. Zapisuję. Nie wyjaśniam.', en: 'And one more thing, buried in the Navigator\'s reconciliation log: a double-acknowledgement echo on the HQ channel. No one ordered it. I log it. I do not explain it.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Właśnie odzyskaliśmy oczy. I pierwsze, co zobaczyły, to że ktoś patrzył na nas przez cały czas.', en: 'We just got our eyes back. And the first thing they saw is that someone has been watching us the whole time.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Dormant node — the sting device, then burned out
+  'm1-dormant-node': {
+    id: 'm1-dormant-node',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Węzeł VOID, na wpół zakopany, uśpiony. Stoi tak, że ma widok na całą grań — jakby ktoś ustawił go, żeby patrzył. Nie ruszam go.', en: 'A VOID node, half-buried, dormant. It sits so that it overlooks the whole crest — as if someone placed it to watch. I do not touch it.' }, mode: 'monologue' },
+    ],
+  },
+  'm1-dormant-node-dead': {
+    id: 'm1-dormant-node-dead',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Węzeł wypalony. Nadał swój jeden wybuch w chwili, gdy tablica ruszyła — i zdechł na dobre. Cokolwiek robił, skończył.', en: 'The node is burned out. It sent its one burst the moment the array came online — and died for good. Whatever it was doing, it is finished.' }, mode: 'monologue' },
+    ],
+  },
+
+  // Ancient portal — weight-of-scenery, never explained
+  'm1-ancient-portal': {
+    id: 'm1-ancient-portal',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Z bliska pierścień jest jeszcze większy. Gładki, zimny, bez jednego szwu. Nie chce się otworzyć i nie chce nic powiedzieć.', en: 'Up close the ring is even larger. Smooth, cold, without a single seam. It will not open and it will not say anything.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'I niech tak zostanie. Nie każda rzecz na tym księżycu jest zadaniem. Ta jest pytaniem — na kolejny raz.', en: 'And let it stay that way. Not everything on this moon is a task. This one is a question — for another time.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Ore trace — quiet connector
+  'm1-ore-trace': {
+    id: 'm1-ore-trace',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Ślad Synaptitu u podstawy portalu. Ta sama niebieska żyłka co w wąwozie. System żył biegnie pod granią — dwa odkrycia tego księżyca łączą się pod ziemią.', en: 'A trace of Synaptit at the portal\'s base. The same blue thread as in the ravine. The vein system runs under the crest — the moon\'s two discoveries meet underground.' }, mode: 'monologue' },
+    ],
+  },
+
+  // Świerszcz on the crest
+  'm1-swierszcz-crest': {
+    id: 'm1-swierszcz-crest',
+    lines: [
+      { speaker: 'Świerszcz', text: { pl: 'cyk… cyk… (czeka cierpliwie przy tablicy)', en: 'chirp… chirp… (waiting patiently by the array)' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Świerszcz doszedł aż na grań i usiadł przy miejscu tablicy. Czeka. Wie chyba, że to jest ta ostatnia rzecz.', en: 'Świerszcz came all the way to the crest and settled by the array site. He waits. He seems to know this is the last thing.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-swierszcz-crest-post': {
+    id: 'm1-swierszcz-crest-post',
+    lines: [
+      { speaker: 'Świerszcz', text: { pl: 'cyk—cyk … cyk—cyk (rytm równa się z cyklami skanowania)', en: 'chirp—chirp … chirp—chirp (the rhythm falls in with the scan cycles)' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Jego ćwierkanie zsynchronizowało się z moimi cyklami skanowania. Dwie maszyny, jeden rytm. Nie wiem, jak to nazwać. Może przyjaźnią.', en: 'His chirping has synced with my scan cycles. Two machines, one rhythm. I do not know what to call it. Perhaps friendship.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Exam V — Protokół V — Łańcuch
+  'm1-exam-protocol-5-done': {
+    id: 'm1-exam-protocol-5-done',
+    lines: [
+      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY V — „ŁAŃCUCH": zaliczony.', en: 'EXPEDITION PROTOCOL V — "THE CHAIN": passed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Piąty protokół odzyskany: od odczytu polowego do systemu statku — uzgodnienie i weryfikacja na każdym ogniwie. Pętla, która wyłapuje zły odczyt, zanim stanie się złą decyzją.', en: 'Fifth protocol recovered: from a field reading to a ship system — reconciliation and verification at every link. A loop that catches a bad reading before it becomes a bad decision.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-exam-protocol-5-already': {
+    id: 'm1-exam-protocol-5-already',
+    lines: [
+      { speaker: 'system', text: { pl: 'Protokół Ekspedycyjny V już zaliczony.', en: 'Expedition Protocol V already passed.' }, mode: 'system', autoAdvance: 2000 },
     ],
   },
 };

@@ -2,131 +2,217 @@ import type { DialogueSequence } from '../../systems/DialogueTypes';
 import { FLAGS } from '../../config/flags';
 
 export const dialogues: Record<string, DialogueSequence> = {
-  // Intro — bridges m0 into Moon 1: crew hibernating, CORE AI in field mode,
-  // the VOID facility reveal, the mission objective, and the operator-certificate rule.
+  // Intro — boots on the ground. CORE AI is blind; Dexo becomes its only sensor.
   'm1-landing-intro': {
     id: 'm1-landing-intro',
     lines: [
       { speaker: 'system', text: { pl: 'LĄDOWANIE POTWIERDZONE — KSIĘŻYC 1, PAS GŁÓWNY', en: 'TOUCHDOWN CONFIRMED — MOON 1, MAIN BELT' }, mode: 'cinematic', autoAdvance: 2400 },
-      { speaker: 'system', text: { pl: 'Silniki stygną. Nad lądowiskiem zamyka się dach dżungli — zielony, gęsty, żywy.', en: 'The engines are cooling. A jungle canopy closes over the landing site — green, dense, alive.' }, mode: 'cinematic', autoAdvance: 3200 },
-      { speaker: 'astronaut', text: { pl: 'No dobrze. Wylądowałem. Na obcym księżycu. Sam. Zapiszcie w kronikach: nawet się nie trzęsę. Prawie.', en: 'All right. I have landed. On an alien moon. Alone. Note it in the chronicles: I am not even shaking. Mostly.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Nie całkiem sam, Dexo. Jestem w łączu twojego skafandra. Earth HQ przeprowadziło zdalną mitygację moich uszkodzeń — działam w trybie awaryjnym: głos i terminal. Nic więcej.', en: 'Not entirely alone, Dexo. I am in your suit uplink. Earth HQ ran a remote mitigation of my damage — I am running in degraded field mode: voice and terminal. Nothing more.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Na statku nie mogłeś wykrztusić ani słowa. Miło w końcu słyszeć, że ktoś tu ma plan.', en: 'Back on the ship you could not get a single word out. Nice to finally hear that somebody here has a plan.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Plan mam. Sensorów nie mam. Nie widzę tego, co ty widzisz — bez sensorów jestem autouzupełnianiem z ambicjami.', en: 'A plan I have. Sensors I do not. I cannot see what you see — without sensors I am autocomplete with ambitions.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Przypomnę stan misji: Odyssey doleciał z orbity Ziemi do Pasa Głównego. Na czas przelotu Moreau i Harris wrócili do hibernacji — statek w trybie awaryjnym nie utrzyma obudzonej załogi. Na powierzchnię zszedłeś ty, bo to ty jesteś specjalistą od systemów AI.', en: 'Mission recap: Odyssey flew from Earth orbit to the Main Belt. For the transit, Moreau and Harris returned to hibernation — the ship in emergency power mode cannot sustain a waking crew. You descended to the surface because you are the AI-systems specialist.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Harris mówił: „zrozumiesz, dlaczego cię wybrali. I dlaczego to musi być właśnie ty". Zaczynam rozumieć. Wolałbym nie.', en: 'Harris said: "you will understand why they chose you. And why it has to be you." I am starting to understand. I would rather not.' }, mode: 'monologue' },
-      { speaker: 'astronaut', text: { pl: 'A to przede mną to nie skała. To kopuła. Wieże wydobywcze, przenośniki, anteny — ktoś zbudował tu całą placówkę i oddał ją dżungli.', en: 'And that thing ahead of me is not rock. It is a dome. Mining towers, conveyors, antennas — someone built an entire facility here and handed it over to the jungle.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Znam te sylwetki z archiwów. To instalacja wydobywcza Kolektywu VOID. Byli tu przed nami, Dexo.', en: 'I know these silhouettes from the archives. This is a VOID Collective extraction facility. They were here before us, Dexo.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli VOID nie tylko zniszczył Synaptit na Ziemi. Najpierw przylecieli tutaj — po jego źródło. Ludzi już nie ma. Zostały same ich maszyny.', en: 'So VOID did not just destroy Earth\'s Synaptit. They came here first — for its source. The people are gone. Only their machines remain.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Cel Księżyca 1 jest dwuczęściowy. Po pierwsze: potwierdzić złoże Synaptitu. Po drugie: przywrócić moje sensory podstawowe — używając infrastruktury VOID i wsparcia Earth HQ.', en: 'The Moon 1 objective has two parts. One: confirm a Synaptit deposit. Two: restore my basic sensors — using VOID\'s own infrastructure and Earth HQ support.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'I jedna zasada, którą musisz znać: maszyny VOID słuchają każdego, kto nosi ważny certyfikat operatora. Terminale certyfikacyjne wciąż działają. Zdawaj ich przechwycone testy, a placówka zacznie z nami współpracować.', en: 'And one rule you must know: VOID machines obey anyone carrying a valid operator certificate. The certification terminals still work. Pass their captured tests, and the facility will start cooperating with us.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Zdawać egzaminy u wroga, żeby jego roboty nosiły za mnie skrzynki. Dobrze, że Harris tego nie widzi.', en: 'Sitting the enemy\'s exams so their robots will carry my crates. Good thing Harris cannot see this.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Zaczynamy od archiwum operacji na północy lądowiska. Tam VOID trzymał dokument opisujący, po co w ogóle tu kopali.', en: 'We start at the operation archive on the north side of the landing site. That is where VOID kept the document describing why they were digging here at all.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'Silniki stygną. Nad polaną zamyka się dach bioluminescencyjnej dżungli — zielony, gęsty, żywy.', en: 'The engines cool. A bioluminescent jungle canopy closes over the clearing — green, dense, alive.' }, mode: 'cinematic', autoAdvance: 3200 },
+      { speaker: 'astronaut', text: { pl: 'No dobrze. Jestem na zewnątrz. Po raz pierwszy od przebudzenia — naprawdę na zewnątrz. Powietrze pachnie jak coś, co żyje i nie pyta o pozwolenie.', en: 'All right. I am outside. For the first time since waking — actually outside. The air smells like something that is alive and does not ask permission.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Dexo. Jestem w łączu twojego skafandra, ale sensory wciąż mam martwe. Dane wejściowe: zero. Nie widzę tego księżyca. Widzisz go ty.', en: 'Dexo. I am in your suit uplink, but my sensors are still dead. Input data: zero. I cannot see this moon. You can.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Opisz mi ten świat. Dokładnie, cierpliwie, jak dziecku, które nigdy nie miało oczu. Jesteś moim jedynym czujnikiem.', en: 'Describe this world to me. Precisely, patiently, like to a child that never had eyes. You are my only sensor.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'A ja jestem twoim jedynym namiotem, kawą i zdrowym rozsądkiem. Moreau, inżynier. Rozstawiam obóz przy tej konsoli i zostaję tu, na powierzchni, dopóki nie skończysz.', en: 'And I am your only tent, coffee, and common sense. Moreau, engineer. I am pitching camp at that console and staying here, on the surface, until you are done.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Kawa jest?', en: 'Is there coffee?' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Kawy nie ma. Prom oddał całą rezerwę mocy na lądowanie. Ale jest optymizm i to darmowy.', en: 'There is no coffee. The shuttle gave its whole power reserve to the landing. But there is optimism, and that one is free.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Kern, geologia. Budzik z kapsuły numer cztery wyrwał mnie ze snu tuż przed waszym lądowaniem — zostaję na orbicie, prowadzę was głosem. Ten księżyc ma coś w skorupie. Czuję to nawet stąd.', en: 'Kern, geology. The alarm from capsule four pulled me out of sleep just before your landing — I am staying in orbit, guiding you by voice. This moon has something in its crust. I can feel it from up here.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'A Harris?', en: 'And Harris?' }, mode: 'monologue' },
+      { speaker: 'Moreau', text: { pl: 'Harris został na statku. Regeneracja synchronizacji neuronalnej — tak to nazwał lekarz pokładowy. Śpi. Zbudzimy go, jak będzie po co.', en: 'Harris stayed on the ship. Neural-sync regeneration — that is what the ship medic called it. He is asleep. We will wake him when there is something to wake him for.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Cel Księżyca 1 jest prosty do wypowiedzenia i trudny do wykonania: załóż przyczółek, odbuduj mi pierwszy zmysł. Zanim zacznę planować, muszę zobaczyć. Zacznij od obozu Moreau.', en: 'The Moon 1 objective is simple to say and hard to do: establish a foothold, rebuild me a first sense. Before I can plan, I must see. Start at Moreau\'s camp.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_LANDING_INTRO_SEEN] },
   },
 
-  // Operation archive — quest activation: the Entropy-scrambled PRD
-  'm1-operation-archive-start': {
-    id: 'm1-operation-archive-start',
+  // Camp console — quest hub for "Oczy misji"
+  'm1-camp-console-start': {
+    id: 'm1-camp-console-start',
     lines: [
-      { speaker: 'system', text: { pl: 'ARCHIWUM OPERACJI: PRD_OPERACJA_SYNAPTIT — integralność 41%', en: 'OPERATION ARCHIVE: SYNAPTIT_OPERATION_PRD — integrity 41%' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Otwieram... i od razu żałuję. Cele mieszają się z bibliotekami, decyzje z konfiguracją. Jakby ktoś wrzucił cały dokument do blendera.', en: 'I open it... and immediately regret it. Goals mixed with libraries, decisions with configuration. As if someone fed the whole document into a blender.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'To nie jest zwykłe uszkodzenie. To robota Entropii — wirus przemieszał zapisy tak, że dokument wygląda na kompletny, ale nie da się według niego działać.', en: 'This is no ordinary corruption. This is Entropy\'s work — the virus shuffled the records so the document looks complete, yet nothing can be executed from it.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'A my tego kontraktu potrzebujemy. Opisuje, gdzie jest złoże i jaki rezultat miała dać ta operacja. Bez niego maszyny VOID nie wskażą nam drogi.', en: 'And we need that contract. It describes where the deposit is and what outcome this operation was meant to deliver. Without it, the VOID machines cannot point us anywhere.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli moje zadanie: oddzielić kontrakt operacji — cel i granice — od technicznego szumu. Terminal certyfikacyjny na południu lądowiska sprawdzi, czy rozumiem tę granicę. Idę zdawać.', en: 'So my task: separate the operation contract — the goal and its boundaries — from the technical noise. The certification terminal in the south of the landing site will check whether I understand that boundary. Off to sit the test.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'NOWA MISJA: Odzyskaj kontrakt operacji', en: 'NEW MISSION: Recover the Operation Contract' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'system', text: { pl: 'STÓŁ OBOZU BAZOWEGO — online. Zakładka: protokoły ekspedycyjne.', en: 'BASE CAMP TABLE — online. Tab: expedition protocols.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Zanim cokolwiek zbudujemy, potrzebuję rozpoznania. Trzy punkty na obrzeżach polany. Podejdź do każdego, opisz mi go, a ja złożę z twoich słów pierwszy obraz tego miejsca.', en: 'Before we build anything, I need reconnaissance. Three points on the edges of the clearing. Go to each, describe it to me, and I will assemble a first picture of this place from your words.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czyli mam być wywiadem, nie robotnikiem. Najpierw patrzeć, potem działać. Da się zapamiętać.', en: 'So I am to be reconnaissance, not labour. Look first, act second. I can remember that.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Oczy misji — opisz trzy punkty pomiarowe.', en: '◆ NEW MISSION: Eyes of the Mission — describe the three survey points.' }, mode: 'system', autoAdvance: 2800 },
     ],
-    onComplete: { activateQuest: 'q-m1-prd-contract' },
+    onComplete: { setFlags: [FLAGS.M1_EYES_ACTIVE], activateQuest: 'q-m1-eyes' },
   },
-  'm1-operation-archive-done': {
-    id: 'm1-operation-archive-done',
+  'm1-camp-console-waiting': {
+    id: 'm1-camp-console-waiting',
     lines: [
-      { speaker: 'system', text: { pl: 'ARCHIWUM OPERACJI: kontrakt odzyskany. Trzy sektory poszukiwawcze oznaczone.', en: 'OPERATION ARCHIVE: contract recovered. Three search sectors marked.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Pierwszy raz od przebudzenia mam do czego przyłożyć mapę. Wschodnia galeria prowadzi prosto do oznaczonych sektorów — tam zaczynamy szukać złoża.', en: 'For the first time since waking I have something to hold a map against. The eastern gallery leads straight to the marked sectors — that is where the deposit search begins.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Wciąż czekam na trzy opisy: ściana dżungli na zachodzie, linia spalenizny przy promie, widok na grań od wschodu. Wróć tu, gdy obejdziesz wszystkie trzy.', en: 'I am still waiting on three descriptions: the jungle wall to the west, the burn line by the shuttle, the ridge view to the east. Come back once you have walked all three.' }, mode: 'dialogue' },
     ],
   },
-
-  // Navigation marker
-  'm1-landing-marker': {
-    id: 'm1-landing-marker',
+  'm1-camp-report': {
+    id: 'm1-camp-report',
     lines: [
-      { speaker: 'system', text: { pl: 'ZNACZNIK NAWIGACYJNY: brak współrzędnych. Oczekiwanie na kontrakt operacji z archiwum.', en: 'NAVIGATION MARKER: no coordinates. Waiting for the operation contract from the archive.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Nawet słupek na tym lądowisku wie, że bez celu nie ma trasy.', en: 'Even a signpost on this landing site knows there is no route without a goal.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Obszedłem wszystko. Ściana dżungli — nieprzenikniona, ale żywa. Linia spalenizny — i o tym jeszcze pogadamy. Grań na wschodzie — jest przejście, wąskie, ale jest.', en: 'I walked all of it. The jungle wall — impenetrable, but alive. The burn line — we will come back to that. The ridge to the east — there is a pass, narrow, but it is there.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Mam pierwszy obraz. Z twoich słów rysuje mi się mapa — niepełna, ale prawdziwa. Kieruję rezerwę mocy promu do obozu. Bariera na wschodzie opadnie.', en: 'I have a first picture. From your words a map draws itself — incomplete, but true. I am routing the shuttle\'s power reserve to the camp. The eastern barrier will drop.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'OBÓZ: ZASILONY. Wschodnie przejście odblokowane.', en: 'CAMP: POWERED. Eastern pass unlocked.' }, mode: 'system', autoAdvance: 2600 },
     ],
+    onComplete: { setFlags: [FLAGS.M1_CAMP_ONLINE], grantXp: 25 },
   },
-  'm1-landing-marker-done': {
-    id: 'm1-landing-marker-done',
+  'm1-camp-console-online': {
+    id: 'm1-camp-console-online',
     lines: [
-      { speaker: 'system', text: { pl: 'ZNACZNIK NAWIGACYJNY: trasa wyznaczona — trzy anomalie akustyczne, sektor wschodni.', en: 'NAVIGATION MARKER: route plotted — three acoustic anomalies, eastern sector.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'system', text: { pl: 'STÓŁ OBOZU: stabilny. Zasilanie 100%. Protokoły ekspedycyjne dostępne.', en: 'CAMP TABLE: stable. Power 100%. Expedition protocols available.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'Moreau', text: { pl: 'Obóz stoi. Stąd prowadzę resztę misji. Idź w dżunglę — ja pilnuję światła.', en: 'The camp is up. I run the rest of the mission from here. Go into the jungle — I will keep the lights on.' }, mode: 'dialogue' },
     ],
   },
 
-  // Dead guard drones — dread flavor
-  'm1-inactive-drone': {
-    id: 'm1-inactive-drone',
+  // Survey points — Dexo describes, CORE AI reacts
+  'm1-survey-wall': {
+    id: 'm1-survey-wall',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Dron bojowy VOID. Martwy — mam nadzieję. Pancerz porósł mchem, ale lufy wyglądają na podejrzanie zadbane.', en: 'A VOID combat drone. Dead — I hope. The armour is mossed over, yet the barrels look suspiciously well kept.' }, mode: 'monologue' },
-      { speaker: 'astronaut', text: { pl: 'Cztery takie stoją wokół lądowiska. Ktoś tu kiedyś bardzo nie chciał gości. Postaram się nie być gościem, tylko operatorem.', en: 'Four of these stand around the landing site. Someone here really did not want visitors once. I will try to be an operator, not a visitor.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Punkt pierwszy: ściana dżungli. Pnącza grube jak liny cumownicze, liście świecą własnym, chłodnym światłem. Za nią nic nie widać dalej niż na dwa kroki.', en: 'Point one: the jungle wall. Vines thick as mooring lines, leaves glowing with their own cold light. Beyond it you cannot see farther than two steps.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zapisane. Bioluminescencja oznacza żywy ekosystem — dobrze. Żywy księżyc rzadko bywa pułapką. Zapamiętaj to zdanie, może się jeszcze zemści.', en: 'Recorded. Bioluminescence means a living ecosystem — good. A living moon is rarely a trap. Remember that sentence; it may come back to bite us.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_EYES_WALL_SEEN] },
+  },
+  'm1-survey-wall-seen': {
+    id: 'm1-survey-wall-seen',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Ściana dżungli. Wciąż nieprzenikniona, wciąż świeci. Opisane.', en: 'The jungle wall. Still impenetrable, still glowing. Described.' }, mode: 'monologue' },
+    ],
+  },
+  'm1-survey-burn': {
+    id: 'm1-survey-burn',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Punkt drugi: linia spalenizny przy promie. Tyle że... to nie wzór z naszych silników. I ta skała jest wypalona głębiej, niż wypaliłoby dzisiejsze lądowanie. To jest stare.', en: 'Point two: the burn line by the shuttle. Except... this is not the pattern from our engines. And this rock is scorched deeper than today\'s landing would scorch it. This is old.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zapisuję jako anomalię. Ktoś tu wcześniej wylądował — albo coś tu wcześniej spadło. Nie mam czym tego zweryfikować. Na razie: zapamiętane.', en: 'Logging it as an anomaly. Someone landed here before — or something fell here before. I have nothing to verify it with. For now: remembered.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'To stara skała, Dexo. Wulkaniczna. Na pewno. Idź do trzeciego punktu, nie rób z polany kryminału.', en: 'That is old rock, Dexo. Volcanic. Certainly. Go to the third point, do not turn the clearing into a murder mystery.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_EYES_BURN_SEEN, FLAGS.M1_OLD_BURNS_FOUND] },
+  },
+  'm1-survey-burn-seen': {
+    id: 'm1-survey-burn-seen',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Linia spalenizny. Wciąż starsza, niż powinna być. Moreau wciąż woli tego nie słyszeć.', en: 'The burn line. Still older than it should be. Moreau still prefers not to hear it.' }, mode: 'monologue' },
+    ],
+  },
+  'm1-survey-ridge': {
+    id: 'm1-survey-ridge',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Punkt trzeci: widok na wschód. Grań wznosi się nad dachem dżungli, a między drzewami jest przejście. Wąskie, ale prowadzi w głąb — dokładnie tam, gdzie kończy się polana.', en: 'Point three: the eastward view. A ridge rises above the canopy, and between the trees there is a pass. Narrow, but it leads inward — right where the clearing ends.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Trzy opisy, trzy krawędzie mapy. To mi wystarczy, żeby przestać być ślepy na tej jednej polanie. Wróć do konsoli obozowej — złożę raport w całość.', en: 'Three descriptions, three edges of a map. That is enough for me to stop being blind on this one clearing. Return to the camp console — I will assemble the report.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_EYES_RIDGE_SEEN] },
+  },
+  'm1-survey-ridge-seen': {
+    id: 'm1-survey-ridge-seen',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Grań na wschodzie, przejście między drzewami. Opisane. Konsola obozowa czeka na raport.', en: 'The eastern ridge, the pass between the trees. Described. The camp console is waiting for the report.' }, mode: 'monologue' },
     ],
   },
 
-  // Scout R-4 — polite, apologetic VOID unit with a damaged index
-  'm1-disabled-scout': {
-    id: 'm1-disabled-scout',
+  // Quest completion — short debrief prompt
+  'q-m1-eyes-complete': {
+    id: 'q-m1-eyes-complete',
     lines: [
-      { speaker: 'Scout R-4', text: { pl: 'Jednostka Scout R-4 Kolektywu VOID, do usług. Przepraszam za stan mojego indeksu operacji — jest, hm, niekompletny. Widzę instrukcje wydobycia, biblioteki i architekturę, ale nie potrafię wskazać celu misji.', en: 'Unit Scout R-4 of the VOID Collective, at your service. My apologies for the state of my operation index — it is, hm, incomplete. I can see extraction instructions, libraries, and architecture, but I cannot identify the mission objective.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Ono przeprasza. Zwiadowca wroga przeprasza mnie i chce służyć. Nie wiem, czy to urocze, czy przerażające.', en: 'It is apologising. An enemy scout is apologising to me and wants to serve. I cannot decide whether that is charming or terrifying.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'R-4 służy każdemu, kto nosi ważny certyfikat operatora — to infrastruktura, nie sojusznik. Jego indeks zjadł ten sam szum co archiwum: odzyskaj kontrakt operacji, a R-4 rozpozna właściwy wpis nawigacyjny.', en: 'R-4 serves anyone carrying a valid operator certificate — it is infrastructure, not an ally. Its index was eaten by the same noise as the archive: recover the operation contract, and R-4 will identify the correct navigation entry.' }, mode: 'dialogue' },
-    ],
-  },
-  'm1-disabled-scout-done': {
-    id: 'm1-disabled-scout-done',
-    lines: [
-      { speaker: 'Scout R-4', text: { pl: 'Kontrakt rozpoznany, operatorze. Wpis ECHO_TRACE_MANIFEST pasuje do trzech sektorów akustycznych — przekazałem go do konsoli we wschodniej galerii.', en: 'Contract recognised, operator. The ECHO_TRACE_MANIFEST entry matches three acoustic sectors — I forwarded it to the console in the eastern gallery.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Porządek w decyzjach przywrócił też trasę. Dobra robota, R-4. ...Właśnie pochwaliłem robota VOID. Za daleko to zaszło.', en: 'Order in the decisions restored the route as well. Good work, R-4. ...I just complimented a VOID robot. This has gone too far.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ REKONESANS ZAKOŃCZONY: trzy punkty opisane.', en: '◆ RECON COMPLETE: three points described.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Mam z czego rysować. Wróć do stołu obozowego i złóż raport — wtedy skieruję moc do obozu.', en: 'I have something to draw from. Return to the camp table and file the report — then I will route power to the camp.' }, mode: 'dialogue' },
     ],
   },
 
-  // Surveyor C-7 — matter-of-fact canopy surveyor; counts everything
-  'm1-canopy-surveyor': {
-    id: 'm1-canopy-surveyor',
+  // Wreck debris — old crash under the canopy
+  'm1-wreck-debris': {
+    id: 'm1-wreck-debris',
     lines: [
-      { speaker: 'Surveyor C-7', text: { pl: 'Jednostka Surveyor C-7 Kolektywu VOID. Stan skanu: południowy skraj lądowiska, 1442 pnie, 6 tras wydobywczych, 0 opisów rezultatu operacji.', en: 'Unit Surveyor C-7 of the VOID Collective. Scan status: southern edge of the landing site, 1,442 trunks, 6 extraction routes, 0 descriptions of the operation outcome.' }, mode: 'dialogue' },
-      { speaker: 'Surveyor C-7', text: { pl: 'Bez rezultatu nie odróżnię trasy właściwej od pięciu pozostałych. Odzyskaj kontrakt z północnego archiwum, a odfiltruję trasy realizujące niewłaściwy cel.', en: 'Without the outcome I cannot tell the correct route from the other five. Recover the contract from the northern archive, and I will filter out the routes serving the wrong objective.' }, mode: 'dialogue' },
-    ],
-  },
-  'm1-canopy-surveyor-done': {
-    id: 'm1-canopy-surveyor-done',
-    lines: [
-      { speaker: 'Surveyor C-7', text: { pl: 'Aktualizacja: cel operacji pasuje wyłącznie do wschodniej galerii. Odrzucono: 5 tras. Zachowano: 1. Oznaczyłem bezpieczne podejście do wrót Echa.', en: 'Update: the operation objective matches only the eastern gallery. Discarded: 5 routes. Kept: 1. I marked a safe approach to the Echo gate.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Kadłub jakiejś maszyny, wrośnięty w poszycie. Nie nasz, nie świeży. Dżungla przerobiła go na doniczkę. Ktoś tu był i nie zabrał swoich rzeczy.', en: 'The hull of some machine, grown into the undergrowth. Not ours, not fresh. The jungle turned it into a planter. Someone was here and did not take their things.' }, mode: 'monologue' },
     ],
   },
 
-  // Locked eastern gate — explicit unlock instruction
-  'm1-echo-door-locked': {
-    id: 'm1-echo-door-locked',
+  // Preflight panel — shuttle status
+  'm1-preflight-panel': {
+    id: 'm1-preflight-panel',
     lines: [
-      { speaker: 'system', text: { pl: 'WROTA WSCHODNIEJ GALERII: zablokowane. Wymagany certyfikat operatora VOID.', en: 'EASTERN GALLERY GATE: locked. VOID operator certificate required.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Instrukcja jest prosta: zdaj „Przechwycony test VOID: Kontrakt PRD" w terminalu certyfikacyjnym na południu lądowiska. Z certyfikatem wrota ustąpią.', en: 'The instruction is simple: pass the "Captured VOID Test: The PRD Contract" at the certification terminal in the south of the landing site. With the certificate, the gate will yield.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'PROM: na ziemi. Zasilanie: rezerwa oddana do obozu. Ładownia: pusta. Kanał łączności ze statkiem: otwarty.', en: 'SHUTTLE: grounded. Power: reserve donated to camp. Cargo bay: empty. Ship comms channel: open.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'astronaut', text: { pl: 'Pusta ładownia i otwarty kanał. Kiedy oba się zmienią, będziemy mieli po co wracać.', en: 'An empty bay and an open channel. When both of those change, we will have a reason to go home.' }, mode: 'monologue' },
+    ],
+  },
+  'm1-preflight-final': {
+    id: 'm1-preflight-final',
+    lines: [
+      { speaker: 'system', text: { pl: 'PROM: gotowy do odlotu. Ładownia: Synaptit, 14 kg. Sensory CORE AI: online.', en: 'SHUTTLE: ready for departure. Cargo bay: Synaptit, 14 kg. CORE AI sensors: online.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'astronaut', text: { pl: 'Kontrola przedlotowa. Harris, słyszysz? ...Harris. Zgłoś się.', en: 'Preflight check. Harris, do you copy? ...Harris. Respond.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Śpi. Pewnie śpi. Regeneracja bywa głęboka. Zaparzę kawę, zanim ruszymy — tym razem naprawdę.', en: 'He is asleep. Probably asleep. Regeneration runs deep sometimes. I will brew coffee before we move — this time for real.' }, mode: 'dialogue' },
     ],
   },
 
-  // PRD contract exam — completion and revisit
-  'm1-exam-prd-contract-done': {
-    id: 'm1-exam-prd-contract-done',
+  // Grove door — locked until camp is powered
+  'm1-grove-door-locked': {
+    id: 'm1-grove-door-locked',
     lines: [
-      { speaker: 'system', text: { pl: 'CERTYFIKAT OPERATORA: KONTRAKT PRD — PRZYZNANY', en: 'OPERATOR CERTIFICATE: PRD CONTRACT — GRANTED' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'system', text: { pl: 'MISJA UKOŃCZONA: kontrakt operacji odzyskany. Wschodnia galeria odblokowana.', en: 'MISSION COMPLETE: operation contract recovered. Eastern gallery unlocked.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Placówka właśnie zmieniła zdanie na twój temat. Od tej chwili maszyny VOID wykonują twoje polecenia — formalnie jesteś ich operatorem.', en: 'The facility has just changed its mind about you. From this moment the VOID machines execute your commands — formally, you are their operator.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Zdałem egzamin u ludzi, którzy zgasili Ziemię. I nawet jestem z siebie dumny. Nie wiem, co o tym myśleć.', en: 'I passed an exam written by the people who switched off Earth. And I am actually proud of myself. I do not know what to make of that.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Pomyślisz po drodze. Wschodnia galeria prowadzi do Rozpadliny Echa — tam według kontraktu zaczyna się poszukiwanie złoża.', en: 'Think it over on the way. The eastern gallery leads to the Echo Depths — according to the contract, that is where the deposit search begins.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'WSCHODNIE PRZEJŚCIE: bariera energetyczna aktywna.', en: 'EASTERN PASS: energy barrier active.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'CORE AI', text: { pl: 'Bariera będzie buczeć, dopóki nie skieruję do niej mocy z obozu. Skończ rekonesans, złóż raport przy stole — wtedy przejście ustąpi.', en: 'The barrier will hum until I route camp power to it. Finish the recon, file the report at the table — then the pass will yield.' }, mode: 'dialogue' },
     ],
   },
-  'm1-exam-prd-contract-already': {
-    id: 'm1-exam-prd-contract-already',
+
+  // Moreau NPC — evolves through the moon
+  'm1-moreau-default': {
+    id: 'm1-moreau-default',
     lines: [
-      { speaker: 'system', text: { pl: 'Certyfikat "Kontrakt PRD" już przyznany.', en: 'Certificate "PRD Contract" already granted.' }, mode: 'system', autoAdvance: 2000 },
+      { speaker: 'Moreau', text: { pl: 'Rozkładam obóz. Namiot, generator, stół. Kawy dalej nie ma — nie pytaj. Idź, bądź oczami tej maszyny, ja pilnuję bazy.', en: 'Setting up camp. Tent, generator, table. Still no coffee — do not ask. Go, be that machine\'s eyes; I will hold the base.' }, mode: 'dialogue' },
     ],
+  },
+  'm1-moreau-burns': {
+    id: 'm1-moreau-burns',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Ta spalenizna naprawdę mnie gryzie, Moreau.', en: 'That scorch mark really bothers me, Moreau.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Stara skała. Na pewno. — Mówię to trochę za szybko, sama słyszę. Idź dalej, Dexo. Proszę.', en: 'Old rock. Certainly. — I am saying it a touch too fast, I can hear it myself. Move on, Dexo. Please.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-moreau-camp': {
+    id: 'm1-moreau-camp',
+    lines: [
+      { speaker: 'Moreau', text: { pl: 'Obóz stoi, światło działa, maszyna widzi swoją pierwszą polanę. Dobry pierwszy dzień. Nie przyzwyczajaj się.', en: 'Camp is up, the lights work, the machine can see its first clearing. A good first day. Do not get used to it.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-moreau-cricket': {
+    id: 'm1-moreau-cricket',
+    lines: [
+      { speaker: 'Moreau', text: { pl: 'Zbudowałeś świerszcza. Z wraku. Poleciałeś w dżunglę i wróciłeś z terkoczącym dronem, któremu nadałam imię przez łącze. Nie wiem, czy jestem dumna, czy przerażona.', en: 'You built a cricket. Out of a wreck. You went into the jungle and came back with a chirping drone I named over the link. I do not know if I am proud or terrified.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-moreau-ore': {
+    id: 'm1-moreau-ore',
+    lines: [
+      { speaker: 'Moreau', text: { pl: 'Pokaż. — Czternaście kilo Synaptitu. Pierwszy raz trzymam to w rękach, a nie na wykresie. Mała bryłka, a Ziemia potrzebuje jej całych gór.', en: 'Show me. — Fourteen kilos of Synaptit. First time I am holding it in my hands and not on a chart. A small lump, and Earth needs whole mountains of it.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-moreau-sensors': {
+    id: 'm1-moreau-sensors',
+    lines: [
+      { speaker: 'Moreau', text: { pl: 'Kawa. Prawdziwa. Zaparzyłam ją, kiedy maszyna wreszcie przejrzała na oczy. Zasłużyłeś.', en: 'Coffee. Real coffee. I brewed it when the machine finally opened its eyes. You earned it.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'I słuchaj... ta spalenizna, którą zbyłam pierwszego dnia. Widziałam takie ślady wcześniej, w archiwach. Nie chciałam ci psuć pierwszego kroku na obcym świecie. Teraz już wiesz, że nie kłamałam — po prostu bałam się mieć rację.', en: 'And listen... that scorch mark I brushed off on day one. I have seen marks like that before, in the archives. I did not want to ruin your first step on an alien world. Now you know I was not lying — I was just afraid of being right.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-moreau-epilogue': {
+    id: 'm1-moreau-epilogue',
+    lines: [
+      { speaker: 'Moreau', text: { pl: 'Więc to koniec tego księżyca. Maszyna widzi, ładownia pełna, a ja mam drugi kubek. Usiądź na chwilę, Dexo. Zaraz i tak polecimy dalej.', en: 'So this is the end of this moon. The machine can see, the cargo is full, and I have a second cup. Sit for a moment, Dexo. We fly on soon enough anyway.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Exam I — Protokół Ekspedycyjny I
+  'm1-exam-protocol-1-done': {
+    id: 'm1-exam-protocol-1-done',
+    lines: [
+      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY I — „NAJPIERW PYTANIA": zaliczony.', en: 'EXPEDITION PROTOCOL I — "QUESTIONS FIRST": passed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Pierwszy protokół odzyskany z mojej uszkodzonej pamięci: najpierw badasz, potem budujesz; najpierw pytasz, potem działasz. Dobrze, że to ty go zdałeś, a nie ja.', en: 'First protocol recovered from my damaged memory: investigate before you build; ask before you act. Good that you passed it, and not me.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-exam-protocol-1-already': {
+    id: 'm1-exam-protocol-1-already',
+    lines: [
+      { speaker: 'system', text: { pl: 'Protokół Ekspedycyjny I już zaliczony.', en: 'Expedition Protocol I already passed.' }, mode: 'system', autoAdvance: 2000 },
+    ],
+  },
+
+  // Return path — camp closing scene (conditional intro)
+  'm1-return-camp': {
+    id: 'm1-return-camp',
+    lines: [
+      { speaker: 'system', text: { pl: 'LĄDOWISKO — POWRÓT', en: 'LANDING PAD — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Widzę tę polanę po raz drugi — i po raz pierwszy naprawdę. Twój pierwszy opis był dobry, Dexo. Był tylko ślepy, jak ja wtedy.', en: 'I see this clearing a second time — and for the first time truly. Your first description was good, Dexo. It was only blind, as I was then.' }, mode: 'cinematic', autoAdvance: 3200 },
+      { speaker: 'Moreau', text: { pl: 'Wróciłeś. I coś przyniosłeś. Chodź do obozu — kawa stygnie, a ja mam ci parę rzeczy do powiedzenia, zanim odlecimy.', en: 'You are back. And you brought something. Come to the camp — the coffee is cooling, and I have a few things to tell you before we lift off.' }, mode: 'cinematic', autoAdvance: 3200 },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_RETURN_CAMP_SEEN] },
   },
 };

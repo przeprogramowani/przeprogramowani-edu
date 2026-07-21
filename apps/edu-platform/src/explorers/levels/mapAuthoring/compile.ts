@@ -8,7 +8,7 @@ import {
 } from '../../config/tileIndices';
 import type { ObjectLayer, TiledMap, TiledProperty, TileLayer, ZoneObject } from '../../editor/types';
 import { groundRoles, resolveWalls } from './autoTiler';
-import type { LevelSource, ZoneSource } from './types';
+import type { LevelSource, ValidationIssue, ZoneSource } from './types';
 
 const PROP_SLOT_ROLES = [
   TileRole.PROP_1,
@@ -59,22 +59,19 @@ function tileLayer(name: string, id: number, width: number, height: number, data
 }
 
 /**
- * Compile a parsed level source into the Tiled JSON the Phaser runtime
- * consumes. Deterministic: same source + mapKey → same output object.
- * Throws if the grid has unresolvable wall geometry (run validation first
- * for friendlier reporting).
+ * Compile a parsed level source into Tiled JSON without throwing on invalid
+ * geometry: unresolvable wall cells render as empty and are reported in
+ * `errors`, out-of-bounds props are skipped. Intended for live editor
+ * previews of mid-edit sources.
  */
-export function compileLevel(source: LevelSource, mapKey: string): TiledMap {
+export function compileLevelDraft(
+  source: LevelSource,
+  mapKey: string,
+): { map: TiledMap; errors: ValidationIssue[] } {
   const height = source.cells.length;
   const width = source.cells[0]?.length ?? 0;
 
   const { roles: wallRoles, errors } = resolveWalls(source.cells, mapKey);
-  if (errors.length > 0) {
-    const first = errors[0];
-    throw new Error(
-      `[${mapKey}] ${errors.length} unresolvable wall cell(s); first at (${first.at?.[0]}, ${first.at?.[1]}): ${first.message}`,
-    );
-  }
   const ground: number[] = [];
   const walls: number[] = [];
   const groundVariantRoles = groundRoles(source.cells, mapKey);
@@ -88,6 +85,7 @@ export function compileLevel(source: LevelSource, mapKey: string): TiledMap {
 
   for (const prop of source.props) {
     const [x, y] = prop.at;
+    if (x < 0 || x >= width || y < 0 || y >= height) continue;
     const cellIndex = y * width + x;
     const propIndex = propTileIndex(source.theme, prop.slot);
     if (prop.solid) {
@@ -121,7 +119,7 @@ export function compileLevel(source: LevelSource, mapKey: string): TiledMap {
     y: 0,
   };
 
-  return {
+  const map: TiledMap = {
     compressionlevel: -1,
     height,
     infinite: false,
@@ -157,6 +155,24 @@ export function compileLevel(source: LevelSource, mapKey: string): TiledMap {
     version: '1.10',
     width,
   };
+  return { map, errors };
+}
+
+/**
+ * Compile a parsed level source into the Tiled JSON the Phaser runtime
+ * consumes. Deterministic: same source + mapKey → same output object.
+ * Throws if the grid has unresolvable wall geometry (run validation first
+ * for friendlier reporting).
+ */
+export function compileLevel(source: LevelSource, mapKey: string): TiledMap {
+  const { map, errors } = compileLevelDraft(source, mapKey);
+  if (errors.length > 0) {
+    const first = errors[0];
+    throw new Error(
+      `[${mapKey}] ${errors.length} unresolvable wall cell(s); first at (${first.at?.[0]}, ${first.at?.[1]}): ${first.message}`,
+    );
+  }
+  return map;
 }
 
 function sortKeysDeep(value: unknown): unknown {

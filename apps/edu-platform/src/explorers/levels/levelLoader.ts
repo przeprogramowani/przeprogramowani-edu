@@ -23,6 +23,7 @@ interface GameManifestLevel {
   introFlag: GameFlag | null;
   introCinematicTitle?: string;
   introCinematicSubtitle?: string;
+  introSpotlight?: boolean;
   conditionalIntros?: {
     dialogue: string;
     flag: GameFlag;
@@ -39,6 +40,8 @@ export interface IntroConfig {
   requiredFlags?: GameFlag[];
   cinematicTitle?: string;
   cinematicSubtitle?: string;
+  /** Spotlight-in-darkness reveal — hibernation-bay awakening only */
+  spotlight?: boolean;
 }
 
 /** Shape of the /api/game JSON response */
@@ -156,6 +159,7 @@ export function loadLevelsFromData(data: GameManifestResponse): void {
         flag: manifest.introFlag,
         cinematicTitle: manifest.introCinematicTitle,
         cinematicSubtitle: manifest.introCinematicSubtitle,
+        spotlight: manifest.introSpotlight,
       });
     }
     for (const intro of manifest.conditionalIntros ?? []) {

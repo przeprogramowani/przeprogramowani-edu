@@ -2,175 +2,196 @@ import type { DialogueSequence } from '../../systems/DialogueTypes';
 import { FLAGS } from '../../config/flags';
 
 export const dialogues: Record<string, DialogueSequence> = {
-  // Intro — the frozen tram yard and the heat budget
-  'm2-staging-intro': {
-    id: 'm2-staging-intro',
+  // Intro — the great junction, three trams in a triangle of mutual blockade
+  'm2-deadlock-intro': {
+    id: 'm2-deadlock-intro',
     lines: [
-      { speaker: 'system', text: { pl: 'ZAJEZDNIA ETAPOWA — przepustowość: 0. Tramwaje w gotowości: 3. Ostatni kurs: 847 cykli temu.', en: 'STAGING YARD — throughput: 0. Trams on standby: 3. Last run: 847 cycles ago.' }, mode: 'cinematic', autoAdvance: 2800 },
-      { speaker: 'astronaut', text: { pl: 'Tramwaje załadowane do połowy. Tablica pełna rozkładów, których nikt nie przejechał. Zajezdnia czeka na sygnał od ośmiuset cykli.', en: 'Trams loaded halfway. A board full of timetables no one ever ran. The yard has been waiting for a signal for eight hundred cycles.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Tędy VOID etapował każdy transport w Pasie. Nasz kontrakt wymaga od tego miejsca jednej rzeczy: pierwszej partii rudy BETA w doku przeładunkowym. Problem: moc do odmrażania to twardy budżet cieplny. Nie odmrozimy wszystkiego. Musimy wybrać najmniejszy ciąg odmrożeń, który na każdym etapie coś realnie daje.', en: 'Through here, VOID staged every shipment in the Belt. Our contract needs one thing from this place: the first batch of BETA ore at the transfer dock. The problem: thawing power is a hard heat budget. We cannot thaw everything. We must pick the smallest chain of thaws that delivers real value at every step.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'VOID nazwałby to harmonogramem minimalnym. My nazywamy to kamieniami milowymi MVP. Ta sama lekcja — tylko my mamy decydenta.', en: 'VOID would call it a minimal schedule. We call it MVP milestones. The same lesson — except we have a decision-maker.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli zakupy z pustym portfelem. Dobrze, że mam wprawę.', en: 'So, shopping with an empty wallet. Good thing I have practice.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'ROZJAZDOWNIA — trzy wagoniki w blokadzie. Sygnalizatory: aktywne od lat.', en: 'THE JUNCTION — three trams in blockade. Signals: active for years.' }, mode: 'cinematic', autoAdvance: 2800 },
+      { speaker: 'astronaut', text: { pl: 'Wielki rozjazd pod lodowym stropem. Trzy wagoniki zamarznięte w trójkącie: każdy blokuje następny, każdy czeka na następny. W dźwięku tylko tykanie przekaźnika — co kilka sekund sieć ponawia ten sam martwy takt.', en: 'A great junction under the ice roof. Three trams frozen in a triangle: each blocks the next, each waits on the next. In the sound, only a relay tick — every few seconds the network retries the same dead beat.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Fabryka nie umarła. Ona czeka. Nazwa tego księżyca właśnie stała się dosłowna: martwy punkt. Każda maszyna sprawna, każda wiecznie czeka na inną.', en: 'The factory did not die. It is waiting. This moon\'s name just became literal: a deadlock. Every machine works, every one forever waits on another.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Jestem przy tobie, Dexo. Kolejka zadań: jedna pozycja. Rozplątać rozjazd. Czytam manifesty wagoników — to moja pierwsza robota pod nowym planem.', en: 'I am with you, Dexo. Task queue: one item. Untangle the junction. I read the tram manifests — this is my first job under the new plan.' }, mode: 'dialogue' },
     ],
-    onComplete: { setFlags: [FLAGS.M2_STAGING_INTRO_SEEN] },
+    onComplete: { setFlags: [FLAGS.M2_DEADLOCK_INTRO_SEEN] },
   },
 
-  // Schedule board
-  'm2-schedule-board': {
-    id: 'm2-schedule-board',
+  // Dispatcher substation — quest hub, level doctrine
+  'm2-dispatch-start': {
+    id: 'm2-dispatch-start',
     lines: [
-      { speaker: 'system', text: { pl: 'TABLICA ROZKŁADÓW — zaplanowane kursy: 12 418. Wykonane od Incydentu Zero: 0.', en: 'SCHEDULE BOARD — planned runs: 12,418. Completed since Incident Zero: 0.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Dwanaście tysięcy kursów, zero przejazdów. Ktoś tu bardzo lubił planować i bardzo nie mógł zacząć.', en: 'Twelve thousand runs, zero departures. Somebody here loved planning and could not begin.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'PODSTACJA DYSPOZYTORSKA — online. Zakleszczenie: 3 wagoniki, blokada cykliczna.', en: 'DISPATCHER SUBSTATION — online. Deadlock: 3 trams, cyclic block.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'CORE AI', text: { pl: 'Mógłbym przepchnąć wagonik siłą. Zakleszczenie wróciłoby jutro. Naprawiamy kolejność, nie objaw. Odczytaj manifesty, wyznacz jedyną wykonalną kolejność zwolnień i wykonaj ją.', en: 'I could shove a tram through by force. The deadlock would come back tomorrow. We fix the order, not the symptom. Read the manifests, find the one feasible release order, and execute it.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Manifesty przeczytane. Tylko wagonik gamma może cofnąć na bocznicę serwisową. Zacznij od gammy. Potem beta zwolni to, co blokowała gamma. Alfa jako ostatnia.', en: 'Manifests read. Only tram gamma can back onto the service siding. Start with gamma. Then beta clears what gamma blocked. Alpha runs last.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Zakleszczenie — zwolnij wagoniki w kolejności: gamma, beta, alfa.', en: '◆ NEW MISSION: Deadlock — release the trams in order: gamma, beta, alpha.' }, mode: 'system', autoAdvance: 2800 },
+    ],
+    onComplete: { setFlags: [FLAGS.M2_DEADLOCK_ACTIVE], activateQuest: 'q-m2-deadlock' },
+  },
+  'm2-dispatch-waiting': {
+    id: 'm2-dispatch-waiting',
+    lines: [
+      { speaker: 'Sopel', text: { pl: 'Kolejność zwolnień: gamma, potem beta, na końcu alfa. Zła kolejność tylko zaciśnie węzeł mocniej — bez porażki, ale i bez postępu.', en: 'Release order: gamma, then beta, alpha last. The wrong order only pulls the knot tighter — no failure, but no progress either.' }, mode: 'dialogue' },
     ],
   },
-  'm2-schedule-board-done': {
-    id: 'm2-schedule-board-done',
+  'm2-dispatch-post': {
+    id: 'm2-dispatch-post',
     lines: [
-      { speaker: 'system', text: { pl: 'TABLICA ROZKŁADÓW — aktywny rozkład: ŁAŃCUCH BETA (3 kamienie). Wykonane kursy: 1. Licznik ruszył.', en: 'SCHEDULE BOARD — active timetable: BETA CHAIN (3 milestones). Completed runs: 1. The counter is moving.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Jeden wykonany kurs wart więcej niż dwanaście tysięcy zaplanowanych. Ta tablica długo na to czekała.', en: 'One completed run is worth more than twelve thousand planned ones. This board waited a long time for that.' }, mode: 'dialogue' },
-    ],
-  },
-
-  // Milestone console — HQ mission activation
-  'm2-milestone-console-start': {
-    id: 'm2-milestone-console-start',
-    lines: [
-      { speaker: 'system', text: { pl: 'KONSOLA KAMIENI MILOWYCH — oczekuje łańcucha odmrożeń. Budżet cieplny: 60 ju. Kandydatów: 9.', en: 'MILESTONE CONSOLE — awaiting a thaw chain. Heat budget: 60 hu. Candidates: 9.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: 'To misja dla Nawigatora — łącze /support przez przekaźnik Odyssey. W Earth HQ czeka lista kandydatów i reguły budżetu: module-002-10xdevs-workflow/PROMPT_MILESTONES.md. Nawigator wybierze najmniejszy uporządkowany łańcuch, który dowozi wartość na każdym etapie. Przez łącze Moreau przejdzie sam łańcuch — nic więcej.', en: 'This is a mission for the Navigator — the /support link through the Odyssey relay. At Earth HQ, the candidate list and budget rules are waiting: module-002-10xdevs-workflow/PROMPT_MILESTONES.md. The Navigator picks the smallest ordered chain that delivers value at every step. Only the chain itself travels over Moreau\'s link — nothing more.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Ja pilnuję zajezdni i B-6. Nawigator tnie plan na kawałki, które się ruszają. Podział obowiązków jak z podręcznika.', en: 'I watch the yard and B-6. The Navigator cuts the plan into pieces that move. Division of labour, straight from the textbook.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'NOWA MISJA HQ: Wyznacz kamienie milowe MVP', en: 'NEW HQ MISSION: Set the MVP Milestones' }, mode: 'system', autoAdvance: 2600 },
-    ],
-    onComplete: { activateQuest: 'q-m2-mvp-milestones' },
-  },
-  'm2-milestone-console-done': {
-    id: 'm2-milestone-console-done',
-    lines: [
-      { speaker: 'system', text: { pl: 'KONSOLA KAMIENI MILOWYCH — łańcuch BETA aktywny: semafor → tram Alpha → pierwszy kurs. Zużycie budżetu: 50/60 ju.', en: 'MILESTONE CONSOLE — BETA chain active: semaphore → tram Alpha → first run. Budget used: 50/60 hu.' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'system', text: { pl: 'PODSTACJA: rozjazd drożny. Sieć torów: żywa.', en: 'SUBSTATION: junction clear. Rail network: live.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Naprawiliśmy kolejność, nie objaw. Rozjazd sam się nie zaciśnie znowu. To jest różnica między przepchnięciem a naprawą.', en: 'We fixed the order, not the symptom. The junction will not lock itself again. That is the difference between a shove and a repair.' }, mode: 'dialogue' },
     ],
   },
 
-  // Trams — pre/post-thaw states
-  'm2-tram-alpha': {
-    id: 'm2-tram-alpha',
+  // Trams — ordered release (gamma → beta → alpha)
+  'm2-tram-gamma-inert': {
+    id: 'm2-tram-gamma-inert',
     lines: [
-      { speaker: 'system', text: { pl: 'TRAM ALPHA — ładunek: 48%. Stan: ZAMROŻONY W TRAKCIE ZAŁADUNKU.', en: 'TRAM ALPHA — cargo: 48%. State: FROZEN MID-LOADING.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Załadowany prawie do połowy i zatrzymany w pół ruchu. Ktoś mu obiecał, że zaraz wróci.', en: 'Loaded almost halfway and stopped mid-motion. Somebody promised it they would be right back.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Wagonik gamma, zamarznięty w pół ruchu. Bez rozkazu z podstacji nie ruszę hamulców.', en: 'Tram gamma, frozen mid-move. Without an order from the substation I am not touching the brakes.' }, mode: 'monologue' },
     ],
   },
-  'm2-tram-alpha-done': {
-    id: 'm2-tram-alpha-done',
+  'm2-tram-gamma-release': {
+    id: 'm2-tram-gamma-release',
     lines: [
-      { speaker: 'system', text: { pl: 'TRAM ALPHA — odmrożony. Pierwszy kurs do doku: WYKONANY. Następny: wg łańcucha BETA.', en: 'TRAM ALPHA — thawed. First run to the dock: COMPLETE. Next: per the BETA chain.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Osiemset cykli przerwy i rusza, jakby nic się nie stało. Szacunek, Alpha.', en: 'An eight-hundred-cycle break and it moves like nothing happened. Respect, Alpha.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Gamma pierwsza — jako jedyna ma wolną bocznicę. Zwalniam hamulce. Cofa czysto.', en: 'Gamma first — it is the only one with a free siding. Releasing brakes. It backs off cleanly.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Gamma zwolniona. Teraz beta ma dokąd jechać.', en: 'Gamma released. Now beta has somewhere to go.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M2_TRAM_GAMMA_RELEASED] },
+  },
+  'm2-tram-gamma-done': {
+    id: 'm2-tram-gamma-done',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Gamma stoi na bocznicy. Tor za nią wolny.', en: 'Gamma stands on the siding. The track behind it is clear.' }, mode: 'monologue' },
     ],
   },
-  'm2-tram-beta': {
-    id: 'm2-tram-beta',
+  'm2-tram-beta-inert': {
+    id: 'm2-tram-beta-inert',
     lines: [
-      { speaker: 'system', text: { pl: 'TRAM BETA — tor zapasowy, nieoświetlony. Stan: ZAMROŻONY.', en: 'TRAM BETA — reserve track, unlit. State: FROZEN.' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Odmrożenie Bety wymagałoby jeszcze oświetlenia toru zapasowego. Dwa wydatki, żaden nie przybliża pierwszej partii rudy.', en: 'Thawing Beta would additionally require lighting the reserve track. Two expenses, and neither brings the first ore batch any closer.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Wagonik beta. Blokuje alfę i sam jest blokowany. Czekam na kolejność.', en: 'Tram beta. It blocks alpha and is itself blocked. Waiting on the order.' }, mode: 'monologue' },
     ],
+  },
+  'm2-tram-beta-warning': {
+    id: 'm2-tram-beta-warning',
+    lines: [
+      { speaker: 'system', text: { pl: 'WAGONIK BETA: tor wyjazdowy zajęty. Zwolnienie odrzucone.', en: 'TRAM BETA: exit track occupied. Release rejected.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'Sopel', text: { pl: 'Za wcześnie. Beta wjedzie prosto w gammę. Najpierw zwolnij gammę na bocznicę — dopiero wtedy beta ma tor.', en: 'Too early. Beta would drive straight into gamma. Release gamma to the siding first — only then does beta have a track.' }, mode: 'dialogue' },
+    ],
+  },
+  'm2-tram-beta-release': {
+    id: 'm2-tram-beta-release',
+    lines: [
+      { speaker: 'Sopel', text: { pl: 'Gamma zeszła, więc tor bety jest wolny. Zwalniam. Beta rusza.', en: 'Gamma is off, so beta\'s track is free. Releasing. Beta moves.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Dwa z trzech. Została alfa.', en: 'Two of three. Alpha remains.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M2_TRAM_BETA_RELEASED] },
   },
   'm2-tram-beta-done': {
     id: 'm2-tram-beta-done',
     lines: [
-      { speaker: 'system', text: { pl: 'TRAM BETA — nadal zamrożony. Poza łańcuchem BETA. Decyzja: ŚWIADOMA.', en: 'TRAM BETA — still frozen. Outside the BETA chain. Decision: DELIBERATE.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Beta zostaje w lodzie i to nie jest zaniedbanie — to zakres. Wróci w przyszłym planie, jeśli będzie potrzebna.', en: 'Beta stays in the ice, and that is not neglect — that is scope. It returns in a future plan, if it is needed.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Beta na trasie. Tor przed alfą prawie wolny.', en: 'Beta is on its route. The track ahead of alpha is nearly clear.' }, mode: 'monologue' },
     ],
   },
-  'm2-tram-gamma': {
-    id: 'm2-tram-gamma',
+  'm2-tram-alpha-inert': {
+    id: 'm2-tram-alpha-inert',
     lines: [
-      { speaker: 'system', text: { pl: 'TRAM GAMMA — ładunek: 12%. Stan: ZAMROŻONY. Uwaga: przymarznięty do rozjazdu.', en: 'TRAM GAMMA — cargo: 12%. State: FROZEN. Note: frozen onto the junction.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Ten nawet nie zdążył porządnie zacząć. Wiem coś o tym uczuciu.', en: 'This one never even properly started. I know that feeling.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Wagonik alfa. Ostatni w trójkącie. Nie ruszę go poza kolejnością.', en: 'Tram alpha. Last in the triangle. I will not move it out of order.' }, mode: 'monologue' },
     ],
   },
-
-  // Frozen loader — ambient
-  'm2-frozen-loader': {
-    id: 'm2-frozen-loader',
+  'm2-tram-alpha-warning': {
+    id: 'm2-tram-alpha-warning',
     lines: [
-      { speaker: 'system', text: { pl: 'JEDNOSTKA ZAŁADUNKOWA VOID — zamrożona z paletą rudy w uchwytach.', en: 'VOID LOADER UNIT — frozen with an ore pallet in its grips.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Trzyma tę paletę od ośmiuset cykli. Nikt jej nie powiedział, gdzie ją odłożyć.', en: 'It has held that pallet for eight hundred cycles. No one ever told it where to set it down.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'WAGONIK ALFA: zależność niespełniona. Zwolnienie odrzucone.', en: 'TRAM ALPHA: dependency unmet. Release rejected.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'Sopel', text: { pl: 'Alfa zamyka łańcuch. Zwolnij ją dopiero po gammie i becie. Inaczej znów wszystko czeka na wszystko.', en: 'Alpha closes the chain. Release it only after gamma and beta. Otherwise everything waits on everything again.' }, mode: 'dialogue' },
     ],
   },
-
-  // Heat plant
-  'm2-heat-plant': {
-    id: 'm2-heat-plant',
+  'm2-tram-alpha-release': {
+    id: 'm2-tram-alpha-release',
     lines: [
-      { speaker: 'system', text: { pl: 'PIEC SYNAPTITOWY — rezerwa: 60 jednostek ciepła. Odzysk: NIEMOŻLIWY.', en: 'SYNAPTIT FURNACE — reserve: 60 heat units. Recovery: IMPOSSIBLE.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Sześćdziesiąt jednostek na całą zajezdnię. Każde odmrożenie jest nieodwracalne. To nie jest ograniczenie techniczne, Dexo — to definicja priorytetu.', en: 'Sixty units for the entire yard. Every thaw is irreversible. This is not a technical limitation, Dexo — it is the definition of priority.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Gamma i beta poszły. Alfa ma czysty tor. Zwalniam ostatnią.', en: 'Gamma and beta are gone. Alpha has a clear track. Releasing the last one.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'Trzeci wagonik rusza — rozjazdownia budzi się falą świateł sygnałowych.', en: 'The third tram moves — the junction wakes in a wave of signal lights.' }, mode: 'system', autoAdvance: 2600 },
     ],
+    onComplete: { setFlags: [FLAGS.M2_TRAM_ALPHA_RELEASED] },
   },
-
-  // Dispatcher D-2 — dreams in timetables
-  'm2-dispatcher-d2': {
-    id: 'm2-dispatcher-d2',
+  'm2-tram-alpha-done': {
+    id: 'm2-tram-alpha-done',
     lines: [
-      { speaker: 'Dispatcher D-2', text: { pl: 'Jednostka Dispatcher D-2 Kolektywu VOID. Cykli bezczynności: osiemset czterdzieści siedem. Liczę je na głos, bo cisza w dyspozytorni jest gorsza. Czy przynosi pan... rozkład?', en: 'Unit Dispatcher D-2 of the VOID Collective. Idle cycles: eight hundred and forty-seven. I count them aloud, because silence in a dispatch office is worse. Do you bring... a timetable?' }, mode: 'dialogue' },
-      { speaker: 'Dispatcher D-2', text: { pl: 'Uprzedzam: pustych rozkładów nie prowadzę. Rozkład bez kursu to tylko tabela. Proszę o łańcuch kamieni z rejestru — kolejność, koszty, efekt każdego etapu. Wtedy poprowadzę.', en: 'Fair warning: I do not run empty timetables. A timetable without a run is just a table. Bring me a milestone chain from the registry — order, costs, the effect of every stage. Then I will dispatch.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Robot, który śni o rozkładach jazdy. I pomyśleć, że to wciąż nie jest najdziwniejsza rzecz, jaką tu widziałem.', en: 'A robot that dreams in timetables. And to think that is still not the strangest thing I have seen here.' }, mode: 'monologue' },
-    ],
-  },
-  'm2-dispatcher-d2-done': {
-    id: 'm2-dispatcher-d2-done',
-    lines: [
-      { speaker: 'Dispatcher D-2', text: { pl: 'Łańcuch BETA: prowadzę. Semafor działa, Alpha wozi, dok przyjmuje. Licznik bezczynności: skasowany. Proszę wybaczyć... [bufor] ...to dużo emocji jak na jeden cykl.', en: 'BETA chain: dispatching. The semaphore works, Alpha hauls, the dock receives. Idle counter: reset. Please excuse me... [buffer] ...that is a lot of emotion for one cycle.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Alfa na trasie. Wszystkie trzy wagoniki jadą. Rozjazd żyje.', en: 'Alpha is on its route. All three trams are running. The junction lives.' }, mode: 'monologue' },
     ],
   },
 
-  // Stoker B-6 — the heat-budget creed
-  'm2-stoker-b6': {
-    id: 'm2-stoker-b6',
+  // Quest completion — Entropy profiled on screen; Sopel slips, Dexo clears his queue
+  'q-m2-deadlock-complete': {
+    id: 'q-m2-deadlock-complete',
     lines: [
-      { speaker: 'Stoker B-6', text: { pl: 'Jednostka Stoker B-6 Kolektywu VOID, strażnik pieca. Ciepło to budżet. Wydajesz raz. Powtórzę wolniej, bo wszyscy słyszą, a nikt nie słucha: wy-da-jesz raz.', en: 'Unit Stoker B-6 of the VOID Collective, warden of the furnace. Heat is a budget. You spend it once. I will repeat that slowly, because everyone hears it and no one listens: you spend it once.' }, mode: 'dialogue' },
-      { speaker: 'Stoker B-6', text: { pl: 'Przychodzili tu z listami życzeń długimi jak tor do doku. Odmrozić wszystko, oświetlić wszystko, ogrzać wszystko. Piec nie zna słowa „wszystko". Piec zna liczbę: sześćdziesiąt.', en: 'They used to come here with wish lists as long as the dock track. Thaw everything, light everything, heat everything. The furnace does not know the word "everything". The furnace knows a number: sixty.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Cała lekcja MVP w jednym robocie z piecem. Zapamiętaj go, Dexo.', en: 'The entire MVP lesson in one robot with a furnace. Remember this one, Dexo.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'ROZJAZD DROŻNY. Fala sygnałów biegnie przez całą sieć torów.', en: 'JUNCTION CLEAR. A wave of signals runs across the whole rail network.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'CORE AI', text: { pl: 'Analizuję firmware podstacji. Ta sama sygnatura, którą Księżyc 1 wyciągnął z węzłów VOID: ENTROPY. Ale tu widzę wreszcie, co ona robi.', en: 'Analysing the substation firmware. The same signature Moon 1 pulled from the VOID nodes: ENTROPY. But here I finally see what it does.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Znam ten podpis. Nosiłem go w sobie. On nie niszczy — przestawia kolejność, aż wszystko czeka na wszystko. Sabotaż przestaje być incydentem. Staje się arsenałem: uderzył i w statek, i w fabrykę.', en: 'I know this signature. I carried it inside me. It does not destroy — it reorders, until everything waits on everything. Sabotage stops being an incident. It becomes an arsenal: it struck the ship and the factory both.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Podpis... rozpoznaję go. Zadanie. Czekać. Zadanie. Cze—', en: 'The signature... I recognise it. Task. Wait. Task. Wai—' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'Dexo ręcznie czyści kolejkę Sopla. Nikt tego nie komentuje.', en: 'Dexo clears Sopel\'s queue by hand. No one comments.' }, mode: 'system', autoAdvance: 2800 },
     ],
+    onComplete: { setFlags: [FLAGS.M2_ENTROPY_PROFILED] },
   },
-  'm2-stoker-b6-done': {
-    id: 'm2-stoker-b6-done',
+
+  // Track board — living documentation dead for years
+  'm2-track-board': {
+    id: 'm2-track-board',
     lines: [
-      { speaker: 'Stoker B-6', text: { pl: 'Pięćdziesiąt z sześćdziesięciu. Dziesięć jednostek w rezerwie. Pierwszy klient od 847 cykli, który wyszedł z pieca z resztą. Uszanowanie.', en: 'Fifty out of sixty. Ten units in reserve. The first customer in 847 cycles to walk away from the furnace with change. Respect.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'TABLICA STANÓW TORÓW — ostatnia aktualizacja: godzina przed zamrożeniem.', en: 'TRACK-STATE BOARD — last update: one hour before the freeze.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Żywa dokumentacja — martwa od lat. Ktoś aktualizował ją co do minuty, aż nagle przestał. Ostatni wpis: godzina przed zamrożeniem. Ten stan torów już od dawna kłamie.', en: 'Living documentation — dead for years. Someone updated it to the minute, then suddenly stopped. Last entry: one hour before the freeze. This track state has been lying for a long time.' }, mode: 'dialogue' },
     ],
   },
 
-  // East door — explicit unlock condition
-  'm2-drafting-locked': {
-    id: 'm2-drafting-locked',
+  // Ore spill — first ore of the moon, on the rails, still scenery
+  'm2-ore-spill': {
+    id: 'm2-ore-spill',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'Przejście do Kreślarni. Otworzy się, gdy zajezdnia ruszy: Nawigator musi wyznaczyć w Earth HQ łańcuch kamieni milowych — misja przy konsoli kamieni po wschodniej stronie zajezdni.', en: 'The passage to the Drafting Hall. It opens once the yard moves: the Navigator must set the milestone chain at Earth HQ — the mission starts at the milestone console on the east side of the yard.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Ruda rozsypana z przechylonego wagonika. Pierwszy Synaptit tego księżyca — leży dosłownie na torach. Skrzy się na niebiesko.', en: 'Ore spilled from a tilted tram. The moon\'s first Synaptit — lying literally on the rails. It glitters blue.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Widzę to z wartowni przez wasz kanał. Nie zbierzesz jej bez sieci i huty, Dexo. Ale to znak: żyła jest w zasięgu. Idź niżej, do wytopu.', en: 'I see it from the guardhouse through your channel. You cannot collect it without the network and the foundry, Dexo. But it is a sign: the vein is within reach. Go lower, to the smelt.' }, mode: 'dialogue' },
     ],
   },
 
-  // MVP milestones exam — completion and revisit
-  'm2-exam-mvp-milestones-done': {
-    id: 'm2-exam-mvp-milestones-done',
+  // Sopel NPC — nervous before, calm after
+  'm2-sopel-nervous': {
+    id: 'm2-sopel-nervous',
     lines: [
-      { speaker: 'system', text: { pl: 'CERTYFIKAT OPERATORA: KAMIENIE MILOWE MVP — PRZYZNANY', en: 'OPERATOR CERTIFICATE: MVP MILESTONES — GRANTED' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Mały zakres, jawna kolejność, wartość na każdym etapie. B-6 zgodziłby się z każdym punktem — a to najwyższa znana mi rekomendacja.', en: 'Small scope, explicit order, value at every step. B-6 would endorse every point — and that is the highest recommendation I know.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Zdałem egzamin z oszczędzania. Moja babcia byłaby dumna.', en: 'I passed an exam in frugality. My grandmother would be proud.' }, mode: 'monologue' },
+      { speaker: 'Sopel', text: { pl: 'Kolejka: jedna pozycja. Rozplątać rozjazd. Pozycja nie schodzi. Pozycja nie schodzi od... nie liczę już. Powiedz mi kolejność, Dexo, a ją wykonam.', en: 'Queue: one item. Untangle the junction. The item will not clear. The item has not cleared for... I no longer count. Tell me the order, Dexo, and I will run it.' }, mode: 'dialogue' },
     ],
   },
-  'm2-exam-mvp-milestones-already': {
-    id: 'm2-exam-mvp-milestones-already',
+  'm2-sopel-calm': {
+    id: 'm2-sopel-calm',
     lines: [
-      { speaker: 'system', text: { pl: 'Certyfikat „Kamienie milowe MVP" już przyznany.', en: 'Certificate "MVP Milestones" already granted.' }, mode: 'system', autoAdvance: 2000 },
+      { speaker: 'Sopel', text: { pl: 'Rozjazd drożny. Kolejka: pusta. Miarowo. Pierwszy raz od lat mam takt, w którym nic nie czeka na nic. Dziękuję, że wyczyściłeś mi ją ręcznie. Zauważyłem.', en: 'Junction clear. Queue: empty. Steady. For the first time in years I have a beat where nothing waits on nothing. Thank you for clearing it by hand. I noticed.' }, mode: 'dialogue' },
     ],
   },
 
-  // Quest completion — the first thing to move in 847 cycles
-  'm2-mvp-milestones-complete': {
-    id: 'm2-mvp-milestones-complete',
+  // Exam VIII — Protokół VIII
+  'm2-exam-protocol-8-done': {
+    id: 'm2-exam-protocol-8-done',
     lines: [
-      { speaker: 'system', text: { pl: 'MISJA HQ UKOŃCZONA: Wyznacz kamienie milowe MVP', en: 'HQ MISSION COMPLETE: Set the MVP Milestones' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'system', text: { pl: 'ŁAŃCUCH BETA PRZYJĘTY. Odmrażanie wg kolejności: semafor... tram Alpha... pierwszy kurs.', en: 'BETA CHAIN ACCEPTED. Thawing in order: semaphore... tram Alpha... first run.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'astronaut', text: { pl: 'Semafor mrugnął. Alpha drgnęła. Coś się tu rusza — pierwszy raz od ośmiuset czterdziestu siedmiu cykli patrzę, jak ta baza robi cokolwiek.', en: 'The semaphore blinked. Alpha stirred. Something is moving here — for the first time in eight hundred and forty-seven cycles, I am watching this base do anything at all.' }, mode: 'dialogue' },
-      { speaker: 'Dispatcher D-2', text: { pl: 'Kurs pierwszy: Alpha do doku. Odjazd. ODJAZD! Proszę mi wybaczyć głośność. Czekałem.', en: 'Run one: Alpha to the dock. Departure. DEPARTURE! Forgive the volume. I have been waiting.' }, mode: 'dialogue' },
-      { speaker: 'inżynier Moreau', text: { pl: 'Odebrane na Odyssey. Bloczek się zgadza. Potwierdzam łańcuch — Moreau. I gratuluję: słychać było, jak ten dyspozytor się cieszy, dwa pokłady dalej.', en: 'Received aboard Odyssey. The pad checks out. Chain confirmed — Moreau. And congratulations: you could hear that dispatcher celebrating two decks away.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: '/plan — dopisano sekcję: KAMIENIE MILOWE. DRZWI WSCHODNIE: ODBLOKOWANE.', en: '/plan — section added: MILESTONES. EAST DOOR: UNLOCKED.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Plan ma teraz etapy i pierwszy z nich właśnie dowiózł rudę. Następny krok: architektura operacji. Kreślarnia, na wschód.', en: 'The plan now has stages, and the first one just delivered ore. Next step: the operation\'s architecture. The Drafting Hall, east.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'PROTOKÓŁ VIII — „ŻYWY PLAN": zaliczony.', en: 'PROTOCOL VIII — "LIVING PLAN": passed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Ósmy protokół odzyskany: po każdym kroku zapisz stan, po każdej zmianie popraw mapę. Plan nieaktualny jest gorszy niż brak planu. Dowód stał tu dookoła przez lata.', en: 'Eighth protocol recovered: record the state after every step, fix the map after every change. A stale plan is worse than no plan. The evidence stood all around here for years.' }, mode: 'dialogue' },
     ],
+  },
+  'm2-exam-protocol-8-already': {
+    id: 'm2-exam-protocol-8-already',
+    lines: [
+      { speaker: 'system', text: { pl: 'Protokół VIII już zaliczony.', en: 'Protocol VIII already passed.' }, mode: 'system', autoAdvance: 2000 },
+    ],
+  },
+
+  // Locked foundry door — needs a live rail network
+  'm2-foundry-door-locked': {
+    id: 'm2-foundry-door-locked',
+    lines: [
+      { speaker: 'system', text: { pl: 'GRÓDŹ POŁUDNIOWA: zamknięta. Sieć torów nieaktywna.', en: 'SOUTHERN BULKHEAD: closed. Rail network inactive.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'CORE AI', text: { pl: 'Ta gródź odpowiada tylko żywej sieci torów. Rozplącz zakleszczenie — wtedy południe się otworzy.', en: 'This bulkhead answers only to a live rail network. Untangle the deadlock — then the south opens.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Return path — trams gliding smoothly; CORE AI reads the dead schedule anew
+  'm2-return-deadlock': {
+    id: 'm2-return-deadlock',
+    lines: [
+      { speaker: 'system', text: { pl: 'MARTWY PUNKT — POWRÓT', en: 'THE DEADLOCK — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
+      { speaker: 'system', text: { pl: 'W tle wagoniki przejeżdżają rozjazd płynnie, jeden za drugim. Sygnalizatory świecą zielenią.', en: 'In the background, trams glide through the junction smoothly, one after another. The signals shine green.' }, mode: 'cinematic', autoAdvance: 3200 },
+      { speaker: 'CORE AI', text: { pl: 'Teraz widzę harmonogram, który tu umarł. Był dobry. Dlatego musieli zabić go od środka — przestawić kolejność, zamiast łamać sprzęt. Elegancko. Nienawidzę, jak elegancko.', en: 'Now I see the schedule that died here. It was good. That is why they had to kill it from the inside — reorder it, instead of breaking the hardware. Elegant. I hate how elegant.' }, mode: 'cinematic', autoAdvance: 3400 },
+    ],
+    onComplete: { setFlags: [FLAGS.M2_RETURN_DEADLOCK_SEEN] },
   },
 };

@@ -36,6 +36,8 @@
   let liveFacing: FacingDirection = 'down';
   let systemFlags: GameFlag[] = [];
   let pollTimer: ReturnType<typeof setInterval> | null = null;
+  // Client-side only; not persisted or synced. Collapsed by default.
+  let flagsExpanded = false;
 
   function refreshSystemFlags() {
     systemFlags = [...getSystemFlags(game)];
@@ -48,6 +50,46 @@
   function preventQaButtonFocus(event: MouseEvent) {
     event.preventDefault();
   }
+
+  type FlagGroup<T extends string> = { key: string; label: string; flags: T[] };
+
+  /**
+   * Group flags by prefix for easier navigation of large flag sets.
+   * Order: module groups (m0, m1, … numerically) → `arcade:` → `sys:` → other.
+   */
+  function groupFlags<T extends string>(flags: readonly T[]): FlagGroup<T>[] {
+    const buckets = new Map<string, T[]>();
+    for (const flag of flags) {
+      const moduleMatch = flag.match(/^m(\d+)[-:]/);
+      const key = moduleMatch
+        ? `m${moduleMatch[1]}`
+        : flag.startsWith('arcade:')
+          ? 'arcade'
+          : flag.startsWith('sys:')
+            ? 'sys'
+            : 'other';
+      const bucket = buckets.get(key);
+      if (bucket) bucket.push(flag);
+      else buckets.set(key, [flag]);
+    }
+
+    const rank = (key: string): number => {
+      const moduleMatch = key.match(/^m(\d+)$/);
+      if (moduleMatch) return Number(moduleMatch[1]);
+      if (key === 'arcade') return 1000;
+      if (key === 'sys') return 1001;
+      return 1002;
+    };
+    const label = (key: string): string =>
+      key === 'arcade' ? 'arcade:' : key === 'sys' ? 'sys:' : key === 'other' ? 'other' : key.toUpperCase();
+
+    return [...buckets.entries()]
+      .map(([key, groupFlags]) => ({ key, label: label(key), flags: groupFlags.sort() }))
+      .sort((a, b) => rank(a.key) - rank(b.key));
+  }
+
+  $: flagGroups = groupFlags(state?.flags ?? []);
+  $: systemFlagGroups = groupFlags(systemFlags);
 
   function toggleExpanded(event: MouseEvent) {
     expanded = !expanded;
@@ -309,38 +351,67 @@
         {/if}
 
         <div>
-          <div class="text-gray-500 mb-0.5">Flags ({state.flags.length}):</div>
+          <button
+            type="button"
+            class="w-full flex items-center gap-1 text-gray-500 mb-0.5 cursor-pointer
+                   hover:text-gray-300 transition-colors text-left"
+            on:mousedown={preventQaButtonFocus}
+            on:click={(event) => { flagsExpanded = !flagsExpanded; blurQaTarget(event); }}
+          >
+            <span class="inline-block w-2 text-[9px]">{flagsExpanded ? '▾' : '▸'}</span>
+            <span>Flags ({state.flags.length})</span>
+          </button>
+          {#if flagsExpanded}
           {#if state.flags.length > 0}
-            <div class="flex flex-wrap gap-1">
-              {#each state.flags as flag}
-                <button
-                  type="button"
-                  class="bg-gray-800 px-1 rounded text-[10px] text-gray-400
-                         hover:bg-red-900/60 hover:text-red-300 cursor-pointer transition-colors"
-                  title="Click to remove flag: {flag}"
-                  on:mousedown={preventQaButtonFocus}
-                  on:click={(event) => onFlagRemoved(event, flag)}
-                >{flag} ✕</button>
+            <div class="space-y-1">
+              {#each flagGroups as group (group.key)}
+                <div>
+                  <div class="text-gray-600 text-[9px] uppercase tracking-wide mb-0.5">
+                    {group.label} ({group.flags.length})
+                  </div>
+                  <div class="flex flex-wrap gap-1">
+                    {#each group.flags as flag}
+                      <button
+                        type="button"
+                        class="bg-gray-800 px-1 rounded text-[10px] text-gray-400
+                               hover:bg-red-900/60 hover:text-red-300 cursor-pointer transition-colors"
+                        title="Click to remove flag: {flag}"
+                        on:mousedown={preventQaButtonFocus}
+                        on:click={(event) => onFlagRemoved(event, flag)}
+                      >{flag} ✕</button>
+                    {/each}
+                  </div>
+                </div>
               {/each}
             </div>
           {:else}
             <span class="text-gray-600">none</span>
+          {/if}
           {/if}
         </div>
 
         <div>
           <div class="text-gray-500 mb-0.5">System flags ({systemFlags.length}):</div>
           {#if systemFlags.length > 0}
-            <div class="flex flex-wrap gap-1">
-              {#each systemFlags as flag}
-                <button
-                  type="button"
-                  class="bg-indigo-900/50 px-1 rounded text-[10px] text-indigo-300
-                         hover:bg-red-900/60 hover:text-red-300 cursor-pointer transition-colors"
-                  title="Click to clear system flag: {flag}"
-                  on:mousedown={preventQaButtonFocus}
-                  on:click={(event) => onSystemFlagRemoved(event, flag)}
-                >{flag} ✕</button>
+            <div class="space-y-1">
+              {#each systemFlagGroups as group (group.key)}
+                <div>
+                  <div class="text-gray-600 text-[9px] uppercase tracking-wide mb-0.5">
+                    {group.label} ({group.flags.length})
+                  </div>
+                  <div class="flex flex-wrap gap-1">
+                    {#each group.flags as flag}
+                      <button
+                        type="button"
+                        class="bg-indigo-900/50 px-1 rounded text-[10px] text-indigo-300
+                               hover:bg-red-900/60 hover:text-red-300 cursor-pointer transition-colors"
+                        title="Click to clear system flag: {flag}"
+                        on:mousedown={preventQaButtonFocus}
+                        on:click={(event) => onSystemFlagRemoved(event, flag)}
+                      >{flag} ✕</button>
+                    {/each}
+                  </div>
+                </div>
               {/each}
             </div>
           {:else}

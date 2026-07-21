@@ -1,42 +1,25 @@
 <script lang="ts">
-  import type { LayerName } from './types';
-
   interface Props {
-    activeLayer: LayerName;
     layerVisibility: Record<string, boolean>;
-    onLayerSelect: (layer: LayerName) => void;
     onVisibilityToggle: (layer: string) => void;
   }
 
-  let { activeLayer, layerVisibility, onLayerSelect, onVisibilityToggle }: Props = $props();
+  let { layerVisibility, onVisibilityToggle }: Props = $props();
 
-  const layers: { name: LayerName; label: string }[] = [
-    { name: 'Ground', label: 'Ground' },
-    { name: 'Walls', label: 'Walls' },
-    { name: 'Above', label: 'Above' },
-    { name: 'Zones', label: 'Zones' },
-  ];
-
-  function layerClass(name: LayerName): string {
-    const isActive = activeLayer === name;
-    return [
-      'flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer transition-colors',
-      isActive ? 'bg-blue-900/40 text-blue-300' : 'hover:bg-gray-800',
-    ].join(' ');
-  }
+  const layers = ['Ground', 'Walls', 'Zones'];
 </script>
 
 <div class="p-2 border-b border-gray-700">
   <div class="text-xs text-gray-400 mb-2 uppercase tracking-wider">Layers</div>
   <div class="flex flex-col gap-0.5">
     {#each layers as layer}
-      <div class={layerClass(layer.name)}>
+      <div class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-800 transition-colors">
         <button
           class="w-5 h-5 flex items-center justify-center text-xs rounded hover:bg-gray-700 shrink-0"
-          onclick={(e) => { e.stopPropagation(); onVisibilityToggle(layer.name); }}
-          title={layerVisibility[layer.name] ? 'Hide layer' : 'Show layer'}
+          onclick={() => onVisibilityToggle(layer)}
+          title={layerVisibility[layer] ? 'Hide layer' : 'Show layer'}
         >
-          {#if layerVisibility[layer.name]}
+          {#if layerVisibility[layer]}
             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
               <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
@@ -48,12 +31,7 @@
             </svg>
           {/if}
         </button>
-        <button
-          class="flex-1 text-left text-xs"
-          onclick={() => onLayerSelect(layer.name)}
-        >
-          {layer.label}
-        </button>
+        <span class="flex-1 text-left text-xs">{layer}</span>
       </div>
     {/each}
   </div>

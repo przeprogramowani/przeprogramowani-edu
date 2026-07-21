@@ -3,51 +3,60 @@ import { FLAGS } from '../../config/flags';
 
 export const exams: ExamDefinition[] = [
   {
-    id: 'm2-exam-impl-control',
-    title: { pl: 'Przechwycony test VOID: Kontrola implementacji', en: 'Captured VOID Test: Implementation Control' },
+    id: 'm2-exam-protocol-9',
+    title: { pl: 'Protokół Ekspedycyjny IX — Ostatnie 20%', en: 'Expedition Protocol IX — The Last 20%' },
     description: {
-      pl: 'Test sprawdza nadzór nad wykonaniem planu przez agenta: punkty kontrolne, wykrywanie dryfu wykonania i dobór działań korygujących.',
-      en: 'This test checks supervising an agent\'s plan execution: checkpoints, detecting execution drift, and choosing corrective actions.',
+      pl: 'Doktryna hutnicza: automat linii niesie cię przez pierwsze 80% roboty, ale ostatnia część należy do człowieka. Rozpoznaj pętlę błędu, przejmij stery na czas i sam obejrzyj wynik, zanim trafi do ładowni.',
+      en: 'The foundry doctrine: the line\'s automaton carries you through the first 80% of the work, but the last part is the human\'s. Recognise the error loop, take the controls in time, and inspect the result yourself before it ships.',
     },
-    passingScore: 3,
+    passingScore: 2,
     questions: [
       {
         id: 'q1',
-        text: { pl: 'Agent dostał zatwierdzony plan implementacji podzielony na kroki. Jak zorganizować nadzór, żeby dryf wykonania nie pozostał niezauważony?', en: 'The agent received an approved implementation plan split into steps. How do you organise supervision so execution drift does not go unnoticed?' },
+        text: {
+          pl: 'Automat linii trzeci raz z rzędu wykonuje tę samą fazę z tym samym błędem. Co to znaczy?',
+          en: 'The line automaton runs the same phase with the same error a third time in a row. What does that mean?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Sprawdzić dopiero końcowy rezultat — pośrednie kroki to szczegół wykonawczy', en: 'Check only the final result — intermediate steps are an execution detail' } },
-          { id: 'b', text: { pl: 'Zdefiniować punkty kontrolne po kluczowych krokach i porównywać na nich faktyczny stan z planem, zanim praca pójdzie dalej', en: 'Define checkpoints after key steps and compare the actual state against the plan at each one before work continues' } },
-          { id: 'c', text: { pl: 'Obserwować na żywo każdą linię kodu generowaną przez agenta', en: 'Watch live every line of code the agent generates' } },
-          { id: 'd', text: { pl: 'Poprosić agenta, żeby sam zgłaszał momenty, w których zboczył z planu', en: 'Ask the agent to self-report the moments it strayed from the plan' } },
+          { id: 'a', text: { pl: 'Że jest blisko — jeszcze jedno, dwa podejścia i samo zaskoczy', en: 'That it is close — one or two more attempts and it will click on its own' } },
+          { id: 'b', text: { pl: 'Że utknął w pętli błędu — ten sam błąd trzeci raz nie naprawi się czwartym; przejmuję stery', en: 'That it is stuck in an error loop — the same error a third time will not fix itself on the fourth; I take the controls' } },
+          { id: 'c', text: { pl: 'Że rozkaz był zły — kasuję wszystko i wydaję fazę od nowa, innymi słowami', en: 'That the order was wrong — I wipe it all and reissue the phase from scratch, in other words' } },
+          { id: 'd', text: { pl: 'Że brakuje mu kontekstu — dorzucam więcej danych o poprzednich próbach i pozwalam mu próbować dalej', en: 'That it lacks context — I feed it more data about the previous attempts and let it keep trying' } },
         ],
         correctOptionIds: ['b'],
       },
       {
         id: 'q2',
-        text: { pl: 'Na punkcie kontrolnym odkrywasz, że agent wykonał dodatkową „ulepszającą" zmianę, której plan nie zawiera. Testy przechodzą. Co robisz?', en: 'At a checkpoint you discover the agent made an extra "improving" change the plan does not contain. Tests pass. What do you do?' },
+        text: {
+          pl: 'Linia doprowadziła wytop do 80%. Jak dzielisz odpowiedzialność za ostatnią fazę?',
+          en: 'The line carried the melt to 80%. How do you split responsibility for the last phase?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Zostawić zmianę — skoro testy przechodzą, nie ma problemu', en: 'Keep the change — tests pass, so there is no problem' } },
-          { id: 'b', text: { pl: 'Wycofać całą pracę agenta od początku planu', en: 'Roll back all of the agent\'s work to the start of the plan' } },
-          { id: 'c', text: { pl: 'Odizolować zmianę spoza planu i podjąć decyzję o niej osobno — zakres wraca do decydenta, a plan wykonuje się dalej czysto', en: 'Isolate the out-of-plan change and decide on it separately — scope goes back to the decision-maker, and the plan continues clean' } },
-          { id: 'd', text: { pl: 'Dopisać zmianę do planu wstecznie, żeby ślad wykonania się zgadzał', en: 'Backfill the change into the plan so the execution trace matches' } },
+          { id: 'a', text: { pl: 'Automat dokańcza sam — skoro bez potknięcia doszedł aż do 80%, ostatni odcinek jest już najłatwiejszy', en: 'The automaton finishes on its own — since it reached 80% without a stumble, the last stretch is the easiest' } },
+          { id: 'b', text: { pl: 'Maszyna niesie ciężką, powtarzalną większość; ja przejmuję krytyczne ostatnie 20% i domykam je sam', en: 'The machine carries the heavy, repetitive bulk; I take the critical last 20% and close it out myself' } },
+          { id: 'c', text: { pl: 'Robię całą fazę od nowa ręcznie — do wyniku, za który odpowiadam, nie wpuszczam automatu', en: 'I redo the whole phase by hand — I keep the automaton away from a result I answer for' } },
+          { id: 'd', text: { pl: 'Dzielę ostatnią fazę na pół z automatem i pracujemy równolegle na tym samym odlewie', en: 'I split the last phase with the automaton and we work the same cast in parallel' } },
         ],
-        correctOptionIds: ['c'],
+        correctOptionIds: ['b'],
       },
       {
         id: 'q3',
-        text: { pl: 'Ślad wykonania pokazuje trzy odchylenia od planu: drobne w kroku 2, poważne w kroku 5 i kosmetyczne w kroku 7. Od czego zacząć korektę?', en: 'The execution trace shows three deviations from the plan: minor at step 2, serious at step 5, cosmetic at step 7. Where do you start correcting?' },
+        text: {
+          pl: 'Partia jest odlana. Co robisz, zanim trafi do ładowni?',
+          en: 'The batch is cast. What do you do before it ships to the cargo bay?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Od pierwszego odchylenia w kolejności wykonania — późniejsze mogą być jego skutkami i wymagają ponownej oceny po korekcie', en: 'From the first deviation in execution order — later ones may be its consequences and need re-evaluation after the fix' } },
-          { id: 'b', text: { pl: 'Od najpoważniejszego odchylenia, niezależnie od kolejności', en: 'From the most serious deviation, regardless of order' } },
-          { id: 'c', text: { pl: 'Od najłatwiejszego do poprawienia, żeby szybko zredukować listę', en: 'From the easiest fix, to shorten the list quickly' } },
-          { id: 'd', text: { pl: 'Wszystkie trzy naraz, jedną zbiorczą poprawką agenta', en: 'All three at once, in a single combined agent fix' } },
+          { id: 'a', text: { pl: 'Wysyłam od razu — odlew dopiął się bez błędu, a proces jest sprawdzony', en: 'Ship it at once — the cast completed without error and the process is proven' } },
+          { id: 'b', text: { pl: 'Sam oglądam partię wobec specyfikacji — czystość, wagę, formę; przegląd łapie to, co automat przepuścił', en: 'Inspect the batch myself against the spec — purity, weight, form; the review catches what the automaton let through' } },
+          { id: 'c', text: { pl: 'Wysyłam próbkę i czekam na kontrolę u odbiorcy, zanim ruszę z resztą', en: 'Ship a sample and wait for the recipient\'s check before releasing the rest' } },
+          { id: 'd', text: { pl: 'Ufam meldunkowi automatu, że partia trzyma normę — po to właśnie raportuje wynik po każdej ukończonej fazie', en: 'Trust the automaton\'s report that the batch meets spec — that is exactly what it reports after every completed phase' } },
         ],
-        correctOptionIds: ['a'],
+        correctOptionIds: ['b'],
       },
     ],
-    rewards: { xp: 50, flags: [FLAGS.M2_EXAM_IMPL_CONTROL_DONE] },
+    rewards: { xp: 100, flags: [FLAGS.M2_EXAM_PROTOCOL_9_DONE] },
   },
 ];

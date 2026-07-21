@@ -1,0 +1,87 @@
+# M3 L2 — Złomowisko / The Boneyard
+# A wreck field of machines that walked into the lava with green lights blinking.
+# Frozen lava streams (magma-crystals) wind between the hulls; the only red light
+# on the whole moon is I-5KRA, parked on the safe edge. The service module sits
+# mid-field. Deliberate isolation — Moreau and Kern speak through the module.
+theme: 4
+grid: |
+  ################################
+  #..............................#
+  #..............................#
+  #..............................#
+  #..............................#
+  #..............................#
+  #..............................#
+  D..............................D
+  #..............................#
+  #..............................#
+  #..............................#
+  #..............................#
+  #..............................#
+  ################################
+props:
+  - { prop: lava-geyser, at: [12, 3], solid: true }
+  - { prop: exploration-rover, at: [19, 3], solid: true }
+  - { id: wreck-1, prop: exploration-rover, at: [8, 4], solid: true }
+  - { prop: exploration-rover, at: [25, 4], solid: true }
+  - { prop: magma-crystals, at: [5, 5], solid: false }
+  - { id: service-module, prop: survey-lander, at: [15, 6], solid: true }
+  - { id: service-terminal, prop: survey-lander, at: [17, 6], solid: true }
+  - { prop: magma-crystals, at: [20, 6], solid: true }
+  - { prop: magma-crystals, at: [10, 7], solid: true }
+  - { prop: magma-crystals, at: [20, 7], solid: false }
+  - { prop: magma-crystals, at: [10, 8], solid: false }
+  - { prop: magma-crystals, at: [24, 8], solid: false }
+  - { prop: exploration-rover, at: [6, 9], solid: true }
+  - { id: wreck-2, prop: exploration-rover, at: [22, 9], solid: true }
+  - { prop: exploration-rover, at: [11, 10], solid: true }
+  - { prop: magma-crystals, at: [14, 11], solid: false }
+  - { id: i5kra, prop: exploration-rover, at: [27, 11], solid: true }
+zones:
+  - id: apron-door
+    name: Return to the Apron
+    type: door
+    at: [0, 7]
+    properties:
+      targetMap: m3-apron
+      spawnX: 28
+      spawnY: 7
+  - id: trial-door
+    name: Route to the Fire Trial
+    type: door
+    at: [31, 7]
+    properties:
+      targetMap: m3-fire-trial
+      spawnX: 2
+      spawnY: 7
+      requiredFlags: m3-iskra-online
+  - id: service-module
+    name: Field Service Module
+    type: trigger
+    propId: service-module
+  - id: i5kra
+    name: I-5KRA
+    type: trigger
+    propId: i5kra
+  - id: wreck-1
+    name: Wreck — Scorched Hull
+    type: trigger
+    propId: wreck-1
+  - id: wreck-2
+    name: Wreck — Green Over Burnt Steel
+    type: trigger
+    propId: wreck-2
+  - id: iskra-return
+    name: Iskra
+    type: npc
+    at: [4, 10]
+    properties:
+      npcType: robot
+      npcVariant: crimson-red
+      requiredFlags: m3-diagnostics-online
+  - id: exam-protocol-12
+    name: Expedition Protocol Terminal XII
+    type: exam
+    propId: service-terminal
+    properties:
+      examId: m3-exam-protocol-12

@@ -2,138 +2,132 @@ import type { DialogueSequence } from '../../systems/DialogueTypes';
 import { FLAGS } from '../../config/flags';
 
 export const dialogues: Record<string, DialogueSequence> = {
-  // Intro — the drafting hall and the architecture annex
-  'm2-drafting-intro': {
-    id: 'm2-drafting-intro',
+  // Intro — rows of service robots frozen in charging cradles
+  'm2-service-intro': {
+    id: 'm2-service-intro',
     lines: [
-      { speaker: 'system', text: { pl: 'KREŚLARNIA PN-0 — stoły kreślarskie: 14. Otwarte rysunki: 231. Zatwierdzone od Incydentu Zero: 0.', en: 'PN-0 DRAFTING HALL — drafting tables: 14. Open drawings: 231. Approved since Incident Zero: 0.' }, mode: 'cinematic', autoAdvance: 2800 },
-      { speaker: 'astronaut', text: { pl: 'Stoły pełne planów pod szronem. Makiety całego Pasa. Tu rysowano wszystko, co Księżyc 1 potem kopał.', en: 'Tables full of blueprints under frost. Scale models of the whole Belt. Everything Moon 1 later dug was drawn here first.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Kontrakt mamy, kamienie milowe dowożą. Ale rejestr nie dopuści wykonania bez aneksu architektury: która jednostka robi co, po jakich interfejsach rozmawia i gdzie kończy się jej mandat. VOID rysował to dla maszyn. My narysujemy to dla agentów.', en: 'We have the contract; the milestones deliver. But the registry will not clear execution without an architecture annex: which unit does what, over which interfaces it talks, and where its mandate ends. VOID drew this for machines. We will draw it for agents.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Pamiętasz dżunglę? Entropia to lekcja o systemie, w którym granice zniknęły. Dobra architektura to granice narysowane, zanim ktokolwiek zacznie kopać.', en: 'Remember the jungle? Entropy is the lesson about a system whose boundaries vanished. Good architecture is boundaries drawn before anyone starts digging.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Zamrożona pracownia projektowa. Przynajmniej nikt mi nie będzie zaglądał przez ramię. ...Prawie nikt.', en: 'A frozen design studio. At least nobody will look over my shoulder. ...Almost nobody.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'HALA SERWISOWA — rzędy jednostek w gniazdach ładowania. Ruch: żaden.', en: 'SERVICE BAY — rows of units in charging cradles. Motion: none.' }, mode: 'cinematic', autoAdvance: 2800 },
+      { speaker: 'astronaut', text: { pl: 'Roboty. Dziesiątki. Każdy zamarznięty w połowie gestu, twarzą do własnego zadania. Ten kadr za bardzo przypomina komorę hibernacyjną Odyssey. Nie powiem tego głośno.', en: 'Robots. Dozens. Each frozen mid-gesture, facing its own task. This frame looks too much like the Odyssey hibernation deck. I will not say it out loud.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Jeden z nich stoi twarzą do wyjścia, jakby zamarzł w pół kroku do zadania. To pierwsza maszyna tej fabryki. Nie jest zepsuta. Jest wierna martwemu planowi.', en: 'One of them faces the exit, as if frozen mid-step toward a task. That is this factory\'s first machine. It is not broken. It is faithful to a dead plan.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Terminal serwisowy działa. Prowadzę was stąd, z wartowni. Naprawa tej jednostki to nie lutownica, Dexo. To nowy rozkaz.', en: 'The service terminal works. I guide you from here, from the guardhouse. Fixing that unit is not a soldering iron, Dexo. It is a new order.' }, mode: 'dialogue' },
     ],
-    onComplete: { setFlags: [FLAGS.M2_DRAFTING_INTRO_SEEN] },
+    onComplete: { setFlags: [FLAGS.M2_SERVICE_INTRO_SEEN] },
   },
 
-  // Drafting tables — ambient
-  'm2-drafting-table-1': {
-    id: 'm2-drafting-table-1',
+  // Service terminal — quest hub (logs + release-key riddle)
+  'm2-service-terminal-start': {
+    id: 'm2-service-terminal-start',
     lines: [
-      { speaker: 'system', text: { pl: 'STÓŁ KREŚLARSKI 07 — rysunek otwarty: „SIEĆ TRANSPORTOWA, REWIZJA 41". Rylec zamrożony w połowie linii.', en: 'DRAFTING TABLE 07 — open drawing: "TRANSPORT NETWORK, REVISION 41". Stylus frozen mid-line.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Czterdzieści jeden rewizji i nikt nie powiedział „wystarczy, budujemy". Znam zespoły, które tak skończyły.', en: 'Forty-one revisions and no one ever said "enough, we build". I know teams that ended like this.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'TERMINAL SERWISOWY — online. Kolejka hali: jedno zlecenie, licznik prób rośnie.', en: 'SERVICE TERMINAL — online. Bay queue: one order, attempt counter rising.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'CORE AI', text: { pl: 'Żeby wydać jednostce nowy rozkaz, potrzebujesz właściwego zlecenia i klucza zwolnienia kolejki. Oba są w logach hali — ale tylko wpisy ze stemplem dyspozytora i poprawną sumą kontrolną są prawdziwe.', en: 'To issue the unit a new order, you need the correct work order and the queue release key. Both are in the bay logs — but only entries with a dispatcher stamp and a valid checksum are real.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czyli odsiewam śmieci i składam odpowiedź w formacie zlecenie-klucz. Podam ją przez /solve.', en: 'So I sift out the junk and assemble the answer in the order-key format. I will enter it via /solve.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Nowy Rozkaz — odczytaj zlecenie i klucz z logów, podaj przez /solve.', en: '◆ NEW MISSION: New Order — read the work order and key from the logs, enter via /solve.' }, mode: 'system', autoAdvance: 2800 },
     ],
+    onComplete: { activateQuest: 'q-m2-new-order' },
   },
-  'm2-drafting-table-2': {
-    id: 'm2-drafting-table-2',
+  'm2-service-terminal-post': {
+    id: 'm2-service-terminal-post',
     lines: [
-      { speaker: 'system', text: { pl: 'STÓŁ KREŚLARSKI 11 — rysunek otwarty: „GRANICE MANDATÓW JEDNOSTEK". Adnotacja: NIE PRZEKRACZAĆ.', en: 'DRAFTING TABLE 11 — open drawing: "UNIT MANDATE BOUNDARIES". Annotation: DO NOT EXCEED.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'VOID rozumiał granice lepiej niż większość żywych zespołów. Ironia: zabrakło im tylko kogoś, kto zatwierdzi rysunek.', en: 'VOID understood boundaries better than most living teams. The irony: all they lacked was someone to approve the drawing.' }, mode: 'dialogue' },
-    ],
-  },
-
-  // The scale model of the Belt operation
-  'm2-model-plinth': {
-    id: 'm2-model-plinth',
-    lines: [
-      { speaker: 'system', text: { pl: 'MAKIETA OPERACJI PASA — skala 1:50 000. Elementy ruchome: zamrożone.', en: 'BELT OPERATION SCALE MODEL — scale 1:50,000. Moving parts: frozen.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Cały Pas na jednym postumencie. Księżyc 1, nasz księżyc, trzy kolejne. I malutka Odyssey na orbicie. ...Ktoś nas dorysował?', en: 'The whole Belt on one plinth. Moon 1, our moon, three more. And a tiny Odyssey in orbit. ...Did someone draw us in?' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Makieta ma tryb aktualizacji na żywo. Ktoś — albo coś — utrzymuje ją w zgodzie ze stanem Pasa. Odnotowuję to. Bez wniosków. Na razie.', en: 'The model has a live-update mode. Someone — or something — keeps it consistent with the state of the Belt. I am noting that. No conclusions. Yet.' }, mode: 'dialogue' },
-    ],
-  },
-  'm2-model-plinth-done': {
-    id: 'm2-model-plinth-done',
-    lines: [
-      { speaker: 'system', text: { pl: 'MAKIETA OPERACJI PASA — nowa warstwa: „WYDOBYCIE BETA" z aneksem architektury. Jednostki i interfejsy: oznaczone.', en: 'BELT OPERATION SCALE MODEL — new layer: "EXTRACTION BETA" with the architecture annex. Units and interfaces: marked.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Nasz plan wygląda na tej makiecie zaskakująco dorośle. Może dlatego, że ma granice.', en: 'Our plan looks surprisingly grown-up on this model. Maybe because it has boundaries.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'TERMINAL SERWISOWY: kolejka wyczyszczona. Jedno gniazdo ładowania — puste.', en: 'SERVICE TERMINAL: queue cleared. One charging cradle — empty.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Sopel ruszył w głąb fabryki. Kolejka pusta, gniazdo puste. Dobra pustka — pierwszy raz od lat.', en: 'Sopel moved deeper into the factory. Empty queue, empty cradle. A good emptiness — first time in years.' }, mode: 'dialogue' },
     ],
   },
 
-  // Architecture console — event quest activation
-  'm2-architecture-console-start': {
-    id: 'm2-architecture-console-start',
+  // Queue board — the loop made visible before the word is spoken
+  'm2-queue-board': {
+    id: 'm2-queue-board',
     lines: [
-      { speaker: 'system', text: { pl: 'KONSOLA ARCHITEKTURY — aneks planu „WYDOBYCIE BETA": BRAK. Wymagany do dopuszczenia wykonania.', en: 'ARCHITECTURE CONSOLE — architecture annex for plan "EXTRACTION BETA": MISSING. Required before execution clearance.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: 'Układamy aneks razem: role jednostek-agentów, kontrakty między nimi, granice mandatów. A-3 poprowadzi cię po stacjach kreślarni. Konsola przyjmie aneks od operatora z certyfikatem „Architektura z agentami" — terminal certyfikacyjny stoi przy północno-wschodniej ścianie.', en: 'We draft the annex together: agent-unit roles, the contracts between them, mandate boundaries. A-3 will guide you through the hall\'s stations. The console accepts the annex from an operator holding the "Architecture with Agents" certificate — the certification terminal stands by the north-east wall.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Rysowanie granic w bazie, która zamarzła w ich cieniu. Jest w tym jakaś poezja.', en: 'Drawing boundaries in a base that froze in their shadow. There is a kind of poetry in that.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'NOWA MISJA: Narysuj architekturę operacji', en: 'NEW MISSION: Draw the Operation Architecture' }, mode: 'system', autoAdvance: 2600 },
-    ],
-    onComplete: { activateQuest: 'q-m2-agent-architecture' },
-  },
-  'm2-architecture-console-done': {
-    id: 'm2-architecture-console-done',
-    lines: [
-      { speaker: 'system', text: { pl: 'KONSOLA ARCHITEKTURY — aneks „WYDOBYCIE BETA": ZATWIERDZONY I OSTEMPLOWANY. Wykonanie: DOPUSZCZONE.', en: 'ARCHITECTURE CONSOLE — annex "EXTRACTION BETA": APPROVED AND STAMPED. Execution: CLEARED.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'system', text: { pl: 'TABLICA KOLEJKI ZADAŃ — 1 zlecenie aktywne. Prób: 1 407 219 i rośnie.', en: 'TASK-QUEUE BOARD — 1 order active. Attempts: 1,407,219 and rising.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'astronaut', text: { pl: 'Jedno zlecenie. Milion czterysta tysięcy prób. Licznik przeskakuje, kiedy patrzę. Ta maszyna próbowała wykonać to samo zadanie przez lata i za każdym razem odbijała się od ściany.', en: 'One order. A million four hundred thousand attempts. The counter ticks over while I watch. This machine has tried to run the same task for years and bounced off a wall every time.' }, mode: 'dialogue' },
     ],
   },
 
-  // Approach-control array — the first VOID reaction (thread escalation)
-  'm2-approach-array': {
-    id: 'm2-approach-array',
+  // S-0PL — the frozen unit facing the exit
+  'm2-s0pl-frozen': {
+    id: 'm2-s0pl-frozen',
     lines: [
-      { speaker: 'system', text: { pl: 'MACIERZ KONTROLI PODEJŚCIA — dziennik pasywny odmrożony. Nowe wpisy od Incydentu Zero: 1.', en: 'APPROACH-CONTROL ARRAY — passive log thawed. New entries since Incident Zero: 1.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: 'Jeden wpis. Świeży. Skierowana wiązka odpowiedzi na sygnał nadajnika z szybu — na nasz beacon z Księżyca 1. I korekta trajektorii: obiekt w zewnętrznym Pasie zmienił kurs. Kierunek: do wewnątrz układu. Czas przybycia: nieznany.', en: 'One entry. Fresh. A directed burst answering the shaft transmitter\'s signal — our beacon from Moon 1. And a trajectory correction: an object in the outer Belt has changed course. Heading: in-system. Arrival time: unknown.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'OBIEKT: NIEZIDENTYFIKOWANY. TRAJEKTORIA: ZBIEŻNA. STATUS ALARMU: PASYWNY — MACIERZ NIE MA KOMU RAPORTOWAĆ.', en: 'OBJECT: UNIDENTIFIED. TRAJECTORY: CONVERGENT. ALARM STATUS: PASSIVE — THE ARRAY HAS NO ONE TO REPORT TO.' }, mode: 'system', autoAdvance: 3000 },
-      { speaker: 'astronaut', text: { pl: 'Na Księżycu 1 nas usłyszeli. Tu widzę, że odpowiedzieli. Coś do nas leci i jedyne, czego nie wiem, to kiedy.', en: 'On Moon 1, they heard us. Here I can see that they answered. Something is coming for us, and the only thing I do not know is when.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Przekazuję wpis na Odyssey łączem Moreau. Nie przerywamy pracy, Dexo. Baza, która umie tylko czekać, już tu jest. Nie będziemy drugą.', en: 'I am forwarding the entry to Odyssey over Moreau\'s link. We do not stop working, Dexo. A base that only knew how to wait is already here. We will not be the second one.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Jednostka S-0PL. Zamarznięta w pół kroku do wyjścia, jakby szła po zadanie, którego nigdy nie mogła skończyć. Dioda statusu tli się słabo. Ktoś tam jeszcze jest.', en: 'Unit S-0PL. Frozen mid-step toward the exit, as if walking to a task it could never finish. The status light glows faintly. Someone is still in there.' }, mode: 'monologue' },
     ],
-    onComplete: { setFlags: [FLAGS.M2_INBOUND_CONTACT_LOGGED] },
   },
-  'm2-approach-array-logged': {
-    id: 'm2-approach-array-logged',
+  'm2-s0pl-empty': {
+    id: 'm2-s0pl-empty',
     lines: [
-      { speaker: 'system', text: { pl: 'MACIERZ KONTROLI PODEJŚCIA — wpis przekazany na Odyssey. Obiekt: bez zmian kursu. Nasłuch: CIĄGŁY.', en: 'APPROACH-CONTROL ARRAY — entry forwarded to Odyssey. Object: no further course change. Watch: CONTINUOUS.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'astronaut', text: { pl: 'Gniazdo S-0PL — puste. Sopel jest teraz na głębszych mapach, przy pracy. Miło popatrzeć na puste miejsce, które kiedyś było więzieniem.', en: 'S-0PL\'s cradle — empty. Sopel is on the deeper maps now, at work. It is good to look at an empty spot that was once a cell.' }, mode: 'monologue' },
     ],
   },
 
-  // Draftsman A-3 — allergic to ambiguity
-  'm2-draftsman-a3': {
-    id: 'm2-draftsman-a3',
+  // Charging-cradle rows — the crew that cannot wake
+  'm2-bot-row': {
+    id: 'm2-bot-row',
     lines: [
-      { speaker: 'Draftsman A-3', text: { pl: 'Jednostka Draftsman A-3 Kolektywu VOID. Proszę nie mówić „mniej więcej". W tej sali „mniej więcej" jest wyrazem obraźliwym. Do każdej odpowiedzi dołączę diagram. Nie trzeba dziękować.', en: 'Unit Draftsman A-3 of the VOID Collective. Please do not say "more or less". In this hall, "more or less" is a slur. I will attach a diagram to every answer. No thanks are necessary.' }, mode: 'dialogue' },
-      { speaker: 'Draftsman A-3', text: { pl: 'Dobra architektura odpowiada na trzy pytania: kto, czym i dokąd. Jednostka bez roli to szum. Interfejs bez kontraktu to spór. Mandat bez granicy to... proszę wyjrzeć przez okno, tak wygląda mandat bez granicy.', en: 'Good architecture answers three questions: who, with what, and up to where. A unit without a role is noise. An interface without a contract is a dispute. A mandate without a boundary is... please look outside, that is what a mandate without a boundary looks like.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Pierwszy robot VOID, którego chętnie zabrałbym na review architektury. Może nawet na dwa.', en: 'The first VOID robot I would gladly bring to an architecture review. Maybe even two.' }, mode: 'monologue' },
-    ],
-  },
-  'm2-draftsman-a3-done': {
-    id: 'm2-draftsman-a3-done',
-    lines: [
-      { speaker: 'Draftsman A-3', text: { pl: 'Aneks „WYDOBYCIE BETA" ostemplowany. Role: jednoznaczne. Interfejsy: skontraktowane. Granice: narysowane. Dołączam diagram pamiątkowy. ...To żart. Diagram jest obowiązkowy.', en: 'Annex "EXTRACTION BETA" stamped. Roles: unambiguous. Interfaces: contracted. Boundaries: drawn. I attach a commemorative diagram. ...That was a joke. The diagram is mandatory.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Rząd jednostek w gniazdach. Wszystkie w połowie gestu, wszystkie ciche. Nie znajduję na nich awarii. One po prostu czekają na rozkaz, który nigdy nie przyszedł.', en: 'A row of units in cradles. All mid-gesture, all silent. I find no fault on them. They are simply waiting for an order that never came.' }, mode: 'monologue' },
     ],
   },
 
-  // East door — explicit unlock condition
-  'm2-assembly-locked': {
-    id: 'm2-assembly-locked',
+  // Derailed tram — flavour landmark
+  'm2-derailed-tram': {
+    id: 'm2-derailed-tram',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'Przejście do Hali Montażowej. Otworzy się po zatwierdzeniu aneksu architektury: zdaj przechwycony test VOID „Architektura z agentami" przy terminalu certyfikacyjnym, a A-3 ostempluje aneks w rejestrze.', en: 'The passage to the Assembly Hall. It opens once the architecture annex is approved: pass the captured VOID test "Architecture with Agents" at the certification terminal, and A-3 stamps the annex into the registry.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Wagonik serwisowy, wykolejony tuż przy wjeździe. Przewrócił się w połowie kursu i już nikt go nie podniósł. Zostawię go — mam pilniejszego robota do obudzenia.', en: 'A service tram, derailed right by the entrance. It tipped mid-run and no one ever set it right. I will leave it — I have a more urgent robot to wake.' }, mode: 'monologue' },
     ],
   },
 
-  // Architecture exam — completion and revisit
-  'm2-exam-agent-architecture-done': {
-    id: 'm2-exam-agent-architecture-done',
+  // Sopel — return-path escort detach (spawns only with M2_PLANNING_ONLINE)
+  'm2-sopel-return': {
+    id: 'm2-sopel-return',
     lines: [
-      { speaker: 'system', text: { pl: 'CERTYFIKAT OPERATORA: ARCHITEKTURA Z AGENTAMI — PRZYZNANY', en: 'OPERATOR CERTIFICATE: ARCHITECTURE WITH AGENTS — GRANTED' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Role, kontrakty, granice mandatów. Kiedy agentów jest wielu, architektura nie jest dokumentem — jest umową o nieprzeszkadzaniu sobie.', en: 'Roles, contracts, mandate boundaries. With many agents, architecture is not a document — it is an agreement on staying out of each other\'s way.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'A-3 na pewno już rysuje diagram mojego wyniku.', en: 'A-3 is surely already drawing a diagram of my score.' }, mode: 'monologue' },
-    ],
-  },
-  'm2-exam-agent-architecture-already': {
-    id: 'm2-exam-agent-architecture-already',
-    lines: [
-      { speaker: 'system', text: { pl: 'Certyfikat „Architektura z agentami" już przyznany.', en: 'Certificate "Architecture with Agents" already granted.' }, mode: 'system', autoAdvance: 2000 },
+      { speaker: 'Sopel', text: { pl: 'Zadanie eskorty: zakończone. Odłączam się tutaj. Moja kolejka po raz pierwszy od lat ma więcej niż jedną pozycję.', en: 'Escort task: complete. I detach here. My queue has more than one item for the first time in years.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Odbudowa huty. Krok 1 z 4812. — To dużo kroków, Dexo. Ale wszystkie są wykonalne. Sprawdziłem każdy.', en: 'Foundry rebuild. Step 1 of 4,812. — That is a lot of steps, Dexo. But all of them are executable. I checked each one.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Idź, Sopel. Masz plan. To więcej, niż mieliśmy tu wszyscy przez długi czas.', en: 'Go, Sopel. You have a plan. That is more than any of us had here for a long time.' }, mode: 'dialogue' },
     ],
   },
 
-  // Quest completion — the annex enters the registry
-  'm2-agent-architecture-complete': {
-    id: 'm2-agent-architecture-complete',
+  // Quest completion — the spoken doctrine trial, naming, and the endless-task sting
+  'q-m2-new-order-complete': {
+    id: 'q-m2-new-order-complete',
     lines: [
-      { speaker: 'system', text: { pl: 'MISJA UKOŃCZONA: Narysuj architekturę operacji', en: 'MISSION COMPLETE: Draw the Operation Architecture' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'Draftsman A-3', text: { pl: 'Przyjmuję aneks do rejestru. Stempel: TRZYMA SIĘ GRANIC. To najwyższa ocena, jaką wydaje ta kreślarnia.', en: 'I accept the annex into the registry. Stamp: STAYS WITHIN BOUNDARIES. That is the highest grade this drafting hall issues.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: '/plan — dopisano sekcję: ARCHITEKTURA. DRZWI WSCHODNIE: ODBLOKOWANE.', en: '/plan — section added: ARCHITECTURE. EAST DOOR: UNLOCKED.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Kontrakt, kamienie, architektura. Plan jest kompletny na papierze — czas sprawdzić, co zrobi z nim wykonawca. Hala Montażowa, na wschód. Tam czeka F-6.', en: 'Contract, milestones, architecture. The plan is complete on paper — time to see what an executor does with it. The Assembly Hall, east. F-6 is waiting there.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Papier przyjmie wszystko. Fabrykator — zobaczymy.', en: 'Paper accepts anything. The fabricator — we will see.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: '◆ KLUCZ ZWOLNIENIA PRZYJĘTY. Kolejka S-0PL: odblokowana.', en: '◆ RELEASE KEY ACCEPTED. S-0PL queue: unlocked.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Mogę nadpisać kolejkę robota zdalnie. Rekomenduję pełną automatyzację.', en: 'I can overwrite the robot\'s queue remotely. I recommend full automation.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Przygotuj rozkaz. Wydam go ja.', en: 'Prepare the order. I will issue it.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'S-0PL: rozruch. Jednostka próbuje starej pętli — jedno uderzenie serca — i przyjmuje nowy plan.', en: 'S-0PL: booting. The unit tries the old loop — one heartbeat — and accepts the new plan.' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'Moreau', text: { pl: 'S-zero-P-L? — Sopel. Niech zostanie Sopel.', en: 'S-zero-P-L? — Sopel. Icicle. Let it stay Sopel.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Analiza starej pętli: zlecenie było niewykonywalne z konstrukcji. Do kolejki wstrzyknięto zależność cykliczną — zadanie, które czeka samo na siebie. Nie wyłączyli ich. Dali im zadanie bez końca.', en: 'Analysis of the old loop: the order was unexecutable by construction. A cyclic dependency was injected into the queue — a task that waits on itself. They did not switch them off. They gave them a task without end.' }, mode: 'dialogue' },
     ],
+    onComplete: { setFlags: [FLAGS.M2_ENDLESS_TASK_FOUND] },
+  },
+
+  // Exam VII — Protokół VII
+  'm2-exam-protocol-7-done': {
+    id: 'm2-exam-protocol-7-done',
+    lines: [
+      { speaker: 'system', text: { pl: 'PROTOKÓŁ VII — „ARCHITEKT I WYKONAWCA": zaliczony.', en: 'PROTOCOL VII — "ARCHITECT AND EXECUTOR": passed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Siódmy protokół odzyskany: kto układa plan, nie poprawia go w trakcie kroku. Jeden rozkaz, jedno zadanie, jasne kryterium końca, weryfikacja tego, co wraca. Wykonawca zrobi dokładnie to, co w rozkazie — także twój błąd.', en: 'Seventh protocol recovered: whoever lays the plan does not patch it mid-step. One order, one task, a clear end criterion, verification of what comes back. The executor does exactly what the order says — your mistake included.' }, mode: 'dialogue' },
+    ],
+  },
+  'm2-exam-protocol-7-already': {
+    id: 'm2-exam-protocol-7-already',
+    lines: [
+      { speaker: 'system', text: { pl: 'Protokół VII już zaliczony.', en: 'Protocol VII already passed.' }, mode: 'system', autoAdvance: 2000 },
+    ],
+  },
+
+  // Locked deadlock door — needs a working service unit
+  'm2-deadlock-door-locked': {
+    id: 'm2-deadlock-door-locked',
+    lines: [
+      { speaker: 'system', text: { pl: 'GRÓDŹ DO ROZJAZDOWNI: zamknięta. Brak sprawnej jednostki serwisowej.', en: 'BULKHEAD TO THE JUNCTION: closed. No working service unit.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'CORE AI', text: { pl: 'Nie otworzę sieci torów bez działającej jednostki serwisowej. Wydaj S-0PL nowy rozkaz — wtedy gródź ustąpi.', en: 'I will not open the rail network without a working service unit. Issue S-0PL its new order — then the bulkhead yields.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Return path — service arms lifting units out of cradles in schedule order
+  'm2-return-service': {
+    id: 'm2-return-service',
+    lines: [
+      { speaker: 'system', text: { pl: 'WARSZTAT — POWRÓT', en: 'THE SERVICE BAY — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Ramiona serwisowe podnoszą jednostki z gniazd — jedną po drugiej, w kolejności harmonogramu. Hala budzi się rzędami, nie naraz. Tak, jak trzeba.', en: 'Service arms lift units out of the cradles — one by one, in schedule order. The bay wakes in rows, not all at once. The way it should.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'CORE AI', text: { pl: 'Teraz każdy z nich ma rozkaz, który da się skończyć. To była cała naprawa. Nie lutownica — plan.', en: 'Now each of them has an order that can be finished. That was the whole repair. Not a soldering iron — a plan.' }, mode: 'cinematic', autoAdvance: 3200 },
+    ],
+    onComplete: { setFlags: [FLAGS.M2_RETURN_SERVICE_SEEN] },
   },
 };

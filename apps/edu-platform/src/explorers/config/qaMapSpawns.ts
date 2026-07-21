@@ -20,5 +20,10 @@ export const QA_MAP_SPAWNS: Readonly<Record<string, QaMapSpawn>> = {
   'm2-drafting-hall': { x: 2, y: 7 },
   'm2-assembly-line': { x: 2, y: 3 },
   'm2-planning-core': { x: 2, y: 7 },
+  'm3-apron': { x: 3, y: 7 },
+  'm3-boneyard': { x: 2, y: 7 },
+  'm3-fire-trial': { x: 2, y: 7 },
+  'm3-annealing-yard': { x: 2, y: 7 },
+  'm3-assay-office': { x: 2, y: 7 },
   'debug-npc-playground': { x: 1, y: 10 },
 };

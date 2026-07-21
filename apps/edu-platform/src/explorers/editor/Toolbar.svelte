@@ -1,102 +1,79 @@
 <script lang="ts">
-  import type { TiledMap } from './types';
-  import { validateAndParseMap } from './mapImporter';
-  import { exportMapJSON, downloadJSON } from './mapExporter';
+  import { THEMES, THEME_COUNT } from '../config/tileIndices';
 
   interface Props {
-    mapData: TiledMap;
-    mapName: string;
-    onNewMap: (width: number, height: number) => void;
-    onLoadMap: (data: TiledMap) => void;
-    onMapNameChange: (name: string) => void;
+    mapKeys: string[];
+    currentMapKey: string | null;
+    theme: number;
+    isDirty: boolean;
+    saving: boolean;
+    errorCount: number;
+    warningCount: number;
+    onSelectLevel: (mapKey: string) => void;
+    onThemeChange: (theme: number) => void;
+    onSave: () => void;
   }
 
-  let { mapData, mapName, onNewMap, onLoadMap, onMapNameChange }: Props = $props();
-  let fileInput: HTMLInputElement | undefined = $state();
-  let showNewMap = $state(false);
+  let {
+    mapKeys,
+    currentMapKey,
+    theme,
+    isDirty,
+    saving,
+    errorCount,
+    warningCount,
+    onSelectLevel,
+    onThemeChange,
+    onSave,
+  }: Props = $props();
 
-  function handleLoad() {
-    fileInput?.click();
-  }
+  const themeOptions = Array.from({ length: THEME_COUNT }, (_, i) => i + 1);
 
-  function handleFileChange(e: Event) {
-    const input = e.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) return;
-    loadFile(file);
-    input.value = '';
-  }
-
-  function loadFile(file: File) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const json = JSON.parse(reader.result as string);
-        const parsed = validateAndParseMap(json);
-        onLoadMap(parsed);
-        // Derive name from filename
-        const name = file.name.replace(/\.json$/i, '');
-        onMapNameChange(name);
-        console.log(`[MapEditor] Loaded map: ${file.name}`);
-      } catch (err) {
-        console.error('[MapEditor] Import failed:', err);
-        alert(`Failed to load map: ${(err as Error).message}`);
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  function handleExport() {
-    const json = exportMapJSON(mapData);
-    downloadJSON(json, mapName);
-    console.log(`[MapEditor] Exported map: ${mapName}.json`);
+  function handleLevelChange(e: Event) {
+    const select = e.target as HTMLSelectElement;
+    const mapKey = select.value;
+    onSelectLevel(mapKey);
+    // The parent may refuse the switch (dirty-check); resync the control.
+    select.value = currentMapKey ?? '';
   }
 </script>
 
 <div class="flex items-center gap-2 h-full">
-  <button
-    onclick={() => showNewMap = true}
-    class="px-2 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 transition-colors"
+  <select
+    value={currentMapKey ?? ''}
+    onchange={handleLevelChange}
+    class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none max-w-52"
   >
-    New
-  </button>
-  <button
-    onclick={handleLoad}
-    class="px-2 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 transition-colors"
+    {#each mapKeys as mapKey}
+      <option value={mapKey}>{mapKey}</option>
+    {/each}
+  </select>
+
+  <select
+    value={theme}
+    onchange={(e) => onThemeChange(Number((e.target as HTMLSelectElement).value))}
+    class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
+    title="Theme"
   >
-    Load
-  </button>
+    {#each themeOptions as t}
+      <option value={t}>{t} — {THEMES[t]?.name ?? 'unknown'}</option>
+    {/each}
+  </select>
+
   <button
-    onclick={handleExport}
-    class="px-2 py-1 rounded text-xs bg-blue-700 hover:bg-blue-600 text-white transition-colors"
+    onclick={onSave}
+    disabled={saving || !isDirty || errorCount > 0}
+    class="px-3 py-1 rounded text-xs transition-colors disabled:opacity-40 disabled:cursor-not-allowed
+      {errorCount > 0 ? 'bg-red-900/40 text-red-300' : 'bg-blue-700 hover:bg-blue-600 text-white'}"
+    title={errorCount > 0 ? 'Fix validation errors before saving' : 'Write map.level.yaml'}
   >
-    Export
+    {saving ? 'Saving...' : 'Save'}
   </button>
 
-  <input
-    bind:this={fileInput}
-    type="file"
-    accept=".json"
-    onchange={handleFileChange}
-    class="hidden"
-  />
-
-  <span class="text-gray-600 mx-1">|</span>
-
-  <input
-    type="text"
-    value={mapName}
-    oninput={(e) => onMapNameChange((e.target as HTMLInputElement).value)}
-    class="bg-gray-800 border border-gray-600 rounded px-2 py-0.5 text-xs text-gray-300 w-32 focus:border-blue-500 focus:outline-none"
-    placeholder="map-name"
-  />
+  {#if errorCount > 0}
+    <span class="text-xs text-red-400">{errorCount} error{errorCount === 1 ? '' : 's'}</span>
+  {/if}
+  {#if warningCount > 0}
+    <span class="text-xs text-amber-400">{warningCount} warning{warningCount === 1 ? '' : 's'}</span>
+  {/if}
 </div>
-
-{#if showNewMap}
-  {#await import('./NewMapModal.svelte') then mod}
-    <mod.default
-      onConfirm={(w, h) => { showNewMap = false; onNewMap(w, h); }}
-      onCancel={() => showNewMap = false}
-    />
-  {/await}
-{/if}

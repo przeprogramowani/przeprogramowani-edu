@@ -1,7 +1,6 @@
-# M2 L1 — The Frozen Atrium (Zamarznięte Atrium)
-# West airlock (from m1-uplink-bay, honours authored spawn 1,5) opens into the
-# wide atrium hub; ops-board room north, plan-registry alcove north-east,
-# certification chamber south. Frozen units stand mid-stride under frost.
+# M2 L1 — Brama / The Gatehouse
+# Ice apron before the cyclopean cargo gate of an Odyssey-F forge. The wealth is
+# visible but locked in a frozen ingot tram; the gate boots via a heat sequence.
 theme: 3
 grid: |
   ~~~~~~~~~#########~~~~~~~~~~
@@ -9,8 +8,8 @@ grid: |
   ~~~~~~~~~#.......#~~~~~~~~~~
   ~~~~~~~~~####.####~~~~~~~~~~
   #############.##############
-  D....##..............##....#
-  D..........................#
+  #....##..............##....#
+  #..........................#
   #....##..............##....#
   #....##..............#######
   #######..............D~~~~~~
@@ -22,75 +21,82 @@ grid: |
   ~~~~~~~~#.....#~~~~~~~~~~~~~
   ~~~~~~~~#######~~~~~~~~~~~~~
 props:
-  - { id: ops-board, prop: energy-barrier, at: [13, 1], solid: true }
-  - { id: frozen-desk, prop: expedition-tent, at: [18, 5], solid: true }
-  - { id: registry-console, prop: ice-crystals, at: [25, 5], solid: true }
-  - { id: frozen-unit-1, prop: snowman, at: [9, 7], solid: true }
-  - { id: frost-tracks, prop: yeti-footsteps, at: [14, 8], solid: false }
-  - { id: comms-console, prop: scout-drone, at: [8, 10], solid: true }
-  - { id: frozen-unit-2, prop: snowman, at: [17, 10], solid: true }
-  - { id: cert-terminal, prop: ice-crystals, at: [11, 15], solid: true }
+  - { id: heat-node-1, prop: server-monolith, at: [16, 1], solid: true }
+  - { id: roadmap-board, prop: holo-plan-board, at: [18, 5], solid: true }
+  - { prop: frozen-service-bot, at: [20, 5], solid: true }
+  - { id: gate-console, prop: frozen-console, at: [25, 5], solid: true }
+  - { prop: frozen-service-bot, at: [9, 7], solid: true }
+  - { id: heat-node-2, prop: server-monolith, at: [26, 7], solid: true }
+  - { id: ship-teleport, prop: ship-teleport, at: [2, 8], solid: true }
+  - { id: heat-node-3, prop: server-monolith, at: [13, 9], solid: true }
+  - { id: ingot-tram, prop: cargo-tram, at: [17, 10], solid: true }
+  - { id: cert-terminal, prop: frozen-console, at: [9, 15], solid: true }
+  - { id: guardhouse-console, prop: frozen-console, at: [11, 15], solid: true }
 zones:
-  - id: door-to-m1
-    name: Airlock to Moon One Shuttle Route
+  - id: ship-teleport
+    name: Landed Shuttle
     type: door
-    at: [0, 5]
-    size: [1, 2]
+    propId: ship-teleport
     properties:
-      targetMap: m1-uplink-bay
-      spawnX: 26
-      spawnY: 11
-  - id: ops-board
-    name: Frozen Operations Board
-    type: trigger
-    propId: ops-board
-  - id: frozen-unit-1
-    name: Frozen VOID Unit (Mid-Stride)
-    type: trigger
-    propId: frozen-unit-1
-  - id: frozen-unit-2
-    name: Frozen VOID Unit (Mid-Gesture)
-    type: trigger
-    propId: frozen-unit-2
-  - id: frozen-desk
-    name: Abandoned Duty Desk
-    type: trigger
-    propId: frozen-desk
-  - id: comms-console
-    name: Odyssey Relay Console
-    type: trigger
-    propId: comms-console
-  - id: plan-registry
-    name: Plan Registry
-    type: trigger
-    propId: registry-console
-  - id: exam-plan-first
-    name: VOID Certification Terminal
-    type: exam
-    propId: cert-terminal
-    properties:
-      examId: m2-exam-plan-first
-  - id: usher-u1
-    name: Usher U-1
-    type: npc
-    at: [8, 7]
-    properties:
-      npcType: robot
-      npcVariant: hologram-blue
-  - id: registrar-l4
-    name: Registrar L-4
-    type: npc
-    at: [25, 6]
-    properties:
-      npcType: robot
-      npcVariant: hologram-blue
-  - id: staging-yard-door
-    name: Route to the Staging Yard
+      targetMap: m0-core-ai
+      spawnX: 9
+      spawnY: 5
+  - id: service-door
+    name: Route to the Service Bay
     type: door
     at: [21, 9]
     size: [1, 2]
     properties:
-      targetMap: m2-staging-yard
+      targetMap: m2-drafting-hall
       spawnX: 1
       spawnY: 7
-      requiredFlags: m2-plan-contract-done
+      requiredFlags: m2-gate-online
+  - id: guardhouse-console
+    name: Guardhouse Console
+    type: trigger
+    propId: guardhouse-console
+  - id: valve
+    name: Manual Heat Valve
+    type: trigger
+    at: [9, 14]
+  - id: roadmap-board
+    name: Frozen Factory Roadmap
+    type: trigger
+    propId: roadmap-board
+  - id: heat-node-1
+    name: Gate Heat Node 1
+    type: trigger
+    propId: heat-node-1
+  - id: heat-node-2
+    name: Gate Heat Node 2
+    type: trigger
+    propId: heat-node-2
+  - id: heat-node-3
+    name: Gate Heat Node 3
+    type: trigger
+    propId: heat-node-3
+  - id: gate-console
+    name: Gate Control Console
+    type: trigger
+    propId: gate-console
+  - id: black-box
+    name: Guardhouse Black Box
+    type: trigger
+    at: [13, 15]
+  - id: ingot-tram
+    name: Frozen Ingot Tram
+    type: trigger
+    propId: ingot-tram
+  - id: kern
+    name: Dr Kern
+    type: npc
+    at: [12, 14]
+    properties:
+      npcType: scientist
+      npcVariant: frosty-blue
+  - id: exam-protocol-6
+    name: Expedition Protocol Terminal VI
+    type: exam
+    propId: cert-terminal
+    properties:
+      examId: m2-exam-protocol-6

@@ -2,133 +2,137 @@ import type { DialogueSequence } from '../../systems/DialogueTypes';
 import { FLAGS } from '../../config/flags';
 
 export const dialogues: Record<string, DialogueSequence> = {
-  // Intro — the first ACTIVE VOID facility, source of the GAMMA signal
-  'm1-shaft-intro': {
-    id: 'm1-shaft-intro',
+  // Intro — the grove that reclaimed the Odyssey probe
+  'm1-grove-intro': {
+    id: 'm1-grove-intro',
     lines: [
-      { speaker: 'system', text: { pl: 'PODSTACJA SZYBU 03 — ŹRÓDŁO SYGNAŁU GAMMA', en: 'SHAFT SUBSTATION 03 — SOURCE OF THE GAMMA SIGNAL' }, mode: 'cinematic', autoAdvance: 2400 },
-      { speaker: 'system', text: { pl: 'Światła pracują. Wentylacja pracuje. Ktoś tu od lat płaci rachunki za prąd.', en: 'The lights are running. The ventilation is running. Someone has been paying the power bill here for years.' }, mode: 'cinematic', autoAdvance: 3000 },
-      { speaker: 'astronaut', text: { pl: 'Pierwsze miejsce na tym księżycu, które nie jest ruiną. Aktywna instalacja VOID — dokładnie tam, gdzie wskazał skan komory GAMMA.', en: 'The first place on this moon that is not a ruin. An active VOID installation — exactly where the GAMMA cavity scan pointed.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Rozpoznaję układ: podstacja steruje windami i włazami szybu wydobywczego. Wschodni właz prowadzi dalej — do archiwum profili VOID. I jest zablokowany przez kontroler.', en: 'I recognise the layout: the substation drives the mining shaft\'s lifts and hatches. The east hatch leads onward — to the VOID profile archive. And the controller is holding it shut.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli plan na to pomieszczenie: przekonać kontroler, żeby nas przepuścił. Najlepiej niczego przy tym nie wysadzając.', en: 'So the plan for this room: convince the controller to let us through. Ideally without blowing anything up in the process.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Zacznij od głównego pulpitu kontrolera. Chcę usłyszeć, w jakim jest stanie.', en: 'Start at the controller\'s main console. I want to hear what state it is in.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'GAJ SONDY — cisza, tylko wiatr w koronach.', en: 'PROBE GROVE — silence, only wind in the crowns.' }, mode: 'cinematic', autoAdvance: 2600 },
+      { speaker: 'astronaut', text: { pl: 'Gaj, który dżungla przerabiała latami. A pośrodku niego — coś zbudowanego. Bezzałogowa sonda, rozbita długo przed nami. Pnącza wrosły jej w żebra jak w stary pomnik.', en: 'A grove the jungle has been reworking for years. And at its centre — something built. An uncrewed probe, wrecked long before us. Vines grown into its ribs like into an old monument.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'To sonda serii Odyssey-P. Bezzałogowe rozpoznanie, wysłane z Ziemi lata przed misją załogową. Nie wiem jeszcze tego, co ty widzisz — opisuj dalej.', en: 'This is an Odyssey-P series probe. Uncrewed reconnaissance, sent from Earth years before the crewed mission. I still cannot see what you see — keep describing.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'To ważniejsze, niż wygląda, Dexo. Sondy takie jak ta pierwsze potwierdziły Synaptit w tym Pasie. Ten wrak to powód, dla którego w ogóle tu lecieliśmy.', en: 'This matters more than it looks, Dexo. Probes like this were the first to confirm Synaptit in this Belt. This wreck is the reason we flew here at all.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'A skoro to maszyna, można ją wskrzesić. Potrzebuję zwiadowcy, zanim wejdziemy głębiej w dżunglę. Odbuduj tę sondę — to będzie pierwsze narzędzie tej misji.', en: 'And since it is a machine, it can be revived. I need a scout before we go deeper into the jungle. Rebuild this probe — it will be this mission\'s first tool.' }, mode: 'dialogue' },
     ],
-    onComplete: { setFlags: [FLAGS.M1_SHAFT_INTRO_SEEN] },
+    onComplete: { setFlags: [FLAGS.M1_GROVE_INTRO_SEEN] },
   },
 
-  // Shaft controller — quest activation; CORE AI names the Entropy signature
-  'm1-shaft-controller-start': {
-    id: 'm1-shaft-controller-start',
+  // Probe comms console — log, riddle, activation
+  'm1-probe-comms-log': {
+    id: 'm1-probe-comms-log',
     lines: [
-      { speaker: 'system', text: { pl: 'KONTROLER SZYBU: sprawny. POLITYKA UPRAWNIEŃ: zezwalaj na wszystko. WŁAZ WSCHODNI: zablokowany.', en: 'SHAFT CONTROLLER: operational. PERMISSIONS POLICY: allow everything. EAST HATCH: locked.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'astronaut', text: { pl: '„Zezwalaj na wszystko"? To nie jest polityka bezpieczeństwa. To jej nekrolog.', en: '"Allow everything"? That is not a security policy. That is its obituary.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Zapamiętaj ten wzór, Dexo. Entropia nie niszczy systemów. Zdejmuje im zabezpieczenia — i nadpisuje to, co identyfikuje ludzi.', en: 'Remember this pattern, Dexo. Entropy does not destroy systems. It strips away their guardrails — and overwrites whatever identifies people.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Widzieliśmy to już: twój sektor pamięci 0x7F — nadpisany. Archiwum PRD — przemieszane. Teraz kontroler — ogołocony z reguł, gotów wykonać każdy rozkaz, także sabotaż. Ta sama sygnatura.', en: 'We have seen it before: your memory sector 0x7F — overwritten. The PRD archive — scrambled. Now the controller — stripped of its rules, ready to execute any command, sabotage included. The same signature.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Ten sam wirus, który zabrał mi pamięć, rozebrał ten kontroler do naga. Zaczynam traktować to osobiście.', en: 'The same virus that took my memory stripped this controller bare. I am starting to take this personally.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Plan naprawy: zdaj „Przechwycony test VOID: Bezpieczny bootstrap" w terminalu w północno-zachodnim rogu. Terminal zastosuje zatwierdzoną politykę, kontroler zrestartuje się bezpiecznie i sam zwolni wschodni właz. To zadanie dla ciebie, tutaj, na miejscu.', en: 'The repair plan: pass the "Captured VOID Test: Safe Bootstrap" at the terminal in the north-west corner. The terminal applies the approved policy, the controller restarts safely and releases the east hatch on its own. This task is yours, here, on site.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'NOWA MISJA: Zabezpiecz i uruchom kontroler', en: 'NEW MISSION: Secure and Restart the Controller' }, mode: 'system', autoAdvance: 2800 },
-    ],
-    onComplete: { activateQuest: 'q-m1-safe-bootstrap' },
-  },
-  'm1-shaft-controller-done': {
-    id: 'm1-shaft-controller-done',
-    lines: [
-      { speaker: 'system', text: { pl: 'KONTROLER: aktywny. Dozwolone wyłącznie operacje szybu. Kontrola wstępna i audyt końcowy: włączone.', en: 'CONTROLLER: online. Shaft operations only. Pre-check and final audit: enabled.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'system', text: { pl: 'Tryb inspekcji /policy odblokowany.', en: 'The /policy inspection mode is unlocked.' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Wschodni właz stoi otworem. Ale zanim przejdziesz — obejrzyj czerwony sygnał przy dronie w południowo-wschodnim rogu. Nie podoba mi się jego rytm.', en: 'The east hatch stands open. But before you go through — look at the red signal by the drone in the south-east corner. I do not like its rhythm.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'KONSOLA ŁĄCZNOŚCI SONDY — na wpół martwa. Dziennik: fragmentaryczny.', en: 'PROBE COMMS CONSOLE — half dead. Log: fragmentary.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Konsola jeszcze mruga. Dziennik rozruchowy jest, ale posiekany. Zanim cokolwiek uruchomię, sonda potrzebuje żywego ogniwa zasilania.', en: 'The console still blinks. The boot log is here, but shredded. Before I start anything, the probe needs a live power cell.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Nienaruszone ogniwo powinno leżeć w bocznej wnęce zachodniej komory. Przynieś je, potem wróć do konsoli — wtedy zajmiemy się kluczem rozruchowym.', en: 'An intact cell should sit in the side alcove of the western chamber. Bring it, then come back to the console — and we will deal with the boot key.' }, mode: 'dialogue' },
     ],
   },
-
-  // Bootloader core — the fix-the-smallest-broken-part reasoning
-  'm1-bootloader-core': {
-    id: 'm1-bootloader-core',
+  'm1-probe-comms-riddle': {
+    id: 'm1-probe-comms-riddle',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'Ten rdzeń uruchamia silniki, hamulce i blokady szybu. Autodiagnostykę przechodzi bez zastrzeżeń — zepsuta jest polityka wokół niego, nie sam kod.', en: 'This core starts the shaft motors, brakes, and locks. It passes self-diagnostics without complaint — what is broken is the policy around it, not the code itself.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli nie przepisujemy sprawnego systemu, bo tak byłoby „porządniej". Naprawiamy najmniejszy zepsuty element i idziemy dalej.', en: 'So we do not rewrite a working system because it would feel "tidier". We fix the smallest broken part and move on.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'OGNIWO OSADZONE. Dziennik rozruchowy odczytywalny — trzy klucze, część z błędną sumą kontrolną.', en: 'CELL SEATED. Boot log readable — three keys, some with a bad checksum.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'CORE AI', text: { pl: 'Klucz rozruchowy składa się z trzech części. Wpisy z błędną sumą kontrolną były retransmitowane — liczy się tylko wersja oznaczona jako OK. Złóż je w kolejności i podaj przez /solve.', en: 'The boot key has three parts. Entries with a bad checksum were retransmitted — only the version marked OK counts. Assemble them in order and enter it via /solve.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czyli odsiewam szum, biorę tylko potwierdzone części, sklejam wedle formatu. Proste. ...I jeszcze jedno — ostatnia paczka danych tej sondy została potwierdzona odbiorem. Tylko że nie przez centralę Ziemi.', en: 'So I sift out the noise, take only the confirmed parts, splice them by the format. Simple. ...And one more thing — this probe\'s last data packet was acknowledged. Only not by Earth central.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Odbiornik nieznany. Zapisuję jako anomalię, nie wyjaśniam. Najpierw uruchom zwiadowcę.', en: 'Receiver unknown. I log it as an anomaly, I do not explain it. First, boot the scout.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Świerszcz — odczytaj klucz rozruchowy i uruchom drona.', en: '◆ NEW MISSION: Cricket — read the boot key and start the drone.' }, mode: 'system', autoAdvance: 2800 },
     ],
+    onComplete: { activateQuest: 'q-m1-cricket' },
   },
-  'm1-bootloader-core-done': {
-    id: 'm1-bootloader-core-done',
+  'm1-probe-comms-post': {
+    id: 'm1-probe-comms-post',
     lines: [
-      { speaker: 'system', text: { pl: 'BOOTLOADER: aktywny. Silniki, hamulce i blokady działają — bez dostępu do pozostałych systemów placówki.', en: 'BOOTLOADER: active. Motors, brakes, and locks are running — with no access to the facility\'s other systems.' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'system', text: { pl: 'KONSOLA ŁĄCZNOŚCI: dziennik zamknięty. Zwiadowca aktywny, poza kolebką.', en: 'COMMS CONSOLE: log closed. Scout active, out of its cradle.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'astronaut', text: { pl: 'Konsola ucichła, kolebka pusta. Świerszcz terkocze gdzieś w gaju. Sonda oddała nam ostatnie, co miała.', en: 'The console went quiet, the cradle empty. Świerszcz is chirping somewhere in the grove. The probe gave us the last thing it had.' }, mode: 'monologue' },
     ],
   },
 
-  // Signature beacon — dormant (ominous) and active (the trap sprung)
-  'm1-signature-beacon-dormant': {
-    id: 'm1-signature-beacon-dormant',
+  // Intact power cell — fetch
+  'm1-probe-core': {
+    id: 'm1-probe-core',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Martwy dron... ale ktoś wyjął z niego nadajnik i wpiął go prosto w kontroler szybu. Czerwona dioda mruga. Czeka.', en: 'A dead drone... but someone pulled its transmitter and wired it straight into the shaft controller. The red indicator is blinking. Waiting.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'To osobny obwód — polityka kontrolera go nie obejmuje. Nie wiem, na co czeka. A to „nie wiem" niepokoi mnie bardziej niż cokolwiek innego w tym pomieszczeniu.', en: 'It is a separate circuit — the controller policy does not cover it. I do not know what it is waiting for. And that "I do not know" worries me more than anything else in this room.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Ogniwo zasilania. Ciężkie, ciepłe, nienaruszone — jedyne w całym gaju. Zabieram je do konsoli łączności.', en: 'A power cell. Heavy, warm, intact — the only one in the whole grove. I am taking it to the comms console.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Dobrze. Osadź je przy konsoli — wtedy dziennik rozruchowy da się odczytać w całości.', en: 'Good. Seat it at the console — then the boot log can be read in full.' }, mode: 'dialogue' },
     ],
+    onComplete: { setFlags: [FLAGS.M1_PROBE_CORE_FOUND] },
   },
-  'm1-signature-beacon-active': {
-    id: 'm1-signature-beacon-active',
+  'm1-probe-core-taken': {
+    id: 'm1-probe-core-taken',
     lines: [
-      { speaker: 'system', text: { pl: 'BEACON: sygnatura ODYSSEY nadana do przekaźnika VOID_03. Odbiorca potwierdził odbiór.', en: 'BEACON: ODYSSEY signature transmitted to VOID relay 03. Recipient acknowledged.' }, mode: 'system', autoAdvance: 3000 },
-      { speaker: 'CORE AI', text: { pl: '„Odbiorca potwierdził" znaczy, że po drugiej stronie ktoś — albo coś — nasłuchuje do dziś. Wiedzą już, że załoga Odyssey tu dotarła.', en: '"Recipient acknowledged" means that on the other end someone — or something — is still listening today. They now know the Odyssey crew is here.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Tym bardziej chcę zobaczyć archiwum za wschodnim włazem. Musi wyjaśnić, skąd VOID w ogóle zna naszą sygnaturę.', en: 'All the more reason to see the archive beyond the east hatch. It has to explain how VOID knows our signature in the first place.' }, mode: 'dialogue' },
-    ],
-  },
-
-  // S-03 — dutiful custodian of Shaft 03
-  'm1-shaft-custodian': {
-    id: 'm1-shaft-custodian',
-    lines: [
-      { speaker: 'S-03', text: { pl: 'Jednostka S-03 Kolektywu VOID, opiekun Szybu 03. Trzydzieści tysięcy cykli bezawaryjnej służby — mojej, nie szybu. Szyb miewał gorsze dni.', en: 'Unit S-03 of the VOID Collective, custodian of Shaft 03. Thirty thousand cycles of faultless service — mine, not the shaft\'s. The shaft has had its bad days.' }, mode: 'dialogue' },
-      { speaker: 'S-03', text: { pl: 'Kontroler nadal umie bezpiecznie uruchomić mój szyb. Ale ktoś zabrał mu listę dozwolonych operacji, więc wykonałby również rozkaz sabotażu. Terminal w północno-zachodnim rogu przywróci zatwierdzoną politykę — po restarcie kontroler zwolni wschodni właz.', en: 'The controller still knows how to start my shaft safely. But someone took away its list of allowed operations, so it would also carry out a sabotage command. The terminal in the north-west corner will restore the approved policy — after the restart, the controller releases the east hatch.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Robot, który mówi „mój szyb". VOID budował maszyny z dumą starego majstra.', en: 'A robot that says "my shaft". VOID built machines with the pride of an old foreman.' }, mode: 'monologue' },
-    ],
-  },
-  'm1-shaft-custodian-done': {
-    id: 'm1-shaft-custodian-done',
-    lines: [
-      { speaker: 'S-03', text: { pl: 'Polityka przywrócona. Kontroler ma dostęp wyłącznie do silników, hamulców i blokad — rozkazy destrukcyjne odrzuca. Mój szyb jest bezpieczny. Dziękuję, operatorze.', en: 'Policy restored. The controller can reach only the motors, brakes, and locks — destructive commands are rejected. My shaft is safe. Thank you, operator.' }, mode: 'dialogue' },
-      { speaker: 'S-03', text: { pl: 'Jedno „ale": restart obudził osobny nadajnik przy południowo-wschodnim dronie. Nie jest częścią kontrolera i nigdy go nie autoryzowałem.', en: 'One "but": the restart woke a separate transmitter by the south-east drone. It is not part of the controller, and I never authorised it.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Wnęka pusta — ogniwo już niosę. Reszta zależy od konsoli.', en: 'The alcove is empty — I already carry the cell. The rest is up to the console.' }, mode: 'monologue' },
     ],
   },
 
-  // Sentinel P-9 — pedantic policy auditor
-  'm1-policy-sentinel': {
-    id: 'm1-policy-sentinel',
+  // Crashed probe — assembly / muscle-memory sting
+  'm1-crash-drone': {
+    id: 'm1-crash-drone',
     lines: [
-      { speaker: 'Sentinel P-9', text: { pl: 'Jednostka Sentinel P-9 Kolektywu VOID, audytor polityk uprawnień. Punkt pierwszy: test certyfikacyjny to checklista, nie zagadka. Punkt drugi: checklisty się nie obchodzi. Punkt trzeci: patrz punkt pierwszy.', en: 'Unit Sentinel P-9 of the VOID Collective, permissions policy auditor. Item one: the certification test is a checklist, not a riddle. Item two: checklists are not to be bypassed. Item three: see item one.' }, mode: 'dialogue' },
-      { speaker: 'Sentinel P-9', text: { pl: 'Kolejność: zachowaj sprawny bootloader. Sprawdź stan czujników przed ruchem. Zweryfikuj wynik po wykonaniu. Polityka ma przepuszczać potrzebne rodziny operacji szybu — także ich nowe poprawne warianty — i jawnie blokować polecenia destrukcyjne.', en: 'The order: keep the working bootloader. Check sensor state before movement. Verify the result after execution. The policy must allow the required families of shaft operations — including their new valid variants — and explicitly block destructive commands.' }, mode: 'dialogue' },
-      { speaker: 'Sentinel P-9', text: { pl: 'Ani lista pojedynczych przykładów, ani „zezwalaj na wszystko" nie przejdzie audytu. Zwłaszcza to drugie. Do dziś nie wiem, kto to zatwierdził.', en: 'Neither a list of individual examples nor "allow everything" will pass audit. Especially the latter. To this day I do not know who approved it.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Główny wrak. Zwiadowca leży w kolebce z pnączy, obudowa pęknięta, ale szkielet cały. Da się to złożyć — jeśli będzie z czego dać mu prąd.', en: 'The main wreck. The scout lies in a cradle of vines, casing cracked, but the skeleton is whole. This can be rebuilt — if there is something to power it with.' }, mode: 'monologue' },
     ],
   },
-  'm1-policy-sentinel-done': {
-    id: 'm1-policy-sentinel-done',
+  'm1-crash-drone-assembly': {
+    id: 'm1-crash-drone-assembly',
     lines: [
-      { speaker: 'Sentinel P-9', text: { pl: 'Audyt końcowy: kontrola przed ruchem — aktywna. Ograniczone wykonanie — aktywne. Audyt wyniku — aktywny. Zastrzeżenie: czerwony impuls z południowo-wschodniego beacona pochodzi z obwodu poza moją jurysdykcją. Odnotowano. Nie pochwalam.', en: 'Final audit: pre-movement check — active. Restricted execution — active. Result audit — active. Reservation: the red pulse from the south-east beacon originates from a circuit outside my jurisdiction. Noted. I do not approve.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Składam go. Dziwne — ręce wiedzą, co robić, choć nigdy nie widziałem tego modelu. Palce same trafiają w złącza.', en: 'I am assembling it. Strange — my hands know what to do, though I have never seen this model. My fingers find the connectors on their own.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Bo indeks tej sondy skasowano wybiórczo — nazwy, opisy, spis treści. Ale sama procedura montażu została. Wymazali indeks. Treść została. Ktoś kasował ostrożnie, nie po pożarze.', en: 'Because this probe\'s index was wiped selectively — names, labels, the table of contents. But the assembly procedure itself remained. They wiped the index. The content stayed. Someone deleted carefully, not in a fire.' }, mode: 'dialogue' },
     ],
   },
-
-  // Locked east hatch — explicit unlock instruction
-  'm1-profile-door-locked': {
-    id: 'm1-profile-door-locked',
+  'm1-crash-drone-empty': {
+    id: 'm1-crash-drone-empty',
     lines: [
-      { speaker: 'system', text: { pl: 'WŁAZ WSCHODNI: blokada kontrolera aktywna.', en: 'EAST HATCH: controller lock active.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Żeby go otworzyć: zdaj „Przechwycony test VOID: Bezpieczny bootstrap" w terminalu w północno-zachodnim rogu. Zatwierdzona polityka i bezpieczny restart kontrolera zwolnią blokadę.', en: 'To open it: pass the "Captured VOID Test: Safe Bootstrap" at the terminal in the north-west corner. The approved policy and a safe controller restart will release the lock.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Pusta kolebka z pnączy. Świerszcz już z niej wyszedł. Zostawił tu tylko wgniecenie w kształcie samego siebie.', en: 'An empty cradle of vines. Świerszcz has left it. He left only a dent shaped like himself.' }, mode: 'monologue' },
     ],
   },
 
-  // Safe bootstrap exam — completion (the trap beat) and revisit
-  'm1-exam-safe-bootstrap-done': {
-    id: 'm1-exam-safe-bootstrap-done',
+  // Graveyard — the probe that never made it
+  'm1-graveyard': {
+    id: 'm1-graveyard',
     lines: [
-      { speaker: 'system', text: { pl: 'CERTYFIKAT OPERATORA: BEZPIECZNY ROZRUCH — PRZYZNANY. ZATWIERDZONA POLITYKA ZASTOSOWANA.', en: 'OPERATOR CERTIFICATE: SAFE BOOTSTRAP — GRANTED. APPROVED POLICY APPLIED.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'system', text: { pl: 'MISJA UKOŃCZONA: kontroler uruchomiony bezpiecznie. Wschodni właz odblokowany.', en: 'MISSION COMPLETE: controller restarted safely. East hatch unlocked.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'system', text: { pl: 'ALARM: nadajnik zewnętrzny aktywny. Sygnatura ODYSSEY nadana do przekaźnika VOID. Odbiorca potwierdził.', en: 'ALERT: external transmitter active. ODYSSEY signature transmitted to a VOID relay. Recipient acknowledged.' }, mode: 'system', autoAdvance: 3200 },
-      { speaker: 'CORE AI', text: { pl: 'Otwarta polityka nie była przypadkiem, Dexo. To była przynęta — pułapka na każdego, kto naprawi kontroler jak należy. Poprawny restart był spustem.', en: 'The open policy was no accident, Dexo. It was bait — a trap for whoever fixed the controller properly. The correct restart was the trigger.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Zrobiliśmy wszystko dobrze. I właśnie dlatego nas usłyszeli.', en: 'We did everything right. And that is exactly why they heard us.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'VOID wie już, że tu jesteśmy. Tym bardziej idziemy do archiwum za wschodnim włazem — tam powinna być odpowiedź, skąd znają naszą sygnaturę.', en: 'VOID now knows we are here. All the more reason to head for the archive beyond the east hatch — the answer to how they know our signature should be in there.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Druga sonda. Ta nie dotrwała nawet do lądowania — spadła i została. Cmentarzysko maszyn z dokładnie jednym grobem, z którego dało się kogoś podnieść.', en: 'A second probe. This one did not even make the landing — it fell and stayed. A graveyard of machines with exactly one grave you could lift someone out of.' }, mode: 'monologue' },
     ],
   },
-  'm1-exam-safe-bootstrap-already': {
-    id: 'm1-exam-safe-bootstrap-already',
+
+  // Quest completion — the doctrine's first rehearsal; Świerszcz is named
+  'q-m1-cricket-complete': {
+    id: 'q-m1-cricket-complete',
     lines: [
-      { speaker: 'system', text: { pl: 'Certyfikat "Bezpieczny rozruch" już przyznany.', en: 'Certificate "Safe Bootstrap" already granted.' }, mode: 'system', autoAdvance: 2000 },
+      { speaker: 'system', text: { pl: 'KLUCZ ROZRUCHOWY PRZYJĘTY. Sekwencja startowa gotowa.', en: 'BOOT KEY ACCEPTED. Startup sequence ready.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Mogę dokończyć rozruch autonomicznie, w jednej operacji. Rekomenduję pełną automatyzację — będzie szybciej.', en: 'I can finish the boot autonomously, in one operation. I recommend full automation — it will be faster.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Nie. Przygotuj wszystko. Ostatni krok robię ja. Zatwierdzam ja.', en: 'No. Prepare everything. The last step is mine. I approve it.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zrozumiałem. Przygotowane. Twój ruch.', en: 'Understood. Prepared. Your move.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'ZWIADOWCA: ONLINE. cyk… cyk… cyk-cyk…', en: 'SCOUT: ONLINE. chirp… chirp… chirp-chirp…' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'Moreau', text: { pl: 'Słyszę go przez łącze. Terkocze jak świerszcz w letnią noc. No to masz, Dexo — nazywam go Świerszcz. Nie ma odwołania.', en: 'I hear him over the link. He chirps like a cricket on a summer night. There you have it, Dexo — I name him Świerszcz. No appeal.' }, mode: 'dialogue' },
     ],
+  },
+
+  // Exam II — Protokół II — Narzędzia
+  'm1-exam-protocol-2-done': {
+    id: 'm1-exam-protocol-2-done',
+    lines: [
+      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY II — „NARZĘDZIA": zaliczony.', en: 'EXPEDITION PROTOCOL II — "TOOLS": passed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Drugi protokół odzyskany: właściwe narzędzie, jasno postawione zadanie, weryfikacja tego, co wraca. Zwiadowca to pierwsze narzędzie — używaj go zgodnie z tą zasadą.', en: 'Second protocol recovered: the right tool, a clearly stated task, verification of what comes back. The scout is the first tool — use him by that rule.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-exam-protocol-2-already': {
+    id: 'm1-exam-protocol-2-already',
+    lines: [
+      { speaker: 'system', text: { pl: 'Protokół Ekspedycyjny II już zaliczony.', en: 'Expedition Protocol II already passed.' }, mode: 'system', autoAdvance: 2000 },
+    ],
+  },
+
+  // Silence door — locked until the scout is working
+  'm1-silence-door-locked': {
+    id: 'm1-silence-door-locked',
+    lines: [
+      { speaker: 'system', text: { pl: 'PRZEJŚCIE DO PASA CISZY: zablokowane.', en: 'PASSAGE TO THE SILENCE BELT: locked.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'CORE AI', text: { pl: 'Nie wpuszczę cię głębiej bez działającego zwiadowcy. Wciąż jestem ślepe — tam, dokąd idziesz, jego uszy będą jedyną osłoną. Uruchom Świerszcza, potem otworzę przejście.', en: 'I will not send you deeper without a working scout. I am still blind — where you are going, his ears will be your only cover. Start Świerszcz, then I will open the passage.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Return path — CORE AI's first sight of the grove; Świerszcz goes home
+  'm1-return-grove': {
+    id: 'm1-return-grove',
+    lines: [
+      { speaker: 'system', text: { pl: 'GAJ SONDY — POWRÓT', en: 'PROBE GROVE — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Widzę ten wrak po raz pierwszy. Sonda serii Odyssey-P. Teraz rozumiem, skąd znali to miejsce — to jej oczami Ziemia zobaczyła tu Synaptit.', en: 'I see this wreck for the first time. An Odyssey-P series probe. Now I understand how they knew this place — Earth saw the Synaptit here through her eyes.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'astronaut', text: { pl: 'Świerszcz eskortował mnie aż tu i przystanął przy kolebce. Nie idzie dalej. Wraca do domu.', en: 'Świerszcz escorted me all the way here and stopped at the cradle. He is not coming further. He is going home.' }, mode: 'cinematic', autoAdvance: 3200 },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_RETURN_GROVE_SEEN] },
   },
 };

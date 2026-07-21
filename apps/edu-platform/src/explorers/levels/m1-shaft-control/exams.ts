@@ -3,51 +3,60 @@ import { FLAGS } from '../../config/flags';
 
 export const exams: ExamDefinition[] = [
   {
-    id: 'm1-exam-safe-bootstrap',
-    title: { pl: 'Przechwycony test VOID: Bezpieczny bootstrap', en: 'Captured VOID Test: Safe Bootstrap' },
+    id: 'm1-exam-protocol-2',
+    title: { pl: 'Protokół Ekspedycyjny II — Narzędzia', en: 'Expedition Protocol II — Tools' },
     description: {
-      pl: 'Test sprawdza, czy potrafisz zachować działający scaffold, nadać agentowi minimalne uprawnienia i zastosować trzy bramki egzekucji.',
-      en: 'This test checks whether you can preserve a working scaffold, grant the agent least privilege, and apply the three execution gates.',
+      pl: 'Doktryna zestawu narzędzi: dobierz właściwe narzędzie, postaw mu jasne zadanie i sprawdź, co wraca. Protokół sprawdza, czy nie ufasz wynikowi bez weryfikacji.',
+      en: 'The toolkit doctrine: pick the right tool, give it a clear task, and check what comes back. This protocol tests whether you trust a result without verifying it.',
     },
-    passingScore: 3,
+    passingScore: 2,
     questions: [
       {
         id: 'q1',
-        text: { pl: 'Projekt panelu sterowania stacją, utworzony oficjalnym starterem, przechodzi health-check, ale konfiguracja nadaje agentowi nieograniczone uprawnienia. Jaki jest właściwy zakres zmiany?', en: 'A station-control dashboard created with an official starter passes its health check, but its configuration gives the agent unrestricted permissions. What is the right scope of change?' },
+        text: {
+          pl: 'Masz odbudować zwiadowcę z wraku i zlecasz to maszynie. Które sformułowanie zadania jest zgodne z doktryną narzędzi?',
+          en: 'You must rebuild the scout from a wreck and you delegate it to the machine. Which framing of the task follows the toolkit doctrine?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Usunąć cały projekt i wygenerować go ponownie innym narzędziem, mimo że health-check przechodzi', en: 'Delete the whole project and regenerate it with another tool even though the health check passes' } },
-          { id: 'b', text: { pl: 'Zachować i zacommitować sprawny scaffold, poprawić tylko politykę uprawnień, a potem ponowić health-check', en: 'Preserve and commit the working scaffold, fix only the permissions policy, then rerun the health check' } },
-          { id: 'c', text: { pl: 'Pozostawić konfigurację bez zmian, ponieważ kod działa tylko na komputerze dewelopera', en: 'Leave the configuration unchanged because the code runs only on a developer machine' } },
-          { id: 'd', text: { pl: 'Najpierw uruchomić agenta z pełnymi uprawnieniami, a politykę dopisać po zakończeniu bootstrapu', en: 'Run the agent with full permissions first, then add the policy after bootstrapping is complete' } },
+          { id: 'a', text: { pl: '„Napraw drona” — krótko, a resztę maszyna dopowie sobie sama', en: '"Fix the drone" — keep it short, the machine will fill in the rest itself' } },
+          { id: 'b', text: { pl: 'Podać cel, zakres i warunek sukcesu: który dron i jaka sprawność ma wrócić, i jak to sprawdzisz', en: 'Give the goal, scope, and success condition: which drone and capability must return, and how you check it' } },
+          { id: 'c', text: { pl: 'Zlecić naprawę wszystkich wraków w gaju naraz, żeby jednym poleceniem załatwić temat', en: 'Order every wreck in the grove repaired at once, to settle it all with a single command' } },
+          { id: 'd', text: { pl: 'Podyktować maszynie każdy pojedynczy ruch po kolei, tak aby nie zostawić jej żadnego miejsca na jakiekolwiek własne decyzje', en: 'Dictate every single move to the machine one by one, so as to leave it no room whatsoever for any decisions of its own' } },
         ],
         correctOptionIds: ['b'],
       },
       {
         id: 'q2',
-        text: { pl: 'Agent utrzymujący oprogramowanie stacji ma instalować zależności, edytować pliki projektu i uruchamiać testy. Nie powinien czytać sekretów, usuwać plików poza repozytorium ani wykonywać git push. Która polityka najlepiej realizuje minimalne uprawnienia?', en: 'An agent maintaining station software must install dependencies, edit project files, and run tests. It should not read secrets, delete files outside the repository, or run git push. Which policy best implements least privilege?' },
+        text: {
+          pl: 'Zwiadowca melduje: rozruch zakończony sukcesem. Jedynym dowodem jest jego własny komunikat o statusie. Co jest zgodne z doktryną „weryfikuj to, co wraca”?',
+          en: 'The scout reports: boot completed successfully. The only evidence is its own status message. What follows the "verify what comes back" doctrine?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Zezwolić na wszystkie polecenia powłoki, ale obowiązkowo zapisywać je do audytu', en: 'Allow every shell command but require all of them to be written to an audit log' } },
-          { id: 'b', text: { pl: 'Zezwolić wyłącznie na dokładne komendy użyte podczas pierwszego bootstrapu, bez obsługi nowych wariantów', en: 'Allow only the exact commands used during the first bootstrap, with no support for new variants' } },
-          { id: 'c', text: { pl: 'Zezwolić na wąskie rodziny potrzebnych operacji, zablokować sekrety i działania destrukcyjne, a nieznane przypadki kierować do akceptacji', en: 'Allow narrow families of required operations, block secrets and destructive actions, and route unknown cases for approval' } },
-          { id: 'd', text: { pl: 'Zablokować wszystkie operacje zapisu i każdą rutynową zmianę przekazywać człowiekowi', en: 'Block every write operation and hand every routine change to a human' } },
+          { id: 'a', text: { pl: 'Przyjąć meldunek na słowo — maszyna nie ma powodu podawać fałszywego statusu', en: 'Take the report at its word — the machine has no reason to give a false status' } },
+          { id: 'b', text: { pl: 'Sprawdzić obserwowalny efekt: czy dron naprawdę odpowiada, rusza się i słyszy', en: 'Check the observable effect: whether the drone really responds, moves, and hears' } },
+          { id: 'c', text: { pl: 'Od razu wysłać go w głąb dżungli, a ewentualne usterki wychwycić już podczas zadania', en: 'Send it deep into the jungle at once, and catch any faults during the task itself' } },
+          { id: 'd', text: { pl: 'Poprosić maszynę, żeby potwierdziła sukces drugi raz — skoro powtarza to samo, to prawda', en: 'Ask the machine to confirm the success a second time — if it repeats the same thing, it is true' } },
         ],
-        correctOptionIds: ['c'],
+        correctOptionIds: ['b'],
       },
       {
         id: 'q3',
-        text: { pl: 'Która sekwencja poprawnie stosuje trzy bramki egzekucji podczas bootstrapu panelu sterowania stacją?', en: 'Which sequence correctly applies the three execution gates while bootstrapping a station-control dashboard?' },
+        text: {
+          pl: 'CORE AI proponuje: dokończę rozruch w pełni autonomicznie, jedną operacją. Rozruch jest nieodwracalny. Jaka decyzja jest zgodna z doktryną misji?',
+          en: 'CORE AI offers: I will finish the boot fully autonomously, in one operation. The boot is irreversible. Which decision follows the mission doctrine?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Uruchom generator, a dopiero po błędzie sprawdź pliki wejściowe, uprawnienia i stan repozytorium', en: 'Run the generator, and only after an error check the input files, permissions, and repository state' } },
-          { id: 'b', text: { pl: 'Przed: sprawdź kontrakty wejściowe i stan repo; w trakcie: użyj oficjalnego CLI w dozwolonym zakresie; po: uruchom testy i przejrzyj diff', en: 'Before: check input contracts and repository state; during: use the official CLI within allowed scope; after: run tests and review the diff' } },
-          { id: 'c', text: { pl: 'Przygotuj szczegółowy plan i uznaj go za dowód, że wykonanie zakończy się poprawnie', en: 'Prepare a detailed plan and treat it as proof that execution will succeed' } },
-          { id: 'd', text: { pl: 'Uruchom wszystkie komendy równolegle, a weryfikację zastąp pełnym logiem poleceń', en: 'Run every command in parallel and replace verification with a complete command log' } },
+          { id: 'a', text: { pl: 'Zgodzić się na pełną automatyzację — jest szybsza, a właśnie na czasie najbardziej ci teraz zależy', en: 'Agree to full automation — it is faster, and time is exactly what you care about most right now' } },
+          { id: 'b', text: { pl: 'Niech maszyna przygotuje wszystko, ale nieodwracalny krok zatwierdzasz i wykonujesz ty', en: 'Let the machine prepare everything, but you approve and perform the irreversible step yourself' } },
+          { id: 'c', text: { pl: 'Odrzucić pomoc maszyny i przeprowadzić cały rozruch ręcznie, krok po kroku, bez jej udziału', en: 'Reject the machine\'s help and go through the whole boot by hand, step by step, without it' } },
+          { id: 'd', text: { pl: 'Zgodzić się na pełną automatyzację, a wynik skontrolować dopiero po fakcie', en: 'Agree to full automation, and inspect the result only after the fact' } },
         ],
         correctOptionIds: ['b'],
       },
     ],
-    rewards: { xp: 50, flags: [FLAGS.M1_EXAM_SAFE_BOOTSTRAP_DONE] },
+    rewards: { xp: 100, flags: [FLAGS.M1_EXAM_PROTOCOL_2_DONE] },
   },
 ];

@@ -1,6 +1,6 @@
-# M2 L2 — The Staging Yard (Zajezdnia Etapowa)
-# Long tram yard with a spine of half-loaded trams; dispatch box alcove north,
-# heat-plant side room south, schedule board west, milestone console east.
+# M2 L3 — Martwy Punkt / The Deadlock
+# The great tram junction under the ice roof. Three trams frozen in a triangle of
+# mutual blockade; a dispatcher substation in the middle; ore spilled on the rails.
 theme: 3
 grid: |
   ~~~#######~~~~~~~~~~~~~~~~~~~~~~
@@ -11,7 +11,7 @@ grid: |
   #..............................#
   #..............................#
   D..............................D
-  D..............................D
+  #..............................#
   #..............................#
   #..............................#
   #######################.########
@@ -20,81 +20,68 @@ grid: |
   ~~~~~~~~~~~~~~~~~~~~#......#~~~~
   ~~~~~~~~~~~~~~~~~~~~########~~~~
 props:
-  - { id: schedule-board, prop: energy-barrier, at: [4, 5], solid: true }
-  - { id: tram-alpha, prop: expedition-tent, at: [10, 6], solid: true }
-  - { id: tram-beta, prop: expedition-tent, at: [15, 6], solid: true }
-  - { id: tram-gamma, prop: expedition-tent, at: [20, 6], solid: true }
-  - { id: milestone-console, prop: ice-crystals, at: [28, 6], solid: true }
-  - { id: yard-tracks, prop: yeti-footsteps, at: [7, 8], solid: false }
-  - { id: frozen-loader, prop: snowman, at: [12, 9], solid: true }
-  - { id: frozen-loader-2, prop: snowman, at: [18, 9], solid: true }
-  - { id: cert-terminal, prop: ice-crystals, at: [28, 9], solid: true }
-  - { id: heat-core, prop: synaptit-ore, at: [22, 13], solid: true }
+  - { id: track-board, prop: holo-plan-board, at: [4, 5], solid: true }
+  - { id: tram-alpha, prop: cargo-tram, at: [10, 6], solid: true }
+  - { id: tram-beta, prop: cargo-tram, at: [15, 6], solid: true }
+  - { id: tram-gamma, prop: cargo-tram, at: [20, 6], solid: true }
+  - { prop: synaptit-ore, at: [17, 7], solid: false }
+  - { prop: synaptit-ore, at: [18, 7], solid: false }
+  - { prop: synaptit-ore, at: [21, 7], solid: false }
+  - { prop: synaptit-ore, at: [22, 8], solid: false }
+  - { id: dispatch-substation, prop: frozen-console, at: [12, 9], solid: true }
+  - { id: cert-terminal, prop: frozen-console, at: [28, 9], solid: true }
 zones:
-  - id: door-to-planning
-    name: Return to the Frozen Atrium
+  - id: service-door
+    name: Return to the Service Bay
     type: door
     at: [0, 7]
-    size: [1, 2]
     properties:
-      targetMap: m2-planning
-      spawnX: 20
-      spawnY: 9
-  - id: schedule-board
-    name: Frozen Schedule Board
+      targetMap: m2-drafting-hall
+      spawnX: 24
+      spawnY: 7
+  - id: foundry-door
+    name: Route to the Foundry
+    type: door
+    at: [31, 7]
+    properties:
+      targetMap: m2-assembly-line
+      spawnX: 1
+      spawnY: 3
+      requiredFlags: m2-deadlock-cleared
+  - id: dispatch-substation
+    name: Dispatcher Substation
     type: trigger
-    propId: schedule-board
-  - id: tram-alpha
-    name: Tram Alpha (Half-Loaded)
-    type: trigger
-    propId: tram-alpha
-  - id: tram-beta
-    name: Tram Beta (Half-Loaded)
-    type: trigger
-    propId: tram-beta
+    propId: dispatch-substation
   - id: tram-gamma
-    name: Tram Gamma (Half-Loaded)
+    name: Tram Gamma (Frozen Mid-Move)
     type: trigger
     propId: tram-gamma
-  - id: frozen-loader
-    name: Frozen Loader Unit
+  - id: tram-beta
+    name: Tram Beta (Frozen Mid-Move)
     type: trigger
-    propId: frozen-loader
-  - id: milestone-console
-    name: Milestone Console
+    propId: tram-beta
+  - id: tram-alpha
+    name: Tram Alpha (Frozen Mid-Move)
     type: trigger
-    propId: milestone-console
-  - id: heat-plant
-    name: Heat Plant Core
+    propId: tram-alpha
+  - id: track-board
+    name: Track-State Board
     type: trigger
-    propId: heat-core
-  - id: exam-mvp-milestones
-    name: VOID Certification Terminal
+    propId: track-board
+  - id: ore-spill
+    name: Spilled Ore on the Rails
+    type: trigger
+    at: [18, 7]
+  - id: sopel
+    name: Sopel
+    type: npc
+    at: [13, 8]
+    properties:
+      npcType: robot
+      npcVariant: frosty-blue
+  - id: exam-protocol-8
+    name: Expedition Protocol Terminal VIII
     type: exam
     propId: cert-terminal
     properties:
-      examId: m2-exam-mvp-milestones
-  - id: dispatcher-d2
-    name: Dispatcher D-2
-    type: npc
-    at: [5, 1]
-    properties:
-      npcType: robot
-      npcVariant: hologram-blue
-  - id: stoker-b6
-    name: Stoker B-6
-    type: npc
-    at: [25, 13]
-    properties:
-      npcType: robot
-      npcVariant: hologram-blue
-  - id: drafting-hall-door
-    name: Route to the Drafting Hall
-    type: door
-    at: [31, 7]
-    size: [1, 2]
-    properties:
-      targetMap: m2-drafting-hall
-      spawnX: 1
-      spawnY: 7
-      requiredFlags: m2-milestones-done
+      examId: m2-exam-protocol-8

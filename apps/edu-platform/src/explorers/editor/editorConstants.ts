@@ -1,6 +1,13 @@
+export interface EditorManifestLite {
+  interactionRoutes: { zoneId: string }[];
+  exams: { id: string }[];
+  arcadeGames: { id: string }[];
+}
+
 export interface EditorMeta {
   maps: { id: string; displayName: string }[];
   dialogueIds: string[];
+  manifests: Record<string, EditorManifestLite>;
 }
 
 /** Fetch lightweight editor metadata from the server */

@@ -218,7 +218,7 @@
         69,
         74,
         75,
-        78,
+        74,
         74,
         74,
         75,
@@ -241,8 +241,8 @@
         82,
         75,
         74,
-        74,
-        74,
+        69,
+        72,
         69,
         72,
         69,
@@ -271,8 +271,8 @@
         74,
         74,
         74,
-        74,
-        83,
+        69,
+        69,
         70,
         69,
         69,
@@ -301,8 +301,8 @@
         74,
         74,
         74,
-        74,
-        74,
+        69,
+        69,
         71,
         69,
         69,
@@ -361,8 +361,8 @@
         74,
         74,
         83,
-        74,
-        75,
+        72,
+        69,
         69,
         69,
         69,
@@ -391,8 +391,8 @@
         74,
         74,
         74,
-        74,
-        74,
+        71,
+        69,
         69,
         69,
         69,
@@ -494,7 +494,7 @@
         0,
         0,
         0,
-        0,
+        87,
         0,
         76,
         0,
@@ -518,7 +518,7 @@
         0,
         0,
         80,
-        85,
+        80,
         80,
         0,
         0,
@@ -572,7 +572,7 @@
         0,
         73,
         0,
-        86,
+        78,
         0,
         0,
         0,
@@ -605,13 +605,13 @@
         0,
         0,
         0,
+        79,
         0,
         0,
         0,
         0,
         0,
-        0,
-        80,
+        79,
         0,
         0,
         0,
@@ -623,7 +623,7 @@
         0,
         0,
         0,
-        0,
+        87,
         0,
         94,
         66,
@@ -648,7 +648,7 @@
         0,
         76,
         0,
-        81,
+        73,
         0,
         0,
         0,
@@ -674,9 +674,9 @@
         0,
         0,
         0,
-        0,
-        0,
-        84,
+        96,
+        90,
+        92,
         0,
         73,
         0,
@@ -696,17 +696,17 @@
         0,
         0,
         0,
+        80,
         0,
-        0,
-        85,
-        0,
-        0,
+        79,
         0,
         0,
         0,
         0,
         0,
-        84,
+        76,
+        0,
+        0,
         0,
         89,
         90,
@@ -734,39 +734,9 @@
         0,
         0,
         0,
-        0,
-        0,
-        76,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        73,
-        0,
-        80,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        80,
-        0,
-        0,
-        76,
+        94,
+        66,
+        68,
         0,
         0,
         0,
@@ -782,6 +752,7 @@
         0,
         73,
         0,
+        78,
         0,
         0,
         0,
@@ -792,8 +763,7 @@
         0,
         0,
         0,
-        0,
-        0,
+        86,
         0,
         0,
         76,
@@ -824,9 +794,39 @@
         0,
         0,
         0,
+        96,
+        90,
+        92,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        73,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         0,
         0,
         76,
+        0,
+        0,
         0,
         0,
         0,
@@ -854,9 +854,9 @@
         90,
         90,
         90,
-        90,
-        90,
         92,
+        0,
+        0,
         0
       ],
       "height": 14,
@@ -1308,14 +1308,14 @@
       "name": "Zones",
       "objects": [
         {
-          "height": 128,
+          "height": 64,
           "id": 1,
-          "name": "Return to the Assembly Hall",
+          "name": "Return to the Foundry",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "door-to-assembly"
+              "value": "foundry-door"
             },
             {
               "name": "targetMap",
@@ -1342,7 +1342,7 @@
         {
           "height": 64,
           "id": 2,
-          "name": "Planning Core Face",
+          "name": "Schedule Core Face",
           "properties": [
             {
               "name": "id",
@@ -1359,12 +1359,12 @@
         {
           "height": 64,
           "id": 3,
-          "name": "Plan Queue Console",
+          "name": "Dispatcher Console",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "plan-queue"
+              "value": "dispatch-console"
             }
           ],
           "type": "trigger",
@@ -1376,12 +1376,29 @@
         {
           "height": 64,
           "id": 4,
-          "name": "Frost-Etched Draft (Plan Echo)",
+          "name": "Main Switch Lever",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "plan-echo"
+              "value": "master-switch"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 1152,
+          "y": 512
+        },
+        {
+          "height": 64,
+          "id": 5,
+          "name": "Plan Board I",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "plan-board-1"
             }
           ],
           "type": "trigger",
@@ -1392,13 +1409,13 @@
         },
         {
           "height": 64,
-          "id": 5,
-          "name": "Approval Pedestal",
+          "id": 6,
+          "name": "Plan Board II",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "approval-pedestal"
+              "value": "plan-board-2"
             }
           ],
           "type": "trigger",
@@ -1409,13 +1426,30 @@
         },
         {
           "height": 64,
-          "id": 6,
-          "name": "Review Console",
+          "id": 7,
+          "name": "Plan Board III",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "review-console"
+              "value": "plan-board-3"
+            }
+          ],
+          "type": "trigger",
+          "visible": true,
+          "width": 64,
+          "x": 1088,
+          "y": 320
+        },
+        {
+          "height": 64,
+          "id": 8,
+          "name": "Tower Siding Tram",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "siding-tram"
             }
           ],
           "type": "trigger",
@@ -1426,35 +1460,13 @@
         },
         {
           "height": 64,
-          "id": 7,
-          "name": "VOID Certification Terminal",
+          "id": 9,
+          "name": "Sopel",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "exam-solo-review"
-            },
-            {
-              "name": "examId",
-              "type": "string",
-              "value": "m2-exam-solo-review"
-            }
-          ],
-          "type": "exam",
-          "visible": true,
-          "width": 64,
-          "x": 896,
-          "y": 640
-        },
-        {
-          "height": 64,
-          "id": 8,
-          "name": "Core Warden Z-9",
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "core-warden-z9"
+              "value": "sopel-dispatch"
             },
             {
               "name": "npcType",
@@ -1464,51 +1476,36 @@
             {
               "name": "npcVariant",
               "type": "string",
-              "value": "hologram-blue"
+              "value": "frosty-blue"
             }
           ],
           "type": "npc",
           "visible": true,
           "width": 64,
-          "x": 1088,
-          "y": 320
+          "x": 320,
+          "y": 448
         },
         {
-          "height": 128,
-          "id": 9,
-          "name": "Route to Moon Three",
+          "height": 64,
+          "id": 10,
+          "name": "Expedition Protocol Terminal X",
           "properties": [
             {
               "name": "id",
               "type": "string",
-              "value": "moon-three-door"
+              "value": "exam-protocol-10"
             },
             {
-              "name": "targetMap",
+              "name": "examId",
               "type": "string",
-              "value": "m3-diagnostics"
-            },
-            {
-              "name": "spawnX",
-              "type": "int",
-              "value": 1
-            },
-            {
-              "name": "spawnY",
-              "type": "int",
-              "value": 7
-            },
-            {
-              "name": "requiredFlags",
-              "type": "string",
-              "value": "m2-solo-review-done,sys:course-m3-available"
+              "value": "m2-exam-protocol-10"
             }
           ],
-          "type": "door",
+          "type": "exam",
           "visible": true,
           "width": 64,
-          "x": 1792,
-          "y": 448
+          "x": 896,
+          "y": 640
         }
       ],
       "opacity": 1,
@@ -1519,7 +1516,7 @@
     }
   ],
   "nextlayerid": 5,
-  "nextobjectid": 10,
+  "nextobjectid": 11,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.10.2",

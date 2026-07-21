@@ -96,6 +96,7 @@ function parseZone(
     );
   }
   let at: [number, number];
+  let propId: string | undefined;
   if (obj.propId !== undefined) {
     if (typeof obj.propId !== 'string' || obj.propId === '') {
       fail(mapKey, `zones[${index}].propId must be a non-empty string`);
@@ -104,6 +105,7 @@ function parseZone(
     if (!propAt) {
       fail(mapKey, `zones[${index}] ("${obj.id}") references unknown propId "${obj.propId}"`);
     }
+    propId = obj.propId;
     at = [...propAt];
   } else {
     at = parseCoords(obj.at, `zones[${index}].at`, mapKey);
@@ -131,6 +133,7 @@ function parseZone(
     id: obj.id,
     ...(obj.name !== undefined ? { name: obj.name as string } : {}),
     type: obj.type as ZoneType,
+    ...(propId !== undefined ? { propId } : {}),
     at,
     size,
     properties,
@@ -174,6 +177,7 @@ export function parseLevelSource(yamlText: string, mapKey: string): LevelSource 
       fail(mapKey, `duplicate prop id "${prop.id}"`);
     }
     propLocations.set(prop.id, props[index].at);
+    props[index].id = prop.id;
   }
   return {
     theme,

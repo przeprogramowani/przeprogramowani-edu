@@ -33,11 +33,11 @@ describe('BaseScene flag cache', () => {
     Object.defineProperty(scene, 'registry', { value: { get: () => undefined } });
 
     const initialFlags = scene.flagsSet;
-    expect(scene.hasFlag('m1-echotrace-done')).toBe(false);
+    expect(scene.hasFlag('m1-camp-online')).toBe(false);
 
-    state = createState(['m1-echotrace-done']);
+    state = createState(['m1-camp-online']);
 
     expect(scene.flagsSet).not.toBe(initialFlags);
-    expect(scene.hasFlag('m1-echotrace-done')).toBe(true);
+    expect(scene.hasFlag('m1-camp-online')).toBe(true);
   });
 });

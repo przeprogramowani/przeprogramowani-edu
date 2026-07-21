@@ -100,6 +100,8 @@ export interface NpcColorVariant {
 // controls how the tinted sprite is composited over the map.
 export const NPC_COLOR_VARIANTS: Record<string, NpcColorVariant> = {
   'jungle-dark-green': { color: 0x8fa383, mode: 'multiply' },
+  'frosty-blue': { color: 0xa5cfe0, mode: 'multiply' },
+  'crimson-red': { color: 0xd97a7a, mode: 'multiply' },
   'hologram-blue': { color: 0x66ccff, mode: 'multiply' },
   'hologram-green': { color: 0x66ff99, mode: 'multiply' },
   'hologram-magenta': { color: 0xff66cc, mode: 'multiply' },

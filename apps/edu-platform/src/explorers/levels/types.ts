@@ -65,6 +65,12 @@ export interface LevelManifest {
   /** Subtitle text for the cinematic intro card (optional) */
   introCinematicSubtitle?: string;
   /**
+   * Reveal the player via an expanding spotlight in darkness after the title card,
+   * keeping the screen dimmed until the intro dialogue is dismissed.
+   * Reserved for the hibernation-bay awakening — other levels use a plain fade.
+   */
+  introSpotlight?: boolean;
+  /**
    * Additional flag-conditional intros, checked in order after the primary intro
    * (e.g. a return-to-ship cinematic that only plays once the player has visited a moon).
    */

@@ -1,0 +1,87 @@
+# M3 L1 — Przedpole / The Apron
+# Black-glass volcanic apron: the shuttle sits west, the survey camp anchors the
+# centre, and three audit points sit out on the outskirts. The main board reads
+# ALL SYSTEMS NOMINAL over cold chimneys — a sea of green over a dead station.
+theme: 4
+grid: |
+  ##############################
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  #............................D
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  ##############################
+props:
+  - { id: main-board, prop: survey-lander, at: [14, 2], solid: true }
+  - { id: audit-tower, prop: magma-crystals, at: [7, 3], solid: true }
+  - { id: audit-mast, prop: satellite-dish, at: [25, 3], solid: true }
+  - { prop: magma-crystals, at: [7, 4], solid: false }
+  - { prop: magma-crystals, at: [10, 4], solid: false }
+  - { prop: magma-crystals, at: [21, 5], solid: false }
+  - { id: ship-teleport, prop: ship-teleport, at: [2, 7], solid: true }
+  - { id: camp-terminal, prop: survey-lander, at: [12, 8], solid: true }
+  - { id: camp-module, prop: survey-lander, at: [14, 8], solid: true }
+  - { prop: magma-crystals, at: [6, 11], solid: false }
+  - { prop: lava-geyser, at: [19, 12], solid: true }
+  - { prop: magma-crystals, at: [23, 12], solid: false }
+  - { id: audit-anchor, prop: magma-crystals, at: [24, 12], solid: true }
+zones:
+  - id: ship-teleport
+    name: Landed Shuttle
+    type: door
+    propId: ship-teleport
+    properties:
+      targetMap: m0-core-ai
+      spawnX: 9
+      spawnY: 5
+  - id: boneyard-door
+    name: Route to the Boneyard
+    type: door
+    at: [29, 7]
+    properties:
+      targetMap: m3-boneyard
+      spawnX: 2
+      spawnY: 7
+      requiredFlags: m3-camp-online
+  - id: camp-module
+    name: Survey Camp Module
+    type: trigger
+    propId: camp-module
+  - id: main-board
+    name: Station Main Board
+    type: trigger
+    propId: main-board
+  - id: audit-tower
+    name: Audit Point — Cooling Tower
+    type: trigger
+    propId: audit-tower
+  - id: audit-anchor
+    name: Audit Point — Seismic Anchor
+    type: trigger
+    propId: audit-anchor
+  - id: audit-mast
+    name: Audit Point — Telemetry Mast
+    type: trigger
+    propId: audit-mast
+  - id: moreau
+    name: Moreau
+    type: npc
+    at: [13, 9]
+    properties:
+      npcType: scientist
+      npcVariant: crimson-red
+  - id: exam-protocol-11
+    name: Expedition Protocol Terminal XI
+    type: exam
+    propId: camp-terminal
+    properties:
+      examId: m3-exam-protocol-11

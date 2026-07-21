@@ -11,6 +11,8 @@ export type ZoneType = ZoneObject['type'];
 
 /** A prop placement from the yaml source. */
 export interface PropPlacement {
+  /** Optional authoring id, referenceable by zones via propId. Not emitted to Tiled JSON. */
+  id?: string;
   /** Prop slot within the theme block, 1-8. */
   slot: number;
   /** Tile coordinates [x, y]. */
@@ -26,6 +28,11 @@ export interface ZoneSource {
   /** Optional editor display name; defaults to the id. */
   name?: string;
   type: ZoneType;
+  /**
+   * Authoring link to a prop id. When set, `at` mirrors that prop's coordinates
+   * (kept resolved so compile/validate need no lookup). Not emitted to Tiled JSON.
+   */
+  propId?: string;
   at: [number, number];
   size: [number, number];
   /** Extra Tiled properties (targetMap, spawnX, requiredFlags, examId, ...). */

@@ -1,25 +1,43 @@
-import type { ApiAnswerQuest } from '../../systems/QuestManager';
+import type { EventQuest } from '../../systems/QuestManager';
 import { FLAGS } from '../../config/flags';
 
-export const quests: ApiAnswerQuest[] = [
+export const quests: EventQuest[] = [
   {
-    id: 'q-m2-impl-control',
-    completionType: 'api-answer',
-    title: { pl: 'Skoryguj dryf wykonania', en: 'Correct the Execution Drift' },
+    id: 'q-m2-first-melt',
+    completionType: 'event',
+    title: { pl: 'Pierwszy Wytop', en: 'The First Melt' },
     briefing: {
-      pl: 'Misja HQ przez łącze zapasowe Moreau: F-6 wykonał kamień 1 planu BETA, a ślad wykonania trafił do Earth HQ. Porównaj ślad z zatwierdzonym planem, znajdź pierwszy dryf, przypisz go do właściwej bramki i nadaj działanie korygujące z polityki kontroli. Wraca sam werdykt: punkt i akcja.',
-      en: 'An HQ mission via Moreau\'s backup relay: F-6 executed milestone 1 of the BETA plan, and the execution trace reached Earth HQ. Compare the trace against the approved plan, find the first drift, attribute it to the right gate, and issue the corrective action from the control policy. Only the verdict returns: a checkpoint and an action.',
-    },
-    answerHash: '0502a2552ef980c2af63fe4ae40bc6abc33d6d80e2d75eae23d892d82356951d',
-    hint: {
-      pl: 'W Earth HQ otwórz module-002-10xdevs-workflow/PROMPT_CONTROL.md. Odpowiedź ma format CP<numer>:<AKCJA>, bez spacji.',
-      en: 'At Earth HQ, open module-002-10xdevs-workflow/PROMPT_CONTROL.md. The answer has the format CP<number>:<ACTION>, no spaces.',
+      pl: 'Wznów wytop huty i odbierz pierwszy rafinowany Synaptit. Otwórz lodową galerię przy sterowni, zaplanuj dostawy rudy do pieca na stacji zwrotnicy, a na końcu poprowadź ostatnią fazę — odlew — ręcznie przy kadzi.',
+      en: 'Restart the foundry\'s melt and secure the first refined Synaptit. Open the ice gallery at the control console, plan the ore deliveries to the furnace at the switchyard station, then finish the last phase — the cast — by hand at the crucible.',
     },
     hints: [
-      { pl: 'Czytaj ślad w kolejności seq i porównuj każdą pozycję z planem — liczy się pierwszy dryf.', en: 'Read the trace in seq order and compare every row against the plan — only the first drift counts.' },
-      { pl: 'Sprawdź zasadę przypisania: odchylenie przypisuje się bramce, przy której staje się widoczne.', en: 'Check the attribution rule: a deviation is attributed to the gate at which it becomes visible.' },
-      { pl: 'Wartości graniczne tolerancji są nadal w tolerancji — nie każda liczba blisko limitu to dryf.', en: 'Boundary values are still within tolerance — not every number near the limit is drift.' },
+      { pl: 'Zacznij przy sterowni huty — stamtąd otworzysz galerię.', en: 'Start at the foundry control — that is where you open the gallery.' },
+      { pl: 'Zwrotnica to plan tras: ułóż go, gdy wagoniki stoją, potem uruchom harmonogram.', en: 'The switchyard is a route plan: lay it out while the trams stand still, then run the schedule.' },
+      { pl: 'Odlew kończysz ręcznie przy kadzi — ostatnie 20% należy do ciebie.', en: 'You finish the cast by hand at the crucible — the last 20% is yours.' },
     ],
-    rewards: { xp: 200, flags: [FLAGS.M2_IMPL_CONTROL_DONE] },
+    objectives: [
+      {
+        id: 'open-gallery',
+        label: { pl: 'Otwórz lodową galerię', en: 'Open the ice gallery' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M2_GALLERY_OPEN },
+        requireFlag: FLAGS.M2_GALLERY_OPEN,
+      },
+      {
+        id: 'switchyard',
+        label: { pl: 'Zaplanuj dostawy na zwrotnicy', en: 'Plan the deliveries at the switchyard' },
+        event: 'arcade:completed',
+        matchPayload: { arcadeGameId: 'arcade-switchyard', solved: true },
+        requireFlag: FLAGS.M2_SWITCHYARD_DONE,
+      },
+      {
+        id: 'manual-cast',
+        label: { pl: 'Poprowadź ręczny odlew', en: 'Finish the manual cast' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M2_CAST_DONE },
+        requireFlag: FLAGS.M2_CAST_DONE,
+      },
+    ],
+    rewards: { xp: 150, flags: [FLAGS.M2_FIRST_INGOT] },
   },
 ];

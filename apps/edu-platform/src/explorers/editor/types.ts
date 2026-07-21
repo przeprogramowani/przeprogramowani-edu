@@ -73,8 +73,7 @@ export interface TiledMap {
   width: number;
 }
 
-export type EditorMode = 'paint' | 'erase' | 'zones';
-export type LayerName = 'Ground' | 'Walls' | 'Above' | 'Zones';
+export type EditorTool = 'grid' | 'props' | 'zones';
 
 export const ZONE_COLORS: Record<ZoneObject['type'], string> = {
   trigger: '#ffb347',

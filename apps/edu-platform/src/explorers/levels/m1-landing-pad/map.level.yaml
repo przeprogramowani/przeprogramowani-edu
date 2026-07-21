@@ -1,27 +1,25 @@
 theme: 2
 grid: |
-  ~~#######~~~~~~~~~~~
-  ~~#.....#~~~~~~~~~~~
-  ~~#.....#~~~~~~~~~~~
+  ~~###~###~~~~~~~~~~~
+  ~~#.###.#~~~~~~~~~~~
   ~~#.....#~~~~~~~~~~~
   ~~###.###~~~~~~~~~~~
+  ~~~~#.#~~~~~~~~~~~~~
   #####.##############
   #..................#
   #..................D
-  #..................D
-  #............#######
-  #............#~~~~~~
-  ##############~~~~~~
+  #..................#
+  ####################
   ~~~~~~~~~~~~~~~~~~~~
 props:
   - { id: cert-terminal, prop: holographic-console, at: [3, 1], solid: true }
-  - { id: operation-archive, prop: holographic-console, at: [5, 1], solid: true }
-  - { id: drone1, prop: scout-drone, at: [9, 6], solid: true }
-  - { id: drone2, prop: scout-drone, at: [11, 6], solid: true }
+  - { prop: holographic-console, at: [7, 1], solid: true }
+  - { prop: broken-scout-drone, at: [3, 6], solid: false }
+  - { id: drone1, prop: broken-scout-drone, at: [9, 6], solid: true }
   - { id: ship-teleport, prop: ship-teleport, at: [1, 7], solid: true }
-  - { id: landing-marker, prop: crystal-orb, at: [6, 8], solid: true }
-  - { id: drone3, prop: scout-drone, at: [3, 10], solid: true }
-  - { id: drone4, prop: scout-drone, at: [9, 10], solid: true }
+  - { prop: broken-scout-drone, at: [3, 8], solid: false }
+  - { id: landing-marker, prop: energy-core, at: [6, 8], solid: true }
+  - { prop: broken-scout-drone, at: [9, 8], solid: false }
 zones:
   - id: ship-teleport
     name: Landed Shuttle
@@ -31,57 +29,53 @@ zones:
       targetMap: m0-core-ai
       spawnX: 9
       spawnY: 5
-  - id: operation-archive
-    name: Corrupted Operation Archive
+  - id: camp-console
+    name: Base Camp Table
     type: trigger
-    propId: operation-archive
-  - id: landing-marker
-    name: Dormant Landing Marker
-    type: trigger
-    propId: landing-marker
-  - id: drone1
-    name: Inactive Scout Drone 1
-    type: trigger
-    propId: drone1
-  - id: drone2
-    name: Inactive Scout Drone 2
-    type: trigger
-    propId: drone2
-  - id: drone3
-    name: Inactive Scout Drone 3
-    type: trigger
-    propId: drone3
-  - id: drone4
-    name: Inactive Scout Drone 4
-    type: trigger
-    propId: drone4
-  - id: exam-prd-contract
-    name: VOID Certification Terminal
+    at: [7, 1]
+  - id: exam-protocol-1
+    name: Expedition Protocol Terminal I
     type: exam
     propId: cert-terminal
     properties:
-      examId: m1-exam-prd-contract
-  - id: disabled-scout
-    name: Damaged Scout R-4
+      examId: m1-exam-protocol-1
+  - id: moreau
+    name: Moreau
     type: npc
+    at: [5, 7]
+    properties:
+      npcType: scientist
+      npcVariant: jungle-dark-green
+  - id: survey-jungle-wall
+    name: Survey Point — Jungle Wall
+    type: trigger
+    at: [3, 6]
+  - id: survey-burn-line
+    name: Survey Point — Burn Line
+    type: trigger
+    propId: landing-marker
+  - id: survey-ridge-view
+    name: Survey Point — Ridge View
+    type: trigger
     at: [15, 6]
-    properties:
-      npcType: robot
-      npcVariant: jungle-dark-green
-  - id: canopy-surveyor
-    name: Canopy Surveyor C-7
-    type: npc
-    at: [6, 10]
-    properties:
-      npcType: orb
-      npcVariant: jungle-dark-green
-  - id: echo-depths-door
-    name: Route to Echo Depths
+  - id: wreck-debris-1
+    name: Wreck Debris
+    type: trigger
+    propId: drone1
+  - id: wreck-debris-2
+    name: Wreck Debris
+    type: trigger
+    at: [9, 8]
+  - id: preflight-panel
+    name: Shuttle Preflight Panel
+    type: trigger
+    at: [2, 8]
+  - id: grove-door
+    name: Route to Probe Grove
     type: door
     at: [19, 7]
-    size: [1, 2]
     properties:
-      targetMap: m1-echo-depths
+      targetMap: m1-shaft-control
       spawnX: 2
       spawnY: 7
-      requiredFlags: m1-prd-audit-done
+      requiredFlags: m1-camp-online

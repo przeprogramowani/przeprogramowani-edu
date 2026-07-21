@@ -1,81 +1,76 @@
 theme: 2
 grid: |
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~~~~~~~~~########~~~~~~~~~~~
-  ~#######~#......#~########~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~#######~########~########~~
   ~#.....#~#......#~#......#~~
   ~#.....#~#......#~#......#~~
   ~#.....#~#......#~#......#~~
   ~#.....#~#......#~#......#~~
   ~###.###~###.####~###.####~~
-  ####.#######.########.######
-  #..........................#
-  #..........................#
-  D..........................D
-  D..........................D
-  #..........................#
-  #############....###########
-  ~~~~~~~~~~~~#....#~~~~~~~~~~
-  ~~~~~~~~~~~~######~~~~~~~~~~
+  ####.#######.########.##~~~~
+  #......................####~
+  #.........................#~
+  D......................##.#~
+  #.........###...#########.#~
+  #.........#~#...#~~~~~~~#.#~
+  ###########~#...#########.#~
+  ~~~~~~~~~~~~#.............#~
+  ~~~~~~~~~~~~###############~
 props:
-  - { id: amplified-portal, prop: ancient-portal, at: [12, 2], solid: true }
-  - { id: amp-ore, prop: synaptit-ore, at: [13, 2], solid: true }
-  - { id: classical-orb, prop: crystal-orb, at: [4, 3], solid: true }
+  - { id: dormant-node, prop: void-node, at: [4, 3], solid: true }
+  - { id: pylon-west, prop: energy-core, at: [11, 3], solid: true }
+  - { prop: ancient-portal, at: [12, 3], solid: true }
+  - { prop: synaptit-ore, at: [13, 3], solid: true }
   - { id: relay-core, prop: energy-core, at: [21, 3], solid: true }
-  - { id: relay-drone, prop: scout-drone, at: [23, 3], solid: true }
+  - { id: relay-drone, prop: broken-scout-drone, at: [23, 3], solid: true }
   - { id: cert-terminal, prop: holographic-console, at: [7, 9], solid: true }
   - { id: bay-console, prop: holographic-console, at: [14, 9], solid: true }
-  - { id: auth-panel, prop: energy-barrier, at: [14, 15], solid: true }
+  - { prop: energy-barrier, at: [24, 10], solid: true }
+  - { prop: energy-barrier, at: [17, 15], solid: true }
 zones:
-  - id: profile-vault-door
-    name: Return to Profile Vault
+  - id: vein-door
+    name: Return to the Vein
     type: door
     at: [0, 11]
-    size: [1, 2]
     properties:
       targetMap: m1-profile-vault
       spawnX: 21
       spawnY: 9
-  - id: uplink-console
-    name: Reserve Uplink Console
+  - id: array-console
+    name: Sensor Array Control
     type: trigger
     propId: bay-console
-  - id: classical-route
-    name: Classical VOID Route
+  - id: pylon-west
+    name: West Pylon
     type: trigger
-    propId: classical-orb
-  - id: amplified-route
-    name: Synaptit-Amplified Route
-    type: trigger
-    propId: amplified-portal
-  - id: relay-route
-    name: Multi-Hop Relay Route
+    propId: pylon-west
+  - id: pylon-east
+    name: East Pylon
     type: trigger
     propId: relay-core
-  - id: human-auth-panel
-    name: Human Authorization Panel
+  - id: ancient-portal
+    name: Ancient Portal
     type: trigger
-    propId: auth-panel
-  - id: exam-authorization-boundary
-    name: VOID Certification Terminal
-    type: exam
-    propId: cert-terminal
-    properties:
-      examId: m1-exam-authorization-boundary
-  - id: relay-tender
-    name: Relay Tender T-8
+    at: [12, 3]
+  - id: ore-trace
+    name: Ore Trace
+    type: trigger
+    at: [13, 3]
+  - id: dormant-node
+    name: Dormant Node
+    type: trigger
+    propId: dormant-node
+  - id: swierszcz-crest
+    name: Świerszcz
     type: npc
     at: [20, 10]
     properties:
       npcType: robot
       npcVariant: jungle-dark-green
-  - id: moon-two-door
-    name: Route to Moon Two
-    type: door
-    at: [27, 11]
-    size: [1, 2]
+  - id: exam-protocol-5
+    name: Expedition Protocol Terminal V
+    type: exam
+    propId: cert-terminal
     properties:
-      targetMap: m2-planning
-      spawnX: 1
-      spawnY: 5
-      requiredFlags: m1-uplink-done,sys:course-m2-available
+      examId: m1-exam-protocol-5

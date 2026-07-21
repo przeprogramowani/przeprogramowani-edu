@@ -1,14 +1,13 @@
-# M2 L4 — The Assembly Hall (Hala Montażowa)
-# Linear fabricator line the player walks along: two offset wall blocks force
-# the serpentine past the stations and checkpoint gates; line-archive side room
-# south, control console at the east end.
+# M2 L4 — Huta / The Foundry
+# The smelt line and control room; a south annex opens into an ice gallery whose
+# walls glitter with Synaptit veins. First warm glow in years after the cast.
 theme: 3
 grid: |
   ##############################
   #........##..................#
   #........##..................#
   D........##..................D
-  D..................##........D
+  #..................##........#
   #..................##........#
   #..................##........#
   ###############.##############
@@ -17,82 +16,76 @@ grid: |
   ~~~~~~~~~~~~~#....#~~~~~~~~~~~
   ~~~~~~~~~~~~~######~~~~~~~~~~~
 props:
-  - { id: fabricator-1, prop: expedition-tent, at: [3, 1], solid: true }
-  - { id: fabricator-2, prop: expedition-tent, at: [6, 1], solid: true }
-  - { id: fabricator-3, prop: expedition-tent, at: [13, 1], solid: true }
-  - { id: fabricator-4, prop: expedition-tent, at: [17, 1], solid: true }
-  - { id: control-console, prop: ice-crystals, at: [26, 1], solid: true }
-  - { id: cp-gate-1, prop: energy-barrier, at: [12, 4], solid: true }
-  - { id: line-tracks, prop: yeti-footsteps, at: [16, 4], solid: false }
-  - { id: frozen-runner, prop: snowman, at: [8, 5], solid: true }
-  - { id: cp-gate-2, prop: energy-barrier, at: [22, 5], solid: true }
-  - { id: cert-terminal, prop: ice-crystals, at: [26, 6], solid: true }
-  - { id: archive-terminal, prop: scout-drone, at: [14, 9], solid: true }
+  - { id: fabricator-1, prop: fabricator-rig, at: [3, 1], solid: true }
+  - { id: fabricator-2, prop: fabricator-rig, at: [6, 1], solid: true }
+  - { id: smelt-line, prop: fabricator-rig, at: [13, 1], solid: true }
+  - { id: fabricator-4, prop: fabricator-rig, at: [17, 1], solid: true }
+  - { id: foundry-console, prop: frozen-console, at: [26, 1], solid: true }
+  - { id: switchyard-station, prop: frozen-console, at: [25, 2], solid: true }
+  - { id: crucible, prop: server-monolith, at: [12, 4], solid: true }
+  - { id: ore-shuttle, prop: cargo-tram, at: [8, 5], solid: true }
+  - { prop: server-monolith, at: [22, 5], solid: true }
+  - { prop: frozen-service-bot, at: [1, 6], solid: true }
+  - { id: cert-terminal, prop: frozen-console, at: [26, 6], solid: true }
+  - { prop: synaptit-ore, at: [14, 9], solid: true }
+  - { prop: synaptit-ore, at: [16, 9], solid: false }
+  - { prop: synaptit-ore, at: [14, 10], solid: true }
+  - { prop: synaptit-ore, at: [15, 10], solid: false }
+  - { prop: synaptit-ore, at: [17, 10], solid: true }
 zones:
-  - id: door-to-drafting
-    name: Return to the Drafting Hall
+  - id: deadlock-door
+    name: Return to the Deadlock
     type: door
     at: [0, 3]
-    size: [1, 2]
     properties:
-      targetMap: m2-drafting-hall
-      spawnX: 24
+      targetMap: m2-staging-yard
+      spawnX: 30
       spawnY: 7
-  - id: fabricator-line
-    name: Fabricator Line Station
-    type: trigger
-    propId: fabricator-1
-  - id: fabricator-line-2
-    name: Fabricator Line Station (Drifted)
-    type: trigger
-    propId: fabricator-3
-  - id: checkpoint-gate-1
-    name: Checkpoint Gate CP-3
-    type: trigger
-    propId: cp-gate-1
-  - id: checkpoint-gate-2
-    name: Checkpoint Gate CP-4
-    type: trigger
-    propId: cp-gate-2
-  - id: line-archive
-    name: Line Archive Terminal
-    type: trigger
-    propId: archive-terminal
-  - id: control-console
-    name: Line Control Console
-    type: trigger
-    propId: control-console
-  - id: frozen-runner
-    name: Frozen Runner Unit
-    type: trigger
-    propId: frozen-runner
-  - id: exam-impl-control
-    name: VOID Certification Terminal
-    type: exam
-    propId: cert-terminal
-    properties:
-      examId: m2-exam-impl-control
-  - id: foreman-f6
-    name: Foreman F-6
-    type: npc
-    at: [13, 5]
-    properties:
-      npcType: robot
-      npcVariant: hologram-blue
-  - id: controller-cp5
-    name: Controller CP-5
-    type: npc
-    at: [23, 3]
-    properties:
-      npcType: robot
-      npcVariant: hologram-blue
-  - id: planning-core-door
-    name: Route to the Planning Core
+  - id: dispatch-door
+    name: Route to the Dispatch Tower
     type: door
     at: [29, 3]
-    size: [1, 2]
     properties:
       targetMap: m2-planning-core
       spawnX: 1
       spawnY: 7
-      requiredFlags: m2-impl-control-done
+      requiredFlags: m2-first-ingot
+  - id: foundry-console
+    name: Foundry Control Console
+    type: trigger
+    propId: foundry-console
+  - id: switchyard-station
+    name: Delivery Switchyard Station
+    type: arcade
+    at: [25, 2]
+    properties:
+      arcadeGameId: arcade-switchyard
+  - id: gallery-gate
+    name: Ice Gallery Neck
+    type: trigger
+    at: [15, 7]
+  - id: ore-veins
+    name: Synaptit Veins
+    type: trigger
+    at: [16, 9]
+  - id: crucible
+    name: Casting Crucible
+    type: trigger
+    propId: crucible
+  - id: ore-shuttle
+    name: Gallery Ore Shuttle
+    type: trigger
+    propId: ore-shuttle
+  - id: sopel-foundry
+    name: Sopel
+    type: npc
+    at: [4, 5]
+    properties:
+      npcType: robot
+      npcVariant: frosty-blue
+  - id: exam-protocol-9
+    name: Expedition Protocol Terminal IX
+    type: exam
+    propId: cert-terminal
+    properties:
+      examId: m2-exam-protocol-9

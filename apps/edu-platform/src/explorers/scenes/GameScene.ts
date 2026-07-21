@@ -249,6 +249,13 @@ export class GameScene extends BaseScene {
     this.npcs = [];
 
     for (const zone of npcZones) {
+      // Flag-gated NPC spawn: skip NPCs whose requiredFlags are not all set
+      // (e.g. return-path companions that should not appear on the forward pass).
+      const rawRequiredFlags = zone.properties['requiredFlags'] as string | undefined;
+      if (rawRequiredFlags) {
+        const requiredFlags = rawRequiredFlags.split(',').map((f) => f.trim()).filter(Boolean);
+        if (requiredFlags.some((flag) => !this.hasFlag(flag))) continue;
+      }
       const npcTypeName = (zone.properties['npcType'] as string) ?? 'scientist';
       const npcVariantName = zone.properties['npcVariant'] as string | undefined;
       const npc = new NPC(
@@ -651,7 +658,7 @@ export class GameScene extends BaseScene {
     return this.zoneDebugRects.length > 0 && (this.zoneDebugRects[0]?.visible ?? false);
   }
 
-  private playCinematicIntro(introConfig: { dialogueId: string; flag: GameFlag; cinematicTitle?: string; cinematicSubtitle?: string }): void {
+  private playCinematicIntro(introConfig: { dialogueId: string; flag: GameFlag; cinematicTitle?: string; cinematicSubtitle?: string; spotlight?: boolean }): void {
     // No cinematic title card — go straight to dialogue without touching player state
     if (!introConfig.cinematicTitle) {
       this.setFlag(introConfig.flag);
@@ -717,38 +724,54 @@ export class GameScene extends BaseScene {
                 alpha: 0,
                 duration: 500,
                 onComplete: () => {
-                  // Destroy text and original overlay — spotlight RT replaces it
                   titleText.destroy();
                   subtitleText.destroy();
-                  overlay.destroy();
 
-                  // Show player (hidden behind spotlight overlay)
                   this.player.setVisible(true);
                   this.player.setAlpha(1);
 
-                  // Create spotlight overlay centered on player
-                  const cam = this.cameras.main;
-                  const spotlight = createSpotlightReveal({
-                    scene: this,
-                    centerX: this.player.x - cam.scrollX,
-                    centerY: this.player.y - cam.scrollY,
-                  });
-
-                  // Start dialogue — spotlight stays dimmed until dialogue ends
-                  const onDismissed = () => {
-                    this.bus.off(GameEvents.DIALOGUE_DISMISSED, onDismissed);
-                    spotlight.expand().then(() => {
-                      this.introPlaying = false;
-                      this.setFlag(introConfig.flag);
-                      if (this.pendingLocaleSwap) {
-                        this.pendingLocaleSwap = false;
-                        this.refreshLocaleSensitiveText();
-                      }
-                    });
+                  const finishIntro = () => {
+                    this.introPlaying = false;
+                    this.setFlag(introConfig.flag);
+                    if (this.pendingLocaleSwap) {
+                      this.pendingLocaleSwap = false;
+                      this.refreshLocaleSensitiveText();
+                    }
                   };
-                  this.bus.on(GameEvents.DIALOGUE_DISMISSED, onDismissed);
 
-                  this.startDialogue(introConfig.dialogueId);
+                  if (introConfig.spotlight) {
+                    // Spotlight RT replaces the original overlay
+                    overlay.destroy();
+
+                    // Create spotlight overlay centered on player
+                    const cam = this.cameras.main;
+                    const spotlight = createSpotlightReveal({
+                      scene: this,
+                      centerX: this.player.x - cam.scrollX,
+                      centerY: this.player.y - cam.scrollY,
+                    });
+
+                    // Start dialogue — spotlight stays dimmed until dialogue ends
+                    const onDismissed = () => {
+                      this.bus.off(GameEvents.DIALOGUE_DISMISSED, onDismissed);
+                      spotlight.expand().then(finishIntro);
+                    };
+                    this.bus.on(GameEvents.DIALOGUE_DISMISSED, onDismissed);
+
+                    this.startDialogue(introConfig.dialogueId);
+                  } else {
+                    // Plain fade to the scene — dialogue plays over the visible map
+                    this.tweens.add({
+                      targets: overlay,
+                      alpha: 0,
+                      duration: 500,
+                      onComplete: () => {
+                        overlay.destroy();
+                        finishIntro();
+                      },
+                    });
+                    this.startDialogue(introConfig.dialogueId);
+                  }
                 },
               });
             });

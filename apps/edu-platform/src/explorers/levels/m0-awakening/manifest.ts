@@ -24,4 +24,5 @@ export const manifest: LevelManifest = {
   introFlag: FLAGS.M0_INTRO_SEEN,
   introCinematicTitle: 'Statek głębokiej przestrzeni Odyssey',
   introCinematicSubtitle: '322 dni od ostatniego wpisu w logu',
+  introSpotlight: true,
 };

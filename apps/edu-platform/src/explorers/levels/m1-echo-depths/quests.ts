@@ -1,25 +1,43 @@
-import type { ApiAnswerQuest } from '../../systems/QuestManager';
+import type { EventQuest } from '../../systems/QuestManager';
 import { FLAGS } from '../../config/flags';
 
-export const quests: ApiAnswerQuest[] = [
+export const quests: EventQuest[] = [
   {
-    id: 'q-m1-echotrace',
-    completionType: 'api-answer',
-    title: { pl: 'Zbuduj EchoTrace', en: 'Build EchoTrace' },
+    id: 'q-m1-silence',
+    completionType: 'event',
+    title: { pl: 'Cisza', en: 'Silence' },
     briefing: {
-      pl: 'Misja HQ dla Nawigatora: w Earth HQ zbuduj powtarzalny skill EchoTrace, pobierz trzy chronione skany echa i sklasyfikuj komory — bez wchodzenia do niestabilnych tuneli. Dexo czeka przy konsoli na wyniki.',
-      en: 'HQ mission for the Navigator: at Earth HQ, build the repeatable EchoTrace skill, fetch the three protected echo scans, and classify the cavities — without entering the unstable tunnels. Dexo is waiting at the console for the results.',
-    },
-    answerHash: 'dc678dbc056ac0da2252e9ef7fb044c3eaf3952890561a0d56fb6011b118b78e',
-    hint: {
-      pl: 'W Earth HQ otwórz module-001-agentic-environment/PROMPT_ECHOTRACE.md. Identyfikatory śladów znajdziesz także przy trzech barierach w Rozpadlinie Echa.',
-      en: 'At Earth HQ, open module-001-agentic-environment/PROMPT_ECHOTRACE.md. The trace identifiers also appear beside the three barriers in the Echo Depths.',
+      pl: 'Trzy węzły tłumią ten pas dżungli. Nie niszcz ich — odetnij. Odizoluj wszystkie trzy w kolejności wskazywanej przez ćwierkanie Świerszcza: najpierw głęboki, potem północny, na końcu wschodni.',
+      en: 'Three nodes smother this belt of jungle. Do not destroy them — isolate them. Cut off all three in the order Świerszcz\'s chirp points to: deep first, then north, east last.',
     },
     hints: [
-      { pl: 'Dobierz natywny mechanizm wielokrotnego użycia do swojego agenta: skill, instrukcję albo równoważny artefakt.', en: 'Choose the native reusable mechanism offered by your agent: a skill, instruction file, or equivalent artifact.' },
-      { pl: 'Twój mechanizm ma pobierać token z konfiguracji lokalnej; sekret nie może trafić do repozytorium.', en: 'Your mechanism must read the token from local configuration; the secret must not enter the repository.' },
-      { pl: 'Odpowiedź tworzą trzy kody klasyfikacji w kolejności ALFA, BETA, GAMMA.', en: 'The answer is formed from three classification codes in ALPHA, BETA, GAMMA order.' },
+      { pl: 'Kolejność: głęboki węzeł, potem północny, na końcu wschodni. Zła kolejność daje ostrzeżenie, nie porażkę.', en: 'Order: deep node, then north, east last. The wrong order gives a warning, not a failure.' },
+      { pl: 'Świerszcz jest najspokojniejszy przy węźle, który należy odciąć jako następny.', en: 'Świerszcz is calmest at the node you should isolate next.' },
+      { pl: 'Nigdy nie niszcz węzła — odcinasz zasilanie, rdzeń zostaje do zbadania.', en: 'Never destroy a node — you cut the power, the core stays for study.' },
     ],
-    rewards: { xp: 150, flags: [FLAGS.M1_ECHOTRACE_DONE, FLAGS.CMDS_SCAN] },
+    objectives: [
+      {
+        id: 'isolate-deep',
+        label: { pl: 'Odetnij węzeł głęboki', en: 'Isolate the deep node' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M1_NODE_DEEP_ISOLATED },
+        requireFlag: FLAGS.M1_NODE_DEEP_ISOLATED,
+      },
+      {
+        id: 'isolate-north',
+        label: { pl: 'Odetnij węzeł północny', en: 'Isolate the north node' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M1_NODE_NORTH_ISOLATED },
+        requireFlag: FLAGS.M1_NODE_NORTH_ISOLATED,
+      },
+      {
+        id: 'isolate-east',
+        label: { pl: 'Odetnij węzeł wschodni', en: 'Isolate the east node' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M1_NODE_EAST_ISOLATED },
+        requireFlag: FLAGS.M1_NODE_EAST_ISOLATED,
+      },
+    ],
+    rewards: { xp: 125, flags: [FLAGS.M1_SILENCE_DONE, FLAGS.M1_ENTROPY_NAMED, FLAGS.CMDS_INTEL] },
   },
 ];

@@ -1,25 +1,43 @@
-import type { ApiAnswerQuest } from '../../systems/QuestManager';
+import type { EventQuest } from '../../systems/QuestManager';
 import { FLAGS } from '../../config/flags';
 
-export const quests: ApiAnswerQuest[] = [
+export const quests: EventQuest[] = [
   {
-    id: 'q-m2-mvp-milestones',
-    completionType: 'api-answer',
-    title: { pl: 'Wyznacz kamienie milowe MVP', en: 'Set the MVP Milestones' },
+    id: 'q-m2-deadlock',
+    completionType: 'event',
+    title: { pl: 'Zakleszczenie', en: 'Deadlock' },
     briefing: {
-      pl: 'Misja HQ przez łącze zapasowe Moreau: zajezdnia ma twardy budżet cieplny, a kontrakt BETA potrzebuje pierwszej partii rudy w doku. W Earth HQ wybierz najmniejszy uporządkowany łańcuch odmrożeń, który dowozi wartość na każdym etapie, i prześlij sam łańcuch — nic więcej.',
-      en: 'An HQ mission via Moreau\'s backup relay: the yard runs on a hard heat budget, and the BETA contract needs the first ore batch at the dock. At Earth HQ, choose the smallest ordered chain of thaws that delivers value at every step, and transmit the chain alone — nothing more.',
-    },
-    answerHash: '176d1b7feea954ac953a77cb60d58a5f14d16c4046a299cf81c9f4632e28876d',
-    hint: {
-      pl: 'W Earth HQ otwórz module-002-10xdevs-workflow/PROMPT_MILESTONES.md. Odpowiedź to identyfikatory kamieni rozdzielone „>", w kolejności wykonania.',
-      en: 'At Earth HQ, open module-002-10xdevs-workflow/PROMPT_MILESTONES.md. The answer is the milestone ids joined with ">", in execution order.',
+      pl: 'Trzy wagoniki blokują się nawzajem w rozjeździe. Nie przepychaj ich siłą — napraw kolejność. Odczytaj manifesty, wyznacz jedyną wykonalną kolejność i zwolnij wagoniki: gamma, potem beta, na końcu alfa.',
+      en: 'Three trams block one another in the junction. Do not shove them through — fix the order. Read the manifests, find the one feasible sequence, and release the trams: gamma, then beta, alpha last.',
     },
     hints: [
-      { pl: 'Zacznij od celu minimalnego z THAW_BUDGET.md i idź wstecz po kolumnie wymagań.', en: 'Start from the minimal goal in THAW_BUDGET.md and walk backwards along the requirements column.' },
-      { pl: 'Kamień bez fizycznego efektu w zajezdni nie jest kamieniem milowym — raporty odpadają.', en: 'A milestone without a physical effect in the yard is not a milestone — reports do not qualify.' },
-      { pl: 'Policz sumę kosztów łańcucha i sprawdź, czy usunięcie dowolnego kamienia łamie reguły.', en: 'Sum the chain\'s costs and check that removing any single milestone breaks the rules.' },
+      { pl: 'Tylko gamma ma wolną bocznicę — musi ruszyć pierwsza.', en: 'Only gamma has a free siding — it must move first.' },
+      { pl: 'Beta zwolni się dopiero, gdy gamma zejdzie z toru. Alfa jako ostatnia.', en: 'Beta only releases once gamma is off the track. Alpha last.' },
+      { pl: 'Zła kolejność daje ostrzeżenie, nie porażkę. Sopel czyta zależności na głos.', en: 'The wrong order gives a warning, not a failure. Sopel reads the dependencies aloud.' },
     ],
-    rewards: { xp: 150, flags: [FLAGS.M2_MILESTONES_DONE] },
+    objectives: [
+      {
+        id: 'release-gamma',
+        label: { pl: 'Zwolnij wagonik gamma', en: 'Release tram gamma' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M2_TRAM_GAMMA_RELEASED },
+        requireFlag: FLAGS.M2_TRAM_GAMMA_RELEASED,
+      },
+      {
+        id: 'release-beta',
+        label: { pl: 'Zwolnij wagonik beta', en: 'Release tram beta' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M2_TRAM_BETA_RELEASED },
+        requireFlag: FLAGS.M2_TRAM_BETA_RELEASED,
+      },
+      {
+        id: 'release-alpha',
+        label: { pl: 'Zwolnij wagonik alfa', en: 'Release tram alpha' },
+        event: 'flag:set',
+        matchPayload: { flag: FLAGS.M2_TRAM_ALPHA_RELEASED },
+        requireFlag: FLAGS.M2_TRAM_ALPHA_RELEASED,
+      },
+    ],
+    rewards: { xp: 125, flags: [FLAGS.M2_DEADLOCK_CLEARED, FLAGS.M2_ENTROPY_PROFILED] },
   },
 ];

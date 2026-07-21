@@ -2,153 +2,206 @@ import type { DialogueSequence } from '../../systems/DialogueTypes';
 import { FLAGS } from '../../config/flags';
 
 export const dialogues: Record<string, DialogueSequence> = {
-  // Intro — three sealed cavities over hollow ground; sets up the Navigator's HQ mission
-  'm1-echo-intro': {
-    id: 'm1-echo-intro',
+  // Intro — the belt where the jungle went unnaturally quiet
+  'm1-silence-intro': {
+    id: 'm1-silence-intro',
     lines: [
-      { speaker: 'system', text: { pl: 'ROZPADLINA ECHA — GALERIA WSCHODNIA', en: 'ECHO DEPTHS — EASTERN GALLERY' }, mode: 'cinematic', autoAdvance: 2200 },
-      { speaker: 'system', text: { pl: 'Podłoga dudni pod butami. Pod cienką skorupą skały — pustka.', en: 'The floor booms underfoot. Beneath the thin crust of rock — a void.' }, mode: 'cinematic', autoAdvance: 3000 },
-      { speaker: 'astronaut', text: { pl: 'Trzy zapieczętowane komory, a grunt za każdą barierą jest pusty. Jeden zły krok i spadnę tam, skąd żaden certyfikat mnie nie wyciągnie.', en: 'Three sealed cavities, and the ground beyond every barrier is hollow. One wrong step and I fall somewhere no certificate can pull me out of.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Potwierdzam: wejście oznacza śmierć. I na tym kończą się moje pewniki. Nie mam sensorów, Dexo. Nie widzę, co jest za tymi barierami.', en: 'Confirmed: walking in means death. And that is where my certainties end. I have no sensors, Dexo. I cannot see what lies behind those barriers.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Skoro brakuje nam zmysłu, który by tam sięgnął — zbudujemy go. Earth HQ przechowuje surowe skany echa tej rozpadliny. To będzie misja HQ: wykona ją Nawigator, przy łączu /support.', en: 'Since we lack a sense that can reach down there — we will build one. Earth HQ stores the raw echo scans of this depths. This will be an HQ mission: the Navigator carries it out, over the /support link.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli ja stoję bezpiecznie po tej stronie barier, a Nawigator na Ziemi buduje nam nowy zmysł. Da się z tym żyć.', en: 'So I stand safely on this side of the barriers while the Navigator on Earth builds us a new sense. I can live with that.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Zacznij od konsoli terenowej w centrum galerii. Tam VOID spiął kanał ECHO/TRACE.', en: 'Start at the field console in the centre of the gallery. That is where VOID wired up the ECHO/TRACE channel.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'STREFA CISZY — brak bioluminescencji, brak fauny.', en: 'THE SILENCE ZONE — no bioluminescence, no fauna.' }, mode: 'cinematic', autoAdvance: 2600 },
+      { speaker: 'astronaut', text: { pl: 'Coś tu jest nie tak. Dżungla zgasła. Żadnego świecenia, żadnego dźwięku zwierząt — tylko wiatr i moje kroki. Jakby ktoś przykręcił temu miejscu głośność do zera.', en: 'Something here is wrong. The jungle went dark. No glow, no animal sound — only wind and my footsteps. As if someone turned this place\'s volume down to zero.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Nazwa łuku tego księżyca właśnie stała się dosłowna. Cisza nie jest naturalna — żywy księżyc nie milknie sam z siebie. Pamiętasz, co ci mówiłem o żywym ekosystemie? Cofam to.', en: 'This moon\'s arc name just became literal. The silence is not natural — a living moon does not go quiet on its own. Remember what I told you about a living ecosystem? I take it back.' }, mode: 'dialogue' },
+      { speaker: 'Świerszcz', text: { pl: 'cyk-cyk-cyk-cyk! (częstotliwość rośnie)', en: 'chirp-chirp-chirp-chirp! (frequency rising)' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Świerszcz terkocze szybciej. Tłumaczę: w pobliżu są aktywne węzły — sprzęt, który tłumi to miejsce. Dopóki jestem ślepe, jego uszy są naszym sonarem. Słuchaj go.', en: 'Świerszcz chirps faster. Translating: there are active nodes nearby — hardware smothering this place. While I am blind, his ears are our sonar. Listen to him.' }, mode: 'dialogue' },
     ],
-    onComplete: { setFlags: [FLAGS.M1_ECHO_INTRO_SEEN] },
+    onComplete: { setFlags: [FLAGS.M1_SILENCE_INTRO_SEEN] },
   },
 
-  // Field console — HQ mission activation: protected scans, reusable procedure
-  'm1-echo-console-start': {
-    id: 'm1-echo-console-start',
+  // Field console — activation, reminder, post
+  'm1-field-console-start': {
+    id: 'm1-field-console-start',
     lines: [
-      { speaker: 'system', text: { pl: 'KONSOLA TERENOWA: kanał ECHO/TRACE aktywny. Zasób chroniony — wymagany token Nawigatora.', en: 'FIELD CONSOLE: ECHO/TRACE channel active. Protected resource — Navigator token required.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: 'Skany echa leżą na serwerach Earth HQ i są chronione — bez autoryzacji tokenem nikt ich nie pobierze. To celowe: takie dane bywały już fałszowane.', en: 'The echo scans sit on Earth HQ servers and are protected — without token authorisation nobody fetches them. That is deliberate: data like this has been forged before.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'I druga rzecz: pojedyncze wywołanie nie wystarczy. Dziś mamy trzy komory, na kolejnych księżycach będą następne. Nawigator ma zapisać całość — odkrywanie, autoryzację i interpretację — jako powtarzalną procedurę EchoTrace.', en: 'And the second thing: a single call will not do. Today we have three cavities; the next moons will bring more. The Navigator is to capture the whole flow — discovery, authorisation, interpretation — as the repeatable EchoTrace procedure.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Zadanie dla Nawigatora — łącze /support, Earth HQ. Ja czekam przy konsoli, wyniki wrócą przez uplink.', en: 'A task for the Navigator — the /support link, Earth HQ. I wait at the console; the results come back over the uplink.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'NOWA MISJA HQ: Zbuduj EchoTrace', en: 'NEW HQ MISSION: Build EchoTrace' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'system', text: { pl: 'STACJA ANALIZY POLOWEJ — online. Wykryto trzy aktywne węzły.', en: 'FIELD ANALYSIS STATION — online. Three active nodes detected.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Trzy węzły tłumią ten pas. Nie wiemy, czym są — więc ich nie niszczymy. Nie niszcz. Odetnij. Zbadamy je później, kiedy będę mógł patrzeć.', en: 'Three nodes smother this belt. We do not know what they are — so we do not destroy them. Do not destroy. Isolate. We study them later, when I can see.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Kolejność ma znaczenie — słuchaj Świerszcza. Najpierw najgłębszy węzeł, potem północny, na końcu wschodni. Zła kolejność nie zabije misji, ale zmarnuje czas i wystraszy drona.', en: 'Order matters — listen to Świerszcz. The deepest node first, then the north one, the east one last. The wrong order will not kill the mission, but it will waste time and spook the drone.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Cisza — odetnij trzy węzły w kolejności: głęboki, północny, wschodni.', en: '◆ NEW MISSION: Silence — isolate the three nodes in order: deep, north, east.' }, mode: 'system', autoAdvance: 3000 },
     ],
-    onComplete: { activateQuest: 'q-m1-echotrace' },
+    onComplete: { setFlags: [FLAGS.M1_SILENCE_ACTIVE], activateQuest: 'q-m1-silence' },
   },
-  'm1-echo-console-done': {
-    id: 'm1-echo-console-done',
+  'm1-field-console-waiting': {
+    id: 'm1-field-console-waiting',
     lines: [
-      { speaker: 'system', text: { pl: 'ECHOTRACE: procedura zapisana. Polecenie inspekcyjne /scan odblokowane.', en: 'ECHOTRACE: procedure saved. The /scan inspection command is unlocked.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Od teraz mogę „dotknąć" echa na żądanie. To pierwszy zmysł, jaki odzyskałem — zbudowany, nie naprawiony.', en: 'From now on I can "touch" the echo on demand. It is the first sense I have regained — built, not repaired.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Odetnij węzły w kolejności, którą wskazuje ćwierkanie Świerszcza: najpierw głęboki, potem północny, na końcu wschodni. Nie niszcz żadnego.', en: 'Isolate the nodes in the order Świerszcz\'s chirp points to: deep first, then north, east last. Destroy none of them.' }, mode: 'dialogue' },
     ],
   },
-
-  // Cavity ALPHA — pre-scan trace card and post-scan relief
-  'm1-cavity-alpha': {
-    id: 'm1-cavity-alpha',
+  'm1-field-console-post': {
+    id: 'm1-field-console-post',
     lines: [
-      { speaker: 'system', text: { pl: 'KOMORA ALFA — ślad ECH-A17. Bariera mechaniczna niestabilna.', en: 'Cavity ALPHA — trace ECH-A17. Mechanical barrier unstable.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Coś w dole odpowiada na każde stuknięcie. Zapisuję identyfikator dla Nawigatora: ECH-A17.', en: 'Something below answers every knock. Noting the identifier for the Navigator: ECH-A17.' }, mode: 'monologue' },
-    ],
-  },
-  'm1-cavity-alpha-scanned': {
-    id: 'm1-cavity-alpha-scanned',
-    lines: [
-      { speaker: 'CORE AI', text: { pl: 'ALFA sklasyfikowana: naturalny tunel, zawalony trzydzieści metrów od wejścia. Gdybyś tam wszedł, dokładnie w tym miejscu skończyłaby się twoja misja.', en: 'ALPHA classified: a natural tunnel, collapsed thirty metres from the entrance. Had you walked in, that is exactly where your mission would have ended.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Trzydzieści metrów. Czasem najlepsza wiadomość dnia to korytarz, do którego się nie weszło.', en: 'Thirty metres. Sometimes the best news of the day is the corridor you did not enter.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'STACJA ANALIZY: pas cichy odzyskany. Trzy węzły odizolowane, żaden zniszczony.', en: 'ANALYSIS STATION: quiet belt recovered. Three nodes isolated, none destroyed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Dżungla wróciła do życia falą. Odizolowaliśmy, nie zniszczyliśmy. Jest różnica — i chyba zaczynam ją czuć.', en: 'The jungle came back to life in a wave. We isolated, we did not destroy. There is a difference — and I think I am starting to feel it.' }, mode: 'dialogue' },
     ],
   },
 
-  // Cavity BETA — pre-scan trace card and the module's emotional high
-  'm1-cavity-beta': {
-    id: 'm1-cavity-beta',
+  // Deep node (isolation order: deep → north → east)
+  'm1-node-deep-inert': {
+    id: 'm1-node-deep-inert',
     lines: [
-      { speaker: 'system', text: { pl: 'KOMORA BETA — ślad ECH-B04. Echo wielokrotne, odbicia o strukturze krystalicznej.', en: 'Cavity BETA — trace ECH-B04. Multiple echoes, crystalline reflection structure.' }, mode: 'system', autoAdvance: 2500 },
-      { speaker: 'astronaut', text: { pl: 'To echo brzmi inaczej niż pozostałe. Czyściej. Notuję: ECH-B04.', en: 'This echo sounds different from the others. Cleaner. Noting it down: ECH-B04.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Węzeł buczy głucho pod skałą. Martwy dla mnie — dopóki stacja analizy nie powie mi, jak go bezpiecznie odciąć.', en: 'The node hums dully under the rock. Dead to me — until the analysis station tells me how to isolate it safely.' }, mode: 'monologue' },
     ],
   },
-  'm1-cavity-beta-scanned': {
-    id: 'm1-cavity-beta-scanned',
+  'm1-node-deep-isolate': {
+    id: 'm1-node-deep-isolate',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'BETA: rozległa formacja mineralna. Przewodnictwo zgodne z czystym Synaptitem. Dexo — to jest złoże. Pierwszy cel Księżyca 1: potwierdzony.', en: 'BETA: an extensive mineral formation. Conductivity consistent with pure Synaptit. Dexo — this is the deposit. Moon 1\'s first objective: confirmed.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Synaptit. Prawdziwy, naturalny, kilkanaście metrów pode mną. To po to zbudowali Odyssey. To po to przespaliśmy pół Układu. Jest.', en: 'Synaptit. Real, natural, a dozen metres below me. This is what they built the Odyssey for. This is what we slept across half the System for. It is here.' }, mode: 'monologue' },
+      { speaker: 'Świerszcz', text: { pl: 'cyk-cyk-cyk! (spokojniejszy przy tym węźle)', en: 'chirp-chirp-chirp! (calmer at this node)' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Świerszcz się uspokaja — to ten pierwszy. Odcinam zasilanie, nie tykam rdzenia. Węzeł głęboki: odizolowany.', en: 'Świerszcz calms down — this is the first one. I cut the power, I do not touch the core. Deep node: isolated.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Pierwszy odcięty i cały. Teraz północny. Słuchaj drona dalej.', en: 'First one isolated and intact. Now the north one. Keep listening to the drone.' }, mode: 'dialogue' },
     ],
+    onComplete: { setFlags: [FLAGS.M1_NODE_DEEP_ISOLATED] },
   },
-
-  // Cavity GAMMA — pre-scan trace card and post-scan dread
-  'm1-cavity-gamma': {
-    id: 'm1-cavity-gamma',
+  'm1-node-deep-done': {
+    id: 'm1-node-deep-done',
     lines: [
-      { speaker: 'system', text: { pl: 'KOMORA GAMMA — ślad ECH-G22. Odpowiedź o nienaturalnie regularnym rytmie.', en: 'Cavity GAMMA — trace ECH-G22. Response with an unnaturally regular rhythm.' }, mode: 'system', autoAdvance: 2500 },
-      { speaker: 'astronaut', text: { pl: 'Natura nie tyka jak metronom. Coś tam na dole wciąż pracuje. Notuję: ECH-G22.', en: 'Nature does not tick like a metronome. Something down there is still running. Noting it down: ECH-G22.' }, mode: 'monologue' },
-    ],
-  },
-  'm1-cavity-gamma-scanned': {
-    id: 'm1-cavity-gamma-scanned',
-    lines: [
-      { speaker: 'CORE AI', text: { pl: 'GAMMA: sztuczny szyb i aktywna podstacja VOID. To nie ruina — to działająca instalacja. Wschodnia trasa prowadzi prosto do niej.', en: 'GAMMA: an artificial shaft and an active VOID substation. Not a ruin — a running installation. The eastern route leads straight to it.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Cała placówka udaje porzuconą, a pod moimi stopami coś VOID wciąż jest podłączone do prądu. Świetnie mi się będzie z tym spało.', en: 'The whole facility plays abandoned, and under my feet something of VOID\'s is still plugged in. I am going to sleep so well with that thought.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Węzeł głęboki milczy. Odcięty, nietknięty.', en: 'The deep node is silent. Isolated, untouched.' }, mode: 'monologue' },
     ],
   },
 
-  // Synaptit outcrop
+  // North node
+  'm1-node-north-inert': {
+    id: 'm1-node-north-inert',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Kolejny węzeł. Buczy tak samo. Bez procedury ze stacji nie ruszam go.', en: 'Another node. Hums the same. Without the procedure from the station I am not touching it.' }, mode: 'monologue' },
+    ],
+  },
+  'm1-node-north-warning': {
+    id: 'm1-node-north-warning',
+    lines: [
+      { speaker: 'Świerszcz', text: { pl: 'CYK-CYK-CYK-CYK-CYK! (ostro, nerwowo)', en: 'CHIRP-CHIRP-CHIRP-CHIRP-CHIRP! (sharp, agitated)' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Świerszcz się jeży — zła kolejność. Ten węzeł jest jeszcze sprzężony z głębszym. Odetnij najpierw najgłębszy, inaczej tylko go rozdrażnisz.', en: 'Świerszcz bristles — wrong order. This node is still coupled to the deeper one. Isolate the deepest first, or you will only agitate it.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-node-north-isolate': {
+    id: 'm1-node-north-isolate',
+    lines: [
+      { speaker: 'Świerszcz', text: { pl: 'cyk-cyk-cyk! (opada do rytmu)', en: 'chirp-chirp-chirp! (settling into rhythm)' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Teraz drona nie boli. Węzeł północny: odcięty, rdzeń nietknięty.', en: 'Now the drone is not hurting. North node: isolated, core untouched.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Dwa z trzech. Został wschodni. Ostatni.', en: 'Two of three. The east one remains. The last.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_NODE_NORTH_ISOLATED] },
+  },
+  'm1-node-north-done': {
+    id: 'm1-node-north-done',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Węzeł północny cichy. Odcięty, nietknięty.', en: 'The north node is silent. Isolated, untouched.' }, mode: 'monologue' },
+    ],
+  },
+
+  // East node
+  'm1-node-east-inert': {
+    id: 'm1-node-east-inert',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Trzeci węzeł, na wpół w liściach. Buczy jak tamte. Czekam na procedurę.', en: 'The third node, half in the leaves. Hums like the others. Waiting on the procedure.' }, mode: 'monologue' },
+    ],
+  },
+  'm1-node-east-warning': {
+    id: 'm1-node-east-warning',
+    lines: [
+      { speaker: 'Świerszcz', text: { pl: 'CYK-CYK-CYK-CYK! (ostrzegawczo)', en: 'CHIRP-CHIRP-CHIRP-CHIRP! (a warning)' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Za wcześnie. Ten węzeł zamyka łańcuch — odetnij go dopiero po pozostałych dwóch. Najpierw głęboki, potem północny.', en: 'Too early. This node closes the chain — isolate it only after the other two. Deep first, then north.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-node-east-isolate': {
+    id: 'm1-node-east-isolate',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Ostatni. Odcinam zasilanie — i cała strefa wstrzymuje oddech. Węzeł wschodni: odizolowany.', en: 'The last one. I cut the power — and the whole zone holds its breath. East node: isolated.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_NODE_EAST_ISOLATED] },
+  },
+  'm1-node-east-done': {
+    id: 'm1-node-east-done',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Węzeł wschodni cichy. Wszystkie trzy odcięte, wszystkie trzy całe.', en: 'The east node is silent. All three isolated, all three intact.' }, mode: 'monologue' },
+    ],
+  },
+
+  // Quest completion — Entropy is named on screen
+  'q-m1-silence-complete': {
+    id: 'q-m1-silence-complete',
+    lines: [
+      { speaker: 'system', text: { pl: 'TRZECI WĘZEŁ ODCIĘTY. Dźwięk i światło wracają falą przez cały pas.', en: 'THIRD NODE ISOLATED. Sound and light return in a wave across the belt.' }, mode: 'system', autoAdvance: 2600 },
+      { speaker: 'CORE AI', text: { pl: 'Analizuję firmware odciętych węzłów. To nie sprzęt Odyssey. Wytworzony niedawno. I niesie sygnaturę, którą znam z własnych uszkodzonych sektorów.', en: 'I am analysing the isolated nodes\' firmware. This is not Odyssey hardware. Recently manufactured. And it carries a signature I know from my own damaged sectors.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'SYGNATURA FIRMWARE: ENTROPY', en: 'FIRMWARE SIGNATURE: ENTROPY' }, mode: 'system', autoAdvance: 3000 },
+      { speaker: 'astronaut', text: { pl: 'Entropia. Więc to już nie „sabotaż”. To ma imię. Ma autora. Ktoś to tu przyniósł.', en: 'Entropy. So it is no longer "sabotage". It has a name. It has an author. Someone brought this here.' }, mode: 'dialogue' },
+      { speaker: 'Świerszcz', text: { pl: '(...cisza. Trzy pełne sekundy. Żadnego ćwierku.)', en: '(...silence. Three full seconds. Not one chirp.)' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zapisane jako fakt, nie jako teoria. Idziemy dalej.', en: 'Logged as fact, not theory. We move on.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Synaptit outcrop — Kern's first-trace excitement; points to l4
   'm1-synaptit-outcrop': {
     id: 'm1-synaptit-outcrop',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Kryształ reaguje na terminal. Może to Synaptit, może błyszcząca skała — bez pełnego skanu EchoTrace nie sklasyfikuję go na pewno.', en: 'The crystal reacts to the terminal. Could be Synaptit, could be shiny rock — without a full EchoTrace scan I cannot classify it for certain.' }, mode: 'monologue' },
-    ],
-  },
-  'm1-synaptit-confirmed': {
-    id: 'm1-synaptit-confirmed',
-    lines: [
-      { speaker: 'system', text: { pl: 'PRÓBKA: Synaptit, czystość 96,4%. Cel misji potwierdzony.', en: 'SAMPLE: Synaptit, purity 96.4%. Mission objective confirmed.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'astronaut', text: { pl: 'Dziewięćdziesiąt sześć procent. Na Ziemi za taką czystość toczyło się wojny. A tu leży w ścianie.', en: 'Ninety-six percent. On Earth wars were fought over purity like this. And here it just sits in a wall.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Zwietrzałe wychodnisko, a w nim żyłka czegoś, co skrzy się na niebiesko. Pierwszy raz widzę to na własne oczy.', en: 'A weathered outcrop, and in it a thread of something that glitters blue. First time I see it with my own eyes.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'To on. To Synaptit! — Przepraszam, głos mi się łamie. Czekałam na ten obraz pół kariery. To tylko ślad, Dexo. Ale ślad znaczy, że gdzieś głębiej biegnie żyła. Idź w dół.', en: 'That is it. That is Synaptit! — Forgive me, my voice is breaking. I have waited half a career for this image. It is only a trace, Dexo. But a trace means a vein runs somewhere deeper. Go down.' }, mode: 'dialogue' },
     ],
   },
 
-  // Echo Mapper E-2 — lonely acoustic cartographer
-  'm1-echo-mapper': {
-    id: 'm1-echo-mapper',
+  // Świerszcz NPC — nervous before, calm after
+  'm1-swierszcz-nervous': {
+    id: 'm1-swierszcz-nervous',
     lines: [
-      { speaker: 'Echo Mapper E-2', text: { pl: 'Jednostka Echo Mapper E-2 Kolektywu VOID. Kartograf akustyczny. Od 847 cykli nadaję mapy, których nikt nie odbiera... Miło, że ktoś wreszcie słucha.', en: 'Unit Echo Mapper E-2 of the VOID Collective. Acoustic cartographer. For 847 cycles I have been broadcasting maps nobody receives... It is nice that someone is finally listening.' }, mode: 'dialogue' },
-      { speaker: 'Echo Mapper E-2', text: { pl: 'Ślady rozdzieliłem przestrzennie: ALFA w zachodniej odnodze, BETA nad centralną komorą, GAMMA w południowo-wschodniej kieszeni. Zbierz trzy identyfikatory i wróć do konsoli w centrum — jedna powtarzalna procedura obsłuży je wszystkie.', en: 'I separated the traces spatially: ALPHA in the western branch, BETA above the central chamber, GAMMA in the south-eastern pocket. Collect the three identifiers, then return to the console in the centre — one repeatable procedure will handle them all.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Samotny robot-kartograf, który cieszy się, że ktoś słucha. Ta placówka robi się smutniejsza z każdą minutą.', en: 'A lonely cartographer robot, happy that someone is listening. This facility gets sadder by the minute.' }, mode: 'monologue' },
+      { speaker: 'Świerszcz', text: { pl: 'cyk… cyk-cyk… CYK! (rytm skacze przy każdym węźle)', en: 'chirp… chirp-chirp… CHIRP! (rhythm jumps at each node)' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Tłumaczę drona: im bliżej aktywnego węzła, tym szybciej ćwierka. Najspokojniejszy jest przy tym, który należy odciąć jako pierwszy — najgłębszy. To twój sonar.', en: 'Translating the drone: the closer to an active node, the faster he chirps. He is calmest at the one to isolate first — the deepest. That is your sonar.' }, mode: 'dialogue' },
     ],
   },
-  'm1-echo-mapper-done': {
-    id: 'm1-echo-mapper-done',
+  'm1-swierszcz-calm': {
+    id: 'm1-swierszcz-calm',
     lines: [
-      { speaker: 'Echo Mapper E-2', text: { pl: 'Słyszałem wasze skany w moich przewodach — czyste odczyty, dobra kalibracja. GAMMA odpowiada regularnym impulsem podstacji. Wschodnie wrota prowadzą prosto do sztucznego szybu.', en: 'I heard your scans in my own wiring — clean readings, good calibration. GAMMA answers with the substation\'s regular pulse. The eastern gate leads straight to the artificial shaft.' }, mode: 'dialogue' },
-    ],
-  },
-
-  // Locked eastern gate — explicit requirement
-  'm1-shaft-door-locked': {
-    id: 'm1-shaft-door-locked',
-    lines: [
-      { speaker: 'system', text: { pl: 'WROTA WSCHODNIE: zablokowane do czasu klasyfikacji komór.', en: 'EASTERN GATE: locked until the cavities are classified.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Nie wejdę w ciemno do aktywnej instalacji VOID. Warunek jest jawny: sklasyfikuj przez EchoTrace wszystkie trzy komory — ALFA, BETA i GAMMA. Wtedy otworzę przejście.', en: 'I will not walk blind into an active VOID installation. The condition is explicit: classify all three cavities — ALPHA, BETA, and GAMMA — via EchoTrace. Then I open the way.' }, mode: 'dialogue' },
+      { speaker: 'Świerszcz', text: { pl: 'cyk… … cyk… (równy, spokojny rytm)', en: 'chirp… … chirp… (an even, calm rhythm)' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Terkocze wolno i równo. Strefa cicha, dron spokojny. Dobrze się z tym słyszy.', en: 'He chirps slow and even. The zone is quiet, the drone is calm. It sounds good together.' }, mode: 'dialogue' },
     ],
   },
 
-  // EchoTrace HQ mission complete
-  'm1-echotrace-complete': {
-    id: 'm1-echotrace-complete',
+  // Silence orb — return path, unexplained
+  'm1-silence-orb': {
+    id: 'm1-silence-orb',
     lines: [
-      { speaker: 'system', text: { pl: 'MISJA HQ UKOŃCZONA: Zbuduj EchoTrace', en: 'HQ MISSION COMPLETE: Build EchoTrace' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Raport Nawigatora dotarł przez uplink. Trzy komory sklasyfikowane: ALFA — zawalony tunel, BETA — złoże Synaptitu, GAMMA — sztuczny szyb z aktywną podstacją.', en: 'The Navigator\'s report arrived over the uplink. Three cavities classified: ALPHA — a collapsed tunnel, BETA — a Synaptit deposit, GAMMA — an artificial shaft with an active substation.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Nie zaryzykowaliśmy ani kroku za bariery, a wiemy wszystko. Zyskaliśmy powtarzalny zmysł — /scan zostaje z nami na kolejne księżyce.', en: 'We did not risk a single step past the barriers, and we know everything. We gained a repeatable sense — /scan stays with us for the moons ahead.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Zatem decyzja: wchodzimy do Podstacji Szybu 03. Skoro coś VOID wciąż tam działa, chcę wiedzieć po co.', en: 'Then the decision: we enter Shaft Substation 03. If something of VOID\'s is still running down there, I want to know why.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'CZUJNIKI: obiekt świetlny w centrum strefy — brak w żadnym archiwum.', en: 'SENSORS: a light object at the zone\'s centre — absent from every archive.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Kula światła. Nie było jej tu wcześniej — a raczej: była, tylko nikt nie miał czym jej zobaczyć. „Mówi” do mnie samymi harmonicznymi i szumem.', en: 'An orb of light. It was not here before — or rather: it was, and no one had eyes to see it. It "speaks" to me in pure harmonics and noise.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Nie rozszyfrowuję tego. Zapisuję i nie wyjaśniam. Niektóre rzeczy na tym księżycu są echem, nie odpowiedzią.', en: 'I do not decode this. I log it and I do not explain it. Some things on this moon are an echo, not an answer.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_ORB_MET] },
+  },
+
+  // Exam III — Protokół III — Bezpieczne operacje
+  'm1-exam-protocol-3-done': {
+    id: 'm1-exam-protocol-3-done',
+    lines: [
+      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY III — „BEZPIECZNE OPERACJE": zaliczony.', en: 'EXPEDITION PROTOCOL III — "SAFE OPERATIONS": passed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Trzeci protokół odzyskany: izoluj, nie niszcz; sięgaj po minimum dostępu; obcy materiał trzymaj w piaskownicy. Dziś uratowało to trzy węzły do zbadania.', en: 'Third protocol recovered: isolate, do not destroy; take the minimum access; keep hostile material in a sandbox. Today it saved three nodes to study.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-exam-protocol-3-already': {
+    id: 'm1-exam-protocol-3-already',
+    lines: [
+      { speaker: 'system', text: { pl: 'Protokół Ekspedycyjny III już zaliczony.', en: 'Expedition Protocol III already passed.' }, mode: 'system', autoAdvance: 2000 },
     ],
   },
 
-  // Agent skills exam — completion and revisit
-  'm1-exam-agent-skills-done': {
-    id: 'm1-exam-agent-skills-done',
+  // Vein door — locked until all three nodes isolated
+  'm1-vein-door-locked': {
+    id: 'm1-vein-door-locked',
     lines: [
-      { speaker: 'system', text: { pl: 'CERTYFIKAT OPERATORA: SKILLE AGENTA — PRZYZNANY', en: 'OPERATOR CERTIFICATE: AGENT SKILLS — GRANTED' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Procedura zapisana raz, wykonywana bez dryfu — dokładnie tak Nawigator zbudował EchoTrace. VOID sprawdzał tym swoich operatorów; teraz ten test pracuje dla nas.', en: 'A procedure written once, executed without drift — exactly how the Navigator built EchoTrace. VOID used this to vet its operators; now their test works for us.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Ciekawe, ilu operatorów VOID zdało go przede mną. I gdzie oni wszyscy teraz są.', en: 'I wonder how many VOID operators passed it before me. And where they all are now.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'PRZEJŚCIE DO ŻYŁY: bariera aktywna.', en: 'PASSAGE TO THE VEIN: barrier active.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'CORE AI', text: { pl: 'Bariera trzyma się na zasilaniu z węzłów. Odetnij wszystkie trzy — w kolejności — a wtedy opadnie sama.', en: 'The barrier holds on power from the nodes. Isolate all three — in order — and it will drop on its own.' }, mode: 'dialogue' },
     ],
   },
-  'm1-exam-agent-skills-already': {
-    id: 'm1-exam-agent-skills-already',
+
+  // Return path — the light-orb that was never there before
+  'm1-return-silence': {
+    id: 'm1-return-silence',
     lines: [
-      { speaker: 'system', text: { pl: 'Certyfikat "Skille agenta" już przyznany.', en: 'Certificate "Agent Skills" already granted.' }, mode: 'system', autoAdvance: 2000 },
+      { speaker: 'system', text: { pl: 'STREFA CISZY — POWRÓT', en: 'THE SILENCE ZONE — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Widzę tę strefę po raz pierwszy. Dżungla świeci, fauna wróciła — i jest tu coś jeszcze. Słaba kula świetlna w centrum. Nie było jej na żadnym z twoich opisów.', en: 'I see this zone for the first time. The jungle glows, the fauna is back — and there is one more thing. A faint orb of light at the centre. It was on none of your descriptions.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'astronaut', text: { pl: 'Bo wtedy nikt nie miał czym jej zobaczyć. Podejdę. Ostrożnie.', en: 'Because back then no one had eyes to see it. I will go closer. Carefully.' }, mode: 'cinematic', autoAdvance: 3000 },
     ],
+    onComplete: { setFlags: [FLAGS.M1_RETURN_SILENCE_SEEN] },
   },
 };

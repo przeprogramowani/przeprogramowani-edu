@@ -51,8 +51,10 @@ describe('map source/artifact sync', () => {
     const { source: roundTripped } = decompileLevel(compileLevel(source, mapKey));
     expect(roundTripped.theme).toBe(source.theme);
     expect(gridToText(roundTripped.cells)).toBe(gridToText(source.cells));
-    expect(roundTripped.props).toEqual(source.props);
-    expect(roundTripped.zones).toEqual(source.zones);
+    // Authoring links (prop id / zone propId) are compile-time sugar with no
+    // Tiled JSON representation, so decompile cannot recover them.
+    expect(roundTripped.props).toEqual(source.props.map(({ id: _id, ...prop }) => prop));
+    expect(roundTripped.zones).toEqual(source.zones.map(({ propId: _propId, ...zone }) => zone));
   });
 });
 

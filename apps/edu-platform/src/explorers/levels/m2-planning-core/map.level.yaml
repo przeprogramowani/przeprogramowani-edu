@@ -1,7 +1,6 @@
-# M2 L5 — The Planning Core (Rdzeń Planowania)
-# Ceremonial approach corridor narrowing to a single-tile passage before the
-# core rotunda — the biggest chamber of the module. Core face north-centre,
-# plan queue west, approval pedestal centre, review console south-east.
+# M2 L5 — Dyspozytornia / The Dispatch Tower
+# Glazed dispatch room above the whole motionless complex. The Schedule Core is
+# frost-grown under the roof, ringed by three dead plan boards and the main switch.
 theme: 3
 grid: |
   ~~~~~~~~~~~~#################~
@@ -11,74 +10,74 @@ grid: |
   ~~~~~~~~~~~~#...............#~
   ########~~~~#...............#~
   D......######...............#~
-  D...........................D~
-  #......######...............D~
-  ########~~~~#...............#~
+  #.........................###~
+  #......######.............#~~~
+  ########~~~~#.............###~
   ~~~~~~~~~~~~#...............#~
-  ~~~~~~~~~~~~#...............#~
-  ~~~~~~~~~~~~#...............#~
-  ~~~~~~~~~~~~#################~
+  ~~~~~~~~~~~~#.............###~
+  ~~~~~~~~~~~~#.............#~~~
+  ~~~~~~~~~~~~###############~~~
 props:
-  - { id: core-left, prop: ice-crystals, at: [19, 2], solid: true }
-  - { id: core-center, prop: energy-barrier, at: [20, 2], solid: true }
-  - { id: core-right, prop: ice-crystals, at: [21, 2], solid: true }
-  - { id: plan-queue-console, prop: scout-drone, at: [14, 4], solid: true }
-  - { id: plan-echo-frost, prop: ice-crystals, at: [23, 5], solid: true }
-  - { id: approach-tracks, prop: yeti-footsteps, at: [3, 7], solid: false }
-  - { id: approval-pedestal, prop: energy-barrier, at: [20, 8], solid: true }
-  - { id: cert-terminal, prop: ice-crystals, at: [14, 10], solid: true }
-  - { id: review-console, prop: ice-crystals, at: [25, 10], solid: true }
+  - { prop: frozen-service-bot, at: [26, 1], solid: true }
+  - { id: core-left, prop: server-monolith, at: [19, 2], solid: true }
+  - { id: core-center, prop: server-monolith, at: [20, 2], solid: true }
+  - { id: core-right, prop: server-monolith, at: [21, 2], solid: true }
+  - { id: dispatch-console, prop: frozen-console, at: [14, 4], solid: true }
+  - { id: plan-board-3, prop: holo-plan-board, at: [17, 5], solid: true }
+  - { id: plan-board-1, prop: holo-plan-board, at: [23, 5], solid: true }
+  - { prop: frozen-service-bot, at: [5, 6], solid: true }
+  - { id: master-switch, prop: server-monolith, at: [18, 8], solid: true }
+  - { id: plan-board-2, prop: holo-plan-board, at: [20, 8], solid: true }
+  - { id: cert-terminal, prop: frozen-console, at: [14, 10], solid: true }
+  - { id: siding-tram, prop: cargo-tram, at: [25, 10], solid: true }
 zones:
-  - id: door-to-assembly
-    name: Return to the Assembly Hall
+  - id: foundry-door
+    name: Return to the Foundry
     type: door
     at: [0, 6]
-    size: [1, 2]
     properties:
       targetMap: m2-assembly-line
       spawnX: 28
       spawnY: 3
   - id: core-face
-    name: Planning Core Face
+    name: Schedule Core Face
     type: trigger
     at: [19, 2]
     size: [3, 1]
-  - id: plan-queue
-    name: Plan Queue Console
+  - id: dispatch-console
+    name: Dispatcher Console
     type: trigger
-    propId: plan-queue-console
-  - id: plan-echo
-    name: Frost-Etched Draft (Plan Echo)
+    propId: dispatch-console
+  - id: master-switch
+    name: Main Switch Lever
     type: trigger
-    propId: plan-echo-frost
-  - id: approval-pedestal
-    name: Approval Pedestal
+    propId: master-switch
+  - id: plan-board-1
+    name: Plan Board I
     type: trigger
-    propId: approval-pedestal
-  - id: review-console
-    name: Review Console
+    propId: plan-board-1
+  - id: plan-board-2
+    name: Plan Board II
     type: trigger
-    propId: review-console
-  - id: exam-solo-review
-    name: VOID Certification Terminal
+    propId: plan-board-2
+  - id: plan-board-3
+    name: Plan Board III
+    type: trigger
+    propId: plan-board-3
+  - id: siding-tram
+    name: Tower Siding Tram
+    type: trigger
+    propId: siding-tram
+  - id: sopel-dispatch
+    name: Sopel
+    type: npc
+    at: [5, 7]
+    properties:
+      npcType: robot
+      npcVariant: frosty-blue
+  - id: exam-protocol-10
+    name: Expedition Protocol Terminal X
     type: exam
     propId: cert-terminal
     properties:
-      examId: m2-exam-solo-review
-  - id: core-warden-z9
-    name: Core Warden Z-9
-    type: npc
-    at: [17, 5]
-    properties:
-      npcType: robot
-      npcVariant: hologram-blue
-  - id: moon-three-door
-    name: Route to Moon Three
-    type: door
-    at: [28, 7]
-    size: [1, 2]
-    properties:
-      targetMap: m3-diagnostics
-      spawnX: 1
-      spawnY: 7
-      requiredFlags: m2-solo-review-done,sys:course-m3-available
+      examId: m2-exam-protocol-10

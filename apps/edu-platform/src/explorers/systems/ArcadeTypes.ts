@@ -1,6 +1,12 @@
 import type { BilingualText } from '../i18n/types';
 
-export type ArcadeGameType = 'asteroid-range' | 'memory-matrix' | 'oscilloscope';
+export type ArcadeGameType =
+  | 'asteroid-range'
+  | 'memory-matrix'
+  | 'oscilloscope'
+  | 'deep-scan'
+  | 'switchyard'
+  | 'fault-trace';
 
 export interface ArcadeStationContext<
   MapKey extends string = string,

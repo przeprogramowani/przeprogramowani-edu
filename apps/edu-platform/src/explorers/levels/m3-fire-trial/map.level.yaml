@@ -1,0 +1,83 @@
+# M3 L3 — Próba Ognia / The Fire Trial
+# A test hall under open sky: three trial stands in a row over lava nozzles, the
+# control module on the axis, and a trench under stand 3 where the moon's first
+# Synaptit vein is exposed. The range that passed everything and checked nothing.
+theme: 4
+grid: |
+  ##############################
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  D............................D
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  #............................#
+  ##############################
+props:
+  - { id: trial-control, prop: survey-lander, at: [14, 3], solid: true }
+  - { id: trial-terminal, prop: survey-lander, at: [16, 3], solid: true }
+  - { prop: magma-crystals, at: [11, 5], solid: false }
+  - { id: geyser-1, prop: lava-geyser, at: [8, 7], solid: true }
+  - { id: geyser-2, prop: lava-geyser, at: [15, 7], solid: true }
+  - { id: geyser-3, prop: lava-geyser, at: [22, 7], solid: true }
+  - { prop: magma-crystals, at: [8, 8], solid: false }
+  - { prop: magma-crystals, at: [15, 8], solid: false }
+  - { prop: magma-crystals, at: [22, 8], solid: false }
+  - { prop: magma-crystals, at: [19, 10], solid: false }
+  - { id: ore-vein, prop: synaptit-ore, at: [22, 11], solid: true }
+zones:
+  - id: boneyard-door
+    name: Return to the Boneyard
+    type: door
+    at: [0, 7]
+    properties:
+      targetMap: m3-boneyard
+      spawnX: 30
+      spawnY: 7
+  - id: annealing-door
+    name: Route to the Annealing Yard
+    type: door
+    at: [29, 7]
+    properties:
+      targetMap: m3-annealing-yard
+      spawnX: 2
+      spawnY: 7
+      requiredFlags: m3-red-light-online
+  - id: trial-control
+    name: Trial Control Module
+    type: trigger
+    propId: trial-control
+  - id: stand-1
+    name: Test Stand 1
+    type: trigger
+    propId: geyser-1
+  - id: stand-2
+    name: Test Stand 2
+    type: trigger
+    propId: geyser-2
+  - id: stand-3
+    name: Test Stand 3
+    type: trigger
+    propId: geyser-3
+  - id: ore-vein
+    name: Trench Synaptit Vein
+    type: trigger
+    propId: ore-vein
+  - id: iskra
+    name: Iskra
+    type: npc
+    at: [5, 10]
+    properties:
+      npcType: robot
+      npcVariant: crimson-red
+  - id: exam-protocol-13
+    name: Expedition Protocol Terminal XIII
+    type: exam
+    propId: trial-terminal
+    properties:
+      examId: m3-exam-protocol-13

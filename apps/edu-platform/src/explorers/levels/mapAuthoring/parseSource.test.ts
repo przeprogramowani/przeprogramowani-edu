@@ -92,8 +92,27 @@ zones:
       'test',
     );
 
-    expect(source.props[0]).toEqual({ slot: 1, at: [1, 1], solid: true });
+    expect(source.props[0]).toEqual({ id: 'main-console', slot: 1, at: [1, 1], solid: true });
     expect(source.zones[0].at).toEqual([1, 1]);
+  });
+
+  it('retains prop ids and zone propId links after parsing', () => {
+    const source = parseLevelSource(
+      `${MINIMAL}props:
+  - { id: main-console, slot: 1, at: [1, 1] }
+  - { slot: 2, at: [2, 1] }
+zones:
+  - { id: console-zone, type: trigger, propId: main-console }
+  - { id: floor-zone, type: trigger, at: [2, 1] }
+`,
+      'test',
+    );
+
+    expect(source.props[0].id).toBe('main-console');
+    expect(source.props[1].id).toBeUndefined();
+    expect(source.zones[0].propId).toBe('main-console');
+    expect(source.zones[0].at).toEqual([1, 1]);
+    expect(source.zones[1].propId).toBeUndefined();
   });
 
   it('uses propId coordinates when a zone also contains at', () => {

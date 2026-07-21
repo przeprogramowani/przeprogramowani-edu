@@ -19,13 +19,15 @@ export const COMMAND_REGISTRY: CommandEntry[] = [
   { name: 'support', descriptionKey: 'terminal.cmd.support', requiredFlag: FLAGS.CMDS_SUPPORT },
   { name: 'badges', descriptionKey: 'terminal.cmd.badges', requiredFlag: FLAGS.CMDS_BADGES },
   { name: 'scan', descriptionKey: 'terminal.cmd.scan', requiredFlag: FLAGS.CMDS_SCAN },
-  { name: 'policy', descriptionKey: 'terminal.cmd.policy', requiredFlag: FLAGS.CMDS_POLICY },
+  { name: 'drone', descriptionKey: 'terminal.cmd.drone', requiredFlag: FLAGS.CMDS_DRONE },
   { name: 'crew', descriptionKey: 'terminal.cmd.crew', requiredFlag: FLAGS.CMDS_CREW },
   { name: 'intel', descriptionKey: 'terminal.cmd.intel', requiredFlag: FLAGS.CMDS_INTEL },
   { name: 'uplink', descriptionKey: 'terminal.cmd.uplink', requiredFlag: FLAGS.CMDS_UPLINK },
   { name: 'sensors', descriptionKey: 'terminal.cmd.sensors', requiredFlag: FLAGS.CMDS_SENSORS },
   { name: 'plan', descriptionKey: 'terminal.cmd.plan', requiredFlag: FLAGS.CMDS_PLAN },
-  { name: 'planner', descriptionKey: 'terminal.cmd.planner', requiredFlag: FLAGS.CMDS_PLANNER },
+  { name: 'sopel', descriptionKey: 'terminal.cmd.sopel', requiredFlag: FLAGS.CMDS_SOPEL },
+  { name: 'iskra', descriptionKey: 'terminal.cmd.iskra', requiredFlag: FLAGS.CMDS_ISKRA },
+  { name: 'diag', descriptionKey: 'terminal.cmd.diag', requiredFlag: FLAGS.CMDS_DIAG },
 ];
 
 export function getAvailableCommands(flags: GameFlag[]): CommandEntry[] {

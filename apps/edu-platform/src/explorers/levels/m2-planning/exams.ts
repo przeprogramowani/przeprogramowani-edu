@@ -3,51 +3,60 @@ import { FLAGS } from '../../config/flags';
 
 export const exams: ExamDefinition[] = [
   {
-    id: 'm2-exam-plan-first',
-    title: { pl: 'Przechwycony test VOID: Plan przed kodem', en: 'Captured VOID Test: Plan Before Code' },
+    id: 'm2-exam-protocol-6',
+    title: { pl: 'Protokół Ekspedycyjny VI — Mapa drogowa', en: 'Expedition Protocol VI — Roadmap' },
     description: {
-      pl: 'Test sprawdza pracę plan-first z agentem: kontrakt planu przed implementacją, zawartość dobrego kontraktu i obsługę zmian zakresu w trakcie wykonania.',
-      en: 'This test checks plan-first work with an agent: a plan contract before implementation, the contents of a good contract, and handling scope changes during execution.',
+      pl: 'Doktryna planowania wyprawy: kiedy CORE AI rozpisuje mapę drogową, każdy kamień milowy musi mieć obserwowalny efekt i warunek, po którym poznasz, że jest osiągnięty. Protokół sprawdza, czy odróżniasz plan od pobożnych życzeń.',
+      en: 'The expedition planning doctrine: when CORE AI drafts a roadmap, every milestone must have an observable effect and a condition that tells you it has been reached. This protocol checks that you tell a plan apart from wishful thinking.',
     },
-    passingScore: 3,
+    passingScore: 2,
     questions: [
       {
         id: 'q1',
-        text: { pl: 'Nawigator ma z agentem wdrożyć nowy moduł raportowania stacji. Agent proponuje: „zacznijmy od kodu, plan ułoży się po drodze". Co jest najlepszym pierwszym krokiem?', en: 'The Navigator is about to build a new station-reporting module with an agent. The agent proposes: "let\'s start with code, the plan will emerge along the way". What is the best first step?' },
+        text: {
+          pl: 'CORE AI rozpisało mapę rozruchu bramy i oznaczyło pierwszy kamień milowy. Po czym poznasz, że naprawdę został osiągnięty?',
+          en: 'CORE AI drafted the gate boot roadmap and marked the first milestone. How do you know it has genuinely been reached?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Pozwolić agentowi generować kod od razu — szybkie iteracje zastąpią planowanie', en: 'Let the agent generate code immediately — fast iterations will replace planning' } },
-          { id: 'b', text: { pl: 'Spisać kontrakt planu: cel, zakres, kryteria sukcesu i nie-cele, zatwierdzić go, a dopiero potem implementować', en: 'Write the plan contract: goal, scope, success criteria, and non-goals, approve it, and only then implement' } },
-          { id: 'c', text: { pl: 'Poprosić agenta o pełną dokumentację techniczną przyszłego systemu przed rozmową o celu', en: 'Ask the agent for full technical documentation of the future system before discussing the goal' } },
-          { id: 'd', text: { pl: 'Zacząć od wyboru frameworka i struktury katalogów, bo to determinuje całą resztę', en: 'Start by choosing the framework and directory structure, because that determines everything else' } },
+          { id: 'a', text: { pl: 'CORE AI melduje „rozpoczęto rozruch węzła" — praca ruszyła, więc kamień zaliczony', en: 'CORE AI reports "node boot started" — the work has begun, so the milestone counts' } },
+          { id: 'b', text: { pl: 'Węzeł osiąga temperaturę roboczą i ją utrzymuje — warunek, który sam odczytasz z przyrządu', en: 'The node reaches working temperature and holds it — a condition you read off the instrument yourself' } },
+          { id: 'c', text: { pl: 'Wszystkie zadania etapu odhaczone na tablicy planu — lista domknięta', en: 'Every task in the stage ticked off on the plan board — the list is closed' } },
+          { id: 'd', text: { pl: 'CORE AI ocenia, że etap przebiegł zgodnie z planem, i proponuje iść dalej', en: 'CORE AI judges the stage went to plan and suggests moving on' } },
         ],
         correctOptionIds: ['b'],
       },
       {
         id: 'q2',
-        text: { pl: 'Kontrakt planu nowej funkcji jest gotowy do zatwierdzenia. Który zestaw elementów świadczy o tym, że nadaje się do pracy z agentem?', en: 'The plan contract for a new feature is ready for approval. Which set of elements shows it is fit for work with an agent?' },
+        text: {
+          pl: 'CORE AI wskazuje trzy węzły grzewcze bramy naraz — widzi wszystkie, ale nie umie ich uszeregować. Część zależy od siebie. Jak układasz plan rozruchu?',
+          en: 'CORE AI points to the gate\'s three heating nodes at once — it sees them all but cannot rank them. Some depend on others. How do you lay out the boot plan?',
+        },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Pełny listing przyszłego kodu i gotowa lista commitów do wykonania', en: 'A full listing of the future code and a ready list of commits to make' } },
-          { id: 'b', text: { pl: 'Harmonogram godzinowy prac i przypisanie zadań do członków załogi', en: 'An hour-by-hour schedule and task assignments for crew members' } },
-          { id: 'c', text: { pl: 'Sam opis technologii: język, framework, biblioteki i wersje zależności', en: 'A technology description alone: language, framework, libraries, and dependency versions' } },
-          { id: 'd', text: { pl: 'Cel, zakres, mierzalne kryteria sukcesu i jawne nie-cele wyznaczające granice pracy agenta', en: 'Goal, scope, measurable success criteria, and explicit non-goals marking the boundaries of the agent\'s work' } },
-        ],
-        correctOptionIds: ['d'],
-      },
-      {
-        id: 'q3',
-        text: { pl: 'W połowie implementacji agent odkrywa, że prostsze rozwiązanie wymaga wyjścia poza zatwierdzony zakres planu. Co powinno się wydarzyć?', en: 'Halfway through implementation, the agent discovers a simpler solution that requires stepping outside the approved plan scope. What should happen?' },
-        type: 'single',
-        options: [
-          { id: 'a', text: { pl: 'Agent wdraża prostsze rozwiązanie od razu — plan nie może blokować oczywistej poprawy', en: 'The agent ships the simpler solution immediately — a plan must not block an obvious improvement' } },
-          { id: 'b', text: { pl: 'Agent porzuca całą dotychczasową pracę i rozpoczyna plan od zera', en: 'The agent abandons all work so far and starts the plan from scratch' } },
-          { id: 'c', text: { pl: 'Zatrzymać pracę, zaproponować decydentowi aktualizację planu i wrócić do implementacji po zatwierdzeniu zmiany', en: 'Stop the work, propose a plan update to the decision-maker, and return to implementation once the change is approved' } },
-          { id: 'd', text: { pl: 'Agent dopisuje zmianę do planu po fakcie, żeby dokumentacja pozostała spójna', en: 'The agent appends the change to the plan after the fact, so the documentation stays consistent' } },
+          { id: 'a', text: { pl: 'Odpalam wszystkie trzy węzły równolegle — brama i tak potrzebuje ich wszystkich, więc robię je naraz i skracam rozruch', en: 'Fire all three nodes in parallel — the gate needs them all anyway, so I do them at once and shorten the boot' } },
+          { id: 'b', text: { pl: 'Zaczynam od węzła, który znam najlepiej, a resztę dopnę w biegu', en: 'Start with the node I know best and sort the rest out as I go' } },
+          { id: 'c', text: { pl: 'Wyprowadzam kolejność z zależności i idę krok po kroku, sprawdzając efekt każdego, zanim ruszę następny', en: 'Derive the order from the dependencies and go step by step, checking each effect before the next' } },
+          { id: 'd', text: { pl: 'Rozpisuję plan z każdym możliwym wariantem awaryjnym, zanim cokolwiek uruchomię', en: 'Write out a plan with every possible fallback before I start anything' } },
         ],
         correctOptionIds: ['c'],
       },
+      {
+        id: 'q3',
+        text: {
+          pl: 'Kiedy uznajesz krok planu za skończony — i co robisz, gdy węzeł protestuje poza kolejnością?',
+          en: 'When do you call a plan step finished — and what do you do when a node protests out of order?',
+        },
+        type: 'single',
+        options: [
+          { id: 'a', text: { pl: 'Krok jest skończony, gdy przechodzę dalej; a protest obchodzę, wymuszając kolejność ręcznie', en: 'A step is finished when I move on; and I get around the protest by forcing the order by hand' } },
+          { id: 'b', text: { pl: 'Krok jest skończony, gdy spełnia wcześniej ustalone kryterium; a protest poza kolejnością każe cofnąć się do ostatniego pewnego stanu i znaleźć pominiętą zależność', en: 'A step is finished when it meets a pre-set criterion; and an out-of-order protest means falling back to the last safe state to find the missed dependency' } },
+          { id: 'c', text: { pl: 'Krok jest skończony, gdy maszyna zgłasza gotowość; a protest poza kolejnością to zwykle fałszywy alarm z czujnika, który po kilku ponowieniach rozkazu mija sam', en: 'A step is finished when the machine reports ready; and an out-of-order protest is usually a false sensor alarm that clears itself after a few retries of the order' } },
+          { id: 'd', text: { pl: 'Krok jest skończony, gdy nie widzę już błędów na ekranie; a protest ignoruję, jeśli reszta i tak działa', en: 'A step is finished when I no longer see errors on screen; and I ignore the protest if the rest works anyway' } },
+        ],
+        correctOptionIds: ['b'],
+      },
     ],
-    rewards: { xp: 50, flags: [FLAGS.M2_EXAM_PLAN_FIRST_DONE] },
+    rewards: { xp: 100, flags: [FLAGS.M2_EXAM_PROTOCOL_6_DONE] },
   },
 ];

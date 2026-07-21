@@ -2,153 +2,183 @@ import type { DialogueSequence } from '../../systems/DialogueTypes';
 import { FLAGS } from '../../config/flags';
 
 export const dialogues: Record<string, DialogueSequence> = {
-  // Intro — the module's biggest reveal: VOID held crew profiles dated before launch
-  'm1-profile-intro': {
-    id: 'm1-profile-intro',
+  // Intro — the jungle floor tears into a mineral crypt
+  'm1-vein-intro': {
+    id: 'm1-vein-intro',
     lines: [
-      { speaker: 'system', text: { pl: 'MAGAZYN PROFILI — WYKRYTO DANE ZAŁOGI ODYSSEY', en: 'PROFILE VAULT — ODYSSEY CREW DATA DETECTED' }, mode: 'cinematic', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Regały pełne modułów pamięci. A na indeksach... nasze nazwiska. Moreau. Harris. Dexo.', en: 'Racks full of memory modules. And on the index labels... our names. Moreau. Harris. Dexo.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Sprawdzam znaczniki czasu. Te kopie profili są datowane przed startem Odyssey. VOID miał nasze dane, zanim opuściliśmy Ziemię.', en: 'Checking the timestamps. These profile copies are dated before the Odyssey launch. VOID had our data before we ever left Earth.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Przed startem... Czyli ktoś z wnętrza Project Odyssey przekazał im wszystko. Tak Entropia dostała się na pokład. Nie włamali się. Zostali wpuszczeni.', en: 'Before launch... So someone inside Project Odyssey handed them everything. That is how Entropy got aboard. They did not break in. They were let in.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'I jeszcze jedno. Kopia twojego profilu nosi obcy znacznik: sektor 0x7F — oznaczony do nadpisania. Ktoś wskazał cię, zanim wystartowaliśmy, Dexo.', en: 'And one more thing. The copy of your profile carries a foreign marker: sector 0x7F — flagged for overwrite. Someone marked you before we launched, Dexo.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Moja amnezja ma autora. Nie wiem, kim jest. Ale wiem, że zaplanował ją, zanim zasnąłem.', en: 'My amnesia has an author. I do not know who they are. But I know they planned it before I fell asleep.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Najpełniejszy operacyjnie fragment archiwum dotyczy inżyniera Moreau. Zacznij od cache\'u profili załogi w centrum sali.', en: 'The operationally richest part of the archive concerns Engineer Moreau. Start at the crew profile cache in the centre of the hall.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'ŻYŁA — dno dżungli rozrywa się w wąwóz.', en: 'THE VEIN — the jungle floor tears into a ravine.' }, mode: 'cinematic', autoAdvance: 2600 },
+      { speaker: 'astronaut', text: { pl: 'Ziemia się rozstępuje. Wchodzę w wąwóz jak w katedrę — ściany błyszczą żyłami, coś skrzy się w ciemności na niebiesko. Klaustrofobiczna zieleń nagle zamienia się w ogrom.', en: 'The ground splits. I step into the ravine like into a cathedral — the walls shine with veins, something glitters blue in the dark. The claustrophobic green suddenly becomes vastness.' }, mode: 'monologue' },
+      { speaker: 'dr Kern', text: { pl: 'Tu. To jest tu. Czuję tę geologię, zanim ją zobaczysz. Wąwóz to mineralna krypta — a te żyły to Synaptit, surowy, nietknięty. Poprowadzę cię. Wiem, gdzie szukać.', en: 'Here. It is here. I feel this geology before you see it. The ravine is a mineral crypt — and those veins are Synaptit, raw, untouched. I will guide you. I know where to look.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Kern jest dziś wyjątkowo pewna. Zapamiętuję to. Na razie: zestaw badawczy stoi przy wejściu do wąwozu. Zasil go, zrób głęboki skan, wydobądź pierwszą rudę. Do tej pory goniliśmy ślady. Ten weźmiemy w całości.', en: 'Kern is unusually certain today. I note it. For now: the research kit stands at the ravine entrance. Power it, run a deep scan, extract the first ore. Until now we chased traces. This one we take whole.' }, mode: 'dialogue' },
     ],
-    onComplete: { setFlags: [FLAGS.M1_PROFILE_INTRO_SEEN] },
+    onComplete: { setFlags: [FLAGS.M1_VEIN_INTRO_SEEN] },
   },
 
-  // Crew profile cache — HQ mission activation: the minimal onboarding packet
-  'm1-profile-cache-start': {
-    id: 'm1-profile-cache-start',
+  // Survey rig — quest hub
+  'm1-survey-rig-start': {
+    id: 'm1-survey-rig-start',
     lines: [
-      { speaker: 'system', text: { pl: 'CACHE PROFILI: 200 reguł komunikacyjnych. Sygnatury operacyjne Odyssey: 3. Wpisy szumu: 197.', en: 'PROFILE CACHE: 200 communication rules. Odyssey operational signatures: 3. Noise entries: 197.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'CORE AI', text: { pl: 'Plan: budzimy Moreau. To on jest specjalistą od łączności — bez niego nie odczytamy sygnatur ani nie przygotujemy transmisji do Ziemi. Ale Moreau śpi na Odyssey i nie zna niczego, co wydarzyło się na tej placówce.', en: 'The plan: we wake Moreau. He is the comms specialist — without him we cannot read the signatures or prepare the transmission to Earth. But Moreau is asleep aboard Odyssey and knows nothing of what happened at this facility.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Dlatego to misja HQ dla Nawigatora — łącze /support, Earth HQ: przygotować MINIMALNY pakiet onboardingu. Trzy prawdziwe sygnatury i kontekst, którego Moreau nie mógł znać. Nic więcej — umysł tuż po wybudzeniu, zalany szumem, popełnia błędy.', en: 'So this is an HQ mission for the Navigator — the /support link, Earth HQ: prepare a MINIMAL onboarding packet. The three genuine signatures and the context Moreau could not have known. Nothing more — a mind fresh out of hibernation, drowning in noise, makes mistakes.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli Nawigator filtruje na Ziemi, ja czekam przy przekaźniku, a Moreau dostanie różnicę, nie kopię.', en: 'So the Navigator filters back on Earth, I wait by the relay, and Moreau gets the difference, not a copy.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: 'NOWA MISJA HQ: Przywróć kontekst Moreau', en: 'NEW HQ MISSION: Restore Moreau\'s Context' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'system', text: { pl: 'ZESTAW BADAWCZY — bez zasilania. Głęboki skan: niedostępny.', en: 'RESEARCH KIT — unpowered. Deep scan: unavailable.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Zestaw jest martwy. Potrzebuje ogniwa — leży w bocznej galerii wąwozu. Przynieś je, wróć tu, wtedy uruchomimy głęboki skan.', en: 'The kit is dead. It needs a cell — one lies in the side gallery of the ravine. Bring it, come back, and we will run the deep scan.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Pierwsza Żyła — zasil zestaw, wykonaj głęboki skan, wydobądź rudę.', en: '◆ NEW MISSION: The First Vein — power the kit, run a deep scan, extract the ore.' }, mode: 'system', autoAdvance: 3000 },
     ],
-    onComplete: { activateQuest: 'q-m1-moreau-onboarding' },
+    onComplete: { setFlags: [FLAGS.M1_VEIN_ACTIVE], activateQuest: 'q-m1-first-vein' },
   },
-  'm1-profile-cache-done': {
-    id: 'm1-profile-cache-done',
+  'm1-survey-rig-scan': {
+    id: 'm1-survey-rig-scan',
     lines: [
-      { speaker: 'system', text: { pl: 'CACHE: trzy sygnatury Odyssey wydzielone. 197 wpisów szumu odrzuconych.', en: 'CACHE: three Odyssey signatures isolated. 197 noise entries rejected.' }, mode: 'system', autoAdvance: 2600 },
-    ],
-  },
-
-  // Moreau's profile — what he knows vs. lacks (one dentist wink)
-  'm1-moreau-profile': {
-    id: 'm1-moreau-profile',
-    lines: [
-      { speaker: 'CORE AI', text: { pl: 'Profil Moreau: wiedza ogólna nienaruszona — systemy radiowe, propagacja, publiczna doktryna VOID. Braki: wydarzenia tej misji, nazwy sektorów, wzorce sabotażu.', en: 'Moreau\'s profile: general knowledge intact — radio systems, propagation, VOID\'s public doctrine. Missing: this mission\'s events, sector names, sabotage patterns.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'W aktach jest też incydent: „tydzień przekonania o byciu dentystą, po wybudzeniu". Czyli to nie był żart. Tym bardziej obudźmy go porządnie.', en: 'The file also lists an incident: "one week convinced he was a dentist, post-awakening". So that was not a joke. All the more reason to wake him properly.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'ZESTAW BADAWCZY: zasilony. Głęboki skan gotowy do uruchomienia.', en: 'RESEARCH KIT: powered. Deep scan ready to run.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Uruchom skan przy konsoli obok. Triangulujesz echo po omacku — jestem ślepe, ty masz tylko pingi. Znajdź jedną czystą żyłę. Każdy zmarnowany ping to moc odjęta obozowi.', en: 'Run the scan at the console beside it. You triangulate the echo by feel — I am blind, you have only pings. Find one pure vein. Every wasted ping is power taken from the camp.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Czysta żyła jest w prawej górnej komorze, przy ścianie. Wiem to. Skanuj tam.', en: 'The pure vein is in the upper-right chamber, by the wall. I know it. Scan there.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: '...Skąd ona to wiedziała? Skan jeszcze nie ruszył.', en: '...How did she know that? The scan has not even started.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: '(nikt nie odpowiada)', en: '(no one answers)' }, mode: 'system', autoAdvance: 2200 },
     ],
   },
-  'm1-moreau-profile-done': {
-    id: 'm1-moreau-profile-done',
+  'm1-survey-rig-unsealed': {
+    id: 'm1-survey-rig-unsealed',
     lines: [
-      { speaker: 'inżynier Moreau', text: { pl: 'Zajrzałem, co trzymali w moich aktach. Nawet ten tydzień z dentystą. Ktoś prowadził o nas bardzo dokładne notatki — i to jest najmniej zabawna rzecz, jaką dziś przeczytałem.', en: 'I looked at what they kept in my file. Even the dentist week. Someone took very thorough notes on us — and that is the least funny thing I have read today.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'GŁĘBOKI SKAN: zweryfikowany. Pole komory zwolnione.', en: 'DEEP SCAN: verified. Chamber field released.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Skan potwierdził jedną czystą żyłę. Pole komory opadło. Wejdź i wydobądź rudę z oznaczonej żyły.', en: 'The scan confirmed one pure vein. The chamber field dropped. Enter and extract the ore from the marked vein.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-survey-rig-post': {
+    id: 'm1-survey-rig-post',
+    lines: [
+      { speaker: 'system', text: { pl: 'ZESTAW BADAWCZY: cel osiągnięty. Ładunek: Synaptit, 14 kg.', en: 'RESEARCH KIT: objective met. Cargo: Synaptit, 14 kg.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Pierwsza ruda w skrzyni. Ciężka jak obietnica. Teraz na grań.', en: 'The first ore in the crate. Heavy as a promise. Now to the crest.' }, mode: 'dialogue' },
     ],
   },
 
-  // The encrypted third signature — pre and post discovery
-  'm1-recall-code': {
-    id: 'm1-recall-code',
+  // Kit power cell — fetch (sets rig powered)
+  'm1-kit-core': {
+    id: 'm1-kit-core',
     lines: [
-      { speaker: 'system', text: { pl: 'SYGNATURA TRZECIA: funkcja nierozpoznana. Profil docelowy: zaszyfrowany.', en: 'THIRD SIGNATURE: function unknown. Target profile: encrypted.' }, mode: 'system', autoAdvance: 2500 },
-      { speaker: 'astronaut', text: { pl: 'Dwie sygnatury rozumiemy. Trzecia jest zamknięta na klucz i z czymś powiązana. Z czym? Z kim?', en: 'Two signatures we understand. The third is locked away and bound to something. To what? To whom?' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Ogniwo w bocznej galerii. Biorę je i niosę wprost do zestawu badawczego — osadzam w gnieździe, aż zaskoczy.', en: 'A cell in the side gallery. I take it and carry it straight to the research kit — I seat it in the socket until it clicks.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zestaw budzi się do życia. Głęboki skan dostępny. Wróć do konsoli zestawu, kiedy będziesz gotów.', en: 'The kit comes to life. Deep scan available. Return to the kit console when you are ready.' }, mode: 'dialogue' },
     ],
+    onComplete: { setFlags: [FLAGS.M1_RIG_POWERED] },
   },
-  'm1-recall-code-done': {
-    id: 'm1-recall-code-done',
+  'm1-kit-core-taken': {
+    id: 'm1-kit-core-taken',
     lines: [
-      { speaker: 'inżynier Moreau', text: { pl: 'Rozszyfrowałem trzeci wpis. To nie jest znacznik śledzący. To kod przywołania Entropii — wpięty w obwód pobudki Harrisa. Wybudzenie byłoby spustem.', en: 'I decrypted the third entry. It is not a tracking marker. It is an Entropy recall code — wired into Harris\'s wake circuit. Waking him would be the trigger.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Obwód pobudki Harrisa objąłem kwarantanną. Harris śpi — i na razie to najbezpieczniejsze miejsce, w jakim może być.', en: 'I have quarantined Harris\'s wake circuit. Harris sleeps — and for now that is the safest place he can be.' }, mode: 'dialogue' },
-    ],
-  },
-
-  // Wake relay — link to Capsule 01
-  'm1-wake-relay': {
-    id: 'm1-wake-relay',
-    lines: [
-      { speaker: 'system', text: { pl: 'PRZEKAŹNIK ODYSSEY: łącze z kapsułą 01 aktywne. Oczekiwanie na zweryfikowany pakiet onboardingu.', en: 'ODYSSEY RELAY: link to Capsule 01 active. Waiting for a verified onboarding packet.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Po drugiej stronie tego łącza śpi Moreau. Obudzimy go dobrze albo wcale.', en: 'On the other end of this link, Moreau is asleep. We wake him well, or not at all.' }, mode: 'monologue' },
-    ],
-  },
-  'm1-wake-relay-done': {
-    id: 'm1-wake-relay-done',
-    lines: [
-      { speaker: 'system', text: { pl: 'KAPSUŁA 01: inżynier Moreau przytomny. Polecenie /crew odblokowane.', en: 'CAPSULE 01: Engineer Moreau awake. The /crew command is unlocked.' }, mode: 'system', autoAdvance: 2700 },
+      { speaker: 'astronaut', text: { pl: 'Wnęka pusta — ogniwo siedzi już w zestawie. Reszta dzieje się przy konsoli skanu.', en: 'The alcove is empty — the cell is already in the kit. The rest happens at the scan console.' }, mode: 'monologue' },
     ],
   },
 
-  // Archive Echo — looping playback of a long-gone VOID archivist
-  'm1-archive-echo': {
-    id: 'm1-archive-echo',
+  // Deep scan arcade — cleared
+  'm1-deep-scan-cleared': {
+    id: 'm1-deep-scan-cleared',
     lines: [
-      { speaker: 'Archive Echo', text: { pl: '...tu archiwum. Tu archiwum. Jednostka... nie. Jestem zapisem archiwisty Kolektywu VOID. Pętla odtwarzania, aktualizacja: dawno. ...Tu archiwum.', en: '...archive here. Archive here. Unit... no. I am a recording of a VOID Collective archivist. Playback loop, last updated: long ago. ...Archive here.' }, mode: 'dialogue' },
-      { speaker: 'Archive Echo', text: { pl: 'Zasada, którą powtarzam, odkąd odszedł: profil to nie kopia magazynu. Budzonemu umysłowi podaje się różnicę — to, czego nie mógł wiedzieć. Reszta jest szumem. Szumem. Szumem.', en: 'The rule I have repeated since he left: a profile is not a copy of the vault. A waking mind is given the difference — what it could not have known. The rest is noise. Noise. Noise.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Nagranie kogoś, kogo dawno nie ma, wciąż pilnuje zasad. Pierwszy raz spotykam ducha, który ma rację.', en: 'A recording of someone long gone, still keeping the rules. First time I have met a ghost that happens to be right.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: 'GŁĘBOKI SKAN: złoże zlokalizowane. Wynik w granicach tolerancji.', en: 'DEEP SCAN: deposit located. Result within tolerance.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Trafiłem. Po omacku, pingami, ale trafiłem. Pole komory właśnie zgasło.', en: 'I hit it. By feel, by pings, but I hit it. The chamber field just went dark.' }, mode: 'dialogue' },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_DEEP_SCAN_DONE] },
+  },
+
+  // Chamber barrier
+  'm1-chamber-barrier-sealed': {
+    id: 'm1-chamber-barrier-sealed',
+    lines: [
+      { speaker: 'system', text: { pl: 'POLE KOMORY: aktywne. Wymagany zweryfikowany wynik głębokiego skanu.', en: 'CHAMBER FIELD: active. A verified deep-scan result is required.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Pole trzyma najczystszą komorę zamkniętą, dopóki skan jej nie potwierdzi. Nie forsuj go. Najpierw skan.', en: 'The field keeps the purest chamber sealed until a scan confirms it. Do not force it. Scan first.' }, mode: 'dialogue' },
     ],
   },
-  'm1-archive-echo-done': {
-    id: 'm1-archive-echo-done',
+  'm1-chamber-barrier-released': {
+    id: 'm1-chamber-barrier-released',
     lines: [
-      { speaker: 'Archive Echo', text: { pl: 'Pakiet przyjęty... przyjęty. Profil Moreau odpowiada spójnie z Odyssey. Jedna obca sygnatura pozostała poza pakietem: kod przywołania przy profilu Harrisa. Archiwum odnotowało. ...Tu archiwum.', en: 'Packet accepted... accepted. Moreau\'s profile responds coherently from the Odyssey. One foreign signature remains outside the packet: a recall code on Harris\'s profile. The archive has noted it. ...Archive here.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Pole opadło. Przejście do komory otwarte. Skan wystarczył — nie musiałem niczego rozbijać.', en: 'The field dropped. The way into the chamber is open. The scan was enough — I did not have to break anything.' }, mode: 'monologue' },
     ],
   },
 
-  // Vault Indexer V-6 — fussy anti-redundancy librarian
-  'm1-vault-indexer': {
-    id: 'm1-vault-indexer',
+  // Pure vein — extraction beat
+  'm1-pure-vein-sealed': {
+    id: 'm1-pure-vein-sealed',
     lines: [
-      { speaker: 'Vault Indexer V-6', text: { pl: 'Jednostka Vault Indexer V-6 Kolektywu VOID, bibliotekarz tego magazynu. Uprzejma prośba: proszę niczego nie duplikować. Redundancja to entropia z lepszym PR-em.', en: 'Unit Vault Indexer V-6 of the VOID Collective, librarian of this vault. A polite request: please duplicate nothing. Redundancy is entropy with better PR.' }, mode: 'dialogue' },
-      { speaker: 'Vault Indexer V-6', text: { pl: 'Układ sali: lewe skrzydło — wiedza ogólna Moreau. Prawe skrzydło — wydarzenia tej placówki i przechwycone sygnatury. Pakiet dla Moreau to różnica między skrzydłami, nie kopia obu.', en: 'The layout: left wing — Moreau\'s general knowledge. Right wing — this site\'s events and intercepted signatures. Moreau\'s packet is the difference between the wings, not a copy of both.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Żyła skrzy się za polem — piękna, czysta, poza zasięgiem. Nie forsuję komory. Najpierw skan.', en: 'The vein glitters behind the field — beautiful, pure, out of reach. I do not force the chamber. Scan first.' }, mode: 'monologue' },
     ],
   },
-  'm1-vault-indexer-done': {
-    id: 'm1-vault-indexer-done',
+  'm1-pure-vein-extract': {
+    id: 'm1-pure-vein-extract',
     lines: [
-      { speaker: 'Vault Indexer V-6', text: { pl: 'Pakiet różnicowy przyjęty. Zero duplikatów — odnotowuję z uznaniem. Profil Moreau spójny; wpis Harrisa odseparowany jako obcy kod przywołania.', en: 'Differential packet accepted. Zero duplicates — noted with appreciation. Moreau\'s profile is coherent; Harris\'s entry remains isolated as a foreign recall code.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Oznaczona żyła. Podłączam ekstraktor, tnę wzdłuż warstwy. Ruda schodzi w całości — surowy Synaptit, pierwszy w tej misji.', en: 'The marked vein. I attach the extractor, cut along the layer. The ore comes away whole — raw Synaptit, the first of this mission.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Trzymasz w rękach to, po co przylecieliśmy przez pół Układu. Zważ to. Zapisz masę.', en: 'You are holding what we crossed half the system for. Weigh it. Record the mass.' }, mode: 'dialogue' },
     ],
+    onComplete: { setFlags: [FLAGS.M1_VEIN_EXTRACTED] },
   },
-
-  // Locked uplink door — explicit unlock instruction
-  'm1-uplink-door-locked': {
-    id: 'm1-uplink-door-locked',
+  'm1-pure-vein-post': {
+    id: 'm1-pure-vein-post',
     lines: [
-      { speaker: 'system', text: { pl: 'PRZEJŚCIE DO ZATOKI UPLINK: zablokowane.', en: 'PASSAGE TO THE UPLINK BAY: locked.' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Warunek otwarcia: ukończ misję HQ „Przywróć kontekst Moreau". Kiedy Moreau potwierdzi trzy prawdziwe sygnatury, otworzę przejście — bez niego transmisja do Ziemi byłaby zgadywaniem.', en: 'The condition: complete the HQ mission "Restore Moreau\'s Context". Once Moreau confirms the three genuine signatures, I open the passage — without him, the transmission to Earth would be guesswork.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Komora pusta w miejscu żyły. Zabrałem tylko oznaczoną warstwę. Reszta krypty zostaje nietknięta.', en: 'The chamber is empty where the vein was. I took only the marked layer. The rest of the crypt stays untouched.' }, mode: 'monologue' },
     ],
   },
 
-  // Moreau onboarding complete — the wake-up and the Harris warning
-  'm1-moreau-onboarding-complete': {
-    id: 'm1-moreau-onboarding-complete',
+  // Sample marks — the sting inside a sealed chamber
+  'm1-sample-marks': {
+    id: 'm1-sample-marks',
     lines: [
-      { speaker: 'system', text: { pl: 'MISJA HQ UKOŃCZONA: Przywróć kontekst Moreau', en: 'HQ MISSION COMPLETE: Restore Moreau\'s Context' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'system', text: { pl: 'Pakiet onboardingu wstrzyknięty. Kapsuła 01: procedura wybudzania rozpoczęta.', en: 'Onboarding packet injected. Capsule 01: wake-up procedure initiated.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'inżynier Moreau', text: { pl: 'Obudziliście mnie przed czasem... mam nadzieję, że jest kawa.', en: 'You woke me early... I hope there is coffee.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Kawy nie ma. Jest porośnięta dżunglą placówka VOID, złoże Synaptitu i pakiet, który właśnie przeczytałeś.', en: 'No coffee. There is a jungle-covered VOID facility, a Synaptit deposit, and the packet you just read.' }, mode: 'dialogue' },
-      { speaker: 'inżynier Moreau', text: { pl: 'Przeczytałem. Krótki, konkretny — dobra robota. A teraz koniec żartów: trzecia sygnatura to kod przywołania Entropii, związany z obwodem pobudki Harrisa. Nie budźcie go. Pod żadnym pozorem.', en: 'I read it. Short, specific — good work. Now the jokes stop: the third signature is an Entropy recall code, bound to Harris\'s wake circuit. Do not wake him. Under any circumstances.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Kwarantanna obwodu pobudki Harrisa: aktywna. Dexo — przejście do rezerwowej zatoki uplink jest otwarte. Moreau poprowadzi nas przez transmisję do Ziemi.', en: 'Quarantine on Harris\'s wake circuit: active. Dexo — the passage to the reserve uplink bay is open. Moreau will guide us through the transmission to Earth.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Harris mówił: „przewidzieliśmy komplikacje". Ciekawe, czy przewidział tę, która śpi z nim w jednej kapsule.', en: 'Harris said: "we anticipated complications." I wonder if he anticipated the one sleeping inside his own capsule.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Chwila. To są ślady po pobraniu rdzenia próbek. Świeże. W komorze, która była zapieczętowana od zewnątrz. Ktoś badał tę żyłę niedawno — i wyszedł, zamykając za sobą pole.', en: 'Wait. These are core-sampling marks. Fresh. In a chamber that was sealed from the outside. Someone surveyed this vein recently — and left, closing the field behind them.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zapisuję jako anomalię. Nie mam kim ani czym tego wyjaśnić. Jeszcze nie.', en: 'I log it as an anomaly. I have no one and nothing to explain it with. Not yet.' }, mode: 'dialogue' },
     ],
   },
 
-  // Agent onboarding exam — completion and revisit
-  'm1-exam-agent-onboarding-done': {
-    id: 'm1-exam-agent-onboarding-done',
+  // Świerszcz in the ravine
+  'm1-swierszcz-vein': {
+    id: 'm1-swierszcz-vein',
     lines: [
-      { speaker: 'system', text: { pl: 'CERTYFIKAT OPERATORA: ONBOARDING AGENTA — PRZYZNANY', en: 'OPERATOR CERTIFICATE: AGENT ONBOARDING — GRANTED' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Dobry kontekst to różnica, nie kopia — wszystko, czego budzony umysł nie może wiedzieć sam, i nic ponadto.', en: 'Good context is a difference, not a copy — everything a waking mind cannot know on its own, and nothing beyond that.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'VOID szkolił operatorów z budzenia maszyn. My obudziliśmy człowieka. Zasady okazały się te same.', en: 'VOID trained operators to wake machines. We woke a human. The rules turned out to be the same.' }, mode: 'monologue' },
+      { speaker: 'Świerszcz', text: { pl: 'cyk……cyk (echo wraca dwa razy, ze ścian wąwozu)', en: 'chirp……chirp (the echo returns twice, off the ravine walls)' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Terkot niesie się dziwnie w tej krypcie — wraca do niego samego. Świerszcz przekrzywia się, jakby nie ufał własnemu echu.', en: 'The chirp carries strangely in this crypt — it comes back to him. Świerszcz tilts, as if he does not trust his own echo.' }, mode: 'dialogue' },
     ],
   },
-  'm1-exam-agent-onboarding-already': {
-    id: 'm1-exam-agent-onboarding-already',
+  'm1-swierszcz-vein-post': {
+    id: 'm1-swierszcz-vein-post',
     lines: [
-      { speaker: 'system', text: { pl: 'Certyfikat "Onboarding agenta" już przyznany.', en: 'Certificate "Agent Onboarding" already granted.' }, mode: 'system', autoAdvance: 2000 },
+      { speaker: 'Świerszcz', text: { pl: 'cyk-cyk! (raźno, przy skrzyni z rudą)', en: 'chirp-chirp! (briskly, by the ore crate)' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Ruda w skrzyni, dron zadowolony. Nawet echo w wąwozie brzmi teraz mniej samotnie.', en: 'Ore in the crate, the drone content. Even the ravine\'s echo sounds less lonely now.' }, mode: 'dialogue' },
     ],
+  },
+
+  // Quest completion — the stake-calibrating line
+  'q-m1-first-vein-complete': {
+    id: 'q-m1-first-vein-complete',
+    lines: [
+      { speaker: 'system', text: { pl: 'WYDOBYCIE ZAKOŃCZONE. Ważenie ładunku...', en: 'EXTRACTION COMPLETE. Weighing cargo...' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Synaptit: 14 kilogramów. Wystarczy na jeden chip. Ziemia potrzebuje ich tysięcy.', en: 'Synaptit: 14 kilograms. Enough for one chip. Earth needs thousands of them.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czternaście kilo. Trzymam w rękach cały nasz pierwszy sukces — i jest wielkości pięści. To nie jest łup. To jest błąd zaokrąglenia wobec tego, po co przylecieliśmy.', en: 'Fourteen kilos. I am holding our entire first success — and it is the size of a fist. This is not loot. This is a rounding error against what we came for.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Exam IV — Protokół IV — Dziennik zewnętrzny
+  'm1-exam-protocol-4-done': {
+    id: 'm1-exam-protocol-4-done',
+    lines: [
+      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY IV — „DZIENNIK ZEWNĘTRZNY": zaliczony.', en: 'EXPEDITION PROTOCOL IV — "EXTERNAL JOURNAL": passed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Czwarty protokół odzyskany: zapisuj ustalenia poza własną głową. Dziennik obozowy to pamięć ekspedycji — bo kolejna hibernacja zabierze to, czego nie zapisałeś.', en: 'Fourth protocol recovered: record your findings outside your own head. The camp journal is the expedition\'s memory — because the next hibernation takes whatever you did not write down.' }, mode: 'dialogue' },
+    ],
+  },
+  'm1-exam-protocol-4-already': {
+    id: 'm1-exam-protocol-4-already',
+    lines: [
+      { speaker: 'system', text: { pl: 'Protokół Ekspedycyjny IV już zaliczony.', en: 'Expedition Protocol IV already passed.' }, mode: 'system', autoAdvance: 2000 },
+    ],
+  },
+
+  // Crest door — locked until the first ore is secured
+  'm1-crest-door-locked': {
+    id: 'm1-crest-door-locked',
+    lines: [
+      { speaker: 'system', text: { pl: 'PODEJŚCIE NA GRAŃ: zamknięte.', en: 'RIDGE ASCENT: closed.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'CORE AI', text: { pl: 'Nie ruszamy na grań, dopóki pierwsza ruda nie jest zabezpieczona. Wydobądź Synaptit, potem otworzę podejście.', en: 'We do not move to the crest until the first ore is secured. Extract the Synaptit, then I will open the ascent.' }, mode: 'dialogue' },
+    ],
+  },
+
+  // Return path — CORE AI sees the vein system for the first time
+  'm1-return-vein': {
+    id: 'm1-return-vein',
+    lines: [
+      { speaker: 'system', text: { pl: 'ŻYŁA — POWRÓT', en: 'THE VEIN — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
+      { speaker: 'CORE AI', text: { pl: 'Widzę ten wąwóz po raz pierwszy. Cały system żył — biegnie dalej, niż sięgał twój skan, głębiej, niż ktokolwiek tu wchodził. To nie jedno złoże. To sieć.', en: 'I see this ravine for the first time. The whole vein system — it runs farther than your scan reached, deeper than anyone went. This is not one deposit. This is a network.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'astronaut', text: { pl: 'I gdzieś w niej — świeże ślady, których wtedy nie umiałem odczytać. Teraz je widzimy oboje.', en: 'And somewhere in it — fresh marks I could not read back then. Now we both see them.' }, mode: 'cinematic', autoAdvance: 3000 },
+    ],
+    onComplete: { setFlags: [FLAGS.M1_RETURN_VEIN_SEEN] },
   },
 };

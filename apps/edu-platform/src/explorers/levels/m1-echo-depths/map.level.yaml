@@ -1,76 +1,82 @@
 theme: 2
 grid: |
-  ~~~~~~~~~#####~~~~~~~~
-  ~~~~~~~~~#...#~~~~~~~~
-  ~#####~~~#...#~~~~~~~~
-  ~#...#~~~##.##~~~~~~~~
-  ~#...#~####.####~~~~~~
-  ~##.##~#.......#######
-  ###.####.............D
-  D....................D
-  D..............##.####
-  ########.......##.##~~
-  ~~~~~~~#.#######...#~~
-  ~~~~~~~###~~~~~#...#~~
-  ~~~~~~~~~~~~~~~#####~~
-  ~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~###########~
+  ~###~~~~~~#.........#~
+  ~#.#~~~~~~#.#####...#~
+  ~#.##o##~~#.#~~~##.##~
+  ~#.....#~~#.#~~~~#.#~~
+  ~#####.#~~#.#~~~~#.###
+  ######.#~~#.###o##...D
+  D...##.####..........#
+  #.............###.####
+  #######o##....#~#.#~~~
+  ~~~~~~~~~##.###~#.#~~~
+  ~#######o##.#~~~#.#~~~
+  ~#..........#~~~###~~~
+  ~############~~~~~~~~~
 props:
-  - { id: orb-beta, prop: crystal-orb, at: [11, 1], solid: true }
-  - { id: orb-alpha, prop: crystal-orb, at: [3, 3], solid: true }
-  - { id: cert-terminal, prop: holographic-console, at: [13, 5], solid: true }
-  - { id: field-console, prop: holographic-console, at: [11, 7], solid: true }
-  - { id: ore-outcrop, prop: synaptit-ore, at: [8, 10], solid: true }
-  - { id: orb-gamma, prop: crystal-orb, at: [17, 11], solid: true }
+  - { id: node-beta, prop: void-node, at: [11, 1], solid: true }
+  - { id: node-east, prop: void-node, at: [18, 1], solid: false }
+  - { prop: holographic-console, at: [2, 2], solid: false }
+  - { prop: holographic-console, at: [13, 9], solid: false }
+  - { id: node-gamma, prop: void-node, at: [17, 11], solid: true }
+  - { prop: synaptit-ore, at: [2, 12], solid: false }
 zones:
-  - id: landing-door
-    name: Return to Landing
+  - id: grove-door
+    name: Return to Probe Grove
     type: door
     at: [0, 7]
-    size: [1, 2]
     properties:
-      targetMap: m1-landing-pad
-      spawnX: 18
+      targetMap: m1-shaft-control
+      spawnX: 21
       spawnY: 7
-  - id: echo-console
-    name: EchoTrace Field Console
+  - id: field-console
+    name: Field Analysis Station
     type: trigger
-    propId: field-console
-  - id: cavity-alpha
-    name: Cavity Alpha
+    at: [13, 9]
+  - id: exam-protocol-3
+    name: Expedition Protocol Terminal III
+    type: exam
+    at: [2, 2]
+    properties:
+      examId: m1-exam-protocol-3
+  - id: node-deep
+    name: Deep Node
     type: trigger
-    propId: orb-alpha
-  - id: cavity-beta
-    name: Cavity Beta
+    propId: node-gamma
+  - id: node-north
+    name: North Node
     type: trigger
-    propId: orb-beta
-  - id: cavity-gamma
-    name: Cavity Gamma
+    propId: node-beta
+  - id: node-east
+    name: East Node
     type: trigger
-    propId: orb-gamma
+    propId: node-east
   - id: synaptit-outcrop
     name: Synaptit Outcrop
     type: trigger
-    propId: ore-outcrop
-  - id: exam-agent-skills
-    name: VOID Certification Terminal
-    type: exam
-    propId: cert-terminal
-    properties:
-      examId: m1-exam-agent-skills
-  - id: echo-mapper
-    name: Echo Mapper E-2
+    at: [2, 12]
+  - id: swierszcz
+    name: Świerszcz
     type: npc
-    at: [16, 6]
+    at: [11, 5]
+    properties:
+      npcType: robot
+      npcVariant: jungle-dark-green
+  - id: silence-orb
+    name: Silence Orb
+    type: npc
+    at: [11, 8]
     properties:
       npcType: orb
       npcVariant: hologram-blue
-  - id: shaft-control-door
-    name: Route to Shaft Control
+      requiredFlags: m1-sensors-online
+  - id: vein-door
+    name: Route to the Vein
     type: door
     at: [21, 6]
-    size: [1, 2]
     properties:
-      targetMap: m1-shaft-control
+      targetMap: m1-profile-vault
       spawnX: 2
-      spawnY: 7
-      requiredFlags: m1-echotrace-done
+      spawnY: 10
+      requiredFlags: m1-silence-done

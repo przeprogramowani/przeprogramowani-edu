@@ -14,6 +14,11 @@ import { manifest as m2StagingYard } from './m2-staging-yard/manifest';
 import { manifest as m2DraftingHall } from './m2-drafting-hall/manifest';
 import { manifest as m2AssemblyLine } from './m2-assembly-line/manifest';
 import { manifest as m2PlanningCore } from './m2-planning-core/manifest';
+import { manifest as m3Apron } from './m3-apron/manifest';
+import { manifest as m3Boneyard } from './m3-boneyard/manifest';
+import { manifest as m3FireTrial } from './m3-fire-trial/manifest';
+import { manifest as m3AnnealingYard } from './m3-annealing-yard/manifest';
+import { manifest as m3AssayOffice } from './m3-assay-office/manifest';
 import { manifest as debugNpcPlayground } from './debug-npc-playground/manifest';
 
 const LEVELS = [
@@ -31,6 +36,11 @@ const LEVELS = [
   m2DraftingHall,
   m2AssemblyLine,
   m2PlanningCore,
+  m3Apron,
+  m3Boneyard,
+  m3FireTrial,
+  m3AnnealingYard,
+  m3AssayOffice,
   debugNpcPlayground,
 ] as const;
 

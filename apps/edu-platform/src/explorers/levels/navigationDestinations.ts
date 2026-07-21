@@ -36,10 +36,7 @@ export type NavDestination = NavDestinationBase &
 export type DestinationStatus = 'available' | 'locked' | 'no-signal';
 
 /** Shared status logic for the navigation deck overlay and the /navi mission map. */
-export function getDestinationStatus(
-  dest: NavDestination,
-  hasFlag: (flag: GameFlag) => boolean
-): DestinationStatus {
+export function getDestinationStatus(dest: NavDestination, hasFlag: (flag: GameFlag) => boolean): DestinationStatus {
   if (!dest.targetMap) return 'no-signal';
   return dest.requiredFlags.every(hasFlag) ? 'available' : 'locked';
 }
@@ -50,8 +47,8 @@ export const NAV_DESTINATIONS: readonly NavDestination[] = [
     id: 'moon-1',
     name: { pl: 'Księżyc 1 — Dżungla', en: 'Moon 1 — Jungle' },
     description: {
-      pl: 'Strefa wydobywcza VOID. Wykryto sygnaturę Synaptitu.',
-      en: 'VOID extraction zone. Synaptit signature detected.',
+      pl: 'Dżunglowy księżyc. Strefa Ciszy — sygnał urwany.',
+      en: 'Jungle moon. The Silence Zone — signal cut off.',
     },
     codename: 'Agentic Asteroid',
     eta: '2026-05-22',
@@ -64,27 +61,29 @@ export const NAV_DESTINATIONS: readonly NavDestination[] = [
     id: 'moon-2',
     name: { pl: 'Księżyc 2 — Lodowy', en: 'Moon 2 — Ice' },
     description: {
-      pl: 'Węzeł Planistyczny PN-0. Moduł planowania CORE AI.',
-      en: 'Planning Node PN-0. CORE AI planning module.',
+      pl: 'Lodowa wykuwnia serii Odyssey-F. Sygnał nawigacyjny: powtarzalny. Załoga: żadna.',
+      en: 'Odyssey-F ice forge. Navigation signal: repeating. Crew: none.',
     },
     codename: 'Wormhole Workflows',
     eta: '2026-05-29',
     targetMap: 'm2-planning',
     spawnX: 2,
     spawnY: 6,
-    requiredFlags: [FLAGS.M1_UPLINK_DONE, FLAGS.SYS_COURSE_M2_AVAILABLE],
+    requiredFlags: [FLAGS.M1_SENSORS_ONLINE, FLAGS.SYS_COURSE_M2_AVAILABLE],
   },
   {
     id: 'moon-3',
     name: { pl: 'Księżyc 3 — Wulkaniczny', en: 'Moon 3 — Volcanic' },
     description: {
-      pl: 'Autodiagnostyka CORE AI. Sygnał niedostępny.',
-      en: 'CORE AI self-diagnostics. Signal unavailable.',
+      pl: 'Poligon certyfikacyjny serii Odyssey-T. Raport stacji: wszystkie systemy sprawne — od 1892 dni.',
+      en: 'Odyssey-T certification proving ground. Station report: all systems nominal — for 1,892 days.',
     },
     codename: 'Quality Quasar',
     eta: '2026-06-05',
-    targetMap: null,
-    requiredFlags: [],
+    targetMap: 'm3-apron',
+    spawnX: 4,
+    spawnY: 7,
+    requiredFlags: [FLAGS.M2_PLANNING_ONLINE, FLAGS.SYS_COURSE_M3_AVAILABLE],
   },
   {
     id: 'moon-4',
@@ -96,7 +95,7 @@ export const NAV_DESTINATIONS: readonly NavDestination[] = [
     codename: 'Megalithic Monolith',
     eta: '2026-06-12',
     targetMap: null,
-    requiredFlags: [],
+    requiredFlags: [FLAGS.M3_DIAGNOSTICS_ONLINE, FLAGS.SYS_COURSE_M4_AVAILABLE],
   },
   {
     id: 'moon-5',

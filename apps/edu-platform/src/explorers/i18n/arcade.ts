@@ -38,6 +38,37 @@ export const arcadeStrings = {
     'arcade.ast.statusCooldown': 'LADOWANIE {ms}ms',
     'arcade.ast.statusLine': 'SEKTOR B-12  |  CELE {targets}\nMINERALY {score}  |  LASER {laser}',
 
+    // DeepScan renderer
+    'arcade.ds.title': 'GŁĘBOKI SKAN — WĄWÓZ',
+    'arcade.ds.controls': '[WSAD] kursor  [SPACE] ping  [ENTER] oznacz złoże',
+    'arcade.ds.status': 'PINGI: {pings}  |  CZYTAJ ECHA, OZNACZ ŻYŁĘ',
+    'arcade.ds.outOfPings': 'Bateria wyczerpana — [ENTER] oznacz złoże',
+    'arcade.ds.result': 'ODCZYT: {score}/100',
+    'arcade.ds.finishHint': 'Skan zakończony — [ENTER] zakończ',
+
+    // Switchyard renderer
+    'arcade.sw.title': 'ZWROTNICA — HUTA',
+    'arcade.sw.phasePlanning': 'FAZA PLANOWANIA',
+    'arcade.sw.phaseExecution': 'FAZA WYKONANIA',
+    'arcade.sw.controlsPlanning': '[WSAD] kursor  [SPACE] zwrotnica/kolejność  [ENTER] start',
+    'arcade.sw.controlsExecution': '[SPACE] przytrzymaj wagonik   blokady: {holds}',
+    'arcade.sw.startHint': 'Ułóż plan, potem naciśnij [ENTER]',
+    'arcade.sw.queue': 'KOLEJKA ODJAZDÓW: {order}',
+    'arcade.sw.delivered': 'DOSTARCZONO: {done}/{total}   BLOKADY: {holds}',
+    'arcade.sw.result': 'DOSTAWA: {score}/100',
+    'arcade.sw.finishHint': 'Wytop gotowy — [ENTER] zakończ',
+
+    // FaultTrace renderer
+    'arcade.ft.title': 'ZWARCIE — WYŻARZALNIA',
+    'arcade.ft.controls': '[A/D] sonda  [SPACE] pomiar  [ENTER] wskaż usterkę',
+    'arcade.ft.status': 'SONDY: {probes}  |  ZLOKALIZUJ USTERKĘ — NIE UFAJ JEDNEMU ZIELONEMU',
+    'arcade.ft.reportOk': 'POWYŻEJ: OK',
+    'arcade.ft.reportFault': 'PONIŻEJ: BŁĄD',
+    'arcade.ft.confirmHint': 'Jeden czujnik kłamie — potwierdź odczyt drugą sondą.',
+    'arcade.ft.outOfProbes': 'Chłodziwo na wyczerpaniu — [ENTER] wskaż usterkę',
+    'arcade.ft.result': 'LOKALIZACJA: {score}/100',
+    'arcade.ft.finishHint': 'Pętla skalibrowana — [ENTER] zakończ',
+
     // Mission resolution / results
     'arcade.replay.disclaimer':
       'Misja w tym miejscu jest już wykonana. Dodatkowe XP nie zostanie przyznane - możesz zagrać dla zabawy. Powodzenia!',
@@ -89,6 +120,37 @@ export const arcadeStrings = {
     'arcade.ast.statusReady': 'READY',
     'arcade.ast.statusCooldown': 'RELOADING {ms}ms',
     'arcade.ast.statusLine': 'SECTOR B-12  |  TARGETS {targets}\nMINERALS {score}  |  LASER {laser}',
+
+    // DeepScan renderer
+    'arcade.ds.title': 'DEEP SCAN — RAVINE',
+    'arcade.ds.controls': '[WSAD] cursor  [SPACE] ping  [ENTER] mark deposit',
+    'arcade.ds.status': 'PINGS: {pings}  |  READ THE ECHOES, MARK THE VEIN',
+    'arcade.ds.outOfPings': 'Battery drained — [ENTER] mark deposit',
+    'arcade.ds.result': 'READING: {score}/100',
+    'arcade.ds.finishHint': 'Scan complete — [ENTER] finish',
+
+    // Switchyard renderer
+    'arcade.sw.title': 'SWITCHYARD — FOUNDRY',
+    'arcade.sw.phasePlanning': 'PLANNING PHASE',
+    'arcade.sw.phaseExecution': 'EXECUTION PHASE',
+    'arcade.sw.controlsPlanning': '[WSAD] cursor  [SPACE] switch/order  [ENTER] start',
+    'arcade.sw.controlsExecution': '[SPACE] hold a tram   holds: {holds}',
+    'arcade.sw.startHint': 'Lay out the plan, then press [ENTER]',
+    'arcade.sw.queue': 'DEPARTURE QUEUE: {order}',
+    'arcade.sw.delivered': 'DELIVERED: {done}/{total}   HOLDS: {holds}',
+    'arcade.sw.result': 'DELIVERY: {score}/100',
+    'arcade.sw.finishHint': 'Melt ready — [ENTER] finish',
+
+    // FaultTrace renderer
+    'arcade.ft.title': 'FAULT TRACE — ANNEALING YARD',
+    'arcade.ft.controls': '[A/D] probe  [SPACE] measure  [ENTER] mark fault',
+    'arcade.ft.status': 'PROBES: {probes}  |  LOCATE THE FAULT — TRUST NO SINGLE GREEN',
+    'arcade.ft.reportOk': 'UPSTREAM: OK',
+    'arcade.ft.reportFault': 'DOWNSTREAM: FAULT',
+    'arcade.ft.confirmHint': 'One sensor lies — confirm the reading with a second probe.',
+    'arcade.ft.outOfProbes': 'Coolant running low — [ENTER] mark the fault',
+    'arcade.ft.result': 'LOCALIZATION: {score}/100',
+    'arcade.ft.finishHint': 'Loop calibrated — [ENTER] finish',
 
     // Mission resolution / results
     'arcade.replay.disclaimer':
