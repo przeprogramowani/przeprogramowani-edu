@@ -2,8 +2,12 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ALL_FLAGS } from '../config/flags';
-import { NPC_TYPE_ROWS } from '../config/constants';
+import { NPC_COLOR_VARIANTS, NPC_TYPE_ROWS, TILE_SIZE } from '../config/constants';
+import { QA_MAP_SPAWNS, type QaMapSpawn } from '../config/qaMapSpawns';
+import { isSpawnPositionValid } from '../state/spawnValidation';
 import { ALL_LEVELS } from './index';
+import { NAV_DESTINATIONS } from './navigationDestinations';
+import { parseLevelSource } from './mapAuthoring/parseSource';
 
 interface TiledProperty {
   name: string;
@@ -18,10 +22,13 @@ interface TiledObject {
 
 interface TiledLayer {
   name?: string;
+  data?: number[];
   objects?: TiledObject[];
 }
 
 interface TiledMap {
+  width?: number;
+  height?: number;
   layers?: TiledLayer[];
 }
 
@@ -34,18 +41,23 @@ interface ParsedZone {
 const THIS_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(THIS_DIR, '../../..');
 const MAPS_DIR = path.join(PROJECT_ROOT, 'public/game/maps');
+const LEVELS_DIR = path.join(PROJECT_ROOT, 'src/explorers/levels');
 
 function isKnownFlag(flag: string): boolean {
   return ALL_FLAGS.includes(flag as (typeof ALL_FLAGS)[number]) || flag.startsWith('arcade:');
 }
 
-function getZonesForMap(mapKey: string): ParsedZone[] {
+function getMap(mapKey: string): TiledMap {
   const mapPath = path.join(MAPS_DIR, `${mapKey}.json`);
   if (!existsSync(mapPath)) {
     throw new Error(`Missing map JSON for "${mapKey}" at ${mapPath}`);
   }
 
-  const map = JSON.parse(readFileSync(mapPath, 'utf8')) as TiledMap;
+  return JSON.parse(readFileSync(mapPath, 'utf8')) as TiledMap;
+}
+
+function getZonesForMap(mapKey: string): ParsedZone[] {
+  const map = getMap(mapKey);
   const zonesLayer = map.layers?.find((layer) => layer.name === 'Zones');
   const objects = zonesLayer?.objects ?? [];
 
@@ -59,6 +71,39 @@ function getZonesForMap(mapKey: string): ParsedZone[] {
   });
 }
 
+function isSafeAuthoredSpawn(mapKey: string, spawn: QaMapSpawn): boolean {
+  const sourcePath = path.join(LEVELS_DIR, mapKey, 'map.level.yaml');
+  if (!existsSync(sourcePath)) return false;
+
+  const source = parseLevelSource(readFileSync(sourcePath, 'utf8'), mapKey);
+  const { x, y } = spawn;
+  if (!Number.isInteger(x) || !Number.isInteger(y) || source.cells[y]?.[x] !== 'FLOOR') {
+    return false;
+  }
+  if (source.props.some((prop) => prop.solid && prop.at[0] === x && prop.at[1] === y)) {
+    return false;
+  }
+
+  const targetMap = getMap(mapKey);
+  const walls = targetMap.layers?.find((layer) => layer.name === 'Walls')?.data;
+  const width = targetMap.width;
+  const height = targetMap.height;
+  if (typeof width !== 'number' || typeof height !== 'number' || !walls || walls.length !== width * height) {
+    return false;
+  }
+
+  return isSpawnPositionValid(
+    {
+      width,
+      height,
+      collisions: Array.from({ length: height }, (_, tileY) =>
+        walls.slice(tileY * width, (tileY + 1) * width).map((tile) => tile !== 0),
+      ),
+    },
+    { x: x * TILE_SIZE, y: y * TILE_SIZE },
+  );
+}
+
 export function validateExplorersContent(): string[] {
   const errors: string[] = [];
   const globalDialogueOwners = new Map<string, string>();
@@ -69,6 +114,47 @@ export function validateExplorersContent(): string[] {
   const globalQuestIds = new Set<string>();
   const globalExamIds = new Set<string>();
   const globalArcadeIds = new Set<string>();
+
+  const destinationIds = new Set<string>();
+  for (const destination of NAV_DESTINATIONS) {
+    if (destinationIds.has(destination.id)) {
+      errors.push(`Duplicate navigation destination ID "${destination.id}"`);
+    }
+    destinationIds.add(destination.id);
+
+    for (const flag of destination.requiredFlags) {
+      if (!isKnownFlag(flag)) {
+        errors.push(`Navigation destination "${destination.id}" references unknown required flag "${flag}"`);
+      }
+    }
+
+    if (!destination.targetMap) continue;
+    if (!ALL_LEVELS.has(destination.targetMap)) {
+      errors.push(`Navigation destination "${destination.id}" references unknown target map "${destination.targetMap}"`);
+      continue;
+    }
+
+    const { spawnX, spawnY } = destination;
+    if (!isSafeAuthoredSpawn(destination.targetMap, { x: spawnX, y: spawnY })) {
+      errors.push(
+        `Navigation destination "${destination.id}" spawns at (${spawnX}, ${spawnY}) in "${destination.targetMap}", which is not a safe authored floor position`,
+      );
+    }
+  }
+
+  for (const mapKey of ALL_LEVELS.keys()) {
+    const spawn = QA_MAP_SPAWNS[mapKey];
+    if (!spawn) {
+      errors.push(`Map "${mapKey}" is missing a QA selector spawn`);
+    } else if (!isSafeAuthoredSpawn(mapKey, spawn)) {
+      errors.push(`Map "${mapKey}" has an unsafe QA selector spawn at (${spawn.x}, ${spawn.y})`);
+    }
+  }
+  for (const mapKey of Object.keys(QA_MAP_SPAWNS)) {
+    if (!ALL_LEVELS.has(mapKey)) {
+      errors.push(`QA selector spawn references unknown map "${mapKey}"`);
+    }
+  }
 
   for (const [mapKey, manifest] of ALL_LEVELS) {
     for (const dialogueId of Object.keys(manifest.dialogues)) {
@@ -144,6 +230,10 @@ export function validateExplorersContent(): string[] {
         const npcType = zone.properties.npcType;
         if (typeof npcType !== 'string' || !(npcType in NPC_TYPE_ROWS)) {
           errors.push(`Map "${mapKey}" NPC zone "${zone.id}" references unknown npcType "${String(npcType)}"`);
+        }
+        const npcVariant = zone.properties.npcVariant;
+        if (npcVariant !== undefined && (typeof npcVariant !== 'string' || !(npcVariant in NPC_COLOR_VARIANTS))) {
+          errors.push(`Map "${mapKey}" NPC zone "${zone.id}" references unknown npcVariant "${String(npcVariant)}"`);
         }
       }
 
@@ -227,6 +317,20 @@ export function validateExplorersContent(): string[] {
     }
     if (manifest.introFlag && !isKnownFlag(manifest.introFlag)) {
       errors.push(`Manifest "${mapKey}" references unknown introFlag "${manifest.introFlag}"`);
+    }
+
+    for (const intro of manifest.conditionalIntros ?? []) {
+      if (!globalDialogueIds.has(intro.dialogue)) {
+        errors.push(`Manifest "${mapKey}" conditional intro references unknown dialogue "${intro.dialogue}"`);
+      }
+      if (!isKnownFlag(intro.flag)) {
+        errors.push(`Manifest "${mapKey}" conditional intro references unknown flag "${intro.flag}"`);
+      }
+      for (const flag of intro.requiredFlags ?? []) {
+        if (!isKnownFlag(flag)) {
+          errors.push(`Manifest "${mapKey}" conditional intro references unknown required flag "${flag}"`);
+        }
+      }
     }
 
     for (const exam of manifest.exams ?? []) {

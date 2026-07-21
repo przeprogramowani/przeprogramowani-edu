@@ -49,6 +49,7 @@ export const DEPTH = {
   DIALOGUE: 20,
   EXAM: 90,
   ARCADE: 90,
+  NAVIGATION: 90,
   TRANSITION: 100,
 } as const;
 
@@ -82,8 +83,29 @@ export const NPC_WALL_CLEAR_STABLE_MS = 150; // ms
 export const NPC_TYPE_ROWS: Record<string, number> = {
   scientist: 0,
   alien: 1,
-  philosopher: 2,
+  robot: 2,
+  orb: 3,
+};
+
+export type NpcBlendMode = 'add' | 'screen';
+
+export interface NpcColorVariant {
+  color: number;
+  mode: 'fill' | 'multiply';
+  blendMode?: NpcBlendMode;
+}
+
+// Optional named color variants authored via an NPC zone's npcVariant property.
+// Tint changes the sprite color without lowering its opacity. The optional blend mode
+// controls how the tinted sprite is composited over the map.
+export const NPC_COLOR_VARIANTS: Record<string, NpcColorVariant> = {
+  'jungle-dark-green': { color: 0x8fa383, mode: 'multiply' },
+  'hologram-blue': { color: 0x66ccff, mode: 'multiply' },
+  'hologram-green': { color: 0x66ff99, mode: 'multiply' },
+  'hologram-magenta': { color: 0xff66cc, mode: 'multiply' },
+  'hologram-blue-add': { color: 0x66ccff, mode: 'multiply', blendMode: 'add' },
+  'hologram-blue-screen': { color: 0x66ccff, mode: 'multiply', blendMode: 'screen' },
 };
 
 // Total frames per row = character count × 4 frames per direction
-export const NPC_SPRITE_COLS = Object.keys(NPC_TYPE_ROWS).length * 4; // 12
+export const NPC_SPRITE_COLS = Object.keys(NPC_TYPE_ROWS).length * 4; // 16

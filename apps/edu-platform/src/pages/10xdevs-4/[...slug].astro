@@ -29,6 +29,7 @@ import FaqBody from '@/components/tenx-workflow/pages/FaqBody.astro';
 import CertBody from '@/components/tenx-workflow/pages/CertBody.astro';
 import CliBody from '@/components/tenx-workflow/pages/CliBody.astro';
 import SpaceExplorersBody from '@/components/tenx-workflow/pages/SpaceExplorersBody.astro';
+import TenxBenchBody from '@/components/tenx-workflow/pages/TenxBenchBody.astro';
 import { getCirclePost } from '@/server/circle/circlePost';
 import { SKILL_PAGES } from '@/components/tenx-workflow/skills';
 import NewSkillBody from '@/components/tenx-workflow/skills/NewSkillBody.astro';
@@ -36,6 +37,7 @@ import ResearchSkillBody from '@/components/tenx-workflow/skills/ResearchSkillBo
 import PlanSkillBody from '@/components/tenx-workflow/skills/PlanSkillBody.astro';
 import ImplementSkillBody from '@/components/tenx-workflow/skills/ImplementSkillBody.astro';
 import ImplReviewSkillBody from '@/components/tenx-workflow/skills/ImplReviewSkillBody.astro';
+import ArchiveSkillBody from '@/components/tenx-workflow/skills/ArchiveSkillBody.astro';
 
 const BASE = PUBLIC_BASE;
 
@@ -59,6 +61,7 @@ const PAGE_BODIES: Record<string, any> = {
   certyfikacja: CertBody,
   '10x-cli': CliBody,
   'space-explorers': SpaceExplorersBody,
+  '10xbench': TenxBenchBody,
   faq: FaqBody,
 };
 
@@ -70,6 +73,7 @@ const SKILL_BODIES: Record<string, any> = {
   '10x-plan': PlanSkillBody,
   '10x-implement': ImplementSkillBody,
   '10x-impl-review': ImplReviewSkillBody,
+  '10x-archive': ArchiveSkillBody,
 };
 
 const rawSlug = Astro.params.slug ?? '';

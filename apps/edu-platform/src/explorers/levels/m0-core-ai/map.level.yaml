@@ -1,0 +1,50 @@
+theme: 1
+grid: |
+  ~~~~~~~~~~~
+  ~~~~~~~~~~~
+  ##o#o#o#o##
+  #.........#
+  D.........#
+  D.........#
+  #.........#
+  ##o#o#o#o##
+  ~~~~~~~~~~~
+  ~~~~~~~~~~~
+props:
+  - { prop: crate, at: [1, 3], solid: true }
+  - { prop: console, at: [3, 3], solid: true }
+  - { prop: whiteboard, at: [8, 3], solid: true }
+  - { prop: whiteboard, at: [9, 3], solid: true }
+  - { prop: radar, at: [9, 4], solid: true }
+  - { prop: crate, at: [1, 6], solid: true }
+  - { prop: hibernation-chamber, at: [4, 6], solid: true }
+  - { prop: hibernation-chamber, at: [5, 6], solid: true }
+  - { prop: hibernation-chamber, at: [6, 6], solid: true }
+zones:
+  - id: exam-room-door
+    name: Return to Exam Room
+    type: door
+    at: [0, 4]
+    size: [1, 2]
+    properties:
+      targetMap: m0-exam-room
+      spawnX: 12
+      spawnY: 6
+  - id: firmware-console
+    name: Firmware Console
+    type: trigger
+    at: [3, 3]
+  - id: core-ai-module
+    name: CORE AI Module
+    type: trigger
+    at: [4, 6]
+    size: [3, 1]
+  - id: support-manual
+    name: Support Manual
+    type: trigger
+    at: [8, 3]
+    size: [2, 1]
+  - id: ship-navigation-deck
+    name: Ship Navigation Deck
+    type: navigation
+    at: [9, 4]

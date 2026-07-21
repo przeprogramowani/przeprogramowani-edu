@@ -17,7 +17,7 @@
  * geneza, dalej) w i18n/hub.ts (pl+en).
  */
 import type { Lang } from '../i18n';
-import { CATEGORIES, CATEGORY_META } from '../i18n/categories';
+import { CATEGORIES, CATEGORY_META, PAGE_META } from '../i18n/categories';
 import { HUB } from '../i18n/hub';
 import {
   NAV_CATEGORY_LABEL,
@@ -76,37 +76,105 @@ const cats: Cat[] = NAV_CATEGORY_ORDER.map((id) => {
     : null;
 }).filter((c): c is Cat => c !== null);
 
-const N = cats.length;
+/**
+ * Wyroznione skroty-perelki: najwazniejsze pojedyncze strony wprost na mostku,
+ * ponad kaflami kategorii. Kolejnosc staly kanon; slug niewidoczny w kontekscie
+ * widza (np. 10x-cli / space-explorers w gated) jest pomijany, wiec publicznie
+ * jest ich piec, a w kontekscie gated mniej.
+ */
+const FLAGSHIP_ORDER = ['top5', 'csc', '10x-cli', 'space-explorers', 'jak-dziala-kurs'] as const;
+interface Flagship {
+  href: string;
+  accent: string;
+  glyph: string;
+  kicker: string;
+  h3: string;
+  short: string;
+  p: string;
+  aria: string;
+}
+const flagships: Flagship[] = FLAGSHIP_ORDER.filter((slug) => pages.some((p) => p.slug === slug)).map(
+  (slug) => {
+    const meta = PAGE_META[slug];
+    const f = t.flagships[slug];
+    return {
+      href: pageHref(base, slug, lang),
+      accent: meta.accent,
+      glyph: meta.glyph,
+      kicker: f.kicker,
+      h3: f.h3,
+      short: f.short,
+      p: f.p,
+      aria: `${f.h3} - ${f.p}`,
+    };
+  }
+);
 
-// ---------- konsola pozioma (desktop) ----------
-// Panele w jednym rzedzie, wysrodkowane; ekran centralny pod nimi. Wspolrzedne
-// licza sie z N, wiec uklad dziala dla 4 i 5 kategorii.
+/**
+ * Wspolna reprezentacja kafla diagramu w Hero: kategorie (num = numer stacji,
+ * label = nazwa) i perelki (num = kicker/rola, label = krotka etykieta). Diagram
+ * pokazuje oba rzedy, wiec pelne 10 celow nawigacji jest widocznych juz w Hero.
+ */
+interface Tile {
+  href: string;
+  accent: string;
+  num: string;
+  label: string;
+  aria: string;
+}
+const catTiles: Tile[] = cats.map((c) => ({
+  href: c.href,
+  accent: c.accent,
+  num: c.num,
+  label: c.label.toUpperCase(),
+  aria: c.aria,
+}));
+const flagTiles: Tile[] = flagships.map((f) => ({
+  href: f.href,
+  accent: f.accent,
+  num: f.kicker,
+  label: f.short,
+  aria: f.aria,
+}));
+
+// ---------- konsola pozioma (desktop): dwa rzedy wokol ekranu ----------
+// Gorny rzad = kategorie (przeplyw do gornej krawedzi ekranu), dolny = perelki
+// (przeplyw od dolnej krawedzi ekranu). Wspolrzedne licza sie z liczby kafli,
+// wiec uklad dziala dla roznej liczby kategorii/perelek (kontekst gated/public).
 const PW = 150;
 const PH = 64;
-const PY = 24;
 const GAP = 42;
-const totalW = N * PW + (N - 1) * GAP;
-const startX = Math.round((960 - totalW) / 2);
-const dPanels = cats.map((c, i) => {
-  const x = startX + i * (PW + GAP);
-  const cx = x + PW / 2;
-  // punkt na gornej krawedzi ekranu (344..616), rownomiernie po szerokosci
-  const targetX = N === 1 ? 480 : Math.round(344 + (i * 272) / (N - 1));
-  return { ...c, x, cx, numY: PY + 22, lblY: PY + 46, dotX: x + PW - 13, dotY: PY + 13, targetX };
-});
+/** Rozklada rzad kafli symetrycznie w szerokosci 960 i laczy je z ekranem. */
+const layoutRow = (tiles: Tile[], y: number, screenEdgeY: number, dir: 'down' | 'up') => {
+  const n = tiles.length;
+  const totalW = n * PW + (n - 1) * GAP;
+  const startX = Math.round((960 - totalW) / 2);
+  return tiles.map((tl, i) => {
+    const x = startX + i * (PW + GAP);
+    const cx = x + PW / 2;
+    const edgeX = n === 1 ? 480 : Math.round(344 + (i * 272) / (n - 1));
+    const flow =
+      dir === 'down' ? `M${cx},${y + PH} L${edgeX},${screenEdgeY}` : `M${edgeX},${screenEdgeY} L${cx},${y}`;
+    return { ...tl, x, y, cx, numY: y + 22, lblY: y + 46, dotX: x + PW - 13, dotY: y + 13, flow };
+  });
+};
+const dCats = layoutRow(catTiles, 24, 138, 'down');
+const dFlags = layoutRow(flagTiles, 254, 222, 'up');
 
 // ---------- konsola pionowa (mobile, <=720px) ----------
-// Ekran centralny u gory, panele w dwoch kolumnach pod nim - zero scrolla poziomego.
+// Ekran centralny u gory, potem kafle w dwoch kolumnach: najpierw kategorie,
+// potem perelki - ta sama kaskada, zero scrolla poziomego.
 const MW = 200;
 const MH = 72;
-const mPanels = cats.map((c, i) => {
+const mAll = [...catTiles, ...flagTiles];
+const mTiles = mAll.map((tl, i) => {
   const col = i % 2;
   const row = Math.floor(i / 2);
   const x = col === 0 ? 20 : 260;
   const y = 160 + row * 98;
   const cx = x + MW / 2;
   return {
-    ...c,
+    ...tl,
     x,
     y,
     cx,
@@ -117,7 +185,7 @@ const mPanels = cats.map((c, i) => {
     flow: `M${cx},${row === 0 ? 124 : y - 26} V${y}`,
   };
 });
-const mViewH = 160 + Math.ceil(N / 2) * 98 + 20;
+const mViewH = 160 + Math.ceil(mAll.length / 2) * 98 + 20;
 ---
 
 <style is:global>
@@ -134,6 +202,29 @@ svg.chain-m{display:none}
   svg.chain-d{display:none}
   svg.chain-m{display:block;min-width:0}
 }
+
+/* wyroznione skroty-perelki: mocniejszy akcent niz kafle kategorii (sum-card).
+   Ramka i tlo w kolorze akcentu strony, kicker (rola) u gory, strzalka w rogu. */
+.flag-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:22px}
+/* drugi eyebrow (kategorie) potrzebuje oddechu po rzedzie perelek */
+#skrot .flag-grid + .rv{margin-top:40px}
+a.flag-card{position:relative;display:block;padding:18px 18px 16px;text-decoration:none;color:var(--txt);
+  border:1px solid color-mix(in srgb,var(--acc) 55%,transparent);
+  background:
+    linear-gradient(160deg,color-mix(in srgb,var(--acc) 12%,transparent),transparent 62%),
+    color-mix(in srgb,var(--surface) 70%,transparent);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--acc) 12%,transparent),0 10px 30px rgba(0,0,0,.28);
+  transition:border-color .2s,box-shadow .2s,transform .2s}
+a.flag-card:hover,a.flag-card:focus-visible{border-color:var(--acc);
+  box-shadow:0 0 22px color-mix(in srgb,var(--acc) 34%,transparent);transform:translateY(-3px);outline:none}
+.flag-card .flag-ico{display:block;margin-bottom:10px}
+.flag-card .flag-ico svg{width:30px;height:30px;color:var(--acc);display:block}
+.flag-card .flag-k{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;color:var(--acc)}
+.flag-card h3{font-family:var(--disp);font-size:1.08rem;margin:4px 0 7px;font-weight:700;line-height:1.25}
+.flag-card p{font-size:.84rem;color:var(--muted);line-height:1.5;max-width:36ch}
+.flag-card .flag-go{position:absolute;top:16px;right:16px;font-size:1rem;line-height:1;color:var(--acc);
+  opacity:.5;transition:opacity .2s,transform .2s}
+a.flag-card:hover .flag-go,a.flag-card:focus-visible .flag-go{opacity:1;transform:translateX(3px)}
 </style>
 
 <header>
@@ -142,20 +233,23 @@ svg.chain-m{display:none}
   <p class="sub" set:html={t.subHtml} />
 
   <div class="chainwrap">
-    <svg class="chain chain-d" viewBox="0 0 960 250" role="img" aria-label={t.svgDesktopAria}>
+    <svg class="chain chain-d" viewBox="0 0 960 340" role="img" aria-label={t.svgDesktopAria}>
       <!-- rama pulpitu -->
-      <rect x="8" y="8" width="944" height="234" fill="none" stroke="#3ddad0" opacity=".22"/>
+      <rect x="8" y="8" width="944" height="324" fill="none" stroke="#3ddad0" opacity=".22"/>
       <g stroke="#3ddad0" fill="none" opacity=".55">
-        <path d="M8,26 V8 H26 M934,8 H952 V26 M952,224 V242 H934 M26,242 H8 V224"/>
+        <path d="M8,26 V8 H26 M934,8 H952 V26 M952,314 V332 H934 M26,332 H8 V314"/>
       </g>
       <!-- gwiazdy w przerwach pulpitu -->
       <g fill="#8a93b8" opacity=".35">
-        <circle cx="40" cy="120" r="1.2"/><circle cx="150" cy="176" r="1"/><circle cx="252" cy="118" r="1.3"/>
-        <circle cx="708" cy="118" r="1"/><circle cx="820" cy="176" r="1.4"/><circle cx="918" cy="126" r="1"/>
+        <circle cx="40" cy="120" r="1.2"/><circle cx="252" cy="118" r="1.3"/><circle cx="708" cy="118" r="1"/><circle cx="918" cy="126" r="1"/>
+        <circle cx="42" cy="216" r="1"/><circle cx="252" cy="210" r="1"/><circle cx="700" cy="214" r="1.2"/><circle cx="916" cy="212" r="1"/>
       </g>
-      <!-- przeplywy danych: panele -> ekran centralny -->
-      {dPanels.map((p) => (
-        <path d={`M${p.cx},88 L${p.targetX},138`} stroke={p.accent} fill="none" stroke-dasharray="4 5" opacity=".3" class="anim-dash"/>
+      <!-- przeplywy danych: kategorie -> gorna krawedz ekranu, perelki <- dolna -->
+      {dCats.map((p) => (
+        <path d={p.flow} stroke={p.accent} fill="none" stroke-dasharray="4 5" opacity=".3" class="anim-dash"/>
+      ))}
+      {dFlags.map((p) => (
+        <path d={p.flow} stroke={p.accent} fill="none" stroke-dasharray="4 5" opacity=".3" class="anim-dash"/>
       ))}
       <!-- ekran centralny -->
       <g style="color:#3ddad0">
@@ -168,12 +262,12 @@ svg.chain-m{display:none}
         <circle cx="356" cy="151" r="2.4" fill="currentColor" opacity=".5" class="anim-pulse" style="animation-delay:-.6s"/>
         <circle cx="368" cy="151" r="2.4" fill="currentColor" opacity=".3" class="anim-pulse" style="animation-delay:-1.2s"/>
       </g>
-      <!-- panele-wskazniki (kategorie) -->
-      {dPanels.map((p) => (
+      <!-- panele-wskazniki: gorny rzad = kategorie, dolny = perelki -->
+      {[...dCats, ...dFlags].map((p) => (
         <a href={p.href} style={`color:${p.accent}`} aria-label={p.aria}>
-          <rect class="kbox" x={p.x} y={PY} width={PW} height={PH} stroke-width="1.4"/>
+          <rect class="kbox" x={p.x} y={p.y} width={PW} height={PH} stroke-width="1.4"/>
           <text class="knum" x={p.cx} y={p.numY} text-anchor="middle">{p.num}</text>
-          <text class="klbl" x={p.cx} y={p.lblY} text-anchor="middle">{p.label.toUpperCase()}</text>
+          <text class="klbl" x={p.cx} y={p.lblY} text-anchor="middle">{p.label}</text>
           <circle cx={p.dotX} cy={p.dotY} r="3" fill="currentColor" class="anim-pulse"/>
         </a>
       ))}
@@ -181,12 +275,12 @@ svg.chain-m{display:none}
       <circle r="7" fill="#3ddad0" opacity=".25"><animateMotion dur="9s" repeatCount="indefinite" path="M330,138 H630 V222 H330 Z"/></circle>
       <circle r="3" fill="#dce2f5" class="anim-pulse"><animateMotion dur="9s" repeatCount="indefinite" path="M330,138 H630 V222 H330 Z"/></circle>
     </svg>
-    <!-- wariant pionowy konsoli (tylko <=720px) -->
+    <!-- wariant pionowy konsoli (tylko <=720px): kategorie, potem perelki -->
     <svg class="chain chain-m" viewBox={`0 0 480 ${mViewH}`} role="img" aria-label={t.svgMobileAria}>
       <!-- rama pulpitu -->
       <rect x="8" y="8" width="464" height={mViewH - 16} fill="none" stroke="#3ddad0" opacity=".22"/>
       <!-- przeplywy danych: ekran centralny -> panele (pionowa kaskada) -->
-      {mPanels.map((p) => (
+      {mTiles.map((p) => (
         <path d={p.flow} stroke={p.accent} fill="none" stroke-dasharray="4 5" opacity=".3" class="anim-dash"/>
       ))}
       <!-- ekran centralny -->
@@ -197,12 +291,12 @@ svg.chain-m{display:none}
         <text class="knum neutral-only" x="240" y="98" text-anchor="middle">{t.screenNeutral}</text>
         <path d="M104,108 H376" stroke="currentColor" stroke-dasharray="6 8" opacity=".3" class="anim-dash-slow" fill="none"/>
       </g>
-      <!-- panele-wskazniki (kategorie) -->
-      {mPanels.map((p) => (
+      <!-- panele-wskazniki (kategorie + perelki) -->
+      {mTiles.map((p) => (
         <a href={p.href} style={`color:${p.accent}`} aria-label={p.aria}>
           <rect class="kbox" x={p.x} y={p.y} width={MW} height={MH} stroke-width="1.4"/>
           <text class="knum" x={p.cx} y={p.numY} text-anchor="middle">{p.num}</text>
-          <text class="klbl" x={p.cx} y={p.lblY} text-anchor="middle">{p.label.toUpperCase()}</text>
+          <text class="klbl" x={p.cx} y={p.lblY} text-anchor="middle">{p.label}</text>
           <circle cx={p.dotX} cy={p.dotY} r="3" fill="currentColor" class="anim-pulse"/>
         </a>
       ))}
@@ -218,10 +312,27 @@ svg.chain-m{display:none}
   </nav>
 </header>
 
-<!-- ============ SKRÓT / KATEGORIE ============ -->
+<!-- ============ SKRÓT / PEREŁKI + KATEGORIE ============ -->
 <section id="skrot">
+  <!-- wyroznione skroty-perelki: najwazniejsze pojedyncze strony -->
   <div class="rv">
-    <p class="eyebrow" style="--acc:#3ddad0"><span class="ico ico-star" aria-hidden="true"></span>{t.skrotEyebrow}</p>
+    <p class="eyebrow" style="--acc:#ffd166"><span class="ico ico-star" aria-hidden="true"></span>{t.flagshipsEyebrow}</p>
+  </div>
+  <div class="flag-grid rv">
+    {flagships.map((f) => (
+      <a class="flag-card" href={f.href} style={`--acc:${f.accent}`} aria-label={f.aria}>
+        <span class="flag-ico"><Fragment set:html={f.glyph} /></span>
+        <span class="flag-k">{f.kicker}</span>
+        <h3>{f.h3}</h3>
+        <p>{f.p}</p>
+        <span class="flag-go" aria-hidden="true">→</span>
+      </a>
+    ))}
+  </div>
+
+  <!-- kafle kategorii: piec sekcji portalu -->
+  <div class="rv">
+    <p class="eyebrow" style="--acc:#3ddad0"><span class="ico ico-radar" aria-hidden="true"></span>{t.skrotEyebrow}</p>
   </div>
   <div class="sum-grid rv">
     {cats.map((c) => (

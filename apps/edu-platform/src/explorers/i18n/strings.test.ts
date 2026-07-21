@@ -6,6 +6,7 @@ import { arcadeStrings } from './arcade';
 import { terminalStrings } from './terminal';
 import { previewStrings } from './preview';
 import { grantStrings } from './grant';
+import { navigationStrings } from './navigation';
 
 type StringModule = { pl: Record<string, string>; en: Record<string, string> };
 
@@ -17,6 +18,7 @@ const MODULES: [string, StringModule][] = [
   ['terminal', terminalStrings as StringModule],
   ['preview', previewStrings as StringModule],
   ['grant', grantStrings as StringModule],
+  ['navigation', navigationStrings as StringModule],
 ];
 
 // Keys where pl === en is intentional (technical terms, URLs, Latin mottos,
@@ -40,8 +42,12 @@ const INTENTIONALLY_IDENTICAL = new Set<string>([
   'terminal.support.loginUrl',
   // System speaker label is the same in both locales by design
   'scene.speakerSystem',
+  // "MAGENTA" is the same word in Polish and English (unlike BLUE/GREEN tints)
+  'scene.debugNpcMagentaTint',
   // "XP:" is a universal gaming abbreviation, identical in both locales
   'terminal.me.xpLabel',
+  // Debug NPC playground label — technical, identical by design
+  'scene.debugNpcMagentaTint',
 ]);
 
 describe('i18n parity — UI chrome modules', () => {

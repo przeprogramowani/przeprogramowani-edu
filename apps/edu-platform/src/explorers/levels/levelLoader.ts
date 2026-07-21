@@ -23,6 +23,22 @@ interface GameManifestLevel {
   introFlag: GameFlag | null;
   introCinematicTitle?: string;
   introCinematicSubtitle?: string;
+  conditionalIntros?: {
+    dialogue: string;
+    flag: GameFlag;
+    requiredFlags?: GameFlag[];
+    cinematicTitle?: string;
+    cinematicSubtitle?: string;
+  }[];
+}
+
+/** Resolved intro entry — the primary intro plus any flag-conditional intros, in check order */
+export interface IntroConfig {
+  dialogueId: string;
+  flag: GameFlag;
+  requiredFlags?: GameFlag[];
+  cinematicTitle?: string;
+  cinematicSubtitle?: string;
 }
 
 /** Shape of the /api/game JSON response */
@@ -39,7 +55,7 @@ let allExamCompletionDialogues: Record<string, string>;
 let allArcadeGames: Map<string, ArcadeGameDefinition>;
 let routesByMap: Map<string, InteractionRoute[]>;
 let displayNames: Record<string, BilingualText>;
-let introConfigs: Map<string, { dialogueId: string; flag: GameFlag; cinematicTitle?: string; cinematicSubtitle?: string }>;
+let introConfigs: Map<string, IntroConfig[]>;
 let dialoguesByLevel: Map<string, string[]>;
 
 let loaded = false;
@@ -132,14 +148,27 @@ export function loadLevelsFromData(data: GameManifestResponse): void {
     // Register display name
     displayNames[mapKey] = manifest.displayName;
 
-    // Register intro config
+    // Register intro configs — primary first-visit intro, then conditional intros in order
+    const intros: IntroConfig[] = [];
     if (manifest.introDialogue && manifest.introFlag) {
-      introConfigs.set(mapKey, {
+      intros.push({
         dialogueId: manifest.introDialogue,
         flag: manifest.introFlag,
         cinematicTitle: manifest.introCinematicTitle,
         cinematicSubtitle: manifest.introCinematicSubtitle,
       });
+    }
+    for (const intro of manifest.conditionalIntros ?? []) {
+      intros.push({
+        dialogueId: intro.dialogue,
+        flag: intro.flag,
+        requiredFlags: intro.requiredFlags,
+        cinematicTitle: intro.cinematicTitle,
+        cinematicSubtitle: intro.cinematicSubtitle,
+      });
+    }
+    if (intros.length > 0) {
+      introConfigs.set(mapKey, intros);
     }
   }
 
@@ -211,7 +240,7 @@ export function getDialoguesByLevel(): Map<string, string[]> {
   return dialoguesByLevel;
 }
 
-/** Get intro config for a map (if any) */
-export function getIntroConfig(mapKey: string): { dialogueId: string; flag: GameFlag; cinematicTitle?: string; cinematicSubtitle?: string } | null {
-  return introConfigs.get(mapKey) ?? null;
+/** Get intro configs for a map in check order (primary intro first, then conditional intros) */
+export function getIntroConfigs(mapKey: string): IntroConfig[] {
+  return introConfigs.get(mapKey) ?? [];
 }

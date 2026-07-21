@@ -1,0 +1,72 @@
+theme: 1
+grid: |
+  ~~~~~~~~~~~~~~
+  ###########~~~
+  #.........#~~~
+  D.........#~~~
+  D.........#~~~
+  #####.....##o#
+  ~~~~#........D
+  ~~~~#........D
+  ~~~~##o#o#o#o#
+  ~~~~~~~~~~~~~~
+props:
+  - { prop: console, at: [5, 2], solid: true }
+  - { prop: crate, at: [6, 2], solid: true }
+  - { prop: console, at: [7, 2], solid: true }
+  - { prop: crate, at: [8, 2], solid: true }
+  - { prop: console, at: [9, 2], solid: true }
+  - { prop: console, at: [5, 7], solid: true }
+  - { prop: whiteboard, at: [6, 7], solid: true }
+  - { prop: whiteboard, at: [7, 7], solid: true }
+  - { prop: whiteboard, at: [8, 7], solid: true }
+  - { prop: console, at: [9, 7], solid: true }
+zones:
+  - id: study-notes-board
+    name: Study Notes Board
+    type: trigger
+    at: [6, 7]
+    size: [3, 1]
+  - id: exam-llm-basics
+    name: Exam LLM Basics
+    type: exam
+    at: [5, 2]
+    properties:
+      examId: m0-exam-agent-systems
+  - id: exam-prompting
+    name: Exam Prompting
+    type: exam
+    at: [7, 2]
+    properties:
+      examId: m0-exam-operational-procedures
+  - id: exam-tokenization
+    name: Exam Tokenization
+    type: exam
+    at: [9, 2]
+    properties:
+      examId: m0-exam-context-engineering
+  - id: crew-room-door
+    name: Return Door
+    type: door
+    at: [0, 3]
+    size: [1, 2]
+    properties:
+      targetMap: m0-awakening
+      spawnX: 10
+      spawnY: 6
+  - id: coreai-room-door
+    name: CoreAI
+    type: door
+    at: [13, 6]
+    size: [1, 2]
+    properties:
+      targetMap: m0-core-ai
+      spawnX: 1
+      spawnY: 5
+      requiredFlags: m0-exam-agent-systems-done,m0-exam-operational-procedures-done,m0-exam-context-engineering-done
+  - id: officer-harris
+    name: Officer Harris
+    type: npc
+    at: [8, 5]
+    properties:
+      npcType: scientist

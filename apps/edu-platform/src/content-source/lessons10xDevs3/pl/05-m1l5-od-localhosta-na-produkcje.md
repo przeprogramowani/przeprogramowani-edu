@@ -1,11 +1,11 @@
 ---
-title: "Od localhosta na produkcję"
-titleEn: "From localhost to production"
+title: "Od localhost po produkcję - Deployment z Agentem"
+titleEn: "From localhost to production - Deployment with Agent"
 lessonId: "05"
 language: "pl"
 order: 5
 ---
-# Od localhosta na produkcję - wdrożenie z Agentem AI
+# Od localhost po produkcję - Deployment z Agentem
 
 Na tym etapie szkolenia projekt działa już lokalnie, a agent zaczyna go coraz lepiej rozumieć. Moglibyśmy w tym stanie pozostać jeszcze długo, dodając kolejne funkcje, pliki i moduły - całość rosłaby w oczach a ty miałbyś złudne poczucie progressu.
 

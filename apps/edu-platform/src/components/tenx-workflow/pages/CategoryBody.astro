@@ -72,6 +72,11 @@ if (category === 'skille') {
 const backHtml = t.backHtml
   .replace('{mostek}', pageHref(base, 'index', lang))
   .replace('{csc}', pageHref(base, 'csc', lang));
+
+// Sekcja "Dlaczego CSC" (tylko przeglad skilli) - link do pelnej strony CSC.
+const overviewTargetHtml = t.overview?.targetHtml
+  .replace('{csc}', pageHref(base, 'csc', lang))
+  .replace('{mostek}', pageHref(base, 'index', lang));
 ---
 
 <header>
@@ -105,3 +110,62 @@ const backHtml = t.backHtml
     </div>
   )}
 </section>
+
+{t.overview && (
+  <!-- ============ DLACZEGO CSC (~90% ROBOTY) - tylko przeglad skilli ============ -->
+  <section class="sector" id="dlaczego" style={`--acc:${accent}`}>
+    <div class="rv">
+      <div class="sec-head">
+        <span class="sec-num">{t.overview.eyebrow}</span>
+      </div>
+      <h2>{t.overview.h2}</h2>
+    </div>
+    <div class="duo rv">
+      <div class="tx">
+        <span class="mono"><span class="ico ico-cube" aria-hidden="true"></span>{t.overview.aMono}</span>
+        <p class="lead" set:html={t.overview.aLeadHtml} />
+        <dl class="mech">
+          {t.overview.aRows.map((row) => (
+            <div><dt><span class="ico ico-link" aria-hidden="true"></span>{row.dt}</dt><dd class="v" style="margin:0" set:html={row.ddHtml} /></div>
+          ))}
+        </dl>
+      </div>
+      <div class="tx">
+        <span class="mono"><span class="ico ico-up" aria-hidden="true"></span>{t.overview.bMono}</span>
+        <p class="lead" set:html={t.overview.bLeadHtml} />
+        <dl class="mech">
+          {t.overview.bRows.map((row) => (
+            <div><dt><span class="ico ico-check" aria-hidden="true"></span>{row.dt}</dt><dd class="v" style="margin:0" set:html={row.ddHtml} /></div>
+          ))}
+        </dl>
+      </div>
+    </div>
+    <div class="target rv">
+      <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.overview.targetK}</span>
+      <p set:html={overviewTargetHtml} />
+    </div>
+  </section>
+)}
+
+{t.overview?.more && (
+  <!-- ======= RESZTA 10xSKILLI: odwolania do innych modulow (tylko skille) ======= -->
+  <section class="sector" id="poza-lancuchem" style={`--acc:${accent}`}>
+    <div class="rv">
+      <div class="sec-head">
+        <span class="sec-num">{t.overview.more.eyebrow}</span>
+      </div>
+      <h2>{t.overview.more.h2}</h2>
+    </div>
+    <div class="solo rv">
+      <p class="lead" set:html={t.overview.more.leadHtml} />
+      <dl class="mech">
+        {t.overview.more.rows.map((row) => (
+          <div>
+            <dt><span class="ico ico-cube" aria-hidden="true"></span><a href={pageHref(base, row.slug, lang)} style="color:var(--acc)">{row.dt}</a></dt>
+            <dd class="v" style="margin:0" set:html={row.ddHtml} />
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+)}

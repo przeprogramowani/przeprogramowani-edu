@@ -71,4 +71,14 @@ export const SKILL_PAGES: SkillPage[] = [
     accent: UNIVERSES.wh40k.color,
     universeId: 'wh40k',
   },
+  {
+    slug: '10x-archive',
+    skill: '/10x-archive',
+    title: 'Skill /10x-archive - domknięcie zmiany',
+    titleEn: 'Skill /10x-archive - closing out the change',
+    breadcrumb: '10X WORKFLOW // SKILL // /10X-ARCHIVE',
+    step: 'k-archive',
+    accent: UNIVERSES.fundacja.color,
+    universeId: 'fundacja',
+  },
 ];

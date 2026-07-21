@@ -1,5 +1,5 @@
 /**
- * Slownik strony "Skalowanie" (SCALE TIER / SkalowanieBody) - misja EN, faza 2.
+ * Slownik strony "Skalowanie" (SCALE TIER / SkalowanieBody) - misja EN, etap 2.
  * Struktura kluczy odzwierciedla kolejnosc sekcji w body; pola *Html zawieraja
  * inline markup (strong/b/em/code/p/ul/li) i renderuja sie przez set:html.
  * Tablice fig[] = kolejne etykiety <text> w SVG sekcji, w kolejnosci dokumentu.
@@ -110,7 +110,7 @@ export const SKALOWANIE: Record<Lang, SkalowanieDict> = {
       ann01: 'WĘZEŁ 01 · BRAMKI JAKOŚCI',
       dim01: 'PRZECHODZI TYLKO ZIELONE',
       ann02: 'WĘZEŁ 02 · AUTONOMICZNY PRZELOT',
-      dim02: 'FAZY IDĄ SAME · COMMIT PER FAZA',
+      dim02: 'ETAPY IDĄ SAME · COMMIT PER ETAP',
       ceilK: 'SUFIT',
       ceilLbl: 'REVIEW',
       ceilAnn: 'człowiek · sufit przepustowości',
@@ -125,12 +125,12 @@ export const SKALOWANIE: Record<Lang, SkalowanieDict> = {
       {
         num: 'WĘZEŁ 01',
         h3: 'quality gates',
-        p: 'Automatyczne bramki domykają każdą fazę - żadna nie przechodzi na czerwono.',
+        p: 'Automatyczne bramki domykają każdy etap - żaden nie przechodzi na czerwono.',
       },
       {
         num: 'WĘZEŁ 02',
         h3: 'goal',
-        p: 'Plan wykonuje się sam: commit per faza albo uczciwy STOP.',
+        p: 'Plan wykonuje się sam: commit per etap albo uczciwy STOP.',
       },
       {
         num: 'WĘZEŁ 03',
@@ -160,15 +160,15 @@ export const SKALOWANIE: Record<Lang, SkalowanieDict> = {
       ],
       figcaption: 'RYS. 01 // BRAMKA-PRÓBA - PRZECHODZI TYLKO ZIELONE',
       leadSfHtml:
-        'Gom dżabbar sprawdza jedno: czy kandydat wytrzyma próbę, zanim ktokolwiek mu zaufa. Ten węzeł robi to samo z każdą fazą planu. Bez niego autonomia oznacza kod, którego nikt nie sprawdził w chwili powstania - jedyną bramką jesteś Ty i musisz patrzeć na wszystko. <em>Quality gates</em> odpowiadają na pytanie: <strong>co pilnuje jakości, gdy Ciebie nie ma?</strong>',
+        'Gom dżabbar sprawdza jedno: czy kandydat wytrzyma próbę, zanim ktokolwiek mu zaufa. Ten węzeł robi to samo z każdym etapem planu. Bez niego autonomia oznacza kod, którego nikt nie sprawdził w chwili powstania - jedyną bramką jesteś Ty i musisz patrzeć na wszystko. <em>Quality gates</em> odpowiadają na pytanie: <strong>co pilnuje jakości, gdy Ciebie nie ma?</strong>',
       leadNeutralHtml:
         'Ten węzeł odpowiada na pytanie: <strong>co pilnuje jakości, gdy Ciebie nie ma?</strong> Bez automatycznych bramek autonomia oznacza kod, którego nikt nie sprawdził w chwili powstania - jedyną bramką jesteś Ty i musisz patrzeć na wszystko.',
       leadHtml:
-        'Wejście: plan z warunkami sukcesu. Wyjście: <strong>faza domknięta automatycznie</strong> - lint i typecheck po każdej edycji, testy per faza, commit tylko na zielono. Mechanizm: <em>deliberate-break check</em> - celowo psujesz implementację i potwierdzasz, że test pada. Bramce można zaufać dopiero wtedy, gdy widziałeś, jak się zamyka.',
+        'Wejście: plan z warunkami sukcesu. Wyjście: <strong>etap domknięty automatycznie</strong> - lint i typecheck po każdej edycji, testy per etap, commit tylko na zielono. Mechanizm: <em>deliberate-break check</em> - celowo psujesz implementację i potwierdzasz, że test pada. Bramce można zaufać dopiero wtedy, gdy widziałeś, jak się zamyka.',
       mech: {
         q: 'co pilnuje jakości, gdy Ciebie nie ma?',
-        g: 'żadna faza nie przechodzi na czerwono',
-        artifactHtml: '<b>komplet zielonych bramek per faza</b> + commit na zielono',
+        g: 'żaden etap nie przechodzi na czerwono',
+        artifactHtml: '<b>komplet zielonych bramek per etap</b> + commit na zielono',
         toolsHtml:
           'hooki (per-edit → pre-commit → pre-push), <b>/10x-tdd</b>, deliberate-break check, <b>/10x-plan-review</b>',
       },
@@ -212,20 +212,20 @@ export const SKALOWANIE: Record<Lang, SkalowanieDict> = {
         'COMMIT',
         'STOP: PRZEWIDZIANY',
         'CEL',
-        'FAZY WYKONUJĄ SIĘ SAME',
+        'ETAPY WYKONUJĄ SIĘ SAME',
         'KRYZYS: W PLANIE, NIE W IMPROWIZACJI',
       ],
       figcaption: 'RYS. 02 // TRAJEKTORIA PLANU - COMMITY I PRZEWIDZIANY STOP',
       leadSfHtml:
-        'Plan Seldona działa, bo nie potrzebuje autora przy sterach: kryzysy przewidziano zawczasu, a Krypta odzywa się dokładnie wtedy, kiedy trzeba. Ten węzeł przenosi to na plan zmiany. Bez niego siedzisz między fazami jako klikacz „dalej" i autonomia kończy się na pierwszym pytaniu. <em>/10x-goal-implement</em> pod <em>/goal</em> odpowiada: <strong>jak plan wykonuje się bez Ciebie?</strong>',
+        'Plan Seldona działa, bo nie potrzebuje autora przy sterach: kryzysy przewidziano zawczasu, a Krypta odzywa się dokładnie wtedy, kiedy trzeba. Ten węzeł przenosi to na plan zmiany. Bez niego siedzisz między etapami jako klikacz „dalej" i autonomia kończy się na pierwszym pytaniu. <em>/10x-goal-implement</em> pod <em>/goal</em> odpowiada: <strong>jak plan wykonuje się bez Ciebie?</strong>',
       leadNeutralHtml:
-        'Ten węzeł odpowiada na pytanie: <strong>jak plan wykonuje się bez Ciebie?</strong> Bez niego siedzisz między fazami jako klikacz „dalej" i autonomia kończy się na pierwszym pytaniu - <em>/10x-goal-implement</em> pod <em>/goal</em> zdejmuje Cię z tego stanowiska.',
+        'Ten węzeł odpowiada na pytanie: <strong>jak plan wykonuje się bez Ciebie?</strong> Bez niego siedzisz między etapami jako klikacz „dalej" i autonomia kończy się na pierwszym pytaniu - <em>/10x-goal-implement</em> pod <em>/goal</em> zdejmuje Cię z tego stanowiska.',
       leadHtml:
-        'Wejście: zatwierdzony plan.md. Wyjście: <strong>commit per faza na zielono albo uczciwy STOP</strong>. Mechanizm: fazy wykonują się same, sekcja Progress pracuje jak maszyna stanów, a przy strukturalnym rozjeździe wykonanie zatrzymuje się <em>STOP-blokiem</em> zamiast improwizować. Kryzys jest przewidziany w samym planie - nie odgrywany na żywo.',
+        'Wejście: zatwierdzony plan.md. Wyjście: <strong>commit per etap na zielono albo uczciwy STOP</strong>. Mechanizm: etapy wykonują się same, sekcja Progress pracuje jak maszyna stanów, a przy strukturalnym rozjeździe wykonanie zatrzymuje się <em>STOP-blokiem</em> zamiast improwizować. Kryzys jest przewidziany w samym planie - nie odgrywany na żywo.',
       mech: {
         q: 'jak plan wykonuje się bez Ciebie?',
-        g: 'commit per faza na zielono albo uczciwy STOP',
-        artifactHtml: '<b>commity per faza</b> + run report albo STOP-blok z konkretem',
+        g: 'commit per etap na zielono albo uczciwy STOP',
+        artifactHtml: '<b>commity per etap</b> + run report albo STOP-blok z konkretem',
         toolsHtml:
           '<b>/10x-goal-implement</b> pod <b>/goal</b>, Progress jako maszyna stanów, STOP-bloki, run report',
       },
@@ -238,11 +238,11 @@ export const SKALOWANIE: Record<Lang, SkalowanieDict> = {
         },
         {
           label: 'Wejście → wyjście',
-          body: `<p>Wejście: zatwierdzony <code>plan.md</code> z sekcją <code>Progress</code> jako maszyną stanów. Wyjście: <b>commit per faza</b> (Conventional Commits) plus run report - albo uczciwy STOP-blok z tym, czego plan oczekiwał, co zastano, dlaczego to blokuje i skąd wznowić.</p>`,
+          body: `<p>Wejście: zatwierdzony <code>plan.md</code> z sekcją <code>Progress</code> jako maszyną stanów. Wyjście: <b>commit per etap</b> (Conventional Commits) plus run report - albo uczciwy STOP-blok z tym, czego plan oczekiwał, co zastano, dlaczego to blokuje i skąd wznowić.</p>`,
         },
         {
           label: 'Stos bramek',
-          body: `<p>Każda faza przechodzi stały ciąg: kryteria sukcesu z planu → staging dotkniętych plików → <b>deliberate-break check</b> (celowe zepsucie kodu produkcyjnego; test musi spaść - czerwień jest warunkiem zaliczenia) → pełny zestaw testów, lint, typecheck → commit <b>tylko na zielono</b>. Padająca bramka dostaje najwyżej 2 próby naprawy, potem STOP.</p>`,
+          body: `<p>Każdy etap przechodzi stały ciąg: kryteria sukcesu z planu → staging dotkniętych plików → <b>deliberate-break check</b> (celowe zepsucie kodu produkcyjnego; test musi spaść - czerwień jest warunkiem zaliczenia) → pełny zestaw testów, lint, typecheck → commit <b>tylko na zielono</b>. Padająca bramka dostaje najwyżej 2 próby naprawy, potem STOP.</p>`,
         },
         {
           label: 'Taksonomia rozjazdów',
@@ -290,23 +290,23 @@ export const SKALOWANIE: Record<Lang, SkalowanieDict> = {
       dd: [
         {
           label: 'Po co',
-          body: `<p>Silnik pojedynczego toru: wykonuje zatwierdzony plan z <code>context/changes/&lt;change-id&gt;/plan.md</code> faza po fazie, z weryfikacją i osobnym commitem po każdej fazie. To dokładnie ten cykl powielasz, gdy dokładasz kolejne równoległe tory.</p>`,
+          body: `<p>Silnik pojedynczego toru: wykonuje zatwierdzony plan z <code>context/changes/&lt;change-id&gt;/plan.md</code> etap po etapie, z weryfikacją i osobnym commitem po każdym etapie. To dokładnie ten cykl powielasz, gdy dokładasz kolejne równoległe tory.</p>`,
         },
         {
           label: 'Wejście → wyjście',
-          body: `<p>Wejście: plan z sekcją <code>Progress</code> na dole. Wyjście: zaimplementowane fazy - każda z własnym commitem (Conventional Commits), którego skrócony SHA wraca do odhaczonych wierszy Progress jako dowód, co i kiedy wylądowało.</p>`,
+          body: `<p>Wejście: plan z sekcją <code>Progress</code> na dole. Wyjście: zaimplementowane etapy - każdy z własnym commitem (Conventional Commits), którego skrócony SHA wraca do odhaczonych wierszy Progress jako dowód, co i kiedy wylądowało.</p>`,
         },
         {
           label: 'Progress jako stan',
           body: `<p>Sekcja <code>Progress</code> w planie jest jedynym źródłem stanu - bez plików pomocniczych i markerów. „Gdzie jestem" jest wyliczane, nie zapisywane: pierwszy pusty checkbox to następny krok. Dzięki temu cykl można przerwać, wyczyścić kontekst i wznowić jedną komendą - stan nigdy nie ginie.</p>`,
         },
         {
-          label: 'Rytuał końca fazy',
-          body: `<p>Po zieleni automatów: potwierdzenie manualne od człowieka → staging <b>wyłącznie plików dotkniętych w fazie</b> (nigdy <code>git add -A</code>; brudne pliki spoza zestawu dostają osobne pytanie) → zatwierdzenie komunikatu → commit → SHA wpisany z powrotem do Progress.</p>`,
+          label: 'Rytuał końca etapu',
+          body: `<p>Po zieleni automatów: potwierdzenie manualne od człowieka → staging <b>wyłącznie plików dotkniętych w etapie</b> (nigdy <code>git add -A</code>; brudne pliki spoza zestawu dostają osobne pytanie) → zatwierdzenie komunikatu → commit → SHA wpisany z powrotem do Progress.</p>`,
         },
         {
           label: 'Izolacja kontekstu',
-          body: `<p>Po każdej fazie decyzja: kontynuować w tym samym kontekście czy wyczyścić i wznowić komendą skopiowaną do schowka (<code>/10x-implement &lt;change-id&gt; phase N</code>). Ten mechanizm pozwala prowadzić kilka cykli równolegle - każdy tor ma własny kontekst i własny stan w swoim planie.</p>`,
+          body: `<p>Po każdym etapie decyzja: kontynuować w tym samym kontekście czy wyczyścić i wznowić komendą skopiowaną do schowka (<code>/10x-implement &lt;change-id&gt; phase N</code>). Ten mechanizm pozwala prowadzić kilka cykli równolegle - każdy tor ma własny kontekst i własny stan w swoim planie.</p>`,
         },
         {
           label: 'Granice',

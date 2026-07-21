@@ -232,6 +232,8 @@ Key files:
 - `src/pages/explorers-editor.astro` - Level editor page
 - `src/layouts/GameLayout.astro` - Full-viewport layout (no header/footer)
 
+Maps are authored as text sources — `src/explorers/levels/<map-key>/map.level.yaml` (see the cookbook's "Map Authoring Pipeline" section); the Tiled JSON in `public/game/maps/` is a compiled artifact regenerated with `npm run levels:build`. Never edit the JSON by hand — a Vitest sync test gates source/artifact drift.
+
 Game documentation:
 - `.ai/10x-devs/game/cookbook.md` - Game development cookbook
 - `.ai/10x-devs/game/storyline.md` - Game storyline

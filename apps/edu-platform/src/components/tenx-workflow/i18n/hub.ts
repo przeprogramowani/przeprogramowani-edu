@@ -25,7 +25,17 @@ interface HubDict {
   routeJak: string;
   routeGeneza: string;
   routeDalej: string;
+  /** Eyebrow rzedu wyroznionych skrotow (perelki) nad kaflami kategorii. */
+  flagshipsEyebrow: string;
+  /** Eyebrow rzedu kafli kategorii. */
   skrotEyebrow: string;
+  /**
+   * Wyroznione skroty-perelki na mostku (klucz = slug strony). Kolor i glif
+   * biora sie z PAGE_META (kanon), tu tylko kicker (rola) + etykieta + zajawka.
+   * Slug niewidoczny w kontekscie widza (np. 10x-cli w gated) jest pomijany.
+   * `short` to skrocona etykieta na kaflu diagramu w Hero (dluga h3 sie nie miesci).
+   */
+  flagships: Record<string, { kicker: string; h3: string; p: string; short: string }>;
   how: {
     num: string;
     /** Sufiks za universeName(UNIVERSES.expanse, lang) w sec-uni. */
@@ -92,20 +102,53 @@ export const HUB: Record<Lang, HubDict> = {
     subHtml:
       'Ten portal to mapa <strong>10x Workflow</strong> - systemu pracy z agentem AI z kursu <strong>10xDevs</strong>. Podzielony na pięć kategorii: <strong>Kurs</strong> (przebieg i certyfikacja), <strong>Moduły</strong> (pięć modułów i skalowanie), <strong>Skille</strong> (łańcuch Core Skills Chain), <strong>Ekosystem</strong> (narzędzia i dokumentacja) oraz <strong>FAQ</strong>. Każdy panel poniżej to jedna kategoria - kliknij, żeby otworzyć jej przegląd.',
     svgDesktopAria:
-      'Konsola mostka: centralny ekran 10x Workflow otoczony panelami-wskaźnikami; każdy panel prowadzi do przeglądu jednej kategorii portalu - Kurs, Moduły, Skille, Ekosystem i FAQ',
+      'Konsola mostka: centralny ekran 10x Workflow otoczony panelami-wskaźnikami; górny rząd to kategorie portalu (Kurs, Moduły, Skille, Ekosystem, FAQ), dolny to wyróżnione skróty (10xTop5, Core Skills Chain, 10x-cli, Space Explorers, Jak działa kurs)',
     svgMobileAria:
-      'Konsola mostka w układzie pionowym: centralny ekran 10x Workflow u góry, poniżej panele-wskaźniki prowadzące do przeglądu kategorii portalu - Kurs, Moduły, Skille, Ekosystem i FAQ',
+      'Konsola mostka w układzie pionowym: centralny ekran 10x Workflow u góry, poniżej panele-wskaźniki - najpierw kategorie portalu (Kurs, Moduły, Skille, Ekosystem, FAQ), potem wyróżnione skróty (10xTop5, Core Skills Chain, 10x-cli, Space Explorers, Jak działa kurs)',
     screenTitle: '10X WORKFLOW',
     screenSf: 'MOSTEK // KURS WYZNACZONY',
     screenNeutral: 'PANEL STEROWANIA // PORTAL',
-    mapCapSf: 'MOSTEK // WYBIERZ KATEGORIĘ',
-    mapCapNeutral: 'PANEL STEROWANIA // WYBIERZ KATEGORIĘ',
+    mapCapSf: 'MOSTEK // WYBIERZ CEL',
+    mapCapNeutral: 'PANEL STEROWANIA // WYBIERZ CEL',
     routeAria: 'Sekcje mostka',
     routeSkrot: 'Kategorie',
     routeJak: 'Jak czytać portal',
     routeGeneza: 'Skąd ten klimat',
     routeDalej: 'Dalej: zacznij od 10xTop5',
-    skrotEyebrow: 'Pięć kategorii portalu w jednym widoku',
+    flagshipsEyebrow: 'Perełki · zacznij od tych stron',
+    skrotEyebrow: 'Pięć kategorii portalu',
+    flagships: {
+      top5: {
+        kicker: 'TOP 5',
+        h3: '10xTop5',
+        short: '10XTOP5',
+        p: 'Pięć wartości kursu z dowodami i głosami uczestników - najlepsze pierwsze czytanie.',
+      },
+      csc: {
+        kicker: 'RDZEŃ',
+        h3: 'Core Skills Chain',
+        short: 'CSC',
+        p: 'Serce systemu: pięć kroków od pomysłu do review, każdy z artefaktem na dysku.',
+      },
+      '10x-cli': {
+        kicker: 'NARZĘDZIE',
+        h3: '10x-cli',
+        short: '10X-CLI',
+        p: 'Terminalowy pomocnik: zasoby lekcji i skille prosto do Twojego projektu.',
+      },
+      'space-explorers': {
+        kicker: 'GRA',
+        h3: 'Space Explorers',
+        short: 'EXPLORERS',
+        p: 'Narracyjna gra kursu - fabularne wejście w świat 10x Workflow.',
+      },
+      'jak-dziala-kurs': {
+        kicker: 'START',
+        h3: 'Jak działa kurs',
+        short: 'JAK DZIAŁA',
+        p: 'Przebieg kursu: prework, pięć tygodni pracy z agentem i ścieżka do certyfikatu.',
+      },
+    },
     how: {
       num: 'INSTRUKCJA',
       uniSuffix: ' · Konsola mostka',
@@ -176,20 +219,53 @@ export const HUB: Record<Lang, HubDict> = {
     subHtml:
       'This portal is the map of the <strong>10x Workflow</strong> - the system for working with an AI agent from the <strong>10xDevs</strong> course. It is split into five categories: <strong>Course</strong> (flow and certification), <strong>Modules</strong> (the five modules and scaling), <strong>Skills</strong> (the Core Skills Chain), <strong>Ecosystem</strong> (tools and documentation) and <strong>FAQ</strong>. Each panel below is one category - click it to open its overview.',
     svgDesktopAria:
-      'Bridge console: a central 10x Workflow screen surrounded by indicator panels; each panel leads to the overview of one portal category - Course, Modules, Skills, Ecosystem and FAQ',
+      'Bridge console: a central 10x Workflow screen surrounded by indicator panels; the top row is the portal categories (Course, Modules, Skills, Ecosystem, FAQ), the bottom row is the highlighted shortcuts (10xTop5, Core Skills Chain, 10x-cli, Space Explorers, How the course works)',
     svgMobileAria:
-      'Bridge console in a vertical layout: the central 10x Workflow screen on top, below it indicator panels leading to the overview of portal categories - Course, Modules, Skills, Ecosystem and FAQ',
+      'Bridge console in a vertical layout: the central 10x Workflow screen on top, below it indicator panels - first the portal categories (Course, Modules, Skills, Ecosystem, FAQ), then the highlighted shortcuts (10xTop5, Core Skills Chain, 10x-cli, Space Explorers, How the course works)',
     screenTitle: '10X WORKFLOW',
     screenSf: 'BRIDGE // COURSE LAID IN',
     screenNeutral: 'CONTROL PANEL // PORTAL',
-    mapCapSf: 'BRIDGE // CHOOSE A CATEGORY',
-    mapCapNeutral: 'CONTROL PANEL // CHOOSE A CATEGORY',
+    mapCapSf: 'BRIDGE // CHOOSE A DESTINATION',
+    mapCapNeutral: 'CONTROL PANEL // CHOOSE A DESTINATION',
     routeAria: 'Bridge sections',
     routeSkrot: 'Categories',
     routeJak: 'How to read the portal',
     routeGeneza: 'Why the vibe',
     routeDalej: 'Next: start with 10xTop5',
-    skrotEyebrow: 'The five portal categories in one view',
+    flagshipsEyebrow: 'Highlights · start with these pages',
+    skrotEyebrow: 'The five portal categories',
+    flagships: {
+      top5: {
+        kicker: 'TOP 5',
+        h3: '10xTop5',
+        short: '10XTOP5',
+        p: 'Five course values with evidence and participant voices - the best first read.',
+      },
+      csc: {
+        kicker: 'CORE',
+        h3: 'Core Skills Chain',
+        short: 'CSC',
+        p: 'The heart of the system: five steps from idea to review, each with an artifact on disk.',
+      },
+      '10x-cli': {
+        kicker: 'TOOL',
+        h3: '10x-cli',
+        short: '10X-CLI',
+        p: 'The terminal helper: lesson resources and skills straight into your project.',
+      },
+      'space-explorers': {
+        kicker: 'GAME',
+        h3: 'Space Explorers',
+        short: 'EXPLORERS',
+        p: 'The narrative course game - a story-driven way into 10x Workflow.',
+      },
+      'jak-dziala-kurs': {
+        kicker: 'START',
+        h3: 'How the course works',
+        short: 'COURSE FLOW',
+        p: 'The course flow: prework, five weeks with an agent and the path to a certificate.',
+      },
+    },
     how: {
       num: 'MANUAL',
       uniSuffix: ' · Bridge console',

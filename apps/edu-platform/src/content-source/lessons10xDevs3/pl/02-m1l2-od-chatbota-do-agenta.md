@@ -1,11 +1,11 @@
 ---
-title: "Od chatbota do Agenta: tech stack, skille i metaprompting"
-titleEn: "From chatbot to Agent: tech stack, skills and metaprompting"
+title: "Od Chatbota do Agenta: tech stack, skille i metaprompting"
+titleEn: "From Chatbot to Agent: tech stack, skills and metaprompting"
 lessonId: "02"
 language: "pl"
 order: 2
 ---
-# Od chatbota do Agenta: tech stack, skille i metaprompting
+# Od Chatbota do Agenta: tech stack, skille i metaprompting
 
 W poprzedniej lekcji twój pomysł na projekt przeszedł sesję sokratejską i wylądował na dysku jako **prd.md**: kontrakt opisujący *co* budujesz, dla kogo i po czym poznasz, że działa.
 

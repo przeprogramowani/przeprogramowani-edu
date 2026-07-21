@@ -24,11 +24,13 @@ async function listFiles(dir: string, extension: string): Promise<string[]> {
 }
 
 describe('generated lesson HTML files', () => {
+  // Generates HTML for every lesson source; ~2.3s locally but can exceed the
+  // default 5s cap on a loaded CI runner, so give it explicit headroom.
   it('keeps generator-owned HTML up to date', async () => {
     const result = await checkGeneratedLessonHtml(createDefaultLessonHtmlGenerationTargets(projectRoot));
 
     expect(result.ok, result.diagnostics.join('\n')).toBe(true);
-  });
+  }, 30000);
 
   it('has matching generated PL HTML for each non-hidden PL Markdown source', async () => {
     const sourceFiles = await listFiles(plSourceDir, '.md');

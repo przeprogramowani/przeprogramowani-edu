@@ -15,7 +15,9 @@ src/explorers/levels/
 ├── types.ts                    # LevelManifest, InteractionRoute types
 ├── index.ts                    # ALL_LEVELS map — server-side registry (imported by /api/game)
 ├── levelLoader.ts              # Client-side loader; loadLevelsFromData() builds global registries
+├── mapAuthoring/               # Map source compiler/validator library (see "Map Authoring Pipeline")
 └── example-level/
+    ├── map.level.yaml          # Canonical map source — compiled to public/game/maps/<key>.json
     ├── manifest.ts
     ├── dialogues.ts
     ├── games.ts
@@ -58,18 +60,93 @@ All dialogues from all levels are merged into one flat map. IDs must be unique a
 
 ## How to Add a New Level
 
-### Step 1: Create the Tiled map
+### Level-design quality gate for agents
 
-**File:** `public/game/maps/<map-key>.json`
+A valid map is not automatically an interesting map. Before writing YAML, prepare a short level-design brief that answers:
 
-Create a Tiled-compatible JSON with layers: `Ground`, `Walls`, `Above` (optional), `Zones` (object layer for interactive objects and doors).
+| Decision | Required question |
+|----------|-------------------|
+| Purpose | What story, quest, or traversal beat is this level responsible for? |
+| Topology | What makes moving through this space different from the previous level? |
+| Landmarks | Which prop, NPC, doorway, vista, or room shape helps the player orient themselves? |
+| Quest geography | Where does the player learn the objective, perform it, and observe its consequence? |
+| NPC role | Does this level need an embodied character? If yes, which type and how does their dialogue participate in the quest? If no, why is a terminal, environment, or deliberate isolation stronger? |
 
-No manual asset registration needed - just create the map JSON file in the `public/game/maps/` directory.
+Treat **topology** as gameplay structure, not decoration. Unless a level is intentionally a tiny connector, tutorial cell, or ceremonial reveal, do not default to a rectangular room with two opposite doors. Prefer a readable combination of spatial beats such as:
+
+- an entry chamber opening into a wider hub;
+- a bend, offset doorway, alcove, side room, or short branch that breaks a single sightline;
+- a loop or optional detour that reconnects to the main path;
+- a narrow-to-wide or quiet-to-busy transition;
+- one visually dominant landmark placed where it aids navigation;
+- props and interaction zones distributed according to the room's purpose instead of arranged symmetrically by habit.
+
+Do not add complexity as noise. Every branch should hold a clue, interaction, resource, shortcut, story beat, or useful view. Respect the compiler's geometry constraints: build varied connected floor silhouettes and chambers, not unsupported thin walls, isolated wall stubs, or unreachable decorative pockets.
+
+Spatialize quests when the level owns a quest beat. Avoid placing activation, objective, and consequence on the same tile unless the quest is intentionally a single interaction. A useful default flow is: learn the objective near the entry or hub, travel to a distinct interaction deeper in the layout, then see a changed route, prop dialogue, NPC response, or unlocked exit. Backtracking is acceptable when the return path is short or changes meaningfully after completion.
+
+NPCs are conditional, not a quota. Add one when a character improves motivation, explanation, emotional response, local knowledge, or visible quest state. When an NPC is present in a quest-bearing level, tie them to the quest through at least one concrete mechanism: their dialogue activates it, provides an actionable clue, reacts through flag variants, sets a required flag, or acknowledges its consequence. Prefer both a useful pre-quest role and a changed post-quest response. Do not add an NPC merely to fill empty space; terminal-driven missions, abandoned locations, environmental puzzles, and intentionally lonely scenes may be stronger without one.
+
+### Step 1: Author the map source
+
+**File:** `src/explorers/levels/<map-key>/map.level.yaml`
+
+Maps are authored as text — never hand-write tile indices or the Tiled JSON. The yaml source holds a theme, an ASCII floor plan, props, and zones; `npm run levels:build` compiles it into `public/game/maps/<map-key>.json` (the artifact the game loads, committed alongside the source). The compiler auto-tiles everything: wall edges, outer/inner corners, and floor/background variant scatter are all derived from the floor plan. A `D` cell selects doorway art; a matching `type: door` zone supplies its interaction and destination.
+
+```yaml
+# src/explorers/levels/engine-room/map.level.yaml
+theme: 1            # 1-6, see the theme table below
+grid: |             # ~ outside, # wall, . floor, o window wall, D doorway wall
+  ~~~~~~~~~~~~
+  ~##########~
+  ~#........D~
+  ~#........D~
+  ~##########~
+  ~~~~~~~~~~~~
+props:
+  - { id: reactor-console, prop: console, at: [2, 2], solid: true } # named prop, collides
+  - { slot: 6, at: [4, 3], solid: false }         # slot number, walkable decal (Ground layer)
+zones:
+  - id: reactor-panel
+    name: Reactor Panel      # optional editor display name
+    type: trigger            # trigger | door | terminal | npc | exam | arcade
+    propId: reactor-console  # derives at: [2, 2] from the named prop
+    size: [2, 1]             # in tiles, defaults to [1, 1]
+  - id: door-to-crew
+    type: door
+    at: [10, 2]
+    size: [1, 2]
+    properties: { targetMap: m0-crew-room, spawnX: 2, spawnY: 3 }
+```
+
+Rules the validator enforces (`npm run levels:check`):
+
+- The grid alphabet is fixed: `~` outside, `#` wall, `.` floor, `o` window wall, `D` doorway wall. Grids must be rectangular.
+- Windows (`o`) only work on north/south-facing wall runs — the tileset has no side-wall window (the side-wall "B" tiles are doorways). A window anywhere else is an error.
+- Doorway cells (`D`) only work on west/east-facing wall runs. Every `D` must be covered by exactly one `type: door` zone; every door zone must cover only `D` cells and be one tile wide.
+- Rooms must be sealed — every floor cell fully surrounded by floor or walls. Walls must be resolvable: no thin walls (floor on both sides of a 1-tile wall), no free-standing pillars/stubs.
+- Props stand on floor cells. `solid: true` (default) puts the prop on the Walls layer (collides); `solid: false` makes a walkable Ground decal.
+- A prop may declare a map-local `id`. A zone with `propId` derives its `at` coordinates from that prop; otherwise the zone must declare `at`. Prop ids must be non-empty and unique, and unknown `propId` references are errors. If both fields are present, `propId` takes precedence.
+- Doors need `targetMap`, `spawnX`, `spawnY` (spawn must be walkable floor in the target map). Doors to not-yet-existing maps are allowed (warning only) when gated by flags.
+- Each `D` resolves automatically to the correct west/east doorway sprite for the selected theme.
+- Zone `properties` pass through to Tiled: `spawnX`/`spawnY` become ints, everything else strings.
+
+**Themes** (each an 8×4 block in the stacked `placeholder.png`, tile index offset `(theme−1)×32`):
+
+| Theme | Setting |
+|-------|---------|
+| 1 | sci-fi |
+| 2 | jungle |
+| 3 | snow |
+| 4 | lava |
+| 5 | desert |
+| 6 | oceanic / underwater |
 
 ### Step 2: Create the level directory
 
 ```
 src/explorers/levels/engine-room/
+├── map.level.yaml
 ├── manifest.ts
 ├── dialogues.ts
 └── quests.ts          # only if the level has quests
@@ -86,13 +163,22 @@ export const dialogues: Record<string, DialogueSequence> = {
   'reactor-panel': {
     id: 'reactor-panel',
     lines: [
-      { speaker: 'system', text: 'Reaktor — tryb oszczędzania energii.', mode: 'system', autoAdvance: 2000 },
+      {
+        speaker: 'system',
+        text: { pl: 'Reaktor — tryb oszczędzania energii.', en: 'Reactor — power-saving mode.' },
+        mode: 'system',
+        autoAdvance: 2000,
+      },
     ],
   },
   'coolant-pipe': {
     id: 'coolant-pipe',
     lines: [
-      { speaker: 'astronaut', text: 'Rura chłodząca. Jeszcze ciepła.', mode: 'monologue' },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Rura chłodząca. Jeszcze ciepła.', en: 'Coolant pipe. Still warm.' },
+        mode: 'monologue',
+      },
     ],
   },
 };
@@ -110,7 +196,7 @@ import { dialogues } from './dialogues';
 
 export const manifest: LevelManifest = {
   id: 'engine-room',                    // must match map JSON filename
-  displayName: 'Maszynownia',           // Polish, shown in HUD
+  displayName: { pl: 'Maszynownia', en: 'Engine Room' },
   dialogues,
   interactionRoutes: [
     { zoneId: 'reactor-panel', defaultDialogue: 'reactor-panel' },
@@ -136,9 +222,100 @@ This file is the **server-side** registry. It is imported by the `/api/game` end
 
 ### Step 6: Connect via doors
 
-Add door objects in the Tiled map's `Zones` layer pointing to existing maps, and add return doors in existing maps pointing back. Door objects need `targetMap`, `spawnX`, `spawnY` properties.
+Add door zones in the new map's yaml pointing to existing maps, and add return doors in existing maps' yaml sources pointing back. Door zones need `targetMap`, `spawnX`, `spawnY` properties. Re-run `npm run levels:build` after editing any source.
+
+Doors deliberately use both representations:
+
+- A `type: door` zone is emitted into the Tiled `Zones` layer with its transition properties.
+- A matching `D` grid cell selects the correctly oriented doorway art for the map's theme.
+- The validator checks exact `D`/zone coverage, known targets, walkable target spawns, and missing return connections.
+- The runtime performs the transition when the player interacts with the compiled door zone.
+
+The compiler does **not** infer the destination, create the return door, choose spawn coordinates, replace a wall with walkable floor, or create north/south doorway art. Mark doorway wall cells with `D`, cover the same coordinates with the door zone, and keep the destination spawn on an unobstructed `.` floor cell inside the target room.
+
+For example, given rooms whose side walls are at `x=1` and `x=10`, connect A's east wall to B's west wall like this:
+
+```yaml
+# room-a/map.level.yaml
+grid: |
+  ~~~~~~~~~~~~
+  ~##########~
+  ~#........D~
+  ~#........D~
+  ~##########~
+  ~~~~~~~~~~~~
+zones:
+  - id: door-to-b
+    type: door
+    at: [10, 2]
+    size: [1, 2]
+    properties: { targetMap: room-b, spawnX: 2, spawnY: 3 }
+
+# room-b/map.level.yaml — explicit reciprocal connection
+grid: |
+  ~~~~~~~~~~~~
+  ~##########~
+  ~D........#~
+  ~D........#~
+  ~##########~
+  ~~~~~~~~~~~~
+zones:
+  - id: door-to-a
+    type: door
+    at: [1, 2]
+    size: [1, 2]
+    properties: { targetMap: room-a, spawnX: 9, spawnY: 3 }
+```
+
+The `at` coordinates describe doorway wall art in the current map. `spawnX` and `spawnY` describe where the player appears in the other map. They are not the target door's wall coordinates.
 
 **That's it.** No other files to edit. The level loader auto-discovers everything from the manifest. The map display name, all dialogues, interaction routes, and editor constants are all derived automatically.
+
+---
+
+## Map Authoring Pipeline
+
+`map.level.yaml` files under `src/explorers/levels/<map-key>/` are the canonical map sources; the Tiled JSON under `public/game/maps/` is a compiled build artifact (committed, like the lesson HTML). A Vitest sync test (`mapAuthoring/mapSync.test.ts`) fails CI whenever an artifact drifts from its source — so never edit the JSON by hand.
+
+| Command | What it does |
+|---------|--------------|
+| `npm run levels:build` | Validate all sources, then compile each to `public/game/maps/<key>.json`. Deterministic — same source, same bytes. `-- --map <key>` scopes the write. |
+| `npm run levels:check` | Validation only: geometry, sealed rooms, wall resolvability, props, zones, cross-map doors + spawn walkability, floor reachability, manifest references (interaction routes, exam/arcade ids). Exit 1 on errors. |
+| `npm run levels:render -- <key> [--zones] [--out <path>]` | Render the compiled map to a PNG (default: OS temp dir). `--zones` overlays zone rectangles with object-id labels and prints an id legend. |
+| `npm run levels:decompile -- --full <key>` | One-off: lift an existing JSON map into a yaml source (used for the m0 migration). |
+| `npm run levels:decompile -- --zones-only <key> [--from <json>]` | Lift zone edits made in `/explorers-editor` back into the yaml source, leaving theme/grid/props untouched. Comments above the `zones:` block survive; comments inside it don't. |
+
+**The editor's role:** `/explorers-editor` is for zones authoring and visual preview. Draw/erase zones there, export the JSON, then run `levels:decompile --zones-only` to fold the change back into the source. Wall/floor changes belong in the yaml grid, not the editor. If a door zone moves, update the corresponding `D` cells in the grid too; validation rejects stale or mismatched placement.
+
+`id`/`propId` is compile-time YAML syntax sugar: the parser resolves it to ordinary zone coordinates, and the Tiled JSON stores only those coordinates. Decompilation therefore emits an explicit `at` and does not restore the original `propId` reference.
+
+**The agent loop:** author or edit `map.level.yaml` → `npm run levels:build` (runs validation) → `npm run levels:render -- <key> --zones` → view the PNG → iterate. An agent can ship a complete level without ever hand-writing a tile index.
+
+### Agent recipe: create a connected themed level set
+
+For requests such as “create three oceanic levels connected by doors,” treat the set as one graph rather than authoring maps independently:
+
+1. Choose stable map keys and write a topology table before editing. Record every directed door, including return connections.
+2. Give each map a distinct spatial purpose and silhouette. Record its entry beat, landmark, branch or turn, quest interaction location, and exit beat; do not repeat the same rectangular composition across the set.
+3. Decide whether each quest-bearing map benefits from an NPC. Record `none` with a reason, or record the NPC type, zone id, quest relationship, and pre/post-quest dialogue states.
+4. Assign the same requested theme to every map (`theme: 6` for oceanic) unless the request explicitly calls for a transition.
+5. Sketch all grids and mark doorways with `D` on west/east wall runs. Do not cut holes in the ASCII wall ring.
+6. Choose a walkable, unobstructed spawn inside each destination, normally one tile inward from its door.
+7. Create all `map.level.yaml` sources before the first build. Validation loads the complete source set, even when `levels:build -- --map <key>` scopes which JSON file is written.
+8. Add props by alias, not slot number. Include `synaptit-ore` only where the level design calls for the mission resource. Use props as landmarks and spatial storytelling, not uniform filler.
+9. Add manifests and register all levels in `src/explorers/levels/index.ts`. Add bilingual dialogues and display names when the levels contain player-facing content.
+10. Run `npm run levels:build`, then render every map with `--zones`. Check geometry, door overlays, target spawns, solid-prop obstructions, repeated visual composition, dead space, and whether the quest path uses the layout.
+11. Run the full verification commands and test every transition in both directions in the browser.
+
+Example topology prepared before authoring:
+
+| Map | Theme | Outgoing doors | Intended entry spawn |
+|-----|-------|----------------|----------------------|
+| `oceanic-landing` | 6 | east → `oceanic-reef` | `[2, 3]` |
+| `oceanic-reef` | 6 | west → `oceanic-landing`; east → `oceanic-sanctum` | `[2, 3]` from west; `[9, 3]` from east |
+| `oceanic-sanctum` | 6 | west → `oceanic-reef` | `[9, 3]` |
+
+This table is a planning aid, not compiler input. Every row still needs explicit YAML door zones.
 
 ---
 
@@ -157,7 +334,7 @@ interface DialogueSequence {
 
 interface DialogueLine {
   speaker: 'astronaut' | 'system' | string;
-  text: string;                  // Polish in-game text
+  text: BilingualText;           // { pl: string, en: string }
   mode: 'dialogue' | 'monologue' | 'system' | 'cinematic';
   autoAdvance?: number;          // milliseconds, for system/cinematic modes
 }
@@ -380,6 +557,19 @@ SmartTerminal renders these as teal-colored clickable divs. This system is reusa
 
 NPCs are autonomous characters that wander the map and initiate dialogues with the player. They reuse the same interaction route system as static triggers — a zone `id` maps to a dialogue via `interactionRoutes`.
 
+### Choose an NPC for a reason
+
+Match the visual type to the character's narrative function and the local theme: `scientist` for human crew or researchers, `alien` for organic non-human inhabitants, `robot` for technical or service entities, and `orb` for energy beings, anomalies, or ancient guides. This is guidance, not a restriction—a deliberate contrast can be more interesting than a literal match.
+
+For quest-linked NPCs, write down the relationship before placing the zone:
+
+- **Activation:** interacting with the NPC ends with `activateQuest`.
+- **Guidance:** their dialogue gives a clue the player can act on elsewhere in the topology.
+- **State:** `flagVariants` distinguish not-started, active, and completed quest states.
+- **Consequence:** their post-quest dialogue acknowledges what changed or points to the newly available route.
+
+An NPC does not need to own every stage. For example, a robot can activate a repair quest, a console in a side chamber can be the objective, and the same robot can react to the completion flag. Conversely, omit the NPC when the fiction calls for isolation or when a terminal/environment already communicates the quest more clearly.
+
 ### How it works
 
 1. Map author places a zone object with `type: npc` in Tiled's `Zones` layer
@@ -389,22 +579,18 @@ NPCs are autonomous characters that wander the map and initiate dialogues with t
 5. Pressing [E] freezes all NPCs, resolves the dialogue ID via `interactionRoutes`, and starts the dialogue
 6. On dialogue dismiss, all NPCs resume wandering
 
-### Step 1: Add the NPC zone to the Tiled map
+### Step 1: Add the NPC zone to the map source
 
-In the map's `Zones` layer, add an object with `type: npc`:
+In the map's `map.level.yaml`, add a zone with `type: npc` (then `npm run levels:build`):
 
-```json
-{
-  "type": "npc",
-  "x": 192,
-  "y": 128,
-  "width": 32,
-  "height": 32,
-  "properties": [
-    { "name": "id",      "type": "string", "value": "engineer-moreau" },
-    { "name": "npcType", "type": "string", "value": "scientist" }
-  ]
-}
+```yaml
+zones:
+  - id: engineer-moreau
+    name: Moreau
+    type: npc
+    at: [9, 6]
+    properties:
+      npcType: scientist
 ```
 
 Key properties:
@@ -422,7 +608,8 @@ NPC movement speed is standardized in runtime via `NPC_SPEED` and is not authore
 |-----------|--------------------------|---------------|
 | `scientist` | 0 | Crew members, engineers |
 | `alien` | 1 | Non-human characters |
-| `philosopher` | 2 | Mentors, scholars |
+| `robot` | 2 | Androids, service units, drones |
+| `orb` | 3 | Floating entities, energy beings |
 
 The animation key format is `npc-{npcType}-walk-{direction}` (e.g. `npc-scientist-walk-down`).
 
@@ -486,25 +673,53 @@ Flag variants work identically to triggers — if the NPC should say something d
 ### Editor support
 
 The map editor (`/editor`) supports NPC zones natively. When you change a zone's type to `npc`:
-- A `npcType` dropdown appears (scientist / alien / philosopher)
+- A `npcType` dropdown appears (scientist / alien / robot / orb)
 - The debug overlay renders the zone in **fuchsia** (`#e879f9`)
 
 ### Spritesheet layout — `npc-characters.png`
 
-**Size:** 384 × 192 px — 4 frames per direction × 3 characters × 4 directions
+**Size:** 1024 × 384 px — 4 frames per direction × 4 characters × 4 directions
 
 ```
-         scientist        alien         philosopher
-         (cols 0–3)      (cols 4–7)     (cols 8–11)
-row 0    [up   × 4]      [up   × 4]     [up   × 4]
-row 1    [down × 4]      [down × 4]     [down × 4]
-row 2    [left × 4]      [left × 4]     [left × 4]
-row 3    [right × 4]     [right × 4]    [right × 4]
+         scientist        alien           robot           orb
+         (cols 0–3)      (cols 4–7)     (cols 8–11)    (cols 12–15)
+row 0    [up   × 4]      [up   × 4]     [up   × 4]      [up   × 4]
+row 1    [down × 4]      [down × 4]     [down × 4]      [down × 4]
+row 2    [left × 4]      [left × 4]     [left × 4]      [left × 4]
+row 3    [right × 4]     [right × 4]    [right × 4]     [right × 4]
 ```
 
-Frame index formula: `dirRow × 12 + charIdx × 4 + frameOffset`
+Frame index formula: `dirRow × 16 + charIdx × 4 + frameOffset`
 
-Each frame is **32 × 48 px** (same as the player spritesheet).
+Each frame is **64 × 96 px** (same as the player spritesheet).
+
+### Reusing the sheet as color variants
+
+Do not use a Phaser geometry or bitmap mask to recolor an NPC. Masks control which pixels are visible; they do not change pixel color. `NPC` extends `Phaser.Physics.Arcade.Sprite`, so color variants can be applied directly to each instance while continuing to use the same texture frames and animation keys:
+
+```typescript
+// Color filter: preserves the source shading, but multiplies its RGB values.
+npc.setTint(0x66ccff);
+
+// Alpha-mask look: replaces every visible pixel with the selected color.
+npc.setTintFill(0x66ccff);
+
+// Restore the original sprite colors.
+npc.clearTint();
+```
+
+Both tint modes respect the PNG alpha channel, so fully transparent background pixels remain transparent. Use `setTint()` for damage/status lighting or modest theme shifts. Use `setTintFill()` for holograms, silhouettes, scans, and other intentional one-color mask effects. Because the source characters are already colored, multiplicative tint cannot perform an arbitrary palette swap: black remains black and a saturated source channel cannot be remapped freely.
+
+Phaser's sprite tint component is WebGL-only. The game currently uses `Phaser.AUTO`, so a browser that falls back to Canvas will not render these tints. If Canvas parity or exact multi-color theme palettes are required, generate and cache one derived spritesheet texture per variant after `npc-characters` loads:
+
+1. Copy the source image into a `CanvasTexture` with image smoothing disabled.
+2. For a one-color mask, fill it using the canvas `source-in` composite operation; this preserves the original alpha channel.
+3. Register the canvas as a spritesheet with the same `64 × 96` frame configuration.
+4. Register variant animation keys against that texture once, then reuse the cached texture for all matching NPC instances.
+
+Avoid generating a texture per NPC. Cache by a stable variant key such as `npc-characters--hologram-blue`. For selective palette swaps (for example changing robot armor while preserving its eyes and outline), either export separate grayscale mask layers from the art pipeline or use a custom WebGL palette-swap pipeline; a single whole-sprite tint cannot distinguish semantic regions.
+
+The authored YAML contains a numeric map `theme`, but the compiler does not currently emit it into the runtime Tiled map. Automatic theme-based NPC variants therefore need one small data-contract change first: emit the theme as a map property, or author an explicit validated `npcVariant` property on each NPC zone. Prefer the explicit property when two NPCs on the same map may use different variants.
 
 ### Key files
 
@@ -530,21 +745,26 @@ Doors can require one or more flags before the player can pass through. When the
 3. If any flag is missing, it resolves a dialogue ID via the existing `InteractionRoute` system and shows it instead
 4. If all flags are present (or none are required), the door transitions normally
 
-### Step 1: Add `requiredFlags` to the door zone in the Tiled map
+### Step 1: Add `requiredFlags` to the door zone in the map source
 
-In the map JSON, add a `requiredFlags` property to the door object. Flags are comma-separated:
+In the map's `map.level.yaml`, add a `requiredFlags` property to the door zone (comma-separated flags), then `npm run levels:build`:
 
-```json
-{
-  "type": "door",
-  "properties": [
-    { "name": "id", "type": "string", "value": "exit-door" },
-    { "name": "targetMap", "type": "string", "value": "next-room" },
-    { "name": "spawnX", "type": "int", "value": 5 },
-    { "name": "spawnY", "type": "int", "value": 3 },
-    { "name": "requiredFlags", "type": "string", "value": "exam-a-done,exam-b-done" }
-  ]
-}
+```yaml
+grid: |
+  ~##########~
+  ~#........D~
+  ~#........D~
+  ~##########~
+zones:
+  - id: exit-door
+    type: door
+    at: [10, 1]
+    size: [1, 2]
+    properties:
+      targetMap: next-room
+      spawnX: 5
+      spawnY: 3
+      requiredFlags: exam-a-done,exam-b-done
 ```
 
 ### Step 2: Add an InteractionRoute for the door
@@ -755,6 +975,34 @@ interface ApiAnswerQuest {
 }
 ```
 
+### Companion HQ repository for API quests
+
+`api-answer` quests span two repositories. The secondary repository is not an optional example or a documentation mirror; it is the Navigator's actual working environment and therefore part of the production quest contract:
+
+- Local checkout: `~/dev/10x-explorers-hq`
+- Public repository: `github.com/przeprogramowani/10x-explorers-hq`
+- Player CLI: `earthctl` from `@10xdevspl/earth-ctl`
+
+The responsibility split is deliberate:
+
+| Repository | Owns |
+|---|---|
+| `edu-platform` | Quest activation, bilingual briefing and hints, API token lifecycle, server-side answer hash, XP/flag grant, pending-grant application, map/dialogue consequences |
+| `10x-explorers-hq` | Mission source files, static fixtures, artifact templates, local validator/simulator, agent instructions, deterministic passphrase generation, `earthctl submit` workflow |
+
+The game API does not receive or grade repository files. `POST /api/game/submit` accepts a short canonical answer and compares its normalized SHA-256 hash. Consequently, an API quest is not playable merely because its `quests.ts`, dialogue, and `answerHash` exist. The corresponding HQ mission must contain enough authored inputs and deterministic local tooling to produce that exact canonical answer.
+
+When adding or changing an `api-answer` quest:
+
+1. Inspect both repositories before implementation and obey each repository's `AGENTS.md`.
+2. Add the quest definition and game consequences in `edu-platform`.
+3. Add the matching mission package in `10x-explorers-hq`, including its briefing, inputs, expected artifact shape, and deterministic validator.
+4. Run the HQ validator to obtain the canonical answer, then compute/update the `answerHash` in `edu-platform`. Never invent an unrelated hash by hand.
+5. Verify the complete player path: `earthctl status` → solve using HQ assets → local validator emits answer → `earthctl submit --quest-id <id> --answer <answer>` → pending grant appears → browser applies XP/flags and plays the completion dialogue.
+6. If the mission needs more than `{ quest_id, answer }` (for example explicit human authorization), update the HQ instructions, `earthctl`, the submission API schema, tests, and server validation as one cross-repository change.
+
+Keep large puzzle inputs and local-only validator fixtures in the HQ repository. Keep player-facing in-game prose bilingual in `edu-platform`; keep HQ mission prose consistent with that repository's Earth HQ immersion rules.
+
 ### Step 1: Define the quest
 
 **File:** `src/explorers/levels/engine-room/quests.ts`
@@ -884,8 +1132,8 @@ Exams are multiple-choice quizzes triggered from map zones. They support single-
 ```typescript
 interface ExamDefinition {
   id: string;                    // globally unique
-  title: string;                 // Polish display title
-  description: string;           // Polish description
+  title: BilingualText;
+  description: BilingualText;
   questions: ExamQuestion[];
   passingScore: number;          // minimum correct answers to pass
   rewards: { xp: number; flags: string[] };
@@ -894,7 +1142,7 @@ interface ExamDefinition {
 
 interface ExamQuestion {
   id: string;                    // unique within exam
-  text: string;                  // Polish question text
+  text: BilingualText;
   type: 'single' | 'multi';     // single-choice or multi-choice
   options: ExamOption[];
   correctOptionIds: string[];    // IDs of correct options
@@ -902,7 +1150,7 @@ interface ExamQuestion {
 
 interface ExamOption {
   id: string;                    // unique within question
-  text: string;                  // Polish option text
+  text: BilingualText;
 }
 ```
 
@@ -916,29 +1164,35 @@ import type { ExamDefinition } from '../../systems/ExamTypes';
 export const exams: ExamDefinition[] = [
   {
     id: 'reactor-certification',
-    title: 'Certyfikacja Reaktora',
-    description: 'Sprawdź wiedzę o systemach reaktora.',
+    title: { pl: 'Certyfikacja Reaktora', en: 'Reactor Certification' },
+    description: {
+      pl: 'Sprawdź wiedzę o systemach reaktora.',
+      en: 'Test your knowledge of the reactor systems.',
+    },
     passingScore: 2,
     questions: [
       {
         id: 'q1',
-        text: 'Jaki jest kod diagnostyczny reaktora?',
+        text: { pl: 'Jaki jest kod diagnostyczny reaktora?', en: 'What is the reactor diagnostic code?' },
         type: 'single',
         options: [
-          { id: 'a', text: 'RT-42' },
-          { id: 'b', text: 'RT-99' },
-          { id: 'c', text: 'RX-01' },
+          { id: 'a', text: { pl: 'RT-42', en: 'RT-42' } },
+          { id: 'b', text: { pl: 'RT-99', en: 'RT-99' } },
+          { id: 'c', text: { pl: 'RX-01', en: 'RX-01' } },
         ],
         correctOptionIds: ['a'],
       },
       {
         id: 'q2',
-        text: 'Które systemy chłodzenia są aktywne? (wybierz wszystkie)',
+        text: {
+          pl: 'Które systemy chłodzenia są aktywne? (wybierz wszystkie)',
+          en: 'Which cooling systems are active? (select all)',
+        },
         type: 'multi',
         options: [
-          { id: 'a', text: 'Obwód pierwotny' },
-          { id: 'b', text: 'Obwód wtórny' },
-          { id: 'c', text: 'Obwód awaryjny' },
+          { id: 'a', text: { pl: 'Obwód pierwotny', en: 'Primary circuit' } },
+          { id: 'b', text: { pl: 'Obwód wtórny', en: 'Secondary circuit' } },
+          { id: 'c', text: { pl: 'Obwód awaryjny', en: 'Emergency circuit' } },
         ],
         correctOptionIds: ['a', 'c'],
       },
@@ -957,20 +1211,20 @@ In the level's `dialogues.ts`, add dialogues for the exam zone and completion:
 'exam-reactor-available': {
   id: 'exam-reactor-available',
   lines: [
-    { speaker: 'system', text: 'Stacja certyfikacji reaktora aktywna.', mode: 'system', autoAdvance: 2000 },
+    { speaker: 'system', text: { pl: 'Stacja certyfikacji reaktora aktywna.', en: 'Reactor certification station active.' }, mode: 'system', autoAdvance: 2000 },
   ],
 },
 'exam-reactor-completed': {
   id: 'exam-reactor-completed',
   lines: [
-    { speaker: 'system', text: 'Certyfikacja ukończona. Dostęp przyznany.', mode: 'system', autoAdvance: 2000 },
+    { speaker: 'system', text: { pl: 'Certyfikacja ukończona. Dostęp przyznany.', en: 'Certification complete. Access granted.' }, mode: 'system', autoAdvance: 2000 },
   ],
 },
 'reactor-exam-complete': {
   id: 'reactor-exam-complete',
   lines: [
-    { speaker: 'system', text: 'CERTYFIKACJA ZALICZONA', mode: 'system', autoAdvance: 2000 },
-    { speaker: 'astronaut', text: 'Reaktor jest teraz pod kontrolą.', mode: 'dialogue' },
+    { speaker: 'system', text: { pl: 'CERTYFIKACJA ZALICZONA', en: 'CERTIFICATION PASSED' }, mode: 'system', autoAdvance: 2000 },
+    { speaker: 'astronaut', text: { pl: 'Reaktor jest teraz pod kontrolą.', en: 'The reactor is under control now.' }, mode: 'dialogue' },
   ],
   onComplete: { setFlags: ['reactor-certified'] },
 },
@@ -983,7 +1237,7 @@ import { exams } from './exams';
 
 export const manifest: LevelManifest = {
   id: 'engine-room',
-  displayName: 'Maszynownia',
+  displayName: { pl: 'Maszynownia', en: 'Engine Room' },
   dialogues,
   interactionRoutes: [
     // ... existing routes ...
@@ -1097,7 +1351,25 @@ export const manifest: LevelManifest = {
 };
 ```
 
-`GameScene` checks `getIntroConfig(mapKey)` on every map entry. If the config exists and the intro flag is NOT set, it runs the cinematic sequence.
+`GameScene` checks `getIntroConfigs(mapKey)` on every map entry and plays the **first** entry whose seen-flag is NOT set and whose `requiredFlags` (if any) are all present. The primary `introDialogue`/`introFlag` intro is always checked first.
+
+### Conditional intros (e.g. return-to-ship cinematics)
+
+A map can define additional one-shot intros via `conditionalIntros` — each gated by `requiredFlags` (AND logic) and tracked by its own seen-flag. This is how a "return from the moon" cinematic plays on a map the player has already visited:
+
+```typescript
+conditionalIntros: [
+  {
+    dialogue: 'm0-return-from-moon1',                 // dialogue ID to play
+    flag: FLAGS.M0_RETURN_FROM_MOON1_SEEN,            // own seen-flag (prevents replay)
+    requiredFlags: [FLAGS.M1_LANDING_INTRO_SEEN],     // only triggers once these are set
+    cinematicTitle: 'Statek głębokiej przestrzeni Odyssey',  // optional title card
+    cinematicSubtitle: 'Powrót z Księżyca 1',
+  },
+],
+```
+
+On the first visit the primary intro plays (the conditional one's `requiredFlags` are unmet); when the player returns after earning the required flags, the conditional intro plays once. `contentValidation` checks that the dialogue exists and all flags are registered in `flags.ts`.
 
 **Two variants:**
 
@@ -1117,7 +1389,7 @@ export const manifest: LevelManifest = {
 ```typescript
 interface LevelManifest {
   id: string;                                        // map key, matches JSON filename
-  displayName: string;                               // Polish, for HUD
+  displayName: BilingualText;                        // { pl: string, en: string }, for HUD
   dialogues: Record<string, DialogueSequence>;       // all dialogues for this level
   interactionRoutes: InteractionRoute[];             // zone → dialogue routing
   quests?: QuestDefinition[];                        // quest definitions (optional)
@@ -1151,11 +1423,26 @@ interface InteractionRoute {
 | `src/explorers/levels/types.ts` | `LevelManifest`, `InteractionRoute` type definitions |
 | `src/explorers/levels/index.ts` | `ALL_LEVELS` map — **server-side** registry, imported by `/api/game` endpoint |
 | `src/explorers/levels/levelLoader.ts` | **Client-side** loader; `loadLevelsFromData()` builds global registries from API response |
+| `src/explorers/levels/<level>/map.level.yaml` | Canonical map source (theme, grid, props, zones) — compiled to `public/game/maps/<level>.json` |
 | `src/explorers/levels/<level>/manifest.ts` | Level manifest (single source of truth per level) |
 | `src/explorers/levels/<level>/dialogues.ts` | Dialogue sequences for the level |
 | `src/explorers/levels/<level>/quests.ts` | Quest definitions for the level (optional) |
 | `src/explorers/levels/<level>/exams.ts` | Exam definitions for the level (optional) |
 | `src/pages/api/game/index.ts` | API endpoint — serializes `ALL_LEVELS` to JSON for client boot |
+
+### Map Authoring
+
+| File | Purpose |
+|------|---------|
+| `src/explorers/config/tileIndices.ts` | Tile semantics: `TileRole` (32 roles per 8×4 theme block), theme math (`tileIndex`/`themeOf`/`roleOf`), role groups |
+| `src/explorers/levels/mapAuthoring/parseSource.ts` | `map.level.yaml` → `LevelSource` (grid/props/zones shape checks, prop alias resolution) |
+| `src/explorers/levels/mapAuthoring/autoTiler.ts` | Wall decision table (edges, corners), window/door edge art, deterministic FNV floor/bg scatter |
+| `src/explorers/levels/mapAuthoring/compile.ts` | `compileLevel()` → Tiled JSON; `serializeMap()` — canonical byte-stable output |
+| `src/explorers/levels/mapAuthoring/decompile.ts` | Inverse mapping: Tiled JSON → `LevelSource` (migration + zones-only round-trip) |
+| `src/explorers/levels/mapAuthoring/validate.ts` | Validation rules: geometry, sealed rooms, props, zones, cross-map doors, reachability, manifest refs |
+| `src/explorers/levels/mapAuthoring/propAliases.ts` | Per-theme prop slot aliases for all six themes |
+| `src/explorers/levels/mapAuthoring/mapSync.test.ts` | CI drift gate: committed JSON must equal compiled yaml source |
+| `scripts/levels-build.ts` / `levels-check.ts` / `levels-decompile.ts` / `levels-render.ts` | CLI wrappers (`npm run levels:*`) |
 
 ### State & Flags
 
@@ -1188,44 +1475,67 @@ interface InteractionRoute {
 
 ---
 
-## Available Sprites
+## Available Sprites (Props)
 
-Interactive objects placed in Tiled map `Zones` layers use sprites from the `placeholder.png` sprite sheet. The following object sprites are available:
+Each theme block in `placeholder.png` ships 8 theme-specific prop tiles, addressed in `map.level.yaml` by `slot: 1-8` or, preferably, by per-theme alias (`prop: <name>`, defined in `src/explorers/levels/mapAuthoring/propAliases.ts`). The aliases in exact slot order are:
 
-| Sprite | Use for |
-|--------|---------|
-| Computer | Workstations, data terminals, puzzle interfaces |
-| Terminal | Command-line consoles, system access points |
-| Hibernation chamber | Crew pods, stasis units |
-| Whiteboard | Information displays, notes, schematics |
-| Loot box | Collectibles, item pickups, rewards |
-| Ladder | Vertical traversal, level transitions |
+| Theme | Slots 1 → 8 |
+|-------|-------------|
+| 1 — sci-fi | `console`, `hibernation-chamber`, `viewport`, `whiteboard`, `crate`, `radar`, `oscilloscope`, `button-panel` |
+| 2 — jungle | `ship-teleport`, `holographic-console`, `crystal-orb`, `synaptit-ore`, `ancient-portal`, `scout-drone`, `energy-barrier`, `energy-core` |
+| 3 — snow | `ship-teleport`, `yeti-footsteps`, `synaptit-ore`, `ice-crystals`, `energy-barrier`, `scout-drone`, `expedition-tent`, `snowman` |
+| 4 — volcanic | `ship-teleport`, `survey-lander`, `lava-geyser`, `lava-obelisk`, `magma-crystals`, `synaptit-ore`, `satellite-dish`, `exploration-rover` |
+| 5 — sand | `ship-teleport`, `buried-hatch`, `desert-cairn`, `signal-beacon`, `synaptit-ore`, `solar-panel`, `supply-canister`, `desert-well` |
+| 6 — oceanic | `ship-teleport`, `water-pump`, `seaweed`, `synaptit-ore`, `coral-shrine`, `pearl-orb`, `tidal-monolith`, `water-turbine` |
 
-When designing a new level or quest, pick from these sprites for zone objects. Each sprite can be wired to any dialogue or interaction route via the manifest's `interactionRoutes`.
+Theme 1 usage guidance:
+
+| Slot | Alias (theme 1) | Use for |
+|------|-----------------|---------|
+| 1 | `console` | Workstations, data terminals, puzzle interfaces |
+| 2 | `hibernation-chamber` | Crew pods, stasis units |
+| 3 | `viewport` | Windows, observation points |
+| 4 | `whiteboard` | Information displays, notes, schematics |
+| 5 | `crate` | Collectibles, item pickups, rewards |
+| 6 | `radar` | Scanners, navigation stations |
+| 7 | `oscilloscope` | Diagnostic equipment, signal displays |
+| 8 | `button-panel` | Switches, control panels |
+
+Props render their own ground, so `solid: true` (Walls layer, collides) vs `solid: false` (Ground layer, walkable decal) is purely a gameplay decision per placement. Interactivity always comes from a separate zone over the same tiles, wired via the manifest's `interactionRoutes`.
+
+Every planetary theme (2-6) exposes one visually appropriate resource tile through the shared `synaptit-ore` alias. Theme 1 is the Odyssey's sci-fi interior and keeps `crate` instead. The physical Synaptit slot varies by planetary theme, so always prefer the alias over a numeric slot.
 
 ---
 
 ## Checklist: Adding a New Level
 
 - [ ] Add any new flag constants to `src/explorers/config/flags.ts` before using them elsewhere
-- [ ] Create `public/game/maps/<map-key>.json` (Tiled map — auto-discovered by `getMapAssets()`)
+- [ ] Write the level-design brief: purpose, distinctive topology, landmark, quest geography, and NPC-or-no-NPC decision
+- [ ] For a multi-level set, write the topology and reciprocal door pairs before editing maps; ensure adjacent maps do not repeat the same silhouette and traversal pattern
+- [ ] Create `src/explorers/levels/<map-key>/map.level.yaml` (theme, grid, props, zones — see Step 1)
+- [ ] Give meaningful branches, alcoves, or loops a clue, interaction, resource, shortcut, story beat, or useful view; remove purposeless dead space
+- [ ] Mark every doorway with `D` and add an exactly overlapping door zone; add reciprocal connections where required
+- [ ] `npm run levels:build` — compiles `public/game/maps/<map-key>.json`; fix any validation errors
+- [ ] `npm run levels:render -- <map-key> --zones` — reject accidental box rooms, repetitive compositions, obstructed quest routes, and weak landmarks; iterate on the YAML
 - [ ] Create `src/explorers/levels/<map-key>/dialogues.ts`
 - [ ] Create `src/explorers/levels/<map-key>/quests.ts` (if needed)
+- [ ] If the level has a quest, place activation, objective, and consequence across the topology where practical instead of collapsing every beat into one interaction
+- [ ] If an NPC improves the quest, choose a matching type and tie it to activation, guidance, flag-dependent state, or consequence; otherwise record why no NPC is the stronger choice
 - [ ] Create `src/explorers/levels/<map-key>/exams.ts` (if needed)
 - [ ] Create `src/explorers/levels/<map-key>/manifest.ts`
 - [ ] Add import + entry in `src/explorers/levels/index.ts`
 - [ ] If adding new manifest fields consumed by runtime, also serialize them in `src/pages/api/game.ts` and map them in `src/explorers/levels/levelLoader.ts`
-- [ ] Add door objects connecting to/from existing maps
-- [ ] `npx tsc --noEmit` passes
+- [ ] `npm run check` passes
+- [ ] `npx vitest run` passes (includes the map source/artifact sync test)
 - [ ] `npm run build` passes
-- [ ] Test in browser: doors work, dialogues play, quests function, exams work
+- [ ] Test in browser: traversal is readable and purposeful; every door works in both directions and spawns safely; dialogues, quests, NPC state changes, and exams work
 
 ## Checklist: Adding an NPC
 
-- [ ] Place a zone object (`type: npc`, `id`, optional `npcType`) in the Tiled map's `Zones` layer via the map editor
+- [ ] Add an NPC zone (`type: npc`, `id`, optional `npcType`) to `map.level.yaml`
 - [ ] Add a dialogue sequence to the level's `dialogues.ts` (use `mode: 'dialogue'` for two-character lines)
 - [ ] Add `{ zoneId: '<npc-id>', defaultDialogue: '<dialogue-id>' }` to the manifest's `interactionRoutes`
-- [ ] Ensure `public/game/sprites/npc-characters.png` exists (384 × 192 px, 32 × 48 px frames)
+- [ ] Ensure `public/game/sprites/npc-characters.png` exists (1024 × 384 px, 64 × 96 px frames)
 - [ ] `npx tsc --noEmit` passes
 - [ ] Test in browser: NPC wanders, `[E] Porozmawiaj` prompt tracks NPC, dialogue plays, NPC freezes/resumes
 
@@ -1269,12 +1579,18 @@ export const arcadeGames: ArcadeGameDefinition[] = [
   {
     id: 'arcade-asteroid-test',       // Unique ID (referenced by Tiled zone)
     type: 'asteroid-range',           // 'asteroid-range' | 'memory-matrix' | 'oscilloscope'
-    title: 'Strzelnica Asteroidów',   // Polish title (shown in overlay header)
-    description: 'Odyssey potrzebuje surowców do utrzymywania sprawności systemów pokładowych. Namierzaj asteroidy, rozbijaj je działkiem pokładowym i zbieraj minerały.',
+    title: { pl: 'Strzelnica Asteroidów', en: 'Asteroid Range' },
+    description: {
+      pl: 'Odyssey potrzebuje surowców do utrzymywania sprawności systemów pokładowych. Namierzaj asteroidy i zbieraj minerały.',
+      en: 'The Odyssey needs raw materials to keep its systems running. Track asteroids and collect minerals.',
+    },
     difficulty: 2,                    // 1-5 (affects game parameters)
-    baseXp: 5,                        // XP granted on completion (before score bonus)
-    scoreMultiplier: 0.1,             // XP bonus = floor(score × multiplier)
     durationSeconds: 60,              // Timer length (0 = round-based, no timer)
+    mission: {
+      minScore: 250,
+      firstClearXp: 10,
+      firstClearDialogueId: 'arcade-asteroid-cleared',
+    },
   },
 ];
 ```
@@ -1289,14 +1605,17 @@ export const manifest: LevelManifest = {
 };
 ```
 
-### Placing Arcade Zones in Tiled Maps
+### Placing Arcade Zones in Map Sources
 
-In the map editor (`/explorers-editor`):
+Add the zone to `map.level.yaml`, then rebuild:
 
-1. Switch to Zones layer
-2. Click to create a zone
-3. Set **type** to `arcade`
-4. Set **arcadeGameId** to the game's `id` from the manifest (e.g., `arcade-asteroid-test`)
+```yaml
+zones:
+  - id: asteroid-station
+    type: arcade
+    at: [4, 3]
+    properties: { arcadeGameId: arcade-asteroid-test }
+```
 
 The zone renders with an orange debug overlay. Player sees `[E] Graj` prompt when nearby.
 
@@ -1329,13 +1648,9 @@ The zone renders with an orange debug overlay. Player sees `[E] Graj` prompt whe
 - Control scheme is aligned with the rest of the arcade set: `W/S` for vertical selection, `A/D` for left/right value changes
 - Mission framing should emphasize signal stabilization, calibration, or reconnecting damaged Odyssey / CORE AI systems rather than abstract waveform matching alone
 
-### XP Calculation
+### Mission success and XP
 
-```
-xpReward = baseXp + floor(score × scoreMultiplier)
-```
-
-XP is granted via the existing `XP_GAINED` event pipeline — no changes needed in PhaserGame.svelte.
+Mission success can require `requireCompleted`, `minScore`, or `minScoreRatio`. If no score rule is authored and the renderer reports `maxScore`, the default threshold is 80%. `mission.firstClearXp` is granted only on the first successful clear; successful replays grant no additional XP.
 
 ### Adding a New Game Renderer
 
@@ -1354,9 +1669,78 @@ The `ArcadeGameRenderer` interface:
 ### Checklist: Adding an Arcade Game
 
 - [ ] Define the game in a separate `games.ts` module and import it into the level manifest
-- [ ] Place an `arcade` zone on the Tiled map with `arcadeGameId` property
+- [ ] Add an `arcade` zone to `map.level.yaml` with an `arcadeGameId` property
 - [ ] `npm run build` passes
 - [ ] Test in browser: `[E] Graj` prompt → intro screen → countdown → gameplay → results → XP granted
+
+---
+
+## Ship Navigation Deck (moon travel)
+
+Travel from the Odyssey to the mission moons goes through the **ship navigation deck** — an overlay scene (`NavigationScene`, mirroring the exam scene lifecycle) opened from a `type: navigation` map zone. The player picks one of the 5 moons; selecting an available destination plays a short star-streak flight cinematic and then performs a regular map transition (`TRANSITION_START`). Arrival cinematics are handled by the destination map's own intro config.
+
+### Destination registry
+
+Destinations are authored content in `src/explorers/levels/navigationDestinations.ts` (bilingual names/descriptions). Each entry has:
+
+```typescript
+{
+  id: 'moon-1',
+  name: { pl: 'Księżyc 1 — Dżungla', en: 'Moon 1 — Jungle' },
+  description: { pl: '...', en: '...' },
+  codename: 'Agentic Asteroid',   // course-stage codename shown on the /navi mission map
+  eta: '2026-05-22',              // course schedule date — /navi shows a countdown while in the future
+  targetMap: 'm1-landing-pad',    // null = future content, renders as "no signal"
+  spawnX: 1,
+  spawnY: 5,
+  requiredFlags: [FLAGS.M0_EARTH_SIGNAL_RECEIVED, FLAGS.SYS_COURSE_M1_AVAILABLE],  // AND logic
+}
+```
+
+Row states: **available** (all `requiredFlags` set, clickable), **locked** (flags missing — "no launch clearance"), **no signal** (`targetMap: null`). Status logic lives in `getDestinationStatus()` in the same file.
+
+### /navi terminal command
+
+The SmartTerminal `/navi` mission map is driven by the **same registry** — `cmdNavi` in `terminal/commandHandler.ts` iterates `NAV_DESTINATIONS` and reuses `getDestinationStatus()`, so the terminal and the deck can never disagree. Per moon it shows: **ready to launch** (points the player at the CORE AI navigation deck), **no launch clearance** (flags missing), an **ETA countdown** (`eta` still in the future), or **no signal**. A fixed "0. Awakening Procedures" entry represents the ship and stays marked in-progress until the first moon becomes available. Edit moon names, codenames, dates, or gating in `navigationDestinations.ts` only — never in the command handler.
+
+### Placing a navigation zone
+
+```yaml
+props:
+  - { id: navigation-console, prop: radar, at: [9, 4], solid: true }
+zones:
+  - id: ship-navigation-deck
+    type: navigation
+    propId: navigation-console
+```
+
+No zone properties are needed — the scene reads the global destination registry. The prompt shows `[E] Nawigacja`; the debug overlay renders navigation zones in blue. Unlocking a new moon = adding a destination entry (or flipping its `sys:` flag); when the target map ships, replace `targetMap: null` with the real map key and spawn.
+
+Note the deliberate asymmetry: flying out happens via the deck, returning happens via a **ship-teleport** on the moon map — a solid `ship-teleport` prop with a door-type zone on the same tile pointing back at the ship (the validator's "no door leading back" warning for such maps is expected). Door zones normally must sit on `D` wall cells, but the validator allows a door zone on a floor cell when a solid prop covers that tile — the prop is the door visual. Example from `m1-landing-pad`:
+
+```yaml
+props:
+  - { id: ship-teleport, prop: ship-teleport, at: [1, 7], solid: true }
+zones:
+  - id: ship-teleport
+    name: Landed Shuttle
+    type: door
+    propId: ship-teleport
+    properties:
+      targetMap: m0-core-ai
+      spawnX: 9
+      spawnY: 5
+```
+
+### Key files
+
+| File | Role |
+|------|------|
+| `src/explorers/scenes/NavigationScene.ts` | Overlay scene: destination list, flight cinematic, transition |
+| `src/explorers/levels/navigationDestinations.ts` | `NAV_DESTINATIONS` — bilingual destination registry |
+| `src/explorers/i18n/navigation.ts` | Chrome strings (`nav.*`) |
+| `src/explorers/scenes/GameScene.ts` | `navigation` interaction case, `NAVIGATION_DISMISSED` resume |
+| `src/explorers/events/GameEvents.ts` | `NAVIGATION_SHOW` / `NAVIGATION_DISMISSED` |
 
 ---
 

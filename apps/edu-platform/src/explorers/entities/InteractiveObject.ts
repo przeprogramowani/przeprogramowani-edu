@@ -8,14 +8,14 @@ export interface InteractiveObjectConfig {
   width: number;
   height: number;
   objectId: string;
-  objectType: 'trigger' | 'door' | 'terminal' | 'exam' | 'arcade';
+  objectType: 'trigger' | 'door' | 'terminal' | 'exam' | 'arcade' | 'navigation';
   eventId?: string;
   properties: Record<string, unknown>;
 }
 
 export class InteractiveObject {
   readonly objectId: string;
-  readonly objectType: 'trigger' | 'door' | 'terminal' | 'exam' | 'arcade';
+  readonly objectType: 'trigger' | 'door' | 'terminal' | 'exam' | 'arcade' | 'navigation';
   readonly eventId: string;
   readonly properties: Record<string, unknown>;
   readonly x: number;

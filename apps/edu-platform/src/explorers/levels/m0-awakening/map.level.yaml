@@ -1,0 +1,57 @@
+theme: 1
+grid: |
+  ~~~~~~~~~~~~
+  ~~~~~~~~~~~~
+  ~#o#o#o#o#o#
+  ~#.........D
+  ~#.........#
+  ~#.........#
+  ~#.........D
+  ~#o#o#o#o#o#
+  ~~~~~~~~~~~~
+  ~~~~~~~~~~~~
+props:
+  - { prop: console, at: [2, 3], solid: true }
+  - { prop: viewport, at: [3, 3], solid: true }
+  - { prop: whiteboard, at: [6, 3], solid: true }
+  - { prop: whiteboard, at: [7, 3], solid: true }
+  - { prop: crate, at: [6, 6], solid: true }
+zones:
+  - id: hibernation-pod
+    name: Hibernation Pod
+    type: trigger
+    at: [2, 3]
+    size: [2, 1]
+  - id: loot-terminal
+    name: Loot Box
+    type: trigger
+    at: [6, 6]
+  - id: info-board
+    name: Info Board
+    type: trigger
+    at: [6, 3]
+    size: [2, 1]
+  - id: crew-room-door
+    name: Crew Room Door
+    type: door
+    at: [11, 3]
+    properties:
+      targetMap: m0-crew-room
+      spawnX: 1
+      spawnY: 7
+      requiredFlags: m0-info-board-read
+  - id: zone-6
+    name: ExamRoom
+    type: door
+    at: [11, 6]
+    properties:
+      targetMap: m0-exam-room
+      spawnX: 1
+      spawnY: 4
+      requiredFlags: m0-info-board-read
+  - id: engineer-moreau
+    name: Moreu
+    type: npc
+    at: [9, 6]
+    properties:
+      npcType: scientist

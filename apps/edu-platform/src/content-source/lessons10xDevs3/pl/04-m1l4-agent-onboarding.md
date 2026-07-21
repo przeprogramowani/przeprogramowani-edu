@@ -1,6 +1,6 @@
 ---
-title: "Agent Onboarding: Agents.md, AI Rules i feedback loops"
-titleEn: "Agent Onboarding: Agents.md, AI Rules & feedback loops"
+title: "Agent Onboarding: Reguły dla AI"
+titleEn: "Agent Onboarding: Agents.md, AI Rules and feedback loops"
 lessonId: "04"
 language: "pl"
 order: 4

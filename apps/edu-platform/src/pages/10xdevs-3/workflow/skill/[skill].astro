@@ -12,6 +12,7 @@ import ResearchSkillBody from '@/components/tenx-workflow/skills/ResearchSkillBo
 import PlanSkillBody from '@/components/tenx-workflow/skills/PlanSkillBody.astro';
 import ImplementSkillBody from '@/components/tenx-workflow/skills/ImplementSkillBody.astro';
 import ImplReviewSkillBody from '@/components/tenx-workflow/skills/ImplReviewSkillBody.astro';
+import ArchiveSkillBody from '@/components/tenx-workflow/skills/ArchiveSkillBody.astro';
 import { INTERNAL_BASE } from '@/components/tenx-workflow/config';
 import { tenxWorkflowAccess } from '@/components/tenx-workflow/gate';
 import { pagesForGroups, workflowPage } from '@/components/tenx-workflow/pages';
@@ -22,6 +23,7 @@ const BODIES: Record<string, any> = {
   '10x-plan': PlanSkillBody,
   '10x-implement': ImplementSkillBody,
   '10x-impl-review': ImplReviewSkillBody,
+  '10x-archive': ArchiveSkillBody,
 };
 
 // Walidacja sluga PRZED bramka auth: nieznany skill to 404 takze dla

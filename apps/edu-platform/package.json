@@ -12,6 +12,10 @@
     "astro": "astro",
     "generate:assets": "node scripts/generate-placeholder-assets.mjs",
     "generate:guid-mappings": "tsx scripts/generate-guid-mappings.ts",
+    "levels:build": "tsx scripts/levels-build.ts",
+    "levels:check": "tsx scripts/levels-check.ts",
+    "levels:decompile": "tsx scripts/levels-decompile.ts",
+    "levels:render": "tsx scripts/levels-render.ts",
     "generate:lesson-html": "tsx scripts/generate-lesson-html.ts",
     "generate:lesson-html:dry": "tsx scripts/generate-lesson-html.ts --dry-run",
     "copy:10xdevs3-prework:i18n": "tsx scripts/copy-10xdevs3-prework-to-i18n.ts",
@@ -49,8 +53,11 @@
     "@playwright/test": "^1.59.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/svelte": "^5.3.1",
+    "@types/pngjs": "^6.0.5",
     "jsdom": "^29.0.2",
-    "tsx": "^4.20.3"
+    "pngjs": "^7.0.0",
+    "tsx": "^4.20.3",
+    "yaml": "^2.9.0"
   },
   "engines": {
     "node": "22"

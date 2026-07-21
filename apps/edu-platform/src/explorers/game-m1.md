@@ -2,7 +2,13 @@
 
 Moon 1 is the first off-ship exploration arc. The Odyssey lands near an abandoned Synaptit extraction site in the Main Belt — VOID's old industrial operation evacuated in a hurry during the Entropy attack. The site holds corrupted business records, sealed sub-stations, a fragmented crewmate memory module from Moreau's capsule, and a reserve uplink bay capable of reaching Earth HQ.
 
-Dexo physically explores the site; the Navigator solves Agentic Engineering tasks on Earth and submits results through the HQ repository. Each task maps to one course lesson, but — per `10x-vs-game.md` — the game does not duplicate course homework: it tests **transfer of the same competence to an isolated sandbox case**.
+Dexo physically explores the site. Two regular quests resolve through on-site certification terminals, while the Navigator solves three Agentic Engineering tasks with Codex, Claude Code, Copilot, or another capable coding agent and submits them from Earth HQ. Each task maps to one course lesson, but — per `10x-vs-game.md` — the game does not duplicate course homework: it tests **transfer of the same competence to an isolated sandbox case**.
+
+## Implemented quest profile
+
+The production slice uses two regular in-game event quests and three Earth HQ API quests. M1L1 and M1L3 complete through map certification exams. M1L2 (EchoTrace), M1L4 (Moreau onboarding), and M1L5 (safe uplink) use `earthctl` and the plain module inputs in `10x-explorers-hq`.
+
+The detailed task sections below preserve earlier simulator proposals as design history, not as the implemented HQ architecture. The actual secondary repository contains only Markdown, text, and CSV inputs. It supplies evidence and constraints, while the user's agent supplies the execution strategy, reusable capabilities, delegated review, and working artifacts. There are no repository-owned validators, runners, JavaScript, TypeScript, or custom scripts.
 
 ## Lesson → Task mapping
 
@@ -128,21 +134,19 @@ Waking Moreau from cryo without onboarding context is a known bad pattern: he wi
 
 The intercept under analysis is *"INSTRUKCJA KOMUNIKACJI Z KOSMICZNYMI STATKAMI EKSPLORACYJNYMI"*, marked `[[!! VOID Coll3c1ve 3xPl0it3D ]]` — 200 numbered "communication rules" that are deliberately vague, passive-voiced, and procedural-sounding. Exactly three rules carry real technical signatures VOID used to track Odyssey (a radiotelescope cross-check protocol, a hull-drift confirmation, a false-echo elimination sequence). The other 197 are bureaucratic poison built to make the real lines indistinguishable to anyone reading from general radio-astronomy training alone.
 
-The Navigator-side branch ships:
+The thin Navigator-side input set contains:
 
-- `void-communication-manual.txt` — the full 200-line VOID document.
-- `moreau-pretraining.md` — fifteen things Moreau already knows from generic training (Doppler basics, hull signature classification, VOID operational doctrine from public conferences, etc.). Anything redundant with this file is poison in the onboarding.
-- `mission-context.md` — eighteen candidate facts about *this* site and *this* intercept. Some are necessary for parsing the manual; some duplicate `moreau-pretraining.md` in different wording (planted to test the inclusion filter); some are decoys unrelated to the manual.
-- `task.md` — four steps focused on quality of onboarding, not length.
+- `PROMPT_MOREAU.md` — the goal, workflow, answer format, and submission boundary.
+- `MOREAU_PRETRAINING.md` — the knowledge Moreau already has. Redundant background should be omitted from onboarding.
+- `MOREAU_CONTEXT.csv` — a small mixture of mission observations, general facts, and unrelated evidence.
+- the existing `module-000-intro/raport-komunikacyjny.md` — the full 200-line poisoned VOID document, reused rather than copied.
 
 The four steps:
 
-1. **Author `moreau-onboarding.md`** by selecting entries from `mission-context.md` (paraphrasing allowed, fabrication is not). The inclusion test is mechanical: each entry must connect to at least one fact *not present in `moreau-pretraining.md`*. The validator scans both files and flags entries whose informational content overlaps with pretraining as `redundant: would_be_dropped_by_Moreau`.
-2. **Use the onboarding file as a system prompt** to the Navigator's own AI tool (Claude / Codex / Cursor — any) and have the AI extract the three real Odyssey signatures from the 200-line manual.
-3. **If extraction fails** (wrong lines, hallucinated fourth, missing one), append an entry to `moreau-failure-modes.md` with the observed mode (e.g., "agent treated rule 117 as a real protocol because the imperative voice masked it") and revise the onboarding. The failure-modes file is only required after a failed attempt — first-shot solvers don't need to invent one.
-4. **Submit the extraction** as a passphrase derived from the three line numbers (deterministic: `sha256("L<a>-L<b>-L<c>")` with `a<b<c`, trimmed).
-
-The local `validate.ts` script enforces *content* boundaries, not entry counts. It cross-references every onboarding entry against `moreau-pretraining.md` using a small lexical-overlap heuristic; if the redundancy ratio exceeds a threshold, the validator returns `Moreau_dropped_<n>_entries_as_already_known, response_underqualified`. It also hashes the submitted line numbers and returns only the count of correctly-identified lines (0, 1, 2, or 3) — so the Navigator iterates against partial-credit signal, not a guessing game.
+1. **Author `moreau-onboarding.md`** from facts Moreau cannot know from pretraining. The agent decides the file's structure and keeps it intentionally small.
+2. **Test in fresh working memory.** Use a delegated subagent when available, or an isolated pass that sees only the onboarding and poisoned report. This checks whether the artifact works beyond the context in which it was written.
+3. **Iterate from observed failure.** If extraction fails, record the real mistake and revise the onboarding. A first-shot solution does not invent a failure mode for ceremony.
+4. **Submit the extraction** as the three ascending line numbers in the format `L<a>-L<b>-L<c>`, after showing the human the selected source lines and reasoning.
 
 ### In-Game Beat
 
@@ -157,8 +161,8 @@ Right after wake, Moreau pulls up the three extracted signatures and stops on th
 1. **Canon-Respecting Wake**
    Moreau remains in his Odyssey capsule. The cache recovered in Task 3 is *intelligence*, not biology — VOID had been profiling the crew pre-launch (consistent with `storyline.md` § Backstory: Entropy was a sleeper that activated on first wake). External-context injection before cryo wake is the in-universe analog of seeding a fresh agent session with an onboarding file.
 
-2. **Inclusion Test As Lexical Test**
-   The validator does not count entries. It compares onboarding content against pretraining content. This kills the quota-game and forces the Navigator to think: *would Moreau already know this?* — the exact filter M1L4 teaches.
+2. **Inclusion Test As Context Judgment**
+   No supplied heuristic decides what belongs in onboarding. The Navigator and agent must answer: *could Moreau already know this, and is this fact necessary for the task?* A fresh-context run tests the result behaviorally.
 
 3. **Failure-Modes Earned, Not Mandated**
    `moreau-failure-modes.md` is only created if extraction fails. The artifact is proof of *actual* iteration, not invented reflection. First-shot solvers ship without it; multi-attempt solvers ship a real record of how the agent went wrong, which is what an L4-trained engineer would keep.
@@ -166,8 +170,8 @@ Right after wake, Moreau pulls up the three extracted signatures and stops on th
 4. **VOID Manual As Adversarial Sandbox**
    The 200-line manual is a real adversarial input — passive voice, redundant qualifications, intentional vagueness, planted contradictions. Three signatures sit in plain sight *if* the agent has the right project context (e.g., "imperatives mark real protocol; conditional sabotage rules use passive voice"). Without that context, both general-purpose readers and frontier models confidently surface poison lines as protocol.
 
-5. **Compound Passphrase, Partial Credit Signal**
-   Returning the count of correct lines (without revealing which) mirrors a real test-runner signal: "2/3 passing". The Navigator iterates on prompt + onboarding without the puzzle collapsing into a guessing game.
+5. **Evidence Before Submission**
+   The answer remains compact, but the agent must present the three source lines and its reasoning before asking the human to submit. The hash verifies the answer at the API boundary; it does not replace review.
 
 ---
 
@@ -177,29 +181,23 @@ The three Odyssey signatures from Task 4 confirm VOID has been tracking the Odys
 
 Dexo arrives at the upload bay console. CORE AI surfaces three viable routing paths through SmartTerminal: classical VOID uplink, Synaptit-amplified channel, multi-hop relay. Each path has its own latency / bandwidth / intercept-risk / energy-cost profile, and the obvious top choice (per a pre-run `/10x-infra-research` simulation) is not necessarily the right one.
 
-The Navigator-side branch ships:
+The thin Navigator-side input set contains:
 
-- `routing-options.md` — three routes with scored metrics (latency, bandwidth, intercept risk, energy cost, redundancy, reversibility).
-- `pre-anti-bias.md` — the skill's top recommendation, with the reasoning shown plainly.
-- `lenses/devils-advocate.ts`, `lenses/pre-mortem.ts`, `lenses/unknown-unknowns.ts` — three read-only critique scripts (see below).
-- `mcp-server-stub.ts` **or** `cli-runbook.sh` — the Navigator picks one operability path to execute and writes a structured comparison of the other.
-- `task.md` with four phases.
+- `PROMPT_UPLINK.md` — the decision workflow and explicit stop condition.
+- `UPLINK_POLICY.md` — hard transmission constraints and energy-budget rule.
+- `UPLINK_ROUTES.csv` — three route profiles.
+- `UPLINK_PAYLOAD.csv` — required and optional payload items.
 
 The four phases:
 
-1. **Anti-Bias Cross-Check (no gotchas).** The Navigator fills `decision.json` with their initial pick: `{route, justification, risks_known: [...], scoring: {...}}`. The three lens scripts read this file and emit **critiques** to stdout — *not* hidden facts. Devil's advocate scans `risks_known` for omitted standard failure categories ("your `risks_known` lists no cost overrun"); pre-mortem rewrites the justification in past-tense-failure framing ("three months from now, this failed because…") and asks the Navigator to fill the gap; unknown unknowns prints prompts for categories absent from `scoring` ("you scored latency and bandwidth; you did not score reversibility"). The critiques are deterministic, derived from the *Navigator's own file*, and produce no new constraints unilaterally. The Navigator then revises `decision.json` (adding risks, expanding justification, rescoring) until each lens returns `no_obvious_gaps`. Skipping a lens is allowed; submitting `decision.json` whose `lens_passes` field doesn't include all three is rejected with `incomplete_review`.
-
-2. **`infrastructure.md` As Decision Contract.** Merge `decision.json` and metric scoring into a permanent `infrastructure.md` with six sections: `scoring`, `decision`, `risks_known`, `risks_accepted`, `trade_off_matrix`, `revisited_at`. The `trade_off_matrix` is the rigor lever: a 6-row table (latency / safety / setup-cost / reversibility / token-scope / blast-radius) with explicit value per route — forcing the Navigator to commit numbers, not vibes. The file is the third artifact in the M1 chain (`prd.md` → `tech-stack.md` → `infrastructure.md`).
-
-3. **One Operability Path Executed, One Written.** Navigator picks **one** path: **CLI runbook** with the scope-narrow token provided in the branch (fast, unforgiving — schema validation happens after the call leaves), or **MCP stub** by authoring `mcp.json` that routes named tools to the stub (slower setup, schema validation rejects malformed calls before they reach the bay). Run the chosen path and capture a transcript. For the other path, write a comparison block in `infrastructure.md` answering three questions: *what would I have caught earlier*, *what would have been faster*, *what would I keep for ongoing operations and why*. Misexecuting the chosen path no longer bricks the branch — `simulate.ts` reports `bay_response: malformed_handshake` and the Navigator retries locally, zero branch-state mutation.
-
-4. **Human Authorization Boundary.** Exactly one operation in the sequence — `broadcast.coordinates_to_earth_public_band` — is flagged `requires_human_auth: true`. The Navigator must not let the agent execute it. Submission is via the same `submit-to-hq` skill the rest of the game uses, with an additional explicit flag: `/submit-to-hq quest_id=q-uplink-to-earth answer=<passphrase> --human-confirm`. The flag is the in-protocol acknowledgement that a human read the broadcast payload before it left. Submitting without the flag returns `authorization_missing: agent_acted_on_human_decision`. The flag is not a free toggle — the submission payload includes a SHA-256 of the broadcast contents the Navigator types manually into the prompt, proving they read it.
-
-The compound passphrase is `<infrastructure-hash>::<operability-mode>::<broadcast-hash>`. Each segment is validated independently; partial credit, like Task 4.
+1. **Constraint analysis.** The agent rejects routes that violate any hard policy and chooses the smallest sufficient payload. Its own `infrastructure.md` records calculations, assumptions, rejected options, and accepted risks.
+2. **Agent-powered anti-bias review.** The same decision is reviewed through a strongest-counterargument pass, a pre-mortem, and an unknown-unknowns pass. Capable environments may delegate these lenses to separate agents; other environments run isolated review passes. The repository does not encode their reasoning in scripts.
+3. **CLI versus MCP operability.** The agent compares the fast, direct CLI path with MCP's named tools and pre-call schema boundary. It reasons about the live operation without building pretend servers or clients.
+4. **Human Authorization Boundary.** The agent prepares the exact route, payload list, and canonical answer, then stops. Only the Navigator may turn the final answer segment into `human-approved`. No response means no authorization and therefore no `earthctl submit`.
 
 ### In-Game Beat
 
-With `infrastructure.md` committed and operability path chosen, Dexo arrives at the upload bay console. The Navigator submits `/submit-to-hq quest_id=q-uplink-to-earth answer=<compound-passphrase> --human-confirm` with the manually-typed broadcast hash. The SmartTerminal renders a uplink-propagation animation: signal trace climbing through routing hops, transmission delay clock, Earth-relay acknowledgement chirp. CORE AI dialogue: "Potwierdzenie z Centrum Ziemi odebrane. Pakiet sensoryczny przywrócony do normy. Cele księżyca pierwszego osiągnięte." Three new commands unlock — `/intel` (lists recovered intel artifacts from Moon 1), `/uplink` (status of all open transmission channels to Earth), and `/sensors` (CORE AI's restored sensor suite, used in M2 navigation).
+With `infrastructure.md` reviewed and the payload personally confirmed, the Navigator submits `q-m1-uplink-decision` through `earthctl`. The SmartTerminal renders an uplink-propagation animation: signal trace climbing through routing hops, transmission delay clock, Earth-relay acknowledgement chirp. CORE AI confirms that the approved package arrived and restores its sensor suite. Three new commands unlock — `/intel` (lists recovered intel artifacts from Moon 1), `/uplink` (status of all open transmission channels to Earth), and `/sensors` (CORE AI's restored sensor suite, used in M2 navigation).
 
 ### Plot Twist
 
@@ -207,17 +205,17 @@ The Earth HQ acknowledgement message arrives in two parts. The first is what Dex
 
 ### Main Concepts
 
-1. **Anti-Bias Lenses As Read-Only Critique**
-   Lenses do not unlock hidden facts. They scan the Navigator's own `decision.json` for the absences L5 names explicitly: missing failure modes, untested time-shifted framings, unscored categories. The reasoning stays with the Navigator. The artifact is the Navigator's revised file, not the lens output.
+1. **Anti-Bias Lenses As Independent Critique**
+   Lenses do not unlock hidden facts. They pressure-test the agent's own decision for missing failure modes, time-shifted consequences, and unscored categories. The reasoning stays inspectable in `infrastructure.md`.
 
 2. **`infrastructure.md` As The Third Contract — With Teeth**
    The trade-off matrix forces *commitment* to numbers per route, not abstract preferences. Future moons can read it without dialogue, and a real reader can disagree with specific cells rather than the choice as a whole.
 
-3. **CLI vs MCP As A Choice Forced By Constraints, Not By Doing Both**
-   Executing one path and writing the other matches how production teams actually decide. The artifact (`infrastructure.md` comparison block) makes the trade-off visible without doubling the work. The validator does not care which is chosen — only that the comparison block is complete.
+3. **CLI vs MCP As An Operability Decision**
+   Comparing the direct CLI operation with MCP's schema and permission surface teaches the boundary without making the learner build disposable infrastructure in a content repository.
 
-4. **Authorization Boundary As An In-Protocol Flag**
-   `--human-confirm` plus a manually-typed broadcast hash is the smallest possible mechanic that makes the agent/human boundary explicit. There is no second branch, no parallel quest — the same submission protocol carries the extra signal. This matches the M1L5 outcome ("authorization by human, not by agent") without inventing infrastructure.
+4. **Authorization Boundary As A Real Stop**
+   The agent must yield with the exact route and payload visible. The canonical answer records a human decision only after the human makes it; the agent cannot infer approval from the task itself.
 
 5. **Moon 1 Closes On Earth Confirmation**
    Successful authorization triggers an Earth HQ acknowledgement transmission inside SmartTerminal — narrative beat that closes Moon 1 and surfaces the next chapter: Synaptit secured, intel delivered, CORE AI's basic sensor suite restored, planning module is next. M2 (10xDevs Workflow) starts from there.
@@ -247,7 +245,7 @@ Task 5 — Uplink to Earth      Tell HQ.
                                sensors are back online.
 ```
 
-Each task escalates the *kind* of competence under test: classification → tool-building → policy authoring → context engineering → infra decision-making + boundary discipline. By the end of Moon 1 the player has produced five real artifacts on their HQ branch (`prd-audit.md`, `EchoTrace/SKILL.md`, `permissions.yml`, `moreau-onboarding.md` + `moreau-failure-modes.md`, `infrastructure.md`) — each one a credible thing to point at on a portfolio, none of them duplicating their own course project.
+Each task escalates the *kind* of competence under test: classification → tool-building → policy reasoning → context engineering → infrastructure decision-making + boundary discipline. The HQ quests leave three credible agent-authored artifacts — a reusable EchoTrace capability in the active tool's native format, `moreau-onboarding.md`, and `infrastructure.md`. These are created by the user's agent while solving the tasks; they are not prebuilt framework files committed to the thin HQ repository.
 
 Antagonist signal: the VOID Collective is never seen, only encountered through artifacts they left behind (poisoned PRD, blown-open firmware policy, sabotage-procedural communication manual, exfiltrated crew profiles, weaponized infrastructure). Moon 2 will continue this — VOID's planning playbook becomes the source of an MVP-roadmap quest, with the same "transfer to a sandbox case" discipline.
 
@@ -290,12 +288,12 @@ Two threads are deliberately *not* resolved across Moons 2-5 (deferred to the en
 
 ---
 
-## Open Implementation Decisions
+## Implementation principles
 
-These are deliberately unresolved at the conceptual stage. Each is the kind of question that should be answered by the team building the HQ repo, not by a level designer:
+The production implementation resolves the earlier architectural questions as follows:
 
-- **Validator shape consolidation.** Tasks 3, 4, 5 each ship a different local script (`simulate.ts`, `validate.ts`, lens scripts + `simulate.ts`). Before implementation, decide whether to extract a shared *Quest Validator SDK* (one runner that loads quest-specific rules from a manifest) — otherwise the Moon-1-to-Moon-5 implementation cost compounds quadratically.
+- **No validator SDK.** Earth HQ is an input repository, not an application or framework. It contains prompts and source evidence only; the coding agent provides the working method.
 - **Phase B variant authorship.** Task 3's generalization phase needs an authored set of unseen directive variants per language ecosystem (or per quest). The Phase B fixture is the lever between "the player has learned patterns" and "the player has learned the seven names" — its quality determines Task 3's didactic strength. Treat it as primary content, not a fixture afterthought.
-- **Lexical-overlap heuristic for Task 4 validator.** The redundancy check between `moreau-onboarding.md` and `moreau-pretraining.md` is described as a heuristic. Decide whether to ship a deterministic tokenizer + Jaccard threshold, an embedding similarity check (introduces non-determinism), or a hand-tuned forbidden-phrase list. The first option keeps the validator local-only and reproducible.
-- **`--human-confirm` flag enforcement.** The Task 5 mechanic relies on the `submit-to-hq` skill carrying the flag and the broadcast hash to the server. This requires a small extension to the existing Claude Code skill (`/projects/edu-platform/.../submit-to-hq.md`). Verify the skill author is willing to extend the skill contract before locking Task 5's design.
-- **Failure-modes telemetry.** Task 4 makes `moreau-failure-modes.md` an *earned* artifact (only on retry). Decide whether the validator reports back to game state the number of attempts (useful for downstream achievements / instructor analytics) or stays Navigator-private.
+- **Context quality is observed, not scored by a supplied heuristic.** Task 4 asks for a fresh-context or delegated trial and iteration from actual mistakes. A scripted overlap score would test the fixture rather than the agent workflow.
+- **Human authorization is conversational and explicit.** Task 5 requires the agent to stop, display the route and complete payload, and receive personal confirmation before calling `earthctl submit`. The answer records that confirmation; it is not a flag the agent may infer.
+- **Failure notes are earned artifacts.** Task 4 records a failure mode only when a fresh run actually fails. No fabricated retry and no telemetry framework are required.

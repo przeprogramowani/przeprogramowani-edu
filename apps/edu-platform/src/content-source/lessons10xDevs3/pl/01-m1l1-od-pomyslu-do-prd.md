@@ -1,6 +1,6 @@
 ---
 title: "Od pomysłu do PRD: Metoda Sokratejska z Agentem"
-titleEn: "From Idea to PRD: The Socratic Method with AI Agent"
+titleEn: "From Idea to PRD: The Socratic Method with an Agent"
 lessonId: "01"
 language: "pl"
 order: 1

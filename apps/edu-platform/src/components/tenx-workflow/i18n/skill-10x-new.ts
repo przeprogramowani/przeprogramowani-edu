@@ -179,7 +179,7 @@ export const SKILL_NEW: Record<Lang, SkillNewDict> = {
       ],
       targetK: 'CZEGO TU NIE MA:',
       targetHtml:
-        'żadnego bloku artifacts.* (wynika z zawartości folderu) ani liczników faz - <b>postęp wykonania mieszka wyłącznie w sekcji Progress w plan.md</b>.',
+        'żadnego bloku artifacts.* (wynika z zawartości folderu) ani liczników etapów - <b>postęp wykonania mieszka wyłącznie w sekcji Progress w plan.md</b>.',
     },
     granice: {
       num: 'GRANICE',

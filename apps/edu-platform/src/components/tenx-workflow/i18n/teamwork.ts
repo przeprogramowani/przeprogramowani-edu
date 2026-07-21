@@ -497,7 +497,7 @@ export const TEAMWORK: Record<Lang, TeamworkDict> = {
         },
         {
           label: 'MECHANIZM',
-          body: `<p>Implementację każdej fazy pisze delegowany subagent, ale bramki jakości biegną w głównym kontekście: kryteria planu → <b>deliberate-break check</b> (test musi zaczerwienić się na celowo zepsutym kodzie - inaczej niczego nie chroni) → pełny zestaw testów → commit wyłącznie na zielono, osobno per faza.</p>`,
+          body: `<p>Implementację każdego etapu pisze delegowany subagent, ale bramki jakości biegną w głównym kontekście: kryteria planu → <b>deliberate-break check</b> (test musi zaczerwienić się na celowo zepsutym kodzie - inaczej niczego nie chroni) → pełny zestaw testów → commit wyłącznie na zielono, osobno per etap.</p>`,
         },
         {
           label: 'ROZJAZDY',

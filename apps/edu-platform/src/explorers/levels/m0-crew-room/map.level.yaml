@@ -1,0 +1,78 @@
+theme: 1
+grid: |
+  ~~~~~~~~~~~~~~
+  ##############
+  #............#
+  #............#
+  #............#
+  #............#
+  D............#
+  D............#
+  ####oooooo####
+  ~~~~~~~~~~~~~~
+props:
+  - { prop: radar, at: [1, 2], solid: true }
+  - { prop: whiteboard, at: [11, 2], solid: true }
+  - { prop: oscilloscope, at: [12, 2], solid: true }
+  - { prop: console, at: [4, 3], solid: true }
+  - { prop: whiteboard, at: [5, 3], solid: true }
+  - { prop: console, at: [8, 4], solid: true }
+  - { prop: whiteboard, at: [9, 4], solid: true }
+  - { prop: console, at: [4, 6], solid: true }
+  - { prop: whiteboard, at: [5, 6], solid: true }
+  - { prop: button-panel, at: [12, 7], solid: true }
+zones:
+  - id: board-eng
+    name: Board Engineer
+    type: trigger
+    at: [4, 3]
+    size: [2, 1]
+  - id: board-ofc
+    name: Board Officer
+    type: trigger
+    at: [4, 6]
+    size: [2, 1]
+  - id: board-nav
+    name: Board Navigator
+    type: trigger
+    at: [8, 4]
+    size: [2, 1]
+  - id: awakening-door
+    name: Return Door
+    type: door
+    at: [0, 6]
+    size: [1, 2]
+    properties:
+      targetMap: m0-awakening
+      spawnX: 10
+      spawnY: 3
+  - id: floobert
+    name: Floobert
+    type: npc
+    at: [11, 5]
+    properties:
+      npcType: alien
+  - id: whiteboard
+    name: API_hint
+    type: trigger
+    at: [11, 2]
+    properties:
+      eventId: m0-whiteboard
+  - id: crew-room-asteroids
+    name: Arcade_asteroid
+    type: arcade
+    at: [1, 2]
+    properties:
+      arcadeGameId: crew-room-asteroids
+  - id: crew-room-memory
+    name: Arcade_memory
+    type: arcade
+    at: [12, 7]
+    properties:
+      arcadeGameId: crew-room-memory
+  - id: crew-room-oscilloscope
+    name: Arcade_osci
+    type: arcade
+    at: [12, 2]
+    properties:
+      arcadeGameId: crew-room-oscilloscope

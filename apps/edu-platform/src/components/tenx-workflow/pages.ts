@@ -163,6 +163,16 @@ export const WORKFLOW_PAGES: WorkflowPage[] = [
     access: PUBLIC_ONLY,
   },
   {
+    slug: '10xbench',
+    title: '10xBench - benchmark modeli LLM w kodowaniu (Astro, React, Tailwind, Cloudflare)',
+    navLabel: '10xBench',
+    moduleLabel: 'BENCH',
+    breadcrumb: '10X WORKFLOW // 10XBENCH // BENCHMARK',
+    footerRight: '10XBENCH // BENCHMARK',
+    category: 'ekosystem',
+    access: PUBLIC_ONLY,
+  },
+  {
     slug: 'moduly',
     title: 'Moduły kursu 10xDevs - przegląd pięciu modułów i skalowania',
     navLabel: 'Przegląd',
@@ -418,12 +428,13 @@ export const EN_PAGES: string[] = [
   'top5',
   'kanon',
   'log',
-  // strony skilli (dziedzicza dostepnosc EN po csc); docs dojdzie w fazie 3
+  // strony skilli (dziedzicza dostepnosc EN po csc); docs dojdzie w etapie 3
   'skill/10x-new',
   'skill/10x-research',
   'skill/10x-plan',
   'skill/10x-implement',
   'skill/10x-impl-review',
+  'skill/10x-archive',
 ];
 
 /**

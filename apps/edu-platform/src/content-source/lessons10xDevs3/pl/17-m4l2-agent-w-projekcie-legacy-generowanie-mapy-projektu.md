@@ -1,11 +1,11 @@
 ---
-title: "Agent w projekcie legacy - generowanie Mapy projektu"
-titleEn: "Agent in a Legacy Project: Generating the Project Map"
+title: "Nowy-stary projekt? Agent zbuduje Ci mapę i wyjaśni architekturę"
+titleEn: "New-Old Project? The Agent will Build You a Map and Explain the Architecture"
 lessonId: "17"
 language: "pl"
 order: 17
 ---
-# Agent w projekcie legacy - generowanie Mapy projektu
+# Nowy-stary projekt? Agent zbuduje Ci mapę i wyjaśni architekturę
 
 ![](./assets/cover.png)
 <!-- cdn: https://images.przeprogramowani.pl/lessons/m4-l2/assets/cover.png -->

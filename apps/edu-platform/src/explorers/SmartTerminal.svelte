@@ -12,6 +12,7 @@
   import bootData from './data/dialogues/terminal-boot.json';
   import { type TerminalBlock, stringsToLines, makeBlock } from './terminal/terminalTypes';
   import { fetchSupportToken } from './terminal/supportCommand';
+  import { localized } from './i18n/types';
   import { createTerminalBus } from './terminal/terminalBus';
   import TerminalLockScreen from './terminal/TerminalLockScreen.svelte';
   import TerminalOutput from './terminal/TerminalOutput.svelte';
@@ -207,7 +208,7 @@
         const quest = questManager?.getQuestDef(questId);
         if (quest) {
           appendBlock(stringsToLines([
-            $t('terminal.questActivated', { title: quest.title }),
+            $t('terminal.questActivated', { title: localized(quest.title) }),
             $t('terminal.questActivatedHint'),
             '',
           ]));
@@ -217,7 +218,7 @@
         const quest = questManager.getQuestDef(questId);
         if (quest) {
           appendBlock(stringsToLines([
-            $t('terminal.questCompleted', { title: quest.title, xp: quest.rewards.xp }),
+            $t('terminal.questCompleted', { title: localized(quest.title), xp: quest.rewards.xp }),
             '',
           ]));
         }

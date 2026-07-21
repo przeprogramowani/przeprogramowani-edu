@@ -8,6 +8,7 @@ import {
   getPreloadedSystemFlags,
   clearPreloadedSystemFlags,
 } from '../state/GameStateManager';
+import { loadQaSystemFlags } from '../state/flagManager';
 import { devLog } from '../utils/logger';
 import { loadLevelsFromData } from '../levels/levelLoader';
 import type { GameManifestResponse } from '../levels/levelLoader';
@@ -19,6 +20,7 @@ import { DialogueScene } from './DialogueScene';
 import { TransitionScene } from './TransitionScene';
 import { ExamScene } from './ExamScene';
 import { ArcadeScene } from './ArcadeScene';
+import { NavigationScene } from './NavigationScene';
 
 const STATE_REGISTRY_KEY = 'demoGameState';
 
@@ -48,11 +50,15 @@ export class BootScene extends Phaser.Scene {
     this.registry.set(STATE_REGISTRY_KEY, state);
     this.game.events.emit(GameEvents.STATE_CHANGED, { state });
 
-    // Load system flags into separate read-only registry key
+    // Load system flags into separate read-only registry key. Merge in any
+    // QA-forced overrides persisted in localStorage so they survive a refresh.
     const systemFlags = getPreloadedSystemFlags();
     clearPreloadedSystemFlags();
-    this.registry.set('systemFlags', new Set(systemFlags));
-    devLog(`[BootScene] System flags loaded: ${systemFlags.length} flags`);
+    const qaSystemFlags = loadQaSystemFlags();
+    this.registry.set('systemFlags', new Set([...systemFlags, ...qaSystemFlags]));
+    devLog(
+      `[BootScene] System flags loaded: ${systemFlags.length} server + ${qaSystemFlags.length} QA override(s)`
+    );
 
     // Initialize audio system
     audioManager.init(this.game);
@@ -68,6 +74,7 @@ export class BootScene extends Phaser.Scene {
     this.scene.add(SceneKey.TRANSITION, TransitionScene, false);
     this.scene.add(SceneKey.EXAM, ExamScene, false);
     this.scene.add(SceneKey.ARCADE, ArcadeScene, false);
+    this.scene.add(SceneKey.NAVIGATION, NavigationScene, false);
 
     // Transition to preloader
     this.scene.start(SceneKey.PRELOADER);

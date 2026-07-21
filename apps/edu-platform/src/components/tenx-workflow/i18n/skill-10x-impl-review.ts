@@ -116,9 +116,9 @@ export const SKILL_IMPL_REVIEW: Record<Lang, SkillImplReviewDict> = {
       epigraph: '„Rytuał uspokaja maszynę. Zrozumienie mówi, czy działa."',
       epigraphCite: '- herezja użyteczna, oddział kogitatorów',
       p1Html:
-        '„Działa, mergujemy" to akceptacja bez sprawdzenia, czy kod dotrzymał obietnic planu. Dryf, niebezpieczne decyzje i łamanie konwencji kumulują się po cichu - każda faza dokłada odrobinę, aż rozjazd staje się architekturą. <em>/10x-impl-review</em> łapie to, zanim się utrwali.',
+        '„Działa, mergujemy" to akceptacja bez sprawdzenia, czy kod dotrzymał obietnic planu. Dryf, niebezpieczne decyzje i łamanie konwencji kumulują się po cichu - każdy etap dokłada odrobinę, aż rozjazd staje się architekturą. <em>/10x-impl-review</em> łapie to, zanim się utrwali.',
       p2Html:
-        'Dwa zakresy: <strong>review pojedynczej fazy</strong> (szybki, tuż po jej domknięciu) i <strong>pełny przegląd planu</strong> przed merge. Dwa tryby: świeży review z triage\'em oraz <strong>wznowienie</strong> - zapisany raport otwiera się później i triage rusza od pozycji nierozstrzygniętych.',
+        'Dwa zakresy: <strong>review pojedynczego etapu</strong> (szybki, tuż po jego domknięciu) i <strong>pełny przegląd planu</strong> przed merge. Dwa tryby: świeży review z triage\'em oraz <strong>wznowienie</strong> - zapisany raport otwiera się później i triage rusza od pozycji nierozstrzygniętych.',
       targetK: 'CEL:',
       targetHtml:
         'kluczowy przed merge - im większy diff, tym łatwiej o <b>dryf między tym, co plan obiecał, a tym, co kod robi</b>.',
@@ -127,7 +127,7 @@ export const SKILL_IMPL_REVIEW: Record<Lang, SkillImplReviewDict> = {
       num: 'WEJŚCIE → WYJŚCIE',
       h2: 'Z planu i diffa do zapisanego raportu',
       p1Html:
-        'Wejściem jest <strong>plan.md</strong> (change-id, ścieżka albo numer fazy) i faktyczny stan repozytorium - diff wyznaczany od daty planu. Zestawienie plików z planu z plikami z diffa daje trzy klasy: <strong>oczekiwane</strong> (w obu - weryfikuj treść), <strong>nieplanowane</strong> (tylko w diffie - zbadaj i oflaguj), <strong>brakujące</strong> (tylko w planie - potencjalnie niezaimplementowane).',
+        'Wejściem jest <strong>plan.md</strong> (change-id, ścieżka albo numer etapu) i faktyczny stan repozytorium - diff wyznaczany od daty planu. Zestawienie plików z planu z plikami z diffa daje trzy klasy: <strong>oczekiwane</strong> (w obu - weryfikuj treść), <strong>nieplanowane</strong> (tylko w diffie - zbadaj i oflaguj), <strong>brakujące</strong> (tylko w planie - potencjalnie niezaimplementowane).',
       p2Html:
         'Wyjściem jest raport w <strong>reviews/</strong> folderu zmiany - zapisywany <strong>zawsze</strong>, niezależnie od tego, czy triage rusza teraz, później czy wcale. Wraz z zapisem change.md dostaje status <em>impl_reviewed</em>.',
       rows: [
@@ -234,7 +234,7 @@ export const SKILL_IMPL_REVIEW: Record<Lang, SkillImplReviewDict> = {
         {
           dt: 'Nie kłóci się przy „pomiń"',
           ddHtml:
-            'decyzja użytkownika zapisywana bez dyskusji; przy review fazy sprawdza też, czy nie złamała założeń faz wcześniejszych.',
+            'decyzja użytkownika zapisywana bez dyskusji; przy review etapu sprawdza też, czy nie złamał założeń etapów wcześniejszych.',
         },
         {
           dt: 'Nie dotyka archiwum',

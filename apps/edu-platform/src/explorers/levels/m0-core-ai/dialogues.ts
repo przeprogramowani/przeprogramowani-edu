@@ -466,31 +466,6 @@ export const dialogues: Record<string, DialogueSequence> = {
     ]
   },
 
-  // === MODULE 1 DOOR — locked until earth signal + sys:course-m1-available ===
-
-  'm0-prework-door-locked': {
-    id: 'm0-prework-door-locked',
-    lines: [
-      {
-        speaker: 'system',
-        text: { pl: 'TUNEL DO KOMORY WYJŚCIA - ZABLOKOWANE', en: 'TUNNEL TO EXIT CHAMBER - LOCKED' },
-        mode: 'system',
-        autoAdvance: 2500,
-      },
-      {
-        speaker: 'system',
-        text: { pl: 'Te drzwi zostaną odblokowane wraz z pierwszym modułem misji. Upewnij się, że wszystkie dostępne misje są ukończone.', en: 'These doors will unlock with the first mission module. Make sure all available missions are complete.' },
-        mode: 'system',
-        autoAdvance: 3000,
-      },
-      {
-        speaker: 'astronaut',
-        text: { pl: 'Jeszcze nie czas na lądowanie.', en: 'Not yet time to land.' },
-        mode: 'monologue',
-      },
-    ],
-  },
-
   // Support manual — revisit after reading
   'm0-support-manual-revisit': {
     id: 'm0-support-manual-revisit',
@@ -508,5 +483,30 @@ export const dialogues: Record<string, DialogueSequence> = {
         autoAdvance: 2500,
       },
     ],
+  },
+
+  // === RETURN CINEMATIC — plays once when coming back from Moon 1 ===
+
+  'm0-return-from-moon1': {
+    id: 'm0-return-from-moon1',
+    lines: [
+      {
+        speaker: 'system',
+        text: { pl: 'DOKOWANIE ZAKOŃCZONE — ODYSSEY, POKŁAD GŁÓWNY', en: 'DOCKING COMPLETE — ODYSSEY, MAIN DECK' },
+        mode: 'system',
+        autoAdvance: 2400,
+      },
+      {
+        speaker: 'astronaut',
+        text: { pl: 'Znowu ten równy szum reaktora. Po dżungli brzmi jak cisza.', en: 'That steady reactor hum again. After the jungle it sounds like silence.' },
+        mode: 'monologue',
+      },
+      {
+        speaker: 'CORE AI',
+        text: { pl: 'Witaj z powrotem na pokładzie. Dane z powierzchni księżyca zsynchronizowane z moimi rdzeniami.', en: 'Welcome back aboard. Surface data from the moon has been synchronised with my cores.' },
+        mode: 'dialogue',
+      },
+    ],
+    onComplete: { setFlags: [FLAGS.M0_RETURN_FROM_MOON1_SEEN] },
   },
 };

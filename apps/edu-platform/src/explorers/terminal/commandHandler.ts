@@ -5,7 +5,8 @@ import { localized } from '../i18n/types';
 import { t } from '../i18n';
 import { isCommandAvailable, getAvailableCommands } from './commandRegistry';
 import { getBookmarks } from '../systems/BookmarkManager';
-import { FLAGS } from '../config/flags';
+import { FLAGS, type GameFlag } from '../config/flags';
+import { NAV_DESTINATIONS, getDestinationStatus } from '../levels/navigationDestinations';
 
 export interface InteractiveAction {
   type: 'preview' | 'link';
@@ -59,14 +60,135 @@ export function handleCommand(raw: string, state: GameState, questManager?: Ques
     case 'bookmarks':
       return cmdBookmarks(state);
     case 'navi':
-      return cmdNavi();
+      return cmdNavi(state);
     case 'support':
       return cmdSupport(state);
     case 'badges':
       return cmdBadges(state);
+    case 'scan':
+      return cmdScan();
+    case 'policy':
+      return cmdPolicy();
+    case 'crew':
+      return cmdCrew(state);
+    case 'intel':
+      return cmdIntel();
+    case 'uplink':
+      return cmdUplink(state);
+    case 'sensors':
+      return cmdSensors(state);
+    case 'plan':
+      return cmdPlan(state);
+    case 'planner':
+      return cmdPlanner(state);
     default:
       return { output: [t('terminal.unknownCommandWithName', { cmd })] };
   }
+}
+
+function statusBlock(header: string, lines: string[]): CommandResult {
+  return { output: [header, '═════════════════════════════', '', ...lines] };
+}
+
+function cmdScan(): CommandResult {
+  return statusBlock(t('terminal.scan.header'), [
+    t('terminal.scan.alpha'),
+    t('terminal.scan.beta'),
+    t('terminal.scan.gamma'),
+  ]);
+}
+
+function cmdPolicy(): CommandResult {
+  return statusBlock(t('terminal.policy.header'), [
+    t('terminal.policy.precheck'),
+    t('terminal.policy.generalization'),
+    t('terminal.policy.surface'),
+    t('terminal.policy.beacon'),
+  ]);
+}
+
+function cmdCrew(state: GameState): CommandResult {
+  const moreauStatus = state.flags.includes(FLAGS.M1_MOREAU_AWAKE)
+    ? t('terminal.crew.awake')
+    : t('terminal.crew.asleep');
+  const harrisStatus = state.flags.includes(FLAGS.M1_HARRIS_RECALL_DISCOVERED)
+    ? t('terminal.crew.quarantined')
+    : t('terminal.crew.asleep');
+
+  return statusBlock(t('terminal.crew.header'), [
+    t('terminal.crew.dexo'),
+    t('terminal.crew.moreau', { status: moreauStatus }),
+    t('terminal.crew.harris', { status: harrisStatus }),
+    t('terminal.crew.remaining'),
+  ]);
+}
+
+function cmdIntel(): CommandResult {
+  return statusBlock(t('terminal.intel.header'), [
+    t('terminal.intel.prd'),
+    t('terminal.intel.echo'),
+    t('terminal.intel.policy'),
+    t('terminal.intel.signatures'),
+    t('terminal.intel.hq'),
+  ]);
+}
+
+function cmdUplink(state: GameState): CommandResult {
+  const integrity = state.flags.includes(FLAGS.M1_HQ_CHANNEL_SUSPECT)
+    ? t('terminal.uplink.suspect')
+    : t('terminal.uplink.unknown');
+
+  return statusBlock(t('terminal.uplink.header'), [
+    t('terminal.uplink.primary'),
+    t('terminal.uplink.reserve'),
+    t('terminal.uplink.hq', { integrity }),
+  ]);
+}
+
+function cmdSensors(state: GameState): CommandResult {
+  const sensorStatus = state.flags.includes(FLAGS.M1_BASIC_SENSORS_RESTORED)
+    ? t('terminal.sensors.online')
+    : t('terminal.sensors.offline');
+  const planningRestored = state.flags.includes(FLAGS.M2_PLANNING_MODULE_RESTORED);
+  const planningStatus = planningRestored
+    ? t('terminal.sensors.planningOnline')
+    : t('terminal.sensors.planningOffline');
+
+  return statusBlock(t('terminal.sensors.header'), [
+    t('terminal.sensors.basic', { status: sensorStatus }),
+    t('terminal.sensors.planning', { status: planningStatus }),
+    planningRestored ? t('terminal.sensors.nextM3') : t('terminal.sensors.next'),
+  ]);
+}
+
+// The extraction plan artifact — grows with the module, section by section
+function cmdPlan(state: GameState): CommandResult {
+  const has = (flag: GameFlag) => state.flags.includes(flag);
+  const lines: string[] = [t('terminal.plan.contract')];
+
+  if (has(FLAGS.M2_MILESTONES_DONE)) lines.push(t('terminal.plan.milestones'));
+  if (has(FLAGS.M2_ARCHITECTURE_DONE)) lines.push(t('terminal.plan.architecture'));
+  if (has(FLAGS.M2_IMPL_CONTROL_DONE)) lines.push(t('terminal.plan.execution'));
+
+  if (has(FLAGS.M2_SOLO_REVIEW_DONE)) {
+    lines.push(t('terminal.plan.review'), '', t('terminal.plan.approved'));
+  } else {
+    lines.push('', t('terminal.plan.inPreparation'));
+  }
+
+  return statusBlock(t('terminal.plan.header'), lines);
+}
+
+function cmdPlanner(state: GameState): CommandResult {
+  const moduleStatus = state.flags.includes(FLAGS.M2_PLANNING_MODULE_RESTORED)
+    ? t('terminal.planner.online')
+    : t('terminal.planner.offline');
+
+  return statusBlock(t('terminal.planner.header'), [
+    t('terminal.planner.module', { status: moduleStatus }),
+    t('terminal.planner.activePlan'),
+    t('terminal.planner.next'),
+  ]);
 }
 
 function cmdHelp(state: GameState): CommandResult {
@@ -305,20 +427,9 @@ function cmdBookmarks(state: GameState): CommandResult {
   return { output, interactive };
 }
 
-interface MissionEntry {
-  name: string;
-  date?: string;
-  status?: 'active';
+function isFutureDate(targetDate: string): boolean {
+  return new Date(targetDate + 'T00:00:00').getTime() > Date.now();
 }
-
-const MISSION_SCHEDULE: MissionEntry[] = [
-  { name: 'Awakening Procedures', status: 'active' },
-  { name: 'Agentic Asteroid', date: '2026-05-22' },
-  { name: 'Wormhole Workflows', date: '2026-05-29' },
-  { name: 'Quality Quasar', date: '2026-06-05' },
-  { name: 'Megalithic Monolith', date: '2026-06-12' },
-  { name: 'Teamwork Teleport', date: '2026-06-19' },
-];
 
 function formatCountdown(targetDate: string): string {
   const now = new Date();
@@ -340,21 +451,37 @@ function formatCountdown(targetDate: string): string {
   return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
 
-function cmdNavi(): CommandResult {
+// Mission map \u2014 driven by the same registry as the ship navigation deck,
+// so /navi statuses always match what the deck lets the player launch.
+function cmdNavi(state: GameState): CommandResult {
   const output: string[] = [
     t('terminal.navi.header'),
     '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550',
     '',
   ];
 
-  for (let i = 0; i < MISSION_SCHEDULE.length; i++) {
-    const entry = MISSION_SCHEDULE[i];
-    const marker = entry.status === 'active' ? '\u25C9' : '\u25CB';
-    output.push(` ${marker} ${i + 1}. ${entry.name}`);
-    if (entry.status === 'active') {
-      output.push(t('terminal.navi.inProgress'));
-    } else if (entry.date) {
-      output.push(t('terminal.navi.eta', { countdown: formatCountdown(entry.date) }));
+  const hasFlag = (flag: GameFlag) => state.flags.includes(flag);
+  const anyMoonAvailable = NAV_DESTINATIONS.some(
+    (dest) => getDestinationStatus(dest, hasFlag) === 'available'
+  );
+
+  // Stage 0 \u2014 the ship itself; active until the first moon opens up
+  output.push(` ${anyMoonAvailable ? '\u25CB' : '\u25C9'} 0. Awakening Procedures`);
+  if (!anyMoonAvailable) output.push(t('terminal.navi.inProgress'));
+
+  for (let i = 0; i < NAV_DESTINATIONS.length; i++) {
+    const dest = NAV_DESTINATIONS[i];
+    const status = getDestinationStatus(dest, hasFlag);
+    const marker = status === 'available' ? '\u25C9' : '\u25CB';
+    output.push(` ${marker} ${i + 1}. ${localized(dest.name)} (${dest.codename})`);
+    if (status === 'available') {
+      output.push(t('terminal.navi.ready'));
+    } else if (status === 'locked') {
+      output.push(t('terminal.navi.locked'));
+    } else if (dest.eta && isFutureDate(dest.eta)) {
+      output.push(t('terminal.navi.eta', { countdown: formatCountdown(dest.eta) }));
+    } else {
+      output.push(t('terminal.navi.noSignal'));
     }
   }
 

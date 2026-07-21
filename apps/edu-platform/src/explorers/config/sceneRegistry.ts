@@ -6,6 +6,7 @@ export const SceneKey = {
   TRANSITION: 'TransitionScene',
   EXAM: 'ExamScene',
   ARCADE: 'ArcadeScene',
+  NAVIGATION: 'NavigationScene',
 } as const;
 
 export type SceneKeyType = (typeof SceneKey)[keyof typeof SceneKey];

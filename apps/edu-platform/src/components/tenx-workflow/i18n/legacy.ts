@@ -354,7 +354,7 @@ export const LEGACY: Record<Lang, LegacyDict> = {
       leadNeutralHtml:
         'Refaktor legacy to <strong>odwracalna ścieżka zamiast big-bangu</strong>. Wielki przepisujący skok kończy się katastrofą, bo nie ma z niego drogi powrotu - sekwencja małych, osobno zielonych kroków ma ją zawsze.',
       leadHtml:
-        'Wejście: hot spot z dowodami i test chroniący zachowanie - napisany, <strong>zanim ruszy refaktor</strong>. Wyjście: <strong>okazje refaktorowe</strong> (pozycja ④ raportu) plus ADR-y dokumentujące decyzje. Mechanizm: wzorce odwracalności - <em>Strangler Fig</em> (nowe oplata stare, zanim je zastąpi), <em>Branch by Abstraction</em>, <em>metoda Mikado</em> - a /10x-plan tnie ścieżkę na fazy, z których każda kończy się zielenią albo cofnięciem kroku, nie planu.',
+        'Wejście: hot spot z dowodami i test chroniący zachowanie - napisany, <strong>zanim ruszy refaktor</strong>. Wyjście: <strong>okazje refaktorowe</strong> (pozycja ④ raportu) plus ADR-y dokumentujące decyzje. Mechanizm: wzorce odwracalności - <em>Strangler Fig</em> (nowe oplata stare, zanim je zastąpi), <em>Branch by Abstraction</em>, <em>metoda Mikado</em> - a /10x-plan tnie ścieżkę na etapy, z których każdy kończy się zielenią albo cofnięciem kroku, nie planu.',
       grunt: 'GRUNT: FOWLER + FEATHERS // TEST CHRONIĄCY ZACHOWANIE POWSTAJE PRZED REFAKTOREM',
       question: 'jak przebudować bez zatrzymywania maszyny?',
       guarantee: 'każdy krok odwracalny i osobno zielony',
@@ -366,7 +366,7 @@ export const LEGACY: Record<Lang, LegacyDict> = {
       dd: [
         {
           label: 'PO CO',
-          body: '<p>Zamienić zadanie w plan pocięty na fazy z jawnymi kryteriami sukcesu - automatycznymi i manualnymi - zanim powstanie pierwsza linijka kodu. Plan jest kontraktem: implementacja ma się do czego cofnąć.</p>',
+          body: '<p>Zamienić zadanie w plan pocięty na etapy z jawnymi kryteriami sukcesu - automatycznymi i manualnymi - zanim powstanie pierwsza linijka kodu. Plan jest kontraktem: implementacja ma się do czego cofnąć.</p>',
         },
         {
           label: 'WEJŚCIE → WYJŚCIE',
@@ -374,15 +374,15 @@ export const LEGACY: Record<Lang, LegacyDict> = {
         },
         {
           label: 'MECHANIZM',
-          body: '<p>Research repozytorium subagentami → ocena złożoności (LOW / MEDIUM / HIGH) potwierdzona z użytkownikiem → skalowane dopytywanie: 4-15 pytań, każda opcja z rekomendacją oraz jawną siłą i kosztem → akceptacja szkieletu faz → dopiero wtedy pełny plan.</p>',
+          body: '<p>Research repozytorium subagentami → ocena złożoności (LOW / MEDIUM / HIGH) potwierdzona z użytkownikiem → skalowane dopytywanie: 4-15 pytań, każda opcja z rekomendacją oraz jawną siłą i kosztem → akceptacja szkieletu etapów → dopiero wtedy pełny plan.</p>',
         },
         {
           label: 'ANATOMIA PLANU',
-          body: '<p>Stan obecny, stan docelowy, <b>„czego NIE robimy"</b>, fazy z parą Intent / Contract dla każdej zmiany, kryteria Automated / Manual, na dole sekcja Progress - jedyne miejsce, gdzie żyją checkboxy.</p>',
+          body: '<p>Stan obecny, stan docelowy, <b>„czego NIE robimy"</b>, etapy z parą Intent / Contract dla każdej zmiany, kryteria Automated / Manual, na dole sekcja Progress - jedyne miejsce, gdzie żyją checkboxy.</p>',
         },
         {
           label: 'GRANICE',
-          body: '<p>Plan opisuje intencję, nie implementację - snippet kodu tylko przy zmianie nieoczywistej. Zero otwartych pytań w finalnym planie. Po każdej fazie pauza na ludzkie potwierdzenie weryfikacji manualnej, zanim ruszy następna.</p>',
+          body: '<p>Plan opisuje intencję, nie implementację - snippet kodu tylko przy zmianie nieoczywistej. Zero otwartych pytań w finalnym planie. Po każdym etapie pauza na ludzkie potwierdzenie weryfikacji manualnej, zanim ruszy następny.</p>',
         },
       ],
     },

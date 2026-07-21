@@ -12,7 +12,7 @@ import {
 } from '../config/constants';
 import { getMapAssets } from '../assets/AssetManifest';
 import { MAP_DISPLAY_NAMES } from '../config/mapRegistry';
-import { getInteractionRoutes, getIntroConfig, getAllExams } from '../levels/levelLoader';
+import { getInteractionRoutes, getIntroConfigs, getAllExams } from '../levels/levelLoader';
 import { BaseScene } from './BaseScene';
 import { InputController } from '../systems/InputController';
 import { Astronaut } from '../entities/Astronaut';
@@ -26,7 +26,8 @@ import { createSpotlightReveal } from '../effects/spotlightReveal';
 import type { ArcadeShowPayload } from '../events/GameEvents';
 import { sanitizeSpawnPosition, type SpawnCollisionGrid } from '../state/spawnValidation';
 import { buildActorMovementBounds } from '../state/actorMovementBounds';
-import { t } from '../i18n';
+import { t, type StringKey } from '../i18n';
+import { TILESET_COLS, TileRole, themeOf, tileIndex } from '../config/tileIndices';
 
 interface GameSceneData {
   mapKey: string;
@@ -126,12 +127,26 @@ export class GameScene extends BaseScene {
       aboveLayer.setDepth(DEPTH.ABOVE);
     }
 
-    // Background tile — fills viewport space outside the map (placeholder row 0, col 4)
-    if (!this.textures.get('tileset-placeholder').has('bg-tile')) {
-      this.textures.get('tileset-placeholder').add('bg-tile', 0, 4 * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE);
+    // Fill viewport space outside the map with the active map theme's background.
+    // The Ground layer is fully populated by the map compiler, so its first tile
+    // reliably identifies the theme without hardcoding the sci-fi/star background.
+    const groundTileIndex = groundLayer?.getTileAt(0, 0)?.index;
+    const mapTheme = groundTileIndex && groundTileIndex > 0 ? themeOf(groundTileIndex) : 1;
+    const backgroundTileIndex = tileIndex(mapTheme, TileRole.BG_1) - 1;
+    const backgroundFrame = `bg-tile-theme-${mapTheme}`;
+    const tilesetTexture = this.textures.get('tileset-placeholder');
+    if (!tilesetTexture.has(backgroundFrame)) {
+      tilesetTexture.add(
+        backgroundFrame,
+        0,
+        (backgroundTileIndex % TILESET_COLS) * TILE_SIZE,
+        Math.floor(backgroundTileIndex / TILESET_COLS) * TILE_SIZE,
+        TILE_SIZE,
+        TILE_SIZE,
+      );
     }
     const bgTile = this.add
-      .tileSprite(0, 0, this.scale.width, this.scale.height, 'tileset-placeholder', 'bg-tile')
+      .tileSprite(0, 0, this.scale.width, this.scale.height, 'tileset-placeholder', backgroundFrame)
       .setOrigin(0, 0)
       .setScrollFactor(0)
       .setDepth(DEPTH.GROUND - 1);
@@ -139,6 +154,7 @@ export class GameScene extends BaseScene {
     // Parse zones for interactive objects
     this.zoneObjects = [];
     const npcZones: ZoneObject[] = [];
+    const labelZones: ZoneObject[] = [];
     const zonesLayer = map.getObjectLayer('Zones');
     if (zonesLayer) {
       for (const obj of zonesLayer.objects) {
@@ -158,13 +174,32 @@ export class GameScene extends BaseScene {
           height: obj.height ?? TILE_SIZE,
           properties: props,
         };
-        if (zoneData.type === 'npc') {
+        if (typeof zoneData.properties['displayLabelKey'] === 'string') {
+          labelZones.push(zoneData);
+        } else if (zoneData.type === 'npc') {
           npcZones.push(zoneData);
         } else {
           this.zoneObjects.push(zoneData);
         }
       }
       devLog(`[GameScene] Parsed ${this.zoneObjects.length} zone objects, ${npcZones.length} NPC zone(s)`);
+    }
+
+    // Non-interactive, localized map labels are useful for QA comparison rooms.
+    for (const zone of labelZones) {
+      const labelKey = zone.properties['displayLabelKey'] as StringKey;
+      this.add
+        .text(zone.x + zone.width / 2, zone.y + zone.height / 2, t(labelKey), {
+          fontFamily: 'monospace',
+          fontSize: '18px',
+          color: '#e2e8f0',
+          backgroundColor: '#020617',
+          padding: { x: 8, y: 4 },
+          stroke: '#0f172a',
+          strokeThickness: 3,
+        })
+        .setOrigin(0.5)
+        .setDepth(DEPTH.ABOVE);
     }
 
     // Render zone debug overlays (dev only)
@@ -177,6 +212,7 @@ export class GameScene extends BaseScene {
         if (zone.type === 'exam') color = 0x9b59b6;
         if (zone.type === 'arcade') color = 0xe67e22;
         if (zone.type === 'npc') color = 0xe879f9;
+        if (zone.type === 'navigation') color = 0x3b82f6;
 
         const rect = this.add.rectangle(zone.x + zone.width / 2, zone.y + zone.height / 2, zone.width, zone.height);
         rect.setStrokeStyle(2, color);
@@ -200,7 +236,7 @@ export class GameScene extends BaseScene {
         width: zone.width,
         height: zone.height,
         objectId: zone.id,
-        objectType: zone.type as 'trigger' | 'door' | 'terminal' | 'exam' | 'arcade',
+        objectType: zone.type as 'trigger' | 'door' | 'terminal' | 'exam' | 'arcade' | 'navigation',
         eventId: (zone.properties['eventId'] as string) ?? zone.id,
         properties: zone.properties,
       });
@@ -214,12 +250,14 @@ export class GameScene extends BaseScene {
 
     for (const zone of npcZones) {
       const npcTypeName = (zone.properties['npcType'] as string) ?? 'scientist';
+      const npcVariantName = zone.properties['npcVariant'] as string | undefined;
       const npc = new NPC(
         this,
         zone.x + zone.width / 2,
         zone.y + zone.height / 2,
         zone.id,
         npcTypeName,
+        npcVariantName,
         buildActorMovementBounds(this.collisionGrid, {
           x: zone.x + zone.width / 2,
           y: zone.y + zone.height / 2,
@@ -267,6 +305,15 @@ export class GameScene extends BaseScene {
       devLog('[GameScene] Arcade dismissed, movement restored');
     };
     this.bus.on(GameEvents.ARCADE_DISMISSED, onArcadeDismissed);
+
+    // Listen for navigation deck dismissed (closed without launching)
+    const onNavigationDismissed = () => {
+      this.player.enterState('idle');
+      this.inputController.setEnabled(true);
+      this.npcs.forEach((npc) => npc.unfreeze());
+      devLog('[GameScene] Navigation dismissed, movement restored');
+    };
+    this.bus.on(GameEvents.NAVIGATION_DISMISSED, onNavigationDismissed);
 
     // Invalidate cached flags Set when a flag is set externally (e.g. via flagManager)
     const onFlagSet = (payload: { flag: string }) => {
@@ -346,6 +393,9 @@ export class GameScene extends BaseScene {
     if (!this.scene.isActive(SceneKey.ARCADE)) {
       this.scene.launch(SceneKey.ARCADE);
     }
+    if (!this.scene.isActive(SceneKey.NAVIGATION)) {
+      this.scene.launch(SceneKey.NAVIGATION);
+    }
 
     // Listen for demo-end-screen event
     const onDemoEndScreen = () => {
@@ -365,9 +415,14 @@ export class GameScene extends BaseScene {
       loop: true,
     });
 
-    // Cinematic intro from level manifest
-    const introConfig = getIntroConfig(this.mapKey);
-    if (introConfig && !this.hasFlag(introConfig.flag)) {
+    // Cinematic intro from level manifest — first entry whose seen-flag is unset
+    // and whose required flags (if any) are all present
+    const introConfig = getIntroConfigs(this.mapKey).find(
+      (config) =>
+        !this.hasFlag(config.flag) &&
+        (config.requiredFlags ?? []).every((flag) => this.hasFlag(flag))
+    );
+    if (introConfig) {
       this.playCinematicIntro(introConfig);
     }
 
@@ -378,6 +433,7 @@ export class GameScene extends BaseScene {
       this.bus.off(GameEvents.DIALOGUE_DISMISSED, onDialogueDismissed);
       this.bus.off(GameEvents.EXAM_DISMISSED, onExamDismissed);
       this.bus.off(GameEvents.ARCADE_DISMISSED, onArcadeDismissed);
+      this.bus.off(GameEvents.NAVIGATION_DISMISSED, onNavigationDismissed);
       this.bus.off(GameEvents.FLAG_SET, onFlagSet);
       this.bus.off('demo-end-screen', onDemoEndScreen);
       this.autoSaveTimer?.destroy();
@@ -425,6 +481,7 @@ export class GameScene extends BaseScene {
       if (nearest.objectType === 'exam') promptLabel = t('scene.interactionExam');
       if (nearest.objectType === 'arcade') promptLabel = t('scene.interactionArcade');
       if (nearest.objectType === 'npc') promptLabel = t('scene.interactionNpc');
+      if (nearest.objectType === 'navigation') promptLabel = t('scene.interactionNavigation');
       this.interactionPrompt.show(nearest.centerX, nearest.centerY, promptLabel);
 
       if (this.inputController.isInteractJustPressed()) {
@@ -488,6 +545,15 @@ export class GameScene extends BaseScene {
           `[GameScene] Arcade launch: map=${arcadePayload.mapKey}, zone=${arcadePayload.zoneId}, game=${arcadePayload.arcadeGameId}`
         );
         this.bus.emit(GameEvents.ARCADE_SHOW, arcadePayload);
+        break;
+      }
+      case 'navigation': {
+        this.inputController.setEnabled(false);
+        this.player.enterState('cutscene');
+        this.interactionPrompt.hide();
+        this.npcs.forEach((npc) => npc.freeze());
+        devLog(`[GameScene] Navigation deck opened: ${obj.objectId}`);
+        this.bus.emit(GameEvents.NAVIGATION_SHOW, { zoneId: obj.objectId });
         break;
       }
       case 'exam': {

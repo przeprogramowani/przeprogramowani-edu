@@ -34,13 +34,14 @@ const t = CSC[lang];
   <p class="sub"><Fragment set:html={t.subPreHtml} /><span class="sf-only">{t.subSf}</span><span class="neutral-only">{t.subNeutral}</span><Fragment set:html={t.subPostHtml} /></p>
 
   <div class="chainwrap">
-    <svg class="chain" viewBox="0 0 960 250" role="img" aria-label={t.svgAria}>
-      <path d="M15,125 H945" stroke="#7c8cff" opacity=".12" fill="none"/>
+    <svg class="chain" viewBox="0 0 1155 250" role="img" aria-label={t.svgAria}>
+      <path d="M15,125 H1140" stroke="#7c8cff" opacity=".12" fill="none"/>
       <g stroke="#7c8cff" fill="none" opacity=".65" stroke-width="1.4">
         <path class="anim-dash" stroke-dasharray="4 5" d="M169,125 H196"/><path d="M196,120 l7,5 -7,5"/>
         <path class="anim-dash" stroke-dasharray="4 5" d="M364,125 H391"/><path d="M391,120 l7,5 -7,5"/>
         <path class="anim-dash" stroke-dasharray="4 5" d="M559,125 H586"/><path d="M586,120 l7,5 -7,5"/>
         <path class="anim-dash" stroke-dasharray="4 5" d="M754,125 H781"/><path d="M781,120 l7,5 -7,5"/>
+        <path class="anim-dash" stroke-dasharray="4 5" d="M949,125 H976"/><path d="M976,120 l7,5 -7,5"/>
       </g>
       <a href="#k-new" style="color:#4ade9b" aria-label={t.nodes.new.aria}>
         <text class="ann" x="90" y="52" text-anchor="middle">{t.nodes.new.annTop[0]}</text>
@@ -87,8 +88,17 @@ const t = CSC[lang];
         <path d="M870,163 V186" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
         <text class="ann" x="870" y="201" text-anchor="middle">{t.nodes.review.annBottom[0]}<tspan x="870" y="214">{t.nodes.review.annBottom[1]}</tspan></text>
       </a>
-      <circle r="7" fill="#7c8cff" opacity=".25"><animateMotion dur="7s" repeatCount="indefinite" path="M20,125 H940"/></circle>
-      <circle r="3" fill="#dce2f5" class="anim-pulse"><animateMotion dur="7s" repeatCount="indefinite" path="M20,125 H940"/></circle>
+      <a href="#k-archive" style="color:#f472b6" aria-label={t.nodes.archive.aria}>
+        <text class="ann" x="1065" y="52" text-anchor="middle">{t.nodes.archive.annTop[0]}</text>
+        <path d="M1065,62 V87" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <rect class="kbox" x="990" y="93" width="150" height="64" stroke-width="1.4"/>
+        <text class="knum" x="1065" y="115" text-anchor="middle">{t.nodes.archive.knum}</text>
+        <text class="klbl" x="1065" y="140" text-anchor="middle">{t.nodes.archive.klbl}</text>
+        <path d="M1065,163 V186" stroke="currentColor" opacity=".35" fill="none" stroke-dasharray="2 4"/>
+        <text class="ann" x="1065" y="202" text-anchor="middle">{t.nodes.archive.annBottom[0]}</text>
+      </a>
+      <circle r="7" fill="#7c8cff" opacity=".25"><animateMotion dur="7s" repeatCount="indefinite" path="M20,125 H1130"/></circle>
+      <circle r="3" fill="#dce2f5" class="anim-pulse"><animateMotion dur="7s" repeatCount="indefinite" path="M20,125 H1130"/></circle>
     </svg>
     <p class="map-cap">{t.mapCapPre}<span class="sf-only">{t.mapCapSf}</span><span class="neutral-only">{t.mapCapNeutral}</span>{t.mapCapPost}</p>
   </div>
@@ -99,8 +109,9 @@ const t = CSC[lang];
     <a href="#k-plan" style="--hov:#a78bfa">{t.route[2]}</a>
     <a href="#k-implement" style="--hov:#3ddad0">{t.route[3]}</a>
     <a href="#k-review" style="--hov:#e2564a">{t.route[4]}</a>
-    <a href="#zastosowanie">{t.route[5]}</a>
-    <a href="#fundament">{t.route[6]}</a>
+    <a href="#k-archive" style="--hov:#f472b6">{t.route[5]}</a>
+    <a href="#zastosowanie">{t.route[6]}</a>
+    <a href="#fundament">{t.route[7]}</a>
   </nav>
 </header>
 
@@ -139,6 +150,12 @@ const t = CSC[lang];
       <span class="num">{t.sum.cards[4].num}</span>
       <h3>{t.sum.cards[4].h3}</h3>
       <p>{t.sum.cards[4].p}</p>
+    </a>
+    <a class="sum-card" href="#k-archive" style="--acc:#f472b6">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="1.5"><rect x="7" y="15" width="26" height="17"/><path d="M7,15 l3,-6 h20 l3,6"/><path d="M16,21 h8"/><path d="M20,25 v4 m-2,-2 2,2 2,-2" opacity=".7"/></g></svg>
+      <span class="num">{t.sum.cards[5].num}</span>
+      <h3>{t.sum.cards[5].h3}</h3>
+      <p>{t.sum.cards[5].p}</p>
     </a>
   </div>
   <div class="epigraph finis rv" style="--acc:var(--indigo)">
@@ -462,6 +479,66 @@ const t = CSC[lang];
     <p set:html={t.k5.targetHtml} />
   </div>
   <DeepDive skill="10x-impl-review" items={t.k5.dd} href={pageHref(base, 'skill/10x-impl-review', lang)} lang={lang} />
+</section>
+
+<!-- ============ KROK 06 ARCHIVE ============ -->
+<section class="sector" id="k-archive" style="--acc:#f472b6">
+  <div class="sec-top rv">
+    <div>
+    <div class="sec-head">
+      <span class="sec-num">{t.k6.num}</span>
+      <span class="sec-uni sf-only"><Fragment set:html={UNIVERSES.fundacja.glyph} />{universeName(UNIVERSES.fundacja, lang)} · {t.k6.uniSub}</span>
+    </div>
+    <h2>{t.k6.h2}</h2>
+    <div class="epigraph sf-only">
+      <p>{t.k6.epigraphSf}</p>
+      <cite>{t.k6.epigraphCiteSf}</cite>
+    </div>
+    </div>
+    <figure class="asset">
+      <div class="a-vis">
+        <svg viewBox="0 0 440 300" role="img" aria-label={t.k6.figAria}>
+          <g stroke="currentColor" fill="none">
+            <rect x="24" y="18" width="392" height="264" opacity=".4"/>
+            <path d="M52,132 l10,-12 h30 l6,8 h40 v52 h-86 z"/>
+            <rect x="196" y="122" width="58" height="58" stroke-width="1.5"/>
+            <path d="M209,151 l10,10 17,-21" stroke-width="1.5" class="anim-pulse"/>
+            <path d="M138,151 H190" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <rect x="312" y="88" width="94" height="40"/>
+            <rect x="312" y="176" width="94" height="52"/>
+            <path d="M254,140 C 285,120 292,108 306,108" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+            <path d="M254,162 C 285,184 292,200 306,200" stroke-dasharray="4 5" opacity=".6" class="anim-dash"/>
+          </g>
+          <circle r="2.6" fill="currentColor"><animateMotion dur="4s" repeatCount="indefinite" path="M138,151 H190"/></circle>
+          <text x="99" y="116" text-anchor="middle">{t.k6.fig[0]}</text>
+          <text x="225" y="110" text-anchor="middle" class="acc">{t.k6.fig[1]}</text>
+          <text x="359" y="112" text-anchor="middle">{t.k6.fig[2]}</text>
+          <text x="359" y="206" text-anchor="middle" class="acc">{t.k6.fig[3]}</text>
+          <text x="36" y="42" class="dim">{t.k6.fig[4]}</text>
+        </svg>
+      </div>
+      <figcaption>{t.k6.figcaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="cols rv">
+    <div>
+      <p class="lead sf-only" set:html={t.k6.leadSfHtml} />
+      <p class="lead neutral-only" set:html={t.k6.leadNeutralHtml} />
+      <p class="lead" set:html={t.k6.lead3Html} />
+    </div>
+    <dl class="mech">
+      <div><dt><span class="ico ico-aim" aria-hidden="true"></span>{t.mechDt.q}</dt><dd class="v" style="margin:0">{t.k6.mechQ}</dd></div>
+      <div><dt><span class="ico ico-check" aria-hidden="true"></span>{t.mechDt.g}</dt><dd class="v" style="margin:0">{t.k6.mechG}</dd></div>
+      <div><dt><span class="ico ico-doc" aria-hidden="true"></span>{t.mechDt.a}</dt><dd class="v" style="margin:0" set:html={t.k6.mechArtHtml} /></div>
+      <div><dt><span class="ico ico-link" aria-hidden="true"></span>{t.mechDt.s}</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'skill/10x-archive', lang)} style="color:var(--acc)">{t.k6.skillLink}</a></dd></div>
+    </dl>
+  </div>
+  <div class="target rv">
+    <span class="k"><span class="ico ico-aim" aria-hidden="true"></span>{t.targetK}</span>
+    <p set:html={t.k6.targetHtml} />
+  </div>
+  <DeepDive skill="10x-archive" items={t.k6.dd} href={pageHref(base, 'skill/10x-archive', lang)} lang={lang} />
 </section>
 
 <!-- ============ W PRAKTYCE ============ -->

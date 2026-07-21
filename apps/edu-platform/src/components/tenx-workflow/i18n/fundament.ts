@@ -389,11 +389,11 @@ export const FUNDAMENT: Record<Lang, FundamentDict> = {
         },
         {
           label: 'WEJŚCIE → WYJŚCIE',
-          body: '<p>Wejście: pomysł w wolnej formie - inline, plik z notatkami albo rozmowa. Wyjście: <code>context/foundation/shape-notes.md</code> z checkpointem we frontmatterze (bieżąca faza, fazy ukończone, liczba zebranych wymagań), więc sesję można przerwać i wznowić od następnej fazy zamiast od zera. Na koniec komenda <code>/10x-prd</code> trafia do schowka.</p>',
+          body: '<p>Wejście: pomysł w wolnej formie - inline, plik z notatkami albo rozmowa. Wyjście: <code>context/foundation/shape-notes.md</code> z checkpointem we frontmatterze (bieżący etap, etapy ukończone, liczba zebranych wymagań), więc sesję można przerwać i wznowić od następnego etapu zamiast od zera. Na koniec komenda <code>/10x-prd</code> trafia do schowka.</p>',
         },
         {
           label: 'MECHANIZM',
-          body: '<p>Każda faza odkrywcza idzie tą samą pętlą:</p><ul><li>otwarcie fazy jednym pytaniem otwartym - pierwszą wersję treści daje użytkownik,</li><li>3-5 „szarych stref" jako decyzje z realnymi opcjami i kompromisami,</li><li>jedna opcja oznaczona jako rekomendowana plus zawsze opcja „nie wiem",</li><li>potwierdzenie decyzji jednym zdaniem i dopiero wtedy zapis fazy na dysk.</li></ul>',
+          body: '<p>Każdy etap odkrywczy idzie tą samą pętlą:</p><ul><li>otwarcie etapu jednym pytaniem otwartym - pierwszą wersję treści daje użytkownik,</li><li>3-5 „szarych stref" jako decyzje z realnymi opcjami i kompromisami,</li><li>jedna opcja oznaczona jako rekomendowana plus zawsze opcja „nie wiem",</li><li>potwierdzenie decyzji jednym zdaniem i dopiero wtedy zapis etapu na dysk.</li></ul>',
         },
         {
           label: 'GREENFIELD / BROWNFIELD',

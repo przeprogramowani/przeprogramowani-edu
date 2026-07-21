@@ -9,6 +9,7 @@ import {
   NPC_IDLE_DURATION_MIN,
   NPC_IDLE_DURATION_MAX,
   NPC_WALL_RECOVERY_MIN_MS,
+  NPC_COLOR_VARIANTS,
   NPC_TYPE_ROWS,
   NPC_SPRITE_COLS,
   PLAYER_BODY_WIDTH,
@@ -18,6 +19,7 @@ import {
 } from '../config/constants';
 import type { FacingDirection } from '../state/types';
 import type { ActorMovementBounds } from '../state/actorMovementBounds';
+import type { NpcBlendMode } from '../config/constants';
 import { isActorPositionWithinBounds } from '../state/actorMovementBounds';
 import { actorDepth } from './actorDepth';
 import {
@@ -38,6 +40,11 @@ const NPC_DIR_ROW: Record<FacingDirection, number> = {
   down: 1,
   left: 2,
   right: 3,
+};
+
+const NPC_BLEND_MODES: Record<NpcBlendMode, number> = {
+  add: Phaser.BlendModes.ADD,
+  screen: Phaser.BlendModes.SCREEN,
 };
 
 function idleFrame(charIdx: number, facing: FacingDirection): number {
@@ -75,6 +82,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     y: number,
     npcId: string,
     npcTypeName = 'scientist',
+    npcVariantName?: string,
     movementBounds?: ActorMovementBounds,
   ) {
     const charIdx = NPC_TYPE_ROWS[npcTypeName] ?? 0;
@@ -102,6 +110,16 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     body.setOffset(PLAYER_BODY_OFFSET_X, PLAYER_BODY_OFFSET_Y);
     body.setCollideWorldBounds(true);
     body.setImmovable(false);
+
+    const colorVariant = npcVariantName ? NPC_COLOR_VARIANTS[npcVariantName] : undefined;
+    if (colorVariant?.mode === 'fill') {
+      this.setTintFill(colorVariant.color);
+    } else if (colorVariant) {
+      this.setTint(colorVariant.color);
+    }
+    if (colorVariant?.blendMode) {
+      this.setBlendMode(NPC_BLEND_MODES[colorVariant.blendMode]);
+    }
 
     this.setDepth(actorDepth(this.y));
 

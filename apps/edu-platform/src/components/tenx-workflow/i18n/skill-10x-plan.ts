@@ -88,9 +88,9 @@ export const SKILL_PLAN: Record<Lang, SkillPlanDict> = {
     subSf: 'Pielgrzymka zna trasę, zanim ktokolwiek postawi krok - ten skill wyznacza trasę zmiany.',
     subNeutral: 'Ten skill wyznacza trasę zmiany, zanim powstanie kod.',
     subRestHtml:
-      '<strong>/10x-plan</strong> prowadzi interaktywne, sceptyczne planowanie: skaluje liczbę pytań do złożoności i dostarczonych artefaktów, wymusza decyzje tam, gdzie są tanie, i zapisuje <strong>plan.md</strong> z fazami, kryteriami sukcesu i sekcją <strong>Progress</strong> - plus dwustronicowy <strong>plan-brief.md</strong>.',
+      '<strong>/10x-plan</strong> prowadzi interaktywne, sceptyczne planowanie: skaluje liczbę pytań do złożoności i dostarczonych artefaktów, wymusza decyzje tam, gdzie są tanie, i zapisuje <strong>plan.md</strong> z etapami, kryteriami sukcesu i sekcją <strong>Progress</strong> - plus dwustronicowy <strong>plan-brief.md</strong>.',
     svgAria:
-      'Schemat działania /10x-plan: artefakty wejściowe (research, frame) zasilają rundy pytań z rekomendacjami, z których powstaje trasa faz z warunkami sukcesu, zapisana jako plan.md z sekcją Progress oraz skrót plan-brief.md',
+      'Schemat działania /10x-plan: artefakty wejściowe (research, frame) zasilają rundy pytań z rekomendacjami, z których powstaje trasa etapów z warunkami sukcesu, zapisana jako plan.md z sekcją Progress oraz skrót plan-brief.md',
     svg: {
       in1: 'RESEARCH.MD',
       in2: 'FRAME.MD',
@@ -98,12 +98,12 @@ export const SKILL_PLAN: Record<Lang, SkillPlanDict> = {
       inSub: 'WIĘCEJ ARTEFAKTÓW = MNIEJ PYTAŃ',
       rounds: 'RUNDY PYTAŃ',
       decisions: 'DECYZJE',
-      phase1: 'FAZA 1',
-      phase2: 'FAZA 2',
-      phaseN: 'FAZA N',
-      phaseSub: 'KAŻDA FAZA: WARUNKI SUKCESU',
+      phase1: 'ETAP 1',
+      phase2: 'ETAP 2',
+      phaseN: 'ETAP N',
+      phaseSub: 'KAŻDY ETAP: WARUNKI SUKCESU',
       file: 'PLAN.MD',
-      fileSub: 'FAZY + PROGRESS',
+      fileSub: 'ETAPY + PROGRESS',
       brief: 'PLAN-BRIEF.MD',
     },
     mapCap: '/10X-PLAN // TRASA USTALONA, ZANIM RUSZY IMPLEMENTACJA',
@@ -118,7 +118,7 @@ export const SKILL_PLAN: Record<Lang, SkillPlanDict> = {
       p1Html:
         'Implementacja „na żywioł" podejmuje kluczowe decyzje w najgorszym możliwym miejscu: w środku pisania kodu, mimochodem, bez porównania opcji. <em>/10x-plan</em> wyciąga je przed kod - tam, gdzie zmiana zdania kosztuje edycję tekstu, nie refaktor.',
       p2Html:
-        'Skill jest z założenia <strong>sceptyczny i interaktywny</strong>: kwestionuje mgliste wymagania, pyta „dlaczego" i „co z przypadkiem X", weryfikuje korekty użytkownika własnym researchem i nie pisze planu za jednym podejściem - zatwierdza złożoność, potem decyzje, potem szkielet faz, dopiero na końcu szczegóły.',
+        'Skill jest z założenia <strong>sceptyczny i interaktywny</strong>: kwestionuje mgliste wymagania, pyta „dlaczego" i „co z przypadkiem X", weryfikuje korekty użytkownika własnym researchem i nie pisze planu za jednym podejściem - zatwierdza złożoność, potem decyzje, potem szkielet etapów, dopiero na końcu szczegóły.',
       targetK: 'CEL:',
       targetHtml:
         'kluczowy, gdy zmiana dotyka wielu plików albo niesie decyzje trudne do cofnięcia (schemat danych, publiczne API) - <b>decyzje mają zapaść przed kodem</b>, nie w jego trakcie.',
@@ -132,7 +132,7 @@ export const SKILL_PLAN: Record<Lang, SkillPlanDict> = {
         'Skala jest jawna: zadanie bez artefaktów przy złożoności MEDIUM to 7-10 pytań; z researchem 5-7; z frame 4-6; z oboma 3-5. Ponowne pytanie o rzecz rozstrzygniętą we wcześniejszych krokach to jawnie nazwany błąd skilla, nie nadgorliwość.',
       rows: [
         { dt: 'Wejście', ddHtml: '<b>opis zadania</b> + opcjonalnie research.md i/lub frame.md z folderu zmiany' },
-        { dt: 'Wyjście', ddHtml: '<b>plan.md</b> - fazy z kryteriami sukcesu + sekcja Progress (maszyna stanów)' },
+        { dt: 'Wyjście', ddHtml: '<b>plan.md</b> - etapy z kryteriami sukcesu + sekcja Progress (maszyna stanów)' },
         { dt: 'Wyjście 2', ddHtml: '<b>plan-brief.md</b> - dwustronicowy skrót z tabelą kluczowych decyzji i ich źródeł' },
         { dt: 'Bonus', ddHtml: 'komenda <b>/10x-implement &lt;change-id&gt; phase 1</b> skopiowana do schowka' },
       ],
@@ -164,7 +164,7 @@ export const SKILL_PLAN: Record<Lang, SkillPlanDict> = {
         {
           dt: '05 · Szkielet',
           ddHtml:
-            'propozycja podziału na fazy zatwierdzana, zanim powstaną szczegóły; korekty (za drobno / za grubo) są tanie na tym etapie.',
+            'propozycja podziału na etapy zatwierdzana, zanim powstaną szczegóły; korekty (za drobno / za grubo) są tanie na tym etapie.',
         },
         {
           dt: '06 · Zapis',
@@ -182,7 +182,7 @@ export const SKILL_PLAN: Record<Lang, SkillPlanDict> = {
       p1Html:
         'Sekcja <strong>„What We\'re NOT Doing"</strong> to tama na pełzanie zakresu, a <strong>Critical Implementation Details</strong> jest jawnie opcjonalna: pojawia się tylko, gdy istnieje realny haczyk (kolejność, wyścig, budżet wydajności). Plan bez niej nie jest niekompletny; plan wypchany szablonowymi punktami jest rozdęty.',
       p2Html:
-        'Na dole mieszka <strong>Progress</strong> - jedyne miejsce checkboxów i maszyna stanów dla /10x-implement: po jednym wpisie na każde kryterium sukcesu, w podziale Automated / Manual, z indeksami N.M, które nigdy nie są przenumerowywane. Bloki faz wyżej niosą zwykłe punktory, bez checkboxów.',
+        'Na dole mieszka <strong>Progress</strong> - jedyne miejsce checkboxów i maszyna stanów dla /10x-implement: po jednym wpisie na każde kryterium sukcesu, w podziale Automated / Manual, z indeksami N.M, które nigdy nie są przenumerowywane. Bloki etapów wyżej niosą zwykłe punktory, bez checkboxów.',
       rows: [
         {
           dt: 'Overview + stany',
@@ -191,7 +191,7 @@ export const SKILL_PLAN: Record<Lang, SkillPlanDict> = {
         },
         { dt: "What We're NOT Doing", ddHtml: 'jawna lista rzeczy poza zakresem zmiany' },
         {
-          dt: 'Fazy',
+          dt: 'Etapy',
           ddHtml:
             'Changes Required per plik z parą Intent / Contract; kryteria sukcesu podzielone na <b>automatyczne</b> (komendy) i <b>ręczne</b> (człowiek)',
         },
@@ -202,7 +202,7 @@ export const SKILL_PLAN: Record<Lang, SkillPlanDict> = {
         {
           dt: 'plan-brief.md',
           ddHtml:
-            'What &amp; Why, punkt startu, stan końcowy, <b>tabela kluczowych decyzji ze źródłem</b> (frame / research / plan), fazy w pigułce, ryzyka',
+            'What &amp; Why, punkt startu, stan końcowy, <b>tabela kluczowych decyzji ze źródłem</b> (frame / research / plan), etapy w pigułce, ryzyka',
         },
       ],
       targetK: 'BRIEF:',
@@ -234,8 +234,8 @@ export const SKILL_PLAN: Record<Lang, SkillPlanDict> = {
             'Critical Implementation Details domyślnie pomijane; generyczne rady („użyj memoizacji") nie są treścią planu.',
         },
         {
-          dt: 'Checkboxy w fazach',
-          ddHtml: 'bloki faz niosą zwykłe punktory; stan wykonania żyje wyłącznie w sekcji Progress.',
+          dt: 'Checkboxy w etapach',
+          ddHtml: 'bloki etapów niosą zwykłe punktory; stan wykonania żyje wyłącznie w sekcji Progress.',
         },
       ],
       chainK: 'NA STRONIE ŁAŃCUCHA:',

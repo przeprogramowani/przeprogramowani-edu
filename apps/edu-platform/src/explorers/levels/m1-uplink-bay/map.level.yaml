@@ -1,0 +1,81 @@
+theme: 2
+grid: |
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~########~~~~~~~~~~~
+  ~#######~#......#~########~~
+  ~#.....#~#......#~#......#~~
+  ~#.....#~#......#~#......#~~
+  ~#.....#~#......#~#......#~~
+  ~#.....#~#......#~#......#~~
+  ~###.###~###.####~###.####~~
+  ####.#######.########.######
+  #..........................#
+  #..........................#
+  D..........................D
+  D..........................D
+  #..........................#
+  #############....###########
+  ~~~~~~~~~~~~#....#~~~~~~~~~~
+  ~~~~~~~~~~~~######~~~~~~~~~~
+props:
+  - { id: amplified-portal, prop: ancient-portal, at: [12, 2], solid: true }
+  - { id: amp-ore, prop: synaptit-ore, at: [13, 2], solid: true }
+  - { id: classical-orb, prop: crystal-orb, at: [4, 3], solid: true }
+  - { id: relay-core, prop: energy-core, at: [21, 3], solid: true }
+  - { id: relay-drone, prop: scout-drone, at: [23, 3], solid: true }
+  - { id: cert-terminal, prop: holographic-console, at: [7, 9], solid: true }
+  - { id: bay-console, prop: holographic-console, at: [14, 9], solid: true }
+  - { id: auth-panel, prop: energy-barrier, at: [14, 15], solid: true }
+zones:
+  - id: profile-vault-door
+    name: Return to Profile Vault
+    type: door
+    at: [0, 11]
+    size: [1, 2]
+    properties:
+      targetMap: m1-profile-vault
+      spawnX: 21
+      spawnY: 9
+  - id: uplink-console
+    name: Reserve Uplink Console
+    type: trigger
+    propId: bay-console
+  - id: classical-route
+    name: Classical VOID Route
+    type: trigger
+    propId: classical-orb
+  - id: amplified-route
+    name: Synaptit-Amplified Route
+    type: trigger
+    propId: amplified-portal
+  - id: relay-route
+    name: Multi-Hop Relay Route
+    type: trigger
+    propId: relay-core
+  - id: human-auth-panel
+    name: Human Authorization Panel
+    type: trigger
+    propId: auth-panel
+  - id: exam-authorization-boundary
+    name: VOID Certification Terminal
+    type: exam
+    propId: cert-terminal
+    properties:
+      examId: m1-exam-authorization-boundary
+  - id: relay-tender
+    name: Relay Tender T-8
+    type: npc
+    at: [20, 10]
+    properties:
+      npcType: robot
+      npcVariant: jungle-dark-green
+  - id: moon-two-door
+    name: Route to Moon Two
+    type: door
+    at: [27, 11]
+    size: [1, 2]
+    properties:
+      targetMap: m2-planning
+      spawnX: 1
+      spawnY: 5
+      requiredFlags: m1-uplink-done,sys:course-m2-available

@@ -90,11 +90,11 @@ export const SKILL_IMPLEMENT: Record<Lang, SkillImplementDict> = {
     subSf: 'Rocinante nie leci do celu jednym odpaleniem - koryguje kurs w punktach kontrolnych.',
     subNeutral: 'Duża zmiana nie powstaje jednym diffem - rośnie od punktu kontrolnego do punktu kontrolnego.',
     subRestHtml:
-      '<strong>/10x-implement</strong> realizuje zatwierdzony <strong>plan.md</strong> faza po fazie: każda kończy się weryfikacją, bramą ręcznego potwierdzenia i commitem, a sekcja <strong>Progress</strong> w planie jest jedyną maszyną stanów - przerwana sesja wraca od ostatniego zielonego etapu.',
+      '<strong>/10x-implement</strong> realizuje zatwierdzony <strong>plan.md</strong> etap po etapie: każdy kończy się weryfikacją, bramą ręcznego potwierdzenia i commitem, a sekcja <strong>Progress</strong> w planie jest jedyną maszyną stanów - przerwana sesja wraca od ostatniego zielonego etapu.',
     svgAria:
-      'Schemat działania /10x-implement: szyna faz, w której każda faza przechodzi przez kryteria automatyczne, bramę ręcznej weryfikacji i commit z SHA wpisywanym do sekcji Progress; na końcu commit epilogowy zamyka plan',
+      'Schemat działania /10x-implement: szyna etapów, w której każdy etap przechodzi przez kryteria automatyczne, bramę ręcznej weryfikacji i commit z SHA wpisywanym do sekcji Progress; na końcu commit epilogowy zamyka plan',
     svg: {
-      phase1: 'FAZA 1',
+      phase1: 'ETAP 1',
       start: 'START',
       crit1: 'KRYTERIA',
       crit2: 'AUTOMATYCZNE',
@@ -103,14 +103,14 @@ export const SKILL_IMPLEMENT: Record<Lang, SkillImplementDict> = {
       gateSub2: 'POTWIERDZA',
       commit: 'COMMIT',
       commitSub: 'SHA → PROGRESS',
-      phase2: 'FAZA 2',
+      phase2: 'ETAP 2',
       next: 'DALEJ',
       commit2: 'COMMIT',
       epilog: 'EPILOG',
       epilogSub: 'IMPLEMENTED',
       resume: 'PRZERWANA SESJA WRACA OD PIERWSZEGO NIEODHACZONEGO WIERSZA PROGRESS',
     },
-    mapCap: '/10X-IMPLEMENT // KAŻDA FAZA TO PUNKT POWROTU',
+    mapCap: '/10X-IMPLEMENT // KAŻDY ETAP TO PUNKT POWROTU',
     routeAria: 'Sekcje strony',
     route: ['Po co', 'Wejście → wyjście', 'Mechanizm', 'Anatomia Progress', 'Granice'],
     poco: {
@@ -120,29 +120,29 @@ export const SKILL_IMPLEMENT: Record<Lang, SkillImplementDict> = {
       epigraph: '„Pół drogi ciągu, obrót, pół drogi hamowania - i korekty po drodze."',
       epigraphCite: '- profil lotu, który da się przerwać w każdym punkcie',
       p1Html:
-        'Zmiana realizowana jednym ciągiem nie ma miejsc, w których można ją bezpiecznie przerwać, zweryfikować albo cofnąć. <em>/10x-implement</em> tnie wykonanie na fazy z planu: faza kończy się dopiero, gdy jej kryteria sukcesu są zielone, człowiek potwierdził testy ręczne, a zmiana siedzi w commicie z SHA wpisanym do Progress.',
+        'Zmiana realizowana jednym ciągiem nie ma miejsc, w których można ją bezpiecznie przerwać, zweryfikować albo cofnąć. <em>/10x-implement</em> tnie wykonanie na etapy z planu: etap kończy się dopiero, gdy jego kryteria sukcesu są zielone, człowiek potwierdził testy ręczne, a zmiana siedzi w commicie z SHA wpisanym do Progress.',
       p2Html:
         'Filozofia: <strong>podążaj za intencją planu, adaptując się do zastanego kodu</strong>. Plany są projektowane starannie, ale rzeczywistość bywa nieuporządkowana - przy rozjeździe skill zatrzymuje się i przedstawia problem (oczekiwane / zastane / dlaczego to istotne), zamiast improwizować po cichu.',
       targetK: 'CEL:',
       targetHtml:
-        'kluczowy przy długiej lub przerywanej pracy - <b>każda faza to punkt powrotu</b>: commit plus zielone kryteria zamiast jednego wielkiego diffa na koniec.',
+        'kluczowy przy długiej lub przerywanej pracy - <b>każdy etap to punkt powrotu</b>: commit plus zielone kryteria zamiast jednego wielkiego diffa na koniec.',
     },
     io: {
       num: 'WEJŚCIE → WYJŚCIE',
-      h2: 'Z zatwierdzonego planu do commitów per faza',
+      h2: 'Z zatwierdzonego planu do commitów per etap',
       p1Html:
-        'Wejściem jest <strong>plan.md</strong> z folderu zmiany, opcjonalnie z numerem fazy (<em>/10x-implement oauth-login phase 2</em>). Skill czyta plan w całości, wszystkie pliki, do których plan się odwołuje, oraz <em>lessons.md</em> - zaakceptowane reguły zespołu kształtują każdą decyzję implementacyjną w tym przebiegu.',
+        'Wejściem jest <strong>plan.md</strong> z folderu zmiany, opcjonalnie z numerem etapu (<em>/10x-implement oauth-login phase 2</em>). Skill czyta plan w całości, wszystkie pliki, do których plan się odwołuje, oraz <em>lessons.md</em> - zaakceptowane reguły zespołu kształtują każdą decyzję implementacyjną w tym przebiegu.',
       p2Html:
-        'Wyjściem jest seria <strong>commitów w konwencji Conventional Commits</strong> - po jednym na fazę, w formie <em>typ(change-id): tytuł fazy (pN)</em> - oraz odhaczona sekcja Progress, w której każdy domknięty wiersz nosi skrócony SHA zamykającego commita.',
+        'Wyjściem jest seria <strong>commitów w konwencji Conventional Commits</strong> - po jednym na etap, w formie <em>typ(change-id): tytuł etapu (pN)</em> - oraz odhaczona sekcja Progress, w której każdy domknięty wiersz nosi skrócony SHA zamykającego commita.',
       rows: [
-        { dt: 'Wejście', ddHtml: '<b>plan.md</b> (change-id lub ścieżka) + opcjonalny numer fazy' },
-        { dt: 'Wyjście', ddHtml: '<b>commit per faza</b> (Conventional Commits) + Progress z SHA przy każdym wierszu' },
-        { dt: 'Status', ddHtml: 'change.md: <b>implementing</b> na wejściu, <b>implemented</b> po ostatniej fazie i epilogu' },
+        { dt: 'Wejście', ddHtml: '<b>plan.md</b> (change-id lub ścieżka) + opcjonalny numer etapu' },
+        { dt: 'Wyjście', ddHtml: '<b>commit per etap</b> (Conventional Commits) + Progress z SHA przy każdym wierszu' },
+        { dt: 'Status', ddHtml: 'change.md: <b>implementing</b> na wejściu, <b>implemented</b> po ostatnim etapie i epilogu' },
       ],
     },
     mech: {
       num: 'MECHANIZM',
-      h2: 'Rytuał końca fazy - sekwencja, nie sugestia',
+      h2: 'Rytuał końca etapu - sekwencja, nie sugestia',
       rows: [
         {
           dt: '01 · Start',
@@ -152,7 +152,7 @@ export const SKILL_IMPLEMENT: Record<Lang, SkillImplementDict> = {
         {
           dt: '02 · Implementacja',
           ddHtml:
-            'faza realizowana w całości przed następną; każdy edytowany plik trafia do <b>zbioru plików dotkniętych</b> - kanonicznego wejścia do stagingu, nadrzędnego wobec heurystyk z git status.',
+            'etap realizowany w całości przed następnym; każdy edytowany plik trafia do <b>zbioru plików dotkniętych</b> - kanonicznego wejścia do stagingu, nadrzędnego wobec heurystyk z git status.',
         },
         {
           dt: '03 · Weryfikacja',
@@ -162,7 +162,7 @@ export const SKILL_IMPLEMENT: Record<Lang, SkillImplementDict> = {
         {
           dt: '04 · Brama ręczna',
           ddHtml:
-            'skill wypisuje testy ręczne z planu i <b>czeka na potwierdzenie człowieka</b>; przy ostatniej fazie dokłada zbiorczą listę zaległych pozycji ręcznych z faz wcześniejszych.',
+            'skill wypisuje testy ręczne z planu i <b>czeka na potwierdzenie człowieka</b>; przy ostatnim etapie dokłada zbiorczą listę zaległych pozycji ręcznych z etapów wcześniejszych.',
         },
         {
           dt: '05 · Commit',
@@ -172,12 +172,12 @@ export const SKILL_IMPLEMENT: Record<Lang, SkillImplementDict> = {
         {
           dt: '06 · SHA i dalej',
           ddHtml:
-            'skrócony SHA wraca do każdego wiersza fazy w Progress; potem decyzja: kontynuuj, wyczyść kontekst (komenda wznowienia w schowku) albo review fazy przez /10x-impl-review.',
+            'skrócony SHA wraca do każdego wiersza etapu w Progress; potem decyzja: kontynuuj, wyczyść kontekst (komenda wznowienia w schowku) albo review etapu przez /10x-impl-review.',
         },
         {
           dt: '07 · Epilog',
           ddHtml:
-            'po ostatniej fazie zamykający commit epilogowy domyka SHA ostatniej fazy i status implemented - bez niego archiwizacja zatrzyma się na zmianach bez commita.',
+            'po ostatnim etapie zamykający commit epilogowy domyka SHA ostatniego etapu i status implemented - bez niego archiwizacja zatrzyma się na zmianach bez commita.',
         },
       ],
       targetK: 'ZASADA:',
@@ -188,26 +188,26 @@ export const SKILL_IMPLEMENT: Record<Lang, SkillImplementDict> = {
       num: 'ANATOMIA',
       h2: 'Progress - maszyna stanów bez plików stanu',
       p1Html:
-        'Sekcja <strong>Progress</strong> na dole plan.md to jedyne źródło prawdy o wykonaniu: żadnego JSON-a obok, żadnych markerów w komentarzach, żadnego pliku pomocniczego. Stan nie jest przechowywany, tylko <strong>wyprowadzany</strong>: pierwszy nieodhaczony wiersz = następny krok; faza bieżąca = nagłówek nad nim; ukończenie = stosunek odhaczonych do wszystkich.',
+        'Sekcja <strong>Progress</strong> na dole plan.md to jedyne źródło prawdy o wykonaniu: żadnego JSON-a obok, żadnych markerów w komentarzach, żadnego pliku pomocniczego. Stan nie jest przechowywany, tylko <strong>wyprowadzany</strong>: pierwszy nieodhaczony wiersz = następny krok; etap bieżący = nagłówek nad nim; ukończenie = stosunek odhaczonych do wszystkich.',
       p2Html:
-        'Skill mutuje <strong>wyłącznie Progress</strong> - bloki faz (Overview, Changes Required, Success Criteria) są tylko do odczytu. W środku fazy odhaczone wiersze bez SHA to poprawny stan pośredni; SHA dopisuje się zbiorczo na końcu fazy, po zamykającym commicie.',
+        'Skill mutuje <strong>wyłącznie Progress</strong> - bloki etapów (Overview, Changes Required, Success Criteria) są tylko do odczytu. W środku etapu odhaczone wiersze bez SHA to poprawny stan pośredni; SHA dopisuje się zbiorczo na końcu etapu, po zamykającym commicie.',
       rows: [
         {
           dt: 'Wiersz',
-          ddHtml: 'checkbox + indeks <b>N.M</b> + tytuł kryterium; po domknięciu fazy dochodzi skrócony SHA commita',
+          ddHtml: 'checkbox + indeks <b>N.M</b> + tytuł kryterium; po domknięciu etapu dochodzi skrócony SHA commita',
         },
         {
           dt: 'Podział',
-          ddHtml: 'podsekcje <b>Automated</b> (komendy, testy, typy) i <b>Manual</b> (człowiek patrzy na wynik) per faza',
+          ddHtml: 'podsekcje <b>Automated</b> (komendy, testy, typy) i <b>Manual</b> (człowiek patrzy na wynik) per etap',
         },
         {
           dt: 'Indeksy',
-          ddHtml: '1-based, unikalne w fazie, <b>nigdy nie przenumerowywane</b>; usunięte kroki zostawiają luki',
+          ddHtml: '1-based, unikalne w etapie, <b>nigdy nie przenumerowywane</b>; usunięte kroki zostawiają luki',
         },
         {
-          dt: 'Fazy bez diffa',
+          dt: 'Etapy bez diffa',
           ddHtml:
-            'faza czysto ręczna nie tworzy commita i zostaje bez SHA - /10x-archive zgłosi to jako ostrzeżenie informacyjne, nie błąd',
+            'etap czysto ręczny nie tworzy commita i zostaje bez SHA - /10x-archive zgłosi to jako ostrzeżenie informacyjne, nie błąd',
         },
       ],
       targetK: '„GDZIE JESTEM?":',
@@ -232,7 +232,7 @@ export const SKILL_IMPLEMENT: Record<Lang, SkillImplementDict> = {
         },
         {
           dt: 'Nie edytuje planu',
-          ddHtml: 'bloki faz są read-only; mutacji podlega wyłącznie sekcja Progress i change.md.',
+          ddHtml: 'bloki etapów są read-only; mutacji podlega wyłącznie sekcja Progress i change.md.',
         },
         { dt: 'Nie wykonuje archiwum', ddHtml: 'plan w context/archive/ = odmowa i wskazanie /10x-new.' },
       ],

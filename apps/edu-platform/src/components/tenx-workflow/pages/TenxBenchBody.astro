@@ -1,0 +1,149 @@
+---
+/**
+ * Strona 10xBench (slug 10xbench, kontekst publiczny). Co to jest (benchmark
+ * jednego strzalu na realnej stronie), jak testujemy modele, jak dziala
+ * punktacja i co znajdziesz na 10xbench.ai. Adresy z config (TENX_BENCH);
+ * tresc w i18n/tenxbench.ts.
+ *
+ * hud-top, xnav, footer i wspolny CSS renderuje TenxCosmicLayout; tutaj markup
+ * + scoped CSS (przycisk CTA do leaderboardu).
+ */
+import type { Lang } from '../i18n';
+import { TENX_BENCH_TEXT } from '../i18n/tenxbench';
+import { TENX_BENCH } from '../config';
+import { pageHref } from '../pages';
+
+interface Props {
+  base: string;
+  lang?: Lang;
+}
+
+const { base, lang = 'pl' } = Astro.props;
+const t = TENX_BENCH_TEXT[lang];
+---
+
+<style is:global>
+/* Reguly specyficzne dla strony (diff vs CSS wspolny w TenxCosmicLayout) */
+header h1 .glow{color:#ff4f6e;text-shadow:0 0 24px rgba(255,79,110,.4)}
+
+/* przycisk CTA (otworz leaderboard) */
+.tb-cta{display:inline-flex;align-items:center;gap:9px;margin-top:24px;padding:13px 22px;
+  border:1px solid var(--acc);color:var(--acc);font-family:var(--disp);font-weight:700;font-size:.82rem;
+  letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
+  background:color-mix(in srgb,var(--acc) 10%,transparent);transition:background .15s,color .15s,box-shadow .15s}
+.tb-cta:hover,.tb-cta:focus-visible{background:var(--acc);color:var(--bg);
+  box-shadow:0 0 26px color-mix(in srgb,var(--acc) 42%,transparent);outline:none}
+.tb-cta .ico{width:13px;height:13px}
+</style>
+
+<header>
+  <p class="eyebrow" style="--acc:#ff4f6e"><span class="ico ico-chart" aria-hidden="true"></span>{t.eyebrow}</p>
+  <h1 set:html={t.h1Html} />
+  <p class="sub" set:html={t.subHtml} />
+  <nav class="route" aria-label={t.routeAria}>
+    <a href="#co-to" style="--hov:#ff4f6e">{t.route[0]}</a>
+    <a href="#jak" style="--hov:#a78bfa">{t.route[1]}</a>
+    <a href="#punktacja" style="--hov:#3ddad0">{t.route[2]}</a>
+    <a href="#co-znajdziesz">{t.route[3]}</a>
+  </nav>
+</header>
+
+<!-- ============ 01 CO TO JEST ============ -->
+<section class="sector" id="co-to" style="--acc:#ff4f6e">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.what.num}</span>
+      <span class="sec-uni"><span class="ico ico-radar" aria-hidden="true"></span>{t.what.kicker}</span>
+    </div>
+    <h2>{t.what.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.what.leadHtml} /></div>
+  <div class="rv">
+    <dl class="mech">
+      {t.what.rows.map((r) => (
+        <div><dt><span class="ico ico-star" aria-hidden="true"></span>{r.dt}</dt><dd class="v" style="margin:0" set:html={r.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<!-- ============ 02 JAK TESTUJEMY ============ -->
+<section class="sector" id="jak" style="--acc:#a78bfa">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.how.num}</span>
+      <span class="sec-uni"><span class="ico ico-cube" aria-hidden="true"></span>{t.how.kicker}</span>
+    </div>
+    <h2>{t.how.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.how.leadHtml} /></div>
+  <div class="rv">
+    <dl class="mech">
+      {t.how.rows.map((r) => (
+        <div><dt><span class="ico ico-check" aria-hidden="true"></span>{r.dt}</dt><dd class="v" style="margin:0" set:html={r.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<!-- ============ 03 PUNKTACJA ============ -->
+<section class="sector" id="punktacja" style="--acc:#3ddad0">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.score.num}</span>
+      <span class="sec-uni"><span class="ico ico-gauge" aria-hidden="true"></span>{t.score.kicker}</span>
+    </div>
+    <h2>{t.score.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.score.leadHtml} /></div>
+  <div class="rv">
+    <dl class="mech">
+      {t.score.rows.map((r) => (
+        <div><dt><span class="ico ico-gauge" aria-hidden="true"></span>{r.dt}</dt><dd class="v" style="margin:0" set:html={r.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<!-- ============ 04 CO ZNAJDZIESZ ============ -->
+<section class="sector" id="co-znajdziesz" style="--acc:#ffd166">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.find.num}</span>
+      <span class="sec-uni"><span class="ico ico-trophy" aria-hidden="true"></span>{t.find.kicker}</span>
+    </div>
+    <h2>{t.find.h2}</h2>
+  </div>
+  <div class="solo rv"><p class="lead" set:html={t.find.leadHtml} /></div>
+  <div class="rv">
+    <dl class="mech">
+      {t.find.rows.map((r) => (
+        <div><dt><span class="ico ico-chart" aria-hidden="true"></span>{r.dt}</dt><dd class="v" style="margin:0" set:html={r.ddHtml} /></div>
+      ))}
+    </dl>
+  </div>
+  <div class="rv">
+    <a class="tb-cta" href={TENX_BENCH.site} target="_blank" rel="noopener" style="--acc:#ff4f6e"><span class="ico ico-fast" aria-hidden="true"></span>{t.next.ctaLabel} →</a>
+  </div>
+</section>
+
+<!-- ============ DALEJ ============ -->
+<section class="sector" id="dalej" style="--acc:#ff4f6e">
+  <div class="rv">
+    <div class="sec-head">
+      <span class="sec-num">{t.next.num}</span>
+      <span class="sec-uni"><span class="ico ico-star" aria-hidden="true"></span>{t.next.kicker}</span>
+    </div>
+    <h2>{t.next.h2}</h2>
+  </div>
+  <div class="solo rv">
+    <div class="tx">
+      <span class="mono"><span class="ico ico-link" aria-hidden="true"></span>Skróty</span>
+      <dl class="mech">
+        <div><dt><span class="ico ico-chart" aria-hidden="true"></span>Benchmark</dt><dd class="v" style="margin:0"><a href={TENX_BENCH.site} target="_blank" rel="noopener" style="color:var(--acc)">{t.next.siteLabel}</a>{t.next.siteRest}</dd></div>
+        <div><dt><span class="ico ico-cli" aria-hidden="true"></span>Repo</dt><dd class="v" style="margin:0"><a href={TENX_BENCH.repo} target="_blank" rel="noopener" style="color:var(--acc)">{t.next.repoLabel}</a>{t.next.repoRest}</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Kurs</dt><dd class="v" style="margin:0"><a href={pageHref(base, 'jak-dziala-kurs', lang)} style="color:var(--acc)">{t.next.kursLink}</a>{t.next.kursRest}</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>

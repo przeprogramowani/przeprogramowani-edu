@@ -100,18 +100,24 @@ Each moon corresponds to a course module and a major topic in AI-Assisted Softwa
 
 ## Current Implementation Snapshot
 
-Based on manifests currently loaded in `src/explorers/levels/index.ts`, the game includes exactly four playable maps:
+Based on manifests currently loaded in `src/explorers/levels/index.ts`, the game includes nine playable maps:
 - `m0-awakening`
 - `m0-crew-room`
 - `m0-exam-room`
 - `m0-core-ai`
+- `m1-prework`
+- `m1-echo-depths`
+- `m1-shaft-control`
+- `m1-profile-vault`
+- `m1-uplink-bay`
 
 Implemented progression content in this set:
-- **2 quests:** `q-pass-exams` (event quest), `q-earth-signal` (api-answer quest).
+- **7 quests:** the two Milestone 0 quests plus five Moon 1 API-answer quests covering PRD audit, EchoTrace, controller policy, Moreau onboarding, and the Earth uplink.
 - **3 exams:** LLM basics, prompting, tokenization.
 - **Chapter closure for Milestone 0:** Earth HQ signal confirmation (`m0-earth-signal-complete`) with `/badges` unlock.
+- **Moon 1 closure:** CORE AI basic sensors restored, Synaptit located, and the HQ channel marked suspect.
 
-Everything beyond this (moon arcs and endgame) remains narrative planning.
+Moons 2–5 and the endgame remain narrative planning.
 
 ---
 
@@ -184,7 +190,7 @@ The tutorial/onboarding arc across four maps. The player wakes up, finds equipme
 
 **Unlocks:** `/navi`, `/support`, `/badges`, HQ support handoff (`q-earth-signal` complete).
 
-**Transition:** Back to Exam Room. Milestone 0 is completed after Earth signal confirmation; next chapter content is announced as "coming soon".
+**Transition:** Back to Exam Room, or forward through the gated east door to `m1-prework` after the Earth signal and Module 1 release flag are active.
 
 ---
 
@@ -215,17 +221,27 @@ The tutorial/onboarding arc across four maps. The player wakes up, finds equipme
 
 ## Milestone 1 — The Five Moons
 
-The astronaut has established HQ contact and completed the Earth-signal handoff, but moon gameplay is not yet implemented in level manifests. This milestone remains a narrative placeholder for the first moon arc.
+The astronaut establishes HQ contact, completes the Earth-signal handoff, and receives access to the first jungle extraction site through the gated east door in CORE AI.
 
 **Narrative goal:** Transition from tutorial to the main game loop. The `/navi` command shows the schedule. The `/support` command provides the real-world entry point (GitHub repo + token).
 
-**Status:** Not started in manifests (`src/explorers/levels/index.ts` currently contains only Milestone 0 maps).
+**Status:** Implemented as the bridge from `m0-core-ai` into `m1-prework`.
 
 ---
 
 ## Milestones 2–6 — The Five Moons
 
 Each moon is a self-contained arc with its own maps, quests, exams, and narrative beats. The astronaut travels to each moon, explores its environment, and completes challenges that teach a specific aspect of Agentic Engineering / AI-Assisted Software Development. The Navigator (player) cooperates from Earth via the SmartTerminal.
+
+### Moon 1 implemented map arc
+
+1. `m1-prework` — audit the corrupted Synaptit operation PRD.
+2. `m1-echo-depths` — build EchoTrace and map three inaccessible cavities.
+3. `m1-shaft-control` — secure the existing VOID bootloader with a minimal policy; discover the signature beacon.
+4. `m1-profile-vault` — onboard and wake Moreau; discover the Harris recall code.
+5. `m1-uplink-bay` — choose an operable transmission route, preserve human authorization, restore CORE AI sensors, and uncover the suspect HQ signature.
+
+The five tasks form a linear transfer-learning arc. Each completion unlocks the next room and adds a persistent inspection command: `/scan`, `/policy`, `/crew`, then `/intel`, `/uplink`, and `/sensors` at Moon 1 completion.
 
 **Structure per moon:**
 - Ship departure sequence (brief)
@@ -238,7 +254,7 @@ Each moon is a self-contained arc with its own maps, quests, exams, and narrativ
 
 | Milestone | Moon | Topic | CORE AI Subsystem | Status |
 |-----------|------|-------|-------------------|--------|
-| 2 | Moon 1 | Agentic Environment | Basic sensors | Not started |
+| 2 | Moon 1 | Agentic Environment | Basic sensors | Implemented |
 | 3 | Moon 2 | 10xDevs Workflow | Planning module | Not started |
 | 4 | Moon 3 | AI Quality & Maintenance | Self-diagnostics | Not started |
 | 5 | Moon 4 | Large Scale & Legacy | Long-term memory banks | Not started |

@@ -96,3 +96,17 @@ export const TENX_CLI = {
    */
   skillCmd: (name: string) => `10x get <lekcja> --type skills --name ${name}`,
 } as const;
+
+/**
+ * 10xBench - benchmark Przeprogramowani (repo przeprogramowani/10x-bench),
+ * ktory pokazuje, jak wiodace modele LLM radza sobie z jednym podejsciem
+ * do zbudowania prawdziwej strony produkcyjnej (Astro + React + Tailwind +
+ * Cloudflare). Adresy w jednym miejscu, zeby strona narzedzia i kaflik
+ * ekosystemu czytaly to samo zrodlo.
+ */
+export const TENX_BENCH = {
+  /** Publiczny leaderboard z wynikami, zrzutami ekranu i wygenerowanym kodem. */
+  site: 'https://www.10xbench.ai/',
+  /** Repozytorium benchmarku (prompt, kryteria, wyniki). */
+  repo: 'https://github.com/przeprogramowani/10x-bench',
+} as const;

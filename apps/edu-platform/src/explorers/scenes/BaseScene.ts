@@ -10,6 +10,8 @@ const STATE_REGISTRY_KEY = 'demoGameState';
 export abstract class BaseScene extends Phaser.Scene {
   /** Cached Set view of flags for O(1) lookups */
   private _flagsSet: Set<GameFlag> | null = null;
+  /** Flags array used to build the cached Set. External state merges replace this reference. */
+  private _flagsSource: GameFlag[] | null = null;
 
   /**
    * Phaser invokes init() on every scene start, before create(). At this point
@@ -43,8 +45,10 @@ export abstract class BaseScene extends Phaser.Scene {
 
   /** Get a Set view of current flags (cached, rebuilt on change) */
   get flagsSet(): Set<GameFlag> {
-    if (!this._flagsSet) {
-      this._flagsSet = new Set(this.gameState.flags);
+    const currentFlags = this.gameState.flags;
+    if (!this._flagsSet || this._flagsSource !== currentFlags) {
+      this._flagsSet = new Set(currentFlags);
+      this._flagsSource = currentFlags;
     }
     return this._flagsSet;
   }
@@ -56,13 +60,14 @@ export abstract class BaseScene extends Phaser.Scene {
     const next = { ...prev, ...patch };
     this.registry.set(STATE_REGISTRY_KEY, next);
     // Invalidate flags cache if flags changed
-    if (patch.flags) this._flagsSet = null;
+    if (patch.flags) this.invalidateFlagsCache();
     this.bus.emit(GameEvents.STATE_CHANGED, { state: next });
   }
 
   /** Invalidate the cached flags Set (call when flags change externally) */
   invalidateFlagsCache(): void {
     this._flagsSet = null;
+    this._flagsSource = null;
   }
 
   /** Cached Set view of system flags (read-only, set once at boot) */
@@ -79,7 +84,7 @@ export abstract class BaseScene extends Phaser.Scene {
   /** Set a flag (no-op if already set). Delegates to centralized flagManager. */
   setFlag(flag: GameFlag): boolean {
     if (setFlagCentral(this.game, flag)) {
-      this._flagsSet = null;
+      this.invalidateFlagsCache();
       return true;
     }
     return false;

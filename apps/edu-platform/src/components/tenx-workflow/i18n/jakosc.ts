@@ -193,7 +193,7 @@ export const JAKOSC: Record<Lang, JakoscDict> = {
       leadNeutralHtml:
         'Plan testów zaczyna od mapy tego, co zabija projekt, a nie od listy plików: mapuje ryzyka na osi <strong>wpływ × prawdopodobieństwo</strong>, a każde ryzyko opisuje jako awarię u usera - „koszyk gubi pozycje przy odświeżeniu", nie „brak testów w cart.ts".',
       leadHtml:
-        'Wejście: działający produkt i PRD. Wyjście: <strong>context/foundation/test-plan.md</strong> - mapa ryzyk pocięta na fazy rolloutu, od najgroźniejszych scenariuszy w dół. Mechanizm: <em>/10x-test-plan</em> orkiestruje dowiezienie testów, nie pisze ich sam - każdą fazę prowadzi przez łańcuch (research → plan → implement), a ponowne uruchomienie wznawia od następnej fazy zamiast zaczynać od zera.',
+        'Wejście: działający produkt i PRD. Wyjście: <strong>context/foundation/test-plan.md</strong> - mapa ryzyk pocięta na etapy rolloutu, od najgroźniejszych scenariuszy w dół. Mechanizm: <em>/10x-test-plan</em> orkiestruje dowiezienie testów, nie pisze ich sam - każdy etap prowadzi przez łańcuch (research → plan → implement), a ponowne uruchomienie wznawia od następnego etapu zamiast zaczynać od zera.',
       mechQ: 'co zabija projekt najpierw?',
       mechG: 'najgroźniejsze scenariusze chronione najpierw',
       mechAHtml: '<b>test-plan.md</b> w context/foundation/',
@@ -256,9 +256,9 @@ export const JAKOSC: Record<Lang, JakoscDict> = {
       leadNeutralHtml:
         'Obrona jakości jest <strong>uporządkowana według kosztu</strong>: per-edit (lint i typecheck sekundy po zapisie) → pre-commit → pre-push. Im później błąd zostanie wykryty, tym droższa jest jego naprawa.',
       leadHtml:
-        'Wejście: reguły jakości projektu - lint, typecheck, szybkie testy. Wyjście: <strong>hooki zapięte na zdarzenia</strong> - per-edit, pre-commit i pre-push, każdy z własnym budżetem czasu. Mechanizm: <em>self-checking pipeline</em> - dryf jest wykrywany sekundy po powstaniu, w tle, bez udziału człowieka; do końca fazy dolatuje już tylko to, czego żadna warstwa nie mogła złapać wcześniej.',
+        'Wejście: reguły jakości projektu - lint, typecheck, szybkie testy. Wyjście: <strong>hooki zapięte na zdarzenia</strong> - per-edit, pre-commit i pre-push, każdy z własnym budżetem czasu. Mechanizm: <em>self-checking pipeline</em> - dryf jest wykrywany sekundy po powstaniu, w tle, bez udziału człowieka; do końca etapu dolatuje już tylko to, czego żadna warstwa nie mogła złapać wcześniej.',
       mechQ: 'co łapie błąd, zanim go zobaczysz?',
-      mechG: 'dryf wykryty sekundy po powstaniu, nie na końcu fazy',
+      mechG: 'dryf wykryty sekundy po powstaniu, nie na końcu etapu',
       mechAHtml: '<b>hooki per-edit / pre-commit / pre-push</b> w repo',
       mechTHtml: '<b>hooki</b> (PostToolUse, pre-commit, pre-push), lint, typecheck',
       lessonLabel: 'M3·L3: Hooki i triggery',
@@ -340,15 +340,15 @@ export const JAKOSC: Record<Lang, JakoscDict> = {
     dd1: [
       {
         label: 'Po co',
-        body: '<p>Orkiestrator, nie autor testów: pisze <code>context/foundation/test-plan.md</code> jako fazową strategię rolloutu i prowadzi każdą fazę przez łańcuch: nowa zmiana → research → plan → implement. Ponowne uruchomienie odczytuje stan z dysku i wznawia od pierwszej niedomkniętej fazy.</p>',
+        body: '<p>Orkiestrator, nie autor testów: pisze <code>context/foundation/test-plan.md</code> jako etapową strategię rolloutu i prowadzi każdy etap przez łańcuch: nowa zmiana → research → plan → implement. Ponowne uruchomienie odczytuje stan z dysku i wznawia od pierwszego niedomkniętego etapu.</p>',
       },
       {
         label: 'Wejście → wyjście',
-        body: '<p>Wejście: PRD, roadmapa, archiwum zmian, skan hot-spotów z historii gita (ostatnie 30 dni) i wywiad z użytkownikiem - pięć pytań o realne obawy, wcześniejsze wpadki i miejsca zmieniane bez pewności. Wyjście: mapa ryzyk <b>wpływ × prawdopodobieństwo</b> pocięta na fazy rolloutu ze statusami.</p>',
+        body: '<p>Wejście: PRD, roadmapa, archiwum zmian, skan hot-spotów z historii gita (ostatnie 30 dni) i wywiad z użytkownikiem - pięć pytań o realne obawy, wcześniejsze wpadki i miejsca zmieniane bez pewności. Wyjście: mapa ryzyk <b>wpływ × prawdopodobieństwo</b> pocięta na etapy rolloutu ze statusami.</p>',
       },
       {
         label: 'Dowody, nie kotwice',
-        body: '<p>Każde ryzyko cytuje dowód: linię PRD, odpowiedź z wywiadu, katalog o wysokim churnie. Nigdy <code>plik:linia</code> - kotwice w kodzie znajduje dopiero research w ramach konkretnej fazy, na aktualnym kodzie. Ryzyko to scenariusz awarii u usera, nie lokalizacja w repo.</p>',
+        body: '<p>Każde ryzyko cytuje dowód: linię PRD, odpowiedź z wywiadu, katalog o wysokim churnie. Nigdy <code>plik:linia</code> - kotwice w kodzie znajduje dopiero research w ramach konkretnego etapu, na aktualnym kodzie. Ryzyko to scenariusz awarii u usera, nie lokalizacja w repo.</p>',
       },
       {
         label: 'Koszt × sygnał',
@@ -360,17 +360,17 @@ export const JAKOSC: Record<Lang, JakoscDict> = {
       },
       {
         label: 'Granice',
-        body: '<p>Nie pisze kodu testów, nie konfiguruje hooków ani CI - to robota faz rolloutu. Nie wymyśla ryzyk: każde musi się wywodzić z PRD, roadmapy, archiwum, hot-spotów albo wywiadu. Jeden test do jednego pliku to teren <b>/10x-tdd</b>, nie rollout.</p>',
+        body: '<p>Nie pisze kodu testów, nie konfiguruje hooków ani CI - to robota etapów rolloutu. Nie wymyśla ryzyk: każde musi się wywodzić z PRD, roadmapy, archiwum, hot-spotów albo wywiadu. Jeden test do jednego pliku to teren <b>/10x-tdd</b>, nie rollout.</p>',
       },
     ],
     dd2: [
       {
         label: 'Po co',
-        body: '<p>Test-first brat <b>/10x-implement</b>: prowadzi fazy zatwierdzonego planu przez pętlę <b>czerwony → zielony → refactor</b>. Padający test powstaje przed kodem produkcyjnym - wyrocznia fizycznie nie może zostać spisana z implementacji, bo tej jeszcze nie ma.</p>',
+        body: '<p>Test-first brat <b>/10x-implement</b>: prowadzi etapy zatwierdzonego planu przez pętlę <b>czerwony → zielony → refactor</b>. Padający test powstaje przed kodem produkcyjnym - wyrocznia fizycznie nie może zostać spisana z implementacji, bo tej jeszcze nie ma.</p>',
       },
       {
         label: 'Bramka wejścia',
-        body: '<p>Przed każdą fazą dwa pytania: czy implementacja jeszcze <b>nie istnieje</b> i czy fazę da się poprowadzić padającym testem. Istniejący kod - stop i przekierowanie do <b>/10x-implement</b>, bo testy dopisane po fakcie to nie TDD. Scaffolding, config, infra, szlif wizualny - też przekierowanie: tam padający test niczego nie prowadzi.</p>',
+        body: '<p>Przed każdym etapem dwa pytania: czy implementacja jeszcze <b>nie istnieje</b> i czy etap da się poprowadzić padającym testem. Istniejący kod - stop i przekierowanie do <b>/10x-implement</b>, bo testy dopisane po fakcie to nie TDD. Scaffolding, config, infra, szlif wizualny - też przekierowanie: tam padający test niczego nie prowadzi.</p>',
       },
       {
         label: 'RED',
@@ -378,7 +378,7 @@ export const JAKOSC: Record<Lang, JakoscDict> = {
       },
       {
         label: 'GREEN i REFACTOR',
-        body: '<p>Najmniejszy kod produkcyjny, który gasi czerwień - bez budowania na zapas, przyszłe zachowania dostaną własny krok RED. Potem porządki przy zielonym teście: nazwy, duplikacja, typy - bez zmiany zachowania. Budżet: <b>2-5 testów na fazę</b>, te, które łapią realne regresje; nie test na getter.</p>',
+        body: '<p>Najmniejszy kod produkcyjny, który gasi czerwień - bez budowania na zapas, przyszłe zachowania dostaną własny krok RED. Potem porządki przy zielonym teście: nazwy, duplikacja, typy - bez zmiany zachowania. Budżet: <b>2-5 testów na etap</b>, te, które łapią realne regresje; nie test na getter.</p>',
       },
       {
         label: 'Antywzorce',
@@ -388,7 +388,7 @@ export const JAKOSC: Record<Lang, JakoscDict> = {
     dd4: [
       {
         label: 'Po co',
-        body: '<p>Prowadzi fazy planu wymagające przeglądarki <b>jedno ryzyko na raz</b> przez pętlę plan → generate → review → verify. Agent wygeneruje przechodzący test E2E w sekundy; trudne jest to, żeby test chronił realne ryzyko i przeżył jutrzejszy refactor - i właśnie tę pracę wykonuje ta pętla.</p>',
+        body: '<p>Prowadzi etapy planu wymagające przeglądarki <b>jedno ryzyko na raz</b> przez pętlę plan → generate → review → verify. Agent wygeneruje przechodzący test E2E w sekundy; trudne jest to, żeby test chronił realne ryzyko i przeżył jutrzejszy refactor - i właśnie tę pracę wykonuje ta pętla.</p>',
       },
       {
         label: 'Bramka wejścia',
@@ -408,7 +408,7 @@ export const JAKOSC: Record<Lang, JakoscDict> = {
       },
       {
         label: 'Verify',
-        body: '<p>Zielony wynik to za mało. Pytanie kontrolne: czy test spadnie, gdy ryzyko z planu naprawdę się zmaterializuje? Dowodem jest <b>deliberate break</b>: celowe zepsucie chronionego zachowania i potwierdzona czerwień, potem natychmiastowy powrót do stanu sprzed zepsucia. Budżet: jeden test na ryzyko, rzadko więcej niż 1-3 na fazę.</p>',
+        body: '<p>Zielony wynik to za mało. Pytanie kontrolne: czy test spadnie, gdy ryzyko z planu naprawdę się zmaterializuje? Dowodem jest <b>deliberate break</b>: celowe zepsucie chronionego zachowania i potwierdzona czerwień, potem natychmiastowy powrót do stanu sprzed zepsucia. Budżet: jeden test na ryzyko, rzadko więcej niż 1-3 na etap.</p>',
       },
     ],
     next: {

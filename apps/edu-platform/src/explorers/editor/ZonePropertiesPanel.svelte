@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { ZoneObject, TiledProperty } from './types';
-  import { TILE_SIZE } from '../config/constants';
+  import { NPC_COLOR_VARIANTS, TILE_SIZE } from '../config/constants';
 
   const ZONE_SIZE_OPTIONS = [1, 2, 3].map((n) => ({
     value: TILE_SIZE * n,
@@ -119,6 +119,7 @@
           <option value="npc">npc</option>
           <option value="exam">exam</option>
           <option value="arcade">arcade</option>
+          <option value="navigation">navigation</option>
         </select>
       </label>
 
@@ -269,7 +270,25 @@
           >
             <option value="scientist">scientist</option>
             <option value="alien">alien</option>
-            <option value="philosopher">philosopher</option>
+            <option value="robot">robot</option>
+            <option value="orb">orb</option>
+          </select>
+        </label>
+        <label class="flex flex-col gap-0.5">
+          <span class="text-xs text-gray-500">npcVariant</span>
+          <select
+            value={getProp('npcVariant')}
+            onchange={(e) => {
+              const value = (e.target as HTMLSelectElement).value;
+              if (value) setProp('npcVariant', value);
+              else if (zone) onUpdate({ ...zone, properties: zone.properties.filter(p => p.name !== 'npcVariant') });
+            }}
+            class="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-200 focus:border-blue-500 focus:outline-none"
+          >
+            <option value="">default</option>
+            {#each Object.keys(NPC_COLOR_VARIANTS) as variant}
+              <option value={variant}>{variant}</option>
+            {/each}
           </select>
         </label>
       {/if}

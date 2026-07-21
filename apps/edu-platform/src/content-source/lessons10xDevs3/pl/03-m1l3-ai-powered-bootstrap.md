@@ -1,6 +1,6 @@
 ---
 title: "AI-Powered Bootstrap: boilerplate i bezpieczna praca z Agentem"
-titleEn: "AI-Powered Bootstrap: boilerplate i secure coding with AI Agent"
+titleEn: "AI-Powered Bootstrap: boilerplate and secure coding with the Agent"
 lessonId: "03"
 language: "pl"
 order: 3

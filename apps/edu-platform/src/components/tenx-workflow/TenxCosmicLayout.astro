@@ -209,7 +209,7 @@ const paletteJson = JSON.stringify(paletteItems).replace(/</g, '\\u003c');
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{docTitle}</title>
-    {/* noindex do launchu misji EN (faza 4) - polprzetlumaczony portal nie indeksuje sie. */}
+    {/* noindex do launchu misji EN (etap 4) - polprzetlumaczony portal nie indeksuje sie. */}
     {lang === 'en' && <meta name="robots" content="noindex" />}
     {hasEnVersion && <link rel="alternate" hreflang="pl" href={new URL(pageHref(base, enSlug, 'pl'), Astro.url).href} />}
     {hasEnVersion && <link rel="alternate" hreflang="en" href={new URL(pageHref(base, enSlug, 'en'), Astro.url).href} />}

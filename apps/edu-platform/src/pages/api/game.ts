@@ -29,6 +29,7 @@ export const GET: APIRoute = async () => {
         introFlag: manifest.introFlag ?? null,
         introCinematicTitle: manifest.introCinematicTitle,
         introCinematicSubtitle: manifest.introCinematicSubtitle,
+        conditionalIntros: manifest.conditionalIntros ?? [],
       };
     }
 

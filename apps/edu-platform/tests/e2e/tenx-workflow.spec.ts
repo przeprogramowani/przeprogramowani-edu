@@ -86,6 +86,7 @@ test.describe('10x Workflow pages', () => {
       '/10xdevs-4/jak-dziala-kurs',
       '/10xdevs-4/certyfikacja',
       '/10xdevs-4/10x-cli',
+      '/10xdevs-4/10xbench',
       '/10xdevs-4/faq',
       '/10xdevs-4/skill/10x-new',
     ]) {
@@ -104,6 +105,19 @@ test.describe('10x Workflow pages', () => {
     }
     // FAQ jest jednostronicowa - jej kafel linkuje wprost do strony faq.
     await expect(page.locator('#skrot .sum-card[href$="/10xdevs-4/faq"]')).toBeVisible();
+
+    // Wyroznione skroty-perelki (5 pojedynczych stron) nad kaflami kategorii.
+    for (const slug of ['top5', 'csc', '10x-cli', 'space-explorers', 'jak-dziala-kurs']) {
+      await expect(
+        page.locator(`#skrot .flag-card[href$="/10xdevs-4/${slug}"]`)
+      ).toBeVisible();
+    }
+    expect(await page.locator('#skrot .flag-card').count()).toBe(5);
+
+    // Diagram nawigacyjny w Hero (desktop) ma 10 kafli: 5 kategorii + 5 perełek.
+    expect(await page.locator('svg.chain-d a').count()).toBe(10);
+    await expect(page.locator('svg.chain-d a[href$="/10xdevs-4/kurs"]')).toBeAttached();
+    await expect(page.locator('svg.chain-d a[href$="/10xdevs-4/space-explorers"]')).toBeAttached();
 
     // Strona kategorii Moduly: indeks kart podstron (fundament..skalowanie).
     await page.goto('/10xdevs-4/moduly');

@@ -1,0 +1,98 @@
+# M2 L4 — The Assembly Hall (Hala Montażowa)
+# Linear fabricator line the player walks along: two offset wall blocks force
+# the serpentine past the stations and checkpoint gates; line-archive side room
+# south, control console at the east end.
+theme: 3
+grid: |
+  ##############################
+  #........##..................#
+  #........##..................#
+  D........##..................D
+  D..................##........D
+  #..................##........#
+  #..................##........#
+  ###############.##############
+  ~~~~~~~~~~~~~##.###~~~~~~~~~~~
+  ~~~~~~~~~~~~~#....#~~~~~~~~~~~
+  ~~~~~~~~~~~~~#....#~~~~~~~~~~~
+  ~~~~~~~~~~~~~######~~~~~~~~~~~
+props:
+  - { id: fabricator-1, prop: expedition-tent, at: [3, 1], solid: true }
+  - { id: fabricator-2, prop: expedition-tent, at: [6, 1], solid: true }
+  - { id: fabricator-3, prop: expedition-tent, at: [13, 1], solid: true }
+  - { id: fabricator-4, prop: expedition-tent, at: [17, 1], solid: true }
+  - { id: control-console, prop: ice-crystals, at: [26, 1], solid: true }
+  - { id: cp-gate-1, prop: energy-barrier, at: [12, 4], solid: true }
+  - { id: line-tracks, prop: yeti-footsteps, at: [16, 4], solid: false }
+  - { id: frozen-runner, prop: snowman, at: [8, 5], solid: true }
+  - { id: cp-gate-2, prop: energy-barrier, at: [22, 5], solid: true }
+  - { id: cert-terminal, prop: ice-crystals, at: [26, 6], solid: true }
+  - { id: archive-terminal, prop: scout-drone, at: [14, 9], solid: true }
+zones:
+  - id: door-to-drafting
+    name: Return to the Drafting Hall
+    type: door
+    at: [0, 3]
+    size: [1, 2]
+    properties:
+      targetMap: m2-drafting-hall
+      spawnX: 24
+      spawnY: 7
+  - id: fabricator-line
+    name: Fabricator Line Station
+    type: trigger
+    propId: fabricator-1
+  - id: fabricator-line-2
+    name: Fabricator Line Station (Drifted)
+    type: trigger
+    propId: fabricator-3
+  - id: checkpoint-gate-1
+    name: Checkpoint Gate CP-3
+    type: trigger
+    propId: cp-gate-1
+  - id: checkpoint-gate-2
+    name: Checkpoint Gate CP-4
+    type: trigger
+    propId: cp-gate-2
+  - id: line-archive
+    name: Line Archive Terminal
+    type: trigger
+    propId: archive-terminal
+  - id: control-console
+    name: Line Control Console
+    type: trigger
+    propId: control-console
+  - id: frozen-runner
+    name: Frozen Runner Unit
+    type: trigger
+    propId: frozen-runner
+  - id: exam-impl-control
+    name: VOID Certification Terminal
+    type: exam
+    propId: cert-terminal
+    properties:
+      examId: m2-exam-impl-control
+  - id: foreman-f6
+    name: Foreman F-6
+    type: npc
+    at: [13, 5]
+    properties:
+      npcType: robot
+      npcVariant: hologram-blue
+  - id: controller-cp5
+    name: Controller CP-5
+    type: npc
+    at: [23, 3]
+    properties:
+      npcType: robot
+      npcVariant: hologram-blue
+  - id: planning-core-door
+    name: Route to the Planning Core
+    type: door
+    at: [29, 3]
+    size: [1, 2]
+    properties:
+      targetMap: m2-planning-core
+      spawnX: 1
+      spawnY: 7
+      requiredFlags: m2-impl-control-done

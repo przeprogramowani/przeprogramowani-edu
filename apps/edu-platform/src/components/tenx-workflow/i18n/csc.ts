@@ -69,13 +69,14 @@ interface CscDict {
     plan: ChainNode;
     implement: ChainNode;
     review: ChainNode;
+    archive: ChainNode;
   };
   mapCapPre: string;
   mapCapSf: string;
   mapCapNeutral: string;
   mapCapPost: string;
   routeAria: string;
-  route: [string, string, string, string, string, string, string];
+  route: [string, string, string, string, string, string, string, string];
   sum: {
     eyebrowPre: string;
     eyebrowSf: string;
@@ -98,6 +99,7 @@ interface CscDict {
   k3: CscStep;
   k4: CscStep;
   k5: CscStep;
+  k6: CscStep;
   /** Sekcja "W praktyce": lancuch na roznych ksztaltach pracy + kiedy siegac po dodatki. */
   app: {
     numSf: string;
@@ -131,15 +133,15 @@ export const CSC: Record<Lang, CscDict> = {
   pl: {
     eyebrow: 'MODUŁ 2 // CORE SKILLS CHAIN',
     h1Pre: 'Jedna jednostka pracy, ',
-    h1Sf: 'pięć skoków',
-    h1Neutral: 'pięć kroków',
-    subPreHtml: 'Rdzeń <strong>10x Workflow</strong>: pięć ',
+    h1Sf: 'sześć skoków',
+    h1Neutral: 'sześć kroków',
+    subPreHtml: 'Rdzeń <strong>10x Workflow</strong>: sześć ',
     subSf: 'skoków',
     subNeutral: 'kroków',
     subPostHtml:
-      ' jednej jednostki pracy - od wyznaczenia zakresu po weryfikację. <strong>new → research → plan → implement → review</strong>, a każdy krok zostawia artefakt na dysku.',
+      ' jednej jednostki pracy - od wyznaczenia zakresu po domknięcie. <strong>new → research → plan → implement → review → archive</strong>, a każdy krok zostawia artefakt na dysku. Ten sam łańcuch obsługuje <strong>~90% codziennych zadań</strong> - nie tylko nowe feature’y.',
     svgAria:
-      'Diagram Core Skills Chain: pięć kroków - new, research, plan, implement, review - połączonych strzałkami; jednostka pracy przepływa przez cały łańcuch',
+      'Diagram Core Skills Chain: sześć kroków - new, research, plan, implement, review, archive - połączonych strzałkami; jednostka pracy przepływa przez cały łańcuch',
     nodes: {
       new: {
         aria: 'Krok 01: new - jedna jednostka pracy; jasny, odwracalny zakres',
@@ -176,15 +178,22 @@ export const CSC: Record<Lang, CscDict> = {
         klbl: 'REVIEW',
         annBottom: ['analiza subagentów:', 'plan vs kod'],
       },
+      archive: {
+        aria: 'Krok 06: archive - domknięcie zmiany; lekcje do foundation, folder do archiwum',
+        annTop: ['domknięcie zmiany'],
+        knum: 'KROK 06',
+        klbl: 'ARCHIVE',
+        annBottom: ['lekcje + archiwum'],
+      },
     },
     mapCapPre: 'ŁAŃCUCH CSC // KLIKNIJ KROK, BY ',
     mapCapSf: 'DOLECIEĆ',
     mapCapNeutral: 'PRZEJŚĆ',
     mapCapPost: ' DO SEKCJI',
     routeAria: 'Kroki łańcucha',
-    route: ['01 · new', '02 · research', '03 · plan', '04 · implement', '05 · review', 'W praktyce', 'Fundament i skalowanie'],
+    route: ['01 · new', '02 · research', '03 · plan', '04 · implement', '05 · review', '06 · archive', 'W praktyce', 'Fundament i skalowanie'],
     sum: {
-      eyebrowPre: 'Skrót łańcucha · pięć ',
+      eyebrowPre: 'Skrót łańcucha · sześć ',
       eyebrowSf: 'skoków',
       eyebrowNeutral: 'kroków',
       eyebrowPost: ' w 30 sekund',
@@ -194,6 +203,7 @@ export const CSC: Record<Lang, CscDict> = {
         { num: 'KROK 03', h3: 'plan', p: 'Kluczowe decyzje deva przed kodem: etapy + warunki sukcesu.' },
         { num: 'KROK 04', h3: 'implement', p: 'Etap po etapie: commitowane, weryfikowalne kroki.' },
         { num: 'KROK 05', h3: 'review', p: 'Czy implementacja realizuje plan? Subagenci: plan vs kod.' },
+        { num: 'KROK 06', h3: 'archive', p: 'Domknięcie zmiany: lekcje do foundation, folder do archiwum.' },
       ],
       finis:
         '„Zacznij od 10xDevs Workflow™ Core Skills Chain (CSC). Dodatki dokładaj, gdy rośnie ryzyko i/lub złożoność."',
@@ -300,17 +310,17 @@ export const CSC: Record<Lang, CscDict> = {
       epigraphSf: '„Trasa jest znana, zanim ktokolwiek postawi pierwszy krok."',
       epigraphCiteSf: '- zasada pielgrzymki do Grobowców Czasu',
       figAria: 'Schemat trasy: droga z trzema etapami, każdy z odhaczonym warunkiem sukcesu, prowadzi do celu',
-      fig: ['FAZA 1', 'FAZA 2', 'CEL', 'TRASA USTALONA PRZED WYJŚCIEM', 'KAŻDY ETAP: WARUNKI SUKCESU'],
+      fig: ['ETAP 1', 'ETAP 2', 'CEL', 'TRASA USTALONA PRZED WYJŚCIEM', 'KAŻDY ETAP: WARUNKI SUKCESU'],
       figcaption: 'RYS. 03 // TRASA Z ETAPAMI I WARUNKAMI SUKCESU',
       leadSfHtml:
         'Pielgrzymi w „Hyperionie" znają trasę i zasady, zanim wyruszą - improwizuje się w drodze, nie na mapie. Ten krok usuwa ból implementacji „na żywioł", w której <strong>kluczowe decyzje deva</strong> zapadają mimochodem, w środku pisania kodu. <em>10x-plan</em> wyciąga je przed kod, gdzie są tanie do zmiany.',
       leadNeutralHtml:
         'Ten krok usuwa ból implementacji „na żywioł", w której <strong>kluczowe decyzje deva</strong> zapadają mimochodem, w środku pisania kodu. <em>10x-plan</em> wyciąga je przed kod, gdzie są tanie do zmiany.',
       lead3Html:
-        'Wejście: research.md. Wyjście: <strong>plan.md</strong> - fazy z warunkami sukcesu (automatyczne i ręczne) plus sekcja Progress. Mechanizm: plan powstaje w iteracjach z człowiekiem - czytasz go i kwestionujesz, dopóki jest tekstem; zatwierdzony staje się kontraktem, a Progress <em>maszyną stanów</em> dla następnego kroku.',
+        'Wejście: research.md. Wyjście: <strong>plan.md</strong> - etapy z warunkami sukcesu (automatyczne i ręczne) plus sekcja Progress. Mechanizm: plan powstaje w iteracjach z człowiekiem - czytasz go i kwestionujesz, dopóki jest tekstem; zatwierdzony staje się kontraktem, a Progress <em>maszyną stanów</em> dla następnego kroku.',
       mechQ: 'kluczowe decyzje deva',
       mechG: 'etapy + warunki sukcesu',
-      mechArtHtml: '<b>plan.md</b> - fazy + sekcja Progress',
+      mechArtHtml: '<b>plan.md</b> - etapy + sekcja Progress',
       skillLink: '/10x-plan - pełna strona skilla',
       targetHtml:
         'kluczowy, gdy zmiana dotyka wielu plików albo niesie decyzje trudne do cofnięcia (schemat danych, publiczne API) - <b>decyzje mają zapaść przed kodem</b>, nie w jego trakcie.',
@@ -321,15 +331,15 @@ export const CSC: Record<Lang, CscDict> = {
         },
         {
           label: 'WEJŚCIE → WYJŚCIE',
-          body: '<p>Wejście: opis zadania plus artefakty z wcześniejszych kroków - <code>research.md</code> i/lub <code>frame.md</code>. Każdy dostarczony artefakt zmniejsza liczbę pytań: nie pyta się o to, co użytkownik już zapisał. Wyjście: <code>plan.md</code> (fazy z kryteriami sukcesu i sekcją Progress) plus <code>plan-brief.md</code> - dwustronicowy skrót z tabelą kluczowych decyzji.</p>',
+          body: '<p>Wejście: opis zadania plus artefakty z wcześniejszych kroków - <code>research.md</code> i/lub <code>frame.md</code>. Każdy dostarczony artefakt zmniejsza liczbę pytań: nie pyta się o to, co użytkownik już zapisał. Wyjście: <code>plan.md</code> (etapy z kryteriami sukcesu i sekcją Progress) plus <code>plan-brief.md</code> - dwustronicowy skrót z tabelą kluczowych decyzji.</p>',
         },
         {
           label: 'MECHANIZM',
-          body: '<p>Najpierw ocena złożoności potwierdzana z użytkownikiem (LOW: 4-6 pytań, MEDIUM: 7-10, HIGH: 11-15), potem pytania w rundach - każda opcja z rekomendacją oraz analizą zalet i kosztów. Szkielet faz jest zatwierdzany, zanim powstaną szczegóły.</p>',
+          body: '<p>Najpierw ocena złożoności potwierdzana z użytkownikiem (LOW: 4-6 pytań, MEDIUM: 7-10, HIGH: 11-15), potem pytania w rundach - każda opcja z rekomendacją oraz analizą zalet i kosztów. Szkielet etapów jest zatwierdzany, zanim powstaną szczegóły.</p>',
         },
         {
           label: 'ANATOMIA PLANU',
-          body: '<p>Overview, stan bieżący, stan docelowy, „czego NIE robimy" (tama na pełzanie zakresu), fazy z kryteriami podzielonymi na <b>weryfikację automatyczną</b> (komendy) i <b>ręczną</b> (człowiek). Na dole sekcja Progress - jedyne miejsce checkboxów i maszyna stanów dla <code>/10x-implement</code>.</p>',
+          body: '<p>Overview, stan bieżący, stan docelowy, „czego NIE robimy" (tama na pełzanie zakresu), etapy z kryteriami podzielonymi na <b>weryfikację automatyczną</b> (komendy) i <b>ręczną</b> (człowiek). Na dole sekcja Progress - jedyne miejsce checkboxów i maszyna stanów dla <code>/10x-implement</code>.</p>',
         },
         {
           label: 'ANTYWZORCE',
@@ -358,15 +368,15 @@ export const CSC: Record<Lang, CscDict> = {
       leadSfHtml:
         'Rocinante nie leci do celu jednym odpaleniem silnika: pół drogi ciągu, obrót, pół drogi hamowania - i korekty kursu po drodze. Ten krok usuwa ból jednej wielkiej zmiany bez punktów kontrolnych, której nie da się ani przerwać, ani cofnąć. <em>10x-implement</em> realizuje plan <strong>etap po etapie</strong>.',
       leadNeutralHtml:
-        'Ten krok usuwa ból jednej wielkiej zmiany bez punktów kontrolnych, której nie da się ani przerwać, ani cofnąć. <em>10x-implement</em> realizuje plan <strong>etap po etapie</strong>: każda faza kończy się weryfikacją i commitem.',
+        'Ten krok usuwa ból jednej wielkiej zmiany bez punktów kontrolnych, której nie da się ani przerwać, ani cofnąć. <em>10x-implement</em> realizuje plan <strong>etap po etapie</strong>: każdy etap kończy się weryfikacją i commitem.',
       lead3Html:
-        'Wejście: zatwierdzony plan.md. Wyjście: <strong>commity per faza</strong> i odhaczona sekcja Progress. Mechanizm: <em>Progress jako maszyna stanów</em> - faza kończy się dopiero, gdy jej warunki sukcesu są zielone i zmiana jest zacommitowana; przerwana sesja wraca od ostatniego zielonego etapu, nie od zera.',
+        'Wejście: zatwierdzony plan.md. Wyjście: <strong>commity per etap</strong> i odhaczona sekcja Progress. Mechanizm: <em>Progress jako maszyna stanów</em> - etap kończy się dopiero, gdy jego warunki sukcesu są zielone i zmiana jest zacommitowana; przerwana sesja wraca od ostatniego zielonego etapu, nie od zera.',
       mechQ: 'implementacja etap po etapie',
       mechG: 'commitowane, weryfikowalne kroki',
-      mechArtHtml: '<b>commity per faza</b> + odhaczone Progress',
+      mechArtHtml: '<b>commity per etap</b> + odhaczone Progress',
       skillLink: '/10x-implement - pełna strona skilla',
       targetHtml:
-        'kluczowy przy długiej lub przerywanej pracy - <b>każda faza to punkt powrotu</b>: commit plus zielone warunki sukcesu zamiast jednego wielkiego diffa na koniec.',
+        'kluczowy przy długiej lub przerywanej pracy - <b>każdy etap to punkt powrotu</b>: commit plus zielone warunki sukcesu zamiast jednego wielkiego diffa na koniec.',
       dd: [
         {
           label: 'PO CO',
@@ -374,15 +384,15 @@ export const CSC: Record<Lang, CscDict> = {
         },
         {
           label: 'WEJŚCIE → WYJŚCIE',
-          body: '<p>Wejście: <code>context/changes/&lt;change-id&gt;/plan.md</code>, opcjonalnie numer fazy. Wyjście: commit per faza w konwencji Conventional Commits plus odhaczona sekcja Progress, w której każdy wiersz fazy dostaje dopisany skrócony SHA zamykającego commita.</p>',
+          body: '<p>Wejście: <code>context/changes/&lt;change-id&gt;/plan.md</code>, opcjonalnie numer etapu. Wyjście: commit per etap w konwencji Conventional Commits plus odhaczona sekcja Progress, w której każdy wiersz etapu dostaje dopisany skrócony SHA zamykającego commita.</p>',
         },
         {
           label: 'MASZYNA STANÓW',
-          body: '<p>Sekcja Progress w <code>plan.md</code> to jedyne źródło prawdy - żadnych plików stanu obok. Pierwszy niezaznaczony wiersz wyznacza miejsce startu - po przerwie nie zgadujesz, co już zrobione. Skill modyfikuje wyłącznie Progress; bloki faz są tylko do odczytu.</p>',
+          body: '<p>Sekcja Progress w <code>plan.md</code> to jedyne źródło prawdy - żadnych plików stanu obok. Pierwszy niezaznaczony wiersz wyznacza miejsce startu - po przerwie nie zgadujesz, co już zrobione. Skill modyfikuje wyłącznie Progress; bloki etapów są tylko do odczytu.</p>',
         },
         {
-          label: 'RYTUAŁ KOŃCA FAZY',
-          body: '<p>Automatyczne kryteria przechodzą → brama ręcznej weryfikacji (człowiek potwierdza testy) → staging jawnie po ścieżkach z zestawu plików dotkniętych w fazie (nigdy <code>git add -A</code>) → zatwierdzenie komunikatu commita → SHA wpisany z powrotem do Progress.</p>',
+          label: 'RYTUAŁ KOŃCA ETAPU',
+          body: '<p>Automatyczne kryteria przechodzą → brama ręcznej weryfikacji (człowiek potwierdza testy) → staging jawnie po ścieżkach z zestawu plików dotkniętych w etapie (nigdy <code>git add -A</code>) → zatwierdzenie komunikatu commita → SHA wpisany z powrotem do Progress.</p>',
         },
         {
           label: 'GRANICE',
@@ -415,7 +425,7 @@ export const CSC: Record<Lang, CscDict> = {
       dd: [
         {
           label: 'PO CO',
-          body: '<p>Porównać rzeczywistą implementację z planem, zanim dryf, niebezpieczne decyzje i łamanie konwencji zdążą się skumulować. Dwa zakresy: szybki review pojedynczej fazy albo pełny przegląd całego planu przed merge.</p>',
+          body: '<p>Porównać rzeczywistą implementację z planem, zanim dryf, niebezpieczne decyzje i łamanie konwencji zdążą się skumulować. Dwa zakresy: szybki review pojedynczego etapu albo pełny przegląd całego planu przed merge.</p>',
         },
         {
           label: 'WEJŚCIE → WYJŚCIE',
@@ -435,24 +445,69 @@ export const CSC: Record<Lang, CscDict> = {
         },
       ],
     },
+    k6: {
+      num: 'KROK 06',
+      uniSub: 'Encyklopedia',
+      h2: 'archive - domknięcie zmiany',
+      epigraphSf: '„Zapisane przetrwa upadek; reszta zostaje legendą."',
+      epigraphCiteSf: '- zasada Encyklopedii Galaktycznej, Fundacja',
+      figAria:
+        'Schemat archiwizacji: ukończony folder zmiany przechodzi kontrolę kompletności, lekcje trafiają do foundation, a folder ląduje w archiwum',
+      fig: ['CHANGES/<ID>', 'KONTROLA: KOMPLETNOŚĆ', 'LESSONS.MD', 'ARCHIVE/', 'CHANGES: TYLKO W TOKU'],
+      figcaption: 'RYS. 06 // ZMIANA DOMKNIĘTA - LEKCJE ZOSTAJĄ, FOLDER DO ARCHIWUM',
+      leadSfHtml:
+        'Fundacja przetrwała upadek Imperium nie siłą, lecz dlatego, że zawczasu spisała i zabezpieczyła wiedzę, zanim ta zdążyła zniknąć. Ten krok robi to samo ze skończoną zmianą: zamiast zostawić <code>changes/</code> zapchane starą pracą, <em>10x-archive</em> <strong>domyka jednostkę pracy</strong> - sprawdza, że jest naprawdę skończona, wyciąga z niej lekcje i odkłada folder do archiwum.',
+      leadNeutralHtml:
+        'Bez domknięcia katalog <code>changes/</code> zapycha się starą pracą i nie widać już, co jest w toku. <em>10x-archive</em> <strong>domyka jednostkę pracy</strong>: sprawdza, że jest naprawdę skończona, wyciąga z niej lekcje i odkłada folder do archiwum.',
+      lead3Html:
+        'Wejście: ukończona zmiana - plan.md z odhaczonym Progress i commitami. Wyjście: <strong>lekcje w context/foundation/lessons.md</strong> plus folder przeniesiony do <code>context/archive/</code>. Mechanizm: <em>kontrola kompletności</em> - każdy etap powinien mieć commit (SHA); etap czysto ręczny bez commita to <strong>ostrzeżenie informacyjne</strong>, nie błąd, a stan zostaje jawnie zamknięty.',
+      mechQ: 'domknięcie zmiany',
+      mechG: 'kompletność + wyciągnięte lekcje',
+      mechArtHtml: '<b>lessons.md</b> + folder w context/archive/',
+      skillLink: '/10x-archive - pełna strona skilla',
+      targetHtml:
+        'kluczowy po review i merge - <b>zamyka pętlę</b>: wiedza z tej zmiany zostaje w foundation, a folder trafia do archiwum, żeby <code>changes/</code> pokazywało tylko pracę w toku.',
+      dd: [
+        {
+          label: 'PO CO',
+          body: '<p>Domknąć skończoną jednostkę pracy: potwierdzić, że jest kompletna, przenieść wiedzę do trwałego kontekstu projektu i zwolnić <code>changes/</code>. „Skończone" ma znaczyć skończone - z zapisem, nie z pamięci.</p>',
+        },
+        {
+          label: 'WEJŚCIE → WYJŚCIE',
+          body: '<p>Wejście: folder zmiany <code>context/changes/&lt;change-id&gt;/</code> po review. Wyjście: dopisane lekcje w <code>context/foundation/lessons.md</code> i folder przeniesiony do <code>context/archive/</code> - z zachowaniem pełnej historii (change, research, plan, reviews).</p>',
+        },
+        {
+          label: 'KONTROLA KOMPLETNOŚCI',
+          body: '<p>Przed archiwizacją skill sprawdza spójność stanu: każdy etap w Progress powinien mieć commit (skrócony SHA). Etap czysto ręczny nie tworzy commita i zostaje bez SHA - to <b>ostrzeżenie informacyjne</b>, nie błąd, ale jawnie odnotowane, żeby „domknięte" nie znaczyło „po cichu pominięte".</p>',
+        },
+        {
+          label: 'LEKCJE',
+          body: '<p>To, czego nauczyła Cię ta zmiana - powtarzalne pułapki, decyzje warte zapamiętania - ląduje w <code>context/foundation/lessons.md</code>, wspólnym dla całego projektu. Następne zmiany startują z tej wiedzy, zamiast wynajdywać ją od nowa.</p>',
+        },
+        {
+          label: 'GRANICE',
+          body: '<p>Nie zmienia kodu ani planu - operuje na już zamkniętej pracy. Archiwum to zapis historyczny: nic nie czyta z niego rutynowo, ale wszystko tam jest, gdyby trzeba było wrócić do kontekstu starej zmiany.</p>',
+        },
+      ],
+    },
     app: {
       numSf: 'MANEWRY',
       numNeutral: 'W PRAKTYCE',
       uniSf: 'Łańcuch w locie · Różne kształty pracy, jeden tor',
-      h2: 'W praktyce: jeden łańcuch, każda robota',
-      aMono: 'ZASTOSOWANIE // ~90% ROBOTY, NIE TYLKO NOWE FEATURE',
+      h2: 'W praktyce: jeden łańcuch, każde zadanie',
+      aMono: 'ZASTOSOWANIE // ~90% ZADAŃ, NIE TYLKO NOWE FEATURE',
       aLeadHtml:
         'CSC to nie rytuał od nowych feature’ów - to domyślna pętla dla większości codziennej pracy. Skalujesz ją w dół przy drobnicy i w górę przy ryzyku; rzadko ją porzucasz. <b>Ten sam łańcuch, różne kształty pracy:</b>',
       aRows: [
         {
           dt: 'bugfix',
           ddHtml:
-            '<b>new → research → plan → implement → review</b> - research krótki, plan to minimalny fix plus test regresji chroniący go przed nawrotem.',
+            '<b>new → research → plan → implement → review → archive</b> - research krótki, plan to minimalny fix plus test regresji chroniący go przed nawrotem.',
         },
         {
           dt: 'refaktor',
           ddHtml:
-            '<b>research → plan → implement → review</b> - research mapuje wszystkie call-site’y, review pilnuje, że zachowanie nie dryfnęło.',
+            '<b>research → plan → implement → review → archive</b> - research mapuje wszystkie call-site’y, review pilnuje, że zachowanie nie dryfnęło.',
         },
         {
           dt: 'śledztwo / spike',
@@ -462,7 +517,7 @@ export const CSC: Record<Lang, CscDict> = {
         {
           dt: 'mała zmiana',
           ddHtml:
-            '<b>new → plan → implement</b> - research pomijasz, gdy już wiesz, gdzie leży zmiana; przy zmianie w jednym pliku idziesz wprost do planu.',
+            '<b>new → plan → implement</b> - research pomijasz tylko, gdy naprawdę znasz kod i zmiana jest przewidywalna; sama liczba plików to za mało - przy niepewności research zostaje, nawet dla jednego pliku.',
         },
       ],
       bMono: 'DODATKI // GDY SYTUACJA TEGO WYMAGA',
@@ -475,7 +530,7 @@ export const CSC: Record<Lang, CscDict> = {
         },
         {
           dt: '/10x-tdd',
-          ddHtml: 'ryzyko chronisz testem, który realnie pada na zepsutym kodzie - fazy test-first zamiast /10x-implement.',
+          ddHtml: 'ryzyko chronisz testem, który realnie pada na zepsutym kodzie - etapy test-first zamiast /10x-implement.',
         },
         {
           dt: '/10x-e2e',
@@ -483,11 +538,11 @@ export const CSC: Record<Lang, CscDict> = {
         },
         {
           dt: '/10x-goal-implement',
-          ddHtml: 'przebiegi nienadzorowane i headless - plan wykonuje się bez człowieka między fazami.',
+          ddHtml: 'przebiegi nienadzorowane i headless - plan wykonuje się bez człowieka między etapami.',
         },
         {
           dt: '/10x-test-plan',
-          ddHtml: 'wdrażasz testy w istniejącym produkcie - fazowy rollout brownfield przez łańcuch CSC.',
+          ddHtml: 'wdrażasz testy w istniejącym produkcie - etapowy rollout brownfield przez łańcuch CSC.',
         },
         {
           dt: '/10x-impl-review-ci',
@@ -512,8 +567,8 @@ export const CSC: Record<Lang, CscDict> = {
       bLeadHtml:
         'Łańcuch się nie zmienia - dokładasz mu obstawę. Trzy dodatki podnoszą rygor i autonomię, kiedy stawka rośnie.',
       bRows: [
-        { dt: 'quality gates', ddHtml: 'automatyczne bramki jakości domykają każdą fazę' },
-        { dt: 'goal', ddHtml: 'autonomiczne przejście planu, bez człowieka między fazami' },
+        { dt: 'quality gates', ddHtml: 'automatyczne bramki jakości domykają każdy etap' },
+        { dt: 'goal', ddHtml: 'autonomiczne przejście planu, bez człowieka między etapami' },
         { dt: 'loops', ddHtml: 'powtarzalne przebiegi łańcucha w rytmie, nie na żądanie' },
       ],
     },
@@ -521,15 +576,15 @@ export const CSC: Record<Lang, CscDict> = {
   en: {
     eyebrow: 'MODULE 2 // CORE SKILLS CHAIN',
     h1Pre: 'One unit of work, ',
-    h1Sf: 'five jumps',
-    h1Neutral: 'five steps',
-    subPreHtml: 'The core of <strong>10x Workflow</strong>: five ',
+    h1Sf: 'six jumps',
+    h1Neutral: 'six steps',
+    subPreHtml: 'The core of <strong>10x Workflow</strong>: six ',
     subSf: 'jumps',
     subNeutral: 'steps',
     subPostHtml:
-      ' of a single unit of work - from setting the scope to verification. <strong>new → research → plan → implement → review</strong>, and each step leaves an artifact on disk.',
+      ' of a single unit of work - from setting the scope to closing it out. <strong>new → research → plan → implement → review → archive</strong>, and each step leaves an artifact on disk. The same chain covers <strong>~90% of everyday tasks</strong> - not just new features.',
     svgAria:
-      'Core Skills Chain diagram: five steps - new, research, plan, implement, review - connected by arrows; a unit of work flows through the whole chain',
+      'Core Skills Chain diagram: six steps - new, research, plan, implement, review, archive - connected by arrows; a unit of work flows through the whole chain',
     nodes: {
       new: {
         aria: 'Step 01: new - one unit of work; a clear, reversible scope',
@@ -566,15 +621,22 @@ export const CSC: Record<Lang, CscDict> = {
         klbl: 'REVIEW',
         annBottom: ['subagent analysis:', 'plan vs code'],
       },
+      archive: {
+        aria: 'Step 06: archive - close out the change; lessons to foundation, folder to the archive',
+        annTop: ['close out the change'],
+        knum: 'STEP 06',
+        klbl: 'ARCHIVE',
+        annBottom: ['lessons + archive'],
+      },
     },
     mapCapPre: 'CSC CHAIN // CLICK A STEP TO ',
     mapCapSf: 'FLY',
     mapCapNeutral: 'JUMP',
     mapCapPost: ' TO ITS SECTION',
     routeAria: 'Chain steps',
-    route: ['01 · new', '02 · research', '03 · plan', '04 · implement', '05 · review', 'In practice', 'Foundation and scaling'],
+    route: ['01 · new', '02 · research', '03 · plan', '04 · implement', '05 · review', '06 · archive', 'In practice', 'Foundation and scaling'],
     sum: {
-      eyebrowPre: 'Chain summary · five ',
+      eyebrowPre: 'Chain summary · six ',
       eyebrowSf: 'jumps',
       eyebrowNeutral: 'steps',
       eyebrowPost: ' in 30 seconds',
@@ -584,6 +646,7 @@ export const CSC: Record<Lang, CscDict> = {
         { num: 'STEP 03', h3: 'plan', p: "The dev's key decisions before the code: phases + success criteria." },
         { num: 'STEP 04', h3: 'implement', p: 'Phase by phase: committed, verifiable steps.' },
         { num: 'STEP 05', h3: 'review', p: 'Does the implementation deliver the plan? Subagents: plan vs code.' },
+        { num: 'STEP 06', h3: 'archive', p: 'Close out the change: lessons to foundation, folder to the archive.' },
       ],
       finis:
         '"Start with the 10xDevs Workflow™ Core Skills Chain (CSC). Add the extras as risk and/or complexity grows."',
@@ -826,24 +889,69 @@ export const CSC: Record<Lang, CscDict> = {
         },
       ],
     },
+    k6: {
+      num: 'STEP 06',
+      uniSub: 'The Encyclopedia',
+      h2: 'archive - close out the change',
+      epigraphSf: '"What is written survives the fall; the rest becomes legend."',
+      epigraphCiteSf: '- a principle of the Encyclopedia Galactica, Foundation',
+      figAria:
+        'Archival diagram: a completed change folder passes a completeness check, the lessons go to foundation, and the folder lands in the archive',
+      fig: ['CHANGES/<ID>', 'CHECK: COMPLETENESS', 'LESSONS.MD', 'ARCHIVE/', 'CHANGES: WIP ONLY'],
+      figcaption: 'FIG. 06 // THE CHANGE CLOSED OUT - LESSONS STAY, FOLDER TO THE ARCHIVE',
+      leadSfHtml:
+        'The Foundation survived the fall of the Empire not by force, but because it wrote down and safeguarded knowledge in time, before it could vanish. This step does the same with a finished change: instead of leaving <code>changes/</code> clogged with old work, <em>10x-archive</em> <strong>closes out the unit of work</strong> - it checks that it is truly finished, pulls the lessons from it and files the folder in the archive.',
+      leadNeutralHtml:
+        'Without a close-out, the <code>changes/</code> directory clogs up with old work and you can no longer see what is in progress. <em>10x-archive</em> <strong>closes out the unit of work</strong>: it checks that it is truly finished, pulls the lessons from it and files the folder in the archive.',
+      lead3Html:
+        'Input: a finished change - plan.md with a checked-off Progress and commits. Output: <strong>lessons in context/foundation/lessons.md</strong> plus the folder moved to <code>context/archive/</code>. The mechanism: a <em>completeness check</em> - every phase should have a commit (SHA); a purely manual phase with no commit is an <strong>informational warning</strong>, not an error, and the state is explicitly closed.',
+      mechQ: 'closing out the change',
+      mechG: 'completeness + captured lessons',
+      mechArtHtml: '<b>lessons.md</b> + the folder in context/archive/',
+      skillLink: '/10x-archive - full skill page',
+      targetHtml:
+        'key after review and merge - it <b>closes the loop</b>: what this change taught you stays in foundation, and the folder moves to the archive so <code>changes/</code> shows only work in progress.',
+      dd: [
+        {
+          label: 'WHY',
+          body: '<p>Close out a finished unit of work: confirm it is complete, move the knowledge into the durable project context, and free up <code>changes/</code>. "Done" should mean done - on the record, not from memory.</p>',
+        },
+        {
+          label: 'INPUT → OUTPUT',
+          body: '<p>Input: the change folder <code>context/changes/&lt;change-id&gt;/</code> after review. Output: lessons appended to <code>context/foundation/lessons.md</code> and the folder moved to <code>context/archive/</code> - preserving the full history (change, research, plan, reviews).</p>',
+        },
+        {
+          label: 'COMPLETENESS CHECK',
+          body: '<p>Before archiving, the skill checks state consistency: every phase in Progress should have a commit (short SHA). A purely manual phase creates no commit and stays without a SHA - that is an <b>informational warning</b>, not an error, but it is recorded explicitly so "closed out" does not quietly mean "skipped".</p>',
+        },
+        {
+          label: 'LESSONS',
+          body: '<p>What this change taught you - recurring pitfalls, decisions worth remembering - lands in <code>context/foundation/lessons.md</code>, shared across the whole project. The next changes start from that knowledge instead of rediscovering it.</p>',
+        },
+        {
+          label: 'BOUNDARIES',
+          body: '<p>It does not change code or the plan - it operates on already-closed work. The archive is a historical record: nothing reads from it routinely, but it is all there if you ever need to return to the context of an old change.</p>',
+        },
+      ],
+    },
     app: {
       numSf: 'MANEUVERS',
       numNeutral: 'IN PRACTICE',
       uniSf: 'The chain in flight · Different shapes of work, one track',
-      h2: 'In practice: one chain, every kind of work',
-      aMono: 'USAGE // ~90% OF THE WORK, NOT JUST NEW FEATURES',
+      h2: 'In practice: one chain, every task',
+      aMono: 'USAGE // ~90% OF TASKS, NOT JUST NEW FEATURES',
       aLeadHtml:
         'CSC is not a ritual reserved for new features - it is the default loop for most everyday work. You scale it down for small stuff and up for risk; you rarely abandon it. <b>The same chain, different shapes of work:</b>',
       aRows: [
         {
           dt: 'bugfix',
           ddHtml:
-            '<b>new → research → plan → implement → review</b> - research is short, the plan is a minimal fix plus a regression test guarding against a relapse.',
+            '<b>new → research → plan → implement → review → archive</b> - research is short, the plan is a minimal fix plus a regression test guarding against a relapse.',
         },
         {
           dt: 'refactor',
           ddHtml:
-            '<b>research → plan → implement → review</b> - research maps every call site, review makes sure behavior did not drift.',
+            '<b>research → plan → implement → review → archive</b> - research maps every call site, review makes sure behavior did not drift.',
         },
         {
           dt: 'investigation / spike',
@@ -853,7 +961,7 @@ export const CSC: Record<Lang, CscDict> = {
         {
           dt: 'small change',
           ddHtml:
-            '<b>new → plan → implement</b> - you skip research when you already know where the change lives; for a one-file edit you go straight to the plan.',
+            '<b>new → plan → implement</b> - you skip research only when you truly know the code and the change is predictable; file count alone is not enough - when in doubt, research stays, even for a single file.',
         },
       ],
       bMono: 'ADD-ONS // WHEN THE SITUATION CALLS FOR IT',

@@ -48,6 +48,10 @@ export const GameEvents = {
   ARCADE_COMPLETED: 'arcade:completed',
   ARCADE_DISMISSED: 'arcade:dismissed',
 
+  // Ship navigation (moon travel console)
+  NAVIGATION_SHOW: 'navigation:show',
+  NAVIGATION_DISMISSED: 'navigation:dismissed',
+
   // Preview
   PREVIEW_SHOW: 'preview:show',
   PREVIEW_DISMISSED: 'preview:dismissed',

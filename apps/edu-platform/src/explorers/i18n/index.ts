@@ -6,6 +6,7 @@ import { arcadeStrings } from './arcade';
 import { terminalStrings } from './terminal';
 import { previewStrings } from './preview';
 import { grantStrings } from './grant';
+import { navigationStrings } from './navigation';
 
 export const STRINGS = {
   pl: {
@@ -16,6 +17,7 @@ export const STRINGS = {
     ...terminalStrings.pl,
     ...previewStrings.pl,
     ...grantStrings.pl,
+    ...navigationStrings.pl,
   },
   en: {
     ...hudStrings.en,
@@ -25,6 +27,7 @@ export const STRINGS = {
     ...terminalStrings.en,
     ...previewStrings.en,
     ...grantStrings.en,
+    ...navigationStrings.en,
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 
@@ -46,4 +49,4 @@ export function t(key: StringKey, params?: Record<string, string | number>): str
   });
 }
 
-export { hudStrings, sceneStrings, examStrings, arcadeStrings, terminalStrings, previewStrings, grantStrings };
+export { hudStrings, sceneStrings, examStrings, arcadeStrings, terminalStrings, previewStrings, grantStrings, navigationStrings };

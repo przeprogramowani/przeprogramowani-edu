@@ -8,9 +8,16 @@ export const sceneStrings = {
     'scene.interactionExam': '[E] Egzamin',
     'scene.interactionArcade': '[E] Zadanie',
     'scene.interactionNpc': '[E] Rozmawiaj',
+    'scene.interactionNavigation': '[E] Nawigacja',
     'scene.dialogueAdvanceHint': '[Spacja] dalej  ▸',
     'scene.speakerAstronaut': 'ASTRONAUTA',
     'scene.speakerSystem': 'SYSTEM',
+    'scene.debugNpcOriginal': '1 — ORYGINAŁ',
+    'scene.debugNpcBlueTint': '2 — NIEBIESKI TINT',
+    'scene.debugNpcGreenTint': '3 — ZIELONY TINT',
+    'scene.debugNpcMagentaTint': '4 — MAGENTA TINT',
+    'scene.debugNpcAdd': '5 — NIEBIESKI TINT + ADD',
+    'scene.debugNpcScreen': '6 — NIEBIESKI TINT + SCREEN',
 
     // End-screen panel
     'scene.endTitle': 'DEMO UKOŃCZONE',
@@ -32,9 +39,16 @@ export const sceneStrings = {
     'scene.interactionExam': '[E] Exam',
     'scene.interactionArcade': '[E] Mission',
     'scene.interactionNpc': '[E] Talk',
+    'scene.interactionNavigation': '[E] Navigate',
     'scene.dialogueAdvanceHint': '[Space] next  ▸',
     'scene.speakerAstronaut': 'ASTRONAUT',
     'scene.speakerSystem': 'SYSTEM',
+    'scene.debugNpcOriginal': '1 — ORIGINAL',
+    'scene.debugNpcBlueTint': '2 — BLUE TINT',
+    'scene.debugNpcGreenTint': '3 — GREEN TINT',
+    'scene.debugNpcMagentaTint': '4 — MAGENTA TINT',
+    'scene.debugNpcAdd': '5 — BLUE TINT + ADD',
+    'scene.debugNpcScreen': '6 — BLUE TINT + SCREEN',
 
     // End-screen panel
     'scene.endTitle': 'DEMO COMPLETE',

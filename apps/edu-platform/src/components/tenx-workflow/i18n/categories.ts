@@ -44,6 +44,7 @@ export const PAGE_META: Record<string, { accent: string; glyph: string }> = {
   // ekosystem
   '10x-cli': { accent: UNIVERSES.expanse.color, glyph: UNIVERSES.expanse.glyph },
   'space-explorers': { accent: UNIVERSES.diuna.color, glyph: UNIVERSES.diuna.glyph },
+  '10xbench': { accent: UNIVERSES.redrising.color, glyph: UNIVERSES.redrising.glyph },
   docs: { accent: UNIVERSES.lem.color, glyph: UNIVERSES.lem.glyph },
   kanon: { accent: '#7c8cff', glyph: UNIVERSES.lem.glyph },
   log: { accent: UNIVERSES.expanse.color, glyph: UNIVERSES.expanse.glyph },
@@ -54,6 +55,58 @@ interface Teaser {
   num: string;
   h3: string;
   p: string;
+}
+
+/** Wiersz kolumny .duo w sekcji "Dlaczego CSC" (dt + tresc HTML). */
+interface OverviewRow {
+  dt: string;
+  ddHtml: string;
+}
+
+/**
+ * Wiersz sekcji "Reszta 10xSkilli": odwolanie do innego modulu (link po slugu)
+ * plus jego sygnaturowe techniki/skille. slug -> strona modulu (pageHref).
+ */
+interface MoreRow {
+  slug: string;
+  dt: string;
+  ddHtml: string;
+}
+
+/**
+ * Sekcja "Reszta 10xSkilli / poza lancuchem" - wspomina pozostale moduly przez
+ * odwolania do ich technik (Fundament, Jakosc, Legacy, Teamwork, Skalowanie),
+ * kazdy jako link do strony modulu. Rdzen to CSC; te wiersze pokazuja, gdzie
+ * mieszka reszta systemu.
+ */
+interface CscOverviewMore {
+  eyebrow: string;
+  h2: string;
+  leadHtml: string;
+  rows: MoreRow[];
+}
+
+/**
+ * Sekcja "Dlaczego CSC / ~90% zadan" - opcjonalna, dokladana tylko do
+ * przegladu skilli (skille). Lewa kolumna: ten sam lancuch na roznych
+ * ksztaltach pracy; prawa: dlaczego to dziala. Token {csc}/{mostek} w
+ * targetHtml -> adres (rozwijany w CategoryBody). Tresc destylowana z sekcji
+ * "W praktyce" pelnej strony CSC (i18n/csc.ts) - overview, nie duplikat.
+ * `more` dokłada odwolania do reszty modulow (techniki poza lancuchem).
+ */
+interface CscOverview {
+  /** Eyebrow sekcji (sec-num). */
+  eyebrow: string;
+  h2: string;
+  aMono: string;
+  aLeadHtml: string;
+  aRows: OverviewRow[];
+  bMono: string;
+  bLeadHtml: string;
+  bRows: OverviewRow[];
+  targetK: string;
+  targetHtml: string;
+  more: CscOverviewMore;
 }
 
 interface CategoryDict {
@@ -69,6 +122,8 @@ interface CategoryDict {
   tileP: string;
   /** Zajawki podstron (klucz = slug podstrony lub slug skilla). */
   teasers: Record<string, Teaser>;
+  /** Sekcja "Dlaczego CSC" - tylko przeglad skilli; brak = sekcja sie nie renderuje. */
+  overview?: CscOverview;
 }
 
 export const CATEGORIES: Record<Lang, Record<NavCategoryId, CategoryDict>> = {
@@ -150,7 +205,97 @@ export const CATEGORIES: Record<Lang, Record<NavCategoryId, CategoryDict>> = {
       indexEyebrow: 'Skille łańcucha',
       backHtml:
         'Cały łańcuch w jednym miejscu widać na stronie <a href="{csc}" style="color:var(--acc)">Core Skills Chain</a>. Wróć też na <a href="{mostek}" style="color:var(--acc)">mostek</a>.',
-      tileP: '/10x-new → research → plan → implement → review.',
+      tileP: '/10x-new → research → plan → implement → review → archive.',
+      overview: {
+        eyebrow: 'DLACZEGO CSC // ~90% ZADAŃ',
+        h2: 'Pięć skilli, jeden łańcuch, ~90% Twoich zadań',
+        aMono: 'ZASTOSOWANIE // NIE TYLKO NOWE FEATURE',
+        aLeadHtml:
+          'CSC to nie ceremonia od świeżych feature’ów - to <b>domyślna pętla</b> na większość codziennych zadań. Skalujesz ją w dół przy drobnicy i w górę przy ryzyku; rzadko ją porzucasz. <b>Ten sam łańcuch, różne kształty zadań:</b>',
+        aRows: [
+          {
+            dt: 'bugfix',
+            ddHtml:
+              '<b>new → research → plan → implement → review → archive</b> - research krótki, plan to minimalny fix plus test regresji chroniący go przed nawrotem.',
+          },
+          {
+            dt: 'refaktor',
+            ddHtml:
+              '<b>research → plan → implement → review → archive</b> - research mapuje wszystkie call-site’y, review pilnuje, że zachowanie nie dryfnęło.',
+          },
+          {
+            dt: 'śledztwo / spike',
+            ddHtml:
+              'sam <b>research</b> - artefaktem jest research.md, bez planu i kodu; łańcuch schodzi do jednego kroku, gdy pytasz „dlaczego tak się dzieje?".',
+          },
+          {
+            dt: 'mała zmiana',
+            ddHtml:
+              '<b>new → plan → implement</b> - research pomijasz tylko, gdy naprawdę znasz kod i zmiana jest przewidywalna; sama liczba plików to za mało - przy niepewności research zostaje, nawet dla jednego pliku.',
+          },
+        ],
+        bMono: 'DLACZEGO TO DZIAŁA // TRZY GWARANCJE',
+        bLeadHtml:
+          'Każdy krok zostawia <b>artefakt na dysku</b>, a decyzję na bramkach między krokami podejmuje człowiek. Dlatego łańcuch niesie i drobną poprawkę, i zmianę na wiele plików:',
+        bRows: [
+          {
+            dt: 'artefakt na dysku',
+            ddHtml:
+              'change.md, research.md, plan.md, raport review - trwała pamięć zmiany, nie ulotny kontekst czatu.',
+          },
+          {
+            dt: 'człowiek w pętli',
+            ddHtml:
+              'zakres, plan i review zatwierdzasz Ty - agent nie decyduje po cichu o kierunku zmiany.',
+          },
+          {
+            dt: 'skalowalność',
+            ddHtml:
+              'ten sam łańcuch dla one-linera i dużego epika - dokładasz kroki, gdy rośnie ryzyko, odejmujesz przy drobnicy.',
+          },
+        ],
+        targetK: 'Cały łańcuch:',
+        targetHtml:
+          'Pięć kroków krok po kroku, z artefaktami i deep-dive’ami: <a href="{csc}" style="color:var(--acc)"><b>Core Skills Chain</b></a> - od pomysłu po review.',
+        more: {
+          eyebrow: 'RESZTA 10xSKILLI // POZA ŁAŃCUCHEM',
+          h2: 'Reszta skilli dokłada się z innych modułów',
+          leadHtml:
+            'Łańcuch to rdzeń - <b>~90% zadań</b>. Reszta 10xSkilli to techniki wyspecjalizowane z pozostałych modułów; sięgasz po nie, gdy pojawia się ich wyzwalacz:',
+          rows: [
+            {
+              slug: 'fundament',
+              dt: 'Fundament · M1',
+              ddHtml:
+                'Skąd biorą się jednostki pracy: kontekst i reguły projektu, a przed łańcuchem <b>shape → prd → roadmap</b>.',
+            },
+            {
+              slug: 'jakosc',
+              dt: 'Jakość · M3',
+              ddHtml:
+                'Testy, hooki i bramki jakości: <b>/10x-tdd</b>, <b>/10x-e2e</b>, <b>/10x-test-plan</b> - gdy chcesz ufać kodowi od agenta.',
+            },
+            {
+              slug: 'legacy',
+              dt: 'Legacy · M4',
+              ddHtml:
+                'Zastany kod: mapa repo, hot spoty, refaktor i DDD, a do podejrzanych zgłoszeń <b>/10x-frame</b>.',
+            },
+            {
+              slug: 'teamwork',
+              dt: 'Teamwork · M5',
+              ddHtml:
+                'System w zespole: wspólne konwencje, dystrybucja skilli i review na PR w CI (<b>/10x-impl-review-ci</b>).',
+            },
+            {
+              slug: 'skalowanie',
+              dt: 'Skalowanie',
+              ddHtml:
+                'Więcej rygoru i autonomii: quality gates, tryb goal (<b>/10x-goal-implement</b>) i powtarzalne pętle.',
+            },
+          ],
+        },
+      },
       teasers: {
         '10x-new': {
           num: 'SKILL',
@@ -177,17 +322,22 @@ export const CATEGORIES: Record<Lang, Record<NavCategoryId, CategoryDict>> = {
           h3: '/10x-impl-review',
           p: 'Plan kontra kod: review sprawdza zgodność implementacji z planem, zanim zmiana pójdzie dalej.',
         },
+        '10x-archive': {
+          num: 'SKILL',
+          h3: '/10x-archive',
+          p: 'Domknięcie zmiany: kontrola kompletności, lekcje do foundation i folder do archiwum.',
+        },
       },
     },
     ekosystem: {
       eyebrow: 'EKOSYSTEM // PRZEGLĄD',
       h1: 'Narzędzia i konteksty wokół systemu',
       subHtml:
-        'Wszystko poza modułami: terminalowy <strong>10x-cli</strong>, narracyjna gra <strong>Space Explorers</strong>, przeszukiwalna dokumentacja, motyw sci-fi portalu i dziennik pokładowy - jak to powstało.',
+        'Wszystko poza modułami: terminalowy <strong>10x-cli</strong>, narracyjna gra <strong>Space Explorers</strong>, benchmark modeli <strong>10xBench</strong>, przeszukiwalna dokumentacja, motyw sci-fi portalu i dziennik pokładowy - jak to powstało.',
       indexEyebrow: 'Narzędzia i konteksty',
       backHtml:
         'Szukasz innej sekcji? Wróć na <a href="{mostek}" style="color:var(--acc)">mostek</a> albo użyj wyszukiwarki (Cmd/Ctrl+K).',
-      tileP: '10x-cli, Space Explorers, dokumentacja, motyw SF i dziennik.',
+      tileP: '10x-cli, Space Explorers, 10xBench, dokumentacja, motyw SF i dziennik.',
       teasers: {
         '10x-cli': {
           num: 'CLI',
@@ -198,6 +348,11 @@ export const CATEGORIES: Record<Lang, Record<NavCategoryId, CategoryDict>> = {
           num: 'GAME',
           h3: 'Space Explorers',
           p: 'Narracyjna gra kursu - fabularne wprowadzenie do świata 10x Workflow.',
+        },
+        '10xbench': {
+          num: 'BENCH',
+          h3: '10xBench',
+          p: 'Benchmark modeli LLM: jak radzą sobie z jednym podejściem do zbudowania prawdziwej strony w Astro, React, Tailwind i Cloudflare.',
         },
         docs: {
           num: 'DOCS',
@@ -304,7 +459,97 @@ export const CATEGORIES: Record<Lang, Record<NavCategoryId, CategoryDict>> = {
       indexEyebrow: 'Chain skills',
       backHtml:
         'The whole chain in one place lives on the <a href="{csc}" style="color:var(--acc)">Core Skills Chain</a> page. You can also return to the <a href="{mostek}" style="color:var(--acc)">bridge</a>.',
-      tileP: '/10x-new → research → plan → implement → review.',
+      tileP: '/10x-new → research → plan → implement → review → archive.',
+      overview: {
+        eyebrow: 'WHY CSC // ~90% OF TASKS',
+        h2: 'Five skills, one chain, ~90% of your tasks',
+        aMono: 'USAGE // NOT JUST NEW FEATURES',
+        aLeadHtml:
+          'CSC is not a ceremony reserved for fresh features - it is the <b>default loop</b> for most everyday work. You scale it down for small stuff and up for risk; you rarely abandon it. <b>The same chain, different shapes of work:</b>',
+        aRows: [
+          {
+            dt: 'bugfix',
+            ddHtml:
+              '<b>new → research → plan → implement → review → archive</b> - research is short, the plan is a minimal fix plus a regression test guarding against a relapse.',
+          },
+          {
+            dt: 'refactor',
+            ddHtml:
+              '<b>research → plan → implement → review → archive</b> - research maps every call site, review makes sure behavior did not drift.',
+          },
+          {
+            dt: 'investigation / spike',
+            ddHtml:
+              'just <b>research</b> - the artifact is research.md, no plan and no code; the chain collapses to a single step when you ask "why does this happen?".',
+          },
+          {
+            dt: 'small change',
+            ddHtml:
+              '<b>new → plan → implement</b> - you skip research only when you truly know the code and the change is predictable; file count alone is not enough - when in doubt, research stays, even for a single file.',
+          },
+        ],
+        bMono: 'WHY IT WORKS // THREE GUARANTEES',
+        bLeadHtml:
+          'Every step leaves an <b>artifact on disk</b>, and a human makes the call at the gates between steps. That is why the chain carries both a tiny fix and a many-file change:',
+        bRows: [
+          {
+            dt: 'artifact on disk',
+            ddHtml:
+              'change.md, research.md, plan.md, the review report - durable memory of the change, not the fleeting context of a chat.',
+          },
+          {
+            dt: 'human in the loop',
+            ddHtml:
+              'you approve the scope, the plan and the review - the agent does not quietly decide the direction of the change.',
+          },
+          {
+            dt: 'scalability',
+            ddHtml:
+              'the same chain for a one-liner and a large epic - you add steps as risk grows and drop them for small stuff.',
+          },
+        ],
+        targetK: 'The whole chain:',
+        targetHtml:
+          'All five steps, step by step, with artifacts and deep dives: <a href="{csc}" style="color:var(--acc)"><b>Core Skills Chain</b></a> - from idea to review.',
+        more: {
+          eyebrow: 'THE REST OF 10xSKILLS // BEYOND THE CHAIN',
+          h2: 'The rest of the skills come from the other modules',
+          leadHtml:
+            'The chain is the core - <b>~90% of tasks</b>. The rest of 10xSkills are specialized techniques from the other modules; you reach for them when their trigger appears:',
+          rows: [
+            {
+              slug: 'fundament',
+              dt: 'Foundation · M1',
+              ddHtml:
+                'Where units of work come from: project context and rules, and before the chain <b>shape → prd → roadmap</b>.',
+            },
+            {
+              slug: 'jakosc',
+              dt: 'Quality · M3',
+              ddHtml:
+                "Tests, hooks and quality gates: <b>/10x-tdd</b>, <b>/10x-e2e</b>, <b>/10x-test-plan</b> - when you want to trust the agent's code.",
+            },
+            {
+              slug: 'legacy',
+              dt: 'Legacy · M4',
+              ddHtml:
+                'Inherited code: a repo map, hot spots, refactoring and DDD, plus <b>/10x-frame</b> for suspicious reports.',
+            },
+            {
+              slug: 'teamwork',
+              dt: 'Teamwork · M5',
+              ddHtml:
+                'The system in a team: shared conventions, skill distribution and PR review in CI (<b>/10x-impl-review-ci</b>).',
+            },
+            {
+              slug: 'skalowanie',
+              dt: 'Scaling',
+              ddHtml:
+                'More rigor and autonomy: quality gates, goal mode (<b>/10x-goal-implement</b>) and repeatable loops.',
+            },
+          ],
+        },
+      },
       teasers: {
         '10x-new': {
           num: 'SKILL',
@@ -331,17 +576,22 @@ export const CATEGORIES: Record<Lang, Record<NavCategoryId, CategoryDict>> = {
           h3: '/10x-impl-review',
           p: 'Plan versus code: the review checks the implementation against the plan before the change moves on.',
         },
+        '10x-archive': {
+          num: 'SKILL',
+          h3: '/10x-archive',
+          p: 'Closing out the change: a completeness check, lessons to foundation and the folder to the archive.',
+        },
       },
     },
     ekosystem: {
       eyebrow: 'ECOSYSTEM // OVERVIEW',
       h1: 'Tools and contexts around the system',
       subHtml:
-        'Everything beyond the modules: the terminal <strong>10x-cli</strong>, the narrative <strong>Space Explorers</strong> game, searchable documentation, the portal sci-fi theme and the captain\'s log - how it was built.',
+        'Everything beyond the modules: the terminal <strong>10x-cli</strong>, the narrative <strong>Space Explorers</strong> game, the <strong>10xBench</strong> model benchmark, searchable documentation, the portal sci-fi theme and the captain\'s log - how it was built.',
       indexEyebrow: 'Tools and contexts',
       backHtml:
         'Looking for another section? Head back to the <a href="{mostek}" style="color:var(--acc)">bridge</a> or use search (Cmd/Ctrl+K).',
-      tileP: '10x-cli, Space Explorers, docs, the sci-fi theme and the log.',
+      tileP: '10x-cli, Space Explorers, 10xBench, docs, the sci-fi theme and the log.',
       teasers: {
         '10x-cli': {
           num: 'CLI',
@@ -352,6 +602,11 @@ export const CATEGORIES: Record<Lang, Record<NavCategoryId, CategoryDict>> = {
           num: 'GAME',
           h3: 'Space Explorers',
           p: 'The narrative course game - a story-driven introduction to the world of 10x Workflow.',
+        },
+        '10xbench': {
+          num: 'BENCH',
+          h3: '10xBench',
+          p: 'An LLM model benchmark: how models handle a single-shot build of a real production site in Astro, React, Tailwind and Cloudflare.',
         },
         docs: {
           num: 'DOCS',

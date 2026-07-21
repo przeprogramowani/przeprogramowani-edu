@@ -203,7 +203,7 @@ const DOCS = [
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Mapa warstwy „ponad łańcuchem": trzy węzły, które podnoszą rygor i autonomię, gdy rośnie ryzyko i/lub złożoność.</dd></div>
         <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: działający łańcuch CSC na pojedynczych jednostkach pracy. Wyjście: więcej cykli równolegle, każdy domykany bramkami i review.</dd></div>
-        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Łańcuch się nie zmienia - dokładasz mu obstawę: bramki jakości per faza, autonomiczny przelot planu, równoległe cykle w rytmie.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Łańcuch się nie zmienia - dokładasz mu obstawę: bramki jakości per etap, autonomiczny przelot planu, równoległe cykle w rytmie.</dd></div>
       </dl>
     </details>
   </article>
@@ -302,11 +302,11 @@ const DOCS = [
       <span class="art mono">plan.md</span>
     </div>
     <p class="doc-sum">Pytanie: <b>kluczowe decyzje deva</b>. Gwarancja: <b>etapy + warunki sukcesu</b>. Decyzje zapadają przed kodem, gdzie są tanie do zmiany.</p>
-    <div class="doc-tags"><span class="tag">krok 03</span><span class="tag">plan</span><span class="tag">fazy</span><span class="tag">plan.md</span><span class="tag">/10x-plan</span></div>
+    <div class="doc-tags"><span class="tag">krok 03</span><span class="tag">plan</span><span class="tag">etapy</span><span class="tag">plan.md</span><span class="tag">/10x-plan</span></div>
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Usuwa ból implementacji „na żywioł", w której kluczowe decyzje zapadają mimochodem, w środku pisania kodu.</dd></div>
-        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: research.md. Wyjście: <b>plan.md</b> - fazy z warunkami sukcesu (automatycznymi i ręcznymi) plus sekcja Progress.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: research.md. Wyjście: <b>plan.md</b> - etapy z warunkami sukcesu (automatycznymi i ręcznymi) plus sekcja Progress.</dd></div>
         <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Plan iteruje z człowiekiem, dopóki jest tekstem; zatwierdzony staje się kontraktem, a Progress maszyną stanów dla implementacji.</dd></div>
       </dl>
     </details>
@@ -316,15 +316,15 @@ const DOCS = [
     <div class="doc-head">
       <span class="badge">KROK</span>
       <h3><a href={doc('csc', 'k-implement')}>Krok 04: implement - implementacja etap po etapie</a></h3>
-      <span class="art mono">commity per faza</span>
+      <span class="art mono">commity per etap</span>
     </div>
-    <p class="doc-sum">Pytanie: <b>implementacja etap po etapie</b>. Gwarancja: <b>commitowane, weryfikowalne kroki</b>. Każda faza to punkt powrotu zamiast jednego wielkiego diffa.</p>
+    <p class="doc-sum">Pytanie: <b>implementacja etap po etapie</b>. Gwarancja: <b>commitowane, weryfikowalne kroki</b>. Każdy etap to punkt powrotu zamiast jednego wielkiego diffa.</p>
     <div class="doc-tags"><span class="tag">krok 04</span><span class="tag">implement</span><span class="tag">commity</span><span class="tag">progress</span><span class="tag">/10x-implement</span></div>
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Usuwa ból jednej wielkiej zmiany bez punktów kontrolnych, której nie da się ani przerwać, ani cofnąć.</dd></div>
-        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: <b>commity per faza</b> i odhaczona sekcja Progress.</dd></div>
-        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Progress jako maszyna stanów - faza kończy się dopiero, gdy warunki sukcesu są zielone i zmiana jest zacommitowana; przerwana sesja wraca od ostatniego zielonego etapu.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: <b>commity per etap</b> i odhaczona sekcja Progress.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Progress jako maszyna stanów - etap kończy się dopiero, gdy warunki sukcesu są zielone i zmiana jest zacommitowana; przerwana sesja wraca od ostatniego zielonego etapu.</dd></div>
       </dl>
     </details>
   </article>
@@ -388,12 +388,12 @@ const DOCS = [
       <h3>/10x-plan</h3>
       <span class="art mono">plan.md</span>
     </div>
-    <p class="doc-sum">Tworzy szczegółowy plan implementacji przez gruntowny research i iterację z człowiekiem: fazy, warunki sukcesu, sekcja Progress.</p>
-    <div class="doc-tags"><span class="tag">skill</span><span class="tag">krok 03 · plan</span><span class="tag">fazy</span></div>
+    <p class="doc-sum">Tworzy szczegółowy plan implementacji przez gruntowny research i iterację z człowiekiem: etapy, warunki sukcesu, sekcja Progress.</p>
+    <div class="doc-tags"><span class="tag">skill</span><span class="tag">krok 03 · plan</span><span class="tag">etapy</span></div>
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Kluczowe decyzje deva mają zapaść, gdy są tanie - w tekście, nie w połowie diffa.</dd></div>
-        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: change.md + research.md. Wyjście: <b>plan.md</b> z fazami i sekcją Progress.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: change.md + research.md. Wyjście: <b>plan.md</b> z etapami i sekcją Progress.</dd></div>
         <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Iteracja: czytasz, kwestionujesz, poprawiasz; zatwierdzony plan staje się kontraktem dla /10x-implement.</dd></div>
       </dl>
     </details>
@@ -404,15 +404,15 @@ const DOCS = [
     <div class="doc-head">
       <span class="badge">SKILL</span>
       <h3>/10x-implement</h3>
-      <span class="art mono">commity per faza</span>
+      <span class="art mono">commity per etap</span>
     </div>
-    <p class="doc-sum">Realizuje plan z context/changes/&lt;change-id&gt;/plan.md faza po fazie, z weryfikacją warunków sukcesu po każdej fazie.</p>
+    <p class="doc-sum">Realizuje plan z context/changes/&lt;change-id&gt;/plan.md etap po etapie, z weryfikacją warunków sukcesu po każdym etapie.</p>
     <div class="doc-tags"><span class="tag">skill</span><span class="tag">krok 04 · implement</span><span class="tag">progress</span></div>
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Realizacja planu ma być serią punktów powrotu, nie jednym wielkim diffem, którego nikt nie przeczyta.</dd></div>
-        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: kod, <b>commity per faza</b>, odhaczona sekcja Progress.</dd></div>
-        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Faza po fazie: implementacja, weryfikacja warunków sukcesu, commit; Progress pilnuje, gdzie jesteś po przerwie.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: kod, <b>commity per etap</b>, odhaczona sekcja Progress.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Etap po etapie: implementacja, weryfikacja warunków sukcesu, commit; Progress pilnuje, gdzie jesteś po przerwie.</dd></div>
       </dl>
     </details>
     <p class="doc-open"><a href={`${base}/skill/10x-implement`}>STRONA SKILLA →</a></p>
@@ -429,7 +429,7 @@ const DOCS = [
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Im większy diff, tym łatwiej o dryf między tym, co plan obiecał, a tym, co kod robi.</dd></div>
-        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: plan.md (opcjonalnie konkretna faza) i diff. Wyjście: <b>raport review</b> z listą rozbieżności.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: plan.md (opcjonalnie konkretny etap) i diff. Wyjście: <b>raport review</b> z listą rozbieżności.</dd></div>
         <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Subagenci porównują wymiary planu z kodem: zgodność zakresu, bezpieczeństwo decyzji, wzorce repo.</dd></div>
       </dl>
     </details>
@@ -711,14 +711,14 @@ const DOCS = [
     <div class="doc-head">
       <span class="badge">WĘZEŁ</span>
       <h3><a href={doc('skalowanie', 'w-01')}>Węzeł 01: quality gates - próba, której nie da się ominąć</a></h3>
-      <span class="art mono">komplet zielonych bramek per faza</span>
+      <span class="art mono">komplet zielonych bramek per etap</span>
     </div>
-    <p class="doc-sum">Pytanie: <b>co pilnuje jakości, gdy Ciebie nie ma?</b> Gwarancja: <b>żadna faza nie przechodzi na czerwono</b>. Lint i typecheck po każdej edycji, testy per faza, commit tylko na zielono.</p>
+    <p class="doc-sum">Pytanie: <b>co pilnuje jakości, gdy Ciebie nie ma?</b> Gwarancja: <b>żaden etap nie przechodzi na czerwono</b>. Lint i typecheck po każdej edycji, testy per etap, commit tylko na zielono.</p>
     <div class="doc-tags"><span class="tag">węzeł 01</span><span class="tag">quality gates</span><span class="tag">bramki</span><span class="tag">gom dżabbar</span><span class="tag">deliberate-break</span></div>
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Bez bramek autonomia oznacza kod, którego nikt nie sprawdził w chwili powstania - jedyną bramką jesteś Ty i musisz patrzeć na wszystko.</dd></div>
-        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: plan z warunkami sukcesu. Wyjście: <b>faza domknięta automatycznie</b> - lint/typecheck per edycja, testy per faza, commit na zielono.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: plan z warunkami sukcesu. Wyjście: <b>etap domknięty automatycznie</b> - lint/typecheck per edycja, testy per etap, commit na zielono.</dd></div>
         <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Deliberate-break check: celowo psujesz implementację i potwierdzasz, że test pada - bramce można zaufać dopiero wtedy, gdy widziałeś, jak się zamyka.</dd></div>
       </dl>
     </details>
@@ -728,15 +728,15 @@ const DOCS = [
     <div class="doc-head">
       <span class="badge">WĘZEŁ</span>
       <h3><a href={doc('skalowanie', 'w-02')}>Węzeł 02: goal - plan wykonuje się bez autora</a></h3>
-      <span class="art mono">commity per faza + run report</span>
+      <span class="art mono">commity per etap + run report</span>
     </div>
-    <p class="doc-sum">Pytanie: <b>jak plan wykonuje się bez Ciebie?</b> Gwarancja: <b>commit per faza na zielono albo uczciwy STOP</b>. Autonomiczne przejście planu przez /10x-goal-implement pod /goal.</p>
+    <p class="doc-sum">Pytanie: <b>jak plan wykonuje się bez Ciebie?</b> Gwarancja: <b>commit per etap na zielono albo uczciwy STOP</b>. Autonomiczne przejście planu przez /10x-goal-implement pod /goal.</p>
     <div class="doc-tags"><span class="tag">węzeł 02</span><span class="tag">goal</span><span class="tag">autonomia</span><span class="tag">seldon</span><span class="tag">stop-blok</span><span class="tag">/10x-goal-implement</span></div>
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
-        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Bez tego węzła siedzisz między fazami jako klikacz „dalej" i autonomia kończy się na pierwszym pytaniu.</dd></div>
-        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: <b>commit per faza na zielono albo uczciwy STOP</b> - plus run report.</dd></div>
-        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Fazy wykonują się same, Progress pracuje jak maszyna stanów, a przy strukturalnym rozjeździe wykonanie zatrzymuje się STOP-blokiem zamiast improwizować.</dd></div>
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Bez tego węzła siedzisz między etapami jako klikacz „dalej" i autonomia kończy się na pierwszym pytaniu.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: <b>commit per etap na zielono albo uczciwy STOP</b> - plus run report.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Etapy wykonują się same, Progress pracuje jak maszyna stanów, a przy strukturalnym rozjeździe wykonanie zatrzymuje się STOP-blokiem zamiast improwizować.</dd></div>
       </dl>
     </details>
   </article>
@@ -764,13 +764,13 @@ const DOCS = [
       <h3>/10x-goal-implement</h3>
       <span class="art mono">commity + checklist</span>
     </div>
-    <p class="doc-sum">Autonomiczna realizacja planu pod /goal - bez człowieka między fazami; rodzeństwo /10x-implement do przebiegów nienadzorowanych i headless.</p>
+    <p class="doc-sum">Autonomiczna realizacja planu pod /goal - bez człowieka między etapami; rodzeństwo /10x-implement do przebiegów nienadzorowanych i headless.</p>
     <div class="doc-tags"><span class="tag">skill</span><span class="tag">skalowanie</span><span class="tag">węzeł 02 · goal</span><span class="tag">autonomia</span></div>
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
-        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Skalowanie łańcucha: gdy plan jest dobry, przejście faz nie wymaga człowieka - wymaga bramek.</dd></div>
-        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: commity per faza (Conventional Commits) plus lista rzeczy do ręcznego sprawdzenia na koniec.</dd></div>
-        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Subagent na fazę plus automatyczny stos bramek jakości (warunki planu, kontrola celowo psutego testu, pełny zestaw testów); commit dopiero po zielonym.</dd></div>
+        <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Skalowanie łańcucha: gdy plan jest dobry, przejście etapów nie wymaga człowieka - wymaga bramek.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: commity per etap (Conventional Commits) plus lista rzeczy do ręcznego sprawdzenia na koniec.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Subagent na etap plus automatyczny stos bramek jakości (warunki planu, kontrola celowo psutego testu, pełny zestaw testów); commit dopiero po zielonym.</dd></div>
       </dl>
     </details>
   </article>
@@ -792,8 +792,8 @@ const DOCS = [
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Zamiast pokrywać pliki po kolei, mapuje ryzyka na osi wpływ × prawdopodobieństwo - „koszyk gubi pozycje przy odświeżeniu", nie „brak testów w cart.ts".</dd></div>
-        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: działający produkt i PRD. Wyjście: <b>context/foundation/test-plan.md</b> - mapa ryzyk pocięta na fazy rolloutu, od najgroźniejszych scenariuszy w dół.</dd></div>
-        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">/10x-test-plan orkiestruje dowiezienie testów, nie pisze ich sam - każdą fazę prowadzi przez research → plan → implement, a ponowne uruchomienie wznawia od następnej fazy.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: działający produkt i PRD. Wyjście: <b>context/foundation/test-plan.md</b> - mapa ryzyk pocięta na etapy rolloutu, od najgroźniejszych scenariuszy w dół.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">/10x-test-plan orkiestruje dowiezienie testów, nie pisze ich sam - każdy etap prowadzi przez research → plan → implement, a ponowne uruchomienie wznawia od następnego etapu.</dd></div>
       </dl>
     </details>
   </article>
@@ -822,14 +822,14 @@ const DOCS = [
       <h3><a href={doc('jakosc', 'q-03')}>Lekcja 03: Hooki i triggery - co łapie błąd, zanim go zobaczysz?</a></h3>
       <span class="art mono">hooki per-edit / pre-commit / pre-push</span>
     </div>
-    <p class="doc-sum">Pytanie: <b>co łapie błąd, zanim go zobaczysz?</b> Gwarancja: <b>dryf wykryty sekundy po powstaniu, nie na końcu fazy</b>. Warstwowa obrona według kosztu: per-edit → pre-commit → pre-push.</p>
+    <p class="doc-sum">Pytanie: <b>co łapie błąd, zanim go zobaczysz?</b> Gwarancja: <b>dryf wykryty sekundy po powstaniu, nie na końcu etapu</b>. Warstwowa obrona według kosztu: per-edit → pre-commit → pre-push.</p>
     <div class="doc-tags"><span class="tag">lekcja q-03</span><span class="tag">hooki</span><span class="tag">tarcze</span><span class="tag">lint</span><span class="tag">typecheck</span></div>
     <p class="doc-open"><a href={lessonUrl('13')}>OTWÓRZ LEKCJĘ →</a></p>
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Im dalej błąd doleci, tym drożej kosztuje jego zestrzelenie - obrona jest uporządkowana według kosztu, warstwa za warstwą, od najtańszej na zewnątrz.</dd></div>
         <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: reguły jakości projektu - lint, typecheck, szybkie testy. Wyjście: <b>hooki zapięte na zdarzenia</b> - per-edit, pre-commit i pre-push, każdy z własnym budżetem czasu.</dd></div>
-        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Self-checking pipeline - dryf wykrywany sekundy po powstaniu, w tle, bez udziału człowieka; do końca fazy dolatuje tylko to, czego żadna warstwa nie mogła złapać wcześniej.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Self-checking pipeline - dryf wykrywany sekundy po powstaniu, w tle, bez udziału człowieka; do końca etapu dolatuje tylko to, czego żadna warstwa nie mogła złapać wcześniej.</dd></div>
       </dl>
     </details>
   </article>
@@ -876,13 +876,13 @@ const DOCS = [
       <h3>/10x-test-plan</h3>
       <span class="art mono">test-plan.md</span>
     </div>
-    <p class="doc-sum">Fazowy orkiestrator wdrażania testów w istniejącym produkcie: pisze test-plan.md i prowadzi każdą fazę rolloutu przez pełny łańcuch CSC.</p>
+    <p class="doc-sum">Etapowy orkiestrator wdrażania testów w istniejącym produkcie: pisze test-plan.md i prowadzi każdy etap rolloutu przez pełny łańcuch CSC.</p>
     <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja q-01 · plan testów</span><span class="tag">testy</span><span class="tag">brownfield</span><span class="tag">orkiestrator</span></div>
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Pokrycie testami istniejącego produktu to seria zmian, nie jeden zryw - potrzebuje stanu i kolejności.</dd></div>
-        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: PRD i roadmapa istniejącego produktu. Wyjście: <b>context/foundation/test-plan.md</b> plus kolejne fazy rolloutu jako zmiany CSC.</dd></div>
-        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Każda faza przechodzi /10x-new → research → plan → implement; ponowne uruchomienie wznawia od następnej fazy zapisanej w test-plan.md.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: PRD i roadmapa istniejącego produktu. Wyjście: <b>context/foundation/test-plan.md</b> plus kolejne etapy rolloutu jako zmiany CSC.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Każdy etap przechodzi /10x-new → research → plan → implement; ponowne uruchomienie wznawia od następnego etapu zapisanego w test-plan.md.</dd></div>
       </dl>
     </details>
   </article>
@@ -893,13 +893,13 @@ const DOCS = [
       <h3>/10x-tdd</h3>
       <span class="art mono">testy + kod</span>
     </div>
-    <p class="doc-sum">Prowadzi zatwierdzony plan faza po fazie test-first, przez red → green → refactor - tylko fazy, które da się TDD-ować; resztę kieruje do /10x-implement.</p>
+    <p class="doc-sum">Prowadzi zatwierdzony plan etap po etapie test-first, przez red → green → refactor - tylko etapy, które da się TDD-ować; resztę kieruje do /10x-implement.</p>
     <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja q-02 · wyrocznia</span><span class="tag">krok 04 · implement</span><span class="tag">tdd</span><span class="tag">testy</span></div>
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Wariant implementacji dla logiki, którą opłaca się przybić testem, zanim powstanie.</dd></div>
         <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: zatwierdzony plan.md. Wyjście: testy plus kod, wspólna sekcja Progress z /10x-implement.</dd></div>
-        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Red → green → refactor per faza; fazy, których nie da się prowadzić test-first, wracają do /10x-implement.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Red → green → refactor per etap; etapy, których nie da się prowadzić test-first, wracają do /10x-implement.</dd></div>
       </dl>
     </details>
   </article>
@@ -910,13 +910,13 @@ const DOCS = [
       <h3>/10x-e2e</h3>
       <span class="art mono">testy E2E</span>
     </div>
-    <p class="doc-sum">Prowadzi przeglądarkowe (E2E) fazy planu na działającej aplikacji, ryzyko po ryzyku: plan → generacja → review → weryfikacja.</p>
+    <p class="doc-sum">Prowadzi przeglądarkowe (E2E) etapy planu na działającej aplikacji, ryzyko po ryzyku: plan → generacja → review → weryfikacja.</p>
     <div class="doc-tags"><span class="tag">skill</span><span class="tag">lekcja q-04 · e2e</span><span class="tag">krok 04 · implement</span><span class="tag">e2e</span><span class="tag">playwright</span></div>
     <details class="doc-detal"><summary>Detal</summary>
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Część ryzyk widać dopiero w przeglądarce - ale tylko tę część; reszta należy do /10x-tdd i /10x-implement.</dd></div>
-        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: plan.md z fazami E2E plus zbudowany feature. Wyjście: testy E2E, wspólna sekcja Progress.</dd></div>
-        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Jedno ryzyko na raz; skill sam odsyła fazy, które nie potrzebują przeglądarki, do tańszych narzędzi.</dd></div>
+        <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: plan.md z etapami E2E plus zbudowany feature. Wyjście: testy E2E, wspólna sekcja Progress.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Jedno ryzyko na raz; skill sam odsyła etapy, które nie potrzebują przeglądarki, do tańszych narzędzi.</dd></div>
       </dl>
     </details>
   </article>
@@ -993,7 +993,7 @@ const DOCS = [
       <dl class="mech">
         <div><dt><span class="ico ico-aim" aria-hidden="true"></span>Po co istnieje</dt><dd class="v">Wielki przepisujący skok kończy się katastrofą, bo nie ma z niego drogi powrotu - sekwencja małych, osobno zielonych kroków ma ją zawsze.</dd></div>
         <div><dt><span class="ico ico-fast" aria-hidden="true"></span>Wejście → wyjście</dt><dd class="v">Wejście: hot spot z dowodami i test chroniący zachowanie - napisany, zanim ruszy refaktor. Wyjście: <b>okazje refaktorowe</b> (pozycja ④ raportu) plus ADR-y dokumentujące decyzje.</dd></div>
-        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Wzorce odwracalności - Strangler Fig (nowe oplata stare, zanim je zastąpi), Branch by Abstraction, metoda Mikado - a /10x-plan tnie ścieżkę na fazy, z których każda kończy się zielenią albo cofnięciem kroku, nie planu.</dd></div>
+        <div><dt><span class="ico ico-wrench" aria-hidden="true"></span>Mechanizm</dt><dd class="v">Wzorce odwracalności - Strangler Fig (nowe oplata stare, zanim je zastąpi), Branch by Abstraction, metoda Mikado - a /10x-plan tnie ścieżkę na etapy, z których każdy kończy się zielenią albo cofnięciem kroku, nie planu.</dd></div>
       </dl>
     </details>
   </article>

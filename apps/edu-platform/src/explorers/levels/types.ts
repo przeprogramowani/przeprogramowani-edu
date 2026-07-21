@@ -16,6 +16,19 @@ export interface InteractionRoute {
   }[];
 }
 
+export interface ConditionalIntro {
+  /** Dialogue ID played when this intro triggers */
+  dialogue: string;
+  /** Flag to mark this intro as seen — prevents replay */
+  flag: string;
+  /** All listed flags must be set for this intro to trigger (AND logic) */
+  requiredFlags?: string[];
+  /** Title text for the cinematic black-screen intro card (optional — omit to skip the card) */
+  cinematicTitle?: string;
+  /** Subtitle text for the cinematic intro card (optional) */
+  cinematicSubtitle?: string;
+}
+
 export interface LevelManifest {
   /** Map key — must match Tiled JSON filename in public/game/maps/ */
   id: string;
@@ -51,4 +64,9 @@ export interface LevelManifest {
   introCinematicTitle?: string;
   /** Subtitle text for the cinematic intro card (optional) */
   introCinematicSubtitle?: string;
+  /**
+   * Additional flag-conditional intros, checked in order after the primary intro
+   * (e.g. a return-to-ship cinematic that only plays once the player has visited a moon).
+   */
+  conditionalIntros?: ConditionalIntro[];
 }

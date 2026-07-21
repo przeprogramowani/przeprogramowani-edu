@@ -199,7 +199,7 @@ export const SKILL_RESEARCH: Record<Lang, SkillResearchDict> = {
           ddHtml:
             'świeży research żywego kodu zawsze przed archiwum - wcześniejsze zmiany to kontekst uzupełniający, nie zamiennik czytania.',
         },
-        { dt: 'Nie planuje', ddHtml: 'research ustala fakty; decyzje projektowe i fazy to praca /10x-plan.' },
+        { dt: 'Nie planuje', ddHtml: 'research ustala fakty; decyzje projektowe i etapy to praca /10x-plan.' },
         {
           dt: 'Nie mnoży artefaktów',
           ddHtml:

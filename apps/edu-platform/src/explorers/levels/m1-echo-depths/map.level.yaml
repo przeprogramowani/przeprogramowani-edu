@@ -1,0 +1,76 @@
+theme: 2
+grid: |
+  ~~~~~~~~~#####~~~~~~~~
+  ~~~~~~~~~#...#~~~~~~~~
+  ~#####~~~#...#~~~~~~~~
+  ~#...#~~~##.##~~~~~~~~
+  ~#...#~####.####~~~~~~
+  ~##.##~#.......#######
+  ###.####.............D
+  D....................D
+  D..............##.####
+  ########.......##.##~~
+  ~~~~~~~#.#######...#~~
+  ~~~~~~~###~~~~~#...#~~
+  ~~~~~~~~~~~~~~~#####~~
+  ~~~~~~~~~~~~~~~~~~~~~~
+props:
+  - { id: orb-beta, prop: crystal-orb, at: [11, 1], solid: true }
+  - { id: orb-alpha, prop: crystal-orb, at: [3, 3], solid: true }
+  - { id: cert-terminal, prop: holographic-console, at: [13, 5], solid: true }
+  - { id: field-console, prop: holographic-console, at: [11, 7], solid: true }
+  - { id: ore-outcrop, prop: synaptit-ore, at: [8, 10], solid: true }
+  - { id: orb-gamma, prop: crystal-orb, at: [17, 11], solid: true }
+zones:
+  - id: landing-door
+    name: Return to Landing
+    type: door
+    at: [0, 7]
+    size: [1, 2]
+    properties:
+      targetMap: m1-landing-pad
+      spawnX: 18
+      spawnY: 7
+  - id: echo-console
+    name: EchoTrace Field Console
+    type: trigger
+    propId: field-console
+  - id: cavity-alpha
+    name: Cavity Alpha
+    type: trigger
+    propId: orb-alpha
+  - id: cavity-beta
+    name: Cavity Beta
+    type: trigger
+    propId: orb-beta
+  - id: cavity-gamma
+    name: Cavity Gamma
+    type: trigger
+    propId: orb-gamma
+  - id: synaptit-outcrop
+    name: Synaptit Outcrop
+    type: trigger
+    propId: ore-outcrop
+  - id: exam-agent-skills
+    name: VOID Certification Terminal
+    type: exam
+    propId: cert-terminal
+    properties:
+      examId: m1-exam-agent-skills
+  - id: echo-mapper
+    name: Echo Mapper E-2
+    type: npc
+    at: [16, 6]
+    properties:
+      npcType: orb
+      npcVariant: hologram-blue
+  - id: shaft-control-door
+    name: Route to Shaft Control
+    type: door
+    at: [21, 6]
+    size: [1, 2]
+    properties:
+      targetMap: m1-shaft-control
+      spawnX: 2
+      spawnY: 7
+      requiredFlags: m1-echotrace-done

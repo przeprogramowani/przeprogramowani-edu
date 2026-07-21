@@ -7,9 +7,18 @@
   import type { StateChangedPayload } from './events/GameEvents';
   import type { GameScene } from './scenes/GameScene';
   import { getRankForXP, RANKS } from './config/ranks';
-  import { removeFlag, setFlag } from './state/flagManager';
+  import {
+    removeFlag,
+    setFlag,
+    setSystemFlag,
+    removeSystemFlag,
+    getSystemFlags,
+    clearQaSystemFlags,
+  } from './state/flagManager';
+  import type { GameFlag } from './config/flags';
   import { createDefaultState, saveState } from './state/GameStateManager';
   import { ALL_FLAGS } from './config/flags';
+  import { QA_MAP_SPAWNS } from './config/qaMapSpawns';
 
   export let game: Phaser.Game;
 
@@ -25,7 +34,12 @@
   let liveX = 0;
   let liveY = 0;
   let liveFacing: FacingDirection = 'down';
+  let systemFlags: GameFlag[] = [];
   let pollTimer: ReturnType<typeof setInterval> | null = null;
+
+  function refreshSystemFlags() {
+    systemFlags = [...getSystemFlags(game)];
+  }
 
   function blurQaTarget(event: Event) {
     (event.currentTarget as HTMLElement | null)?.blur();
@@ -86,6 +100,7 @@
         zoneDebugVisible = gameScene.getZoneDebugVisible();
       }
     }
+    refreshSystemFlags();
   }
 
   function onStateChanged(payload: StateChangedPayload) {
@@ -100,15 +115,6 @@
     }
   }
 
-  /** Default spawn positions per map (tile coords). */
-  const DEFAULT_SPAWNS: Record<string, { x: number; y: number }> = {
-    'm0-001-ship': { x: 2, y: 4 },
-    'ship-hibernation': { x: 7, y: 6 },
-    'ship-corridor': { x: 1, y: 4 },
-    'ship-bridge': { x: 1, y: 8 },
-  };
-  const FALLBACK_SPAWN = { x: 2, y: 4 };
-
   function getAvailableMaps(): Array<{ key: string; name: string }> {
     const names = getMapDisplayNames();
     return Object.entries(names).map(([key, name]) => ({ key, name: name.pl }));
@@ -116,7 +122,11 @@
 
   function jumpToMap(mapKey: string) {
     if (state?.currentMap === mapKey) return;
-    const spawn = DEFAULT_SPAWNS[mapKey] ?? FALLBACK_SPAWN;
+    const spawn = QA_MAP_SPAWNS[mapKey];
+    if (!spawn) {
+      console.warn(`[QaOverlay] No QA spawn configured for map: ${mapKey}`);
+      return;
+    }
     game.events.emit(GameEvents.TRANSITION_START, {
       targetMap: mapKey,
       spawnX: spawn.x,
@@ -159,10 +169,24 @@
 
   function addFlag() {
     if (!selectedFlag || !state) return;
+    if (selectedFlag.startsWith('sys:')) {
+      // System flags are server-controlled and read-only for game logic.
+      // The QA overlay is the one place allowed to force them locally so gated
+      // content can be exercised. Not persisted to the server.
+      setSystemFlag(game, selectedFlag);
+      refreshSystemFlags();
+      return;
+    }
     setFlag(game, selectedFlag);
     // setFlag already updates registry + localStorage; also sync to server
     const next = game.registry.get(STATE_KEY) as GameState;
     syncStateToServer(next);
+  }
+
+  function onSystemFlagRemoved(event: MouseEvent, flag: GameFlag) {
+    removeSystemFlag(game, flag);
+    refreshSystemFlags();
+    blurQaTarget(event);
   }
 
   function setXP() {
@@ -180,6 +204,7 @@
       game.registry.set('skipSave', true);
       const freshState = createDefaultState();
       saveState(freshState);
+      clearQaSystemFlags();
 
       // Delete server-side state (KV + Supabase).
       try {
@@ -302,6 +327,26 @@
             <span class="text-gray-600">none</span>
           {/if}
         </div>
+
+        <div>
+          <div class="text-gray-500 mb-0.5">System flags ({systemFlags.length}):</div>
+          {#if systemFlags.length > 0}
+            <div class="flex flex-wrap gap-1">
+              {#each systemFlags as flag}
+                <button
+                  type="button"
+                  class="bg-indigo-900/50 px-1 rounded text-[10px] text-indigo-300
+                         hover:bg-red-900/60 hover:text-red-300 cursor-pointer transition-colors"
+                  title="Click to clear system flag: {flag}"
+                  on:mousedown={preventQaButtonFocus}
+                  on:click={(event) => onSystemFlagRemoved(event, flag)}
+                >{flag} ✕</button>
+              {/each}
+            </div>
+          {:else}
+            <span class="text-gray-600">none</span>
+          {/if}
+        </div>
       </div>
 
       <div class="mt-3 pt-2 border-t border-gray-700 space-y-1.5">
@@ -317,7 +362,7 @@
               on:mousedown|stopPropagation
               on:change={blurQaTarget}
             >
-              {#each ALL_FLAGS.filter(f => !state?.flags.includes(f)) as flag}
+              {#each ALL_FLAGS.filter(f => !state?.flags.includes(f) && !systemFlags.includes(f)) as flag}
                 <option value={flag}>{flag}</option>
               {/each}
             </select>

@@ -4,8 +4,35 @@ import { manifest as m0Awakening } from './m0-awakening/manifest';
 import { manifest as m0CrewRoom } from './m0-crew-room/manifest';
 import { manifest as m0ExamRoom } from './m0-exam-room/manifest';
 import { manifest as m0CoreAi } from './m0-core-ai/manifest';
+import { manifest as m1LandingPad } from './m1-landing-pad/manifest';
+import { manifest as m1EchoDepths } from './m1-echo-depths/manifest';
+import { manifest as m1ShaftControl } from './m1-shaft-control/manifest';
+import { manifest as m1ProfileVault } from './m1-profile-vault/manifest';
+import { manifest as m1UplinkBay } from './m1-uplink-bay/manifest';
+import { manifest as m2Planning } from './m2-planning/manifest';
+import { manifest as m2StagingYard } from './m2-staging-yard/manifest';
+import { manifest as m2DraftingHall } from './m2-drafting-hall/manifest';
+import { manifest as m2AssemblyLine } from './m2-assembly-line/manifest';
+import { manifest as m2PlanningCore } from './m2-planning-core/manifest';
+import { manifest as debugNpcPlayground } from './debug-npc-playground/manifest';
 
-const LEVELS = [m0Awakening, m0CrewRoom, m0ExamRoom, m0CoreAi] as const;
+const LEVELS = [
+  m0Awakening,
+  m0CrewRoom,
+  m0ExamRoom,
+  m0CoreAi,
+  m1LandingPad,
+  m1EchoDepths,
+  m1ShaftControl,
+  m1ProfileVault,
+  m1UplinkBay,
+  m2Planning,
+  m2StagingYard,
+  m2DraftingHall,
+  m2AssemblyLine,
+  m2PlanningCore,
+  debugNpcPlayground,
+] as const;
 
 /** All level manifests, keyed by map ID */
 export const ALL_LEVELS: ReadonlyMap<string, LevelManifest> = new Map(

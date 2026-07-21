@@ -37,11 +37,6 @@ export const manifest: LevelManifest = {
       zoneId: 'exam-room-door',
       defaultDialogue: 'm0-core-ai-malfunction-revisit',
     },
-    // Prework door — locked until earth signal + prework system flag
-    {
-      zoneId: 'prework-door',
-      defaultDialogue: 'm0-prework-door-locked',
-    },
   ],
   quests,
   questCompletionDialogues: {
@@ -49,4 +44,14 @@ export const manifest: LevelManifest = {
   },
   introDialogue: 'm0-core-ai-intro',
   introFlag: FLAGS.M0_CORE_AI_INTRO_SEEN,
+  conditionalIntros: [
+    // Return-to-ship cinematic — plays once, only after the player has landed on Moon 1
+    {
+      dialogue: 'm0-return-from-moon1',
+      flag: FLAGS.M0_RETURN_FROM_MOON1_SEEN,
+      requiredFlags: [FLAGS.M1_LANDING_INTRO_SEEN],
+      cinematicTitle: 'Statek głębokiej przestrzeni Odyssey',
+      cinematicSubtitle: 'Powrót z Księżyca 1',
+    },
+  ],
 };

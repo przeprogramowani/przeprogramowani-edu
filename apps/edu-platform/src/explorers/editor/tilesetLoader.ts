@@ -1,7 +1,8 @@
 import { TILE_SIZE } from '../config/constants';
+import { TILESET_COLS, TILESET_TILE_COUNT } from '../config/tileIndices';
 
-const COLUMNS = 8;
-const TILE_COUNT = 32;
+const COLUMNS = TILESET_COLS;
+const TILE_COUNT = TILESET_TILE_COUNT;
 
 export async function loadTileImages(): Promise<ImageBitmap[]> {
   const img = new Image();

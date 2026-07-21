@@ -1,6 +1,6 @@
 ---
 title: "Hooki i triggery: Agent, który sam reaguje na błędy"
-titleEn: "Hooks and triggers: an agent that reacts to errors on its own"
+titleEn: "Hooks and triggers: An agent that responds to errors automatically"
 lessonId: "13"
 language: "pl"
 order: 13

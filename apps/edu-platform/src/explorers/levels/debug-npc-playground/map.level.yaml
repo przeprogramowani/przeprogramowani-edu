@@ -1,0 +1,180 @@
+theme: 1
+grid: |
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ####################################
+  #..........##..........##..........#
+  #..........##..........##..........#
+  #..........##..........##..........#
+  #..........##..........##..........#
+  #..........##..........##..........#
+  #..........##..........##..........#
+  #####.###########.############.#####
+  #####.###########.############.#####
+  #..................................#
+  #..................................#
+  #####.###########.############.#####
+  #####.###########.############.#####
+  #..........##..........##..........#
+  #..........##..........##..........#
+  #..........##..........##..........#
+  #..........##..........##..........#
+  #..........##..........##..........#
+  #..........##..........##..........#
+  ####################################
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+props: []
+zones:
+  - id: debug-label-original
+    type: trigger
+    at: [1, 7]
+    size: [10, 1]
+    properties: { displayLabelKey: scene.debugNpcOriginal }
+  - id: debug-label-blue
+    type: trigger
+    at: [13, 7]
+    size: [10, 1]
+    properties: { displayLabelKey: scene.debugNpcBlueTint }
+  - id: debug-label-green
+    type: trigger
+    at: [25, 7]
+    size: [10, 1]
+    properties: { displayLabelKey: scene.debugNpcGreenTint }
+  - id: debug-label-magenta
+    type: trigger
+    at: [1, 14]
+    size: [10, 1]
+    properties: { displayLabelKey: scene.debugNpcMagentaTint }
+  - id: debug-label-add
+    type: trigger
+    at: [13, 14]
+    size: [10, 1]
+    properties: { displayLabelKey: scene.debugNpcAdd }
+  - id: debug-label-screen
+    type: trigger
+    at: [25, 14]
+    size: [10, 1]
+    properties: { displayLabelKey: scene.debugNpcScreen }
+  - id: debug-npc-scientist
+    name: Scientist
+    type: npc
+    at: [3, 4]
+    properties:
+      npcType: scientist
+  - id: debug-npc-alien
+    name: Alien
+    type: npc
+    at: [8, 4]
+    properties:
+      npcType: alien
+  - id: debug-npc-robot
+    name: Robot
+    type: npc
+    at: [3, 6]
+    properties:
+      npcType: robot
+  - id: debug-npc-orb
+    name: Orb
+    type: npc
+    at: [8, 6]
+    properties:
+      npcType: orb
+  - id: debug-npc-scientist-blue
+    name: Scientist Blue
+    type: npc
+    at: [15, 4]
+    properties: { npcType: scientist, npcVariant: hologram-blue }
+  - id: debug-npc-alien-blue
+    name: Alien Blue
+    type: npc
+    at: [20, 4]
+    properties: { npcType: alien, npcVariant: hologram-blue }
+  - id: debug-npc-robot-blue
+    name: Robot Blue
+    type: npc
+    at: [15, 6]
+    properties: { npcType: robot, npcVariant: hologram-blue }
+  - id: debug-npc-orb-blue
+    name: Orb Blue
+    type: npc
+    at: [20, 6]
+    properties: { npcType: orb, npcVariant: hologram-blue }
+  - id: debug-npc-scientist-green
+    name: Scientist Green
+    type: npc
+    at: [27, 4]
+    properties: { npcType: scientist, npcVariant: hologram-green }
+  - id: debug-npc-alien-green
+    name: Alien Green
+    type: npc
+    at: [32, 4]
+    properties: { npcType: alien, npcVariant: hologram-green }
+  - id: debug-npc-robot-green
+    name: Robot Green
+    type: npc
+    at: [27, 6]
+    properties: { npcType: robot, npcVariant: hologram-green }
+  - id: debug-npc-orb-green
+    name: Orb Green
+    type: npc
+    at: [32, 6]
+    properties: { npcType: orb, npcVariant: hologram-green }
+  - id: debug-npc-scientist-magenta
+    name: Scientist Magenta
+    type: npc
+    at: [3, 16]
+    properties: { npcType: scientist, npcVariant: hologram-magenta }
+  - id: debug-npc-alien-magenta
+    name: Alien Magenta
+    type: npc
+    at: [8, 16]
+    properties: { npcType: alien, npcVariant: hologram-magenta }
+  - id: debug-npc-robot-magenta
+    name: Robot Magenta
+    type: npc
+    at: [3, 18]
+    properties: { npcType: robot, npcVariant: hologram-magenta }
+  - id: debug-npc-orb-magenta
+    name: Orb Magenta
+    type: npc
+    at: [8, 18]
+    properties: { npcType: orb, npcVariant: hologram-magenta }
+  - id: debug-npc-scientist-blue-add
+    name: Scientist Blue Add
+    type: npc
+    at: [15, 16]
+    properties: { npcType: scientist, npcVariant: hologram-blue-add }
+  - id: debug-npc-alien-blue-add
+    name: Alien Blue Add
+    type: npc
+    at: [20, 16]
+    properties: { npcType: alien, npcVariant: hologram-blue-add }
+  - id: debug-npc-robot-blue-add
+    name: Robot Blue Add
+    type: npc
+    at: [15, 18]
+    properties: { npcType: robot, npcVariant: hologram-blue-add }
+  - id: debug-npc-orb-blue-add
+    name: Orb Blue Add
+    type: npc
+    at: [20, 18]
+    properties: { npcType: orb, npcVariant: hologram-blue-add }
+  - id: debug-npc-scientist-blue-screen
+    name: Scientist Blue Screen
+    type: npc
+    at: [27, 16]
+    properties: { npcType: scientist, npcVariant: hologram-blue-screen }
+  - id: debug-npc-alien-blue-screen
+    name: Alien Blue Screen
+    type: npc
+    at: [32, 16]
+    properties: { npcType: alien, npcVariant: hologram-blue-screen }
+  - id: debug-npc-robot-blue-screen
+    name: Robot Blue Screen
+    type: npc
+    at: [27, 18]
+    properties: { npcType: robot, npcVariant: hologram-blue-screen }
+  - id: debug-npc-orb-blue-screen
+    name: Orb Blue Screen
+    type: npc
+    at: [32, 18]
+    properties: { npcType: orb, npcVariant: hologram-blue-screen }
