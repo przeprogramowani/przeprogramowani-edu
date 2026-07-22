@@ -7,8 +7,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-silence-intro',
     lines: [
       { speaker: 'system', text: { pl: 'STREFA CISZY — brak bioluminescencji, brak fauny.', en: 'THE SILENCE ZONE — no bioluminescence, no fauna.' }, mode: 'cinematic', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Coś tu jest nie tak. Dżungla zgasła. Żadnego świecenia, żadnego dźwięku zwierząt — tylko wiatr i moje kroki. Jakby ktoś przykręcił temu miejscu głośność do zera.', en: 'Something here is wrong. The jungle went dark. No glow, no animal sound — only wind and my footsteps. As if someone turned this place\'s volume down to zero.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Nazwa łuku tego księżyca właśnie stała się dosłowna. Cisza nie jest naturalna — żywy księżyc nie milknie sam z siebie. Pamiętasz, co ci mówiłem o żywym ekosystemie? Cofam to.', en: 'This moon\'s arc name just became literal. The silence is not natural — a living moon does not go quiet on its own. Remember what I told you about a living ecosystem? I take it back.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Coś tu jest nie tak. Dżungla zgasła. Żadnego świecenia, żadnego zwierzęcia — tylko wiatr i moje kroki. Jakby ktoś przykręcił temu miejscu głośność do zera.', en: 'Something here is wrong. The jungle went dark. No glow, no animals — just wind and my own footsteps. Like someone turned this place\'s volume down to zero.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Nazwa łuku tego księżyca właśnie stała się dosłowna. Ta cisza nie jest naturalna — żywy księżyc nie milknie sam z siebie. Pamiętasz, co mówiłem o żywym ekosystemie? Cofam to.', en: 'This moon\'s arc name just turned literal. This silence is not natural — a living moon does not go quiet on its own. Remember what I said about a living ecosystem? I take it back.' }, mode: 'dialogue' },
       { speaker: 'Świerszcz', text: { pl: 'cyk-cyk-cyk-cyk! (częstotliwość rośnie)', en: 'chirp-chirp-chirp-chirp! (frequency rising)' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Świerszcz terkocze szybciej. Tłumaczę: w pobliżu są aktywne węzły — sprzęt, który tłumi to miejsce. Dopóki jestem ślepe, jego uszy są naszym sonarem. Słuchaj go.', en: 'Świerszcz chirps faster. Translating: there are active nodes nearby — hardware smothering this place. While I am blind, his ears are our sonar. Listen to him.' }, mode: 'dialogue' },
     ],
@@ -36,7 +36,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-field-console-post',
     lines: [
       { speaker: 'system', text: { pl: 'STACJA ANALIZY: pas cichy odzyskany. Trzy węzły odizolowane, żaden zniszczony.', en: 'ANALYSIS STATION: quiet belt recovered. Three nodes isolated, none destroyed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Dżungla wróciła do życia falą. Odizolowaliśmy, nie zniszczyliśmy. Jest różnica — i chyba zaczynam ją czuć.', en: 'The jungle came back to life in a wave. We isolated, we did not destroy. There is a difference — and I think I am starting to feel it.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Dżungla wróciła do życia falą. Odizolowaliśmy, nie zniszczyliśmy. Jest różnica — i chyba zaczynam ją czuć.', en: 'The jungle came back to life in a wave. We isolated; we didn\'t destroy. There\'s a difference — and I think I\'m starting to feel it.' }, mode: 'dialogue' },
     ],
   },
 
@@ -51,7 +51,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-node-deep-isolate',
     lines: [
       { speaker: 'Świerszcz', text: { pl: 'cyk-cyk-cyk! (spokojniejszy przy tym węźle)', en: 'chirp-chirp-chirp! (calmer at this node)' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Świerszcz się uspokaja — to ten pierwszy. Odcinam zasilanie, nie tykam rdzenia. Węzeł głęboki: odizolowany.', en: 'Świerszcz calms down — this is the first one. I cut the power, I do not touch the core. Deep node: isolated.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Świerszcz się uspokaja — to ten pierwszy. Odcinam zasilanie, nie tykam rdzenia. Węzeł głęboki: odizolowany.', en: 'Świerszcz calms down — this is the first one. I cut the power; I don\'t touch the core. Deep node: isolated.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Pierwszy odcięty i cały. Teraz północny. Słuchaj drona dalej.', en: 'First one isolated and intact. Now the north one. Keep listening to the drone.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_NODE_DEEP_ISOLATED] },
@@ -67,7 +67,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-node-north-inert': {
     id: 'm1-node-north-inert',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Kolejny węzeł. Buczy tak samo. Bez procedury ze stacji nie ruszam go.', en: 'Another node. Hums the same. Without the procedure from the station I am not touching it.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Kolejny węzeł. Buczy tak samo. Bez procedury ze stacji nie ruszam go.', en: 'Another node. Hums the same. Without the procedure from the station, I\'m not touching it.' }, mode: 'monologue' },
     ],
   },
   'm1-node-north-warning': {
@@ -81,7 +81,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-node-north-isolate',
     lines: [
       { speaker: 'Świerszcz', text: { pl: 'cyk-cyk-cyk! (opada do rytmu)', en: 'chirp-chirp-chirp! (settling into rhythm)' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Teraz drona nie boli. Węzeł północny: odcięty, rdzeń nietknięty.', en: 'Now the drone is not hurting. North node: isolated, core untouched.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Teraz drona nie boli. Węzeł północny: odcięty, rdzeń nietknięty.', en: 'Now the drone isn\'t hurting. North node: isolated, core untouched.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Dwa z trzech. Został wschodni. Ostatni.', en: 'Two of three. The east one remains. The last.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_NODE_NORTH_ISOLATED] },
@@ -128,7 +128,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'system', text: { pl: 'TRZECI WĘZEŁ ODCIĘTY. Dźwięk i światło wracają falą przez cały pas.', en: 'THIRD NODE ISOLATED. Sound and light return in a wave across the belt.' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'CORE AI', text: { pl: 'Analizuję firmware odciętych węzłów. To nie sprzęt Odyssey. Wytworzony niedawno. I niesie sygnaturę, którą znam z własnych uszkodzonych sektorów.', en: 'I am analysing the isolated nodes\' firmware. This is not Odyssey hardware. Recently manufactured. And it carries a signature I know from my own damaged sectors.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'SYGNATURA FIRMWARE: ENTROPY', en: 'FIRMWARE SIGNATURE: ENTROPY' }, mode: 'system', autoAdvance: 3000 },
-      { speaker: 'astronaut', text: { pl: 'Entropia. Więc to już nie „sabotaż”. To ma imię. Ma autora. Ktoś to tu przyniósł.', en: 'Entropy. So it is no longer "sabotage". It has a name. It has an author. Someone brought this here.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Entropia. Więc to już nie „sabotaż”. To ma imię. Ma autora. Ktoś to tu przyniósł.', en: 'Entropy. So it\'s not "sabotage" anymore. It has a name. It has an author. Someone brought this here.' }, mode: 'dialogue' },
       { speaker: 'Świerszcz', text: { pl: '(...cisza. Trzy pełne sekundy. Żadnego ćwierku.)', en: '(...silence. Three full seconds. Not one chirp.)' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Zapisane jako fakt, nie jako teoria. Idziemy dalej.', en: 'Logged as fact, not theory. We move on.' }, mode: 'dialogue' },
     ],
@@ -139,7 +139,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-synaptit-outcrop',
     lines: [
       { speaker: 'astronaut', text: { pl: 'Zwietrzałe wychodnisko, a w nim żyłka czegoś, co skrzy się na niebiesko. Pierwszy raz widzę to na własne oczy.', en: 'A weathered outcrop, and in it a thread of something that glitters blue. First time I see it with my own eyes.' }, mode: 'dialogue' },
-      { speaker: 'dr Kern', text: { pl: 'To on. To Synaptit! — Przepraszam, głos mi się łamie. Czekałam na ten obraz pół kariery. To tylko ślad, Dexo. Ale ślad znaczy, że gdzieś głębiej biegnie żyła. Idź w dół.', en: 'That is it. That is Synaptit! — Forgive me, my voice is breaking. I have waited half a career for this image. It is only a trace, Dexo. But a trace means a vein runs somewhere deeper. Go down.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'To on. To Synaptit! — Przepraszam, głos mi się łamie. Czekałam na ten obraz pół kariery. To tylko ślad, Dexo. Ale ślad znaczy, że gdzieś głębiej biegnie żyła. Idź w dół.', en: 'That\'s it. That\'s Synaptit! — Forgive me, my voice is breaking. I\'ve waited half a career for this image. It\'s only a trace, Dexo. But a trace means a vein runs somewhere deeper. Go down.' }, mode: 'dialogue' },
     ],
   },
 
@@ -164,7 +164,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-silence-orb',
     lines: [
       { speaker: 'system', text: { pl: 'CZUJNIKI: obiekt świetlny w centrum strefy — brak w żadnym archiwum.', en: 'SENSORS: a light object at the zone\'s centre — absent from every archive.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Kula światła. Nie było jej tu wcześniej — a raczej: była, tylko nikt nie miał czym jej zobaczyć. „Mówi” do mnie samymi harmonicznymi i szumem.', en: 'An orb of light. It was not here before — or rather: it was, and no one had eyes to see it. It "speaks" to me in pure harmonics and noise.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Kula światła. Nie było jej tu wcześniej — a raczej: była, tylko nikt nie miał czym jej zobaczyć. „Mówi” do mnie samymi harmonicznymi i szumem.', en: 'An orb of light. It wasn\'t here before — or rather: it was, and no one had eyes to see it. It "speaks" to me in pure harmonics and noise.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Nie rozszyfrowuję tego. Zapisuję i nie wyjaśniam. Niektóre rzeczy na tym księżycu są echem, nie odpowiedzią.', en: 'I do not decode this. I log it and I do not explain it. Some things on this moon are an echo, not an answer.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_ORB_MET] },
@@ -174,7 +174,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-exam-protocol-3-done': {
     id: 'm1-exam-protocol-3-done',
     lines: [
-      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY III — „BEZPIECZNE OPERACJE": zaliczony.', en: 'EXPEDITION PROTOCOL III — "SAFE OPERATIONS": passed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY III — „BEZPIECZNE OPERACJE”: zaliczony.', en: 'EXPEDITION PROTOCOL III — "SAFE OPERATIONS": passed.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Trzeci protokół odzyskany: izoluj, nie niszcz; sięgaj po minimum dostępu; obcy materiał trzymaj w piaskownicy. Dziś uratowało to trzy węzły do zbadania.', en: 'Third protocol recovered: isolate, do not destroy; take the minimum access; keep hostile material in a sandbox. Today it saved three nodes to study.' }, mode: 'dialogue' },
     ],
   },
@@ -200,7 +200,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'STREFA CISZY — POWRÓT', en: 'THE SILENCE ZONE — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Widzę tę strefę po raz pierwszy. Dżungla świeci, fauna wróciła — i jest tu coś jeszcze. Słaba kula świetlna w centrum. Nie było jej na żadnym z twoich opisów.', en: 'I see this zone for the first time. The jungle glows, the fauna is back — and there is one more thing. A faint orb of light at the centre. It was on none of your descriptions.' }, mode: 'cinematic', autoAdvance: 3400 },
-      { speaker: 'astronaut', text: { pl: 'Bo wtedy nikt nie miał czym jej zobaczyć. Podejdę. Ostrożnie.', en: 'Because back then no one had eyes to see it. I will go closer. Carefully.' }, mode: 'cinematic', autoAdvance: 3000 },
+      { speaker: 'astronaut', text: { pl: 'Bo wtedy nikt nie miał czym jej zobaczyć. Podejdę. Ostrożnie.', en: 'Because back then no one had eyes to see it. I\'ll go closer. Carefully.' }, mode: 'cinematic', autoAdvance: 3000 },
     ],
     onComplete: { setFlags: [FLAGS.M1_RETURN_SILENCE_SEEN] },
   },

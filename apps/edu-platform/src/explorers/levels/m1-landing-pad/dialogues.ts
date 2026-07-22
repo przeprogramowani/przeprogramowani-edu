@@ -8,15 +8,15 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'LĄDOWANIE POTWIERDZONE — KSIĘŻYC 1, PAS GŁÓWNY', en: 'TOUCHDOWN CONFIRMED — MOON 1, MAIN BELT' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'system', text: { pl: 'Silniki stygną. Nad polaną zamyka się dach bioluminescencyjnej dżungli — zielony, gęsty, żywy.', en: 'The engines cool. A bioluminescent jungle canopy closes over the clearing — green, dense, alive.' }, mode: 'cinematic', autoAdvance: 3200 },
-      { speaker: 'astronaut', text: { pl: 'No dobrze. Jestem na zewnątrz. Po raz pierwszy od przebudzenia — naprawdę na zewnątrz. Powietrze pachnie jak coś, co żyje i nie pyta o pozwolenie.', en: 'All right. I am outside. For the first time since waking — actually outside. The air smells like something that is alive and does not ask permission.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'No dobrze. Jestem na zewnątrz. Pierwszy raz od przebudzenia — naprawdę na zewnątrz. Powietrze pachnie jak coś, co żyje i nie pyta o pozwolenie.', en: 'All right. I\'m outside. First time since waking — actually outside. The air smells like something alive, something that doesn\'t ask permission.' }, mode: 'monologue' },
       { speaker: 'CORE AI', text: { pl: 'Dexo. Jestem w łączu twojego skafandra, ale sensory wciąż mam martwe. Dane wejściowe: zero. Nie widzę tego księżyca. Widzisz go ty.', en: 'Dexo. I am in your suit uplink, but my sensors are still dead. Input data: zero. I cannot see this moon. You can.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Opisz mi ten świat. Dokładnie, cierpliwie, jak dziecku, które nigdy nie miało oczu. Jesteś moim jedynym czujnikiem.', en: 'Describe this world to me. Precisely, patiently, like to a child that never had eyes. You are my only sensor.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'A ja jestem twoim jedynym namiotem, kawą i zdrowym rozsądkiem. Moreau, inżynier. Rozstawiam obóz przy tej konsoli i zostaję tu, na powierzchni, dopóki nie skończysz.', en: 'And I am your only tent, coffee, and common sense. Moreau, engineer. I am pitching camp at that console and staying here, on the surface, until you are done.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Opisz mi ten świat. Dokładnie, cierpliwie, jak dziecku, które nigdy nie miało oczu. Jesteś moim jedynym czujnikiem.', en: 'Describe this world to me. Precisely, patiently, the way you would to a child that never had eyes. You are my only sensor.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'A ja jestem twoim jedynym namiotem, kawą i zdrowym rozsądkiem. Moreau, inżynier. Rozstawiam obóz przy tej konsoli i zostaję tu, na powierzchni, dopóki nie skończysz.', en: 'And I\'m your only tent, coffee, and common sense. Moreau, engineer. I\'m pitching camp at that console and staying up here, on the surface, till you\'re done.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Kawa jest?', en: 'Is there coffee?' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'Kawy nie ma. Prom oddał całą rezerwę mocy na lądowanie. Ale jest optymizm i to darmowy.', en: 'There is no coffee. The shuttle gave its whole power reserve to the landing. But there is optimism, and that one is free.' }, mode: 'dialogue' },
-      { speaker: 'dr Kern', text: { pl: 'Kern, geologia. Budzik z kapsuły numer cztery wyrwał mnie ze snu tuż przed waszym lądowaniem — zostaję na orbicie, prowadzę was głosem. Ten księżyc ma coś w skorupie. Czuję to nawet stąd.', en: 'Kern, geology. The alarm from capsule four pulled me out of sleep just before your landing — I am staying in orbit, guiding you by voice. This moon has something in its crust. I can feel it from up here.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Kawy nie ma. Prom oddał całą rezerwę mocy na lądowanie. Ale jest optymizm — i to za darmo.', en: 'No coffee. The shuttle gave its whole power reserve to the landing. But there\'s optimism — and that one\'s free.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Kern, geologia. Budzik z kapsuły numer cztery wyrwał mnie ze snu tuż przed waszym lądowaniem — zostaję na orbicie, prowadzę was głosem. Ten księżyc ma coś w skorupie. Czuję to nawet stąd.', en: 'Kern, geology. The alarm from capsule four pulled me out of sleep just before your landing — I\'m staying in orbit, guiding you by voice. This moon has something in its crust. I can feel it from up here.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'A Harris?', en: 'And Harris?' }, mode: 'monologue' },
-      { speaker: 'Moreau', text: { pl: 'Harris został na statku. Regeneracja synchronizacji neuronalnej — tak to nazwał lekarz pokładowy. Śpi. Zbudzimy go, jak będzie po co.', en: 'Harris stayed on the ship. Neural-sync regeneration — that is what the ship medic called it. He is asleep. We will wake him when there is something to wake him for.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Harris został na statku. Regeneracja synchronizacji neuronalnej — tak to nazwał lekarz pokładowy. Śpi. Zbudzimy go, jak będzie po co.', en: 'Harris stayed on the ship. Neural-sync regeneration — that\'s what the ship medic called it. He\'s asleep. We\'ll wake him when there\'s something to wake him for.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Cel Księżyca 1 jest prosty do wypowiedzenia i trudny do wykonania: załóż przyczółek, odbuduj mi pierwszy zmysł. Zanim zacznę planować, muszę zobaczyć. Zacznij od obozu Moreau.', en: 'The Moon 1 objective is simple to say and hard to do: establish a foothold, rebuild me a first sense. Before I can plan, I must see. Start at Moreau\'s camp.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_LANDING_INTRO_SEEN] },
@@ -28,7 +28,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'STÓŁ OBOZU BAZOWEGO — online. Zakładka: protokoły ekspedycyjne.', en: 'BASE CAMP TABLE — online. Tab: expedition protocols.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Zanim cokolwiek zbudujemy, potrzebuję rozpoznania. Trzy punkty na obrzeżach polany. Podejdź do każdego, opisz mi go, a ja złożę z twoich słów pierwszy obraz tego miejsca.', en: 'Before we build anything, I need reconnaissance. Three points on the edges of the clearing. Go to each, describe it to me, and I will assemble a first picture of this place from your words.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli mam być wywiadem, nie robotnikiem. Najpierw patrzeć, potem działać. Da się zapamiętać.', en: 'So I am to be reconnaissance, not labour. Look first, act second. I can remember that.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czyli mam być wywiadem, nie robotnikiem. Najpierw patrzeć, potem działać. Da się zapamiętać.', en: 'So I\'m the reconnaissance, not the labour. Look first, act second. I can remember that.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Oczy misji — opisz trzy punkty pomiarowe.', en: '◆ NEW MISSION: Eyes of the Mission — describe the three survey points.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { setFlags: [FLAGS.M1_EYES_ACTIVE], activateQuest: 'q-m1-eyes' },
@@ -42,7 +42,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-camp-report': {
     id: 'm1-camp-report',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Obszedłem wszystko. Ściana dżungli — nieprzenikniona, ale żywa. Linia spalenizny — i o tym jeszcze pogadamy. Grań na wschodzie — jest przejście, wąskie, ale jest.', en: 'I walked all of it. The jungle wall — impenetrable, but alive. The burn line — we will come back to that. The ridge to the east — there is a pass, narrow, but it is there.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Obszedłem wszystko. Ściana dżungli — nieprzenikniona, ale żywa. Linia spalenizny — i o tym jeszcze pogadamy. Grań na wschodzie — jest przejście, wąskie, ale jest.', en: 'I walked all of it. The jungle wall — impenetrable, but alive. The burn line — we\'ll come back to that. The ridge to the east — there\'s a pass, narrow, but it\'s there.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Mam pierwszy obraz. Z twoich słów rysuje mi się mapa — niepełna, ale prawdziwa. Kieruję rezerwę mocy promu do obozu. Bariera na wschodzie opadnie.', en: 'I have a first picture. From your words a map draws itself — incomplete, but true. I am routing the shuttle\'s power reserve to the camp. The eastern barrier will drop.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'OBÓZ: ZASILONY. Wschodnie przejście odblokowane.', en: 'CAMP: POWERED. Eastern pass unlocked.' }, mode: 'system', autoAdvance: 2600 },
     ],
@@ -52,7 +52,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-camp-console-online',
     lines: [
       { speaker: 'system', text: { pl: 'STÓŁ OBOZU: stabilny. Zasilanie 100%. Protokoły ekspedycyjne dostępne.', en: 'CAMP TABLE: stable. Power 100%. Expedition protocols available.' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'Moreau', text: { pl: 'Obóz stoi. Stąd prowadzę resztę misji. Idź w dżunglę — ja pilnuję światła.', en: 'The camp is up. I run the rest of the mission from here. Go into the jungle — I will keep the lights on.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Obóz stoi. Stąd prowadzę resztę misji. Idź w dżunglę — ja pilnuję światła.', en: 'Camp\'s up. I run the rest of the mission from here. Go into the jungle — I\'ll keep the lights on.' }, mode: 'dialogue' },
     ],
   },
 
@@ -74,9 +74,9 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-survey-burn': {
     id: 'm1-survey-burn',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Punkt drugi: linia spalenizny przy promie. Tyle że... to nie wzór z naszych silników. I ta skała jest wypalona głębiej, niż wypaliłoby dzisiejsze lądowanie. To jest stare.', en: 'Point two: the burn line by the shuttle. Except... this is not the pattern from our engines. And this rock is scorched deeper than today\'s landing would scorch it. This is old.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Punkt drugi: linia spalenizny przy promie. Tyle że... to nie wzór z naszych silników. I ta skała jest wypalona głębiej, niż wypaliłoby ją dzisiejsze lądowanie. To jest stare.', en: 'Point two: the burn line by the shuttle. Except... this isn\'t the pattern our engines leave. And the rock is scorched deeper than today\'s landing would ever reach. This is old.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Zapisuję jako anomalię. Ktoś tu wcześniej wylądował — albo coś tu wcześniej spadło. Nie mam czym tego zweryfikować. Na razie: zapamiętane.', en: 'Logging it as an anomaly. Someone landed here before — or something fell here before. I have nothing to verify it with. For now: remembered.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'To stara skała, Dexo. Wulkaniczna. Na pewno. Idź do trzeciego punktu, nie rób z polany kryminału.', en: 'That is old rock, Dexo. Volcanic. Certainly. Go to the third point, do not turn the clearing into a murder mystery.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'To stara skała, Dexo. Wulkaniczna. Na pewno. Idź do trzeciego punktu i nie rób z polany kryminału.', en: 'That\'s old rock, Dexo. Volcanic. Certainly. Go to the third point — and don\'t turn the clearing into a murder mystery.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_EYES_BURN_SEEN, FLAGS.M1_OLD_BURNS_FOUND] },
   },
@@ -114,7 +114,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-wreck-debris': {
     id: 'm1-wreck-debris',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Kadłub jakiejś maszyny, wrośnięty w poszycie. Nie nasz, nie świeży. Dżungla przerobiła go na doniczkę. Ktoś tu był i nie zabrał swoich rzeczy.', en: 'The hull of some machine, grown into the undergrowth. Not ours, not fresh. The jungle turned it into a planter. Someone was here and did not take their things.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Kadłub jakiejś maszyny, wrośnięty w poszycie. Nie nasz, nie świeży. Dżungla przerobiła go na doniczkę. Ktoś tu był i nie zabrał swoich rzeczy.', en: 'The hull of some machine, grown into the undergrowth. Not ours, not fresh. The jungle turned it into a planter. Someone was here — and didn\'t take their things.' }, mode: 'monologue' },
     ],
   },
 
@@ -123,7 +123,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-preflight-panel',
     lines: [
       { speaker: 'system', text: { pl: 'PROM: na ziemi. Zasilanie: rezerwa oddana do obozu. Ładownia: pusta. Kanał łączności ze statkiem: otwarty.', en: 'SHUTTLE: grounded. Power: reserve donated to camp. Cargo bay: empty. Ship comms channel: open.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Pusta ładownia i otwarty kanał. Kiedy oba się zmienią, będziemy mieli po co wracać.', en: 'An empty bay and an open channel. When both of those change, we will have a reason to go home.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Pusta ładownia i otwarty kanał. Kiedy oba się zmienią, będziemy mieli po co wracać.', en: 'An empty bay and an open channel. When both of those change, we\'ll have a reason to go home.' }, mode: 'monologue' },
     ],
   },
   'm1-preflight-final': {
@@ -131,7 +131,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'PROM: gotowy do odlotu. Ładownia: Synaptit, 14 kg. Sensory CORE AI: online.', en: 'SHUTTLE: ready for departure. Cargo bay: Synaptit, 14 kg. CORE AI sensors: online.' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'astronaut', text: { pl: 'Kontrola przedlotowa. Harris, słyszysz? ...Harris. Zgłoś się.', en: 'Preflight check. Harris, do you copy? ...Harris. Respond.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'Śpi. Pewnie śpi. Regeneracja bywa głęboka. Zaparzę kawę, zanim ruszymy — tym razem naprawdę.', en: 'He is asleep. Probably asleep. Regeneration runs deep sometimes. I will brew coffee before we move — this time for real.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Śpi. Pewnie śpi. Regeneracja bywa głęboka. Zaparzę kawę, zanim ruszymy — tym razem naprawdę.', en: 'He\'s asleep. Probably asleep. Regeneration runs deep sometimes. I\'ll brew coffee before we move — this time for real.' }, mode: 'dialogue' },
     ],
   },
 
@@ -148,45 +148,45 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-moreau-default': {
     id: 'm1-moreau-default',
     lines: [
-      { speaker: 'Moreau', text: { pl: 'Rozkładam obóz. Namiot, generator, stół. Kawy dalej nie ma — nie pytaj. Idź, bądź oczami tej maszyny, ja pilnuję bazy.', en: 'Setting up camp. Tent, generator, table. Still no coffee — do not ask. Go, be that machine\'s eyes; I will hold the base.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Rozkładam obóz. Namiot, generator, stół. Kawy dalej nie ma — nie pytaj. Idź, bądź oczami tej maszyny, ja pilnuję bazy.', en: 'Setting up camp. Tent, generator, table. Still no coffee — don\'t ask. Go, be that machine\'s eyes; I\'ll hold the base.' }, mode: 'dialogue' },
     ],
   },
   'm1-moreau-burns': {
     id: 'm1-moreau-burns',
     lines: [
       { speaker: 'astronaut', text: { pl: 'Ta spalenizna naprawdę mnie gryzie, Moreau.', en: 'That scorch mark really bothers me, Moreau.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'Stara skała. Na pewno. — Mówię to trochę za szybko, sama słyszę. Idź dalej, Dexo. Proszę.', en: 'Old rock. Certainly. — I am saying it a touch too fast, I can hear it myself. Move on, Dexo. Please.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Stara skała. Na pewno. — Mówię to trochę za szybko, sama słyszę. Idź dalej, Dexo. Proszę.', en: 'Old rock. Certainly. — I\'m saying it a touch too fast; I can hear it myself. Move on, Dexo. Please.' }, mode: 'dialogue' },
     ],
   },
   'm1-moreau-camp': {
     id: 'm1-moreau-camp',
     lines: [
-      { speaker: 'Moreau', text: { pl: 'Obóz stoi, światło działa, maszyna widzi swoją pierwszą polanę. Dobry pierwszy dzień. Nie przyzwyczajaj się.', en: 'Camp is up, the lights work, the machine can see its first clearing. A good first day. Do not get used to it.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Obóz stoi, światło działa, maszyna widzi swoją pierwszą polanę. Dobry pierwszy dzień. Nie przyzwyczajaj się.', en: 'Camp\'s up, the lights work, the machine can see its first clearing. A good first day. Don\'t get used to it.' }, mode: 'dialogue' },
     ],
   },
   'm1-moreau-cricket': {
     id: 'm1-moreau-cricket',
     lines: [
-      { speaker: 'Moreau', text: { pl: 'Zbudowałeś świerszcza. Z wraku. Poleciałeś w dżunglę i wróciłeś z terkoczącym dronem, któremu nadałam imię przez łącze. Nie wiem, czy jestem dumna, czy przerażona.', en: 'You built a cricket. Out of a wreck. You went into the jungle and came back with a chirping drone I named over the link. I do not know if I am proud or terrified.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Zbudowałeś świerszcza. Z wraku. Poleciałeś w dżunglę i wróciłeś z terkoczącym dronem, któremu nadałam imię przez łącze. Nie wiem, czy jestem dumna, czy przerażona.', en: 'You built a cricket. Out of a wreck. You went into the jungle and came back with a chirping drone I named over the link. I don\'t know whether I\'m proud or terrified.' }, mode: 'dialogue' },
     ],
   },
   'm1-moreau-ore': {
     id: 'm1-moreau-ore',
     lines: [
-      { speaker: 'Moreau', text: { pl: 'Pokaż. — Czternaście kilo Synaptitu. Pierwszy raz trzymam to w rękach, a nie na wykresie. Mała bryłka, a Ziemia potrzebuje jej całych gór.', en: 'Show me. — Fourteen kilos of Synaptit. First time I am holding it in my hands and not on a chart. A small lump, and Earth needs whole mountains of it.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Pokaż. — Czternaście kilo Synaptitu. Pierwszy raz trzymam to w rękach, a nie na wykresie. Mała bryłka, a Ziemia potrzebuje jej całych gór.', en: 'Show me. — Fourteen kilos of Synaptit. First time I\'m holding it in my hands and not on a chart. A small lump, and Earth needs whole mountains of it.' }, mode: 'dialogue' },
     ],
   },
   'm1-moreau-sensors': {
     id: 'm1-moreau-sensors',
     lines: [
       { speaker: 'Moreau', text: { pl: 'Kawa. Prawdziwa. Zaparzyłam ją, kiedy maszyna wreszcie przejrzała na oczy. Zasłużyłeś.', en: 'Coffee. Real coffee. I brewed it when the machine finally opened its eyes. You earned it.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'I słuchaj... ta spalenizna, którą zbyłam pierwszego dnia. Widziałam takie ślady wcześniej, w archiwach. Nie chciałam ci psuć pierwszego kroku na obcym świecie. Teraz już wiesz, że nie kłamałam — po prostu bałam się mieć rację.', en: 'And listen... that scorch mark I brushed off on day one. I have seen marks like that before, in the archives. I did not want to ruin your first step on an alien world. Now you know I was not lying — I was just afraid of being right.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'I słuchaj... ta spalenizna, którą zbyłam pierwszego dnia. Widziałam takie ślady wcześniej, w archiwach. Nie chciałam ci psuć pierwszego kroku na obcym świecie. Teraz już wiesz, że nie kłamałam — po prostu bałam się mieć rację.', en: 'And listen... that scorch mark I brushed off on day one. I\'ve seen marks like that before, in the archives. I didn\'t want to ruin your first step on an alien world. Now you know I wasn\'t lying — I was just afraid of being right.' }, mode: 'dialogue' },
     ],
   },
   'm1-moreau-epilogue': {
     id: 'm1-moreau-epilogue',
     lines: [
-      { speaker: 'Moreau', text: { pl: 'Więc to koniec tego księżyca. Maszyna widzi, ładownia pełna, a ja mam drugi kubek. Usiądź na chwilę, Dexo. Zaraz i tak polecimy dalej.', en: 'So this is the end of this moon. The machine can see, the cargo is full, and I have a second cup. Sit for a moment, Dexo. We fly on soon enough anyway.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Więc to koniec tego księżyca. Maszyna widzi, ładownia pełna, a ja mam drugi kubek. Usiądź na chwilę, Dexo. Zaraz i tak polecimy dalej.', en: 'So that\'s this moon done. The machine can see, the cargo\'s full, and I\'ve got a second cup. Sit for a moment, Dexo. We fly on soon enough anyway.' }, mode: 'dialogue' },
     ],
   },
 
@@ -194,7 +194,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-exam-protocol-1-done': {
     id: 'm1-exam-protocol-1-done',
     lines: [
-      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY I — „NAJPIERW PYTANIA": zaliczony.', en: 'EXPEDITION PROTOCOL I — "QUESTIONS FIRST": passed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY I — „NAJPIERW PYTANIA”: zaliczony.', en: 'EXPEDITION PROTOCOL I — "QUESTIONS FIRST": passed.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Pierwszy protokół odzyskany z mojej uszkodzonej pamięci: najpierw badasz, potem budujesz; najpierw pytasz, potem działasz. Dobrze, że to ty go zdałeś, a nie ja.', en: 'First protocol recovered from my damaged memory: investigate before you build; ask before you act. Good that you passed it, and not me.' }, mode: 'dialogue' },
     ],
   },
@@ -211,7 +211,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'LĄDOWISKO — POWRÓT', en: 'LANDING PAD — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Widzę tę polanę po raz drugi — i po raz pierwszy naprawdę. Twój pierwszy opis był dobry, Dexo. Był tylko ślepy, jak ja wtedy.', en: 'I see this clearing a second time — and for the first time truly. Your first description was good, Dexo. It was only blind, as I was then.' }, mode: 'cinematic', autoAdvance: 3200 },
-      { speaker: 'Moreau', text: { pl: 'Wróciłeś. I coś przyniosłeś. Chodź do obozu — kawa stygnie, a ja mam ci parę rzeczy do powiedzenia, zanim odlecimy.', en: 'You are back. And you brought something. Come to the camp — the coffee is cooling, and I have a few things to tell you before we lift off.' }, mode: 'cinematic', autoAdvance: 3200 },
+      { speaker: 'Moreau', text: { pl: 'Wróciłeś. I coś przyniosłeś. Chodź do obozu — kawa stygnie, a ja mam ci parę rzeczy do powiedzenia, zanim odlecimy.', en: 'You\'re back. And you brought something. Come to the camp — the coffee\'s cooling, and I\'ve a few things to tell you before we lift off.' }, mode: 'cinematic', autoAdvance: 3200 },
     ],
     onComplete: { setFlags: [FLAGS.M1_RETURN_CAMP_SEEN] },
   },
