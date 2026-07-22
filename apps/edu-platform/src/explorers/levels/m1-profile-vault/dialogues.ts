@@ -7,8 +7,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-vein-intro',
     lines: [
       { speaker: 'system', text: { pl: 'ŻYŁA — dno dżungli rozrywa się w wąwóz.', en: 'THE VEIN — the jungle floor tears into a ravine.' }, mode: 'cinematic', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Ziemia się rozstępuje. Wchodzę w wąwóz jak w katedrę — ściany błyszczą żyłami, coś skrzy się w ciemności na niebiesko. Klaustrofobiczna zieleń nagle zamienia się w ogrom.', en: 'The ground splits. I step into the ravine like into a cathedral — the walls shine with veins, something glitters blue in the dark. The claustrophobic green suddenly becomes vastness.' }, mode: 'monologue' },
-      { speaker: 'dr Kern', text: { pl: 'Tu. To jest tu. Czuję tę geologię, zanim ją zobaczysz. Wąwóz to mineralna krypta — a te żyły to Synaptit, surowy, nietknięty. Poprowadzę cię. Wiem, gdzie szukać.', en: 'Here. It is here. I feel this geology before you see it. The ravine is a mineral crypt — and those veins are Synaptit, raw, untouched. I will guide you. I know where to look.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Ziemia się rozstępuje. Wchodzę w wąwóz jak do katedry — ściany błyszczą żyłami, coś skrzy się w ciemności na niebiesko. Klaustrofobiczna zieleń nagle zamienia się w ogrom.', en: 'The ground splits. I step into the ravine as if into a cathedral — the walls shine with veins, something glitters blue in the dark. The claustrophobic green suddenly opens into vastness.' }, mode: 'monologue' },
+      { speaker: 'dr Kern', text: { pl: 'Tu. To jest tu. Czuję tę geologię, zanim ją zobaczysz. Wąwóz to mineralna krypta — a te żyły to Synaptit, surowy, nietknięty. Poprowadzę cię. Wiem, gdzie szukać.', en: 'Here. It\'s here. I feel this geology before you even see it. The ravine is a mineral crypt — and those veins are Synaptit, raw, untouched. I\'ll guide you. I know where to look.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Kern jest dziś wyjątkowo pewna. Zapamiętuję to. Na razie: zestaw badawczy stoi przy wejściu do wąwozu. Zasil go, zrób głęboki skan, wydobądź pierwszą rudę. Do tej pory goniliśmy ślady. Ten weźmiemy w całości.', en: 'Kern is unusually certain today. I note it. For now: the research kit stands at the ravine entrance. Power it, run a deep scan, extract the first ore. Until now we chased traces. This one we take whole.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_VEIN_INTRO_SEEN] },
@@ -30,7 +30,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'system', text: { pl: 'ZESTAW BADAWCZY: zasilony. Głęboki skan gotowy do uruchomienia.', en: 'RESEARCH KIT: powered. Deep scan ready to run.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Uruchom skan przy konsoli obok. Triangulujesz echo po omacku — jestem ślepe, ty masz tylko pingi. Znajdź jedną czystą żyłę. Każdy zmarnowany ping to moc odjęta obozowi.', en: 'Run the scan at the console beside it. You triangulate the echo by feel — I am blind, you have only pings. Find one pure vein. Every wasted ping is power taken from the camp.' }, mode: 'dialogue' },
       { speaker: 'dr Kern', text: { pl: 'Czysta żyła jest w prawej górnej komorze, przy ścianie. Wiem to. Skanuj tam.', en: 'The pure vein is in the upper-right chamber, by the wall. I know it. Scan there.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: '...Skąd ona to wiedziała? Skan jeszcze nie ruszył.', en: '...How did she know that? The scan has not even started.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: '...Skąd ona to wiedziała? Skan jeszcze nawet nie ruszył.', en: '...How did she know that? The scan hasn\'t even started.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: '(nikt nie odpowiada)', en: '(no one answers)' }, mode: 'system', autoAdvance: 2200 },
     ],
   },
@@ -86,7 +86,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-chamber-barrier-released': {
     id: 'm1-chamber-barrier-released',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Pole opadło. Przejście do komory otwarte. Skan wystarczył — nie musiałem niczego rozbijać.', en: 'The field dropped. The way into the chamber is open. The scan was enough — I did not have to break anything.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Pole opadło. Przejście do komory otwarte. Skan wystarczył — nie musiałem niczego rozbijać.', en: 'The field dropped. The way into the chamber is open. The scan was enough — I didn\'t have to break anything.' }, mode: 'monologue' },
     ],
   },
 
@@ -94,14 +94,14 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-pure-vein-sealed': {
     id: 'm1-pure-vein-sealed',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Żyła skrzy się za polem — piękna, czysta, poza zasięgiem. Nie forsuję komory. Najpierw skan.', en: 'The vein glitters behind the field — beautiful, pure, out of reach. I do not force the chamber. Scan first.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Żyła skrzy się za polem — piękna, czysta, poza zasięgiem. Nie forsuję komory. Najpierw skan.', en: 'The vein glitters behind the field — beautiful, pure, out of reach. I don\'t force the chamber. Scan first.' }, mode: 'monologue' },
     ],
   },
   'm1-pure-vein-extract': {
     id: 'm1-pure-vein-extract',
     lines: [
       { speaker: 'astronaut', text: { pl: 'Oznaczona żyła. Podłączam ekstraktor, tnę wzdłuż warstwy. Ruda schodzi w całości — surowy Synaptit, pierwszy w tej misji.', en: 'The marked vein. I attach the extractor, cut along the layer. The ore comes away whole — raw Synaptit, the first of this mission.' }, mode: 'dialogue' },
-      { speaker: 'dr Kern', text: { pl: 'Trzymasz w rękach to, po co przylecieliśmy przez pół Układu. Zważ to. Zapisz masę.', en: 'You are holding what we crossed half the system for. Weigh it. Record the mass.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Trzymasz w rękach to, po co przylecieliśmy przez pół Układu. Zważ to. Zapisz masę.', en: 'You\'re holding what we crossed half the system for. Weigh it. Record the mass.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_VEIN_EXTRACTED] },
   },
@@ -143,7 +143,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'WYDOBYCIE ZAKOŃCZONE. Ważenie ładunku...', en: 'EXTRACTION COMPLETE. Weighing cargo...' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Synaptit: 14 kilogramów. Wystarczy na jeden chip. Ziemia potrzebuje ich tysięcy.', en: 'Synaptit: 14 kilograms. Enough for one chip. Earth needs thousands of them.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czternaście kilo. Trzymam w rękach cały nasz pierwszy sukces — i jest wielkości pięści. To nie jest łup. To jest błąd zaokrąglenia wobec tego, po co przylecieliśmy.', en: 'Fourteen kilos. I am holding our entire first success — and it is the size of a fist. This is not loot. This is a rounding error against what we came for.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czternaście kilo. Trzymam w rękach cały nasz pierwszy sukces — i jest wielkości pięści. To nie jest łup. To błąd zaokrąglenia wobec tego, po co przylecieliśmy.', en: 'Fourteen kilos. I\'m holding our entire first success — and it\'s the size of a fist. This isn\'t loot. It\'s a rounding error against what we came for.' }, mode: 'dialogue' },
     ],
   },
 
@@ -151,7 +151,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-exam-protocol-4-done': {
     id: 'm1-exam-protocol-4-done',
     lines: [
-      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY IV — „DZIENNIK ZEWNĘTRZNY": zaliczony.', en: 'EXPEDITION PROTOCOL IV — "EXTERNAL JOURNAL": passed.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY IV — „DZIENNIK ZEWNĘTRZNY”: zaliczony.', en: 'EXPEDITION PROTOCOL IV — "EXTERNAL JOURNAL": passed.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Czwarty protokół odzyskany: zapisuj ustalenia poza własną głową. Dziennik obozowy to pamięć ekspedycji — bo kolejna hibernacja zabierze to, czego nie zapisałeś.', en: 'Fourth protocol recovered: record your findings outside your own head. The camp journal is the expedition\'s memory — because the next hibernation takes whatever you did not write down.' }, mode: 'dialogue' },
     ],
   },
@@ -177,7 +177,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'ŻYŁA — POWRÓT', en: 'THE VEIN — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Widzę ten wąwóz po raz pierwszy. Cały system żył — biegnie dalej, niż sięgał twój skan, głębiej, niż ktokolwiek tu wchodził. To nie jedno złoże. To sieć.', en: 'I see this ravine for the first time. The whole vein system — it runs farther than your scan reached, deeper than anyone went. This is not one deposit. This is a network.' }, mode: 'cinematic', autoAdvance: 3400 },
-      { speaker: 'astronaut', text: { pl: 'I gdzieś w niej — świeże ślady, których wtedy nie umiałem odczytać. Teraz je widzimy oboje.', en: 'And somewhere in it — fresh marks I could not read back then. Now we both see them.' }, mode: 'cinematic', autoAdvance: 3000 },
+      { speaker: 'astronaut', text: { pl: 'I gdzieś w niej — świeże ślady, których wtedy nie umiałem odczytać. Teraz widzimy je oboje.', en: 'And somewhere in it — fresh marks I couldn\'t read back then. Now we both see them.' }, mode: 'cinematic', autoAdvance: 3000 },
     ],
     onComplete: { setFlags: [FLAGS.M1_RETURN_VEIN_SEEN] },
   },

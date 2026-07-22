@@ -35,7 +35,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-foundry-briefing': {
     id: 'm2-foundry-briefing',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'Galeria otwarta. Teraz nakarm piec z żył — przez stację zwrotnicy obok. Najpierw ułóż plan tras, potem uruchom harmonogram. Interwencji jest mało: plan ma pracować za ciebie.', en: 'Gallery open. Now feed the furnace from the veins — through the switchyard station beside me. Plan the routes first, then start the schedule. Interventions are few: the plan should do the work for you.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Galeria otwarta. Teraz nakarm piec z żył — przez stację zwrotnicy obok. Najpierw ułóż plan tras, potem uruchom harmonogram. Interwencji jest mało: plan ma pracować za ciebie.', en: 'Gallery open. Now feed the furnace from the veins — through the switchyard station nearby. Plan the routes first, then start the schedule. Interventions are few: the plan should do the work for you.' }, mode: 'dialogue' },
     ],
   },
   'm2-foundry-finish-cast': {

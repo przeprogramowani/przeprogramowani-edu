@@ -137,19 +137,19 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-moreau': {
     id: 'm3-moreau',
     lines: [
-      { speaker: 'Moreau', text: { pl: 'Najpierw kawa. Nauczyłam się planować. — Rozstawiam obóz przy module. Ty idź audytować; ja tu zostanę i będę notować, co wróci.', en: 'Coffee first. I have learned to plan. — I am setting up camp at the module. You go audit; I will stay and note down whatever comes back.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Najpierw kawa. Nauczyłam się planować. — Rozstawiam obóz przy module. Ty idź audytować; ja tu zostanę i będę notować, co wróci.', en: 'Coffee first. I\'ve learned to plan. — I\'m setting up camp at the module. You go audit; I\'ll stay and note down whatever comes back.' }, mode: 'dialogue' },
     ],
   },
   'm3-moreau-camp': {
     id: 'm3-moreau-camp',
     lines: [
-      { speaker: 'Moreau', text: { pl: 'Obóz stoi. Notes pod ręką. Dexo — od Księżyca 2 sprawdzam wszystko dwa razy. Nie dlatego, że nie ufam. Dlatego, że raz już zaufałam za łatwo.', en: 'Camp is up. Notebook at hand. Dexo — since Moon 2 I check everything twice. Not because I distrust. Because once I trusted too easily.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Obóz stoi. Notes pod ręką. Dexo — od Księżyca 2 sprawdzam wszystko dwa razy. Nie z nieufności. Raz już zaufałam za łatwo.', en: 'Camp is up. Notebook at hand. Dexo — since Moon 2 I check everything twice. Not out of distrust. I trusted too easily once.' }, mode: 'dialogue' },
     ],
   },
   'm3-moreau-iskra': {
     id: 'm3-moreau-iskra',
     lines: [
-      { speaker: 'Moreau', text: { pl: 'Iskra? Oczywiście, że Iskra. Jedyna maszyna na tym księżycu, która przyznała się do usterki — i jedyna, która przeżyła. Dobre imię.', en: 'Iskra? Of course it is Iskra. The only machine on this moon that admitted a fault — and the only one that survived. A good name.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Iskra? Oczywiście, że Iskra. Jedyna maszyna na tym księżycu, która przyznała się do usterki — i jedyna, która przeżyła. Dobre imię.', en: 'Iskra? Of course it\'s Iskra. The only machine on this moon that admitted a fault — and the only one that survived. A good name.' }, mode: 'dialogue' },
     ],
   },
   'm3-moreau-cert': {
@@ -168,7 +168,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-moreau-notebook',
     lines: [
       { speaker: 'Moreau', text: { pl: 'Usiądź na kawę. Pokażę ci notes. Trzy wpisy: ślady spalenizny z Księżyca 1. Suma kontrolna z Księżyca 2. Miejsce po przecinku stąd.', en: 'Sit down for coffee. Let me show you the notebook. Three entries: burn traces from Moon 1. A checksum from Moon 2. A decimal place from here.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'Nie wiem, co to znaczy. Może nic. Ale przestałam udawać, że nie widzę.', en: 'I do not know what it means. Maybe nothing. But I have stopped pretending I do not see it.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Nie wiem, co to znaczy. Może nic. Ale przestałam udawać, że nie widzę.', en: 'I don\'t know what it means. Maybe nothing. But I\'ve stopped pretending I don\'t see it.' }, mode: 'dialogue' },
     ],
   },
 

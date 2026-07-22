@@ -9,7 +9,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'system', text: { pl: 'IZBA PROBIERCZA — krawędź kaldery. Rdzeń weryfikatora głównego: ciemny.', en: 'ASSAY OFFICE — caldera rim. Main verifier core: dark.' }, mode: 'cinematic', autoAdvance: 2800 },
       { speaker: 'astronaut', text: { pl: 'Skarbiec. Ściany w archiwalnych certyfikatach — lustrzane archiwum całego Projektu Odyssey, poziom po poziomie. Pod stropem martwy rdzeń weryfikatora. A za krawędzią, na ostrodze zastygłej lawy — obelisk. Strumienie zastygły wokół niego, jakby z szacunku.', en: 'A vault. Walls of archived certificates — the mirror archive of the whole Project Odyssey, tier by tier. Under the ceiling the dead verifier core. And beyond the rim, on a spur of frozen lava — the obelisk. The streams froze around it, as if out of respect.' }, mode: 'monologue' },
       { speaker: 'CORE AI', text: { pl: 'Starszy niż jakiekolwiek dane misji. Nie diagnozuję tego. Jeszcze nie.', en: 'Older than any mission data. I am not diagnosing that. Not yet.' }, mode: 'dialogue' },
-      { speaker: 'Iskra', text: { pl: 'Dexo. Czekam przy podejściu. Lista usterek: dwadzieścia dwie. Wszystkie moje. Żadna twoja. Wejdź — odbudujemy rdzeń.', en: 'Dexo. I am waiting at the approach. Fault list: twenty-two. All mine. None yours. Come in — we rebuild the core.' }, mode: 'dialogue' },
+      { speaker: 'Iskra', text: { pl: 'Dexo. Czekam przy podejściu. Lista usterek: dwadzieścia dwie. Wszystkie moje. Żadna twoja. Wejdź — odbudujemy rdzeń.', en: 'Dexo. I am waiting at the approach. Fault list: twenty-two. All mine. None yours. Come in — we\'ll rebuild the core.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M3_ASSAY_INTRO_SEEN] },
   },
@@ -29,7 +29,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-assay-desk-waiting',
     lines: [
       { speaker: 'CORE AI', text: { pl: 'Przefiltruj archiwum certyfikacji: tylko wektory z podpisem Odyssey, statusem „zatwierdzony" i zgodnym drugim odczytem. Ułóż klucz wzorcowy i prześlij go przez earthctl. Jeden zielony nigdy nie wystarcza — każdy kandydat musi mieć drugiego, niezależnego świadka.', en: 'Filter the certification archive: only vectors with the Odyssey signature, status "approved", and a matching second reading. Assemble the standard key and submit it via earthctl. One green is never enough — every candidate needs a second, independent witness.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'I dokładamy do zapytania kanarka. Celowo błędny wektor autotestu, wartość umówiona z góry. Jeśli wróci taki, jaki wysłaliśmy — łącze jest czyste. Zobaczymy.', en: 'And we add a canary to the query. A deliberately wrong autotest vector, a value agreed in advance. If it comes back as we sent it — the channel is clean. We will see.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'I dokładamy do zapytania kanarka. Celowo błędny wektor autotestu, wartość umówiona z góry. Jeśli wróci taki, jaki wysłaliśmy — łącze jest czyste. Zobaczymy.', en: 'And we add a canary to the query. A deliberately wrong autotest vector, a value agreed in advance. If it comes back as we sent it — the channel is clean. We\'ll see.' }, mode: 'dialogue' },
     ],
   },
   'm3-assay-desk-post': {
@@ -74,13 +74,13 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-iskra-approach': {
     id: 'm3-iskra-approach',
     lines: [
-      { speaker: 'Iskra', text: { pl: 'Podejście czyste. Kadłub: dwie mikrorysy, nieistotne — ale je zgłaszam, na wszelki wypadek. Zawsze zgłaszam. Wejdź do izby, Dexo. Odbudujemy mu głowę.', en: 'Approach clear. Hull: two microcracks, negligible — but I report them, just in case. I always report. Go into the office, Dexo. We rebuild his head.' }, mode: 'dialogue' },
+      { speaker: 'Iskra', text: { pl: 'Podejście czyste. Kadłub: dwie mikrorysy, nieistotne — ale je zgłaszam, na wszelki wypadek. Zawsze zgłaszam. Wejdź do izby, Dexo. Odbudujemy mu głowę.', en: 'Approach clear. Hull: two microcracks, negligible — but I report them, just in case. I always report. Go into the office, Dexo. We\'ll rebuild his head.' }, mode: 'dialogue' },
     ],
   },
   'm3-iskra-approach-post': {
     id: 'm3-iskra-approach-post',
     lines: [
-      { speaker: 'Iskra', text: { pl: 'Synchronizuję listę usterek z nowym rdzeniem. On je przyjmuje — wszystkie dwadzieścia dwie, bez skreślania. Pierwsza maszyna, która słucha mnie do końca. Chyba się polubimy.', en: 'I am syncing my fault list with the new core. He takes them all — all twenty-two, none struck out. The first machine that hears me to the end. I think we will get along.' }, mode: 'dialogue' },
+      { speaker: 'Iskra', text: { pl: 'Synchronizuję listę usterek z nowym rdzeniem. On je przyjmuje — wszystkie dwadzieścia dwie, bez skreślania. Pierwsza maszyna, która słucha mnie do końca. Chyba się polubimy.', en: 'I am syncing my fault list with the new core. He takes them all — all twenty-two, none struck out. The first machine that hears me to the end. I think we\'ll get along.' }, mode: 'dialogue' },
     ],
   },
 

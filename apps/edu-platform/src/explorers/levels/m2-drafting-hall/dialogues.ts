@@ -60,7 +60,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-bot-row': {
     id: 'm2-bot-row',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Rząd jednostek w gniazdach. Wszystkie w połowie gestu, wszystkie ciche. Nie znajduję na nich awarii. One po prostu czekają na rozkaz, który nigdy nie przyszedł.', en: 'A row of units in cradles. All mid-gesture, all silent. I find no fault on them. They are simply waiting for an order that never came.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Rząd jednostek w gniazdach. Wszystkie w połowie gestu, wszystkie ciche. Nie znajduję na nich awarii. One po prostu czekają na rozkaz, który nigdy nie przyszedł.', en: 'A row of units in cradles. All mid-gesture, all silent. I find nothing wrong with them. They are simply waiting for an order that never came.' }, mode: 'monologue' },
     ],
   },
 

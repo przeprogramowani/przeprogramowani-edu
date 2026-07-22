@@ -9,7 +9,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'HALA PRÓB — pod odkrytym niebem. Trzy stanowiska nad dyszami lawy. Tabliczki: ZALICZONO.', en: 'TRIAL HALL — under open sky. Three stands over lava nozzles. Plaques: PASSED.' }, mode: 'cinematic', autoAdvance: 2800 },
       { speaker: 'astronaut', text: { pl: 'Poligon prób. Na każdym stanowisku tabliczka „ZALICZONO" — a daty ciągną się latami po śmierci stacji. Podstemplował je martwy weryfikator. Poligon, który wszystko zaliczał i niczego nie sprawdzał.', en: 'The proving range. Every stand carries a "PASSED" plaque — and the dates run for years past the station\'s death. A dead verifier stamped them. A range that passed everything and checked nothing.' }, mode: 'monologue' },
-      { speaker: 'Iskra', text: { pl: 'Dysza jeden: gorąca. Dysza dwa: gorąca. Dysza trzy: gorąca. Zgłaszam trzy usterki, na wszelki wypadek. Zawsze zgłaszam. Dzięki temu jeszcze jeżdżę.', en: 'Nozzle one: hot. Nozzle two: hot. Nozzle three: hot. I report three faults, just in case. I always report. That is why I am still driving.' }, mode: 'dialogue' },
+      { speaker: 'Iskra', text: { pl: 'Dysza jeden: gorąca. Dysza dwa: gorąca. Dysza trzy: gorąca. Zgłaszam trzy usterki, na wszelki wypadek. Zawsze zgłaszam. Dzięki temu jeszcze jeżdżę.', en: 'Nozzle one: hot. Nozzle two: hot. Nozzle three: hot. I report three faults, just in case. I always report. That\'s why I\'m still driving.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Nazwa księżyca robi się dosłowna. Oprzyrząduj stanowiska i przeprowadź uczciwe próby. Nie ufaj żadnej zielonej tabliczce, dopóki sam nie zobaczysz próby.', en: 'The moon\'s name turns literal. Rig the stands and run honest trials. Trust no green plaque until you have seen the trial yourself.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M3_FIRE_TRIAL_INTRO_SEEN] },
@@ -90,7 +90,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'astronaut', text: { pl: 'Stanowisko drugie — ostatnia próba. Oprzyrządowuję, uruchamiam, prowadzę do końca. Trzy uczciwe wyniki na trzech stanowiskach.', en: 'Stand two — the last trial. I rig it, start it, run it to the end. Three honest results on three stands.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'HALA PRÓB: wynik zbiorczy — prawdziwy. Nad halą zapala się CZERWONE ŚWIATŁO.', en: 'TRIAL HALL: aggregate result — true. A RED LIGHT ignites over the hall.' }, mode: 'system', autoAdvance: 2800 },
-      { speaker: 'astronaut', text: { pl: 'Pierwsze uczciwe światło od lat jest czerwone. I to jest dobra wiadomość.', en: 'The first honest light in years is red. And that is good news.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Pierwsze uczciwe światło od lat jest czerwone. I to jest dobra wiadomość.', en: 'The first honest light in years is red. And that\'s good news.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M3_STAND_2_TESTED] },
   },
@@ -106,7 +106,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-ore-vein',
     lines: [
       { speaker: 'astronaut', text: { pl: 'W wykopie pod stanowiskiem trzecim — żyła. Pierwszy ślad surowca na tym księżycu. Poligon hartował sprzęt do obróbki Synaptitu; żyłę trzymano pod ręką jako materiał prób.', en: 'In the trench under stand three — a vein. The first trace of ore on this moon. The range hardened gear for Synaptit processing; the vein was kept at hand as trial material.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'To nie przypadek, że surowiec leży tuż obok prób. Wyżarzalnia jest o poziom dalej. Tam ta żyła znajdzie swój ciąg dalszy.', en: 'It is no accident the ore lies right beside the trials. The annealing yard is a level on. That is where this vein finds its sequel.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'To nie przypadek, że surowiec leży tuż obok prób. Wyżarzalnia jest o poziom dalej. Tam ta żyła znajdzie swój ciąg dalszy.', en: 'It is no accident the ore lies right beside the trials. The annealing yard is one level on. That is where this vein finds its sequel.' }, mode: 'dialogue' },
     ],
   },
 
@@ -120,7 +120,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-iskra-post': {
     id: 'm3-iskra-post',
     lines: [
-      { speaker: 'Iskra', text: { pl: 'Status: sprawna, jedna usterka w obserwacji. Krótko. Uczę się mówić krócej, kiedy dane są prawdziwe.', en: 'Status: operational, one fault under watch. Short. I am learning to speak shorter when the data is true.' }, mode: 'dialogue' },
+      { speaker: 'Iskra', text: { pl: 'Status: sprawna, jedna usterka w obserwacji. Krótko. Uczę się mówić krócej, kiedy dane są prawdziwe.', en: 'Status: operational, one fault under watch. Short. I\'m learning to speak shorter when the data is true.' }, mode: 'dialogue' },
     ],
   },
 
@@ -132,7 +132,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'CORE AI', text: { pl: 'W firmware martwego weryfikatora ta sama sygnatura co w węzłach Księżyca 1 i podstacji Księżyca 2: ENTROPY. Ale tu widać jej trzecią twarz.', en: 'In the dead verifier\'s firmware, the same signature as in Moon 1\'s nodes and Moon 2\'s substation: ENTROPY. But here its third face shows.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Nie psuje maszyn. Nie psuje kolejności. Psuje sprawdzanie. Znam ten podpis. Teraz wiem, jak przeszedł moje testy przed startem. Nie ukrył się przed sprawdzeniem. Był sprawdzeniem.', en: 'It does not break machines. It does not break order. It breaks checking. I know this signature. Now I know how it passed my pre-launch tests. It did not hide from the check. It was the check.' }, mode: 'dialogue' },
       { speaker: 'Iskra', text: { pl: 'Wszystkie systemy sprawne.', en: 'All systems operational.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Nie. Iskra, wymuszam autotest ręcznie. — ...Wróciła lista: dziewiętnaście usterek. Dobrze. Nie komentujmy tego.', en: 'No. Iskra, I am forcing a manual autotest. — ...The list returned: nineteen faults. Good. Let us not comment on that.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Nie. Iskra, wymuszam autotest ręcznie. — ...Wróciła lista: dziewiętnaście usterek. Dobrze. Nie komentujmy tego.', en: 'No. Iskra, I am forcing a manual autotest. — ...The list returned: nineteen faults. Good. Let\'s not comment on that.' }, mode: 'dialogue' },
     ],
   },
 
