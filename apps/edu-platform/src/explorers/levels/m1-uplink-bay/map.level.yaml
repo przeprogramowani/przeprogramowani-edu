@@ -18,36 +18,36 @@ grid: |
   ~~~~#.#~~~~~#.............#~
   ~~~~###~~~~~###############~
 props:
-  - { id: relay-drone, prop: broken-scout-drone, at: [23, 3], solid: true }
-  - { id: cert-terminal, prop: holographic-console, at: [7, 9], solid: true }
-  - { prop: energy-barrier, at: [24, 10], solid: true }
-  - { prop: energy-barrier, at: [17, 15], solid: true }
-  - { prop: broken-scout-drone, at: [13, 15], solid: true }
-  - { prop: broken-scout-drone, at: [2, 6], solid: true }
-  - { prop: broken-scout-drone, at: [24, 6], solid: true }
-  - { prop: synaptit-ore, at: [1, 13], solid: true }
-  - { prop: synaptit-ore, at: [9, 12], solid: true }
-  - { prop: synaptit-ore, at: [9, 13], solid: true }
-  - { prop: synaptit-ore, at: [8, 13], solid: true }
-  - { prop: synaptit-ore, at: [6, 6], solid: true }
-  - { prop: synaptit-ore, at: [19, 5], solid: true }
-  - { prop: synaptit-ore, at: [19, 6], solid: true }
-  - { prop: synaptit-ore, at: [16, 11], solid: true }
-  - { prop: synaptit-ore, at: [18, 11], solid: true }
-  - { prop: synaptit-ore, at: [17, 10], solid: true }
-  - { prop: synaptit-ore, at: [17, 11], solid: true }
-  - { prop: synaptit-ore, at: [22, 9], solid: true }
-  - { prop: synaptit-ore, at: [1, 9], solid: true }
-  - { prop: synaptit-ore, at: [5, 12], solid: true }
-  - { prop: broken-scout-drone, at: [11, 10], solid: true }
-  - { prop: broken-scout-drone, at: [10, 5], solid: true }
-  - { prop: broken-scout-drone, at: [13, 13], solid: true }
-  - { prop: synaptit-ore, at: [15, 3], solid: true }
-  - { prop: void-node, at: [13, 14], solid: true }
   - { prop: ancient-portal, at: [12, 1], solid: true }
-  - { prop: energy-core, at: [22, 4], solid: true }
+  - { prop: synaptit-ore, at: [15, 3], solid: true }
+  - { id: relay-drone, prop: broken-scout-drone, at: [23, 3], solid: true }
   - { prop: energy-core, at: [3, 4], solid: true }
+  - { prop: energy-core, at: [22, 4], solid: true }
+  - { prop: broken-scout-drone, at: [10, 5], solid: true }
+  - { prop: synaptit-ore, at: [19, 5], solid: true }
+  - { prop: broken-scout-drone, at: [2, 6], solid: true }
+  - { prop: synaptit-ore, at: [6, 6], solid: true }
+  - { prop: synaptit-ore, at: [19, 6], solid: true }
+  - { prop: broken-scout-drone, at: [24, 6], solid: true }
+  - { prop: synaptit-ore, at: [1, 9], solid: true }
+  - { id: cert-terminal, prop: holographic-console, at: [7, 9], solid: true }
+  - { prop: synaptit-ore, at: [22, 9], solid: true }
+  - { prop: broken-scout-drone, at: [11, 10], solid: true }
+  - { prop: synaptit-ore, at: [17, 10], solid: true }
+  - { prop: energy-barrier, at: [24, 10], solid: true }
+  - { prop: synaptit-ore, at: [16, 11], solid: true }
+  - { prop: synaptit-ore, at: [17, 11], solid: true }
+  - { prop: synaptit-ore, at: [18, 11], solid: true }
+  - { prop: synaptit-ore, at: [5, 12], solid: true }
+  - { prop: synaptit-ore, at: [9, 12], solid: true }
+  - { prop: synaptit-ore, at: [1, 13], solid: true }
+  - { prop: synaptit-ore, at: [8, 13], solid: true }
+  - { prop: synaptit-ore, at: [9, 13], solid: true }
+  - { prop: broken-scout-drone, at: [13, 13], solid: true }
+  - { prop: void-node, at: [13, 14], solid: true }
   - { prop: holographic-console, at: [5, 15], solid: true }
+  - { prop: broken-scout-drone, at: [13, 15], solid: true }
+  - { prop: energy-barrier, at: [17, 15], solid: true }
 zones:
   - id: vein-door
     name: Return to the Vein

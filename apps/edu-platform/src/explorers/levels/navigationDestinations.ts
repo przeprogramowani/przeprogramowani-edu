@@ -53,7 +53,7 @@ export const NAV_DESTINATIONS: readonly NavDestination[] = [
     codename: 'Agentic Asteroid',
     eta: '2026-05-22',
     targetMap: 'm1-landing-pad',
-    spawnX: 2,
+    spawnX: 3,
     spawnY: 7,
     requiredFlags: [FLAGS.M0_EARTH_SIGNAL_RECEIVED, FLAGS.SYS_COURSE_M1_AVAILABLE],
   },

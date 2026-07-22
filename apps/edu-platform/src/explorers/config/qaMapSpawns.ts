@@ -10,7 +10,7 @@ export const QA_MAP_SPAWNS: Readonly<Record<string, QaMapSpawn>> = {
   'm0-crew-room': { x: 2, y: 5 },
   'm0-exam-room': { x: 5, y: 5 },
   'm0-core-ai': { x: 2, y: 4 },
-  'm1-landing-pad': { x: 2, y: 7 },
+  'm1-landing-pad': { x: 3, y: 7 },
   'm1-echo-depths': { x: 2, y: 7 },
   'm1-shaft-control': { x: 2, y: 7 },
   'm1-profile-vault': { x: 2, y: 10 },
