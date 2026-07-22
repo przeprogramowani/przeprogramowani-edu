@@ -28,7 +28,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-assay-rig-briefing': {
     id: 'm3-assay-rig-briefing',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'Moduł gorący. Idź do stacji „Zwarcie" i certyfikuj pętlę chłodzenia. Wpinaj sondy, połowu odcinek — i pamiętaj, że jeden czujnik kłamie. Potwierdź każde zielone drugą sondą.', en: 'The rig is hot. Go to the Fault Trace station and certify the cooling loop. Pin probes, bisect the run — and remember one sensor lies. Confirm every green with a second probe.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Moduł gorący. Idź do stacji „Zwarcie" i certyfikuj pętlę chłodzenia. Wpinaj sondy, przepoławiaj odcinek — i pamiętaj, że jeden czujnik kłamie. Potwierdź każde zielone drugą sondą.', en: 'The rig is hot. Go to the Fault Trace station and certify the cooling loop. Pin probes, bisect the run — and remember one sensor lies. Confirm every green with a second probe.' }, mode: 'dialogue' },
     ],
   },
   'm3-assay-rig-run-batch': {
@@ -107,7 +107,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-iskra-yard': {
     id: 'm3-iskra-yard',
     lines: [
-      { speaker: 'Iskra', text: { pl: 'Log: kominy 2 i 4 — mikropęknięcia. Chłodziwo w normie. Palnik 3 — drga, obserwuję. Wszystko zgłoszone, na wszelki wypadek. Tak jest bezpieczniej, Dexo.', en: 'Log: chimneys 2 and 4 — micro-cracks. Coolant nominal. Burner 3 — jittering, watching it. All reported, just in case. It is safer this way, Dexo.' }, mode: 'dialogue' },
+      { speaker: 'Iskra', text: { pl: 'Log: kominy 2 i 4 — mikropęknięcia. Chłodziwo w normie. Palnik 3 — drga, obserwuję. Wszystko zgłoszone, na wszelki wypadek. Tak jest bezpieczniej, Dexo.', en: 'Log: chimneys 2 and 4 — micro-cracks. Coolant nominal. Burner 3 — jittering, watching it. All reported, just in case. It\'s safer this way, Dexo.' }, mode: 'dialogue' },
     ],
   },
   'm3-iskra-yard-post': {

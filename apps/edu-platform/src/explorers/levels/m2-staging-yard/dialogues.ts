@@ -156,7 +156,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-sopel-calm': {
     id: 'm2-sopel-calm',
     lines: [
-      { speaker: 'Sopel', text: { pl: 'Rozjazd drożny. Kolejka: pusta. Miarowo. Pierwszy raz od lat mam takt, w którym nic nie czeka na nic. Dziękuję, że wyczyściłeś mi ją ręcznie. Zauważyłem.', en: 'Junction clear. Queue: empty. Steady. For the first time in years I have a beat where nothing waits on nothing. Thank you for clearing it by hand. I noticed.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Rozjazd drożny. Kolejka: pusta. Miarowo. Pierwszy raz od lat mam takt, w którym nic nie czeka na nic. Dziękuję, że wyczyściłeś mi ją ręcznie. Zauważyłem.', en: 'Junction clear. Queue: empty. Steady. For the first time in years I have a beat where nothing waits on anything. Thank you for clearing it by hand. I noticed.' }, mode: 'dialogue' },
     ],
   },
 
