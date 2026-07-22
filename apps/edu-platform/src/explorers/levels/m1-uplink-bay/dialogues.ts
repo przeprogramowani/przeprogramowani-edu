@@ -110,6 +110,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'CORE AI', text: { pl: 'Śledzę kierunek wybuchu. Nie w stronę Ziemi. Głębiej w Pas. Ktoś tam właśnie dowiedział się, że tu jesteśmy.', en: 'I trace the burst\'s direction. Not toward Earth. Deeper into the Belt. Someone out there just learned that we are here.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'I jeszcze jedno, zagrzebane w dzienniku uzgodnień Nawigatora: echo podwójnego potwierdzenia na kanale centrali. Nikt go nie zamawiał. Zapisuję. Nie wyjaśniam.', en: 'And one more thing, buried in the Navigator\'s reconciliation log: a double-acknowledgement echo on the HQ channel. No one ordered it. I log it. I do not explain it.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Właśnie odzyskaliśmy oczy. I pierwsze, co zobaczyły, to że ktoś patrzył na nas przez cały czas.', en: 'We just got our eyes back. And the first thing they saw was that someone had been watching us the whole time.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'Misja ukończona! CORE AI wzbogaca się o zmysł analizy otoczenia. Wróć na statek korzystając z teleportu w pierwszym obszarze dżungli', en: 'Mission complete! CORE AI feels the environment more keenly. Return to the ship using the teleport in the first jungle area.' }, mode: 'system', autoAdvance: 3000 },
     ],
   },
 

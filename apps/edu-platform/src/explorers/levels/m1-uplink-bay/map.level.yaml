@@ -1,44 +1,35 @@
 theme: 2
 grid: |
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~#######~########~########~~
-  ~#.....#~#......#~#......#~~
-  ~#.....#~#......#~#......#~~
-  ~#.....#~#......#~#......#~~
-  ~#.....#~#......#~#......#~~
-  ~###.###~###.####~###.####~~
+  ~~~~~~~~~~~###~~~~~~~~~~~~~~
+  ~~~~~~~~~~~#.#~~~~~~~~~~~~~~
+  ~#######~###.####~########~~
+  ~#.....###......###......#~~
+  ~#.......................#~~
+  ~#.....###.....####......#~~
+  ~#.....#~#.....#~~#......#~~
+  ~###.###~###.###~~###.####~~
   ####.#######.########.##~~~~
   #......................####~
   #.........................#~
   D......................##.#~
   #.........###...#########.#~
   #.........#~#...#~~~~~~~#.#~
-  ###########~#...#########.#~
-  ~~~~~~~~~~~~#.............#~
-  ~~~~~~~~~~~~###############~
+  #####.#####~#...#########.#~
+  ~~~~#.#~~~~~#.............#~
+  ~~~~###~~~~~###############~
 props:
-  - { id: dormant-node, prop: void-node, at: [4, 3], solid: true }
-  - { id: pylon-west, prop: energy-core, at: [11, 3], solid: true }
-  - { prop: ancient-portal, at: [12, 3], solid: true }
-  - { prop: synaptit-ore, at: [13, 3], solid: true }
-  - { id: relay-core, prop: energy-core, at: [21, 3], solid: true }
   - { id: relay-drone, prop: broken-scout-drone, at: [23, 3], solid: true }
   - { id: cert-terminal, prop: holographic-console, at: [7, 9], solid: true }
-  - { id: bay-console, prop: holographic-console, at: [14, 9], solid: true }
   - { prop: energy-barrier, at: [24, 10], solid: true }
   - { prop: energy-barrier, at: [17, 15], solid: true }
   - { prop: broken-scout-drone, at: [13, 15], solid: true }
   - { prop: broken-scout-drone, at: [2, 6], solid: true }
-  - { prop: broken-scout-drone, at: [15, 6], solid: true }
   - { prop: broken-scout-drone, at: [24, 6], solid: true }
   - { prop: synaptit-ore, at: [1, 13], solid: true }
   - { prop: synaptit-ore, at: [9, 12], solid: true }
   - { prop: synaptit-ore, at: [9, 13], solid: true }
   - { prop: synaptit-ore, at: [8, 13], solid: true }
   - { prop: synaptit-ore, at: [6, 6], solid: true }
-  - { prop: synaptit-ore, at: [15, 5], solid: true }
-  - { prop: synaptit-ore, at: [14, 6], solid: true }
   - { prop: synaptit-ore, at: [19, 5], solid: true }
   - { prop: synaptit-ore, at: [19, 6], solid: true }
   - { prop: synaptit-ore, at: [16, 11], solid: true }
@@ -47,11 +38,16 @@ props:
   - { prop: synaptit-ore, at: [17, 11], solid: true }
   - { prop: synaptit-ore, at: [22, 9], solid: true }
   - { prop: synaptit-ore, at: [1, 9], solid: true }
-  - { prop: synaptit-ore, at: [2, 3], solid: true }
   - { prop: synaptit-ore, at: [5, 12], solid: true }
   - { prop: broken-scout-drone, at: [11, 10], solid: true }
   - { prop: broken-scout-drone, at: [10, 5], solid: true }
   - { prop: broken-scout-drone, at: [13, 13], solid: true }
+  - { prop: synaptit-ore, at: [15, 3], solid: true }
+  - { prop: void-node, at: [13, 14], solid: true }
+  - { prop: ancient-portal, at: [12, 1], solid: true }
+  - { prop: energy-core, at: [22, 4], solid: true }
+  - { prop: energy-core, at: [3, 4], solid: true }
+  - { prop: holographic-console, at: [5, 15], solid: true }
 zones:
   - id: vein-door
     name: Return to the Vein
@@ -64,27 +60,27 @@ zones:
   - id: array-console
     name: Sensor Array Control
     type: trigger
-    propId: bay-console
+    at: [5, 15]
   - id: pylon-west
     name: West Pylon
     type: trigger
-    propId: pylon-west
+    at: [3, 4]
   - id: pylon-east
     name: East Pylon
     type: trigger
-    propId: relay-core
+    at: [22, 4]
   - id: ancient-portal
     name: Ancient Portal
     type: trigger
-    at: [12, 3]
+    at: [12, 1]
   - id: ore-trace
     name: Ore Trace
     type: trigger
-    at: [13, 3]
+    at: [5, 12]
   - id: dormant-node
     name: Dormant Node
     type: trigger
-    propId: dormant-node
+    at: [13, 14]
   - id: swierszcz-crest
     name: Świerszcz
     type: npc
