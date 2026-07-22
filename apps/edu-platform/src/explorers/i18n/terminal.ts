@@ -47,7 +47,7 @@ export const terminalStrings = {
     // Moon 1 inspection commands
     'terminal.scan.header': 'CORE AI — SKAN SENSORYCZNY',
     'terminal.scan.landing': '  Lądowisko: obóz bazowy, wypalona strefa lądowania, ściana dżungli na wschód.',
-    'terminal.scan.grove': '  Gaj Sondy: martwe poszycie oplata wrak sondy Odyssey; cisza w eterze.',
+    'terminal.scan.grove': '  Ogród Sondy: martwe poszycie oplata wrak sondy Odyssey; cisza w eterze.',
     'terminal.scan.silence': '  Strefa Ciszy: brak bioluminescencji, brak fauny — sygnał urwany nienaturalnie.',
     'terminal.scan.vein': '  Żyła: wąwóz mineralny, żyły Synaptitu w ścianach, skala większa niż zakładano.',
     'terminal.scan.crest': '  Grań Przekaźnika: najwyższy punkt, starożytny portal, materiał bez sygnatury.',

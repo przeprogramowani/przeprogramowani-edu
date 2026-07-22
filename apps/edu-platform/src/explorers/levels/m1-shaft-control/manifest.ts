@@ -6,7 +6,7 @@ import { quests } from './quests';
 
 export const manifest: LevelManifest = {
   id: 'm1-shaft-control',
-  displayName: { pl: 'Gaj Sondy', en: 'Probe Grove' },
+  displayName: { pl: 'Ogród Sondy', en: 'Probe Grove' },
   dialogues,
   interactionRoutes: [
     {
@@ -41,13 +41,13 @@ export const manifest: LevelManifest = {
   introDialogue: 'm1-grove-intro',
   introFlag: FLAGS.M1_GROVE_INTRO_SEEN,
   introCinematicTitle: 'Księżyc 1 — Strefa Ciszy',
-  introCinematicSubtitle: 'Gaj Sondy',
+  introCinematicSubtitle: 'Ogród Sondy',
   conditionalIntros: [
     {
       dialogue: 'm1-return-grove',
       flag: FLAGS.M1_RETURN_GROVE_SEEN,
       requiredFlags: [FLAGS.M1_SENSORS_ONLINE],
-      cinematicTitle: 'Powrót — Gaj Sondy',
+      cinematicTitle: 'Powrót — Ogród Sondy',
     },
   ],
 };

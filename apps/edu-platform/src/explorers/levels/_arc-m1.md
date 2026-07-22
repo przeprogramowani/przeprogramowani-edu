@@ -81,7 +81,7 @@ m0-core-ai.
 - **Odblokowania (komendy, możliwości):** Obóz założony (`m1-camp-online`);
   zakładka protokołów ekspedycyjnych; wschodnia bariera otwarta.
 
-### m1 · Poziom 2 — „Gaj Sondy" / Probe Grove
+### m1 · Poziom 2 — Ogród Sondy" / Probe Grove
 
 - **Rozwój fabuły (big picture):** Motyw zestawu narzędzi. Dexo odbudowuje pierwszą
   maszynę misji z wraku — i po raz pierwszy zostaje wypowiedziana główna doktryna

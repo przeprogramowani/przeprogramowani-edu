@@ -538,15 +538,6 @@ export const dialogues: Record<string, DialogueSequence> = {
         mode: 'cinematic',
         autoAdvance: 3000,
       },
-      {
-        speaker: 'system',
-        text: {
-          pl: 'Wszystkie rozdziały odblokowane dla uczestników 10xDevs!',
-          en: 'All chapters are already available for 10xDevs students!',
-        },
-        mode: 'cinematic',
-        autoAdvance: 5000,
-      },
     ],
   },
 

@@ -6,46 +6,46 @@ export const exams: ExamDefinition[] = [
     id: 'm1-exam-protocol-2',
     title: { pl: 'Protokół Ekspedycyjny II — Narzędzia', en: 'Expedition Protocol II — Tools' },
     description: {
-      pl: 'Doktryna zestawu narzędzi: powtarzalna procedura zasługuje na trwały mechanizm, nie na improwizację. Protokół sprawdza, czy wiesz, jak działają Agent Skills.',
-      en: 'The toolkit doctrine: a repeatable procedure deserves a durable mechanism, not improvisation. This protocol checks whether you know how Agent Skills work.',
+      pl: 'Doktryna zestawu narzędzi: powtarzalna procedura zasługuje na trwały mechanizm, nie na improwizację. Protokół sprawdza, czy wiesz, jak rozbudować CORE AI.',
+      en: 'The toolkit doctrine: a repeatable procedure deserves a durable mechanism, not improvisation. This protocol checks whether you know how to increase capabilities of CORE AI.',
     },
     passingScore: 2,
     questions: [
       {
         id: 'q1',
         text: {
-          pl: 'W sterowni szybu porządkujesz warsztat CORE AI — część procedur ekspedycji ma zostać skillami, reszta zwykłymi poleceniami. Kiedy zgodnie z doktryną narzędzi warto zbudować Agent Skill, a kiedy wystarczy jednorazowy prompt?',
-          en: 'In the shaft control room you are organizing CORE AI\'s workshop — some expedition procedures should become skills, the rest plain commands. According to the toolkit doctrine, when is it worth building an Agent Skill, and when does a one-off prompt suffice?',
+          pl: 'W sterowni szybu chcesz zoptymalizować swoją komunikację z CORE AI: część zleceń zostawić jako jednorazowe wiadomości, a część zamienić w reużywalne skille. Kiedy krok zasługuje na skilla, a kiedy wystarczy pojedyncza wiadomość?',
+          en: 'In the shaft control room you want to optimize how you communicate with CORE AI: leave some requests as one-off messages and turn others into reusable skills. When does a step deserve a skill, and when does a single message suffice?',
         },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Zawsze, gdy zadanie dotyka kodu — prompty powinny służyć wyłącznie do rozmów i wyjaśnień', en: 'Whenever the task touches code — prompts should be used only for conversations and explanations' } },
-          { id: 'b', text: { pl: 'Gdy zadanie jest trudne — skill daje modelowi więcej mocy obliczeniowej niż zwykły prompt', en: 'When the task is hard — a skill gives the model more computing power than a plain prompt' } },
+          { id: 'a', text: { pl: 'Zawsze, gdy zadanie dotyka kodu — pojedyncze wiadomości nadają się wyłącznie do rozmów i wyjaśnień', en: 'Whenever the task touches code — single messages are only fit for conversations and explanations' } },
+          { id: 'b', text: { pl: 'Gdy zadanie jest trudne — skill daje modelowi więcej mocy obliczeniowej niż pojedyncza wiadomość', en: 'When the task is hard — a skill gives the model more computing power than a single message' } },
           { id: 'c', text: { pl: 'Prawie nigdy — skill wymaga napisania kodu i utrzymywania osobnej infrastruktury, co rzadko się opłaca', en: 'Almost never — a skill requires writing code and maintaining separate infrastructure, which rarely pays off' } },
-          { id: 'd', text: { pl: 'Gdy krok jest powtarzalny i ma nazwane wejście i wyjście — jednorazową eksplorację czy edycję załatwia prompt', en: 'When the step is repeatable and has a named input and output — a one-off exploration or edit is handled by a prompt' } },
+          { id: 'd', text: { pl: 'Gdy krok jest powtarzalny i ma nazwane wejście i wyjście — jednorazową eksplorację czy edycję załatwia pojedyncza wiadomość', en: 'When the step is repeatable and has a named input and output — a one-off exploration or edit is handled by a single message' } },
         ],
         correctOptionIds: ['d'],
       },
       {
         id: 'q2',
         text: {
-          pl: 'CORE AI ma już zainstalowanych dwadzieścia skilli ekspedycyjnych, a mimo to sesja przy sterowni startuje z niemal pustym oknem kontekstowym. Jak progresywne ujawnianie to umożliwia?',
-          en: 'CORE AI already has twenty expedition skills installed, yet the session at the shaft control starts with a nearly empty context window. How does progressive disclosure make that possible?',
+          pl: 'CORE AI ma już kilkanaście zainstalowanych skilli, a mimo to sesja przy sterowni startuje z niemal pustym oknem kontekstowym. Który mechanizm to zapewnia?',
+          en: 'CORE AI already has a dozen-plus skills installed, yet the session at the shaft control starts with a nearly empty context window. Which mechanism ensures that?',
         },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Skille są kompresowane do formatu binarnego, który model odczytuje przy znacznie mniejszym koszcie tokenów', en: 'Skills are compressed into a binary format that the model reads at a much lower token cost' } },
-          { id: 'b', text: { pl: 'Agent widzi od startu tylko metadane każdego skilla (~100 tokenów) — pełne instrukcje SKILL.md ładują się dopiero po aktywacji', en: 'From the start the agent sees only each skill\'s metadata (~100 tokens) — the full SKILL.md instructions load only upon activation' } },
-          { id: 'c', text: { pl: 'Harness trzyma treść skilli w osobnym oknie kontekstowym, które nie liczy się do limitu sesji', en: 'The harness keeps skill content in a separate context window that does not count against the session limit' } },
-          { id: 'd', text: { pl: 'Instrukcje skilli są wczytywane raz i zapamiętywane przez model na stałe między sesjami', en: 'Skill instructions are loaded once and permanently memorized by the model across sessions' } },
+          { id: 'a', text: { pl: 'Skille są kompresowane do formatu binarnego, który model odczytuje przy znacznie niższym koszcie tokenów', en: 'Skills are compressed into a binary format that the model reads at a much lower token cost' } },
+          { id: 'b', text: { pl: 'Harness ładuje wszystkie skille na starcie, ale każdy automatycznie streszcza do jednego zdania, żeby zmieściły się w limicie', en: 'The harness loads all skills at startup but automatically condenses each into a single sentence to fit the limit' } },
+          { id: 'c', text: { pl: 'Progresywne ujawnianie — na starcie agent widzi tylko metadane każdego skilla, a pełne instrukcje SKILL.md ładują się dopiero po jego aktywacji', en: 'Progressive disclosure — at startup the agent sees only each skill\'s metadata, and the full SKILL.md instructions load only after it is activated' } },
+          { id: 'd', text: { pl: 'Model zapamiętuje instrukcje skilli na stałe między sesjami, więc nie musi ich wczytywać do okna kontekstowego', en: 'The model permanently memorizes skill instructions across sessions, so it need not load them into the context window' } },
         ],
-        correctOptionIds: ['b'],
+        correctOptionIds: ['c'],
       },
       {
         id: 'q3',
         text: {
-          pl: 'Skill doradczy od diagnostyki drona zwiadowczego obiecuje, że aktywuje się sam, gdy CORE AI będzie go potrzebować. Jaki praktyczny wniosek płynie z badań nad automatyczną aktywacją (m.in. evali Vercela)?',
-          en: 'The scout-drone diagnostics advisory skill promises to activate itself whenever CORE AI needs it. What practical conclusion follows from research on automatic activation (including Vercel\'s evals)?',
+          pl: 'Skill doradczy od diagnostyki drona zwiadowczego obiecuje, że aktywuje się sam, gdy CORE AI będzie go potrzebować. Jaki praktyczny wniosek płynie z badań nad automatyczną aktywacją?',
+          en: 'The scout-drone diagnostics advisory skill promises to activate itself whenever CORE AI needs it. What practical conclusion follows from research on automatic activation?',
         },
         type: 'single',
         options: [

@@ -7,6 +7,7 @@ import sentry from '@sentry/astro';
 
 import cloudflare from '@astrojs/cloudflare';
 import { ASTRO_ENV_SCHEMA } from './astro-env';
+import { levelEditorDevPlugin } from './scripts/levelEditorDevPlugin.mjs';
 export default defineConfig({
   integrations: [
     tailwind(),
@@ -41,6 +42,7 @@ export default defineConfig({
     schema: ASTRO_ENV_SCHEMA,
   },
   vite: {
+    plugins: [levelEditorDevPlugin()],
     server: {
       allowedHosts: ['.ngrok-free.app', '.ngrok.app', '.ngrok.io'],
     },

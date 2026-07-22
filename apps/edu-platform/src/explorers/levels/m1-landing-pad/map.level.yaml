@@ -1,25 +1,28 @@
 theme: 2
 grid: |
-  ~~###~###~~~~~~~~~~~
-  ~~#.###.#~~~~~~~~~~~
-  ~~#.....#~~~~~~~~~~~
-  ~~###.###~~~~~~~~~~~
-  ~~~~#.#~~~~~~~~~~~~~
-  #####.##############
-  #..................#
+  ~~#######~~~~#######
+  ~~#.....#~~~~#.....#
+  ~~#.....#~~~~#.###.#
+  ~~###.###~~~~#.#~#.#
+  ~~~~#.#~~~~~~#.#~#.#
+  #####.########.#~#.#
+  #..............###.#
   #..................D
-  #..................#
-  ####################
+  #...........######.#
+  #############~~~~###
   ~~~~~~~~~~~~~~~~~~~~
 props:
   - { id: cert-terminal, prop: holographic-console, at: [3, 1], solid: true }
   - { prop: holographic-console, at: [7, 1], solid: true }
   - { prop: broken-scout-drone, at: [3, 6], solid: false }
-  - { id: drone1, prop: broken-scout-drone, at: [9, 6], solid: true }
   - { id: ship-teleport, prop: ship-teleport, at: [1, 7], solid: true }
-  - { prop: broken-scout-drone, at: [3, 8], solid: false }
   - { id: landing-marker, prop: energy-core, at: [6, 8], solid: true }
   - { prop: broken-scout-drone, at: [9, 8], solid: false }
+  - { prop: holographic-console, at: [18, 1], solid: true }
+  - { prop: broken-scout-drone, at: [18, 8], solid: true }
+  - { prop: holographic-console, at: [2, 8], solid: true }
+  - { prop: broken-scout-drone, at: [10, 6], solid: true }
+  - { prop: broken-scout-drone, at: [7, 2], solid: true }
 zones:
   - id: ship-teleport
     name: Landed Shuttle
@@ -57,11 +60,11 @@ zones:
   - id: survey-ridge-view
     name: Survey Point — Ridge View
     type: trigger
-    at: [15, 6]
+    at: [18, 1]
   - id: wreck-debris-1
     name: Wreck Debris
     type: trigger
-    propId: drone1
+    at: [18, 8]
   - id: wreck-debris-2
     name: Wreck Debris
     type: trigger
