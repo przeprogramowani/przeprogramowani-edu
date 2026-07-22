@@ -41,7 +41,8 @@ const docLine = (d: DocEntry) =>
   '},';
 
 /* Pelna tresc skryptu wyszukiwarki (naglowek + const DOCS + IIFE) budowana we
-   frontmatterze, bo Astro nie interpoluje wyrazen w <script is:inline>. */
+   frontmatterze, bo Astro nie interpoluje wyrazen w skrypcie inline
+   (is:inline). */
 const searchScript =
   `
 /* Indeks wyszukiwarki. Karty wpisow sa wyrenderowane statycznie w HTML
