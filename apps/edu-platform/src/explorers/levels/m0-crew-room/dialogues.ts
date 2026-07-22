@@ -105,7 +105,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm0-whiteboard': {
     id: 'm0-whiteboard',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Co ja widzę - "hello world"?', en: 'What do I see — "hello world"?' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Co ja tu widzę — „hello world"?', en: 'What am I looking at — "hello world"?' }, mode: 'monologue' },
       { speaker: 'astronaut', text: { pl: 'Kosmos to jeden wielki terminal programistyczny...', en: 'Space is one giant developer terminal...' }, mode: 'monologue' },
     ],
   },

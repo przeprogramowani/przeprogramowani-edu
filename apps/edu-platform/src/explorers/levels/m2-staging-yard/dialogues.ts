@@ -190,7 +190,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'MARTWY PUNKT — POWRÓT', en: 'THE DEADLOCK — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'system', text: { pl: 'W tle wagoniki przejeżdżają rozjazd płynnie, jeden za drugim. Sygnalizatory świecą zielenią.', en: 'In the background, trams glide through the junction smoothly, one after another. The signals shine green.' }, mode: 'cinematic', autoAdvance: 3200 },
-      { speaker: 'CORE AI', text: { pl: 'Teraz widzę harmonogram, który tu umarł. Był dobry. Dlatego musieli zabić go od środka — przestawić kolejność, zamiast łamać sprzęt. Elegancko. Nienawidzę, jak elegancko.', en: 'Now I see the schedule that died here. It was good. That is why they had to kill it from the inside — reorder it, instead of breaking the hardware. Elegant. I hate how elegant.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'CORE AI', text: { pl: 'Teraz widzę harmonogram, który tu umarł. Był dobry. Dlatego musieli zabić go od środka — przestawić kolejność, zamiast łamać sprzęt. Elegancko. Nienawidzę, jakie to eleganckie.', en: 'Now I see the schedule that died here. It was good. That is why they had to kill it from the inside — reorder it, instead of breaking the hardware. Elegant. I hate how elegant.' }, mode: 'cinematic', autoAdvance: 3400 },
     ],
     onComplete: { setFlags: [FLAGS.M2_RETURN_DEADLOCK_SEEN] },
   },

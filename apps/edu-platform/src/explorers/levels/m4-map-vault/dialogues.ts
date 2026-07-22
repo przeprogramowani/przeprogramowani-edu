@@ -131,7 +131,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm4-kern-file-seen': {
     id: 'm4-kern-file-seen',
     lines: [
-      { speaker: 'dr Kern', text: { pl: 'Nie dotykam jej więcej. Jedna wartość. Albo moja pamięć, albo ktoś, kto sięgnął do akt, których nie da się sięgnąć. Jak Dexo. Może jak Dexo.', en: 'I will not touch it again. One value. Either my memory, or someone who reached files that cannot be reached. Like Dexo. Maybe like Dexo.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Nie dotykam jej więcej. Jedna wartość. Albo moja pamięć, albo ktoś, kto sięgnął do akt, do których nie da się sięgnąć. Jak Dexo. Może jak Dexo.', en: 'I will not touch it again. One value. Either my memory, or someone who reached files that cannot be reached. Like Dexo. Maybe like Dexo.' }, mode: 'dialogue' },
     ],
   },
 

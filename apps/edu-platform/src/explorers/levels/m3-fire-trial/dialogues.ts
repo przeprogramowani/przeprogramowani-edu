@@ -132,7 +132,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'CORE AI', text: { pl: 'W firmware martwego weryfikatora ta sama sygnatura co w węzłach Księżyca 1 i podstacji Księżyca 2: ENTROPY. Ale tu widać jej trzecią twarz.', en: 'In the dead verifier\'s firmware, the same signature as in Moon 1\'s nodes and Moon 2\'s substation: ENTROPY. But here its third face shows.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Nie psuje maszyn. Nie psuje kolejności. Psuje sprawdzanie. Znam ten podpis. Teraz wiem, jak przeszedł moje testy przed startem. Nie ukrył się przed sprawdzeniem. Był sprawdzeniem.', en: 'It does not break machines. It does not break order. It breaks checking. I know this signature. Now I know how it passed my pre-launch tests. It did not hide from the check. It was the check.' }, mode: 'dialogue' },
       { speaker: 'Iskra', text: { pl: 'Wszystkie systemy sprawne.', en: 'All systems operational.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Nie. Iskra, wymuszam autotest ręcznie. — ...Wróciła lista: dziewiętnaście usterek. Dobrze. Nie komentujmy tego.', en: 'No. Iskra, I am forcing a manual autotest. — ...The list returned: nineteen faults. Good. Let\'s not comment on that.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Nie. Iskra, wymuszam autotest ręcznie. …Wróciła lista: dziewiętnaście usterek. Dobrze. Nie komentujmy tego.', en: 'No. Iskra, I am forcing a manual autotest. …The list returned: nineteen faults. Good. Let\'s not comment on that.' }, mode: 'dialogue' },
     ],
   },
 
