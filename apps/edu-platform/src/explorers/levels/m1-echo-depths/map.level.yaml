@@ -15,12 +15,14 @@ grid: |
   ~#..........#~~~###~~~
   ~############~~~~~~~~~
 props:
-  - { id: node-beta, prop: void-node, at: [11, 1], solid: true }
-  - { id: node-east, prop: void-node, at: [18, 1], solid: false }
+  - { id: node-beta, prop: energy-barrier, at: [11, 1], solid: true }
   - { prop: holographic-console, at: [2, 2], solid: false }
-  - { prop: holographic-console, at: [13, 9], solid: false }
-  - { id: node-gamma, prop: void-node, at: [17, 11], solid: true }
-  - { prop: synaptit-ore, at: [2, 12], solid: false }
+  - { prop: broken-scout-drone, at: [2, 12], solid: true }
+  - { prop: energy-barrier, at: [10, 9], solid: true }
+  - { prop: synaptit-ore, at: [17, 11], solid: true }
+  - { prop: holographic-console, at: [3, 7], solid: true }
+  - { prop: broken-scout-drone, at: [19, 1], solid: true }
+  - { prop: energy-barrier, at: [17, 8], solid: true }
 zones:
   - id: grove-door
     name: Return to Probe Grove
@@ -33,7 +35,7 @@ zones:
   - id: field-console
     name: Field Analysis Station
     type: trigger
-    at: [13, 9]
+    at: [3, 7]
   - id: exam-protocol-3
     name: Expedition Protocol Terminal III
     type: exam
@@ -43,7 +45,7 @@ zones:
   - id: node-deep
     name: Deep Node
     type: trigger
-    propId: node-gamma
+    at: [10, 9]
   - id: node-north
     name: North Node
     type: trigger
@@ -51,25 +53,25 @@ zones:
   - id: node-east
     name: East Node
     type: trigger
-    propId: node-east
+    at: [17, 8]
   - id: synaptit-outcrop
     name: Synaptit Outcrop
     type: trigger
-    at: [2, 12]
+    at: [17, 11]
   - id: swierszcz
     name: Świerszcz
     type: npc
-    at: [11, 5]
+    at: [6, 8]
     properties:
       npcType: robot
       npcVariant: jungle-dark-green
   - id: silence-orb
     name: Silence Orb
     type: npc
-    at: [11, 8]
+    at: [8, 12]
     properties:
       npcType: orb
-      npcVariant: hologram-blue
+      npcVariant: jungle-dark-green
       requiredFlags: m1-sensors-online
   - id: vein-door
     name: Route to the Vein

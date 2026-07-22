@@ -6,17 +6,23 @@ export interface RankDefinition {
   tier: number;
   name: string;
   minXP: number;
+  badgeImage: string | null;
 }
 
 export const RANKS: readonly RankDefinition[] = [
-  { tier: 1, name: '???', minXP: 0 },
-  { tier: 2, name: 'Space Adept', minXP: 100 },
-  { tier: 3, name: 'Moon Engineer', minXP: 1000 },
-  { tier: 4, name: 'Solar Builder', minXP: 2000 },
-  { tier: 5, name: 'Stellar Explorer', minXP: 3000 },
-  { tier: 6, name: 'Cosmic Architect', minXP: 4000 },
-  { tier: 7, name: 'Deep Space Pioneer', minXP: 5000 },
+  { tier: 1, name: '???', minXP: 0, badgeImage: null },
+  { tier: 2, name: 'Space Adept', minXP: 100, badgeImage: '/game/badges/space-adept.png' },
+  { tier: 3, name: 'Moon Engineer', minXP: 1000, badgeImage: '/game/badges/moon-engineer.png' },
+  { tier: 4, name: 'Solar Builder', minXP: 2000, badgeImage: '/game/badges/solar-builder.png' },
+  { tier: 5, name: 'Stellar Explorer', minXP: 3000, badgeImage: '/game/badges/stellar-explorer.png' },
+  { tier: 6, name: 'Cosmic Architect', minXP: 4000, badgeImage: '/game/badges/cosmic-architect.png' },
+  { tier: 7, name: 'Deep Space Pioneer', minXP: 5000, badgeImage: '/game/badges/deep-space-pioneer.png' },
 ] as const;
+
+/** Resolve a shareable badge rank, falling back when the tier has no badge. */
+export function getBadgeRankForTier(tier: number): RankDefinition {
+  return RANKS.find((rank) => rank.tier === tier && rank.badgeImage !== null) ?? RANKS[1];
+}
 
 export interface RankInfo {
   rank: RankDefinition;

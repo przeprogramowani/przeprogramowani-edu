@@ -1,11 +1,10 @@
 ---
-import { RANKS } from '@/explorers/config/ranks';
+import { getBadgeRankForTier } from '@/explorers/config/ranks';
 
 const tier = Number(Astro.url.searchParams.get('tier') ?? '2');
-const rank = RANKS.find((r) => r.tier === tier) ?? RANKS[1];
+const rank = getBadgeRankForTier(tier);
 const name = rank.name;
-
-const imgUrl = `/game/badges/rank-1.jpeg`;// `/game/badges/rank-${tier}.jpeg`;
+const imgUrl = rank.badgeImage!;
 ---
 <!doctype html>
 <html lang="pl">

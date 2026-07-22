@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   getRankForXP,
   getRankProgress,
+  getBadgeRankForTier,
   buildRankUpDialogues,
   getRankUpDialogueId,
 } from './ranks';
@@ -60,6 +61,27 @@ describe('getRankForXP', () => {
   it('returns null nextRank for max rank', () => {
     const { nextRank } = getRankForXP(5000);
     expect(nextRank).toBeNull();
+  });
+});
+
+describe('getBadgeRankForTier', () => {
+  it.each([
+    [2, 'Space Adept', '/game/badges/space-adept.png'],
+    [3, 'Moon Engineer', '/game/badges/moon-engineer.png'],
+    [4, 'Solar Builder', '/game/badges/solar-builder.png'],
+    [5, 'Stellar Explorer', '/game/badges/stellar-explorer.png'],
+    [6, 'Cosmic Architect', '/game/badges/cosmic-architect.png'],
+    [7, 'Deep Space Pioneer', '/game/badges/deep-space-pioneer.png'],
+  ])('maps tier %i to %s artwork', (tier, name, badgeImage) => {
+    expect(getBadgeRankForTier(tier)).toMatchObject({ tier, name, badgeImage });
+  });
+
+  it.each([1, 0, 8, Number.NaN])('falls back to Space Adept for tier %s', (tier) => {
+    expect(getBadgeRankForTier(tier)).toMatchObject({
+      tier: 2,
+      name: 'Space Adept',
+      badgeImage: '/game/badges/space-adept.png',
+    });
   });
 });
 

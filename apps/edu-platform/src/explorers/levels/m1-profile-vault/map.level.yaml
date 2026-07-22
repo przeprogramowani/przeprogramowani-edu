@@ -18,16 +18,36 @@ grid: |
   ~~~~~~~~~~~~~~~~~~~~~~~~
 props:
   - { id: cert-terminal, prop: holographic-console, at: [7, 3], solid: true }
-  - { id: kit-core, prop: energy-core, at: [5, 4], solid: true }
+  - { id: kit-core, prop: ancient-portal, at: [5, 4], solid: true }
   - { prop: synaptit-ore, at: [16, 4], solid: true }
   - { prop: synaptit-ore, at: [19, 4], solid: true }
   - { id: chamber-barrier, prop: energy-barrier, at: [17, 7], solid: false }
   - { id: survey-rig, prop: holographic-console, at: [3, 9], solid: true }
   - { id: deep-scan-station, prop: holographic-console, at: [4, 9], solid: true }
   - { prop: synaptit-ore, at: [10, 10], solid: false }
-  - { prop: synaptit-ore, at: [7, 12], solid: true }
   - { prop: synaptit-ore, at: [15, 12], solid: false }
   - { prop: synaptit-ore, at: [20, 12], solid: false }
+  - { prop: synaptit-ore, at: [19, 6], solid: true }
+  - { prop: synaptit-ore, at: [20, 6], solid: true }
+  - { prop: synaptit-ore, at: [20, 5], solid: true }
+  - { prop: synaptit-ore, at: [1, 12], solid: true }
+  - { prop: synaptit-ore, at: [2, 12], solid: true }
+  - { prop: synaptit-ore, at: [8, 12], solid: true }
+  - { prop: synaptit-ore, at: [5, 12], solid: true }
+  - { prop: synaptit-ore, at: [3, 12], solid: true }
+  - { prop: synaptit-ore, at: [1, 9], solid: true }
+  - { prop: synaptit-ore, at: [2, 9], solid: true }
+  - { prop: synaptit-ore, at: [3, 11], solid: true }
+  - { prop: synaptit-ore, at: [7, 11], solid: true }
+  - { prop: synaptit-ore, at: [4, 6], solid: true }
+  - { prop: synaptit-ore, at: [3, 5], solid: true }
+  - { prop: synaptit-ore, at: [8, 6], solid: true }
+  - { prop: synaptit-ore, at: [14, 9], solid: true }
+  - { prop: synaptit-ore, at: [15, 9], solid: true }
+  - { prop: synaptit-ore, at: [16, 10], solid: true }
+  - { prop: synaptit-ore, at: [22, 12], solid: true }
+  - { prop: ancient-portal, at: [17, 4], solid: true }
+  - { prop: energy-core, at: [19, 3], solid: true }
 zones:
   - id: silence-door
     name: Return to the Silence Zone
