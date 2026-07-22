@@ -1,51 +1,46 @@
 # M3 L4 — Wyżarzalnia / The Annealing Yard
-# Cathedral scale: heat-cycle stations set in rows like a vineyard, a crystal
-# garden glittering along the eastern chimney line, a dead relay dish on the north
-# ridge, and the assay module anchoring the south. First controlled fire of the moon.
+# Cathedral scale. A long nave runs door to door; three anneal bays stand off the
+# north ridge like a vineyard's rows, the dead relay dish rusting in the first of
+# them. The whole east wall is a crystal garden — a tall chimney wing veined with
+# Synaptit and crowned by a lava-obelisk. The south apse holds the assay rig and the
+# cooling-loop fault trace. The first controlled fire of the moon.
 theme: 4
 grid: |
-  ##################################
-  #................................#
-  #................................#
-  #................................#
-  #................................#
-  #................................#
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~######~~######~~######~~~~~~~~
+  ~~~~#....#~~#....#~~#....#~#######
+  ~~~~#....#~~#....#~~#....#~#.....#
+  ~~~~#....#~~#....#~~#....#~#.....#
+  #####....####....####....###.....#
   #................................#
   D................................D
   #................................#
   #................................#
   #................................#
-  #................................#
-  #................................#
-  #................................#
-  #................................#
-  #................................#
-  #................................#
-  ##################################
+  ############..........######.....#
+  ~~~~~~~~~~~#..........#~~~~#.....#
+  ~~~~~~~~~~~#..........#~~~~#.....#
+  ~~~~~~~~~~~#..........#~~~~#######
+  ~~~~~~~~~~~#..........#~~~~~~~~~~~
+  ~~~~~~~~~~~############~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 props:
-  - { id: ridge-antenna, prop: satellite-dish, at: [24, 2], solid: true }
-  - { prop: lava-geyser, at: [30, 3], solid: true }
-  - { prop: magma-crystals, at: [6, 5], solid: true }
-  - { prop: magma-crystals, at: [7, 5], solid: false }
-  - { prop: magma-crystals, at: [12, 5], solid: false }
-  - { prop: magma-crystals, at: [19, 5], solid: true }
-  - { prop: magma-crystals, at: [28, 5], solid: true }
-  - { prop: magma-crystals, at: [29, 5], solid: false }
+  - { id: ridge-antenna, prop: satellite-dish, at: [6, 3], solid: true }
+  - { id: anneal-row, prop: lava-geyser, at: [14, 3], solid: true }
+  - { prop: lava-geyser, at: [22, 3], solid: true }
+  - { prop: magma-crystals, at: [7, 4], solid: false }
+  - { prop: magma-crystals, at: [15, 4], solid: false }
+  - { prop: synaptit-ore, at: [30, 4], solid: true }
   - { prop: synaptit-ore, at: [31, 6], solid: false }
-  - { id: ore-veins, prop: synaptit-ore, at: [30, 7], solid: true }
-  - { id: anneal-row, prop: lava-geyser, at: [10, 8], solid: true }
-  - { prop: lava-obelisk, at: [31, 9], solid: true }
-  - { prop: magma-crystals, at: [6, 11], solid: true }
-  - { prop: magma-crystals, at: [12, 11], solid: false }
-  - { prop: magma-crystals, at: [20, 11], solid: true }
-  - { prop: synaptit-ore, at: [30, 11], solid: true }
-  - { prop: magma-crystals, at: [28, 12], solid: true }
-  - { prop: magma-crystals, at: [29, 12], solid: false }
-  - { prop: synaptit-ore, at: [31, 12], solid: false }
-  - { id: fault-trace-station, prop: satellite-dish, at: [14, 13], solid: true }
-  - { id: assay-rig, prop: survey-lander, at: [16, 13], solid: true }
-  - { id: assay-terminal, prop: survey-lander, at: [18, 13], solid: true }
-  - { prop: lava-geyser, at: [30, 14], solid: true }
+  - { prop: lava-geyser, at: [25, 8], solid: true }
+  - { prop: synaptit-ore, at: [29, 8], solid: true }
+  - { id: ore-veins, prop: synaptit-ore, at: [31, 8], solid: true }
+  - { prop: magma-crystals, at: [9, 9], solid: false }
+  - { prop: synaptit-ore, at: [30, 10], solid: false }
+  - { prop: lava-obelisk, at: [30, 12], solid: true }
+  - { id: assay-rig, prop: survey-lander, at: [15, 13], solid: true }
+  - { id: assay-terminal, prop: survey-lander, at: [17, 13], solid: true }
+  - { id: fault-trace-station, prop: satellite-dish, at: [19, 13], solid: true }
 zones:
   - id: trial-door
     name: Return to the Fire Trial
@@ -71,13 +66,13 @@ zones:
   - id: fault-trace-station
     name: Cooling-Loop Fault Trace
     type: arcade
-    at: [14, 13]
+    propId: fault-trace-station
     properties:
       arcadeGameId: arcade-fault-trace
   - id: anneal-row
     name: Anneal Row
     type: trigger
-    at: [10, 8]
+    propId: anneal-row
   - id: ridge-antenna
     name: Ridge Relay Antenna
     type: trigger
@@ -89,7 +84,7 @@ zones:
   - id: iskra-yard
     name: Iskra
     type: npc
-    at: [7, 14]
+    at: [7, 8]
     properties:
       npcType: robot
       npcVariant: crimson-red

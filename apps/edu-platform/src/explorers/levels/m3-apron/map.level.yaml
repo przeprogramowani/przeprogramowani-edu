@@ -1,39 +1,38 @@
 # M3 L1 — Przedpole / The Apron
-# Black-glass volcanic apron: the shuttle sits west, the survey camp anchors the
-# centre, and three audit points sit out on the outskirts. The main board reads
-# ALL SYSTEMS NOMINAL over cold chimneys — a sea of green over a dead station.
+# A survey clearing carved into the black-glass apron: molten lava on every side,
+# three finger-piers reaching out to the audit points (cooling tower NW, telemetry
+# mast NE, seismic anchor SE), the shuttle in a west landing bay, and the survey
+# camp under the main board. A sea of green readouts over a dead station.
 theme: 4
 grid: |
-  ##############################
-  #............................#
-  #............................#
-  #............................#
-  #............................#
-  #............................#
-  #............................#
+  ~~~######~~~~~~~~~~######~~~~~
+  ~~~#....#~~~~~~~~~~#....#~~~~~
+  ~~~#....############....#~~~~~
+  ~~~####.##..........##.##~~~~~
+  ~~~~~~#.##..........##.#~~~~~~
+  #######................#~~~~~~
+  #......................#######
   #............................D
   #............................#
-  #............................#
-  #............................#
-  #............................#
-  #............................#
-  #............................#
-  #............................#
-  ##############################
+  #......................#######
+  #######................#~~~~~~
+  ~~~~~~##############.###~~~~~~
+  ~~~~~~~~~~~~~~~~~###.###~~~~~~
+  ~~~~~~~~~~~~~~~~~#.....#~~~~~~
+  ~~~~~~~~~~~~~~~~~#.....#~~~~~~
+  ~~~~~~~~~~~~~~~~~#######~~~~~~
 props:
-  - { id: main-board, prop: survey-lander, at: [14, 2], solid: true }
-  - { id: audit-tower, prop: magma-crystals, at: [7, 3], solid: true }
-  - { id: audit-mast, prop: satellite-dish, at: [25, 3], solid: true }
-  - { prop: magma-crystals, at: [7, 4], solid: false }
-  - { prop: magma-crystals, at: [10, 4], solid: false }
-  - { prop: magma-crystals, at: [21, 5], solid: false }
+  - { id: audit-tower, prop: magma-crystals, at: [5, 1], solid: true }
+  - { id: audit-mast, prop: satellite-dish, at: [22, 1], solid: true }
+  - { id: main-board, prop: survey-lander, at: [14, 3], solid: true }
+  - { id: camp-module, prop: survey-lander, at: [11, 6], solid: true }
+  - { id: camp-terminal, prop: survey-lander, at: [13, 6], solid: true }
+  - { prop: magma-crystals, at: [20, 6], solid: false }
   - { id: ship-teleport, prop: ship-teleport, at: [2, 7], solid: true }
-  - { id: camp-terminal, prop: survey-lander, at: [12, 8], solid: true }
-  - { id: camp-module, prop: survey-lander, at: [14, 8], solid: true }
-  - { prop: magma-crystals, at: [6, 11], solid: false }
-  - { prop: lava-geyser, at: [19, 12], solid: true }
-  - { prop: magma-crystals, at: [23, 12], solid: false }
-  - { id: audit-anchor, prop: magma-crystals, at: [24, 12], solid: true }
+  - { prop: magma-crystals, at: [9, 8], solid: false }
+  - { prop: lava-geyser, at: [18, 9], solid: true }
+  - { prop: magma-crystals, at: [16, 10], solid: false }
+  - { id: audit-anchor, prop: magma-crystals, at: [20, 14], solid: true }
 zones:
   - id: ship-teleport
     name: Landed Shuttle
@@ -75,7 +74,7 @@ zones:
   - id: moreau
     name: Moreau
     type: npc
-    at: [13, 9]
+    at: [14, 8]
     properties:
       npcType: scientist
       npcVariant: crimson-red

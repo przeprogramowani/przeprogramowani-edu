@@ -1,36 +1,34 @@
 # M3 L5 — Izba Probiercza / The Assay Office
-# A caldera-edge vault: archive walls of the whole Project Odyssey, the assay desk
-# with its physical stamp, the main dish that runs the canary track, and beyond the
-# rim the lava-obelisk — older than any mission data, never activated, never
-# explained. Iskra waits at the approach ledge. Near-isolation by design.
+# A vault at the caldera's edge. The archive hall holds the whole record of Project
+# Odyssey; the assay desk carries the physical stamp; the main dish runs the canary
+# track. West is Iskra's approach ledge. East, across a single-tile causeway over the
+# rim, stands the lava-obelisk — older than any mission data, never activated, never
+# explained. Near-isolation by design.
 theme: 4
 grid: |
-  ##########################
-  #........................#
-  #........................#
-  #........................#
-  #........................#
-  #........................#
-  #........................#
-  D........................#
-  #........................#
-  #........................#
-  #........................#
-  #........................#
-  #........................#
-  ##########################
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~###############~~~~~~~
+  ~~~~#.............#~~~~~~~
+  ~~~~#.............#######~
+  #####.............##....#~
+  #.................##....#~
+  D.......................#~
+  #.................##....#~
+  #####.............##....#~
+  ~~~~#.............#######~
+  ~~~~#.............#~~~~~~~
+  ~~~~###############~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
 props:
-  - { id: main-dish, prop: satellite-dish, at: [8, 3], solid: true }
-  - { prop: magma-crystals, at: [18, 3], solid: false }
-  - { prop: magma-crystals, at: [22, 6], solid: true }
-  - { id: assay-desk, prop: survey-lander, at: [12, 7], solid: true }
-  - { id: assay-stand, prop: survey-lander, at: [14, 7], solid: true }
-  - { prop: lava-obelisk, at: [23, 7], solid: true }
-  - { prop: magma-crystals, at: [22, 8], solid: true }
-  - { prop: synaptit-ore, at: [23, 9], solid: true }
-  - { prop: magma-crystals, at: [20, 10], solid: false }
-  - { prop: magma-crystals, at: [5, 11], solid: false }
-  - { prop: magma-crystals, at: [10, 11], solid: false }
+  - { id: main-dish, prop: satellite-dish, at: [8, 4], solid: true }
+  - { prop: magma-crystals, at: [15, 5], solid: false }
+  - { id: assay-desk, prop: survey-lander, at: [10, 7], solid: true }
+  - { id: assay-stand, prop: survey-lander, at: [12, 7], solid: true }
+  - { prop: lava-obelisk, at: [22, 7], solid: true }
+  - { prop: magma-crystals, at: [21, 8], solid: false }
+  - { prop: magma-crystals, at: [7, 9], solid: false }
+  - { prop: synaptit-ore, at: [14, 9], solid: true }
 zones:
   - id: annealing-door
     name: Return to the Annealing Yard
@@ -51,11 +49,11 @@ zones:
   - id: overlook
     name: Caldera Overlook
     type: trigger
-    at: [21, 7]
+    at: [18, 7]
   - id: iskra-approach
     name: Iskra
     type: npc
-    at: [4, 7]
+    at: [3, 8]
     properties:
       npcType: robot
       npcVariant: crimson-red

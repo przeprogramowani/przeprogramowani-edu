@@ -1,35 +1,35 @@
 # M3 L3 — Próba Ognia / The Fire Trial
-# A test hall under open sky: three trial stands in a row over lava nozzles, the
-# control module on the axis, and a trench under stand 3 where the moon's first
-# Synaptit vein is exposed. The range that passed everything and checked nothing.
+# A formal test range under open sky: a north control gallery overlooks three test
+# bays set in a dead-straight row, each a stand planted over a lava nozzle. Under
+# stand 3 the trench splits open on the moon's first exposed Synaptit vein. Everything
+# here is square, ordered, symmetric — the range that passed every trial and checked nothing.
 theme: 4
 grid: |
-  ##############################
-  #............................#
-  #............................#
-  #............................#
-  #............................#
-  #............................#
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~##########~~~~~~~~~~
+  ~~~~~~~~~~#........#~~~~~~~~~~
+  ~~~~~~~~~~#........#~~~~~~~~~~
+  ###########........###########
   #............................#
   D............................D
   #............................#
-  #............................#
-  #............................#
-  #............................#
-  #............................#
-  ##############################
+  #####....####....####....#####
+  ~~~~#....#~~#....#~~#....#~~~~
+  ~~~~#....#~~#....#~~#....#~~~~
+  ~~~~######~~######~~######~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 props:
-  - { id: trial-control, prop: survey-lander, at: [14, 3], solid: true }
-  - { id: trial-terminal, prop: survey-lander, at: [16, 3], solid: true }
-  - { prop: magma-crystals, at: [11, 5], solid: false }
-  - { id: geyser-1, prop: lava-geyser, at: [8, 7], solid: true }
-  - { id: geyser-2, prop: lava-geyser, at: [15, 7], solid: true }
-  - { id: geyser-3, prop: lava-geyser, at: [22, 7], solid: true }
-  - { prop: magma-crystals, at: [8, 8], solid: false }
-  - { prop: magma-crystals, at: [15, 8], solid: false }
-  - { prop: magma-crystals, at: [22, 8], solid: false }
-  - { prop: magma-crystals, at: [19, 10], solid: false }
-  - { id: ore-vein, prop: synaptit-ore, at: [22, 11], solid: true }
+  - { id: trial-control, prop: survey-lander, at: [13, 4], solid: true }
+  - { id: trial-terminal, prop: survey-lander, at: [16, 4], solid: true }
+  - { prop: magma-crystals, at: [11, 6], solid: false }
+  - { prop: magma-crystals, at: [18, 6], solid: false }
+  - { id: geyser-1, prop: lava-geyser, at: [6, 10], solid: true }
+  - { id: geyser-2, prop: lava-geyser, at: [14, 10], solid: true }
+  - { id: geyser-3, prop: lava-geyser, at: [22, 10], solid: true }
+  - { prop: magma-crystals, at: [7, 11], solid: false }
+  - { prop: magma-crystals, at: [15, 11], solid: false }
+  - { id: ore-vein, prop: synaptit-ore, at: [23, 11], solid: true }
 zones:
   - id: boneyard-door
     name: Return to the Boneyard
@@ -71,7 +71,7 @@ zones:
   - id: iskra
     name: Iskra
     type: npc
-    at: [5, 10]
+    at: [4, 7]
     properties:
       npcType: robot
       npcVariant: crimson-red

@@ -1,42 +1,40 @@
 # M3 L2 — Złomowisko / The Boneyard
-# A wreck field of machines that walked into the lava with green lights blinking.
-# Frozen lava streams (magma-crystals) wind between the hulls; the only red light
-# on the whole moon is I-5KRA, parked on the safe edge. The service module sits
-# mid-field. Deliberate isolation — Moreau and Kern speak through the module.
+# A wreck field where machines walked into the lava with green lights still blinking.
+# Frozen lava streams wind between the hulls — the drivable spine threads bay to bay,
+# each pocket holding a scorched rover. The only red light on the whole moon is I-5KRA,
+# parked on the safe northeast edge. The service module sits mid-field; Moreau and Kern
+# speak only through it. Deliberate isolation by design.
 theme: 4
 grid: |
-  ################################
-  #..............................#
-  #..............................#
-  #..............................#
-  #..............................#
-  #..............................#
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~#######~~~~~~~~~~~~~~~~
+  ~######~~#.....#~~######~~######
+  ~#....#~~#.....#~~#....#~~#....#
+  ~#....#~~#.....#~~#....#~~#....#
+  ##....####.....####....####....#
   #..............................#
   D..............................D
   #..............................#
-  #..............................#
-  #..............................#
-  #..............................#
-  #..............................#
-  ################################
+  ######....#####....#####.....###
+  ~~~~~#....#~~~#....#~~~#.....#~~
+  ~~~~~#....#~~~#....#~~~#.....#~~
+  ~~~~~######~~~######~~~#######~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 props:
-  - { prop: lava-geyser, at: [12, 3], solid: true }
-  - { prop: exploration-rover, at: [19, 3], solid: true }
-  - { id: wreck-1, prop: exploration-rover, at: [8, 4], solid: true }
-  - { prop: exploration-rover, at: [25, 4], solid: true }
-  - { prop: magma-crystals, at: [5, 5], solid: false }
-  - { id: service-module, prop: survey-lander, at: [15, 6], solid: true }
-  - { id: service-terminal, prop: survey-lander, at: [17, 6], solid: true }
-  - { prop: magma-crystals, at: [20, 6], solid: true }
-  - { prop: magma-crystals, at: [10, 7], solid: true }
-  - { prop: magma-crystals, at: [20, 7], solid: false }
-  - { prop: magma-crystals, at: [10, 8], solid: false }
-  - { prop: magma-crystals, at: [24, 8], solid: false }
-  - { prop: exploration-rover, at: [6, 9], solid: true }
-  - { id: wreck-2, prop: exploration-rover, at: [22, 9], solid: true }
-  - { prop: exploration-rover, at: [11, 10], solid: true }
-  - { prop: magma-crystals, at: [14, 11], solid: false }
-  - { id: i5kra, prop: exploration-rover, at: [27, 11], solid: true }
+  - { id: wreck-1, prop: exploration-rover, at: [11, 3], solid: true }
+  - { prop: exploration-rover, at: [3, 4], solid: true }
+  - { prop: exploration-rover, at: [12, 4], solid: true }
+  - { prop: magma-crystals, at: [19, 4], solid: false }
+  - { prop: exploration-rover, at: [21, 4], solid: true }
+  - { id: i5kra, prop: exploration-rover, at: [29, 4], solid: true }
+  - { prop: magma-crystals, at: [5, 7], solid: false }
+  - { prop: magma-crystals, at: [13, 7], solid: false }
+  - { id: service-module, prop: survey-lander, at: [15, 7], solid: true }
+  - { id: service-terminal, prop: survey-lander, at: [17, 7], solid: true }
+  - { prop: magma-crystals, at: [23, 7], solid: false }
+  - { prop: lava-geyser, at: [8, 10], solid: true }
+  - { id: wreck-2, prop: exploration-rover, at: [16, 10], solid: true }
+  - { prop: exploration-rover, at: [26, 10], solid: true }
 zones:
   - id: apron-door
     name: Return to the Apron
@@ -74,7 +72,7 @@ zones:
   - id: iskra-return
     name: Iskra
     type: npc
-    at: [4, 10]
+    at: [7, 10]
     properties:
       npcType: robot
       npcVariant: crimson-red
