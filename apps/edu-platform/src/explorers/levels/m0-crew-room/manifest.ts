@@ -26,6 +26,10 @@ export const manifest: LevelManifest = {
       ],
     },
     {
+      zoneId: 'kern-engineer',
+      defaultDialogue: 'm0-board-kern',
+    },
+    {
       zoneId: 'whiteboard',
       defaultDialogue: 'm0-whiteboard',
       flagVariants: [{ flag: crewRoomArcadeFlags.oscilloscope, dialogue: 'm0-whiteboard-oscilloscope-cleared' }],

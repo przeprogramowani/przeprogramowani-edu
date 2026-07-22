@@ -1,0 +1,71 @@
+# M4 L2 — Zajezdnia / The Courier Yard
+# An underground courier depot: rows of file-crawlers frozen mid-route, each buried
+# under its own private dune of sand sifted through a cracked roof. One unit — E-CH0 —
+# is parked at a side hatch, facing the exit as if still waiting for an order. A loading
+# annex opens to the south; the service well holds the route journal. Library-quiet.
+theme: 5
+grid: |
+  ##########################~~~~
+  #........................#~~~~
+  #........................#~~~~
+  #........................#~~~~
+  #........................#~~~~
+  #........................#~~~~
+  #........................#~~~~
+  D........................#~~~~
+  #........................#~~~~
+  #######........###########~~~~
+  ~~~~~~#........#~~~~~~~~~~~~~~
+  ~~~~~~#........#~~~~~~~~~~~~~~
+  ~~~~~~##########~~~~~~~~~~~~~~
+props:
+  - { prop: supply-canister, at: [6, 2], solid: true }
+  - { id: echo-unit, prop: supply-canister, at: [20, 2], solid: true }
+  - { id: service-well, prop: desert-well, at: [10, 3], solid: true }
+  - { id: service-terminal, prop: supply-canister, at: [12, 3], solid: true }
+  - { prop: supply-canister, at: [16, 5], solid: true }
+  - { prop: supply-canister, at: [6, 6], solid: true }
+  - { prop: supply-canister, at: [18, 6], solid: true }
+  - { id: index-hatch, prop: buried-hatch, at: [22, 7], solid: true }
+  - { id: yard-power, prop: solar-panel, at: [9, 10], solid: true }
+  - { id: misplaced-canister, prop: supply-canister, at: [12, 11], solid: true }
+zones:
+  - id: caravanserai-door
+    name: Return to the Caravanserai
+    type: door
+    at: [0, 7]
+    properties:
+      targetMap: m4-caravanserai
+      spawnX: 26
+      spawnY: 7
+  - id: index-door
+    name: Side Hatch — to the Erased Index
+    type: door
+    propId: index-hatch
+    properties:
+      targetMap: m4-erased-index
+      spawnX: 2
+      spawnY: 7
+      requiredFlags: m4-echo-online
+  - id: service-well
+    name: Depot Service Well
+    type: trigger
+    propId: service-well
+  - id: echo-unit
+    name: Unit E-CH0
+    type: trigger
+    propId: echo-unit
+  - id: yard-power
+    name: Buried Yard Power Line
+    type: trigger
+    propId: yard-power
+  - id: misplaced-canister
+    name: File Canister — Wrong Cart
+    type: trigger
+    propId: misplaced-canister
+  - id: exam-protocol-17
+    name: Expedition Protocol Terminal XVII
+    type: exam
+    propId: service-terminal
+    properties:
+      examId: m4-exam-protocol-17

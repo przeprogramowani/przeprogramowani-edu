@@ -1,0 +1,103 @@
+# M4 L4 — Skarbiec Map / The Map Vault
+# An underground canyon of shelving: shelves like rock walls, catwalks and lifts over
+# a chasm of files, sand cones on the floor. Three geological bays stand off the north
+# ridge; the east chimney wing glitters with Synaptit veins behind collapsed galleries;
+# the south apse holds the survey head and the Cartograph console. From here the first
+# Master Deposit Map is compiled — cargo that weighs less than it means.
+theme: 5
+grid: |
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~######~~######~~######~~~~~~~~
+  ~~~~#....#~~#....#~~#....#~#######
+  ~~~~#....#~~#....#~~#....#~#.....#
+  ~~~~#....#~~#....#~~#....#~#.....#
+  #####....####....####....###.....#
+  #................................#
+  D................................#
+  #................................#
+  #................................#
+  #................................#
+  ############..........######.....#
+  ~~~~~~~~~~~#..........#~~~~#.....#
+  ~~~~~~~~~~~#..........#~~~~#.....#
+  ~~~~~~~~~~~#..........#~~~~#######
+  ~~~~~~~~~~~############~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+props:
+  - { id: medbay-access, prop: supply-canister, at: [14, 3], solid: true }
+  - { id: kern-file, prop: supply-canister, at: [21, 3], solid: true }
+  - { prop: synaptit-ore, at: [30, 3], solid: false }
+  - { id: vein-1, prop: synaptit-ore, at: [30, 4], solid: true }
+  - { id: echo, prop: signal-beacon, at: [6, 6], solid: false }
+  - { id: map-head, prop: desert-well, at: [15, 7], solid: true }
+  - { id: map-terminal, prop: supply-canister, at: [17, 7], solid: true }
+  - { id: lifts-power, prop: solar-panel, at: [8, 8], solid: true }
+  - { id: vein-2, prop: synaptit-ore, at: [30, 8], solid: true }
+  - { id: memory-hatch, prop: buried-hatch, at: [30, 9], solid: true }
+  - { id: survey-head, prop: desert-well, at: [19, 13], solid: true }
+zones:
+  - id: index-door
+    name: Return to the Erased Index
+    type: door
+    at: [0, 7]
+    properties:
+      targetMap: m4-erased-index
+      spawnX: 14
+      spawnY: 7
+  - id: memory-door
+    name: Gallery Sluice — to the Memory Vault
+    type: door
+    propId: memory-hatch
+    properties:
+      targetMap: m4-memory-vault
+      spawnX: 2
+      spawnY: 7
+      requiredFlags: m4-master-map
+  - id: map-head
+    name: Map Vault Head
+    type: trigger
+    propId: map-head
+  - id: lifts-power
+    name: Buried Lift Power
+    type: trigger
+    propId: lifts-power
+  - id: cartograph-station
+    name: Cartograph Console
+    type: arcade
+    propId: survey-head
+    properties:
+      arcadeGameId: arcade-cartograph
+  - id: kern-file
+    name: dr Kern's Case File
+    type: trigger
+    propId: kern-file
+  - id: medbay-access
+    name: Personnel Wing Access Log
+    type: trigger
+    propId: medbay-access
+  - id: vein-1
+    name: Gallery Synaptit Vein
+    type: trigger
+    propId: vein-1
+  - id: vein-2
+    name: Gallery Synaptit Vein
+    type: trigger
+    propId: vein-2
+  - id: echo
+    name: Echo
+    type: npc
+    at: [10, 6]
+    properties:
+      npcType: robot
+  - id: kern
+    name: dr Kern
+    type: npc
+    at: [16, 13]
+    properties:
+      npcType: scientist
+  - id: exam-protocol-19
+    name: Expedition Protocol Terminal XIX
+    type: exam
+    propId: map-terminal
+    properties:
+      examId: m4-exam-protocol-19

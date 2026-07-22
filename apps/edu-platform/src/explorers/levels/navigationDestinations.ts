@@ -89,12 +89,14 @@ export const NAV_DESTINATIONS: readonly NavDestination[] = [
     id: 'moon-4',
     name: { pl: 'Księżyc 4 — Pustynny', en: 'Moon 4 — Desert' },
     description: {
-      pl: 'Banki pamięci długoterminowej. Sygnał niedostępny.',
-      en: 'Long-term memory banks. Signal unavailable.',
+      pl: 'Zasypane archiwum serii Odyssey-A. Nadajnik wciąż podaje sumę kontrolną katalogu — a suma wynosi zero.',
+      en: 'The buried Odyssey-A archive. Its beacon still transmits the catalogue checksum — and the checksum is zero.',
     },
     codename: 'Megalithic Monolith',
     eta: '2026-06-12',
-    targetMap: null,
+    targetMap: 'm4-caravanserai',
+    spawnX: 4,
+    spawnY: 7,
     requiredFlags: [FLAGS.M3_DIAGNOSTICS_ONLINE, FLAGS.SYS_COURSE_M4_AVAILABLE],
   },
   {

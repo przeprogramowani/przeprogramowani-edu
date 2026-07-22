@@ -6,7 +6,8 @@ export type ArcadeGameType =
   | 'oscilloscope'
   | 'deep-scan'
   | 'switchyard'
-  | 'fault-trace';
+  | 'fault-trace'
+  | 'cartograph';
 
 export interface ArcadeStationContext<
   MapKey extends string = string,

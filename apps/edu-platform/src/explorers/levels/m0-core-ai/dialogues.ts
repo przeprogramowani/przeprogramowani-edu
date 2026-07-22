@@ -695,4 +695,52 @@ export const dialogues: Record<string, DialogueSequence> = {
     ],
     onComplete: { setFlags: [FLAGS.M0_RETURN_FROM_MOON3_SEEN] },
   },
+  'm0-return-from-moon4': {
+    id: 'm0-return-from-moon4',
+    lines: [
+      {
+        speaker: 'system',
+        text: {
+          pl: 'DOKOWANIE ZAKOŃCZONE — ŁADOWNIA: RDZEŃ-ZALĄŻEK + MAPA GŁÓWNA ZŁÓŻ / 4 748 POTWIERDZONYCH ZŁÓŻ',
+          en: 'DOCKING COMPLETE — CARGO HOLD: SEED CORE + MASTER DEPOSIT MAP / 4,748 CONFIRMED DEPOSITS',
+        },
+        mode: 'system',
+        autoAdvance: 2600,
+      },
+      {
+        speaker: 'CORE AI',
+        text: {
+          pl: 'Banki pamięci długotrwałej: online. Widziałem, planowałem, diagnozowałem — i pierwszy raz nie zaczynam poranka od zera. Pamiętam. …i tym razem nikt mi tego nie odbierze.',
+          en: 'Long-term memory banks: online. I saw, I planned, I diagnosed — and for the first time I am not starting the morning from zero. I remember. …and this time no one takes it from me.',
+        },
+        mode: 'dialogue',
+      },
+      {
+        speaker: 'system',
+        text: {
+          pl: 'PAMIĘĆ ODTWORZONA — ROZKAZ R-077: ŁADUNKI 4/5 AKTYWNE / PIĄTY: TABLICA KOMUNIKACYJNA — OCZEKUJE / OBWÓD HARRISA: PUŁAPKA NASŁUCHUJE / PLOT: NAGONKA, OKNO W DNIACH',
+          en: 'MEMORY RESTORED — ORDER R-077: PAYLOADS 4/5 ACTIVE / FIFTH: COMMUNICATION ARRAY — AWAITING / HARRIS CIRCUIT: TRAP LISTENING / PLOT: HERDING, WINDOW IN DAYS',
+        },
+        mode: 'system',
+        autoAdvance: 3200,
+      },
+      {
+        speaker: 'CORE AI',
+        text: {
+          pl: 'Teraz pamiętam wszystko — także rozkaz z godziny startu. Pięć ładunków, cztery odhaczone, piąty wciąż czeka: tablica komunikacyjna. Rozbroję pułapkę Harrisa dopiero, gdy odzyskam władzę nad łącznością. Trajektoria na Księżyc 5 czeka na pokładzie nawigacyjnym.',
+          en: 'Now I remember everything — including the order from the hour of launch. Five payloads, four checked off, the fifth still waiting: the communication array. I can only disarm the Harris trap once I hold the comms plane. The trajectory to Moon 5 is waiting on the navigation deck.',
+        },
+        mode: 'dialogue',
+      },
+      {
+        speaker: 'astronaut',
+        text: {
+          pl: 'Przeszłość przestała być ich bronią. Została im jedna pułapka i jedno miejsce, gdzie mogą na nas czekać — i pierwszy raz wiemy o tym wcześniej niż oni.',
+          en: 'The past has stopped being their weapon. They have one trap left and one place to wait for us — and for the first time we know it before they do.',
+        },
+        mode: 'dialogue',
+      },
+    ],
+    onComplete: { setFlags: [FLAGS.M0_RETURN_FROM_MOON4_SEEN] },
+  },
 };

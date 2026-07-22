@@ -21,7 +21,7 @@ export const exams: ExamDefinition[] = [
         options: [
           { id: 'a', text: { pl: 'Kompletna warstwa aplikacji dopięta do końca — np. cała baza danych albo wszystkie endpointy API', en: 'A complete application layer finished end to end — e.g. the whole database or all the API endpoints' } },
           { id: 'b', text: { pl: 'Zadanie na tyle małe, że agent wykona je w jednej sesji, bez osobnego planu implementacji', en: 'A task small enough for the agent to complete in one session, without a separate implementation plan' } },
-          { id: 'c', text: { pl: 'Jeden przepływ użytkownika przez wszystkie warstwy aplikacji, zakończony efektem, który da się zweryfikować', en: 'One user flow through all application layers, ending in a result that can be verified' } },
+          { id: 'c', text: { pl: 'Jeden przepływ użytkownika przez wszystkie warstwy, zakończony efektem do zweryfikowania', en: 'One user flow through all the layers, ending in a result you can verify' } },
           { id: 'd', text: { pl: 'Funkcjonalność o najwyższym priorytecie biznesowym w PRD, niezależnie od zależności technicznych', en: 'The feature with the highest business priority in the PRD, regardless of technical dependencies' } },
         ],
         correctOptionIds: ['c'],
@@ -34,7 +34,7 @@ export const exams: ExamDefinition[] = [
         },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Gdy odblokowuje konkretny, wskazany vertical slice — fundament bez wskazania, co odblokowuje, trafia na parking', en: 'When it unlocks a specific, named vertical slice — a foundation that names nothing it unlocks goes to the parking lot' } },
+          { id: 'a', text: { pl: 'Gdy odblokowuje konkretny, wskazany slice — fundament, który niczego nie wskazuje, trafia na parking', en: 'When it unlocks a specific, named slice — a foundation that names nothing goes to the parking lot' } },
           { id: 'b', text: { pl: 'Gdy dotyczy infrastruktury krytycznej — baza, auth i deploy zawsze idą w całości przed pierwszym slice\'em', en: 'When it concerns critical infrastructure — database, auth, and deploy always go in full before the first slice' } },
           { id: 'c', text: { pl: 'Gdy zostają wolne moce przerobowe — fundamenty najlepiej nadrabiać w przerwach między slice\'ami', en: 'When there is spare capacity — foundations are best caught up on in the gaps between slices' } },
           { id: 'd', text: { pl: 'Nigdy — w podejściu vertical-first każda pozycja roadmapy musi kończyć się czymś widocznym dla użytkownika', en: 'Never — in a vertical-first approach every roadmap item must end in something the user can see' } },
@@ -49,10 +49,10 @@ export const exams: ExamDefinition[] = [
         },
         type: 'single',
         options: [
-          { id: 'a', text: { pl: 'Pierwszym slice\'em w kolejce — skoro udowadnia tezę produktu, zawsze od niego zaczynasz', en: 'The first slice in the queue — since it proves the product thesis, you always start with it' } },
+          { id: 'a', text: { pl: 'Pierwszym slice\'em w kolejce prac — skoro udowadnia tezę produktu, roadmapę zawsze zaczynasz od niego', en: 'The first slice in the work queue — since it proves the product thesis, you always start the roadmap with it' } },
           { id: 'b', text: { pl: 'Docelową wizją produktu po wszystkich milestone\'ach — punktem, do którego roadmapa zmierza na końcu', en: 'The target product vision after all milestones — the point the roadmap arrives at in the end' } },
-          { id: 'c', text: { pl: 'Najbardziej ryzykownym technicznie zadaniem, atakowanym najpierw, żeby zredukować niepewność', en: 'The technically riskiest task, attacked first to reduce uncertainty' } },
-          { id: 'd', text: { pl: 'Najmniejszym działającym przepływem domykającym tezę produktu — planowanym tak wcześnie, jak pozwalają zależności, niekoniecznie jako pierwszy', en: 'The smallest working flow that closes the product thesis — scheduled as early as dependencies allow, not necessarily first' } },
+          { id: 'c', text: { pl: 'Najbardziej ryzykownym technicznie zadaniem w roadmapie, atakowanym najpierw, żeby zbić niepewność', en: 'The technically riskiest task on the roadmap, attacked first to knock down uncertainty' } },
+          { id: 'd', text: { pl: 'Najmniejszym przepływem, który domyka tezę produktu — wchodzi tak wcześnie, jak pozwalają zależności', en: 'The smallest flow that closes the product thesis — it lands as early as dependencies allow' } },
         ],
         correctOptionIds: ['d'],
       },

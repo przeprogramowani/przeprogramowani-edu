@@ -1,0 +1,87 @@
+# M4 L3 — Wymazany Indeks / The Erased Index
+# A cathedral catalogue hall under the largest dune: carousel spindles reaching to the
+# roof, catwalks and lifts. Every drawer full, every label clean — the cross-references
+# ground to dust, the content untouched. A north niche opens on a Synaptit vein bared in
+# a collapsed wall of shelving; a south reading chamber holds the sealed lower stacks.
+# Through a cracked skylight a thin thread of sand builds a cone on the floor: the hall's
+# own hourglass.
+theme: 5
+grid: |
+  ~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~######~~~~~~~~~
+  ~~~~~~~#....#~~~~~~~~~
+  ########....##########
+  #....................#
+  #....................#
+  D....................#
+  #....................#
+  #....................#
+  #....................#
+  ##########....########
+  ~~~~~~~~~#....#~~~~~~~
+  ~~~~~~~~~#....#~~~~~~~
+  ~~~~~~~~~######~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~
+props:
+  - { id: vein, prop: synaptit-ore, at: [9, 2], solid: true }
+  - { id: catalog-head, prop: desert-well, at: [8, 5], solid: true }
+  - { id: catalog-terminal, prop: supply-canister, at: [10, 5], solid: true }
+  - { id: spindle-3, prop: supply-canister, at: [15, 6], solid: true }
+  - { id: spindle-1, prop: supply-canister, at: [5, 7], solid: true }
+  - { id: spindle-2, prop: supply-canister, at: [10, 8], solid: true }
+  - { id: vault-hatch, prop: buried-hatch, at: [16, 8], solid: true }
+  - { id: lower-reading-room, prop: supply-canister, at: [11, 11], solid: true }
+zones:
+  - id: courier-door
+    name: Return to the Courier Yard
+    type: door
+    at: [0, 6]
+    properties:
+      targetMap: m4-courier-yard
+      spawnX: 20
+      spawnY: 7
+  - id: vault-door
+    name: South Gate — to the Map Vault
+    type: door
+    propId: vault-hatch
+    properties:
+      targetMap: m4-map-vault
+      spawnX: 2
+      spawnY: 7
+      requiredFlags: m4-entropy-catalogued
+  - id: catalog-head
+    name: Catalogue Main Head
+    type: trigger
+    propId: catalog-head
+  - id: spindle-1
+    name: Catalogue Spindle I
+    type: trigger
+    propId: spindle-1
+  - id: spindle-2
+    name: Catalogue Spindle II
+    type: trigger
+    propId: spindle-2
+  - id: spindle-3
+    name: Catalogue Spindle III
+    type: trigger
+    propId: spindle-3
+  - id: vein
+    name: Bared Synaptit Vein
+    type: trigger
+    propId: vein
+  - id: lower-reading-room
+    name: The Lower Reading Room
+    type: trigger
+    propId: lower-reading-room
+  - id: echo
+    name: Echo
+    type: npc
+    at: [12, 7]
+    properties:
+      npcType: robot
+  - id: exam-protocol-18
+    name: Expedition Protocol Terminal XVIII
+    type: exam
+    propId: catalog-terminal
+    properties:
+      examId: m4-exam-protocol-18

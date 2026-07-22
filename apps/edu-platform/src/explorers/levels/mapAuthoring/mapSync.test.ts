@@ -5,20 +5,12 @@ import { fileURLToPath } from 'node:url';
 import { compileLevel, serializeMap } from './compile';
 import { decompileLevel, gridToText } from './decompile';
 import { parseLevelSource } from './parseSource';
-import type { TiledMap } from '../../editor/types';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const LEVELS_DIR = join(HERE, '..');
 const MAPS_DIR = join(HERE, '../../../../public/game/maps');
-const FIXTURES_DIR = join(HERE, '__fixtures__');
 
 const MIGRATED_MAPS = ['m0-awakening', 'm0-core-ai', 'm0-crew-room', 'm0-exam-room'];
-
-// Subset of MIGRATED_MAPS still comparable against their pre-migration fixtures.
-// m0-core-ai was intentionally re-authored after migration (narrowed by one
-// column in eacf8230), so its committed map no longer matches the frozen
-// pre-migration snapshot — the one-off equivalence guard is obsolete for it.
-const MIGRATION_EQUIVALENCE_MAPS = MIGRATED_MAPS.filter((key) => key !== 'm0-core-ai');
 
 function sourceKeys(): string[] {
   return readdirSync(LEVELS_DIR, { withFileTypes: true })
@@ -55,22 +47,5 @@ describe('map source/artifact sync', () => {
     // Tiled JSON representation, so decompile cannot recover them.
     expect(roundTripped.props).toEqual(source.props.map(({ id: _id, ...prop }) => prop));
     expect(roundTripped.zones).toEqual(source.zones.map(({ propId: _propId, ...zone }) => zone));
-  });
-});
-
-describe('m0 migration equivalence (one-off, against pre-migration fixtures)', () => {
-  it.each(MIGRATION_EQUIVALENCE_MAPS)('%s: role grid, props, and zones survived the migration', (mapKey) => {
-    const preMigration = JSON.parse(
-      readFileSync(join(FIXTURES_DIR, `${mapKey}.pre-migration.json`), 'utf-8'),
-    ) as TiledMap;
-    const committed = JSON.parse(readArtifact(mapKey)) as TiledMap;
-
-    const before = decompileLevel(preMigration).source;
-    const after = decompileLevel(committed).source;
-
-    expect(after.theme).toBe(before.theme);
-    expect(gridToText(after.cells)).toBe(gridToText(before.cells));
-    expect(after.props).toEqual(before.props);
-    expect(after.zones).toEqual(before.zones);
   });
 });

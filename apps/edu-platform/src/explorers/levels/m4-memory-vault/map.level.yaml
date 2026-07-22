@@ -1,0 +1,82 @@
+# M4 L5 — Bank Pamięci / The Memory Vault
+# The archive's deepest chamber: the Memory Well — a shaft down into the dark of the
+# banks and a shaft up toward the surface mast. Empty core cradles stand like a
+# honeycomb; behind a seal waits the backup crypt. The first place on the moon where
+# the sand cannot be heard — the absolute silence of a vault. Only Echo waits at the
+# approach.
+theme: 5
+grid: |
+  ~~~~~~~~~~~~~~~~~~
+  ~~~~~~####~~~~~~~~
+  ~~~~~~#..#~~~~~~~~
+  ~~~~~~#..#~~~~~~~~
+  #######..#########
+  #................#
+  #................#
+  #................#
+  D................#
+  #................#
+  #................#
+  #................#
+  #####....#########
+  ~~~~#....#~~~~~~~~
+  ~~~~#....#~~~~~~~~
+  ~~~~######~~~~~~~~
+props:
+  - { id: beacon-1, prop: signal-beacon, at: [7, 2], solid: false }
+  - { id: beacon-2, prop: signal-beacon, at: [8, 3], solid: false }
+  - { id: core-1, prop: supply-canister, at: [4, 6], solid: true }
+  - { id: core-2, prop: supply-canister, at: [13, 6], solid: true }
+  - { id: memory-well, prop: desert-well, at: [8, 7], solid: true }
+  - { id: chronicle-terminal, prop: supply-canister, at: [10, 7], solid: true }
+  - { id: vein-trace, prop: synaptit-ore, at: [3, 10], solid: false }
+  - { id: backup-crypt, prop: buried-hatch, at: [6, 13], solid: true }
+zones:
+  - id: vault-door
+    name: Return to the Map Vault
+    type: door
+    at: [0, 8]
+    properties:
+      targetMap: m4-map-vault
+      spawnX: 28
+      spawnY: 9
+  - id: memory-well
+    name: The Memory Well
+    type: trigger
+    propId: memory-well
+  - id: beacon-1
+    name: Transmitter — Chamber
+    type: trigger
+    propId: beacon-1
+  - id: beacon-2
+    name: Transmitter — Mast Shelf
+    type: trigger
+    propId: beacon-2
+  - id: core-1
+    name: Seed-Core Blank I
+    type: trigger
+    propId: core-1
+  - id: core-2
+    name: Seed-Core Blank II
+    type: trigger
+    propId: core-2
+  - id: backup-crypt
+    name: Backup Crypt
+    type: trigger
+    propId: backup-crypt
+  - id: vein-trace
+    name: Synaptit Trace
+    type: trigger
+    propId: vein-trace
+  - id: echo
+    name: Echo
+    type: npc
+    at: [11, 9]
+    properties:
+      npcType: robot
+  - id: exam-protocol-20
+    name: Expedition Protocol Terminal XX
+    type: exam
+    propId: chronicle-terminal
+    properties:
+      examId: m4-exam-protocol-20

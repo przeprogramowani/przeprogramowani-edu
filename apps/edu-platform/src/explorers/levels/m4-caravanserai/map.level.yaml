@@ -1,0 +1,84 @@
+# M4 L1 — Karawanseraj / The Caravanserai
+# A sea of dunes with only the tips of masts and a line of stone cairns showing.
+# The shuttle sits on a beaten apron to the west; the survey camp and its reading
+# well stand under the tilted mast; three road-cairns mark the outskirts (two true,
+# one moved); the buried main hatch waits under the sand to the east. Twilight the
+# colour of old paper. Nothing here lies — everything here is true and buried.
+theme: 5
+grid: |
+  ~~~######~~~~~~~~~~######~~~~~
+  ~~~#....#~~~~~~~~~~#....#~~~~~
+  ~~~#....############....#~~~~~
+  ~~~####.##..........##.##~~~~~
+  ~~~~~~#.##..........##.#~~~~~~
+  #######................#~~~~~~
+  #......................#######
+  #............................D
+  #............................#
+  #......................#######
+  #######................#~~~~~~
+  ~~~~~~##############.###~~~~~~
+  ~~~~~~~~~~~~~~~~~###.###~~~~~~
+  ~~~~~~~~~~~~~~~~~#.....#~~~~~~
+  ~~~~~~~~~~~~~~~~~#.....#~~~~~~
+  ~~~~~~~~~~~~~~~~~#######~~~~~~
+props:
+  - { prop: desert-cairn, at: [5, 1], solid: true }
+  - { prop: desert-cairn, at: [20, 1], solid: true }
+  - { prop: desert-well, at: [11, 6], solid: true }
+  - { prop: supply-canister, at: [13, 6], solid: true }
+  - { prop: ship-teleport, at: [2, 7], solid: true }
+  - { prop: signal-beacon, at: [9, 8], solid: false }
+  - { prop: solar-panel, at: [18, 8], solid: true }
+  - { prop: buried-hatch, at: [27, 8], solid: true }
+  - { prop: desert-cairn, at: [18, 13], solid: true }
+zones:
+  - id: ship-teleport
+    name: Landed Shuttle
+    type: door
+    at: [2, 7]
+    properties:
+      targetMap: m0-core-ai
+      spawnX: 9
+      spawnY: 5
+  - id: courier-door
+    name: Buried Main Hatch
+    type: door
+    at: [29, 7]
+    properties:
+      targetMap: m4-courier-yard
+      spawnX: 2
+      spawnY: 7
+      requiredFlags: m4-camp-online
+  - id: camp-well
+    name: Camp Reading Well
+    type: trigger
+    at: [11, 6]
+  - id: solar-farm
+    name: Buried Solar Farm
+    type: trigger
+    at: [18, 8]
+  - id: cairn-1
+    name: Road Cairn — West
+    type: trigger
+    at: [5, 1]
+  - id: cairn-2
+    name: Road Cairn — East
+    type: trigger
+    at: [20, 1]
+  - id: cairn-3
+    name: Road Cairn — South
+    type: trigger
+    at: [18, 13]
+  - id: kern
+    name: dr Kern
+    type: npc
+    at: [14, 8]
+    properties:
+      npcType: scientist
+  - id: exam-protocol-16
+    name: Expedition Protocol Terminal XVI
+    type: exam
+    at: [13, 6]
+    properties:
+      examId: m4-exam-protocol-16

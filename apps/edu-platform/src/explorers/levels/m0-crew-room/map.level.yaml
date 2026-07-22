@@ -12,14 +12,20 @@ grid: |
   ~~~~~~~~~~~~~~
 props:
   - { prop: radar, at: [1, 2], solid: true }
+  - { prop: hibernation-chamber, at: [5, 2], solid: true }
+  - { prop: hibernation-chamber, at: [9, 2], solid: true }
   - { prop: whiteboard, at: [11, 2], solid: true }
   - { prop: oscilloscope, at: [12, 2], solid: true }
   - { prop: console, at: [4, 3], solid: true }
   - { prop: whiteboard, at: [5, 3], solid: true }
-  - { prop: console, at: [8, 4], solid: true }
-  - { prop: whiteboard, at: [9, 4], solid: true }
+  - { prop: console, at: [8, 3], solid: true }
+  - { prop: whiteboard, at: [9, 3], solid: true }
   - { prop: console, at: [4, 6], solid: true }
   - { prop: whiteboard, at: [5, 6], solid: true }
+  - { prop: console, at: [8, 6], solid: true }
+  - { prop: whiteboard, at: [9, 6], solid: true }
+  - { prop: hibernation-chamber, at: [5, 7], solid: true }
+  - { prop: hibernation-chamber, at: [9, 7], solid: true }
   - { prop: button-panel, at: [12, 7], solid: true }
 zones:
   - id: board-eng
@@ -35,7 +41,7 @@ zones:
   - id: board-nav
     name: Board Navigator
     type: trigger
-    at: [8, 4]
+    at: [8, 3]
     size: [2, 1]
   - id: awakening-door
     name: Return Door
@@ -76,3 +82,8 @@ zones:
     at: [12, 2]
     properties:
       arcadeGameId: crew-room-oscilloscope
+  - id: kern-engineer
+    name: KernEngineer
+    type: trigger
+    at: [8, 6]
+    size: [2, 1]

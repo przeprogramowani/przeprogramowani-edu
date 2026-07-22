@@ -69,6 +69,18 @@ export const arcadeStrings = {
     'arcade.ft.result': 'LOKALIZACJA: {score}/100',
     'arcade.ft.finishHint': 'Pętla skalibrowana — [ENTER] zakończ',
 
+    // Cartograph renderer
+    'arcade.cg.title': 'KARTOGRAF — SKARBIEC MAP',
+    'arcade.cg.controls': '[WSAD] kursor  [SPACE] sonda  [ENTER] zatwierdź trasę',
+    'arcade.cg.status': 'SONDY: {probes}  |  ODTWÓRZ TRASĘ — ODRZUĆ STARE PIĘTRO',
+    'arcade.cg.reportReal': 'KORYTARZ — łączy się z sąsiadem',
+    'arcade.cg.reportStale': 'STARE PIĘTRO — fragment do niczego nie pasuje',
+    'arcade.cg.reportEmpty': 'GRUZ — pusto',
+    'arcade.cg.staleHint': 'Wygląda poprawnie, ale nie łączy się z niczym. Odrzuć i sonduj dalej.',
+    'arcade.cg.outOfProbes': 'Wiertła zużyte — [ENTER] zatwierdź trasę',
+    'arcade.cg.result': 'MAPA: {score}/100',
+    'arcade.cg.finishHint': 'Mapa gotowa — [ENTER] zakończ',
+
     // Mission resolution / results
     'arcade.replay.disclaimer':
       'Misja w tym miejscu jest już wykonana. Dodatkowe XP nie zostanie przyznane - możesz zagrać dla zabawy. Powodzenia!',
@@ -151,6 +163,18 @@ export const arcadeStrings = {
     'arcade.ft.outOfProbes': 'Coolant running low — [ENTER] mark the fault',
     'arcade.ft.result': 'LOCALIZATION: {score}/100',
     'arcade.ft.finishHint': 'Loop calibrated — [ENTER] finish',
+
+    // Cartograph renderer
+    'arcade.cg.title': 'CARTOGRAPH — MAP VAULT',
+    'arcade.cg.controls': '[WSAD] cursor  [SPACE] probe  [ENTER] commit route',
+    'arcade.cg.status': 'PROBES: {probes}  |  RECONSTRUCT THE ROUTE — REJECT THE OLD FLOOR',
+    'arcade.cg.reportReal': 'CORRIDOR — links a neighbour',
+    'arcade.cg.reportStale': 'OLD FLOOR — the fragment fits nothing',
+    'arcade.cg.reportEmpty': 'RUBBLE — empty',
+    'arcade.cg.staleHint': 'Looks right, but it connects to nothing. Reject it and keep probing.',
+    'arcade.cg.outOfProbes': 'Drills spent — [ENTER] commit route',
+    'arcade.cg.result': 'MAP: {score}/100',
+    'arcade.cg.finishHint': 'Map ready — [ENTER] finish',
 
     // Mission resolution / results
     'arcade.replay.disclaimer':

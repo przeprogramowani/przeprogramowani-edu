@@ -59,6 +59,21 @@ export const dialogues: Record<string, DialogueSequence> = {
     onComplete: { setFlags: [FLAGS.KEYCODE_FOUND] },
   },
 
+  // Board of the sealed fourth crew member — warm-starts dr Kern (pod #4) for m1.
+  // Plants "capsule four" + a "…ge…" fragment (geology). No flags, no code, no payoff here.
+  'm0-board-kern': {
+    id: 'm0-board-kern',
+    lines: [
+      { speaker: 'system', text: { pl: 'TABLICA PERSONALNA', en: 'PERSONAL BOARD' }, mode: 'system', autoAdvance: 2000 },
+      { speaker: 'system', text: { pl: 'Komora hibernacyjna: #4', en: 'Hibernation pod: #4' }, mode: 'system', autoAdvance: 2000 },
+      { speaker: 'astronaut', text: { pl: 'Czwarta komora? Reszta tablicy wymieniała trzy. Tę dopisano na końcu — inną ręką.', en: 'A fourth pod? The rest of the board listed three. This one was added at the end — in a different hand.' }, mode: 'monologue' },
+      { speaker: 'system', text: { pl: '[WPIS ZAPIECZĘTOWANY]', en: '[ENTRY SEALED]' }, mode: 'system', autoAdvance: 2500 },
+      { speaker: 'system', text: { pl: 'Kod osobisty: [ZAPIECZĘTOWANY]', en: 'Personal code: [SEALED]' }, mode: 'system', autoAdvance: 2500 },
+      { speaker: 'astronaut', text: { pl: 'Nazwisko zamazane. Z całego wpisu czytelny jest tylko strzęp: „…ge…". Nic więcej.', en: 'The name is smeared. Of the whole entry only a scrap is legible: "…ge…". Nothing more.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Czworo nas leciało, nie troje. Dlaczego nikt o tej osobie nie wspomniał?', en: 'Four of us flew, not three. Why has no one mentioned this person?' }, mode: 'monologue' },
+    ],
+  },
+
   // Floobert — fluffy alien NPC wandering the crew room
   'npc-floobert': {
     id: 'npc-floobert',

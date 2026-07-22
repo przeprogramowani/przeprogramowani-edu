@@ -19,6 +19,11 @@ import { manifest as m3Boneyard } from './m3-boneyard/manifest';
 import { manifest as m3FireTrial } from './m3-fire-trial/manifest';
 import { manifest as m3AnnealingYard } from './m3-annealing-yard/manifest';
 import { manifest as m3AssayOffice } from './m3-assay-office/manifest';
+import { manifest as m4Caravanserai } from './m4-caravanserai/manifest';
+import { manifest as m4CourierYard } from './m4-courier-yard/manifest';
+import { manifest as m4ErasedIndex } from './m4-erased-index/manifest';
+import { manifest as m4MapVault } from './m4-map-vault/manifest';
+import { manifest as m4MemoryVault } from './m4-memory-vault/manifest';
 import { manifest as debugNpcPlayground } from './debug-npc-playground/manifest';
 
 const LEVELS = [
@@ -41,6 +46,11 @@ const LEVELS = [
   m3FireTrial,
   m3AnnealingYard,
   m3AssayOffice,
+  m4Caravanserai,
+  m4CourierYard,
+  m4ErasedIndex,
+  m4MapVault,
+  m4MemoryVault,
   debugNpcPlayground,
 ] as const;
 

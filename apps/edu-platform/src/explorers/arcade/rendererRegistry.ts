@@ -5,6 +5,7 @@ import { OscilloscopeRenderer } from './OscilloscopeRenderer';
 import { DeepScanRenderer } from './DeepScanRenderer';
 import { SwitchyardRenderer } from './SwitchyardRenderer';
 import { FaultTraceRenderer } from './FaultTraceRenderer';
+import { CartographRenderer } from './CartographRenderer';
 
 const RENDERERS = new Map<ArcadeGameType, new () => ArcadeGameRenderer>([
   ['asteroid-range', AsteroidRangeRenderer],
@@ -13,6 +14,7 @@ const RENDERERS = new Map<ArcadeGameType, new () => ArcadeGameRenderer>([
   ['deep-scan', DeepScanRenderer],
   ['switchyard', SwitchyardRenderer],
   ['fault-trace', FaultTraceRenderer],
+  ['cartograph', CartographRenderer],
 ]);
 
 export function createRenderer(type: ArcadeGameType): ArcadeGameRenderer {

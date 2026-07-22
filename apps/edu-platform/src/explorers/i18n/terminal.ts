@@ -43,6 +43,27 @@ export const terminalStrings = {
     'terminal.cmd.sopel': 'Ping Sopla',
     'terminal.cmd.iskra': 'Odzew Iskry',
     'terminal.cmd.diag': 'Uczciwa diagnostyka CORE AI',
+    'terminal.cmd.echo': 'Odzew Echa',
+    'terminal.cmd.recall': 'Pamięć misji CORE AI',
+
+    // Moon 4 — Echo ping + CORE AI recall
+    'terminal.echo.header': 'ECHO — KURIER-ARCHIWISTA E-CH0',
+    'terminal.echo.status': '  Status: przytomny. Indeks lokalny: prowadzony.',
+    'terminal.echo.moodRange': '  Poza zasięgiem. Echo został w Archiwum Odyssey-A na Księżycu 4.',
+    'terminal.echo.moodWoke': '  „Dokąd?" — pyta, zanim ruszy. Odpowiada, kiedy się do niego mówi.',
+    'terminal.echo.moodIndex': '  Czyta na głos własny dziennik tras. Zapamiętana trasa: karuzela 3 → wrzeciono wschodnie.',
+    'terminal.echo.moodMap': '  Prowadzi gąsienice starą galerią. „Ten korytarz jest na planie. Na planie — nie w skale."',
+    'terminal.echo.moodVault': '  Stoi przy studni. Jego dziennik tras zostaje wpisem zerowym nowego indeksu.',
+    'terminal.echo.moodArchivist': '  Archiwista główny Odyssey-A. Kolejka: „Odbudowa indeksu. Wpis 1 z 11 906 442. Zapytaj mnie o coś."',
+
+    'terminal.recall.header': 'CORE AI — PAMIĘĆ MISJI',
+    'terminal.recall.caravanserai': '  Karawanseraj: dwa kopce prawdziwe, trzeci przestawiony. Mapa to model — znaki weryfikuj nawzajem.',
+    'terminal.recall.courier': '  Zajezdnia: katalog gniazdowy. Wiedza przy drzwiach, mapa przy bramie — nie noś całego archiwum w plecaku.',
+    'terminal.recall.index': '  Sala Katalogowa: treść nietknięta, indeks zmielony. Pamięć to powiązania — idź po nici, nie po spisie.',
+    'terminal.recall.lowerRoom': '  /recall wychwytuje pod posadzką komorę spoza wszystkich wpisów — Dolna Czytelnia. Harmoniczne jak kula z K1, pierścień z K2, obelisk z K3. Wiek: przepełnienie licznika.',
+    'terminal.recall.vault': '  Skarbiec Map: Mapa Główna Złóż — 4 748 potwierdzonych. Trzy źródła, jedna mapa. Nie ufaj staremu planowi piętra.',
+    'terminal.recall.memory': '  Bank Pamięci: wpis 001 — Świerszcz, Sopel, Iskra, Echo, Nawigator, załoga. Nikt nie zostaje zapomniany.',
+    'terminal.recall.generic': '  Bieżąca mapa poza zasięgiem archiwum Odyssey-A. Pamięć misji trzyma tylko to, co widziała.',
 
     // Moon 1 inspection commands
     'terminal.scan.header': 'CORE AI — SKAN SENSORYCZNY',
@@ -315,6 +336,27 @@ export const terminalStrings = {
     'terminal.cmd.sopel': 'Sopel Ping',
     'terminal.cmd.iskra': 'Iskra Ping',
     'terminal.cmd.diag': 'CORE AI Honest Diagnostics',
+    'terminal.cmd.echo': 'Echo Ping',
+    'terminal.cmd.recall': 'CORE AI Mission Memory',
+
+    // Moon 4 — Echo ping + CORE AI recall
+    'terminal.echo.header': 'ECHO — COURIER-ARCHIVIST E-CH0',
+    'terminal.echo.status': '  Status: awake. Local index: maintained.',
+    'terminal.echo.moodRange': '  Out of range. Echo stayed in the Odyssey-A Archive on Moon 4.',
+    'terminal.echo.moodWoke': '  "Where to?" — he asks before he moves. He answers when spoken to.',
+    'terminal.echo.moodIndex': '  Reading his own route journal aloud. Remembered route: carousel 3 → east spindle.',
+    'terminal.echo.moodMap': '  Guiding the crawlers through the old gallery. "This corridor is on the plan. On the plan — not in the rock."',
+    'terminal.echo.moodVault': '  Standing by the well. His route journal becomes entry zero of the new index.',
+    'terminal.echo.moodArchivist': '  Chief archivist of Odyssey-A. His queue: "Index rebuild. Entry 1 of 11,906,442. Ask me something."',
+
+    'terminal.recall.header': 'CORE AI — MISSION MEMORY',
+    'terminal.recall.caravanserai': '  The Caravanserai: two cairns true, the third moved. A map is a model — verify signs against each other.',
+    'terminal.recall.courier': '  The Courier Yard: a nested catalogue. Knowledge at the door, map at the gate — do not carry the whole archive in your pack.',
+    'terminal.recall.index': '  The Catalogue Hall: content intact, index milled away. Memory is the links — follow the thread, not the list.',
+    'terminal.recall.lowerRoom': '  /recall catches a chamber beneath the floor, in no entry at all — the Lower Reading Room. Harmonics like the Moon 1 orb, the Moon 2 ring, the Moon 3 obelisk. Age: counter overflow.',
+    'terminal.recall.vault': '  The Map Vault: the Master Deposit Map — 4,748 confirmed. Three sources, one map. Do not trust the old floor plan.',
+    'terminal.recall.memory': '  The Memory Vault: entry 001 — Świerszcz, Sopel, Iskra, Echo, Navigator, the crew. No one is left forgotten.',
+    'terminal.recall.generic': '  The current map lies outside the Odyssey-A archive. Mission memory holds only what it has seen.',
 
     // Moon 1 inspection commands
     'terminal.scan.header': 'CORE AI — SENSOR SCAN',

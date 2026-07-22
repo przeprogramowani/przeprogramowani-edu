@@ -85,6 +85,10 @@ export function handleCommand(raw: string, state: GameState, questManager?: Ques
       return cmdIskra(state);
     case 'diag':
       return cmdDiag(state);
+    case 'echo':
+      return cmdEcho(state);
+    case 'recall':
+      return cmdRecall(state);
     default:
       return { output: [t('terminal.unknownCommandWithName', { cmd })] };
   }
@@ -253,6 +257,68 @@ function cmdDiag(state: GameState): CommandResult {
   }
 
   return statusBlock(t('terminal.diag.header'), lines);
+}
+
+// Echo (E-CH0) — the courier-archivist woken in the Courier Yard, companion from
+// the Erased Index on. A memory that was kept and skipped: he asks "where to?"
+// before every move (the doctrine — you ask memory, you don't clone it). Out of
+// range off Moon 4. One remembered route or fact per stage; archivist once memory
+// comes online.
+function cmdEcho(state: GameState): CommandResult {
+  const map = state.currentMap;
+  const has = (flag: GameFlag) => state.flags.includes(flag);
+  const lines: string[] = [t('terminal.echo.status')];
+
+  if (!map.startsWith('m4')) {
+    lines.push(t('terminal.echo.moodRange'));
+  } else if (has(FLAGS.M4_MEMORY_ONLINE)) {
+    lines.push(t('terminal.echo.moodArchivist'));
+  } else if (map === 'm4-memory-vault') {
+    lines.push(t('terminal.echo.moodVault'));
+  } else if (map === 'm4-map-vault') {
+    lines.push(t('terminal.echo.moodMap'));
+  } else if (map === 'm4-erased-index') {
+    lines.push(t('terminal.echo.moodIndex'));
+  } else {
+    lines.push(t('terminal.echo.moodWoke'));
+  }
+
+  return statusBlock(t('terminal.echo.header'), lines);
+}
+
+// CORE AI's restored long-term memory — sister of /scan (what I see), /plan (what
+// next) and /diag (what's true): what the mission remembers about this map, plus
+// Odyssey-A archive cross-references. One block per Moon 4 map; on the Erased Index
+// the return-trip /recall also catches the sealed Lower Reading Room.
+function cmdRecall(state: GameState): CommandResult {
+  const map = state.currentMap;
+  const has = (flag: GameFlag) => state.flags.includes(flag);
+  let lines: string[];
+
+  switch (map) {
+    case 'm4-caravanserai':
+      lines = [t('terminal.recall.caravanserai')];
+      break;
+    case 'm4-courier-yard':
+      lines = [t('terminal.recall.courier')];
+      break;
+    case 'm4-erased-index':
+      lines = [t('terminal.recall.index')];
+      // On the walk back, with memory online, /recall surfaces the Lower Reading
+      // Room — a chamber in no entry, harmonics agreeing with the earlier moons.
+      if (has(FLAGS.M4_MEMORY_ONLINE)) lines.push(t('terminal.recall.lowerRoom'));
+      break;
+    case 'm4-map-vault':
+      lines = [t('terminal.recall.vault')];
+      break;
+    case 'm4-memory-vault':
+      lines = [t('terminal.recall.memory')];
+      break;
+    default:
+      lines = [t('terminal.recall.generic')];
+  }
+
+  return statusBlock(t('terminal.recall.header'), lines);
 }
 
 function cmdCrew(state: GameState): CommandResult {

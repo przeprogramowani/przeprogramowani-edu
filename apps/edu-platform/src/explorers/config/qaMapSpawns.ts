@@ -25,5 +25,10 @@ export const QA_MAP_SPAWNS: Readonly<Record<string, QaMapSpawn>> = {
   'm3-fire-trial': { x: 2, y: 7 },
   'm3-annealing-yard': { x: 2, y: 7 },
   'm3-assay-office': { x: 2, y: 7 },
+  'm4-caravanserai': { x: 6, y: 7 },
+  'm4-courier-yard': { x: 3, y: 4 },
+  'm4-erased-index': { x: 3, y: 5 },
+  'm4-map-vault': { x: 4, y: 7 },
+  'm4-memory-vault': { x: 8, y: 9 },
   'debug-npc-playground': { x: 1, y: 10 },
 };

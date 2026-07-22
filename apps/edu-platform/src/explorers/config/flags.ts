@@ -16,6 +16,8 @@ export const FLAGS = {
   CMDS_SOPEL: 'cmds:sopel',
   CMDS_ISKRA: 'cmds:iskra',
   CMDS_DIAG: 'cmds:diag',
+  CMDS_ECHO: 'cmds:echo',
+  CMDS_RECALL: 'cmds:recall',
 
   // General progression flags
   TERMINAL_FOUND: 'terminal-found',
@@ -38,6 +40,7 @@ export const FLAGS = {
   M0_RETURN_FROM_MOON1_SEEN: 'm0-return-from-moon1-seen',
   M0_RETURN_FROM_MOON2_SEEN: 'm0-return-from-moon2-seen',
   M0_RETURN_FROM_MOON3_SEEN: 'm0-return-from-moon3-seen',
+  M0_RETURN_FROM_MOON4_SEEN: 'm0-return-from-moon4-seen',
 
   // M0 Exam Room
   M0_EXAM_AGENT_SYSTEMS_DONE: 'm0-exam-agent-systems-done',
@@ -207,6 +210,66 @@ export const FLAGS = {
   M3_EXAM_PROTOCOL_13_DONE: 'm3-exam-protocol-13-done',
   M3_EXAM_PROTOCOL_14_DONE: 'm3-exam-protocol-14-done',
   M3_EXAM_PROTOCOL_15_DONE: 'm3-exam-protocol-15-done',
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // M4 Desert Archive — „Wymazany Indeks" (Large-scale & Legacy arc)
+  // ─────────────────────────────────────────────────────────────────────────
+  // intros
+  M4_CARAVANSERAI_INTRO_SEEN: 'm4-caravanserai-intro-seen',
+  M4_COURIER_INTRO_SEEN: 'm4-courier-intro-seen',
+  M4_INDEX_INTRO_SEEN: 'm4-index-intro-seen',
+  M4_VAULT_INTRO_SEEN: 'm4-vault-intro-seen',
+  M4_MEMORY_INTRO_SEEN: 'm4-memory-intro-seen',
+  // l1 — Trzy Kopce
+  M4_CAIRNS_ACTIVE: 'm4-cairns-active',
+  M4_PANELS_POWERED: 'm4-panels-powered',
+  M4_CAIRN_1_READ: 'm4-cairn-1-read',
+  M4_CAIRN_2_READ: 'm4-cairn-2-read',
+  M4_CAIRN_3_READ: 'm4-cairn-3-read',
+  M4_CAMP_ONLINE: 'm4-camp-online',
+  M4_MOVED_CAIRN_SEEN: 'm4-moved-cairn-seen',
+  // l2 — Ostatnia Trasa
+  M4_COURIER_HUNT_ACTIVE: 'm4-courier-hunt-active',
+  M4_YARD_POWERED: 'm4-yard-powered',
+  M4_ECHO_ONLINE: 'm4-echo-online',
+  M4_GHOST_COURSE_SEEN: 'm4-ghost-course-seen',
+  M4_DEXO_ARCHITECT_SEEN: 'm4-dexo-architect-seen',
+  // l3 — Nić
+  M4_THREAD_ACTIVE: 'm4-thread-active',
+  M4_SPINDLE_1_LINKED: 'm4-spindle-1-linked',
+  M4_SPINDLE_2_LINKED: 'm4-spindle-2-linked',
+  M4_SPINDLE_3_LINKED: 'm4-spindle-3-linked',
+  M4_ENTROPY_CATALOGUED: 'm4-entropy-catalogued',
+  M4_ENTROPY_FOURTH_FACE_SEEN: 'm4-entropy-fourth-face-seen',
+  M4_VEIN_TRACE_SEEN: 'm4-vein-trace-seen',
+  // l4 — Pierwsza Mapa
+  M4_MAP_ACTIVE: 'm4-map-active',
+  M4_LIFTS_POWERED: 'm4-lifts-powered',
+  M4_GALLERIES_MAPPED: 'm4-galleries-mapped',
+  M4_MASTER_MAP: 'm4-master-map',
+  M4_MEDBAY_INDEX_SEEN: 'm4-medbay-index-seen',
+  M4_KERN_FILE_MISMATCH_SEEN: 'm4-kern-file-mismatch-seen',
+  // l5 — Drugi Kanał
+  M4_MEMORY_ACTIVE: 'm4-memory-active',
+  M4_CORES_BROUGHT: 'm4-cores-brought',
+  M4_SIDE_CHANNEL_ONLINE: 'm4-side-channel-online',
+  M4_MEMORY_ONLINE: 'm4-memory-online',
+  M4_SLEEPING_ENTROPY_SEEN: 'm4-sleeping-entropy-seen',
+  M4_R077_FOUND: 'm4-r077-found',
+  M4_HERDING_PATTERN_SEEN: 'm4-herding-pattern-seen',
+  // return path (conditional-intro seen flags + optional beats)
+  M4_RETURN_VAULT_SEEN: 'm4-return-vault-seen',
+  M4_RETURN_INDEX_SEEN: 'm4-return-index-seen',
+  M4_RETURN_COURIER_SEEN: 'm4-return-courier-seen',
+  M4_RETURN_CARAVANSERAI_SEEN: 'm4-return-caravanserai-seen',
+  M4_LOWER_READING_ROOM_SEEN: 'm4-lower-reading-room-seen',
+  M4_KERN_CONFESSION_SEEN: 'm4-kern-confession-seen',
+  // exams (Protokół Ekspedycyjny XVI–XX)
+  M4_EXAM_PROTOCOL_16_DONE: 'm4-exam-protocol-16-done',
+  M4_EXAM_PROTOCOL_17_DONE: 'm4-exam-protocol-17-done',
+  M4_EXAM_PROTOCOL_18_DONE: 'm4-exam-protocol-18-done',
+  M4_EXAM_PROTOCOL_19_DONE: 'm4-exam-protocol-19-done',
+  M4_EXAM_PROTOCOL_20_DONE: 'm4-exam-protocol-20-done',
 
   // System flags (controlled server-side via Supabase, never saved in player state)
   SYS_COURSE_M1_AVAILABLE: 'sys:course-m1-available',
