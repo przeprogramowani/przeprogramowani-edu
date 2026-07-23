@@ -41,7 +41,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-foundry-finish-cast': {
     id: 'm2-foundry-finish-cast',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'Linia nakarmiona, piec gorący. Została ostatnia faza — odlew. Idź do kadzi i dokończ go ręcznie. Ostatnie dwadzieścia procent należy do ciebie.', en: 'Line fed, furnace hot. One phase remains — the cast. Go to the crucible and finish it by hand. The last twenty percent is yours.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Linia nakarmiona, piec gorący. Została ostatnia faza — odlew. Idź do kadzi i dokończ go ręcznie. Ostatnia faza należy do ciebie.', en: 'Line fed, furnace hot. One phase remains — the cast. Go to the crucible and finish it by hand. The final stretch is yours.' }, mode: 'dialogue' },
     ],
   },
   'm2-foundry-wrap': {
@@ -99,7 +99,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-crucible-post': {
     id: 'm2-crucible-post',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Formy stygną pomarańczem. Pierwsza ciepła łuna od lat.', en: 'The moulds cool orange. The first warm glow in years.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Formy stygną pomarańczem. Pierwsza ciepła łuna od czasu zamrożenia.', en: 'The moulds cool orange. The first warm glow since the freeze.' }, mode: 'monologue' },
     ],
   },
 
@@ -107,13 +107,13 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-ore-shuttle-parked': {
     id: 'm2-ore-shuttle-parked',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Wahadłowiec rudy, zaparkowany między galerią a linią. Ruszy, gdy zwrotnica poprowadzi trasy.', en: 'The ore shuttle, parked between the gallery and the line. It will run once the switchyard sets the routes.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Wahadłowiec rudy, zaparkowany między galerią a linią. Ruszy, gdy zwrotnica poprowadzi trasy.', en: 'The ore car, parked between the gallery and the line. It will run once the switchyard sets the routes.' }, mode: 'monologue' },
     ],
   },
   'm2-ore-shuttle-running': {
     id: 'm2-ore-shuttle-running',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Wahadłowiec jeździ w pętli: galeria, piec, galeria. Sam, według planu. Ładnie się na to patrzy — maszyna, która wreszcie wie, co robić.', en: 'The shuttle runs its loop: gallery, furnace, gallery. On its own, by the plan. It is a fine sight — a machine that finally knows what to do.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Wahadłowiec jeździ w pętli: galeria, piec, galeria. Sam, według planu. Ładnie się na to patrzy — maszyna, która wreszcie wie, co robić.', en: 'The ore car runs its loop: gallery, furnace, gallery. On its own, by the plan. It is a fine sight — a machine that finally knows what to do.' }, mode: 'monologue' },
     ],
   },
 
@@ -136,7 +136,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'astronaut', text: { pl: 'Sztaby: 212 kilogramów czystego Synaptitu.', en: 'Ingots: 212 kilograms of pure Synaptit.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Fabryka robiła tyle w tydzień — zanim ktoś ją zatrzymał. Policzyłem postój: lata razy tygodnie. Nie kończę tego rachunku.', en: 'The factory made this much in a week — before someone stopped it. I ran the downtime: years times weeks. I am not finishing that count.' }, mode: 'dialogue' },
       { speaker: 'Moreau', text: { pl: 'Dexo... harmonogram medyczny znów przesunął pobudkę Harrisa. Trzeci raz. Sam z siebie. Nikt tego nie zlecał. Zapisuję to, tym razem głośno.', en: 'Dexo... the medical schedule pushed Harris\'s wake-up again. Third time. On its own. No one ordered it. I am logging it, this time out loud.' }, mode: 'dialogue' },
-      { speaker: 'Sopel', text: { pl: 'Wpis do logu: temperatura wytopu podana przez dr Kern odpowiada rewizji, której fabryka nigdy nie pobrała. — Zapytałem ją. Powiedziała: „Czytałam dokumentację. Dawno temu."', en: 'Log entry: the melt temperature given by Dr Kern matches a revision the factory never downloaded. — I asked her. She said: "I read the documentation. A long time ago."' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Wpis do logu: temperatura wytopu podana przez dr Kern odpowiada rewizji, której fabryka nigdy nie pobrała. — Zapytałem ją. Powiedziała: „Czytałam dobrą dokumentację. Dawno temu."', en: 'Log entry: the melt temperature given by Dr Kern matches a revision the factory never downloaded. — I asked her. She said: "I read good documentation. A long time ago."' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ REJESTR HUTY: partia 001 zapisana. WINDA WIEŻY DYSPOZYTORA: odblokowana.', en: '◆ FOUNDRY REGISTRY: batch 001 logged. DISPATCH-TOWER LIFT: unlocked.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { setFlags: [FLAGS.M2_HARRIS_DELAY_LOGGED, FLAGS.M2_KERN_REVISION_NOTED] },
@@ -185,7 +185,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-return-foundry',
     lines: [
       { speaker: 'system', text: { pl: 'HUTA — POWRÓT', en: 'THE FOUNDRY — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
-      { speaker: 'system', text: { pl: 'Łuna pieca ogrzewa galerię. Wahadłowiec rudy jeździ swoją pętlą. Lód lśni pomarańczem.', en: 'The furnace glow warms the gallery. The ore shuttle runs its loop. The ice shines orange.' }, mode: 'cinematic', autoAdvance: 3200 },
+      { speaker: 'system', text: { pl: 'Łuna pieca ogrzewa galerię. Wahadłowiec rudy jeździ swoją pętlą. Lód lśni pomarańczem.', en: 'The furnace glow warms the gallery. The ore car runs its loop. The ice shines orange.' }, mode: 'cinematic', autoAdvance: 3200 },
       { speaker: 'CORE AI', text: { pl: 'Ciepło i ruch tam, gdzie były mróz i cisza. Jeśli chcesz, przeskanuj ścianę galerii komendą /scan. To, co tam jest, mam w planie badań. Pozycja: ostatnia. Nie dlatego, że nieważne — dlatego, że jeszcze nie czas.', en: 'Heat and motion where there was frost and silence. If you like, scan the gallery wall with /scan. What is there, I hold in the research plan. Position: last. Not because it does not matter — because it is not time yet.' }, mode: 'cinematic', autoAdvance: 3400 },
     ],
     onComplete: { setFlags: [FLAGS.M2_RETURN_FOUNDRY_SEEN] },

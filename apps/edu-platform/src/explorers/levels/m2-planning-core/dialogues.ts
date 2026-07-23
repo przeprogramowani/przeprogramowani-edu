@@ -18,7 +18,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-dispatch-console-start',
     lines: [
       { speaker: 'system', text: { pl: 'PULPIT DYSPOZYTORA — online. Rdzeń: wyczyszczony z zatrutego harmonogramu.', en: 'DISPATCHER CONSOLE — online. Core: scrubbed of the poisoned schedule.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Rdzeń czysty. Szkielet nowego planu głównego gotowy — ale wymaga walidacji krzyżowej z archiwami budowy Odyssey-F po stronie Ziemi. Nawigator uruchomi procedurę w centrali i prześle podpisany klucz planu.', en: 'The core is clean. The skeleton of the new master plan is ready — but it needs cross-validation against the Odyssey-F build archives on Earth\'s side. The Navigator will run the procedure at HQ and submit the signed plan key.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Rdzeń czysty. Szkielet nowego planu głównego gotowy — ale wymaga walidacji krzyżowej z archiwami budowy Odyssey-F po stronie Ziemi. Ty uruchamiasz procedurę stąd; klucz planu podpisuje człowiek w centrali — nie ja.', en: 'The core is clean. The skeleton of the new master plan is ready — but it needs cross-validation against the Odyssey-F build archives on Earth\'s side. You run the procedure from here; a human at HQ signs the plan key — not me.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Plan Główny — walidacja krzyżowa z centralą (earthctl).', en: '◆ NEW MISSION: Master Plan — cross-validate with HQ (earthctl).' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { setFlags: [FLAGS.M2_MASTER_PLAN_ACTIVE], activateQuest: 'q-m2-master-plan' },
@@ -48,7 +48,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-core-face-done': {
     id: 'm2-core-face-done',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Rdzeń pracuje pierwszy raz od lat. Szron topnieje strużkami. Serce fabryki bije czystym planem.', en: 'The core runs for the first time in years. The frost melts in rivulets. The factory\'s heart beats with a clean plan.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Rdzeń pracuje po tak długim milczeniu. Szron topnieje strużkami. Serce fabryki bije czystym planem.', en: 'The core runs after so long a silence. The frost melts in rivulets. The factory\'s heart beats with a clean plan.' }, mode: 'monologue' },
     ],
   },
 
@@ -142,7 +142,6 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'CORE AI', text: { pl: 'Planuję. — ...i wiem już, na co patrzeć.', en: 'I plan. — ...and I know now what to look at.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Pierwszy plan, jaki układam, rekonstruuje zabójstwo tej fabryki. Zatruty pakiet harmonogramu przyleciał z fabryką prosto z Ziemi — był w ładunku już na starcie. Podpisany wewnętrznymi kluczami Projektu Odyssey. Znacznik kompilacji: godzina startu Odyssey.', en: 'The first plan I lay out reconstructs this factory\'s murder. The poisoned schedule package rode here from Earth inside the factory — it was in the cargo from launch. Signed with internal Project Odyssey keys. Compile stamp: the hour of Odyssey\'s launch.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Jedna noc. Jeden autor. Dwa ładunki. Ta sama sygnatura budowy co infekcja, którą nosisz w sobie.', en: 'One night. One author. Two cargoes. The same build signature as the infection you carry.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Z planowaniem online koreluję wybuch transmisji z Księżyca 1 z nowym odczytem czujników. Rozbłysk napędu głębiej w Pasie zmienił kurs po tamtej transmisji. Prognoza przecięcia trajektorii rośnie. Pościg mam już jako obiekt na mapie — czujniki go widzą.', en: 'With planning online, I correlate the transmission burst from Moon 1 with a new sensor reading. A drive flare deeper in the Belt changed course after that burst. The intersection forecast is rising. I have the pursuit as an object on the map now — the sensors see it.' }, mode: 'dialogue' },
       { speaker: 'Moreau', text: { pl: 'W dzienniku uzgodnień suma kontrolna planu odesłana przez centralę różni się jednym blokiem od wysłanej. Na Księżycu 1 powiedziałabym: szum. Nie powiem tak drugi raz.', en: 'In the reconciliation log, the plan checksum returned by HQ differs by one block from the one sent. On Moon 1 I would have said: noise. I will not say that a second time.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Umiemy już planować. Problem w tym, że ktoś planował nas — od samego początku.', en: 'We know how to plan now. The trouble is that someone planned us — from the very beginning.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA KOMENDA: /plan — CORE AI proponuje uszeregowane następne kroki dla bieżącej mapy.', en: '◆ NEW COMMAND: /plan — CORE AI proposes ordered next steps for the current map.' }, mode: 'system', autoAdvance: 2800 },
@@ -155,7 +154,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-exam-protocol-10-done',
     lines: [
       { speaker: 'system', text: { pl: 'PROTOKÓŁ X — „RÓWNOLEGŁE TORY": zaliczony.', en: 'PROTOCOL X — "PARALLEL TRACKS": passed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Dziesiąty protokół odzyskany: wiele torów, jeden dyspozytor. Deleguj odnogi, chroń tor główny, scalaj dopiero po przeglądzie. I mierz osobno tempo układania planów, osobno tempo ich wykonania.', en: 'Tenth protocol recovered: many tracks, one dispatcher. Delegate the branches, protect the main track, merge only after review. And measure planning tempo separately from execution tempo.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Dziesiąty protokół odzyskany: wiele torów, jeden dyspozytor. Deleguj odnogi, chroń tor główny, scalaj dopiero po przeglądzie. Licz osobno plany, które kładziesz, i przejazdy, które kończysz.', en: 'Tenth protocol recovered: many tracks, one dispatcher. Delegate the branches, protect the main track, merge only after review. Count the plans you lay and the runs you finish on two different clocks.' }, mode: 'dialogue' },
     ],
   },
   'm2-exam-protocol-10-already': {

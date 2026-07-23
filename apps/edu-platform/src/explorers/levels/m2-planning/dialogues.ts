@@ -241,7 +241,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-kern-deadlock': {
     id: 'm2-kern-deadlock',
     lines: [
-      { speaker: 'dr Kern', text: { pl: 'Fala świateł z rozjazdowni doszła aż do bramy. Widziałam ją stąd. Ktoś wreszcie rozpiął ten węzeł. Sieć torów żyje — a to znaczy, że ruda w końcu ruszy.', en: 'The wave of lights from the junction reached the gate. I saw it from here. Someone finally unknotted that tangle. The rail network lives — which means the ore will finally move.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Fala świateł z rozjazdowni doszła aż do bramy. Widziałam ją stąd. Ktoś wreszcie rozpiął ten węzeł. Sieć torów żyje — a to znaczy, że ruda w końcu ruszy.', en: 'The wave of lights from the junction reached the gate. I saw it from here. Someone finally unknotted that deadlock. The rail network lives — which means the ore will finally move.' }, mode: 'dialogue' },
     ],
   },
   'm2-kern-ingot': {
@@ -269,7 +269,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-exam-protocol-6-done',
     lines: [
       { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY VI — „MAPA DROGOWA": zaliczony.', en: 'EXPEDITION PROTOCOL VI — "ROADMAP": passed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Szósty protokół odzyskany: pracę kroi się na pionowe slice\'y — jeden przepływ przez wszystkie warstwy, z efektem do zweryfikowania; fundament wchodzi do roadmapy tylko wtedy, gdy odblokowuje wskazany slice; a north star — najmniejszy przepływ domykający tezę — wchodzi tak wcześnie, jak pozwalają zależności. Dziś ta doktryna otworzyła bramę.', en: 'Sixth protocol recovered: work is cut into vertical slices — one flow through all the layers, ending in a result you can verify; a foundation enters the roadmap only when it unlocks a named slice; and the north star — the smallest flow that closes the thesis — lands as early as dependencies allow. Today that doctrine opened the gate.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Szósty protokół odzyskany: pracy nie układa się piętrami, lecz torami na wskroś — jeden przejazd przez wszystkie warstwy, zakończony wynikiem, który da się sprawdzić. Fundament kładzie się tylko wtedy, gdy odblokowuje konkretny tor. A pierwszy pełny przejazd — najkrótszy, który dowodzi, że plan działa — puszcza się tak wcześnie, jak pozwolą zależności. Dziś ta doktryna otworzyła bramę.', en: 'Sixth protocol recovered: work is not stacked in floors but laid in tracks that run all the way through — one pass across every layer, ending in a result you can check. A foundation is laid only when it unlocks a specific track. And the first full pass — the shortest one that proves the plan works — is set running as early as dependencies allow. Today that doctrine opened the gate.' }, mode: 'dialogue' },
     ],
   },
   'm2-exam-protocol-6-already': {
@@ -296,7 +296,8 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'system', text: { pl: 'Zamarznięty wagonik ze sztabami dojeżdża do bramy własnym napędem. Manifest: DOSTAWA 001 — PRZYJĘTA.', en: 'The frozen ingot tram rolls up to the gate under its own power. Manifest: DELIVERY 001 — ACCEPTED.' }, mode: 'cinematic', autoAdvance: 3400 },
       { speaker: 'dr Kern', text: { pl: 'Dostawa spóźniona o lata — i domknięta w godzinę. Załaduj sztaby na prom, Dexo. Zasłużyliście oboje: ty i ta fabryka.', en: 'A delivery years late — and closed in an hour. Load the ingots onto the shuttle, Dexo. You both earned it: you and this factory.' }, mode: 'cinematic', autoAdvance: 3400 },
       { speaker: 'astronaut', text: { pl: 'Kontrola przedlotowa. Harris, słyszysz? ...Harris.', en: 'Preflight check. Harris, do you copy? ...Harris.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'Medbay mówi: regeneracja. Znowu przesunięta — trzeci raz, i nikt jej nie zlecał. Przestaję wierzyć w ten harmonogram.', en: 'Medbay says: regeneration. Delayed again — third time, and nobody ordered it. I am done trusting that schedule.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Medbay mówi: regeneracja. Znowu przesunięta — i znów nikt jej nie zlecał. Przestaję wierzyć w ten harmonogram.', en: 'Medbay says: regeneration. Delayed again — and again no one ordered it. I am done trusting that schedule.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Z planowaniem online koreluję wybuch transmisji z Księżyca 1 z nowym odczytem czujników. Rozbłysk napędu głębiej w Pasie zmienił kurs po tamtej transmisji. Prognoza przecięcia trajektorii rośnie. Pościg mam już jako obiekt na mapie — czujniki go widzą.', en: 'With planning online, I correlate the transmission burst from Moon 1 with a new sensor reading. A drive flare deeper in the Belt changed course after that burst. The intersection forecast is rising. I have the pursuit as an object on the map now — the sensors see it.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M2_RETURN_GATE_SEEN, FLAGS.M2_DELIVERY_001] },
   },

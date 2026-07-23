@@ -29,7 +29,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-service-terminal-post',
     lines: [
       { speaker: 'system', text: { pl: 'TERMINAL SERWISOWY: kolejka wyczyszczona. Jedno gniazdo ładowania — puste.', en: 'SERVICE TERMINAL: queue cleared. One charging cradle — empty.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Sopel ruszył w głąb fabryki. Kolejka pusta, gniazdo puste. Dobra pustka — pierwszy raz od lat.', en: 'Sopel moved deeper into the factory. Empty queue, empty cradle. A good emptiness — first time in years.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Sopel ruszył w głąb fabryki. Kolejka pusta, gniazdo puste. Dobra pustka — pierwsza od czasu zamrożenia.', en: 'Sopel moved deeper into the factory. Empty queue, empty cradle. A good emptiness — the first since the freeze.' }, mode: 'dialogue' },
     ],
   },
 

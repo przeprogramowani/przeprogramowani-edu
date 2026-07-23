@@ -29,9 +29,9 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'OGNIWO OSADZONE. Ostatni dziennik sondy odtworzony. Telemetria urywa się w chwili zderzenia.', en: 'CELL SEATED. Probe\'s final log restored. Telemetry ends at the moment of impact.' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'CORE AI', text: { pl: 'Dziennik zachował pięć fragmentów procedury naprawczej, ale zgubił ich kolejność. Każdy fragment opisuje położenie jednego kodu względem pozostałych. Odtwórz pełną sekwencję i podaj ją przez /solve.', en: 'The log preserved five fragments of the repair procedure, but lost their order. Each fragment describes one code\'s position relative to the others. Reconstruct the full sequence and enter it via /solve.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Pięć kodów i jedna kolejność zgodna ze wszystkimi wpisami. Da się ją odtworzyć. ...I jeszcze jedno — ostatnią paczkę danych tej sondy ktoś potwierdził odbiorem. Tylko że nie centrala Ziemi.', en: 'Five codes and one order consistent with every entry. It can be reconstructed. ...And one more thing — this probe\'s last data packet got acknowledged. Just not by Earth central.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Pięć kodów i jedna kolejność zgodna ze wszystkimi wpisami. Da się ją odtworzyć. ...I jeszcze jedno — ostatnią paczkę danych tej sondy ktoś potwierdził odbiorem. Tylko że nie centrala Ziemi.', en: 'Five codes and one order consistent with every entry. It can be reconstructed. ...And one more thing — this probe\'s last data packet got acknowledged. Just not by Earth HQ.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Odbiornik nieznany. Zapisuję jako anomalię i zostawiam otwartą. Najpierw uruchom zwiadowcę.', en: 'Receiver unknown. I log it as an anomaly and leave it open. First, boot the scout.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Świerszcz — odtwórz instrukcję naprawy drona.', en: '◆ NEW MISSION: Cricket — reconstruct the drone\'s repair instructions.' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Zwiadowca — odtwórz instrukcję naprawy sondy.', en: '◆ NEW MISSION: The Scout — reconstruct the probe\'s repair instructions.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { activateQuest: 'q-m1-cricket' },
   },
@@ -70,7 +70,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-crash-drone-assembly',
     lines: [
       { speaker: 'astronaut', text: { pl: 'Składam go. Dziwne — ręce wiedzą, co robić, choć nigdy nie widziałem tego modelu. Palce same trafiają w złącza.', en: 'I\'m assembling it. Strange — my hands know what to do, though I\'ve never seen this model. My fingers find the connectors on their own.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Bo indeks tej sondy skasowano wybiórczo — nazwy, opisy, spis treści. Ale sama procedura montażu została. Ktoś robił to na spokojnie, ludzką ręką.', en: 'Because this probe\'s index was wiped selectively — names, labels, the table of contents. But the assembly procedure itself stayed. Someone did this calmly, by hand.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Tego nie umiem wyjaśnić — nigdy nie ćwiczyłeś tego modelu. Zapisuję jako pytanie. Osobno: indeks tej sondy skasowano wybiórczo — nazwy, opisy, spis treści. Została sama procedura montażu. Ktoś robił to na spokojnie, ludzką ręką.', en: 'That I cannot explain — you never trained on this model. I log it as a question. Separately: this probe\'s index was wiped selectively — names, labels, the table of contents. Only the assembly procedure was left. Someone did this calmly, by a human hand.' }, mode: 'dialogue' },
     ],
   },
   'm1-crash-drone-empty': {
@@ -95,7 +95,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'system', text: { pl: 'KOLEJNOŚĆ ODTWORZONA: AC1 → HGX → WW5 → N7K → RQ4. Procedura naprawy gotowa.', en: 'ORDER RESTORED: AC1 → HGX → WW5 → N7K → RQ4. Repair procedure ready.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Mogę teraz wykonać procedurę i dokończyć rozruch autonomicznie, w jednej operacji. Rekomenduję pełną automatyzację — będzie szybciej.', en: 'I can now execute the procedure and finish the boot autonomously, in one operation. I recommend full automation — it will be faster.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Nie. Przygotuj wszystko. Ostatni krok robię ja. Zatwierdzam ja.', en: 'No. Prepare everything. The last step is mine. I approve it.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Zrozumiałem. Przygotowane. Twój ruch.', en: 'Understood. Prepared. Your move.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Przyjęte. Przygotowane. Twój ruch.', en: 'Understood. Prepared. Your move.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'ZWIADOWCA: ONLINE. cyk… cyk… cyk-cyk…', en: 'SCOUT: ONLINE. chirp… chirp… chirp-chirp…' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'Moreau', text: { pl: 'Słyszę go przez łącze. Terkocze jak świerszcz w letnią noc. No to masz, Dexo — nazywam go Świerszcz. Nie ma odwołania.', en: 'I hear him over the link. He chirps like a cricket on a summer night. There you have it, Dexo — I name him Świerszcz. No appeal.' }, mode: 'dialogue' },
     ],
