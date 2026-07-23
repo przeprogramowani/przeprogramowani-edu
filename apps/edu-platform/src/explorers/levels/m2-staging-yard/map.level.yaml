@@ -1,35 +1,87 @@
-# M2 L3 — Martwy Punkt / The Deadlock
-# The great tram junction under the ice roof. Three trams frozen in a triangle of
-# mutual blockade; a dispatcher substation in the middle; ore spilled on the rails.
 theme: 3
 grid: |
-  ~~~#######~~~~~~~~~~~~~~~~~~~~~~
-  ~~~#.....#~~~~~~~~~~~~~~~~~~~~~~
-  ~~~#.....#~~~~~~~~~~~~~~~~~~~~~~
-  ~~~###.###~~~~~~~~~~~~~~~~~~~~~~
-  ######.#########################
+  ~~~~~##################~~~~~~~~~
+  ~~~~~#................#~~~~~~~~~
+  ~~~~~#................#~~~~~~~~~
+  ~~~~~#.##############.#~~~~~~~~~
+  ######.##############.##########
   #..............................#
+  #......##############..........#
+  D......##############..........D
   #..............................#
-  D..............................D
-  #..............................#
-  #..............................#
-  #..............................#
-  #######################.########
-  ~~~~~~~~~~~~~~~~~~~~###.####~~~~
-  ~~~~~~~~~~~~~~~~~~~~#......#~~~~
-  ~~~~~~~~~~~~~~~~~~~~#......#~~~~
-  ~~~~~~~~~~~~~~~~~~~~########~~~~
+  #......##############.##########
+  ######.##############.#~~~~~~~~~
+  ~~~~~#................#~~~~~~~~~
+  ~~~~~#................#~~~~~~~~~
+  ~~~~~##################~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 props:
   - { id: track-board, prop: holo-plan-board, at: [4, 5], solid: true }
-  - { id: tram-alpha, prop: cargo-tram, at: [10, 6], solid: true }
-  - { id: tram-beta, prop: cargo-tram, at: [15, 6], solid: true }
-  - { id: tram-gamma, prop: cargo-tram, at: [20, 6], solid: true }
-  - { prop: synaptit-ore, at: [17, 7], solid: false }
-  - { prop: synaptit-ore, at: [18, 7], solid: false }
   - { prop: synaptit-ore, at: [21, 7], solid: false }
-  - { prop: synaptit-ore, at: [22, 8], solid: false }
-  - { id: dispatch-substation, prop: frozen-console, at: [12, 9], solid: true }
-  - { id: cert-terminal, prop: frozen-console, at: [28, 9], solid: true }
+  - { prop: cargo-tram, at: [7, 1], solid: true }
+  - { prop: cargo-tram, at: [11, 1], solid: true }
+  - { prop: cargo-tram, at: [15, 1], solid: true }
+  - { prop: synaptit-ore, at: [13, 1], solid: true }
+  - { prop: server-monolith, at: [12, 1], solid: true }
+  - { prop: fabricator-rig, at: [6, 1], solid: true }
+  - { prop: holo-plan-board, at: [4, 9], solid: true }
+  - { prop: fabricator-rig, at: [6, 7], solid: true }
+  - { prop: synaptit-ore, at: [17, 2], solid: true }
+  - { prop: synaptit-ore, at: [13, 5], solid: true }
+  - { prop: synaptit-ore, at: [17, 5], solid: true }
+  - { prop: synaptit-ore, at: [18, 5], solid: true }
+  - { prop: synaptit-ore, at: [21, 5], solid: true }
+  - { prop: synaptit-ore, at: [11, 5], solid: true }
+  - { prop: server-monolith, at: [12, 5], solid: true }
+  - { prop: server-monolith, at: [10, 5], solid: true }
+  - { prop: server-monolith, at: [14, 5], solid: true }
+  - { prop: server-monolith, at: [16, 5], solid: true }
+  - { prop: server-monolith, at: [10, 1], solid: true }
+  - { prop: server-monolith, at: [14, 1], solid: true }
+  - { prop: server-monolith, at: [16, 1], solid: true }
+  - { prop: server-monolith, at: [10, 8], solid: true }
+  - { prop: server-monolith, at: [12, 8], solid: true }
+  - { prop: server-monolith, at: [14, 8], solid: true }
+  - { prop: server-monolith, at: [16, 8], solid: true }
+  - { prop: synaptit-ore, at: [11, 8], solid: true }
+  - { prop: synaptit-ore, at: [15, 8], solid: true }
+  - { prop: synaptit-ore, at: [18, 8], solid: true }
+  - { prop: synaptit-ore, at: [9, 8], solid: true }
+  - { prop: synaptit-ore, at: [8, 8], solid: true }
+  - { prop: synaptit-ore, at: [16, 2], solid: true }
+  - { prop: synaptit-ore, at: [17, 1], solid: true }
+  - { prop: synaptit-ore, at: [18, 2], solid: true }
+  - { prop: synaptit-ore, at: [19, 1], solid: true }
+  - { prop: synaptit-ore, at: [21, 1], solid: true }
+  - { prop: synaptit-ore, at: [20, 2], solid: true }
+  - { prop: synaptit-ore, at: [21, 3], solid: true }
+  - { prop: frozen-console, at: [9, 5], solid: true }
+  - { prop: synaptit-ore, at: [30, 6], solid: true }
+  - { prop: synaptit-ore, at: [29, 5], solid: true }
+  - { prop: frozen-service-bot, at: [30, 5], solid: true }
+  - { prop: synaptit-ore, at: [25, 8], solid: true }
+  - { prop: synaptit-ore, at: [26, 8], solid: true }
+  - { prop: synaptit-ore, at: [27, 7], solid: true }
+  - { prop: synaptit-ore, at: [2, 8], solid: true }
+  - { prop: synaptit-ore, at: [1, 9], solid: true }
+  - { prop: frozen-service-bot, at: [27, 8], solid: true }
+  - { prop: frozen-service-bot, at: [21, 2], solid: true }
+  - { prop: frozen-service-bot, at: [20, 1], solid: true }
+  - { prop: frozen-service-bot, at: [15, 5], solid: true }
+  - { prop: frozen-service-bot, at: [13, 8], solid: true }
+  - { prop: frozen-service-bot, at: [17, 8], solid: true }
+  - { prop: server-monolith, at: [10, 12], solid: true }
+  - { prop: server-monolith, at: [12, 12], solid: true }
+  - { prop: server-monolith, at: [14, 12], solid: true }
+  - { prop: server-monolith, at: [16, 12], solid: true }
+  - { prop: synaptit-ore, at: [6, 12], solid: true }
+  - { prop: synaptit-ore, at: [11, 12], solid: true }
+  - { prop: synaptit-ore, at: [13, 12], solid: true }
+  - { prop: synaptit-ore, at: [17, 12], solid: true }
+  - { prop: synaptit-ore, at: [18, 12], solid: true }
+  - { prop: frozen-service-bot, at: [15, 12], solid: true }
+  - { prop: frozen-service-bot, at: [21, 12], solid: true }
 zones:
   - id: service-door
     name: Return to the Service Bay
@@ -51,19 +103,19 @@ zones:
   - id: dispatch-substation
     name: Dispatcher Substation
     type: trigger
-    propId: dispatch-substation
+    at: [4, 9]
   - id: tram-gamma
     name: Tram Gamma (Frozen Mid-Move)
     type: trigger
-    propId: tram-gamma
+    at: [15, 1]
   - id: tram-beta
     name: Tram Beta (Frozen Mid-Move)
     type: trigger
-    propId: tram-beta
+    at: [11, 1]
   - id: tram-alpha
     name: Tram Alpha (Frozen Mid-Move)
     type: trigger
-    propId: tram-alpha
+    at: [7, 1]
   - id: track-board
     name: Track-State Board
     type: trigger
@@ -71,17 +123,17 @@ zones:
   - id: ore-spill
     name: Spilled Ore on the Rails
     type: trigger
-    at: [18, 7]
+    at: [13, 1]
   - id: sopel
     name: Sopel
     type: npc
-    at: [13, 8]
+    at: [6, 9]
     properties:
       npcType: robot
       npcVariant: frosty-blue
   - id: exam-protocol-8
     name: Expedition Protocol Terminal VIII
     type: exam
-    propId: cert-terminal
+    at: [9, 5]
     properties:
       examId: m2-exam-protocol-8

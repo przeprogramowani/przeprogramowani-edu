@@ -19,9 +19,9 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-service-terminal-start',
     lines: [
       { speaker: 'system', text: { pl: 'TERMINAL SERWISOWY — online. Kolejka hali: jedno zlecenie, licznik prób rośnie.', en: 'SERVICE TERMINAL — online. Bay queue: one order, attempt counter rising.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Żeby wydać jednostce nowy rozkaz, potrzebujesz właściwego zlecenia i klucza zwolnienia kolejki. Oba są w logach hali — ale tylko wpisy ze stemplem dyspozytora i poprawną sumą kontrolną są prawdziwe.', en: 'To issue the unit a new order, you need the correct work order and the queue release key. Both are in the bay logs — but only entries with a dispatcher stamp and a valid checksum are real.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli odsiewam śmieci i składam odpowiedź: zlecenie i klucz. Podam ją przez /solve.', en: 'So I sift out the junk and assemble the answer: the work order and the key. I will enter it via /solve.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Nowy Rozkaz — odczytaj zlecenie i klucz z logów, podaj przez /solve.', en: '◆ NEW MISSION: New Order — read the work order and key from the logs, enter via /solve.' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'CORE AI', text: { pl: 'Żeby wydać jednostce nowy rozkaz, potrzebujesz pełnego harmonogramu hali. Zrzut zachował zadania i ich wymagania, ale zatarł kolejność. Istnieje dokładnie jeden porządek, w którym wszystko da się wykonać.', en: 'To issue the unit a new order, you need the full bay schedule. The dump kept the tasks and their requirements but wiped the order. There is exactly one sequence in which everything can be executed.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czyli śledzę zależności i układam zadania w jedyny wykonalny ciąg. Podam go przez /solve.', en: 'So I trace the dependencies and lay the tasks into the only executable sequence. I will enter it via /solve.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Nowy Rozkaz — odtwórz kolejność wykonania z zależności, podaj przez /solve.', en: '◆ NEW MISSION: New Order — reconstruct the execution order from the dependencies, enter via /solve.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { activateQuest: 'q-m2-new-order' },
   },
@@ -86,7 +86,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'q-m2-new-order-complete': {
     id: 'q-m2-new-order-complete',
     lines: [
-      { speaker: 'system', text: { pl: '◆ KLUCZ ZWOLNIENIA PRZYJĘTY. Kolejka S-0PL: odblokowana.', en: '◆ RELEASE KEY ACCEPTED. S-0PL queue: unlocked.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'system', text: { pl: '◆ HARMONOGRAM PRZYJĘTY. Kolejka S-0PL: odblokowana.', en: '◆ SCHEDULE ACCEPTED. S-0PL queue: unlocked.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Mogę nadpisać kolejkę robota zdalnie. Rekomenduję pełną automatyzację.', en: 'I can overwrite the robot\'s queue remotely. I recommend full automation.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Przygotuj rozkaz. Wydam go ja.', en: 'Prepare the order. I will issue it.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'S-0PL: rozruch. Jednostka próbuje starej pętli — jedno uderzenie serca — i przyjmuje nowy plan.', en: 'S-0PL: booting. The unit tries the old loop — one heartbeat — and accepts the new plan.' }, mode: 'system', autoAdvance: 2800 },

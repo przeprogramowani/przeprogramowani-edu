@@ -112,7 +112,8 @@ export class DeepScanRenderer implements ArcadeGameRenderer {
     this.finishDelayTimer = null;
 
     // Ping budget from difficulty: harder = fewer pings (battery pressure).
-    this.pingsLeft = 8 + (5 - config.difficulty);
+    // 14/12/10/8/6 for difficulty 1..5.
+    this.pingsLeft = 6 + 2 * (5 - config.difficulty);
 
     // Playable field
     this.fieldRect = new Phaser.Geom.Rectangle(
@@ -261,14 +262,17 @@ export class DeepScanRenderer implements ArcadeGameRenderer {
       x: dx,
       y: dy,
       amplitude: 1,
-      sigma: diag * 0.19,
+      // Harder = narrower peak (0.22..0.14 of the diagonal), so readings fade
+      // faster with distance and gradient-following takes more pings.
+      sigma: diag * (0.24 - 0.02 * this.config.difficulty),
       real: true,
     };
 
     this.sources = [this.deposit];
 
     // False echoes — flicker/decay differently; placed at least a deposit-radius away.
-    const falseCount = 2 + (this.config.difficulty >= 4 ? 1 : 0);
+    // 1/1/2/3/4 decoys for difficulty 1..5.
+    const falseCount = Phaser.Math.Clamp(this.config.difficulty - 1, 1, 4);
     let attempts = 0;
     while (this.sources.length < falseCount + 1 && attempts < 200) {
       attempts++;
@@ -296,8 +300,8 @@ export class DeepScanRenderer implements ArcadeGameRenderer {
       const flicker = s.real ? 1 : Phaser.Math.FloatBetween(0.35, 1.25);
       value += g * flicker;
     }
-    // Background sensor noise.
-    value += Phaser.Math.FloatBetween(0, 0.06);
+    // Background sensor noise — harder = dirtier readings (0.04..0.09 ceiling).
+    value += Phaser.Math.FloatBetween(0, 0.03 + 0.012 * this.config.difficulty);
     return Phaser.Math.Clamp(value, 0, 1);
   }
 

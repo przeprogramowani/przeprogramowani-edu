@@ -7,20 +7,23 @@ import { t } from '../i18n';
 /**
  * Switchyard — the theme *is* the mechanic: plan first, then let the plan run.
  *
- * Planning phase: the trams stand still on a small fixed track graph. Each tram
- * enters through its own switch (top lane = short, bottom lane = long) and every
- * lane funnels into one shared merge node before the smelter sink. The player
- * moves a cursor (WSAD) and presses SPACE to either flip the nearest switch
- * (route) or cycle the nearest tram's departure slot (order). Two trams that
- * ever occupy the same node on the same beat spill their cargo.
+ * Planning phase: the trams stand still on a track graph of 2-4 parallel lanes
+ * (difficulty-scaled). Each lane spans the same distance but has a different
+ * number of stops, so it takes a different number of beats to reach the shared
+ * merge node before the smelter sink. Every tram has its own route switch that
+ * cycles it through the lanes; a lane is a siding with limited capacity
+ * (ceil(trams/lanes)), so parking the whole fleet on one lane is impossible.
+ * The player moves a cursor (WSAD) and presses SPACE to either cycle the
+ * nearest switch (lane) or cycle the nearest tram's departure slot (order).
+ * Two trams that ever occupy the same node on the same beat spill their cargo —
+ * which happens exactly when two trams' (departure slot + lane length) sums
+ * coincide at the merge. The puzzle is scheduling.
  *
  * Execution phase: ENTER starts the schedule. The trams run on their own along
  * the routed tracks in slot order; the player only has a scarce budget of manual
  * holds (SPACE pauses the nearest running tram for one beat) to rescue a
  * near-collision the plan didn't foresee. A clean plan needs no holds at all.
  */
-
-type Lane = 'top' | 'bottom';
 
 interface TrackNode {
   id: string;
@@ -32,7 +35,7 @@ interface Junction {
   id: string;
   x: number;
   y: number;
-  lane: Lane;
+  laneIndex: number;
 }
 
 interface Tram {
@@ -53,8 +56,8 @@ interface Tram {
 // CRT palette (mirrors the other arcade renderers)
 const COLOR_BG = 0x05100c;
 const COLOR_TRACK = 0x123326;
-const COLOR_TRACK_TOP = 0x00d4aa;
-const COLOR_TRACK_BOT = 0xffb347;
+// One color per lane so a tram's route reads at a glance (max 4 lanes).
+const LANE_COLORS = [0x00d4aa, 0xffb347, 0x4fc3f7, 0xd18cff];
 const COLOR_CURSOR = 0x7cff7c;
 const COLOR_SOURCE = 0x2f6f5a;
 const COLOR_SINK = 0xffd166;
@@ -66,8 +69,6 @@ const COLOR_TEXT_CONTROLS = '#ffffff';
 const CURSOR_SPEED = 320;
 const HEADER_H = 46;
 const FOOTER_H = 26;
-const TICK_MS = 440;
-const MAX_HOLDS = 3;
 const EXEC_TICK_LIMIT = 18;
 const COLLISION_PENALTY = 5;
 const INTERACTION_RADIUS = 34;
@@ -90,20 +91,23 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
 
   private fieldRect!: Phaser.Geom.Rectangle;
 
-  // Two route switches plus the merge node form the fixed three-junction graph.
+  // One route switch per tram; all lanes funnel into the shared merge node.
   private junctions: Junction[] = [];
-  private topNodes: TrackNode[] = [];
-  private botNodes: TrackNode[] = [];
+  private lanes: TrackNode[][] = [];
   private mergeNode!: TrackNode;
   private sinkNode!: TrackNode;
 
   private trams: Tram[] = [];
   private tramCount = 4;
+  private laneCount = 2;
+  private maxPerLane = 2;
+  private maxHolds = 3;
+  private tickMs = 440;
 
   private phase: 'planning' | 'executing' | 'done' = 'planning';
   private cursorX = 0;
   private cursorY = 0;
-  private holdsLeft = MAX_HOLDS;
+  private holdsLeft = 3;
   private delivered = 0;
   private collisions = 0;
   private score = 0;
@@ -130,7 +134,6 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
     this.effects = [];
     this.trams = [];
     this.phase = 'planning';
-    this.holdsLeft = MAX_HOLDS;
     this.delivered = 0;
     this.collisions = 0;
     this.score = 0;
@@ -139,8 +142,19 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
     this.execTick = 0;
     this.finishDelayTimer = null;
 
-    // 3-4 trams depending on difficulty.
-    this.tramCount = Phaser.Math.Clamp(config.difficulty + 1, 3, 4);
+    // Difficulty 1..5 drives the whole curve:
+    //   trams 3/3/4/4/5 (more merge traffic to plan around),
+    //   lanes 2/2/3/3/4 (more lane lengths to schedule against each other),
+    //   holds 5/4/3/2/1 (less room to rescue a bad plan),
+    //   beat 490..370ms (less reaction time per hold).
+    this.tramCount = Phaser.Math.Clamp(2 + Math.ceil(config.difficulty / 2), 3, 5);
+    this.laneCount = Phaser.Math.Clamp(1 + Math.ceil(config.difficulty / 2), 2, 4);
+    // Sidings are short: capping trams-per-lane forbids the degenerate plan of
+    // routing the whole fleet down one lane in single file.
+    this.maxPerLane = Math.ceil(this.tramCount / this.laneCount);
+    this.maxHolds = Phaser.Math.Clamp(6 - config.difficulty, 1, 5);
+    this.holdsLeft = this.maxHolds;
+    this.tickMs = 520 - config.difficulty * 30;
 
     this.fieldRect = new Phaser.Geom.Rectangle(
       bounds.x + 12,
@@ -292,45 +306,50 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
   private buildGraph(): void {
     const r = this.fieldRect;
     const x = (f: number) => r.left + r.width * f;
-    const topY = r.top + r.height * 0.22;
-    const botY = r.top + r.height * 0.82;
-    const cy = r.centerY;
 
-    // Top lane = short (2 shared nodes); bottom lane = long (4 shared nodes).
-    this.topNodes = [
-      { id: 't0', x: x(0.34), y: topY },
-      { id: 't1', x: x(0.58), y: topY },
-    ];
-    this.botNodes = [
-      { id: 'b0', x: x(0.34), y: botY },
-      { id: 'b1', x: x(0.48), y: botY },
-      { id: 'b2', x: x(0.6), y: botY },
-      { id: 'b3', x: x(0.72), y: botY },
-    ];
-    this.junctions = [
-      { id: 'junction-a', x: x(0.18), y: r.top + r.height * 0.32, lane: 'bottom' },
-      { id: 'junction-b', x: x(0.18), y: r.top + r.height * 0.68, lane: 'top' },
-    ];
-    this.mergeNode = { id: 'merge', x: x(0.82), y: cy };
-    this.sinkNode = { id: 'sink', x: x(0.93), y: cy };
+    // Lane i has 2+i stops over the same horizontal span, so lower lanes take
+    // more beats to reach the merge. Lane length is the scheduling currency:
+    // a tram arrives at the merge on beat (departSlot + lane length + const).
+    this.lanes = [];
+    for (let laneIdx = 0; laneIdx < this.laneCount; laneIdx++) {
+      const laneY =
+        r.top + r.height * (this.laneCount === 1 ? 0.5 : 0.2 + 0.6 * (laneIdx / (this.laneCount - 1)));
+      const stops = 2 + laneIdx;
+      const nodes: TrackNode[] = [];
+      for (let k = 0; k < stops; k++) {
+        nodes.push({
+          id: `l${laneIdx}n${k}`,
+          x: x(0.32 + 0.4 * (stops === 1 ? 0.5 : k / (stops - 1))),
+          y: laneY,
+        });
+      }
+      this.lanes.push(nodes);
+    }
+
+    this.mergeNode = { id: 'merge', x: x(0.84), y: r.centerY };
+    this.sinkNode = { id: 'sink', x: x(0.93), y: r.centerY };
   }
 
   private buildRoute(tram: Tram): TrackNode[] {
     const spawn: TrackNode = { id: `s${tram.index}`, x: tram.spawnX, y: tram.rowY };
     const junction = this.junctions[tram.junctionIndex];
     const junctionNode: TrackNode = { id: junction.id, x: junction.x, y: junction.y };
-    const lane = junction.lane === 'top' ? this.topNodes : this.botNodes;
+    const lane = this.lanes[junction.laneIndex];
     return [spawn, junctionNode, ...lane, this.mergeNode, this.sinkNode];
   }
 
   private buildTrams(): void {
     const r = this.fieldRect;
     const spawnX = r.left + r.width * 0.05;
+    const switchX = r.left + r.width * 0.17;
     const n = this.tramCount;
 
+    this.junctions = [];
     for (let i = 0; i < n; i++) {
       const rowY = r.top + r.height * (0.16 + 0.68 * (n === 1 ? 0.5 : i / (n - 1)));
-      // Departure slots always form a real queue. The initial route switches,
+      // One switch per tram, right after its spawn: cycling it picks the lane.
+      this.junctions.push({ id: `j${i}`, x: switchX, y: rowY, laneIndex: i % this.laneCount });
+      // Departure slots always form a real queue. The initial lane switches,
       // not an invalid queue, create the deterministic merge collision.
       const departSlot = i;
 
@@ -354,7 +373,7 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
         index: i,
         rowY,
         spawnX,
-        junctionIndex: i < Math.ceil(n / 2) ? 0 : 1,
+        junctionIndex: i,
         departSlot,
         route: [],
         nodeIndex: -1,
@@ -364,9 +383,39 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
         body,
         badge,
       };
-      tram.route = this.buildRoute(tram);
       this.trams.push(tram);
     }
+
+    this.ensureInitialConflict();
+    for (const tram of this.trams) tram.route = this.buildRoute(tram);
+  }
+
+  /**
+   * The starting plan must contain at least one merge collision, or pressing
+   * ENTER immediately wins. Two trams collide at the merge exactly when their
+   * (departSlot + laneIndex) sums are equal (all lanes span the same distance,
+   * lane i just has i extra stops). If the default lane spread happens to be
+   * collision-free, re-lane the last tram onto a colliding sum.
+   */
+  private ensureInitialConflict(): void {
+    const sums = this.trams.map((tram) => tram.departSlot + this.junctions[tram.junctionIndex].laneIndex);
+    if (new Set(sums).size < sums.length) return;
+
+    const last = this.trams[this.trams.length - 1];
+    const ownLane = this.junctions[last.junctionIndex].laneIndex;
+    for (let lane = 0; lane < this.laneCount; lane++) {
+      const candidate = last.departSlot + lane;
+      const hasRoom = lane === ownLane || this.laneLoad(lane) < this.maxPerLane;
+      if (hasRoom && sums.slice(0, -1).includes(candidate)) {
+        this.junctions[last.junctionIndex].laneIndex = lane;
+        return;
+      }
+    }
+  }
+
+  /** How many trams are currently routed onto the given lane. */
+  private laneLoad(laneIndex: number): number {
+    return this.junctions.filter((junction) => junction.laneIndex === laneIndex).length;
   }
 
   // --- Input actions ---------------------------------------------------------
@@ -407,7 +456,20 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
     }
 
     if (best.kind === 'switch') {
-      best.junction.lane = best.junction.lane === 'top' ? 'bottom' : 'top';
+      // Cycle to the next lane with free siding capacity (own lane always counts
+      // as free once this tram leaves it).
+      const previousLane = best.junction.laneIndex;
+      for (let step = 1; step <= this.laneCount; step++) {
+        const candidate = (previousLane + step) % this.laneCount;
+        if (candidate === previousLane || this.laneLoad(candidate) < this.maxPerLane) {
+          best.junction.laneIndex = candidate;
+          break;
+        }
+      }
+      if (best.junction.laneIndex === previousLane) {
+        audioManager.playSfx(SfxKey.ERROR_BUZZ);
+        return;
+      }
       for (const tram of this.trams) {
         if (this.junctions[tram.junctionIndex] === best.junction) {
           tram.route = this.buildRoute(tram);
@@ -474,7 +536,7 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
 
     this.execTick = 0;
     this.execTimer = this.scene.time.addEvent({
-      delay: TICK_MS,
+      delay: this.tickMs,
       loop: true,
       callback: () => this.doTick(),
     });
@@ -500,7 +562,7 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
         targets: tram.container,
         x: node.x,
         y: node.y,
-        duration: TICK_MS * 0.85,
+        duration: this.tickMs * 0.85,
         ease: 'Sine.easeInOut',
       });
     }
@@ -610,13 +672,22 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
     // Merge node.
     g.fillStyle(0x1a3a2e, 1);
     g.fillCircle(this.mergeNode.x, this.mergeNode.y, 6);
-    g.lineStyle(1, COLOR_TRACK_TOP, 0.5);
+    g.lineStyle(1, LANE_COLORS[0], 0.5);
     g.strokeCircle(this.mergeNode.x, this.mergeNode.y, 6);
 
-    // Each tram's routed polyline; active lane bright.
+    // Faint skeleton of every lane so the alternatives are visible while planning.
+    g.lineStyle(1, COLOR_TRACK, 0.9);
+    for (const lane of this.lanes) {
+      for (let i = 0; i < lane.length - 1; i++) {
+        g.lineBetween(lane[i].x, lane[i].y, lane[i + 1].x, lane[i + 1].y);
+      }
+      g.lineBetween(lane[lane.length - 1].x, lane[lane.length - 1].y, this.mergeNode.x, this.mergeNode.y);
+    }
+
+    // Each tram's routed polyline; active lane bright, colored by lane.
     for (const tram of this.trams) {
       const junction = this.junctions[tram.junctionIndex];
-      const laneColor = junction.lane === 'top' ? COLOR_TRACK_TOP : COLOR_TRACK_BOT;
+      const laneColor = LANE_COLORS[junction.laneIndex % LANE_COLORS.length];
       const alpha = tram.state === 'spilled' ? 0.15 : 0.55;
 
       g.lineStyle(2, laneColor, alpha);
@@ -626,9 +697,9 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
       }
     }
 
-    // Two shared route switches (plus the merge above = three junctions total).
+    // One route switch per tram, colored by its currently selected lane.
     for (const junction of this.junctions) {
-      const laneColor = junction.lane === 'top' ? COLOR_TRACK_TOP : COLOR_TRACK_BOT;
+      const laneColor = LANE_COLORS[junction.laneIndex % LANE_COLORS.length];
       g.fillStyle(laneColor, 0.9);
       g.beginPath();
       g.moveTo(junction.x, junction.y - 7);
@@ -639,10 +710,29 @@ export class SwitchyardRenderer implements ArcadeGameRenderer {
       g.fillPath();
     }
 
-    // Shared node dots so overlaps read as real junctions.
+    // Shared stop dots — more stops on a lane = more beats to cross it.
     g.fillStyle(COLOR_TRACK, 1);
-    for (const node of [...this.topNodes, ...this.botNodes]) {
-      g.fillCircle(node.x, node.y, 3);
+    for (const lane of this.lanes) {
+      for (const node of lane) {
+        g.fillCircle(node.x, node.y, 3);
+      }
+    }
+
+    // Siding capacity pips at each lane entry: filled = trams routed here.
+    for (let laneIdx = 0; laneIdx < this.lanes.length; laneIdx++) {
+      const entry = this.lanes[laneIdx][0];
+      const load = this.laneLoad(laneIdx);
+      const laneColor = LANE_COLORS[laneIdx % LANE_COLORS.length];
+      for (let p = 0; p < this.maxPerLane; p++) {
+        const px = entry.x - 16 - p * 8;
+        if (p < load) {
+          g.fillStyle(laneColor, 0.9);
+          g.fillRect(px - 2, entry.y - 2, 5, 5);
+        } else {
+          g.lineStyle(1, laneColor, 0.5);
+          g.strokeRect(px - 2, entry.y - 2, 5, 5);
+        }
+      }
     }
   }
 

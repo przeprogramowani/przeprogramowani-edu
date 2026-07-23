@@ -1,37 +1,48 @@
-# M2 L4 — Huta / The Foundry
-# The smelt line and control room; a south annex opens into an ice gallery whose
-# walls glitter with Synaptit veins. First warm glow in years after the cast.
 theme: 3
 grid: |
   ##############################
   #........##..................#
-  #........##..................#
-  D........##..................D
-  #..................##........#
-  #..................##........#
-  #..................##........#
-  ###############.##############
-  ~~~~~~~~~~~~~##.###~~~~~~~~~~~
-  ~~~~~~~~~~~~~#....#~~~~~~~~~~~
-  ~~~~~~~~~~~~~#....#~~~~~~~~~~~
-  ~~~~~~~~~~~~~######~~~~~~~~~~~
+  #........##.........#####....#
+  D........##........##~~##....D
+  #..................#####.....#
+  #............................#
+  #.##.####....................#
+  ####.#~~##.####.########.#####
+  ~~~#.##~##.#~##.###~~~~#.#~~~~
+  ~~~#..###..#~#....######.#~~~~
+  ~~~##.....##~#...........#~~~~
+  ~~~~#######~~#############~~~~
 props:
   - { id: fabricator-1, prop: fabricator-rig, at: [3, 1], solid: true }
   - { id: fabricator-2, prop: fabricator-rig, at: [6, 1], solid: true }
   - { id: smelt-line, prop: fabricator-rig, at: [13, 1], solid: true }
-  - { id: fabricator-4, prop: fabricator-rig, at: [17, 1], solid: true }
-  - { id: foundry-console, prop: frozen-console, at: [26, 1], solid: true }
-  - { id: switchyard-station, prop: frozen-console, at: [25, 2], solid: true }
-  - { id: crucible, prop: server-monolith, at: [12, 4], solid: true }
-  - { id: ore-shuttle, prop: cargo-tram, at: [8, 5], solid: true }
   - { prop: server-monolith, at: [22, 5], solid: true }
   - { prop: frozen-service-bot, at: [1, 6], solid: true }
   - { id: cert-terminal, prop: frozen-console, at: [26, 6], solid: true }
   - { prop: synaptit-ore, at: [14, 9], solid: true }
-  - { prop: synaptit-ore, at: [16, 9], solid: false }
   - { prop: synaptit-ore, at: [14, 10], solid: true }
   - { prop: synaptit-ore, at: [15, 10], solid: false }
-  - { prop: synaptit-ore, at: [17, 10], solid: true }
+  - { prop: synaptit-ore, at: [16, 9], solid: true }
+  - { prop: synaptit-ore, at: [15, 7], solid: true }
+  - { prop: synaptit-ore, at: [15, 8], solid: true }
+  - { prop: frozen-service-bot, at: [15, 9], solid: true }
+  - { prop: frozen-service-bot, at: [16, 10], solid: true }
+  - { prop: server-monolith, at: [2, 1], solid: true }
+  - { prop: server-monolith, at: [7, 1], solid: true }
+  - { prop: server-monolith, at: [12, 1], solid: true }
+  - { prop: server-monolith, at: [17, 1], solid: true }
+  - { prop: fabricator-rig, at: [16, 1], solid: true }
+  - { prop: cargo-tram, at: [14, 1], solid: true }
+  - { prop: cargo-tram, at: [15, 1], solid: true }
+  - { prop: cargo-tram, at: [4, 1], solid: true }
+  - { prop: cargo-tram, at: [5, 1], solid: true }
+  - { prop: fabricator-rig, at: [2, 2], solid: true }
+  - { prop: holo-plan-board, at: [7, 2], solid: true }
+  - { prop: frozen-console, at: [9, 6], solid: true }
+  - { prop: frozen-service-bot, at: [8, 10], solid: true }
+  - { prop: frozen-service-bot, at: [9, 9], solid: true }
+  - { prop: frozen-service-bot, at: [25, 1], solid: true }
+  - { prop: frozen-service-bot, at: [25, 2], solid: true }
 zones:
   - id: deadlock-door
     name: Return to the Deadlock
@@ -53,11 +64,11 @@ zones:
   - id: foundry-console
     name: Foundry Control Console
     type: trigger
-    propId: foundry-console
+    at: [7, 2]
   - id: switchyard-station
     name: Delivery Switchyard Station
     type: arcade
-    at: [25, 2]
+    at: [9, 6]
     properties:
       arcadeGameId: arcade-switchyard
   - id: gallery-gate
@@ -71,11 +82,11 @@ zones:
   - id: crucible
     name: Casting Crucible
     type: trigger
-    propId: crucible
+    at: [12, 1]
   - id: ore-shuttle
     name: Gallery Ore Shuttle
     type: trigger
-    propId: ore-shuttle
+    at: [2, 2]
   - id: sopel-foundry
     name: Sopel
     type: npc

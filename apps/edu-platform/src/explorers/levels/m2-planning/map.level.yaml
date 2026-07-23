@@ -1,6 +1,3 @@
-# M2 L1 — Brama / The Gatehouse
-# Ice apron before the cyclopean cargo gate of an Odyssey-F forge. The wealth is
-# visible but locked in a frozen ingot tram; the gate boots via a heat sequence.
 theme: 3
 grid: |
   ~~~~~~~~~#########~~~~~~~~~~
@@ -8,30 +5,51 @@ grid: |
   ~~~~~~~~~#.......#~~~~~~~~~~
   ~~~~~~~~~####.####~~~~~~~~~~
   #############.##############
-  #....##..............##....#
+  #....................##....#
   #..........................#
-  #....##..............##....#
-  #....##..............#######
-  #######..............D~~~~~~
+  #....................##....#
+  #....########........#######
+  #############........D~~~~~~
   ~~~~~~#..............D~~~~~~
   ~~~~~~#..............#~~~~~~
-  ~~~~~~#####.##########~~~~~~
-  ~~~~~~~~###.###~~~~~~~~~~~~~
-  ~~~~~~~~#.....#~~~~~~~~~~~~~
-  ~~~~~~~~#.....#~~~~~~~~~~~~~
-  ~~~~~~~~#######~~~~~~~~~~~~~
+  ~~~~~~#####.####..####~~~~~~
+  ~~~~~~~~###.####..#~~~~~~~~~
+  ~~~~~~~~#.........#~~~~~~~~~
+  ~~~~~~~~#.........#~~~~~~~~~
+  ~~~~~~~~###########~~~~~~~~~
 props:
-  - { id: heat-node-1, prop: server-monolith, at: [16, 1], solid: true }
-  - { id: roadmap-board, prop: holo-plan-board, at: [18, 5], solid: true }
   - { prop: frozen-service-bot, at: [20, 5], solid: true }
-  - { id: gate-console, prop: frozen-console, at: [25, 5], solid: true }
   - { prop: frozen-service-bot, at: [9, 7], solid: true }
   - { id: heat-node-2, prop: server-monolith, at: [26, 7], solid: true }
   - { id: ship-teleport, prop: ship-teleport, at: [2, 8], solid: true }
-  - { id: heat-node-3, prop: server-monolith, at: [13, 9], solid: true }
-  - { id: ingot-tram, prop: cargo-tram, at: [17, 10], solid: true }
   - { id: cert-terminal, prop: frozen-console, at: [9, 15], solid: true }
-  - { id: guardhouse-console, prop: frozen-console, at: [11, 15], solid: true }
+  - { prop: frozen-service-bot, at: [1, 5], solid: true }
+  - { prop: frozen-service-bot, at: [4, 8], solid: true }
+  - { prop: frozen-service-bot, at: [7, 10], solid: true }
+  - { prop: synaptit-ore, at: [7, 11], solid: true }
+  - { prop: server-monolith, at: [8, 11], solid: true }
+  - { prop: frozen-console, at: [10, 1], solid: true }
+  - { prop: frozen-console, at: [20, 11], solid: true }
+  - { prop: synaptit-ore, at: [10, 2], solid: true }
+  - { prop: holo-plan-board, at: [17, 15], solid: true }
+  - { prop: frozen-service-bot, at: [12, 15], solid: true }
+  - { prop: cargo-tram, at: [14, 11], solid: true }
+  - { prop: frozen-service-bot, at: [17, 9], solid: true }
+  - { prop: frozen-service-bot, at: [16, 8], solid: true }
+  - { prop: frozen-service-bot, at: [17, 7], solid: true }
+  - { prop: frozen-service-bot, at: [10, 5], solid: true }
+  - { prop: frozen-service-bot, at: [11, 6], solid: true }
+  - { prop: synaptit-ore, at: [11, 5], solid: true }
+  - { prop: server-monolith, at: [19, 11], solid: true }
+  - { prop: server-monolith, at: [15, 15], solid: true }
+  - { prop: frozen-console, at: [26, 5], solid: true }
+  - { prop: frozen-service-bot, at: [15, 2], solid: true }
+  - { prop: frozen-service-bot, at: [16, 2], solid: true }
+  - { prop: frozen-service-bot, at: [16, 1], solid: true }
+  - { prop: frozen-service-bot, at: [26, 6], solid: true }
+  - { prop: frozen-service-bot, at: [23, 7], solid: true }
+  - { prop: frozen-service-bot, at: [4, 5], solid: true }
+  - { prop: holo-plan-board, at: [11, 7], solid: true }
 zones:
   - id: ship-teleport
     name: Landed Shuttle
@@ -54,39 +72,39 @@ zones:
   - id: guardhouse-console
     name: Guardhouse Console
     type: trigger
-    propId: guardhouse-console
+    at: [11, 7]
   - id: valve
     name: Manual Heat Valve
     type: trigger
-    at: [9, 14]
+    at: [26, 7]
   - id: roadmap-board
     name: Frozen Factory Roadmap
     type: trigger
-    propId: roadmap-board
+    at: [10, 1]
   - id: heat-node-1
     name: Gate Heat Node 1
     type: trigger
-    propId: heat-node-1
+    at: [8, 11]
   - id: heat-node-2
     name: Gate Heat Node 2
     type: trigger
-    propId: heat-node-2
+    at: [15, 15]
   - id: heat-node-3
     name: Gate Heat Node 3
     type: trigger
-    propId: heat-node-3
+    at: [19, 11]
   - id: gate-console
     name: Gate Control Console
     type: trigger
-    propId: gate-console
+    at: [26, 5]
   - id: black-box
     name: Guardhouse Black Box
     type: trigger
-    at: [13, 15]
+    at: [17, 15]
   - id: ingot-tram
     name: Frozen Ingot Tram
     type: trigger
-    propId: ingot-tram
+    at: [14, 11]
   - id: kern
     name: Dr Kern
     type: npc
