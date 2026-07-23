@@ -40,7 +40,7 @@ export const manifest: LevelManifest = {
   examCompletionDialogues: { 'm1-exam-protocol-2': 'm1-exam-protocol-2-done' },
   introDialogue: 'm1-grove-intro',
   introFlag: FLAGS.M1_GROVE_INTRO_SEEN,
-  introCinematicTitle: 'Księżyc 1 — Strefa Ciszy',
+  introCinematicTitle: 'Księżyc 1 — Dżungla',
   introCinematicSubtitle: 'Ogród Sondy',
   conditionalIntros: [
     {

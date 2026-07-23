@@ -7,9 +7,9 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-vein-intro',
     lines: [
       { speaker: 'system', text: { pl: 'ŻYŁA — dno dżungli rozrywa się w wąwóz.', en: 'THE VEIN — the jungle floor tears into a ravine.' }, mode: 'cinematic', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Grunt się rozstępuje. Wchodzę w wąwóz jak do katedry — ściany błyszczą żyłami, coś skrzy się w ciemności na niebiesko. Klaustrofobiczna zieleń nagle zamienia się w ogrom.', en: 'The ground splits. I step into the ravine as if into a cathedral — the walls shine with veins, something glitters blue in the dark. The claustrophobic green suddenly opens into vastness.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Grunt się rozstępuje. Wchodzę w wąwóz jak do katedry — ściany błyszczą żyłami, coś skrzy się w ciemności na niebiesko.', en: 'The ground splits. I step into the ravine as if into a cathedral — the walls shine with veins, something glitters blue in the dark.' }, mode: 'monologue' },
       { speaker: 'dr Kern', text: { pl: 'Tu. To jest tu. Czuję tę geologię, zanim ją zobaczysz. Wąwóz to mineralna krypta — a te żyły to Synaptit, surowy, nietknięty. Poprowadzę cię. Wiem, gdzie szukać.', en: 'Here. It\'s here. I feel this geology before you even see it. The ravine is a mineral crypt — and those veins are Synaptit, raw, untouched. I\'ll guide you. I know where to look.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Kern jest dziś wyjątkowo pewna. Zapamiętuję to. Na razie: zestaw badawczy stoi przy wejściu do wąwozu. Zasil go, zrób głęboki skan, wydobądź pierwszą rudę. Do tej pory goniliśmy ślady. Ten weźmiemy w całości.', en: 'Kern is unusually certain today. I note it. For now: the research kit stands at the ravine entrance. Power it, run a deep scan, extract the first ore. Until now we chased traces. This one we take whole.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Kern jest dziś wyjątkowo pewna. Zapamiętuję to. Ta ruda to nie objazd: z surowego Synaptitu odbudujemy tablicę sensorów na grani, a ta tablica przywróci mi wzrok. Zestaw badawczy stoi przy wejściu — zasil go, zrób głęboki skan, wydobądź pierwszą rudę.', en: 'Kern is unusually certain today. I note it. This ore is no detour: from raw Synaptit we rebuild the sensor array on the crest, and that array gives me back my sight. The research kit stands at the entrance — power it, run a deep scan, extract the first ore.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_VEIN_INTRO_SEEN] },
   },
@@ -101,7 +101,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-pure-vein-extract',
     lines: [
       { speaker: 'astronaut', text: { pl: 'Oznaczona żyła. Podłączam ekstraktor, tnę wzdłuż warstwy. Ruda schodzi w całości — surowy Synaptit, pierwszy w tej misji.', en: 'The marked vein. I attach the extractor, cut along the layer. The ore comes away whole — raw Synaptit, the first of this mission.' }, mode: 'dialogue' },
-      { speaker: 'dr Kern', text: { pl: 'Trzymasz w rękach to, po co przylecieliśmy przez pół Układu. Zważ to. Zapisz masę.', en: 'You\'re holding what we crossed half the system for. Weigh it. Record the mass.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Zważ to i zapisz masę, co do grama. Ta liczba powie nam, ile naprawdę mamy.', en: 'Weigh it and record the mass, to the gram. That number will tell us how much we truly have.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_VEIN_EXTRACTED] },
   },

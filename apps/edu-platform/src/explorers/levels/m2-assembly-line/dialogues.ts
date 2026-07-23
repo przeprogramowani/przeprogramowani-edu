@@ -19,7 +19,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-foundry-start',
     lines: [
       { speaker: 'system', text: { pl: 'STEROWNIA HUTY — online. Piece: zimne. Galeria: zamknięta.', en: 'FOUNDRY CONTROL — online. Furnaces: cold. Gallery: sealed.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Pierwszy wytop od lat. Najpierw otwórz lodową galerię, żeby dobrać się do żył. Potem zaplanuj dostawy przy stacji zwrotnicy, a na końcu poprowadź odlew ręcznie przy kadzi.', en: 'The first melt in years. Open the ice gallery first to reach the veins. Then plan the deliveries at the switchyard station, and finish the cast by hand at the crucible.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Pierwszy wytop od lat. Ta huta pokazuje kształt całej fabryki: najpierw plan, potem wykonanie, na końcu przegląd tego, co wróciło. Powiedz mi tylko, na co patrzeć najpierw. Otwórz galerię, zaplanuj dostawy przy zwrotnicy, a odlew dokończ ręcznie przy kadzi.', en: 'The first melt in years. This foundry shows the shape of the whole factory: first the plan, then the execution, last the review of what comes back. Just tell me what to look at first. Open the gallery, plan the deliveries at the switchyard, and finish the cast by hand at the crucible.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Pierwszy Wytop — galeria, zwrotnica, ręczny odlew.', en: '◆ NEW MISSION: First Melt — gallery, switchyard, manual cast.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { setFlags: [FLAGS.M2_MELT_ACTIVE], activateQuest: 'q-m2-first-melt' },
