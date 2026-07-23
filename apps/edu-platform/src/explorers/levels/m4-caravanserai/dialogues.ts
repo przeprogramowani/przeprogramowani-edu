@@ -134,7 +134,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: '◆ TRZY KOPCE ZAKOŃCZONE. Werdykt: 2 znaki zgodne, 1 przestawiony. Namiar z dwóch prawdziwych.', en: '◆ THREE CAIRNS COMPLETE. Verdict: 2 signs consistent, 1 moved. Bearing from the two true ones.' }, mode: 'system', autoAdvance: 2800 },
       { speaker: 'astronaut', text: { pl: 'Dwa kopce dały jedną linię, trzeci wskazał w wydmy. Gdybym uwierzył wszystkim trzem, kopalibyśmy w piachu. Mapa to model — sprawdziłem znaki nawzajem, bo teren mógł się zmienić albo ktoś mógł go zmienić.', en: 'Two cairns gave one line, the third pointed into the dunes. Had I believed all three, we would be digging in sand. A map is a model — I checked the signs against each other, because the terrain could have changed, or someone could have changed it.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Mam namiar z dwóch prawdziwych znaków. Wrota główne — odkopane i otwarte. Nie dlatego, że kopiec tak twierdzi, ale dlatego, że zważyliśmy trzy i odrzucili jeden.', en: 'I have the bearing from the two true signs. The main gate — dug out and open. Not because a cairn says so, but because we weighed three and rejected one.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Mam namiar z dwóch prawdziwych znaków. Wrota główne — odkopane i otwarte. Nie dlatego, że kopiec tak twierdzi, ale dlatego, że zważyliśmy trzy i odrzuciliśmy jeden.', en: 'I have the bearing from the two true signs. The main gate — dug out and open. Not because a cairn says so, but because we weighed three and rejected one.' }, mode: 'dialogue' },
     ],
   },
 

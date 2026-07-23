@@ -7,7 +7,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-vein-intro',
     lines: [
       { speaker: 'system', text: { pl: 'ŻYŁA — dno dżungli rozrywa się w wąwóz.', en: 'THE VEIN — the jungle floor tears into a ravine.' }, mode: 'cinematic', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Ziemia się rozstępuje. Wchodzę w wąwóz jak do katedry — ściany błyszczą żyłami, coś skrzy się w ciemności na niebiesko. Klaustrofobiczna zieleń nagle zamienia się w ogrom.', en: 'The ground splits. I step into the ravine as if into a cathedral — the walls shine with veins, something glitters blue in the dark. The claustrophobic green suddenly opens into vastness.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Grunt się rozstępuje. Wchodzę w wąwóz jak do katedry — ściany błyszczą żyłami, coś skrzy się w ciemności na niebiesko. Klaustrofobiczna zieleń nagle zamienia się w ogrom.', en: 'The ground splits. I step into the ravine as if into a cathedral — the walls shine with veins, something glitters blue in the dark. The claustrophobic green suddenly opens into vastness.' }, mode: 'monologue' },
       { speaker: 'dr Kern', text: { pl: 'Tu. To jest tu. Czuję tę geologię, zanim ją zobaczysz. Wąwóz to mineralna krypta — a te żyły to Synaptit, surowy, nietknięty. Poprowadzę cię. Wiem, gdzie szukać.', en: 'Here. It\'s here. I feel this geology before you even see it. The ravine is a mineral crypt — and those veins are Synaptit, raw, untouched. I\'ll guide you. I know where to look.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Kern jest dziś wyjątkowo pewna. Zapamiętuję to. Na razie: zestaw badawczy stoi przy wejściu do wąwozu. Zasil go, zrób głęboki skan, wydobądź pierwszą rudę. Do tej pory goniliśmy ślady. Ten weźmiemy w całości.', en: 'Kern is unusually certain today. I note it. For now: the research kit stands at the ravine entrance. Power it, run a deep scan, extract the first ore. Until now we chased traces. This one we take whole.' }, mode: 'dialogue' },
     ],
@@ -125,7 +125,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-swierszcz-vein': {
     id: 'm1-swierszcz-vein',
     lines: [
-      { speaker: 'Świerszcz', text: { pl: 'cyk……cyk (echo wraca dwa razy, ze ścian wąwozu)', en: 'chirp……chirp (the echo returns twice, off the ravine walls)' }, mode: 'dialogue' },
+      { speaker: 'Świerszcz', text: { pl: 'cyk……cyk (echo wraca dwa razy, odbite od ścian wąwozu)', en: 'chirp……chirp (the echo returns twice, off the ravine walls)' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Terkot niesie się dziwnie w tej krypcie — wraca do niego samego. Świerszcz przekrzywia się, jakby nie ufał własnemu echu.', en: 'The chirp carries strangely in this crypt — it comes back to him. Świerszcz tilts, as if he does not trust his own echo.' }, mode: 'dialogue' },
     ],
   },

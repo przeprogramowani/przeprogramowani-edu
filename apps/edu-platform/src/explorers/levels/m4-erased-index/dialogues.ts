@@ -89,7 +89,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm4-spindle-order-warn': {
     id: 'm4-spindle-order-warn',
     lines: [
-      { speaker: 'Echo', text: { pl: 'Nie stąd. To wrzeciono nikt jeszcze nie wskazał. Wróć do poprzedniego ogniwa — indeks czyta się po nici, nie na wyrywki.', en: 'Not from here. Nothing points to this spindle yet. Go back to the previous link — an index is read along the thread, not at random.' }, mode: 'dialogue' },
+      { speaker: 'Echo', text: { pl: 'Nie stąd. Tego wrzeciona jeszcze nic nie wskazuje. Wróć do poprzedniego ogniwa — indeks czyta się po nici, nie na wyrywki.', en: 'Not from here. Nothing points to this spindle yet. Go back to the previous link — an index is read along the thread, not at random.' }, mode: 'dialogue' },
     ],
   },
 

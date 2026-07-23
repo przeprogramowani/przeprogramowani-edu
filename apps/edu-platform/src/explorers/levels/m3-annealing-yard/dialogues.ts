@@ -7,7 +7,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-annealing-intro',
     lines: [
       { speaker: 'system', text: { pl: 'WYŻARZALNIA — plac cykli cieplnych. Ogród kryształów. Kominy: zimne.', en: 'ANNEALING YARD — heat-cycle floor. A crystal garden. Chimneys: cold.' }, mode: 'cinematic', autoAdvance: 2800 },
-      { speaker: 'astronaut', text: { pl: 'Znowu skala rośnie o rząd. Stanowiska wygrzewu w rzędach jak winnica, a wzdłuż kominów — kryształy magmy, całe ogrody, skrzące się w łunie. To nie jest miejsce do znajdowania rudy ani do jej topienia. To miejsce, w którym się za nią ręczy.', en: 'The scale jumps an order again. Anneal stations in rows like a vineyard, and along the chimneys — magma crystals, whole gardens of them, glittering in the glow. This is not a place to find ore, nor to smelt it. It is a place where you vouch for it.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Skala znów rośnie o rząd wielkości. Stanowiska wygrzewu w rzędach jak winnica, a wzdłuż kominów — kryształy magmy, całe ogrody, skrzące się w łunie. To nie jest miejsce do znajdowania rudy ani do jej topienia. To miejsce, w którym się za nią ręczy.', en: 'The scale climbs an order of magnitude again. Anneal stations in rows like a vineyard, and along the chimneys — magma crystals, whole gardens of them, glittering in the glow. This is not a place to find ore, nor to smelt it. It is a place where you vouch for it.' }, mode: 'monologue' },
       { speaker: 'CORE AI', text: { pl: 'Trzeci szczebel misji materiałowej. Na Księżycu 1 znalazłeś. Na Księżycu 2 przetopiłeś. Tu — poręczysz. Zasil moduł probierczy, certyfikuj chłodzenie, przeprowadź partię przez wygrzew.', en: 'The third rung of the material mission. On Moon 1 you found. On Moon 2 you smelted. Here — you vouch. Power the assay rig, certify the cooling, run the batch through the anneal.' }, mode: 'dialogue' },
       { speaker: 'dr Kern', text: { pl: 'Poprowadzę badanie czystości z orbity. Znam parametry tej serii. — Podam je, gdy dojdziesz do modułu.', en: 'I will run the purity assay from orbit. I know this series\' parameters. — I will give them to you when you reach the rig.' }, mode: 'dialogue' },
     ],
@@ -107,7 +107,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-iskra-yard': {
     id: 'm3-iskra-yard',
     lines: [
-      { speaker: 'Iskra', text: { pl: 'Log: kominy 2 i 4 — mikropęknięcia. Chłodziwo w normie. Palnik 3 — drga, obserwuję. Wszystko zgłoszone, na wszelki wypadek. Tak jest bezpieczniej, Dexo.', en: 'Log: chimneys 2 and 4 — micro-cracks. Coolant nominal. Burner 3 — jittering, watching it. All reported, just in case. It\'s safer this way, Dexo.' }, mode: 'dialogue' },
+      { speaker: 'Iskra', text: { pl: 'Dziennik: kominy 2 i 4 — mikropęknięcia. Chłodziwo w normie. Palnik 3 — drga, obserwuję. Wszystko zgłoszone, na wszelki wypadek. Tak jest bezpieczniej, Dexo.', en: 'Log: chimneys 2 and 4 — micro-cracks. Coolant nominal. Burner 3 — jittering, watching it. All reported, just in case. It\'s safer this way, Dexo.' }, mode: 'dialogue' },
     ],
   },
   'm3-iskra-yard-post': {
@@ -125,7 +125,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'CORE AI', text: { pl: 'Badanie zakończone. I pierwsza widoczna cena jakości: trzy sztaby z Księżyca 2 nie przeszły. Wracają do huty.', en: 'The assay is complete. And the first visible price of quality: three ingots from Moon 2 failed. They go back to the smelter.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Trzy sztaby z powrotem do huty. Boli? To znaczy, że test działa.', en: 'Three ingots back to the smelter. Does it sting? That means the test works.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Partia 03: 480 kilogramów. Czystość: 99,4 procent. Pierwsza dostawa, za którą ktoś będzie ręczył imiennie.', en: 'Batch 03: 480 kilograms. Purity: 99.4 percent. The first delivery someone will vouch for by name.' }, mode: 'dialogue' },
-      { speaker: 'Iskra', text: { pl: 'Wpis do logu, na wszelki wypadek: dr Kern podała parametry badania, zanim moduł wyświetlił specyfikację. Wartości zgadzają się z zapieczętowaną przedstartową ekspertyzą złóż. Co do miejsca po przecinku.', en: 'Log entry, just in case: Dr Kern gave the assay parameters before the rig displayed the spec. The values match the sealed pre-launch deposit survey. To the decimal place.' }, mode: 'dialogue' },
+      { speaker: 'Iskra', text: { pl: 'Wpis do dziennika, na wszelki wypadek: dr Kern podała parametry badania, zanim moduł wyświetlił specyfikację. Wartości zgadzają się z zapieczętowaną przedstartową ekspertyzą złóż. Co do miejsca po przecinku.', en: 'Log entry, just in case: Dr Kern gave the assay parameters before the rig displayed the spec. The values match the sealed pre-launch deposit survey. To the decimal place.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Moreau nie pyta tym razem na otwartym kanale. Widzę tylko, jak coś zapisuje w notesie.', en: 'Moreau does not ask on the open channel this time. I only see her write something in her notebook.' }, mode: 'monologue' },
     ],
     onComplete: { setFlags: [FLAGS.M3_KERN_DECIMALS_NOTED] },

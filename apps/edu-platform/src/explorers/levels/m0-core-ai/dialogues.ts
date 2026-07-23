@@ -348,7 +348,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       {
         speaker: 'system',
         text: {
-          pl: '  2. Użyj komendy /support aby nawiązać łączność z bazą HQ',
+          pl: '  2. Użyj komendy /support, aby nawiązać łączność z bazą HQ',
           en: '  2. Use the /support command to establish contact with HQ base',
         },
         mode: 'system',
@@ -472,8 +472,8 @@ export const dialogues: Record<string, DialogueSequence> = {
       {
         speaker: 'system',
         text: {
-          pl: 'Koordynacja z centrum HQ umożliwi mitygację uszkodzeń CORE AI.',
-          en: 'Coordination with HQ centre will enable CORE AI damage mitigation.',
+          pl: 'Koordynacja z centrum HQ pozwoli ograniczyć uszkodzenia CORE AI.',
+          en: 'Coordination with HQ will help contain the damage to CORE AI.',
         },
         mode: 'system',
         autoAdvance: 3000,
@@ -481,7 +481,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       {
         speaker: 'system',
         text: {
-          pl: 'Użyj /badges aby podejrzeć twoje dotychczasowe osiągnięcia',
+          pl: 'Użyj /badges, aby sprawdzić swoje dotychczasowe osiągnięcia',
           en: 'Use /badges to view your achievements so far',
         },
         mode: 'system',
@@ -532,7 +532,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       {
         speaker: 'system',
         text: {
-          pl: 'Przygotowania do misji zakończone! Skorzystaj z modułu nawigacyjnego aby wyruszyć w pierwszą podróż.',
+          pl: 'Przygotowania do misji zakończone! Skorzystaj z modułu nawigacyjnego, aby wyruszyć w pierwszą podróż.',
           en: 'Mission preparations complete! Use the navigation module to start your journey.',
         },
         mode: 'cinematic',
@@ -612,7 +612,7 @@ export const dialogues: Record<string, DialogueSequence> = {
         speaker: 'CORE AI',
         text: {
           pl: 'Dostawa odnotowana. Pierwszy takt planu wykonany.',
-          en: 'Delivery logged. The plan’s first tact has been executed.',
+          en: 'Delivery logged. The plan’s first beat has been executed.',
         },
         mode: 'dialogue',
       },

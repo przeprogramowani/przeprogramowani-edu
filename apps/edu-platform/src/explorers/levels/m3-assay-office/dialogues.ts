@@ -65,7 +65,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-overlook': {
     id: 'm3-overlook',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Krawędź kaldery. Za nią, na ostrodze — obelisk. Nie ma z nim jak wejść w interakcję; strumienie lawy opłynęły go i zastygły. Stoi po prostu.', en: 'The caldera edge. Beyond it, on the spur — the obelisk. There is no way to interact with it; the lava streams flowed around it and froze. It simply stands.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Krawędź kaldery. Za nią, na ostrodze — obelisk. Nie da się z nim nic zrobić; strumienie lawy opłynęły go i zastygły. Stoi po prostu.', en: 'The caldera edge. Beyond it, on the spur — the obelisk. There is no touching it; the lava streams flowed around it and froze. It simply stands.' }, mode: 'monologue' },
       { speaker: 'CORE AI', text: { pl: 'Nie diagnozuję tego. Jeszcze nie. Zapisuję współrzędne i idę dalej. Są rzeczy starsze niż nasze narzędzia.', en: 'I am not diagnosing that. Not yet. I log the coordinates and move on. Some things are older than our tools.' }, mode: 'dialogue' },
     ],
   },

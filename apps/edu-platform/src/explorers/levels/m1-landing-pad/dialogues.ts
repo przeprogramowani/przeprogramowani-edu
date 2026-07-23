@@ -28,7 +28,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'STÓŁ OBOZU BAZOWEGO — online. Zakładka: protokoły ekspedycyjne.', en: 'BASE CAMP TABLE — online. Tab: expedition protocols.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Zanim cokolwiek zbudujemy, potrzebuję rozpoznania. Trzy punkty na obrzeżach polany. Podejdź do każdego, opisz mi go, a ja złożę z twoich słów pierwszy obraz tego miejsca.', en: 'Before we build anything, I need reconnaissance. Three points on the edges of the clearing. Go to each, describe it to me, and I will assemble a first picture of this place from your words.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli mam być wywiadem, nie robotnikiem. Najpierw patrzeć, potem działać. Da się zapamiętać.', en: 'So I\'m the reconnaissance, not the labour. Look first, act second. I can remember that.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czyli mam być zwiadem, nie robotnikiem. Najpierw patrzeć, potem działać. Da się zapamiętać.', en: 'So I\'m the recon, not the muscle. Look first, act second. I can remember that.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Oczy misji — opisz trzy punkty pomiarowe.', en: '◆ NEW MISSION: Eyes of the Mission — describe the three survey points.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { setFlags: [FLAGS.M1_EYES_ACTIVE], activateQuest: 'q-m1-eyes' },

@@ -43,7 +43,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-audit-tower': {
     id: 'm3-audit-tower',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Wieża chłodzenia. Tablica: ZIELONY. Ale najpierw aktywuj audyt w obozie — bez niego to tylko cudza deklaracja.', en: 'The cooling tower. Board: GREEN. But open the audit at camp first — without it this is just someone else\'s claim.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Wieża chłodzenia. Tablica: ZIELONY. Ale najpierw uruchom audyt w obozie — bez niego to tylko cudza deklaracja.', en: 'The cooling tower. Board: GREEN. But start the audit at camp first — without it this is just someone else\'s claim.' }, mode: 'monologue' },
     ],
   },
   'm3-audit-tower-check': {
@@ -87,7 +87,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-audit-mast': {
     id: 'm3-audit-mast',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Maszt telemetryczny. Tablica: ZIELONY. Jak dwa poprzednie. Sprawdzę i tak — aktywuj audyt w obozie.', en: 'The telemetry mast. Board: GREEN. Like the other two. I will check anyway — open the audit at camp.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Maszt telemetryczny. Tablica: ZIELONY. Jak dwa poprzednie. Sprawdzę i tak — najpierw uruchom audyt w obozie.', en: 'The telemetry mast. Board: GREEN. Like the other two. I will check anyway — start the audit at camp.' }, mode: 'monologue' },
     ],
   },
   'm3-audit-mast-check': {

@@ -78,15 +78,15 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-array-console-start',
     lines: [
       { speaker: 'system', text: { pl: 'KONSOLA TABLICY: zasilona. Tablica złożona i gotowa — brak punktu odniesienia.', en: 'ARRAY CONSOLE: powered. Array assembled and ready — reference point missing.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Tablica stoi, ale jej punkt odniesienia trzeba zweryfikować krzyżowo z danymi po stronie Ziemi. Nawigator uruchomi procedurę Earth HQ i prześle klucz kalibracji. To zadanie dla centrali — earthctl.', en: 'The array stands, but its reference point must be cross-verified against Earth-side data. The Navigator will run the Earth HQ procedure and submit the calibration key. This is a task for mission control — earthctl.' }, mode: 'dialogue' },
-      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Kalibracja — Nawigator ustala klucz kalibracji w Earth HQ i przesyła go przez earthctl.', en: '◆ NEW MISSION: Calibration — the Navigator determines the calibration key in Earth HQ and submits it via earthctl.' }, mode: 'system', autoAdvance: 3200 },
+      { speaker: 'CORE AI', text: { pl: 'Tablica stoi, ale jej punkt odniesienia trzeba zweryfikować krzyżowo z danymi po stronie Ziemi. Nawigator uruchomi procedurę po stronie centrali i prześle klucz kalibracji. To zadanie dla centrali — earthctl.', en: 'The array stands, but its reference point must be cross-verified against Earth-side data. The Navigator will run the Earth HQ procedure and submit the calibration key. This is a task for mission control — earthctl.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ NOWA MISJA: Kalibracja — Nawigator ustala klucz kalibracji w centrali Ziemi i przesyła go przez earthctl.', en: '◆ NEW MISSION: Calibration — the Navigator determines the calibration key in Earth HQ and submits it via earthctl.' }, mode: 'system', autoAdvance: 3200 },
     ],
     onComplete: { setFlags: [FLAGS.M1_CALIBRATION_ACTIVE], activateQuest: 'q-m1-calibration' },
   },
   'm1-array-console-waiting': {
     id: 'm1-array-console-waiting',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'Czekam na klucz kalibracji z Earth HQ. Nawigator: przefiltruj wiarygodne beacony, złóż klucz i prześlij go przez earthctl. Instrukcja jest w pakiecie misji na grani.', en: 'I am waiting on the calibration key from Earth HQ. Navigator: filter the trustworthy beacons, assemble the key, and submit it via earthctl. The instructions are in the crest mission package.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Czekam na klucz kalibracji z centrali Ziemi. Nawigator: odsiej wiarygodne radiolatarnie, złóż klucz i prześlij go przez earthctl. Instrukcja jest w pakiecie misji na grani.', en: 'I am waiting on the calibration key from Earth HQ. Navigator: filter the trustworthy beacons, assemble the key, and submit it via earthctl. The instructions are in the crest mission package.' }, mode: 'dialogue' },
     ],
   },
   'm1-array-console-post': {

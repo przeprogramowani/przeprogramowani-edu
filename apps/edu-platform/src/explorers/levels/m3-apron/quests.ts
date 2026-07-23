@@ -11,7 +11,7 @@ export const quests: EventQuest[] = [
       en: 'The main board reports three green statuses: the cooling tower, the seismic anchor, and the telemetry mast. Visit all three points on the outskirts, compare the report against reality, and report back at camp. Doubt is not cynicism — the point is to know which green is real.',
     },
     hints: [
-      { pl: 'Zacznij w obozie — tam aktywujesz audyt i zobaczysz listę statusów.', en: 'Start at camp — that is where you open the audit and see the status list.' },
+      { pl: 'Zacznij w obozie — tam uruchamiasz audyt i zobaczysz listę statusów.', en: 'Start at camp — that is where you start the audit and see the status list.' },
       { pl: 'Każdy punkt audytu jest na obrzeżu równiny. Podejdź i sprawdź sam, nie wierz tablicy.', en: 'Each audit point sits on the outskirts of the plain. Walk up and check for yourself, do not trust the board.' },
       { pl: 'Dwa statusy kłamią, jeden mówi prawdę. Zbierz wszystkie trzy pomiary, żeby wiedzieć które.', en: 'Two statuses lie, one tells the truth. Collect all three measurements to know which.' },
     ],

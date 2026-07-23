@@ -20,7 +20,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'TERMINAL SERWISOWY — online. Kolejka hali: jedno zlecenie, licznik prób rośnie.', en: 'SERVICE TERMINAL — online. Bay queue: one order, attempt counter rising.' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'CORE AI', text: { pl: 'Żeby wydać jednostce nowy rozkaz, potrzebujesz właściwego zlecenia i klucza zwolnienia kolejki. Oba są w logach hali — ale tylko wpisy ze stemplem dyspozytora i poprawną sumą kontrolną są prawdziwe.', en: 'To issue the unit a new order, you need the correct work order and the queue release key. Both are in the bay logs — but only entries with a dispatcher stamp and a valid checksum are real.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli odsiewam śmieci i składam odpowiedź w formacie zlecenie-klucz. Podam ją przez /solve.', en: 'So I sift out the junk and assemble the answer in the order-key format. I will enter it via /solve.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czyli odsiewam śmieci i składam odpowiedź: zlecenie i klucz. Podam ją przez /solve.', en: 'So I sift out the junk and assemble the answer: the work order and the key. I will enter it via /solve.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Nowy Rozkaz — odczytaj zlecenie i klucz z logów, podaj przez /solve.', en: '◆ NEW MISSION: New Order — read the work order and key from the logs, enter via /solve.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { activateQuest: 'q-m2-new-order' },

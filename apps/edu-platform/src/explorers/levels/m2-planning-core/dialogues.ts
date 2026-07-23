@@ -135,7 +135,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'q-m2-master-plan-complete': {
     id: 'q-m2-master-plan-complete',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'Plan zatwierdzony przez centralę. Pierwszy takt czeka na zatwierdzenie tutaj.', en: 'Plan validated by HQ. The first beat waits for approval here.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Plan zatwierdzony przez centralę. Pierwszy takt czeka na twoją zgodę tutaj.', en: 'Plan validated by HQ. The first beat waits for your approval here.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'Ręka Dexo przekłada główną zwrotnicę. Wagonik na bocznicy rusza. Kominy wydychają parę pierwszy raz od lat.', en: 'Dexo\'s hand throws the main switch. The siding tram moves. The chimneys exhale steam for the first time in years.' }, mode: 'system', autoAdvance: 3000 },
       { speaker: 'system', text: { pl: 'Trzy tablice zapalają się jedna po drugiej. PLANOWANIE: ONLINE.', en: 'The three boards light one after another. PLANNING: ONLINE.' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'CORE AI', text: { pl: 'Planuję. — ...i wiem już, na co patrzeć.', en: 'I plan. — ...and I know now what to look at.' }, mode: 'dialogue' },
