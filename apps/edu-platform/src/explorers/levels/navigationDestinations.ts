@@ -75,8 +75,8 @@ export const NAV_DESTINATIONS: readonly NavDestination[] = [
     id: 'moon-3',
     name: { pl: 'Księżyc 3 — Wulkaniczny', en: 'Moon 3 — Volcanic' },
     description: {
-      pl: 'Poligon certyfikacyjny serii Odyssey-T. Raport stacji: wszystkie systemy sprawne — od 1892 dni.',
-      en: 'Odyssey-T certification proving ground. Station report: all systems nominal — for 1,892 days.',
+      pl: 'Poligon certyfikacyjny serii Odyssey-T. Systemy sprawne od 1892 dni.',
+      en: 'Odyssey-T certification proving ground. Systems nominal for 1,892 days.',
     },
     codename: 'Quality Quasar',
     eta: '2026-06-05',
@@ -89,8 +89,8 @@ export const NAV_DESTINATIONS: readonly NavDestination[] = [
     id: 'moon-4',
     name: { pl: 'Księżyc 4 — Pustynny', en: 'Moon 4 — Desert' },
     description: {
-      pl: 'Zasypane archiwum serii Odyssey-A. Nadajnik wciąż podaje sumę kontrolną katalogu — a suma wynosi zero.',
-      en: 'The buried Odyssey-A archive. Its beacon still transmits the catalogue checksum — and the checksum is zero.',
+      pl: 'Zasypane archiwum serii Odyssey-A. Nadajnik wciąż miga na zielono.',
+      en: 'The buried Odyssey-A archive. Its beacon still blinks green.',
     },
     codename: 'Megalithic Monolith',
     eta: '2026-06-12',
