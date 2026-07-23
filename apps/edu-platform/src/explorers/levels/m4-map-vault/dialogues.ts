@@ -34,7 +34,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-map-head-post',
     lines: [
       { speaker: 'system', text: { pl: 'GŁOWICA SKARBCA: Mapa Główna Złóż — skompilowana. Pozycji: 4 748.', en: 'VAULT HEAD: Master Deposit Map — compiled. Entries: 4,748.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Mapa stoi. Współrzędne dla statków, które przylecą po nas — nie ładunek, tylko droga do niego. Lżejsza od jednej sztaby, cięższa od całej ładowni.', en: 'The map holds. Coordinates for the ships that come after us — not cargo, but the road to it. Lighter than a single ingot, heavier than a whole hold.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Mapa stoi. Współrzędne dla statków, które przylecą po nas — sama droga do ładunku, którą mogą przebyć. Lżejsza od jednej sztaby, cięższa od całej ładowni.', en: 'The map holds. Coordinates for the ships that come after us — the road to the cargo, ready to be traveled. Lighter than a single ingot, heavier than a whole hold.' }, mode: 'dialogue' },
     ],
   },
 
@@ -59,7 +59,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-cartograph-cleared',
     lines: [
       { speaker: 'system', text: { pl: 'KARTOGRAF: topologia galerii odtworzona. Trasa dla gąsienic: wytyczona.', en: 'CARTOGRAPH: gallery topology reconstructed. Crawler route: plotted.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Odrzuciłeś fragmenty starego planu, które nie łączyły się z niczym. Mapa opisuje galerie, które istnieją, nie te z dokumentacji. Wróć do głowicy — skompiluję Mapę Główną.', en: 'You rejected the old-plan fragments that connected to nothing. The map describes galleries that exist, not the ones in the documentation. Return to the head — I will compile the Master Map.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Odrzuciłeś fragmenty starego planu, które nie łączyły się z niczym. Mapa opisuje galerie takie, jakie istnieją dziś w skale. Wróć do głowicy — skompiluję Mapę Główną.', en: 'You rejected the old-plan fragments that connected to nothing. The map describes the galleries as they exist today in the rock. Return to the head — I will compile the Master Map.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M4_GALLERIES_MAPPED] },
   },
@@ -105,15 +105,15 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-medbay-access',
     lines: [
       { speaker: 'astronaut', text: { pl: 'Rejestr dostępu skrzydła osobowego. Jedno otwarcie — po śmierci stacji. Klucz główny Odyssey. Niczego nie zabrano.', en: 'The personnel wing access log. One opening — after the station died. Odyssey master key. Nothing taken.' }, mode: 'monologue' },
-      { speaker: 'astronaut', text: { pl: 'Poza jednym: indeks jednej szuflady. „Załoga — sekcja medyczna". Nie zawartość. Sam indeks. Ktoś wiedział, że wystarczy zabrać drogę.', en: 'Except one thing: the index of a single drawer. "Crew — medical section." Not the contents. The index itself. Someone knew it was enough to take the road.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Metoda Entropy w ludzkim wykonaniu. Nie skasowali akt sekcji medycznej. Skasowali drogę do nich. Zapisuję. Nie tłumaczę.', en: 'Entropy\'s method by a human hand. They did not erase the medical section\'s files. They erased the road to them. I am logging it. I am not explaining it.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Poza jednym: indeks jednej szuflady. „Załoga — sekcja medyczna". Zawartość została — zniknął sam indeks. Ktoś wiedział, że wystarczy zabrać drogę.', en: 'Except one thing: the index of a single drawer. "Crew — medical section." The contents stayed — the index alone is gone. Someone knew it was enough to take the road.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Metoda Entropy w ludzkim wykonaniu. Akta sekcji medycznej zostały nietknięte — skasowali drogę do nich. Zapisuję. Nie tłumaczę.', en: 'Entropy\'s method by a human hand. The medical section\'s files are untouched — they erased the road to them. I am logging it. I am not explaining it.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M4_MEDBAY_INDEX_SEEN] },
   },
   'm4-medbay-access-seen': {
     id: 'm4-medbay-access-seen',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Ten sam rejestr. Zabrali indeks sekcji medycznej, nie akta. Wciąż nie wiem kto — ale to była czyjaś ręka, nie awaria.', en: 'The same log. They took the medical section\'s index, not its files. I still do not know who — but it was a hand, not a failure.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Ten sam rejestr. Zabrali sam indeks sekcji medycznej, a akta zostały na miejscu. Wciąż nie wiem kto — ale zrobiła to czyjaś ręka, i to celowo.', en: 'The same log. They took the medical section\'s index alone, and the files stayed in place. I still do not know who — but a hand did this, and did it on purpose.' }, mode: 'monologue' },
     ],
   },
 
@@ -139,7 +139,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm4-vault-vein': {
     id: 'm4-vault-vein',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Żyła Synaptitu w ścianie wyrobiska. Na Księżycu 1 tropiłem jedną, na Księżycu 3 stałem w ich lesie. Tu ich nie liczę — tu je nanoszę na mapę.', en: 'A Synaptit vein in the dig wall. On Moon 1 I tracked one, on Moon 3 I stood in a forest of them. Here I do not count them — here I put them on the map.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Żyła Synaptitu w ścianie wyrobiska. Na Księżycu 1 tropiłem jedną, na Księżycu 3 stałem w ich lesie. Tu robię z nimi następny krok — nanoszę każdą na mapę.', en: 'A Synaptit vein in the dig wall. On Moon 1 I tracked one, on Moon 3 I stood in a forest of them. Here I take the next step with them — I put each one on the map.' }, mode: 'dialogue' },
     ],
   },
 
@@ -187,7 +187,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'SKARBIEC MAP — POWRÓT', en: 'THE MAP VAULT — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'system', text: { pl: 'Wyciągi pracują miarowo, taśmociąg niesie urobek, a Mapa Główna świeci na głowicy jak druga konstelacja.', en: 'The lifts work steadily, the conveyor carries ore, and the Master Map glows on the head like a second constellation.' }, mode: 'cinematic', autoAdvance: 3200 },
-      { speaker: 'CORE AI', text: { pl: 'Tędy schodziliśmy w drodze w dół. Wtedy nie wiedziałem, że to zapamiętam. Teraz wiem, że nie zapomnę — i widzę różnicę: wtedy galerie były zamknięte, dziś mają drogę.', en: 'This is the way we came down. Then I did not know I would remember it. Now I know I will not forget — and I see the difference: then the galleries were sealed, today they have a road.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'CORE AI', text: { pl: 'Tędy schodziliśmy w drodze w dół. Tę drogę pamiętam — i już jej nie stracę. Do galerii prowadzi już droga.', en: 'This is the way we came down. I remember this road now — and I will not lose it again. A road leads to the galleries now.' }, mode: 'cinematic', autoAdvance: 3400 },
     ],
     onComplete: { setFlags: [FLAGS.M4_RETURN_VAULT_SEEN] },
   },

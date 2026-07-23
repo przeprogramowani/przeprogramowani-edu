@@ -67,8 +67,6 @@ export function handleCommand(raw: string, state: GameState, questManager?: Ques
       return cmdBadges(state);
     case 'scan':
       return cmdScan(state);
-    case 'drone':
-      return cmdDrone(state);
     case 'crew':
       return cmdCrew(state);
     case 'intel':
@@ -79,14 +77,8 @@ export function handleCommand(raw: string, state: GameState, questManager?: Ques
       return cmdSensors(state);
     case 'plan':
       return cmdPlan(state);
-    case 'sopel':
-      return cmdSopel(state);
-    case 'iskra':
-      return cmdIskra(state);
     case 'diag':
       return cmdDiag(state);
-    case 'echo':
-      return cmdEcho(state);
     case 'recall':
       return cmdRecall(state);
     default:
@@ -159,68 +151,6 @@ function cmdScan(state: GameState): CommandResult {
   return statusBlock(t('terminal.scan.header'), lines);
 }
 
-// Świerszcz — the drone rebuilt from the Odyssey probe. Reports his own status;
-// his chirp frequency rises near live void-nodes in the Silence Zone.
-function cmdDrone(state: GameState): CommandResult {
-  const map = state.currentMap;
-  const lines: string[] = [t('terminal.drone.status')];
-
-  // Świerszcz stayed on Moon 1 — out of range aboard the ship and on Moons 2 & 3.
-  if (map.startsWith('m0') || map.startsWith('m2') || map.startsWith('m3')) {
-    lines.push(t('terminal.drone.moodRange'));
-  } else if (map === 'm1-echo-depths') {
-    lines.push(
-      state.flags.includes(FLAGS.M1_SILENCE_DONE) ? t('terminal.drone.moodCalm') : t('terminal.drone.moodNervous')
-    );
-  } else {
-    lines.push(t('terminal.drone.moodSteady'));
-  }
-
-  return statusBlock(t('terminal.drone.header'), lines);
-}
-
-// Sopel (S-0PL) — the recovered service robot, companion from Moon 2's Deadlock.
-// Reports his task-queue state: the old dead loop before the junction is cleared,
-// a measured cadence after, and the factory-rebuild schedule once planning is online.
-function cmdSopel(state: GameState): CommandResult {
-  const map = state.currentMap;
-  const lines: string[] = [t('terminal.sopel.status')];
-
-  if (!map.startsWith('m2')) {
-    lines.push(t('terminal.sopel.moodRange'));
-  } else if (state.flags.includes(FLAGS.M2_PLANNING_ONLINE)) {
-    lines.push(t('terminal.sopel.moodRebuild'));
-  } else if (map === 'm2-staging-yard' && !state.flags.includes(FLAGS.M2_DEADLOCK_CLEARED)) {
-    lines.push(t('terminal.sopel.moodLoop'));
-  } else {
-    lines.push(t('terminal.sopel.moodMeasured'));
-  }
-
-  return statusBlock(t('terminal.sopel.header'), lines);
-}
-
-// Iskra (I-5KRA) — the hypochondriac rover, companion from Moon 3's Boneyard. Her
-// fault list is never empty (that's the joke, and the doctrine): nervous while the
-// range still lies, measured once the honest red light is up, and a verifier's
-// tally once she recertifies the station. Out of range off Moon 3.
-function cmdIskra(state: GameState): CommandResult {
-  const map = state.currentMap;
-  const has = (flag: GameFlag) => state.flags.includes(flag);
-  const lines: string[] = [t('terminal.iskra.status')];
-
-  if (!map.startsWith('m3')) {
-    lines.push(t('terminal.iskra.moodRange'));
-  } else if (has(FLAGS.M3_STATION_RECERTIFIED)) {
-    lines.push(t('terminal.iskra.moodVerifier'));
-  } else if (has(FLAGS.M3_RED_LIGHT_ONLINE)) {
-    lines.push(t('terminal.iskra.moodMeasured'));
-  } else {
-    lines.push(t('terminal.iskra.moodNervous'));
-  }
-
-  return statusBlock(t('terminal.iskra.header'), lines);
-}
-
 // CORE AI's honest diagnostics — sister of /scan (what I see) and /plan (what
 // next): what actually works and what doesn't, red/amber/green with no green
 // taken on faith. One block per map, plus the obelisk harmonic once the
@@ -257,33 +187,6 @@ function cmdDiag(state: GameState): CommandResult {
   }
 
   return statusBlock(t('terminal.diag.header'), lines);
-}
-
-// Echo (E-CH0) — the courier-archivist woken in the Courier Yard, companion from
-// the Erased Index on. A memory that was kept and skipped: he asks "where to?"
-// before every move (the doctrine — you ask memory, you don't clone it). Out of
-// range off Moon 4. One remembered route or fact per stage; archivist once memory
-// comes online.
-function cmdEcho(state: GameState): CommandResult {
-  const map = state.currentMap;
-  const has = (flag: GameFlag) => state.flags.includes(flag);
-  const lines: string[] = [t('terminal.echo.status')];
-
-  if (!map.startsWith('m4')) {
-    lines.push(t('terminal.echo.moodRange'));
-  } else if (has(FLAGS.M4_MEMORY_ONLINE)) {
-    lines.push(t('terminal.echo.moodArchivist'));
-  } else if (map === 'm4-memory-vault') {
-    lines.push(t('terminal.echo.moodVault'));
-  } else if (map === 'm4-map-vault') {
-    lines.push(t('terminal.echo.moodMap'));
-  } else if (map === 'm4-erased-index') {
-    lines.push(t('terminal.echo.moodIndex'));
-  } else {
-    lines.push(t('terminal.echo.moodWoke'));
-  }
-
-  return statusBlock(t('terminal.echo.header'), lines);
 }
 
 // CORE AI's restored long-term memory — sister of /scan (what I see), /plan (what

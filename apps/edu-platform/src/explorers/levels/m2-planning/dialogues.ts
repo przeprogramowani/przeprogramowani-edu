@@ -8,8 +8,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'LĄDOWANIE POTWIERDZONE — KSIĘŻYC 2, LODOWY SZELF', en: 'TOUCHDOWN CONFIRMED — MOON 2, ICE SHELF' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'system', text: { pl: 'Nad promem wznosi się cyklopowa brama towarowa. Zorza pełznie po kominach, które nie dymią.', en: 'A cyclopean cargo gate rises over the shuttle. The aurora crawls across chimneys that do not smoke.' }, mode: 'cinematic', autoAdvance: 3200 },
-      { speaker: 'astronaut', text: { pl: 'To nie cisza dżungli. Tamta zamilkła, ale żyła. Ta jest inna: maszyna zatrzymana w pół ruchu. Bogactwo na wyciągnięcie ręki — i martwe na amen.', en: 'This is not the jungle\'s silence. That one went quiet, but lived. This is different: a machine stopped mid-motion. Riches within arm\'s reach — and stone dead.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Cel wybrały nowe czujniki. Wykuwnia serii Odyssey-F — nadawała powtarzalny sygnał nawigacyjny. Ziemia wysłała tu maszyny przed ludźmi. Widzę ją. Widzę wszystko.', en: 'The new sensors chose this target. An Odyssey-F forge, broadcasting a repeating nav signal. Earth sent machines here before people. I can see it. I can see everything.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Ta cisza jest inna niż w dżungli. Tamta zamilkła, ale żyła. Ta to cisza maszyny zatrzymanej w pół ruchu. Bogactwo na wyciągnięcie ręki — i martwe na amen.', en: 'This silence is unlike the jungle\'s. That one went quiet, but lived. This is the silence of a machine stopped mid-motion. Riches within arm\'s reach — and stone dead.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Cel wybrały nowe czujniki. Wykuwnia serii Odyssey-F — nadawała powtarzalny sygnał nawigacyjny. Ziemia wysłała tu maszyny przed ludźmi: najpierw sondę Odyssey-P, teraz całą wykuwnię. Widzę ją. Widzę wszystko.', en: 'The new sensors chose this target. An Odyssey-F forge, broadcasting a repeating nav signal. Earth sent machines here before people: first the Odyssey-P probe, now a whole forge. I can see it. I can see everything.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'I to jest problem. Dane wejściowe: nadmiar. Widzę czternaście tysięcy obiektów i nie umiem ich uszeregować. Powiedz mi, który jest ważny. Bądź moją korą przedczołową.', en: 'And that is the problem. Input data: excess. I see fourteen thousand objects and cannot rank them. Tell me which one matters. Be my prefrontal cortex.' }, mode: 'dialogue' },
       { speaker: 'dr Kern', text: { pl: 'Kern. Schodzę na grunt — pierwszy raz, nie przez wykres. Zakładam stanowisko w wartowni bramy i zostaję tu z tobą. Ten księżyc pachnie rafinowanym Synaptitem. Nawet przez hełm.', en: 'Kern. Boots on the ground — for the first time, not through a chart. I am setting up a station in the gate guardhouse and staying here with you. This moon smells of refined Synaptit. Even through the helmet.' }, mode: 'dialogue' },
       { speaker: 'Moreau', text: { pl: 'A ja zostaję na statku. Łączność i wachta medyczna przy kapsule Harrisa. Ktoś musi patrzeć na jego wykresy — regeneracja trwa dłużej, niż powinna.', en: 'And I stay on the ship. Comms and medical watch at Harris\'s pod. Someone has to watch his charts — the regeneration is running longer than it should.' }, mode: 'dialogue' },
@@ -40,7 +40,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'astronaut', text: { pl: 'Sekwencja domknięta. Zawór, tablica, trzy węzły w kolejności. Wartownia ciepła, węzły grzeją. Melduję.', en: 'Sequence closed. Valve, board, three nodes in order. The guardhouse is warm, the nodes are heating. Reporting.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Kolejność była poprawna. Kieruję ciepło w gródź główną. Brama ustępuje.', en: 'The order was correct. I am routing heat into the main bulkhead. The gate is yielding.' }, mode: 'dialogue' },
-      { speaker: 'dr Kern', text: { pl: 'Kod bramy — seria Odyssey, standard. — Wpisany. Otwiera się.', en: 'The gate code — Odyssey series, standard. — Keyed in. It opens.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Kody serii Odyssey. Standard. ...I już, otwiera się.', en: 'Odyssey-series codes. Standard. ...There — it opens.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Wpisała go, zanim CORE AI zdążył go wyszukać. O jeden takt za szybko. ...Zapamiętuję.', en: 'She keyed it in before CORE AI could look it up. One beat too fast. ...I am remembering that.' }, mode: 'monologue' },
       { speaker: 'system', text: { pl: 'BRAMA: OTWARTA. Gródź serwisowa odblokowana.', en: 'GATE: OPEN. Service bulkhead unlocked.' }, mode: 'system', autoAdvance: 2600 },
     ],
@@ -77,6 +77,14 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'system', text: { pl: 'MAPA DROGOWA WYKUWNI — ostatnia aktualizacja urwana w połowie wiersza.', en: 'FORGE ROADMAP — last update cut mid-line.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'astronaut', text: { pl: 'Etapy, kamienie milowe, kolejność rozruchu bramy: węzeł pierwszy, potem drugi, na końcu trzeci. A ostatni wiersz kończy się w połowie słowa, jakby ktoś zgasił to miejsce w pół myśli.', en: 'Stages, milestones, the gate boot order: node one, then two, node three last. And the final line ends mid-word, as if someone switched this place off in mid-thought.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Zapisane: jeden, dwa, trzy. To jest plan. Trzymaj się go — a jeśli węzeł zaprotestuje, to znaczy, że wyprzedziłeś kolejność.', en: 'Recorded: one, two, three. That is the plan. Hold to it — and if a node protests, it means you got ahead of the order.' }, mode: 'dialogue' },
+    ],
+  },
+
+  'm2-roadmap-board-live': {
+    id: 'm2-roadmap-board-live',
+    lines: [
+      { speaker: 'system', text: { pl: 'MAPA DROGOWA WYKUWNI — zsynchronizowana z nowym planem głównym.', en: 'FORGE ROADMAP — synced with the new master plan.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Urwany wiersz dopisany do końca. Tablica znów płynie: etapy i kamienie milowe nowego planu, aż po wysyłkę. Dokończyliśmy komuś zdanie.', en: 'The cut-off line is written to its end. The board flows again: stages and milestones of the new plan, all the way to shipment. We finished someone\'s sentence.' }, mode: 'dialogue' },
     ],
   },
 
@@ -175,7 +183,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-gate-console-online',
     lines: [
       { speaker: 'system', text: { pl: 'STATUS BRAMY: OTWARTA. Zakładka mapy drogowej: odmrożona.', en: 'GATE STATUS: OPEN. Roadmap tab: thawed.' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'astronaut', text: { pl: 'Mapa drogowa całej wykuwni. Pięć stacji, każda martwa. Jest co budzić.', en: 'A roadmap of the whole forge. Five stations, each one dead. There is plenty to wake.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Mapa drogowa całej wykuwni. Pięć stacji, każda martwa. Pierwsza na trasie: hala serwisowa, zaraz za gródzią.', en: 'A roadmap of the whole forge. Five stations, every one dead. First on the route: the service bay, just past the bulkhead.' }, mode: 'dialogue' },
     ],
   },
 
@@ -185,14 +193,14 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'CZARNA SKRZYNKA WARTOWNI — log dokowań, niezależne zasilanie.', en: 'GUARDHOUSE BLACK BOX — docking log, independent power.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'astronaut', text: { pl: 'Ta skrzynka pisała, gdy reszta zamarzła. Ostatni wpis dokowania jest późniejszy niż zamrożenie fabryki. Sygnatura statku — niezarejestrowana. Ktoś tu wylądował po tym, jak wszystko umarło.', en: 'This box kept writing when the rest froze. The last docking entry is later than the factory freeze. Ship signature — unregistered. Someone landed here after everything died.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Ktoś chodził po tej martwej wykuwni. Zapisuję jako fakt, nie teorię. To już nie archeologia. To wizyta.', en: 'Someone walked this dead forge. I log it as fact, not theory. This is no longer archaeology. It is a visit.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zapisuję jako twardy fakt: dokowanie po zamrożeniu, sygnatura spoza wszystkich rejestrów, które noszę. Ślady z Księżyca 1 miały lata. Ten wpis jest świeży.', en: 'Logging it as a hard fact: a docking after the freeze, a signature outside every registry I carry. The traces on Moon 1 were years old. This entry is fresh.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M2_BLACKBOX_DOCKING_SEEN] },
   },
   'm2-black-box-seen': {
     id: 'm2-black-box-seen',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Log dokowań. Wciąż ten sam wpis, wciąż późniejszy niż powinien być. Wciąż mrozi mnie bardziej niż ten księżyc.', en: 'The docking log. Still the same entry, still later than it should be. Still colder than this moon.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Log dokowań. Wciąż ten sam wpis, wciąż późniejszy, niż powinien być. Mrozi mnie bardziej niż ten księżyc.', en: 'The docking log. Still the same entry, still later than it should be. It chills me more than this moon does.' }, mode: 'monologue' },
     ],
   },
 
@@ -251,8 +259,8 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-kern-epilogue': {
     id: 'm2-kern-epilogue',
     lines: [
-      { speaker: 'dr Kern', text: { pl: 'Zanim odlecisz — muszę ci coś powiedzieć. Lokalizację tej wykuwni wskazała moja własna, przedstartowa ekspertyza złóż. Podpisałam ją lata temu. — W głosie mam dumę. I coś jeszcze, czego na razie nie nazywam.', en: 'Before you fly — I have to tell you something. The location of this forge was pointed to by my own pre-launch deposit survey. I signed it years ago. — There is pride in my voice. And something else I am not naming yet.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Zapamiętuję to, dr Kern. Nie jako oskarżenie. Jako fakt. Tak jak pani nauczyła.', en: 'I am remembering that, Dr Kern. Not as an accusation. As a fact. The way you taught me.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Zanim odlecisz — muszę ci coś powiedzieć. Lokalizację tej wykuwni wskazała moja własna, przedstartowa ekspertyza złóż. Podpisałam ją lata temu. Dobrze zobaczyć, że się nie myliłam. ...Chyba dobrze.', en: 'Before you fly — I have to tell you something. The location of this forge came from my own pre-launch deposit survey. I signed it years ago. It is good to see I was right. ...I think it is good.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Zapisuję to, dr Kern. Na razie jako fakt. Tylko fakt.', en: 'I am noting that, Dr Kern. As a fact, for now. Only a fact.' }, mode: 'dialogue' },
     ],
   },
 
@@ -261,7 +269,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-exam-protocol-6-done',
     lines: [
       { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY VI — „MAPA DROGOWA": zaliczony.', en: 'EXPEDITION PROTOCOL VI — "ROADMAP": passed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Szósty protokół odzyskany: kamień milowy to obserwowalny efekt, nie raport; minimalny łańcuch kroków do celu; jasne „kiedy krok jest skończony" i warunek odwrotu. Dziś ta doktryna otworzyła bramę.', en: 'Sixth protocol recovered: a milestone is an observable effect, not a report; the minimal chain of steps to the goal; a clear "when a step is done" and a retreat condition. Today that doctrine opened the gate.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Szósty protokół odzyskany: pracę kroi się na pionowe slice\'y — jeden przepływ przez wszystkie warstwy, z efektem do zweryfikowania; fundament wchodzi do roadmapy tylko wtedy, gdy odblokowuje wskazany slice; a north star — najmniejszy przepływ domykający tezę — wchodzi tak wcześnie, jak pozwalają zależności. Dziś ta doktryna otworzyła bramę.', en: 'Sixth protocol recovered: work is cut into vertical slices — one flow through all the layers, ending in a result you can verify; a foundation enters the roadmap only when it unlocks a named slice; and the north star — the smallest flow that closes the thesis — lands as early as dependencies allow. Today that doctrine opened the gate.' }, mode: 'dialogue' },
     ],
   },
   'm2-exam-protocol-6-already': {
@@ -286,9 +294,9 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'BRAMA — POWRÓT', en: 'THE GATEHOUSE — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'system', text: { pl: 'Zamarznięty wagonik ze sztabami dojeżdża do bramy własnym napędem. Manifest: DOSTAWA 001 — PRZYJĘTA.', en: 'The frozen ingot tram rolls up to the gate under its own power. Manifest: DELIVERY 001 — ACCEPTED.' }, mode: 'cinematic', autoAdvance: 3400 },
-      { speaker: 'dr Kern', text: { pl: 'Dostawa spóźniona o lata — i domknięta w godzinę. Załaduj sztaby na prom, Dexo. Zasłużyliście oboje: ty i ta maszyna.', en: 'A delivery years late — and closed in an hour. Load the ingots onto the shuttle, Dexo. You both earned it: you and that machine.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'dr Kern', text: { pl: 'Dostawa spóźniona o lata — i domknięta w godzinę. Załaduj sztaby na prom, Dexo. Zasłużyliście oboje: ty i ta fabryka.', en: 'A delivery years late — and closed in an hour. Load the ingots onto the shuttle, Dexo. You both earned it: you and this factory.' }, mode: 'cinematic', autoAdvance: 3400 },
       { speaker: 'astronaut', text: { pl: 'Kontrola przedlotowa. Harris, słyszysz? ...Harris.', en: 'Preflight check. Harris, do you copy? ...Harris.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'Medbay mówi: regeneracja. Znowu przesunięta. Przestaję wierzyć w ten harmonogram — a właśnie nauczyliście mnie, co znaczy zatruty harmonogram.', en: 'Medbay says: regeneration. Delayed again. I am starting to distrust this schedule — and you just taught me what a poisoned schedule means.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Medbay mówi: regeneracja. Znowu przesunięta — trzeci raz, i nikt jej nie zlecał. Przestaję wierzyć w ten harmonogram.', en: 'Medbay says: regeneration. Delayed again — third time, and nobody ordered it. I am done trusting that schedule.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M2_RETURN_GATE_SEEN, FLAGS.M2_DELIVERY_001] },
   },

@@ -27,22 +27,11 @@ function output(command: string, currentMap: string, flags: GameFlag[]): string 
 afterEach(() => setLocale('pl'));
 
 describe('Moon 3 terminal alignment', () => {
-  it('registers /iskra and /diag behind their flags', () => {
-    expect(COMMAND_REGISTRY.find((c) => c.name === 'iskra')).toMatchObject({ requiredFlag: FLAGS.CMDS_ISKRA });
+  it('registers /diag behind its flag and no longer registers /iskra', () => {
     expect(COMMAND_REGISTRY.find((c) => c.name === 'diag')).toMatchObject({ requiredFlag: FLAGS.CMDS_DIAG });
+    expect(COMMAND_REGISTRY.some((c) => c.name === 'iskra')).toBe(false);
     expect(output('/iskra', 'm3-boneyard', [])).toContain('Nieznana komenda');
     expect(output('/diag', 'm3-apron', [])).toContain('Nieznana komenda');
-  });
-
-  it('reports Iskra moods and keeps her fault list non-empty', () => {
-    const base = [FLAGS.CMDS_ISKRA];
-
-    expect(output('/iskra', 'm3-boneyard', base)).toContain('na wszelki wypadek');
-    expect(output('/iskra', 'm3-fire-trial', [...base, FLAGS.M3_RED_LIGHT_ONLINE])).toContain('zmierzone');
-    expect(output('/iskra', 'm3-boneyard', [...base, FLAGS.M3_RED_LIGHT_ONLINE, FLAGS.M3_STATION_RECERTIFIED])).toContain(
-      'USTEREK JAWNYCH: 214'
-    );
-    expect(output('/iskra', 'm1-landing-pad', base)).toContain('poza zasięgiem');
   });
 
   it('runs honest diagnostics per map and reveals the obelisk only after the core is online', () => {
@@ -88,7 +77,6 @@ describe('Moon 3 terminal alignment', () => {
 
   it('renders the Moon 3 surfaces in English too', () => {
     setLocale('en');
-    expect(output('/iskra', 'm3-boneyard', [FLAGS.CMDS_ISKRA])).toContain('just in case');
     expect(output('/diag', 'm3-apron', [FLAGS.CMDS_DIAG])).toContain('the board lies');
     expect(output('/plan', 'm3-fire-trial', [FLAGS.CMDS_PLAN])).toContain('Trust no single green');
   });

@@ -7,16 +7,12 @@ export const FLAGS = {
   CMDS_BADGES: 'cmds:badges',
   CMDS_BOOKMARKS: 'cmds:bookmarks',
   CMDS_SCAN: 'cmds:scan',
-  CMDS_DRONE: 'cmds:drone',
   CMDS_CREW: 'cmds:crew',
   CMDS_INTEL: 'cmds:intel',
   CMDS_UPLINK: 'cmds:uplink',
   CMDS_SENSORS: 'cmds:sensors',
   CMDS_PLAN: 'cmds:plan',
-  CMDS_SOPEL: 'cmds:sopel',
-  CMDS_ISKRA: 'cmds:iskra',
   CMDS_DIAG: 'cmds:diag',
-  CMDS_ECHO: 'cmds:echo',
   CMDS_RECALL: 'cmds:recall',
 
   // General progression flags

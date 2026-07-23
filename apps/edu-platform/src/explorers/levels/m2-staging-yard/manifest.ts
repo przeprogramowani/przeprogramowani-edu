@@ -43,8 +43,16 @@ export const manifest: LevelManifest = {
         { flag: FLAGS.M2_DEADLOCK_ACTIVE, dialogue: 'm2-tram-alpha-warning' },
       ],
     },
-    { zoneId: 'track-board', defaultDialogue: 'm2-track-board' },
-    { zoneId: 'ore-spill', defaultDialogue: 'm2-ore-spill' },
+    {
+      zoneId: 'track-board',
+      defaultDialogue: 'm2-track-board',
+      flagVariants: [{ flag: FLAGS.M2_DEADLOCK_CLEARED, dialogue: 'm2-track-board-live' }],
+    },
+    {
+      zoneId: 'ore-spill',
+      defaultDialogue: 'm2-ore-spill',
+      flagVariants: [{ flag: FLAGS.M2_FIRST_INGOT, dialogue: 'm2-ore-spill-scheduled' }],
+    },
     {
       zoneId: 'sopel',
       defaultDialogue: 'm2-sopel-nervous',

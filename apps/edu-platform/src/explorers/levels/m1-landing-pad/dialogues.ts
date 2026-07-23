@@ -28,7 +28,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'STÓŁ OBOZU BAZOWEGO — online. Zakładka: protokoły ekspedycyjne.', en: 'BASE CAMP TABLE — online. Tab: expedition protocols.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Zanim cokolwiek zbudujemy, potrzebuję rozpoznania. Trzy punkty na obrzeżach polany. Podejdź do każdego, opisz mi go, a ja złożę z twoich słów pierwszy obraz tego miejsca.', en: 'Before we build anything, I need reconnaissance. Three points on the edges of the clearing. Go to each, describe it to me, and I will assemble a first picture of this place from your words.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czyli mam być zwiadem, nie robotnikiem. Najpierw patrzeć, potem działać. Da się zapamiętać.', en: 'So I\'m the recon, not the muscle. Look first, act second. I can remember that.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czyli moja robota to zwiad — najpierw patrzeć, potem działać. Da się zapamiętać.', en: 'So my job is recon — look first, act second. I can remember that.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Oczy misji — opisz trzy punkty pomiarowe.', en: '◆ NEW MISSION: Eyes of the Mission — describe the three survey points.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { setFlags: [FLAGS.M1_EYES_ACTIVE], activateQuest: 'q-m1-eyes' },
@@ -114,7 +114,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-wreck-debris': {
     id: 'm1-wreck-debris',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Kadłub jakiejś maszyny, wrośnięty w poszycie. Nie nasz, nie świeży. Dżungla przerobiła go na doniczkę. Ktoś tu był i nie zabrał swoich rzeczy.', en: 'The hull of some machine, grown into the undergrowth. Not ours, not fresh. The jungle turned it into a planter. Someone was here — and didn\'t take their things.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Kadłub jakiejś maszyny, wrośnięty w poszycie. Obcy i stary. Dżungla przerobiła go na doniczkę. Ktoś tu był i nie zabrał swoich rzeczy.', en: 'The hull of some machine, grown into the undergrowth. Foreign and old. The jungle turned it into a planter. Someone was here — and didn\'t take their things.' }, mode: 'monologue' },
     ],
   },
 
@@ -173,14 +173,14 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-moreau-ore': {
     id: 'm1-moreau-ore',
     lines: [
-      { speaker: 'Moreau', text: { pl: 'Pokaż. — Czternaście kilo Synaptitu. Pierwszy raz trzymam to w rękach, a nie na wykresie. Mała bryłka, a Ziemia potrzebuje jej całych gór.', en: 'Show me. — Fourteen kilos of Synaptit. First time I\'m holding it in my hands and not on a chart. A small lump, and Earth needs whole mountains of it.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Pokaż. — Czternaście kilo Synaptitu. Do tej pory znałam to tylko z wykresów. Teraz mam to w dłoni. Mała bryłka, a Ziemia potrzebuje jej całych gór.', en: 'Show me. — Fourteen kilos of Synaptit. Up to now I only knew it from charts. Now it\'s in my hand. A small lump, and Earth needs whole mountains of it.' }, mode: 'dialogue' },
     ],
   },
   'm1-moreau-sensors': {
     id: 'm1-moreau-sensors',
     lines: [
       { speaker: 'Moreau', text: { pl: 'Kawa. Prawdziwa. Zaparzyłam ją, kiedy maszyna wreszcie przejrzała na oczy. Zasłużyłeś.', en: 'Coffee. Real coffee. I brewed it when the machine finally opened its eyes. You earned it.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'I słuchaj... ta spalenizna, którą zbyłam pierwszego dnia. Widziałam takie ślady wcześniej, w archiwach. Nie chciałam ci psuć pierwszego kroku na obcym świecie. Teraz już wiesz, że nie kłamałam — po prostu bałam się mieć rację.', en: 'And listen... that scorch mark I brushed off on day one. I\'ve seen marks like that before, in the archives. I didn\'t want to ruin your first step on an alien world. Now you know I wasn\'t lying — I was just afraid of being right.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'I słuchaj... ta spalenizna, którą zbyłam pierwszego dnia. Widziałam takie ślady wcześniej, w archiwach. Nie chciałam ci psuć pierwszego kroku na obcym świecie. Teraz już wiesz, że wtedy nie kłamałam. Zbyłam to, bo bałam się, że mam rację.', en: 'And listen... that scorch mark I brushed off on day one. I\'ve seen marks like that before, in the archives. I didn\'t want to ruin your first step on an alien world. Now you know I wasn\'t lying then. I brushed it off because I was afraid I was right.' }, mode: 'dialogue' },
     ],
   },
   'm1-moreau-epilogue': {
@@ -195,7 +195,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-exam-protocol-1-done',
     lines: [
       { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY I — „NAJPIERW PYTANIA”: zaliczony.', en: 'EXPEDITION PROTOCOL I — "QUESTIONS FIRST": passed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Pierwszy protokół odzyskany z mojej uszkodzonej pamięci: najpierw badasz, potem budujesz; najpierw pytasz, potem działasz. Dobrze, że to ty go zdałeś, a nie ja.', en: 'First protocol recovered from my damaged memory: investigate before you build; ask before you act. Good that you passed it, and not me.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Pierwszy protokół odzyskany z mojej uszkodzonej pamięci: najpierw badasz, potem budujesz; najpierw pytasz, potem działasz. Dobrze, że to ty go zdałeś — mojej pamięci bym z nim nie powierzył.', en: 'First protocol recovered from my damaged memory: investigate before you build; ask before you act. Good that you\'re the one who passed it — I wouldn\'t trust it to my own memory.' }, mode: 'dialogue' },
     ],
   },
   'm1-exam-protocol-1-already': {

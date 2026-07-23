@@ -25,6 +25,6 @@ export const quests: TextAnswerQuest[] = [
     ],
     solution: 'nap-77',
     validation: 'exact-lowercase',
-    rewards: { xp: 100, flags: [FLAGS.M3_ISKRA_ONLINE, FLAGS.CMDS_ISKRA] },
+    rewards: { xp: 100, flags: [FLAGS.M3_ISKRA_ONLINE] },
   },
 ];

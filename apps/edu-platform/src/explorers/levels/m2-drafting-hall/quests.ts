@@ -29,6 +29,6 @@ export const quests: TextAnswerQuest[] = [
     ],
     solution: 'c-g-a-e-b-f-d',
     validation: 'exact-lowercase',
-    rewards: { xp: 100, flags: [FLAGS.M2_SOPEL_ONLINE, FLAGS.CMDS_SOPEL] },
+    rewards: { xp: 100, flags: [FLAGS.M2_SOPEL_ONLINE] },
   },
 ];

@@ -107,8 +107,8 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'CORE AI', text: { pl: 'Widzę.', en: 'I see.' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: '…i widzę, jak wiele mi umykało.', en: '…and I see how much was slipping past me.' }, mode: 'cinematic', autoAdvance: 3000 },
       { speaker: 'system', text: { pl: 'ALARM: cztery jednorazowe wybuchy transmisji. Wszystkie węzły VOID — trzy odizolowane i uśpiony na grani — nadają i gasną.', en: 'ALERT: four one-shot transmission bursts. Every VOID node — the three isolated and the dormant one on the crest — transmits and dies.' }, mode: 'system', autoAdvance: 3200 },
-      { speaker: 'CORE AI', text: { pl: 'Śledzę kierunek wybuchu. Nie w stronę Ziemi. Głębiej w Pas. Ktoś tam właśnie dowiedział się, że tu jesteśmy.', en: 'I trace the burst\'s direction. Not toward Earth. Deeper into the Belt. Someone out there just learned that we are here.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'I jeszcze jedno, zagrzebane w dzienniku uzgodnień Nawigatora: echo podwójnego potwierdzenia na kanale centrali. Nikt go nie zamawiał. Zapisuję. Nie wyjaśniam.', en: 'And one more thing, buried in the Navigator\'s reconciliation log: a double-acknowledgement echo on the HQ channel. No one ordered it. I log it. I do not explain it.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Śledzę kierunek wybuchu. Poszedł w głąb Pasa, precz od Ziemi. Ktoś tam właśnie dowiedział się, że tu jesteśmy.', en: 'I trace the burst\'s direction. It ran deep into the Belt, away from Earth. Someone out there just learned that we are here.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'I jeszcze jedno, zagrzebane w dzienniku uzgodnień Nawigatora: echo podwójnego potwierdzenia na kanale centrali. Nikt go nie zamawiał. Zapisuję i zostawiam otwarte.', en: 'And one more thing, buried in the Navigator\'s reconciliation log: a double-acknowledgement echo on the HQ channel. No one ordered it. I log it and leave it open.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Właśnie odzyskaliśmy oczy. I pierwsze, co zobaczyły, to że ktoś patrzył na nas przez cały czas.', en: 'We just got our eyes back. And the first thing they saw was that someone had been watching us the whole time.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'Misja ukończona! CORE AI wzbogaca się o zmysł analizy otoczenia. Wróć na statek korzystając z teleportu w pierwszym obszarze dżungli', en: 'Mission complete! CORE AI feels the environment more keenly. Return to the ship using the teleport in the first jungle area.' }, mode: 'system', autoAdvance: 3000 },
     ],
@@ -133,7 +133,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-ancient-portal',
     lines: [
       { speaker: 'astronaut', text: { pl: 'Z bliska pierścień jest jeszcze większy. Gładki, zimny, bez jednego szwu. Nie chce się otworzyć i nie chce nic powiedzieć.', en: 'Up close the ring is even larger. Smooth, cold, without a single seam. It won\'t open and it won\'t say a thing.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'I niech tak zostanie. Nie każda rzecz na tym księżycu jest zadaniem. Ta jest pytaniem — na kolejny raz.', en: 'And let it stay that way. Not everything on this moon is a task. This one is a question — for another time.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'I niech tak zostanie. Część rzeczy na tym księżycu zostaje pytaniami — i ta jest jedną z nich. Na kolejny raz.', en: 'And let it stay that way. On this moon some things stay questions — and this one is among them. For another time.' }, mode: 'dialogue' },
     ],
   },
 

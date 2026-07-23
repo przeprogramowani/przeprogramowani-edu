@@ -13,7 +13,7 @@ export const quests: EventQuest[] = [
     hints: [
       { pl: 'Zacznij przy sterowni huty — stamtąd otworzysz galerię.', en: 'Start at the foundry control — that is where you open the gallery.' },
       { pl: 'Zwrotnica to plan tras: ułóż go, gdy wagoniki stoją, potem uruchom harmonogram.', en: 'The switchyard is a route plan: lay it out while the trams stand still, then run the schedule.' },
-      { pl: 'Odlew kończysz ręcznie przy kadzi — ostatnie 20% należy do ciebie.', en: 'You finish the cast by hand at the crucible — the last 20% is yours.' },
+      { pl: 'Odlew kończysz ręcznie przy kadzi — maszyna niesie wytop, ty kończysz robotę.', en: 'You finish the cast by hand at the crucible — the machine carries the melt, you finish the job.' },
     ],
     objectives: [
       {

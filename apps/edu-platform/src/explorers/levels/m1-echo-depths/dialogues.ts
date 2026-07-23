@@ -20,8 +20,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-field-console-start',
     lines: [
       { speaker: 'system', text: { pl: 'STACJA ANALIZY POLOWEJ — online. Wykryto trzy aktywne węzły.', en: 'FIELD ANALYSIS STATION — online. Three active nodes detected.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Trzy węzły tłumią ten pas. Nie wiemy, czym są — więc ich nie niszczymy. Nie niszcz. Odetnij. Zbadamy je później, kiedy będę mógł patrzeć.', en: 'Three nodes smother this belt. We do not know what they are — so we do not destroy them. Do not destroy. Isolate. We study them later, when I can see.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Kolejność ma znaczenie — słuchaj Świerszcza. Najpierw najgłębszy węzeł, potem północny, na końcu wschodni. Zła kolejność nie zabije misji, ale zmarnuje czas i wystraszy drona.', en: 'Order matters — listen to Świerszcz. The deepest node first, then the north one, the east one last. The wrong order will not kill the mission, but it will waste time and spook the drone.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Trzy węzły tłumią ten pas. Nie wiemy, czym są — więc ich nie niszczymy. Odetnij im zasilanie i zostaw całe. Zbadamy je później, kiedy będę mógł patrzeć.', en: 'Three nodes smother this belt. We do not know what they are — so we do not destroy them. Cut their power and leave them whole. We study them later, when I can see.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Kolejność ma znaczenie — słuchaj Świerszcza. Najpierw najgłębszy węzeł, potem północny, na końcu wschodni. Zła kolejność jest do odrobienia — kosztuje tylko czas i płoszy drona.', en: 'Order matters — listen to Świerszcz. The deepest node first, then the north one, the east one last. The wrong order is recoverable — it only costs time and spooks the drone.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Cisza — odetnij trzy węzły w kolejności: głęboki, północny, wschodni.', en: '◆ NEW MISSION: Silence — isolate the three nodes in order: deep, north, east.' }, mode: 'system', autoAdvance: 3000 },
     ],
     onComplete: { setFlags: [FLAGS.M1_SILENCE_ACTIVE], activateQuest: 'q-m1-silence' },
@@ -36,7 +36,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-field-console-post',
     lines: [
       { speaker: 'system', text: { pl: 'STACJA ANALIZY: pas cichy odzyskany. Trzy węzły odizolowane, żaden zniszczony.', en: 'ANALYSIS STATION: quiet belt recovered. Three nodes isolated, none destroyed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Dżungla wróciła do życia falą. Odizolowaliśmy, nie zniszczyliśmy. Jest różnica — i chyba zaczynam ją czuć.', en: 'The jungle came back to life in a wave. We isolated; we didn\'t destroy. There\'s a difference — and I think I\'m starting to feel it.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Dżungla wróciła do życia falą. Zostawiliśmy węzły całe, tylko odcięte. Jest różnica — i chyba zaczynam ją czuć.', en: 'The jungle came back to life in a wave. We left the nodes whole, just cut off. There\'s a difference — and I think I\'m starting to feel it.' }, mode: 'dialogue' },
     ],
   },
 
@@ -51,7 +51,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-node-deep-isolate',
     lines: [
       { speaker: 'Świerszcz', text: { pl: 'cyk-cyk-cyk! (spokojniejszy przy tym węźle)', en: 'chirp-chirp-chirp! (calmer at this node)' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Świerszcz się uspokaja — to ten pierwszy. Odcinam zasilanie, nie tykam rdzenia. Węzeł głęboki: odizolowany.', en: 'Świerszcz calms down — this is the first one. I cut the power; I don\'t touch the core. Deep node: isolated.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Świerszcz się uspokaja — to ten pierwszy. Odcinam zasilanie i zostawiam rdzeń w spokoju. Węzeł głęboki: odizolowany.', en: 'Świerszcz calms down — this is the first one. I cut the power and leave the core alone. Deep node: isolated.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Pierwszy odcięty i cały. Teraz północny. Słuchaj drona dalej.', en: 'First one isolated and intact. Now the north one. Keep listening to the drone.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_NODE_DEEP_ISOLATED] },
@@ -126,11 +126,11 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'q-m1-silence-complete',
     lines: [
       { speaker: 'system', text: { pl: 'TRZECI WĘZEŁ ODCIĘTY. Dźwięk i światło wracają falą przez cały pas.', en: 'THIRD NODE ISOLATED. Sound and light return in a wave across the belt.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Analizuję firmware odciętych węzłów. To nie sprzęt Odyssey. Wytworzony niedawno. I niesie sygnaturę, którą znam z własnych uszkodzonych sektorów.', en: 'I am analysing the isolated nodes\' firmware. This is not Odyssey hardware. Recently manufactured. And it carries a signature I know from my own damaged sectors.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Analizuję firmware odciętych węzłów. To sprzęt spoza programu Odyssey, wyprodukowany niedawno. Niesie sygnaturę, którą znam z własnych uszkodzonych sektorów.', en: 'I am analysing the isolated nodes\' firmware. This is hardware from outside the Odyssey program, recently made. It carries a signature I know from my own damaged sectors.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'SYGNATURA FIRMWARE: ENTROPY', en: 'FIRMWARE SIGNATURE: ENTROPY' }, mode: 'system', autoAdvance: 3000 },
-      { speaker: 'astronaut', text: { pl: 'Entropia. Więc to już nie „sabotaż”. To ma imię. Ma autora. Ktoś to tu przyniósł.', en: 'Entropy. So it\'s not "sabotage" anymore. It has a name. It has an author. Someone brought this here.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Entropia. Więc „sabotaż” to za wąskie słowo. Ma imię. Ma autora. Ktoś to tu przyniósł.', en: 'Entropy. So "sabotage" is too small a word now. It has a name. An author. Someone brought this here.' }, mode: 'dialogue' },
       { speaker: 'Świerszcz', text: { pl: '(...cisza. Trzy pełne sekundy. Żadnego ćwierku.)', en: '(...silence. Three full seconds. Not one chirp.)' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Zapisane jako fakt, nie jako teoria. Idziemy dalej.', en: 'Logged as fact, not theory. We move on.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zapisane jako pewnik. Idziemy dalej.', en: 'Logged as established fact. We move on.' }, mode: 'dialogue' },
     ],
   },
 
@@ -165,7 +165,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'CZUJNIKI: obiekt świetlny w centrum strefy — brak w żadnym archiwum.', en: 'SENSORS: a light object at the zone\'s centre — absent from every archive.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'astronaut', text: { pl: 'Kula światła. Nie było jej tu wcześniej — a raczej: była, tylko nikt nie miał czym jej zobaczyć. „Mówi” do mnie samymi harmonicznymi i szumem.', en: 'An orb of light. It wasn\'t here before — or rather: it was, and no one had eyes to see it. It "speaks" to me in pure harmonics and noise.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Nie rozszyfrowuję tego. Zapisuję i nie wyjaśniam. Niektóre rzeczy na tym księżycu są echem, nie odpowiedzią.', en: 'I do not decode this. I log it and I do not explain it. Some things on this moon are an echo, not an answer.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Nie rozszyfrowuję tego. Zapisuję i zostawiam bez wyjaśnienia. Niektóre rzeczy na tym księżycu pozostają echem, które samo nic nie tłumaczy.', en: 'I do not decode this. I log it and leave it unexplained. Some things on this moon stay an echo that answers nothing.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_ORB_MET] },
   },
@@ -175,7 +175,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-exam-protocol-3-done',
     lines: [
       { speaker: 'system', text: { pl: 'PROTOKÓŁ EKSPEDYCYJNY III — „BEZPIECZNE OPERACJE”: zaliczony.', en: 'EXPEDITION PROTOCOL III — "SAFE OPERATIONS": passed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Trzeci protokół odzyskany: izoluj, nie niszcz; sięgaj po minimum dostępu; obcy materiał trzymaj w piaskownicy. Dziś uratowało to trzy węzły do zbadania.', en: 'Third protocol recovered: isolate, do not destroy; take the minimum access; keep hostile material in a sandbox. Today it saved three nodes to study.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Trzeci protokół odzyskany: izoluj i zostaw całe; sięgaj po minimum dostępu; obcy materiał trzymaj w piaskownicy. Dziś uratowało to trzy węzły do zbadania.', en: 'Third protocol recovered: isolate and leave intact; take the minimum access; keep hostile material in a sandbox. Today it saved three nodes to study.' }, mode: 'dialogue' },
     ],
   },
   'm1-exam-protocol-3-already': {

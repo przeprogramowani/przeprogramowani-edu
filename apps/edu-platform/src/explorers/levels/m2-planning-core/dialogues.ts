@@ -8,7 +8,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'DYSPOZYTORNIA — przeszklona wieża nad kompleksem. Rdzeń Harmonogramu: w szronie.', en: 'DISPATCH TOWER — glazed room above the complex. Schedule Core: frosted over.' }, mode: 'cinematic', autoAdvance: 2800 },
       { speaker: 'astronaut', text: { pl: 'Wieża nad całą fabryką. Przez szkło widzę martwy kompleks w dole. Pod stropem Rdzeń Harmonogramu, obrośnięty szronem jak stalagmit, a wokół niego trzy martwe tablice planu. Wiatr, szkło, bezruch.', en: 'A tower over the whole factory. Through the glass I see the dead complex below. Under the roof, the Schedule Core, frost-grown like a stalagmite, and around it three dead plan boards. Wind, glass, stillness.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'To jest serce, które zabili. Zatruty harmonogram siedzi w tym rdzeniu od lat. Wyczyśćmy go — i ułóżmy nowy plan główny. Ale ten nowy plan musi przejść walidację po stronie Ziemi, zanim przełożysz dźwignię.', en: 'This is the heart they killed. The poisoned schedule has sat in this core for years. Let us scrub it — and lay a new master plan. But that new plan must pass validation on Earth\'s side before you throw the lever.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'To jest serce, które zabili. Zatruty harmonogram siedzi w tym rdzeniu od lat. Przy pulpicie dyspozytora wyczyszczę go i złożę szkielet nowego planu głównego. Ale ten plan musi przejść walidację po stronie Ziemi, zanim przełożysz dźwignię.', en: 'This is the heart they killed. The poisoned schedule has sat in this core for years. At the dispatcher console I will scrub it and assemble the skeleton of a new master plan. But that plan must pass validation on Earth\'s side before you throw the lever.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M2_DISPATCH_INTRO_SEEN] },
   },
@@ -33,7 +33,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-dispatch-console-post',
     lines: [
       { speaker: 'system', text: { pl: 'PULPIT DYSPOZYTORA: plan główny aktywny. Kompleks: świeci sekwencjami.', en: 'DISPATCHER CONSOLE: master plan active. Complex: running in light sequences.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Pod nami cały kompleks biegnie światłami, stacja po stacji. Harmonogram żyje. Patrzę na to jak na coś, co sam pomogłem obudzić.', en: 'Below us the whole complex runs with light, station by station. The schedule lives. I look at it like something I helped wake.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Pod nami cały kompleks biegnie światłami, stacja po stacji. Harmonogram żyje — i to my go uruchomiliśmy.', en: 'Below us the whole complex runs with light, station by station. The schedule lives — and we set it running.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Droga powrotna prowadzi przez fabrykę. Prom: lądowisko przy bramie.', en: 'The way back leads through the factory. The shuttle: the landing pad by the gate.' }, mode: 'dialogue' },
     ],
   },
 
@@ -47,7 +48,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-core-face-done': {
     id: 'm2-core-face-done',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Rdzeń pracuje pierwszy raz od lat. Szron topnieje strużkami. Serce fabryki bije — czystym planem, nie zatrutym.', en: 'The core runs for the first time in years. The frost melts in rivulets. The factory\'s heart beats — with a clean plan, not a poisoned one.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Rdzeń pracuje pierwszy raz od lat. Szron topnieje strużkami. Serce fabryki bije czystym planem.', en: 'The core runs for the first time in years. The frost melts in rivulets. The factory\'s heart beats with a clean plan.' }, mode: 'monologue' },
     ],
   },
 
@@ -87,7 +88,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-plan-board-2-lit': {
     id: 'm2-plan-board-2-lit',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Druga tablica świeci — etap drugi: dostawy i transport. Pierścień zapala się jeden po drugim.', en: 'The second board glows — stage two: deliveries and transport. The ring lights up one after another.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Druga tablica świeci — etap drugi: dostawy i transport. Pierścień domyka się tablica po tablicy.', en: 'The second board glows — stage two: deliveries and transport. The ring closes board by board.' }, mode: 'monologue' },
     ],
   },
   'm2-plan-board-3': {
@@ -113,7 +114,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-siding-tram-running': {
     id: 'm2-siding-tram-running',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Bocznica pusta. Wagonik ruszył — pierwszy takt nowego harmonogramu, wykonany. Plan przestał być planem. Stał się ruchem.', en: 'The siding is empty. The tram moved — the first beat of the new schedule, executed. The plan stopped being a plan. It became motion.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Bocznica pusta. Wagonik ruszył — pierwszy takt nowego harmonogramu, wykonany.', en: 'The siding is empty. The tram moved — the first beat of the new schedule, executed.' }, mode: 'monologue' },
     ],
   },
 
@@ -135,15 +136,17 @@ export const dialogues: Record<string, DialogueSequence> = {
   'q-m2-master-plan-complete': {
     id: 'q-m2-master-plan-complete',
     lines: [
-      { speaker: 'CORE AI', text: { pl: 'Plan zatwierdzony przez centralę. Pierwszy takt czeka na twoją zgodę tutaj.', en: 'Plan validated by HQ. The first beat waits for your approval here.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Plan zatwierdzony przez centralę. Pierwszy takt czeka na twoje zatwierdzenie — tutaj, przy dźwigni.', en: 'Plan validated by HQ. The first beat waits for your approval — here, at the lever.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'Ręka Dexo przekłada główną zwrotnicę. Wagonik na bocznicy rusza. Kominy wydychają parę pierwszy raz od lat.', en: 'Dexo\'s hand throws the main switch. The siding tram moves. The chimneys exhale steam for the first time in years.' }, mode: 'system', autoAdvance: 3000 },
       { speaker: 'system', text: { pl: 'Trzy tablice zapalają się jedna po drugiej. PLANOWANIE: ONLINE.', en: 'The three boards light one after another. PLANNING: ONLINE.' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'CORE AI', text: { pl: 'Planuję. — ...i wiem już, na co patrzeć.', en: 'I plan. — ...and I know now what to look at.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Pierwszy plan, jaki układam, rekonstruuje zabójstwo tej fabryki. Zatruty pakiet harmonogramu nie przyszedł z zewnątrz — poleciał z fabryką z Ziemi. Podpisany wewnętrznymi kluczami Projektu Odyssey. Znacznik kompilacji: godzina startu Odyssey.', en: 'The first plan I lay out reconstructs this factory\'s murder. The poisoned schedule package did not come from outside — it flew from Earth with the factory. Signed with internal Project Odyssey keys. Compile stamp: the hour of Odyssey\'s launch.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Pierwszy plan, jaki układam, rekonstruuje zabójstwo tej fabryki. Zatruty pakiet harmonogramu przyleciał z fabryką prosto z Ziemi — był w ładunku już na starcie. Podpisany wewnętrznymi kluczami Projektu Odyssey. Znacznik kompilacji: godzina startu Odyssey.', en: 'The first plan I lay out reconstructs this factory\'s murder. The poisoned schedule package rode here from Earth inside the factory — it was in the cargo from launch. Signed with internal Project Odyssey keys. Compile stamp: the hour of Odyssey\'s launch.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Jedna noc. Jeden autor. Dwa ładunki. Ta sama sygnatura budowy co infekcja, którą nosisz w sobie.', en: 'One night. One author. Two cargoes. The same build signature as the infection you carry.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Z planowaniem online koreluję wybuch transmisji z Księżyca 1 z nowym odczytem czujników. Rozbłysk napędu głębiej w Pasie zmienił kurs po tamtej transmisji. Prognoza przecięcia trajektorii rośnie. Pościg przestaje być wnioskiem — jest obiektem na mapie.', en: 'With planning online, I correlate the transmission burst from Moon 1 with a new sensor reading. A drive flare deeper in the Belt changed course after that burst. The intersection forecast is rising. The pursuit stops being an inference — it is an object on the map.' }, mode: 'dialogue' },
-      { speaker: 'Moreau', text: { pl: 'W dzienniku uzgodnień suma kontrolna planu odesłana przez centralę różni się jednym blokiem od wysłanej. W Księżycu 1 powiedziałabym: szum. Nie powiem tak drugi raz.', en: 'In the reconciliation log, the plan checksum returned by HQ differs by one block from the one sent. On Moon 1 I would have said: noise. I will not say that a second time.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Z planowaniem online koreluję wybuch transmisji z Księżyca 1 z nowym odczytem czujników. Rozbłysk napędu głębiej w Pasie zmienił kurs po tamtej transmisji. Prognoza przecięcia trajektorii rośnie. Pościg mam już jako obiekt na mapie — czujniki go widzą.', en: 'With planning online, I correlate the transmission burst from Moon 1 with a new sensor reading. A drive flare deeper in the Belt changed course after that burst. The intersection forecast is rising. I have the pursuit as an object on the map now — the sensors see it.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'W dzienniku uzgodnień suma kontrolna planu odesłana przez centralę różni się jednym blokiem od wysłanej. Na Księżycu 1 powiedziałabym: szum. Nie powiem tak drugi raz.', en: 'In the reconciliation log, the plan checksum returned by HQ differs by one block from the one sent. On Moon 1 I would have said: noise. I will not say that a second time.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Umiemy już planować. Problem w tym, że ktoś planował nas — od samego początku.', en: 'We know how to plan now. The trouble is that someone planned us — from the very beginning.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ NOWA KOMENDA: /plan — CORE AI proponuje uszeregowane następne kroki dla bieżącej mapy.', en: '◆ NEW COMMAND: /plan — CORE AI proposes ordered next steps for the current map.' }, mode: 'system', autoAdvance: 2800 },
+      { speaker: 'system', text: { pl: '◆ DROGA POWROTNA: pieszo przez Hutę, Rozjazdownię i Warsztat do Bramy. Prom czeka na lądowisku.', en: '◆ RETURN ROUTE: on foot through the Foundry, the Junction, and the Service Bay to the Gatehouse. The shuttle waits at the landing pad.' }, mode: 'system', autoAdvance: 3000 },
     ],
   },
 

@@ -23,7 +23,11 @@ export const manifest: LevelManifest = {
       defaultDialogue: 'm2-valve',
       flagVariants: [{ flag: FLAGS.M2_GUARDHOUSE_WARM, dialogue: 'm2-valve-done' }],
     },
-    { zoneId: 'roadmap-board', defaultDialogue: 'm2-roadmap-board' },
+    {
+      zoneId: 'roadmap-board',
+      defaultDialogue: 'm2-roadmap-board',
+      flagVariants: [{ flag: FLAGS.M2_PLANNING_ONLINE, dialogue: 'm2-roadmap-board-live' }],
+    },
     {
       zoneId: 'heat-node-1',
       defaultDialogue: 'm2-heat-node-1-cold',

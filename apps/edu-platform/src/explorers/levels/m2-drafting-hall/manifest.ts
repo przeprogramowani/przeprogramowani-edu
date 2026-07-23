@@ -14,7 +14,11 @@ export const manifest: LevelManifest = {
       defaultDialogue: 'm2-service-terminal-start',
       flagVariants: [{ flag: FLAGS.M2_SOPEL_ONLINE, dialogue: 'm2-service-terminal-post' }],
     },
-    { zoneId: 'queue-board', defaultDialogue: 'm2-queue-board' },
+    {
+      zoneId: 'queue-board',
+      defaultDialogue: 'm2-queue-board',
+      flagVariants: [{ flag: FLAGS.M2_SOPEL_ONLINE, dialogue: 'm2-queue-board-cleared' }],
+    },
     {
       zoneId: 's0pl',
       defaultDialogue: 'm2-s0pl-frozen',

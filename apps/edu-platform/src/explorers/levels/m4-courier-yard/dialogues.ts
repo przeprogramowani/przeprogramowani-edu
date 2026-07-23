@@ -57,7 +57,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-echo-unit',
     lines: [
       { speaker: 'system', text: { pl: 'JEDNOSTKA E-CH0 — zaparkowana przy bocznym włazie, twarzą do wyjazdu. Stan: czuwanie. Czeka na zlecenie.', en: 'UNIT E-CH0 — parked at the side hatch, facing the exit. State: standby. Awaiting a course.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Stoi jak w połowie myśli. Nie zepsuta — pominięta. Prowadziła własny indeks, kiedy główny umierał, i po prostu czekała. Potrzebuje frazy wybudzenia z dziennika.', en: 'It stands as if mid-thought. Not broken — passed over. It kept its own index while the main one died, and simply waited. It needs the wake-phrase from the journal.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Stoi jak w połowie myśli. Sprawna, tylko pominięta. Prowadziła własny indeks, kiedy główny umierał, i po prostu czekała. Potrzebuje frazy wybudzenia z dziennika.', en: 'It stands as if mid-thought. Intact, just passed over. It kept its own index while the main one died, and simply waited. It needs the wake-phrase from the journal.' }, mode: 'dialogue' },
     ],
   },
   // Quest completion — the doctrine spoken, the unit named
@@ -69,7 +69,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'system', text: { pl: 'JEDNOSTKA E-CH0 — WYBUDZONA. Pierwszy akt: pytanie.', en: 'UNIT E-CH0 — AWAKE. First act: a question.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'Echo', text: { pl: 'Dokąd?', en: 'Where to?' }, mode: 'dialogue' },
       { speaker: 'Moreau', text: { pl: 'E-CH0? Echo. Odpowiada, kiedy się do niego mówi. Niech będzie Echo.', en: 'E-CH0? Echo. It answers when spoken to. Let it be Echo.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Pamięci się nie zgrywa. Pamięć się pyta. Komenda /echo w terminalu — pinguj go, kiedy zechcesz.', en: 'Memory is not cloned. Memory is asked. The /echo command in the terminal — ping it whenever you like.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Pamięć zostaje żywa, kiedy się o nią pyta. Echo pójdzie z tobą — pytaj go, kiedy zechcesz.', en: 'Memory stays alive by being asked. Echo will come with you — ask it whenever you like.' }, mode: 'dialogue' },
     ],
   },
 
@@ -78,7 +78,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-misplaced-canister',
     lines: [
       { speaker: 'system', text: { pl: 'KANISTER AKTOWY — stoi nie na swoim wózku. Rejestr zajezdni: ostatni wpis — zlecenie kursu do skrzydła osobowego.', en: 'FILE CANISTER — standing on the wrong cart. Yard register: last entry — a course ordered to the personnel wing.' }, mode: 'system', autoAdvance: 3000 },
-      { speaker: 'astronaut', text: { pl: 'Zlecenie złożone po śmierci stacji. Poświadczone wewnętrznym kluczem Odyssey — nie sprzętem VOID. Kurierzy byli martwi, kurs nigdy nie wyjechał. A jednak ktoś przyszedł pieszo i obsłużył się sam.', en: 'An order filed after the station died. Signed with an internal Odyssey key — not VOID hardware. The couriers were dead, the course never left. And yet someone came on foot and served themselves.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Zlecenie złożone po śmierci stacji. Poświadczone wewnętrznym kluczem Odyssey — takim, jakiego ludzie VOID nie mają. Kurierzy byli martwi, kurs nigdy nie wyjechał. A jednak ktoś przyszedł pieszo i obsłużył się sam.', en: 'An order filed after the station died. Signed with an internal Odyssey key — the kind VOID hardware never had. The couriers were dead, the course never left. And yet someone came on foot and served themselves.' }, mode: 'dialogue' },
       { speaker: 'Moreau', text: { pl: 'Wewnętrznym kluczem. Zapisuję. To już nie inspekcja z zewnątrz.', en: 'An internal key. I\'m logging it. This is no longer an inspection from outside.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M4_GHOST_COURSE_SEEN] },
@@ -96,7 +96,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'astronaut', text: { pl: 'Idę przez zajezdnię bez mapy i ani razu nie skręcam źle. Znam ten rozkład. Każda komora trzyma własny rejestr przy wejściu, a brama trzyma tylko mapę komór.', en: 'I walk the yard without a map and never turn wrong once. I know this layout. Every chamber keeps its own register at the door, and the gate keeps only the map of chambers.' }, mode: 'monologue' },
       { speaker: 'astronaut', text: { pl: 'Katalog gniazdowy. Wiedza przy drzwiach, mapa przy bramie. Znam ten układ… bo to mój układ.', en: 'A nested catalog. Knowledge at the door, the map at the gate. I know this layout… because it is my layout.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Autor architektury wiedzy całego programu. Wymazali ci nie wiedzę — wymazali autorstwo. „Wymazali indeks. Treść została." — po raz drugi to zdanie waży więcej.', en: 'The author of the whole program\'s knowledge architecture. They erased not your knowledge — they erased authorship. "They erased the index. The content stayed." — a second time, that sentence weighs more.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Autor architektury wiedzy całego programu. Wiedza została — wymazali twoje autorstwo. „Wymazali indeks. Treść została." — po raz drugi to zdanie waży więcej.', en: 'The author of the whole program\'s knowledge architecture. The knowledge stayed — they erased your authorship. "They erased the index. The content stayed." — a second time, that sentence weighs more.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M4_DEXO_ARCHITECT_SEEN] },
   },

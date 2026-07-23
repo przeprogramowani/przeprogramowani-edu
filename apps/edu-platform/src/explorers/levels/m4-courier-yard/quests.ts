@@ -36,6 +36,6 @@ export const quests: TextAnswerQuest[] = [
     ],
     solution: 'ech-0',
     validation: 'exact-lowercase',
-    rewards: { xp: 100, flags: [FLAGS.M4_ECHO_ONLINE, FLAGS.CMDS_ECHO] },
+    rewards: { xp: 100, flags: [FLAGS.M4_ECHO_ONLINE] },
   },
 ];

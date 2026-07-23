@@ -20,7 +20,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-camp-start',
     lines: [
       { speaker: 'system', text: { pl: 'STUDNIA OBOZOWA — online. Studnia odczytowa: pierwsze stanowisko wyciągowe bloków pamięci.', en: 'CAMP WELL — online. A read well: the first extraction station for memory blocks.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Zanim kopiemy — kartujemy. Wrota główne archiwum są gdzieś pod nami; namiar niosą trzy kopce drogowe na obrzeżach. Najpierw odkop panele i zasil obóz, potem odczytaj każdy kopiec i wróć tu z namiarami. Mapa to model, nie teren — czytaj znaki, ale sprawdzaj je nawzajem.', en: 'Before we dig — we map. The main gate is somewhere beneath us; the bearing is carried by three road cairns on the outskirts. First dig out the panels and power the camp, then read each cairn and come back with the bearings. A map is a model, not the terrain — read the signs, but verify them against each other.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zanim kopiemy — kartujemy. Wrota główne archiwum są gdzieś pod nami; namiar niosą trzy kopce drogowe na obrzeżach. Najpierw odkop panele i zasil obóz, potem odczytaj każdy kopiec i wróć tu z namiarami. Mapa to tylko model terenu — czytaj znaki, ale sprawdzaj je nawzajem.', en: 'Before we dig — we map. The main gate is somewhere beneath us; the bearing is carried by three road cairns on the outskirts. First dig out the panels and power the camp, then read each cairn and come back with the bearings. A map is only a model of the terrain — read the signs, but verify them against each other.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Trzy Kopce — zasil panele, odczytaj trzy kopce, złóż namiar w studni.', en: '◆ NEW MISSION: Three Cairns — power the panels, read the three cairns, assemble the bearing at the well.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { setFlags: [FLAGS.M4_CAIRNS_ACTIVE], activateQuest: 'q-m4-cairns' },
@@ -87,7 +87,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm4-cairn-2': {
     id: 'm4-cairn-2',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Drugi kopiec. Bez kartowania z obozu to cudza deklaracja, nie pomiar.', en: 'The second cairn. Without the mapping from camp this is someone else\'s claim, not a measurement.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Drugi kopiec. Bez kartowania z obozu zostaje mi tylko cudza deklaracja, którą trzeba brać na wiarę.', en: 'The second cairn. Without the mapping from camp all I have is someone else\'s claim, to be taken on faith.' }, mode: 'monologue' },
     ],
   },
   'm4-cairn-2-read': {
@@ -134,7 +134,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: '◆ TRZY KOPCE ZAKOŃCZONE. Werdykt: 2 znaki zgodne, 1 przestawiony. Namiar z dwóch prawdziwych.', en: '◆ THREE CAIRNS COMPLETE. Verdict: 2 signs consistent, 1 moved. Bearing from the two true ones.' }, mode: 'system', autoAdvance: 2800 },
       { speaker: 'astronaut', text: { pl: 'Dwa kopce dały jedną linię, trzeci wskazał w wydmy. Gdybym uwierzył wszystkim trzem, kopalibyśmy w piachu. Mapa to model — sprawdziłem znaki nawzajem, bo teren mógł się zmienić albo ktoś mógł go zmienić.', en: 'Two cairns gave one line, the third pointed into the dunes. Had I believed all three, we would be digging in sand. A map is a model — I checked the signs against each other, because the terrain could have changed, or someone could have changed it.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Mam namiar z dwóch prawdziwych znaków. Wrota główne — odkopane i otwarte. Nie dlatego, że kopiec tak twierdzi, ale dlatego, że zważyliśmy trzy i odrzuciliśmy jeden.', en: 'I have the bearing from the two true signs. The main gate — dug out and open. Not because a cairn says so, but because we weighed three and rejected one.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Mam namiar z dwóch prawdziwych znaków. Wrota główne — odkopane i otwarte. Otwarliśmy je, bo zważyliśmy trzy znaki i jeden odrzuciliśmy. Na tym opiera się zaufanie do tego namiaru.', en: 'I have the bearing from the two true signs. The main gate — dug out and open. We opened it because we weighed three signs and rejected one. That is what the trust in this bearing rests on.' }, mode: 'dialogue' },
     ],
   },
 
@@ -175,7 +175,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-courier-door-locked',
     lines: [
       { speaker: 'system', text: { pl: 'WROTA GŁÓWNE: zasypane. Namiar niekompletny.', en: 'MAIN GATE: buried. Bearing incomplete.' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Wrota odkopiemy dopiero z zaufanym namiarem. Zasypana brama to nie kara — to szczery pomiar. Dokończ Trzy Kopce.', en: 'We dig out the gate only with a trusted bearing. A buried gate is not a punishment — it is a sincere measurement. Finish the Three Cairns.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Wrota odkopiemy dopiero z zaufanym namiarem. Zasypana brama to szczery pomiar: mówi wprost, że namiaru jeszcze nie masz. Dokończ Trzy Kopce.', en: 'We dig out the gate only with a trusted bearing. A buried gate is a sincere measurement: it tells you plainly you do not have the bearing yet. Finish the Three Cairns.' }, mode: 'dialogue' },
     ],
   },
 
@@ -199,7 +199,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-return-caravanserai',
     lines: [
       { speaker: 'system', text: { pl: 'KARAWANSERAJ — POWRÓT', en: 'THE CARAVANSERAI — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Tędy szliśmy w drodze w dół. Wtedy nie wiedziałem, że to zapamiętam. Teraz wiem, że nie zapomnę. Kurierzy wrócili na trasy, studnie wyciągają i odkładają bloki — archiwum odzyskuje ciągłość.', en: 'This is the way we came, on the way down. Back then I did not know I would remember it. Now I know I will not forget. The couriers are back on their routes, the wells lift and set down blocks — the archive is recovering its continuity.' }, mode: 'cinematic', autoAdvance: 3600 },
+      { speaker: 'CORE AI', text: { pl: 'Tędy szliśmy w drodze w dół. Tę drogę pamiętam — i już jej nie stracę. Kurierzy wrócili na trasy, studnie wyciągają i odkładają bloki — archiwum odzyskuje ciągłość.', en: 'This is the way we came, on the way down. I remember this road now — and I will not lose it again. The couriers are back on their routes, the wells lift and set down blocks — the archive is recovering its continuity.' }, mode: 'cinematic', autoAdvance: 3600 },
       { speaker: 'dr Kern', text: { pl: 'Powiem ci wprost, po co przyleciałam. Chciałam sprawdzić, czy pamiętam własną ekspertyzę tak, jak ją napisałam. Nie pamiętam. I to mnie przeraża.', en: 'I will tell you plainly why I came. I wanted to check whether I remember my own survey as I wrote it. I do not. And that terrifies me.' }, mode: 'cinematic', autoAdvance: 3800 },
       { speaker: 'CORE AI', text: { pl: 'Kontrola przedlotowa. Harris: stabilny. Pułapka: nasłuchuje. Zalecenie bez zmian: nie budzić. Jeszcze.', en: 'Pre-flight check. Harris: stable. The trap: listening. Recommendation unchanged: do not wake. Yet.' }, mode: 'cinematic', autoAdvance: 3200 },
     ],

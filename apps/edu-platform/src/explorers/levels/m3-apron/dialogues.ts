@@ -94,7 +94,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-audit-mast-check',
     lines: [
       { speaker: 'system', text: { pl: 'MASZT TELEMETRYCZNY — raport stacji: ZIELONY / NADAJE.', en: 'TELEMETRY MAST — station report: GREEN / TRANSMITTING.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Ten faktycznie nadaje. Ciepły, drga, sygnał czysty. Zielony, który mówi prawdę. Cała pointa: wątpienie to nie cynizm — chodzi o to, żeby wiedzieć, które zielone jest prawdziwe.', en: 'This one truly transmits. Warm, humming, the signal clean. A green that tells the truth. That is the whole point: doubt is not cynicism — it is knowing which green is real.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Ten faktycznie nadaje. Ciepły, drga, sygnał czysty. Zielony, który mówi prawdę. Po to się wątpi: żeby wiedzieć, które zielone jest prawdziwe.', en: 'This one truly transmits. Warm, humming, the signal clean. A green that tells the truth. This is what doubt is for: knowing which green is real.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M3_AUDIT_MAST_CHECKED] },
   },
@@ -111,7 +111,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: '◆ AUDYT ZAKOŃCZONY. Werdykt: 2 statusy kłamią, 1 mówi prawdę.', en: '◆ AUDIT COMPLETE. Verdict: 2 statuses lie, 1 tells the truth.' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'astronaut', text: { pl: 'Wieża martwa, kotwa wisi, maszt nadaje. Tablica świeciła zielenią nad wszystkimi trzema. Dwa razy skłamała, raz powiedziała prawdę — i tylko pomiar to rozdzielił.', en: 'Tower dead, anchor hanging, mast transmitting. The board glowed green over all three. It lied twice and told the truth once — and only the measurement told them apart.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Mam pierwszą uczciwą warstwę mapy obozu. Nauka w obozie, pomiar na obrzeżach, konsekwencja przy wyjściu: wschodnia śluza otwiera się — nie dlatego, że raport tak twierdzi, ale dlatego, że ją zbadałeś.', en: 'I have the first honest layer of the camp map. Learn at camp, measure on the outskirts, consequence at the exit: the east airlock opens — not because a report says so, but because you surveyed it.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Mam pierwszą uczciwą warstwę mapy obozu. Nauka w obozie, pomiar na obrzeżach, konsekwencja przy wyjściu: wschodnia śluza otwiera się na twój własny pomiar. Sam ją zbadałeś i to ona cię teraz przepuszcza.', en: 'I have the first honest layer of the camp map. Learn at camp, measure on the outskirts, consequence at the exit: the east airlock opens to your own measurement. You surveyed it yourself, and that is what lets you through now.' }, mode: 'dialogue' },
     ],
   },
 
@@ -137,13 +137,13 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-moreau': {
     id: 'm3-moreau',
     lines: [
-      { speaker: 'Moreau', text: { pl: 'Najpierw kawa. Nauczyłam się planować. — Rozstawiam obóz przy module. Ty idź audytować; ja tu zostanę i będę notować, co wróci.', en: 'Coffee first. I\'ve learned to plan. — I\'m setting up camp at the module. You go audit; I\'ll stay and note down whatever comes back.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Najpierw kawa. Nauczyłam się planować. Rozstawiam obóz przy module. Ty idź audytować; ja tu zostanę i będę notować, co wróci.', en: 'Coffee first. I\'ve learned to plan. I\'m setting up camp at the module. You go audit; I\'ll stay and note down whatever comes back.' }, mode: 'dialogue' },
     ],
   },
   'm3-moreau-camp': {
     id: 'm3-moreau-camp',
     lines: [
-      { speaker: 'Moreau', text: { pl: 'Obóz stoi. Notes pod ręką. Dexo — od Księżyca 2 sprawdzam wszystko dwa razy. Nie z nieufności. Raz już zaufałam za łatwo.', en: 'Camp is up. Notebook at hand. Dexo — since Moon 2 I check everything twice. Not out of distrust. I trusted too easily once.' }, mode: 'dialogue' },
+      { speaker: 'Moreau', text: { pl: 'Obóz stoi. Notes pod ręką. Dexo — od Księżyca 2 sprawdzam wszystko dwa razy. Raz zaufałam za łatwo i to mi wystarczyło za naukę.', en: 'Camp is up. Notebook at hand. Dexo — since Moon 2 I check everything twice. I trusted too easily once, and that was lesson enough.' }, mode: 'dialogue' },
     ],
   },
   'm3-moreau-iskra': {
@@ -177,7 +177,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-boneyard-door-locked',
     lines: [
       { speaker: 'system', text: { pl: 'ŚLUZA WSCHODNIA: zapieczętowana. Trasa niezbadana.', en: 'EAST AIRLOCK: sealed. Route unsurveyed.' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Trasa otworzy się dopiero, gdy zostanie uczciwie zbadana. Zamknięta śluza to nie kara — to szczery pomiar. Dokończ audyt.', en: 'The route opens only once it has been honestly surveyed. A sealed airlock is not a punishment — it is a sincere measurement. Finish the audit.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Trasa otworzy się dopiero, gdy zostanie uczciwie zbadana. Zamknięta śluza to po prostu szczery pomiar: jeszcze jej nie sprawdziłeś. Dokończ audyt.', en: 'The route opens only once it has been honestly surveyed. A sealed airlock is simply an honest measurement: you have not checked it yet. Finish the audit.' }, mode: 'dialogue' },
     ],
   },
 
@@ -186,7 +186,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-exam-protocol-11-done',
     lines: [
       { speaker: 'system', text: { pl: 'PROTOKÓŁ XI — „ZIELONE ŚWIATŁO": zaliczony.', en: 'PROTOCOL XI — "THE GREEN LIGHT": passed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Jedenasty protokół odzyskany: zielone światło to twierdzenie, nie fakt. Każda brama na trasie ma zadawać pytanie, a przechodzi ten, kto zna odpowiedź.', en: 'Eleventh protocol recovered: a green light is a claim, not a fact. Every gate on the route must ask a question, and only the one who knows the answer passes.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Jedenasty protokół odzyskany: zielone światło to dopiero czyjeś twierdzenie, które trzeba jeszcze sprawdzić. Każda brama na trasie ma zadawać pytanie, a przechodzi ten, kto zna odpowiedź.', en: 'Eleventh protocol recovered: a green light is only someone\'s claim, still waiting to be checked. Every gate on the route must ask a question, and only the one who knows the answer passes.' }, mode: 'dialogue' },
     ],
   },
   'm3-exam-protocol-11-already': {

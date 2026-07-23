@@ -1,35 +1,74 @@
-# M2 L5 — Dyspozytornia / The Dispatch Tower
-# Glazed dispatch room above the whole motionless complex. The Schedule Core is
-# frost-grown under the roof, ringed by three dead plan boards and the main switch.
 theme: 3
 grid: |
-  ~~~~~~~~~~~~#################~
-  ~~~~~~~~~~~~#...............#~
-  ~~~~~~~~~~~~#...............#~
-  ~~~~~~~~~~~~#...............#~
-  ~~~~~~~~~~~~#...............#~
-  ########~~~~#...............#~
-  D......######...............#~
-  #.........................###~
-  #......######.............#~~~
-  ########~~~~#.............###~
-  ~~~~~~~~~~~~#...............#~
-  ~~~~~~~~~~~~#.............###~
-  ~~~~~~~~~~~~#.............#~~~
-  ~~~~~~~~~~~~###############~~~
+  ~~~~~~#######################~
+  ~~~~~~#.....................#~
+  ~~~~~~#..####...............#~
+  ~~~~~~#..#~~#...............#~
+  ~~~~~~#..#~~#...............#~
+  #####~#..#~~#####...........#~
+  D...#~#..#~~~~~~###.........#~
+  #...#~#..#~~###~~~#...#######~
+  #...#~#..#~~#.##~~#...#######~
+  #...#~#..#~~#..####...##....#~
+  #...#~#..#~~#.........##....#~
+  #...###..#~~#...............#~
+  #........#~~#...............#~
+  ##########~~#################~
 props:
   - { prop: frozen-service-bot, at: [26, 1], solid: true }
   - { id: core-left, prop: server-monolith, at: [19, 2], solid: true }
   - { id: core-center, prop: server-monolith, at: [20, 2], solid: true }
   - { id: core-right, prop: server-monolith, at: [21, 2], solid: true }
-  - { id: dispatch-console, prop: frozen-console, at: [14, 4], solid: true }
-  - { id: plan-board-3, prop: holo-plan-board, at: [17, 5], solid: true }
-  - { id: plan-board-1, prop: holo-plan-board, at: [23, 5], solid: true }
-  - { prop: frozen-service-bot, at: [5, 6], solid: true }
-  - { id: master-switch, prop: server-monolith, at: [18, 8], solid: true }
-  - { id: plan-board-2, prop: holo-plan-board, at: [20, 8], solid: true }
-  - { id: cert-terminal, prop: frozen-console, at: [14, 10], solid: true }
-  - { id: siding-tram, prop: cargo-tram, at: [25, 10], solid: true }
+  - { prop: server-monolith, at: [7, 10], solid: true }
+  - { prop: server-monolith, at: [7, 8], solid: true }
+  - { prop: server-monolith, at: [7, 6], solid: true }
+  - { prop: server-monolith, at: [7, 4], solid: true }
+  - { prop: server-monolith, at: [7, 2], solid: true }
+  - { prop: synaptit-ore, at: [7, 1], solid: true }
+  - { prop: synaptit-ore, at: [7, 3], solid: true }
+  - { prop: synaptit-ore, at: [7, 5], solid: true }
+  - { prop: synaptit-ore, at: [7, 7], solid: true }
+  - { prop: synaptit-ore, at: [7, 9], solid: true }
+  - { prop: frozen-console, at: [7, 11], solid: true }
+  - { prop: synaptit-ore, at: [18, 2], solid: true }
+  - { prop: holo-plan-board, at: [18, 1], solid: true }
+  - { prop: holo-plan-board, at: [19, 1], solid: true }
+  - { prop: holo-plan-board, at: [20, 1], solid: true }
+  - { prop: holo-plan-board, at: [21, 1], solid: true }
+  - { prop: holo-plan-board, at: [22, 1], solid: true }
+  - { prop: synaptit-ore, at: [22, 2], solid: true }
+  - { prop: synaptit-ore, at: [23, 1], solid: true }
+  - { prop: synaptit-ore, at: [17, 1], solid: true }
+  - { prop: synaptit-ore, at: [19, 3], solid: true }
+  - { prop: synaptit-ore, at: [21, 3], solid: true }
+  - { prop: frozen-service-bot, at: [22, 3], solid: true }
+  - { prop: frozen-service-bot, at: [16, 1], solid: true }
+  - { prop: frozen-service-bot, at: [24, 1], solid: true }
+  - { prop: frozen-service-bot, at: [23, 2], solid: true }
+  - { prop: frozen-service-bot, at: [17, 2], solid: true }
+  - { prop: frozen-service-bot, at: [18, 3], solid: true }
+  - { prop: cargo-tram, at: [13, 12], solid: true }
+  - { prop: holo-plan-board, at: [27, 9], solid: true }
+  - { prop: holo-plan-board, at: [27, 12], solid: true }
+  - { prop: holo-plan-board, at: [24, 12], solid: true }
+  - { prop: server-monolith, at: [24, 9], solid: true }
+  - { prop: frozen-console, at: [13, 8], solid: true }
+  - { prop: frozen-service-bot, at: [26, 5], solid: true }
+  - { prop: frozen-service-bot, at: [25, 6], solid: true }
+  - { prop: frozen-service-bot, at: [27, 4], solid: true }
+  - { prop: frozen-service-bot, at: [27, 5], solid: true }
+  - { prop: synaptit-ore, at: [27, 6], solid: true }
+  - { prop: frozen-service-bot, at: [13, 4], solid: true }
+  - { prop: frozen-service-bot, at: [17, 11], solid: true }
+  - { prop: frozen-service-bot, at: [27, 11], solid: true }
+  - { prop: frozen-service-bot, at: [3, 9], solid: true }
+  - { prop: frozen-service-bot, at: [1, 11], solid: true }
+  - { prop: fabricator-rig, at: [27, 1], solid: true }
+  - { prop: fabricator-rig, at: [13, 3], solid: true }
+  - { prop: cargo-tram, at: [17, 12], solid: true }
+  - { prop: cargo-tram, at: [16, 12], solid: true }
+  - { prop: cargo-tram, at: [15, 12], solid: true }
+  - { prop: cargo-tram, at: [14, 12], solid: true }
 zones:
   - id: foundry-door
     name: Return to the Foundry
@@ -47,37 +86,37 @@ zones:
   - id: dispatch-console
     name: Dispatcher Console
     type: trigger
-    propId: dispatch-console
+    at: [13, 8]
   - id: master-switch
     name: Main Switch Lever
     type: trigger
-    propId: master-switch
+    at: [24, 9]
   - id: plan-board-1
     name: Plan Board I
     type: trigger
-    propId: plan-board-1
+    at: [27, 9]
   - id: plan-board-2
     name: Plan Board II
     type: trigger
-    propId: plan-board-2
+    at: [27, 12]
   - id: plan-board-3
     name: Plan Board III
     type: trigger
-    propId: plan-board-3
+    at: [24, 12]
   - id: siding-tram
     name: Tower Siding Tram
     type: trigger
-    propId: siding-tram
+    at: [17, 12]
   - id: sopel-dispatch
     name: Sopel
     type: npc
-    at: [5, 7]
+    at: [1, 12]
     properties:
       npcType: robot
       npcVariant: frosty-blue
   - id: exam-protocol-10
     name: Expedition Protocol Terminal X
     type: exam
-    propId: cert-terminal
+    at: [7, 11]
     properties:
       examId: m2-exam-protocol-10

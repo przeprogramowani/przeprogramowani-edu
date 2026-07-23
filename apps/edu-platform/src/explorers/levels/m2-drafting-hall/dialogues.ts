@@ -8,8 +8,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'HALA SERWISOWA — rzędy jednostek w gniazdach ładowania. Ruch: żaden.', en: 'SERVICE BAY — rows of units in charging cradles. Motion: none.' }, mode: 'cinematic', autoAdvance: 2800 },
       { speaker: 'astronaut', text: { pl: 'Roboty. Dziesiątki. Każdy zamarznięty w połowie gestu, twarzą do własnego zadania. Ten kadr za bardzo przypomina komorę hibernacyjną Odyssey. Nie powiem tego głośno.', en: 'Robots. Dozens. Each frozen mid-gesture, facing its own task. This frame looks too much like the Odyssey hibernation deck. I will not say it out loud.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Jeden z nich stoi twarzą do wyjścia, jakby zamarzł w pół kroku do zadania. To pierwsza maszyna tej fabryki. Nie jest zepsuta. Jest wierna martwemu planowi.', en: 'One of them faces the exit, as if frozen mid-step toward a task. That is this factory\'s first machine. It is not broken. It is faithful to a dead plan.' }, mode: 'dialogue' },
-      { speaker: 'dr Kern', text: { pl: 'Terminal serwisowy działa. Prowadzę was stąd, z wartowni. Naprawa tej jednostki to nie lutownica, Dexo. To nowy rozkaz.', en: 'The service terminal works. I guide you from here, from the guardhouse. Fixing that unit is not a soldering iron, Dexo. It is a new order.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Jeden z nich stoi twarzą do wyjścia, jakby zamarzł w pół kroku do zadania. To pierwsza maszyna tej fabryki. Wciąż wierna planowi, który dawno umarł.', en: 'One of them faces the exit, as if frozen mid-step toward a task. That is this factory\'s first machine. Still faithful to a plan that died long ago.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Terminal serwisowy działa. Prowadzę was stąd, z wartowni. Tę jednostkę naprawia się rozkazem, Dexo — sprzęt jest sprawny, brakuje jej tylko wykonalnego planu.', en: 'The service terminal works. I guide you from here, from the guardhouse. You fix that unit with an order, Dexo — the hardware is fine, it just lacks an executable plan.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M2_SERVICE_INTRO_SEEN] },
   },
@@ -39,6 +39,14 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'TABLICA KOLEJKI ZADAŃ — 1 zlecenie aktywne. Prób: 1 407 219 i rośnie.', en: 'TASK-QUEUE BOARD — 1 order active. Attempts: 1,407,219 and rising.' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'astronaut', text: { pl: 'Jedno zlecenie. Milion czterysta tysięcy prób. Licznik przeskakuje, kiedy patrzę. Ta maszyna próbowała wykonać to samo zadanie przez lata i za każdym razem odbijała się od ściany.', en: 'One order. A million four hundred thousand attempts. The counter ticks over while I watch. This machine has tried to run the same task for years and bounced off a wall every time.' }, mode: 'dialogue' },
+    ],
+  },
+
+  'm2-queue-board-cleared': {
+    id: 'm2-queue-board-cleared',
+    lines: [
+      { speaker: 'system', text: { pl: 'TABLICA KOLEJKI ZADAŃ — 0 zleceń aktywnych. Licznik prób: zatrzymany.', en: 'TASK-QUEUE BOARD — 0 orders active. Attempt counter: stopped.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Licznik stanął na milionie czterystu tysiącach. Nic już nie odbija się od ściany.', en: 'The counter stopped at a million four hundred thousand. Nothing bounces off a wall any more.' }, mode: 'dialogue' },
     ],
   },
 
@@ -91,7 +99,8 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'astronaut', text: { pl: 'Przygotuj rozkaz. Wydam go ja.', en: 'Prepare the order. I will issue it.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'S-0PL: rozruch. Jednostka próbuje starej pętli — jedno uderzenie serca — i przyjmuje nowy plan.', en: 'S-0PL: booting. The unit tries the old loop — one heartbeat — and accepts the new plan.' }, mode: 'system', autoAdvance: 2800 },
       { speaker: 'Moreau', text: { pl: 'S-zero-P-L? — Sopel. Niech zostanie Sopel.', en: 'S-zero-P-L? — Sopel. Icicle. Let it stay Sopel.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Analiza starej pętli: zlecenie było niewykonywalne z konstrukcji. Do kolejki wstrzyknięto zależność cykliczną — zadanie, które czeka samo na siebie. Nie wyłączyli ich. Dali im zadanie bez końca.', en: 'Analysis of the old loop: the order was unexecutable by construction. A cyclic dependency was injected into the queue — a task that waits on itself. They did not switch them off. They gave them a task without end.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Analiza starej pętli: zlecenie było niewykonywalne z konstrukcji. Do kolejki wstrzyknięto zależność cykliczną — zadanie, które czeka samo na siebie. Nie wyłączyli ich. Dali im zadanie bez końca.', en: 'Analysis of the old loop: the order was unexecutable by construction. A cyclic dependency was injected into the queue — a task that waits on itself. They did not switch them off. They gave them a task without an end.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: '◆ Sopel dołącza do wyprawy. GRÓDŹ DO ROZJAZDOWNI: odblokowana.', en: '◆ Sopel joins the expedition. BULKHEAD TO THE JUNCTION: unlocked.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { setFlags: [FLAGS.M2_ENDLESS_TASK_FOUND] },
   },
@@ -126,7 +135,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'WARSZTAT — POWRÓT', en: 'THE SERVICE BAY — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'astronaut', text: { pl: 'Ramiona serwisowe podnoszą jednostki z gniazd — jedną po drugiej, w kolejności harmonogramu. Hala budzi się rzędami, nie naraz. Tak, jak trzeba.', en: 'Service arms lift units out of the cradles — one by one, in schedule order. The bay wakes in rows, not all at once. The way it should.' }, mode: 'cinematic', autoAdvance: 3400 },
-      { speaker: 'CORE AI', text: { pl: 'Teraz każdy z nich ma rozkaz, który da się skończyć. To była cała naprawa. Nie lutownica — plan.', en: 'Now each of them has an order that can be finished. That was the whole repair. Not a soldering iron — a plan.' }, mode: 'cinematic', autoAdvance: 3200 },
+      { speaker: 'CORE AI', text: { pl: 'Teraz każdy z nich ma rozkaz, który da się skończyć. Cała naprawa polegała na tym, żeby dać im wykonalny plan.', en: 'Now each of them has an order that can be finished. The whole repair was giving them a workable plan.' }, mode: 'cinematic', autoAdvance: 3200 },
     ],
     onComplete: { setFlags: [FLAGS.M2_RETURN_SERVICE_SEEN] },
   },

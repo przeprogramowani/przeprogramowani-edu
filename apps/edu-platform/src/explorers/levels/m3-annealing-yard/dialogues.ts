@@ -7,9 +7,9 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-annealing-intro',
     lines: [
       { speaker: 'system', text: { pl: 'WYŻARZALNIA — plac cykli cieplnych. Ogród kryształów. Kominy: zimne.', en: 'ANNEALING YARD — heat-cycle floor. A crystal garden. Chimneys: cold.' }, mode: 'cinematic', autoAdvance: 2800 },
-      { speaker: 'astronaut', text: { pl: 'Skala znów rośnie o rząd wielkości. Stanowiska wygrzewu w rzędach jak winnica, a wzdłuż kominów — kryształy magmy, całe ogrody, skrzące się w łunie. To nie jest miejsce do znajdowania rudy ani do jej topienia. To miejsce, w którym się za nią ręczy.', en: 'The scale climbs an order of magnitude again. Anneal stations in rows like a vineyard, and along the chimneys — magma crystals, whole gardens of them, glittering in the glow. This is not a place to find ore, nor to smelt it. It is a place where you vouch for it.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Skala znów rośnie o rząd wielkości. Stanowiska wygrzewu w rzędach jak winnica, a wzdłuż kominów — kryształy magmy, całe ogrody, skrzące się w łunie. Tu ruda jest już znaleziona i przetopiona. To miejsce, w którym się za nią ręczy.', en: 'The scale climbs an order of magnitude again. Anneal stations in rows like a vineyard, and along the chimneys — magma crystals, whole gardens of them, glittering in the glow. Here the ore is already found and smelted. This is where you vouch for it.' }, mode: 'monologue' },
       { speaker: 'CORE AI', text: { pl: 'Trzeci szczebel misji materiałowej. Na Księżycu 1 znalazłeś. Na Księżycu 2 przetopiłeś. Tu — poręczysz. Zasil moduł probierczy, certyfikuj chłodzenie, przeprowadź partię przez wygrzew.', en: 'The third rung of the material mission. On Moon 1 you found. On Moon 2 you smelted. Here — you vouch. Power the assay rig, certify the cooling, run the batch through the anneal.' }, mode: 'dialogue' },
-      { speaker: 'dr Kern', text: { pl: 'Poprowadzę badanie czystości z orbity. Znam parametry tej serii. — Podam je, gdy dojdziesz do modułu.', en: 'I will run the purity assay from orbit. I know this series\' parameters. — I will give them to you when you reach the rig.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Poprowadzę badanie czystości z orbity. Znam parametry tej serii. Podam je, gdy dojdziesz do modułu.', en: 'I will run the purity assay from orbit. I know this series\' parameters. I will give them to you when you reach the rig.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M3_ANNEALING_INTRO_SEEN] },
   },
@@ -19,7 +19,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-assay-rig-start',
     lines: [
       { speaker: 'system', text: { pl: 'MODUŁ PROBIERCZY: rozruch. Pierwszy kontrolowany ogień księżyca.', en: 'ASSAY RIG: booting. The moon\'s first controlled fire.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Zapalam palniki. Pierwszy ogień w służbie na tym księżycu — nie kłamstwo kontrolki, tylko żar, który coś robi.', en: 'I light the burners. The first fire in service on this moon — not a lying indicator light, but heat that does something.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Zapalam palniki. Pierwszy ogień w służbie na tym księżycu — prawdziwy żar, który naprawdę coś robi, po tylu kłamiących kontrolkach.', en: 'I light the burners. The first fire in service on this moon — real heat that actually does something, after all those lying indicator lights.' }, mode: 'monologue' },
       { speaker: 'CORE AI', text: { pl: 'Moduł zasilony. Najpierw certyfikuj pętlę chłodzenia przy stacji „Zwarcie". Bez uczciwego chłodzenia nie ma uczciwego badania.', en: 'Rig powered. First certify the cooling loop at the Fault Trace station. Without honest cooling there is no honest assay.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Pierwszy Certyfikat — zasilenie, chłodzenie, wygrzew.', en: '◆ NEW MISSION: The First Certificate — power, cooling, anneal.' }, mode: 'system', autoAdvance: 2800 },
     ],
@@ -48,7 +48,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-assay-rig-post',
     lines: [
       { speaker: 'system', text: { pl: 'MODUŁ PROBIERCZY: certyfikat wystawiony. Status: WYMAGA PORĘCZENIA.', en: 'ASSAY RIG: certificate issued. Status: REQUIRES VOUCHING.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Maszyna zbadała. Ale certyfikat mówi „WYMAGA PORĘCZENIA" — pieczęć człowieka czeka w izbie probierczej. Maszyna bada, człowiek ręczy.', en: 'The machine has tested. But the certificate reads "REQUIRES VOUCHING" — a human stamp waits in the assay office. The machine tests, the human vouches.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Maszyna zbadała. Ale certyfikat mówi „WYMAGA PORĘCZENIA" — teraz człowiek musi przyłożyć pieczęć w izbie probierczej i wziąć wynik na siebie.', en: 'The machine has tested. But the certificate reads "REQUIRES VOUCHING" — now a human has to add the stamp in the assay office and take the result on themselves.' }, mode: 'dialogue' },
     ],
   },
 
@@ -57,7 +57,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-fault-trace-cleared',
     lines: [
       { speaker: 'system', text: { pl: 'ZWARCIE: usterka zlokalizowana. Pętla chłodzenia: certyfikowana.', en: 'FAULT TRACE: fault located. Cooling loop: certified.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Znalazłeś prawdziwą usterkę, nie tę, którą podał kłamiący czujnik. Pętla chłodzenia certyfikowana uczciwie. Wróć do modułu i poprowadź partię.', en: 'You found the real fault, not the one the lying sensor reported. The cooling loop is honestly certified. Return to the rig and run the batch.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Znalazłeś prawdziwą usterkę — tę, którą widać na sprzęcie. Kłamiący czujnik wskazywał gdzie indziej. Pętla chłodzenia certyfikowana uczciwie. Wróć do modułu i poprowadź partię.', en: 'You found the real fault — the one you can see on the hardware. The lying sensor pointed elsewhere. The cooling loop is honestly certified. Return to the rig and run the batch.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M3_COOLING_CERTIFIED] },
   },
@@ -84,7 +84,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'astronaut', text: { pl: 'Antena na grzbiecie — martwa czasza, dawny łącznik stacji z Pasem. Ale dziennik nie jest pusty. Po śmierci stacji ktoś jej użył.', en: 'The ridge antenna — a dead dish, the station\'s old link to the Belt. But its log is not empty. After the station died, someone used it.' }, mode: 'monologue' },
       { speaker: 'astronaut', text: { pl: 'Jedna transmisja. Kierunek: Ziemia. Ktoś zadzwonił do domu przez trupa stacji — i zostawił czaszę tak, jak ją znalazł.', en: 'One transmission. Direction: Earth. Someone phoned home through the station\'s corpse — and left the dish exactly as they found it.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Zapisuję. Nie tłumaczę. Martwy sprzęt użyty jako przekaźnik — to nie awaria. To ktoś.', en: 'I am logging it. I am not explaining it. Dead hardware used as a relay — that is not a failure. That is someone.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zapisuję to, bez interpretacji. Martwy sprzęt użyty jako przekaźnik znaczy jedno: ktoś tu był i go użył.', en: 'I am logging it, without interpretation. Dead hardware used as a relay means one thing: someone was here and used it.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M3_DEAD_DISH_RELAY_SEEN] },
   },
@@ -123,7 +123,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: '◆ PIERWSZY CERTYFIKAT WYSTAWIONY. Status: WYMAGA PORĘCZENIA.', en: '◆ FIRST CERTIFICATE ISSUED. Status: REQUIRES VOUCHING.' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Badanie zakończone. I pierwsza widoczna cena jakości: trzy sztaby z Księżyca 2 nie przeszły. Wracają do huty.', en: 'The assay is complete. And the first visible price of quality: three ingots from Moon 2 failed. They go back to the smelter.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Trzy sztaby z powrotem do huty. Boli? To znaczy, że test działa.', en: 'Three ingots back to the smelter. Does it sting? That means the test works.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Trzy sztaby z powrotem do huty. Piecze — i właśnie dlatego wiem, że test robi swoje.', en: 'Three ingots back to the smelter. It stings — and that is exactly how I know the test is doing its job.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Partia 03: 480 kilogramów. Czystość: 99,4 procent. Pierwsza dostawa, za którą ktoś będzie ręczył imiennie.', en: 'Batch 03: 480 kilograms. Purity: 99.4 percent. The first delivery someone will vouch for by name.' }, mode: 'dialogue' },
       { speaker: 'Iskra', text: { pl: 'Wpis do dziennika, na wszelki wypadek: dr Kern podała parametry badania, zanim moduł wyświetlił specyfikację. Wartości zgadzają się z zapieczętowaną przedstartową ekspertyzą złóż. Co do miejsca po przecinku.', en: 'Log entry, just in case: Dr Kern gave the assay parameters before the rig displayed the spec. The values match the sealed pre-launch deposit survey. To the decimal place.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Moreau nie pyta tym razem na otwartym kanale. Widzę tylko, jak coś zapisuje w notesie.', en: 'Moreau does not ask on the open channel this time. I only see her write something in her notebook.' }, mode: 'monologue' },
@@ -136,7 +136,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-exam-protocol-14-done',
     lines: [
       { speaker: 'system', text: { pl: 'PROTOKÓŁ XIV — „SAMONAPRAWA": zaliczony.', en: 'PROTOCOL XIV — "SELF-REPAIR": passed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Czternasty protokół odzyskany: maszynie wolno powtórzyć znane lekarstwo na znaną chorobę — ale zostawić bliznę w dzienniku, bo blizny czyta człowiek. Trzecie identyczne podejście to pętla, nie leczenie.', en: 'Fourteenth protocol recovered: a machine may repeat a known cure for a known ailment — but leave a scar in the log, because humans read scars. A third identical attempt is a loop, not treatment.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Czternasty protokół odzyskany: maszynie wolno powtórzyć znane lekarstwo na znaną chorobę — ale zostawić bliznę w dzienniku, bo blizny czyta człowiek. Trzecie identyczne podejście przestaje leczyć i zaczyna się zapętlać.', en: 'Fourteenth protocol recovered: a machine may repeat a known cure for a known ailment — but leave a scar in the log, because humans read scars. By the third identical attempt it has stopped treating and started looping.' }, mode: 'dialogue' },
     ],
   },
   'm3-exam-protocol-14-already': {
@@ -161,7 +161,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'WYŻARZALNIA — POWRÓT', en: 'THE ANNEALING YARD — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'system', text: { pl: 'Małe ramiona serwisowe pracują między rzędami. Rutyny samonaprawy robią to, co uczciwa diagnoza wreszcie nazwała.', en: 'Small service arms work between the rows. Self-repair routines do what an honest diagnosis finally named.' }, mode: 'cinematic', autoAdvance: 3200 },
-      { speaker: 'CORE AI', text: { pl: 'Naprawa widziana, nie opowiedziana. Każde ramię zostawia bliznę w dzienniku. Jeśli chcesz posłuchać, co jeszcze słyszę pod kominami — użyj /diag.', en: 'Repair seen, not narrated. Every arm leaves a scar in the log. If you want to hear what else I pick up under the chimneys — use /diag.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'CORE AI', text: { pl: 'Naprawę widać na własne oczy, a każde ramię zostawia po sobie bliznę w dzienniku. Jeśli chcesz posłuchać, co jeszcze słyszę pod kominami — użyj /diag.', en: 'You watch the repair happen with your own eyes, and every arm leaves a scar in the log behind it. If you want to hear what else I pick up under the chimneys — use /diag.' }, mode: 'cinematic', autoAdvance: 3400 },
     ],
     onComplete: { setFlags: [FLAGS.M3_RETURN_ANNEALING_SEEN] },
   },

@@ -28,6 +28,6 @@ export const quests: TextAnswerQuest[] = [
     ],
     solution: 'p7-ac1-hgx-ww5-n7k-rq4',
     validation: 'exact-lowercase',
-    rewards: { xp: 100, flags: [FLAGS.M1_SWIERSZCZ_ONLINE, FLAGS.CMDS_DRONE] },
+    rewards: { xp: 100, flags: [FLAGS.M1_SWIERSZCZ_ONLINE] },
   },
 ];

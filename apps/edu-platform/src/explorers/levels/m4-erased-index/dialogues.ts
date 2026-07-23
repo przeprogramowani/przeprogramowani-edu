@@ -8,7 +8,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'SALA KATALOGOWA — pod największą wydmą. Karuzele katalogowe pod strop. Zasilanie: minimalne.', en: 'THE CATALOGUE HALL — under the largest dune. Catalogue carousels to the ceiling. Power: minimal.' }, mode: 'cinematic', autoAdvance: 3000 },
       { speaker: 'astronaut', text: { pl: 'Katedralna hala. Każda szuflada pełna, każda etykieta czysta. A przez pęknięty świetlik sypie się cienka struga piasku i usypuje stożek na środku posadzki — sala ma własną klepsydrę.', en: 'A cathedral hall. Every drawer full, every label clean. And through a cracked skylight a thin stream of sand falls and builds a cone in the middle of the floor — the hall has its own hourglass.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Treść nietknięta. Odsyłacze — zmielone. Miliony wpisów i ani jednej drogi do żadnego z nich. To nie jest spalona biblioteka, Dexo. To biblioteka, której ktoś zabrał spis.', en: 'The content is untouched. The cross-references — milled to dust. Millions of entries and not one road to any of them. This is not a burned library, Dexo. This is a library someone took the index from.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Treść nietknięta. Odsyłacze — zmielone. Miliony wpisów i ani jednej drogi do żadnego z nich. Tu nie było pożaru, Dexo. Ktoś po prostu wyjął tej bibliotece spis.', en: 'The content is untouched. The cross-references — milled to dust. Millions of entries and not one road to any of them. There was no fire here, Dexo. Someone simply took this library\'s index.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M4_INDEX_INTRO_SEEN] },
   },
@@ -18,7 +18,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-catalog-head',
     lines: [
       { speaker: 'system', text: { pl: 'GŁOWICA KATALOGU — online. Odsyłacze: 0. Rekordy: kompletne.', en: 'CATALOGUE HEAD — online. Cross-references: 0. Records: complete.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Mógłbym zindeksować wszystko naraz, alfabetycznie. Miałbym spis. Nie miałbym pamięci. Pamięć to powiązania — idziemy po nici. Trzy wrzeciona, w kolejności odsyłaczy. Zacznij od pierwszego.', en: 'I could index everything at once, alphabetically. I would have a list. I would not have memory. Memory is the links — we follow the thread. Three spindles, in the order of the references. Start with the first.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Mógłbym zindeksować wszystko naraz, alfabetycznie — i dostać martwy spis haseł. Pamięć to powiązania, więc idziemy po nici. Trzy wrzeciona, w kolejności odsyłaczy. Zacznij od pierwszego.', en: 'I could index everything at once, alphabetically — and get a dead list of headings. Memory is the links, so we follow the thread. Three spindles, in the order of the references. Start with the first.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Nić — odtwórz trzy ogniwa indeksu w kolejności powiązań.', en: '◆ NEW MISSION: The Thread — restore three index links in the order of their references.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { setFlags: [FLAGS.M4_THREAD_ACTIVE], activateQuest: 'q-m4-thread' },
@@ -33,7 +33,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-catalog-head-post',
     lines: [
       { speaker: 'system', text: { pl: 'GŁOWICA KATALOGU: pierwsza nić powiązań — odtworzona. Indeks: fragment żywy.', en: 'CATALOGUE HEAD: first thread of links — restored. Index: a living fragment.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Jedna nić na miliony. Ale to już pamięć, nie inwentarz. Wrota południowe stoją otworem.', en: 'One thread out of millions. But it is memory now, not an inventory. The south gate stands open.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Jedna nić na miliony. Ale to już żywa pamięć. Wrota południowe stoją otworem.', en: 'One thread out of millions. But it is living memory now. The south gate stands open.' }, mode: 'monologue' },
     ],
   },
 
@@ -58,7 +58,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-spindle-2',
     lines: [
       { speaker: 'system', text: { pl: 'WRZECIONO II — odsyłacz odzyskany: → WRZECIONO III.', en: 'SPINDLE II — reference recovered: → SPINDLE III.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'Echo', text: { pl: 'Drugie ogniwo. Widzisz? Nie skaczemy alfabetem. Idziemy tam, dokąd naprawdę prowadzi poprzedni wpis.', en: 'The second link. See? We do not jump by the alphabet. We go where the previous entry actually leads.' }, mode: 'dialogue' },
+      { speaker: 'Echo', text: { pl: 'Drugie ogniwo. Widzisz? Idziemy śladem powiązań — tam, dokąd naprawdę prowadzi poprzedni wpis.', en: 'The second link. See? We follow the trail of links — where the previous entry actually leads.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M4_SPINDLE_2_LINKED] },
   },
@@ -89,7 +89,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm4-spindle-order-warn': {
     id: 'm4-spindle-order-warn',
     lines: [
-      { speaker: 'Echo', text: { pl: 'Nie stąd. Tego wrzeciona jeszcze nic nie wskazuje. Wróć do poprzedniego ogniwa — indeks czyta się po nici, nie na wyrywki.', en: 'Not from here. Nothing points to this spindle yet. Go back to the previous link — an index is read along the thread, not at random.' }, mode: 'dialogue' },
+      { speaker: 'Echo', text: { pl: 'Nie stąd. Tego wrzeciona jeszcze nic nie wskazuje. Wróć do poprzedniego ogniwa — indeks czyta się po nici, ogniwo po ogniwie.', en: 'Not from here. Nothing points to this spindle yet. Go back to the previous link — an index is read along the thread, link by link.' }, mode: 'dialogue' },
     ],
   },
 
@@ -99,7 +99,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: '◆ NIĆ ODTWORZONA. Karuzele katalogowe ruszają falą. Wyciągi podnoszą pierwsze bloki od lat.', en: '◆ THREAD RESTORED. The catalogue carousels turn in a wave. The lifts raise the first blocks in years.' }, mode: 'system', autoAdvance: 3000 },
       { speaker: 'astronaut', text: { pl: 'Cała hala budzi się od jednej nici. A w martwym rdzeniu indeksera — sygnatura. Ta sama co w węzłach na Księżycu 1, w podstacji na Księżycu 2, w weryfikatorze na Księżycu 3.', en: 'The whole hall wakes from a single thread. And in the dead core of the indexer — a signature. The same as in the nodes on Moon 1, the substation on Moon 2, the verifier on Moon 3.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'ENTROPY. Czwarta twarz. Nie skasował ani jednego rekordu. Skasował wszystkie drogi do nich. Kasowanie treści zostawia dziurę — ktoś by zauważył. Kasowanie indeksu zostawia bibliotekę.', en: 'ENTROPY. The fourth face. It deleted not a single record. It deleted every road to them. Deleting content leaves a hole — someone would notice. Deleting the index leaves a library.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'ENTROPY. Czwarta twarz. Rekordy zostały w całości. Zniszczył wszystkie drogi, które do nich prowadziły. Kasowanie treści zostawia dziurę — ktoś by zauważył. Kasowanie indeksu zostawia bibliotekę.', en: 'ENTROPY. The fourth face. The records are whole. It destroyed every road that led to them. Deleting content leaves a hole — someone would notice. Deleting the index leaves a library.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Te słowa już padły. W gaju sondy powiedziałeś: wymazali indeks, treść została. Myślałem, że to opis twojej pamięci. To była definicja broni.', en: 'These words have been spoken before. In the probe grove you said: they erased the index, the content stayed. I thought it described your memory. It was the definition of a weapon.' }, mode: 'dialogue' },
       { speaker: 'Echo', text: { pl: '…Dexo. Gdzie jesteśmy? Nie pamiętam drogi powrotnej.', en: '…Dexo. Where are we? I do not remember the way back.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: '(bez słowa podaję mu jego własny dziennik tras)', en: '(without a word, I hand him his own route journal)' }, mode: 'monologue' },
@@ -135,7 +135,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm4-echo-calm': {
     id: 'm4-echo-calm',
     lines: [
-      { speaker: 'Echo', text: { pl: 'Wpis trzeci: dostawa do sali katalogowej, potwierdzona. Widzisz? Jedno zdanie z własnego dziennika i już wiem, gdzie jestem. Pamięć to droga, nie stos.', en: 'Entry three: delivery to the catalogue hall, confirmed. See? One line from my own journal and I know where I am. Memory is a road, not a pile.' }, mode: 'dialogue' },
+      { speaker: 'Echo', text: { pl: 'Wpis trzeci: dostawa do sali katalogowej, potwierdzona. Widzisz? Jedno zdanie z własnego dziennika i już wiem, gdzie jestem. Pamięć to droga, którą się przechodzi krok po kroku.', en: 'Entry three: delivery to the catalogue hall, confirmed. See? One line from my own journal and I know where I am. Memory is a road you walk step by step.' }, mode: 'dialogue' },
     ],
   },
 
@@ -153,7 +153,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm4-exam-protocol-18-done',
     lines: [
       { speaker: 'system', text: { pl: 'PROTOKÓŁ XVIII — „ARCHEOLOGIA": zaliczony.', en: 'PROTOCOL XVIII — "ARCHAEOLOGY": passed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Osiemnasty protokół odzyskany: znaczenie odzyskuje się z artefaktów, nie zgaduje z powietrza. Dziennik, margines, kolejność warstw. Treść bez kontekstu to nie wiedza, to gruz.', en: 'Eighteenth protocol recovered: meaning is recovered from artifacts, not guessed from the air. The journal, the margin, the order of the layers. Content without context is not knowledge, it is rubble.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Osiemnasty protokół odzyskany: znaczenie wydobywa się z artefaktów — z dziennika, z marginesu, z kolejności warstw. Treść bez kontekstu zostaje gruzem.', en: 'Eighteenth protocol recovered: meaning is drawn from artifacts — the journal, the margin, the order of the layers. Content without context stays rubble.' }, mode: 'dialogue' },
     ],
   },
   'm4-exam-protocol-18-already': {
@@ -169,7 +169,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'SALA KATALOGOWA — POWRÓT', en: 'THE CATALOGUE HALL — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'system', text: { pl: 'Karuzele obracają się miarowo. Wyciągi wyciągają i odkładają bloki. Klepsydra piasku wciąż sypie — ale teraz ktoś ją liczy.', en: 'The carousels turn steadily. The lifts raise blocks and set them down. The hourglass of sand still falls — but now someone is counting it.' }, mode: 'cinematic', autoAdvance: 3400 },
-      { speaker: 'CORE AI', text: { pl: 'Tędy szliśmy w drodze w dół. Wtedy nie wiedziałem, że to zapamiętam. Teraz wiem, że nie zapomnę.', en: 'We came this way on the way down. Then I did not know I would remember it. Now I know I will not forget.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'CORE AI', text: { pl: 'Tędy szliśmy w drodze w dół. Tę drogę pamiętam — i już jej nie stracę.', en: 'We came this way on the way down. I remember this road now — and I will not lose it again.' }, mode: 'cinematic', autoAdvance: 3400 },
     ],
     onComplete: { setFlags: [FLAGS.M4_RETURN_INDEX_SEEN] },
   },

@@ -143,7 +143,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'WYDOBYCIE ZAKOŃCZONE. Ważenie ładunku...', en: 'EXTRACTION COMPLETE. Weighing cargo...' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Synaptit: 14 kilogramów. Wystarczy na jeden chip. Ziemia potrzebuje ich tysięcy.', en: 'Synaptit: 14 kilograms. Enough for one chip. Earth needs thousands of them.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czternaście kilo. Trzymam w rękach cały nasz pierwszy sukces — i jest wielkości pięści. To nie jest łup. To błąd zaokrąglenia wobec tego, po co przylecieliśmy.', en: 'Fourteen kilos. I\'m holding our entire first success — and it\'s the size of a fist. This isn\'t loot. It\'s a rounding error against what we came for.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czternaście kilo. Trzymam w rękach cały nasz pierwszy sukces — i jest wielkości pięści. Wobec tego, po co przylecieliśmy, to zaledwie błąd zaokrąglenia.', en: 'Fourteen kilos. I\'m holding our entire first success — and it\'s the size of a fist. Against what we came for, it\'s barely a rounding error.' }, mode: 'dialogue' },
     ],
   },
 
@@ -176,7 +176,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-return-vein',
     lines: [
       { speaker: 'system', text: { pl: 'ŻYŁA — POWRÓT', en: 'THE VEIN — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Widzę ten wąwóz po raz pierwszy. Cały system żył — biegnie dalej, niż sięgał twój skan, głębiej, niż ktokolwiek tu wchodził. To nie jedno złoże. To sieć.', en: 'I see this ravine for the first time. The whole vein system — it runs farther than your scan reached, deeper than anyone went. This is not one deposit. This is a network.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'CORE AI', text: { pl: 'Widzę ten wąwóz po raz pierwszy. Cały system żył — biegnie dalej, niż sięgał twój skan, głębiej, niż ktokolwiek tu wchodził. To cała sieć złóż.', en: 'I see this ravine for the first time. The whole vein system — it runs farther than your scan reached, deeper than anyone went. This is a whole network of deposits.' }, mode: 'cinematic', autoAdvance: 3400 },
       { speaker: 'astronaut', text: { pl: 'I gdzieś w niej — świeże ślady, których wtedy nie umiałem odczytać. Teraz widzimy je oboje.', en: 'And somewhere in it — fresh marks I couldn\'t read back then. Now we both see them.' }, mode: 'cinematic', autoAdvance: 3000 },
     ],
     onComplete: { setFlags: [FLAGS.M1_RETURN_VEIN_SEEN] },

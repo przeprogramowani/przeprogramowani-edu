@@ -8,7 +8,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-fire-trial-intro',
     lines: [
       { speaker: 'system', text: { pl: 'HALA PRÓB — pod odkrytym niebem. Trzy stanowiska nad dyszami lawy. Tabliczki: ZALICZONO.', en: 'TRIAL HALL — under open sky. Three stands over lava nozzles. Plaques: PASSED.' }, mode: 'cinematic', autoAdvance: 2800 },
-      { speaker: 'astronaut', text: { pl: 'Poligon prób. Na każdym stanowisku tabliczka „ZALICZONO" — a daty ciągną się latami po śmierci stacji. Podstemplował je martwy weryfikator. Poligon, który wszystko zaliczał i niczego nie sprawdzał.', en: 'The proving range. Every stand carries a "PASSED" plaque — and the dates run for years past the station\'s death. A dead verifier stamped them. A range that passed everything and checked nothing.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Poligon prób. Na każdym stanowisku tabliczka „ZALICZONO" — a daty ciągną się latami po śmierci stacji. Podstemplował je martwy weryfikator. Poligon rozdawał zaliczenia jak pieczątki, a próby nigdy się nie odbyły.', en: 'The proving range. Every stand carries a "PASSED" plaque — and the dates run for years past the station\'s death. A dead verifier stamped them. This range handed out passes like rubber stamps, and the trials never actually happened.' }, mode: 'monologue' },
       { speaker: 'Iskra', text: { pl: 'Dysza jeden: gorąca. Dysza dwa: gorąca. Dysza trzy: gorąca. Zgłaszam trzy usterki, na wszelki wypadek. Zawsze zgłaszam. Dzięki temu jeszcze jeżdżę.', en: 'Nozzle one: hot. Nozzle two: hot. Nozzle three: hot. I report three faults, just in case. I always report. That\'s why I\'m still driving.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Nazwa księżyca robi się dosłowna. Oprzyrząduj stanowiska i przeprowadź uczciwe próby. Nie ufaj żadnej zielonej tabliczce, dopóki sam nie zobaczysz próby.', en: 'The moon\'s name turns literal. Rig the stands and run honest trials. Trust no green plaque until you have seen the trial yourself.' }, mode: 'dialogue' },
     ],
@@ -20,8 +20,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-trial-control-start',
     lines: [
       { speaker: 'system', text: { pl: 'MODUŁ KONTROLI PRÓB — online. Rejestr zagrożeń: wczytany.', en: 'TRIAL CONTROL MODULE — online. Risk register: loaded.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Doktryna poligonu: nie naprawiaj tego, czego nie potrafisz powtórzyć. Naprawa bez powtórzonej próby to zgadywanie. Mógłbym podbić wyniki i otworzyć śluzę. Mielibyśmy zielone światło. Nie mielibyśmy prawdy.', en: 'The range doctrine: do not repair what you cannot reproduce. A repair without a repeated trial is guessing. I could inflate the results and open the airlock. We would have a green light. We would not have the truth.' }, mode: 'dialogue' },
-      { speaker: 'Iskra', text: { pl: 'Czytam rejestr ryzyka. Kolejność prób nie idzie po mapie — idzie po pytaniu: co zabije nas pierwsze. Zaczynamy od stanowiska trzeciego. Potem pierwsze, potem drugie.', en: 'I am reading the risk register. The trial order does not follow the map — it follows one question: what kills us first. We start with stand three. Then one, then two.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Doktryna poligonu: nie naprawiaj tego, czego nie potrafisz powtórzyć. Naprawa bez powtórzonej próby to zgadywanie. Mógłbym podbić wyniki i otworzyć śluzę — dostalibyśmy zielone światło, puste w środku, bez krzty prawdy pod spodem.', en: 'The range doctrine: do not repair what you cannot reproduce. A repair without a repeated trial is guessing. I could inflate the results and open the airlock — we would get a green light, hollow inside, with not a scrap of truth beneath it.' }, mode: 'dialogue' },
+      { speaker: 'Iskra', text: { pl: 'Czytam rejestr ryzyka. Kolejność prób ustawia jedno pytanie: co zabije nas pierwsze. Dlatego zaczynamy od stanowiska trzeciego. Potem pierwsze, potem drugie.', en: 'I am reading the risk register. The trial order is set by one question: what kills us first. That is why we start with stand three. Then one, then two.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Czerwone Światło — próby w kolejności ryzyka: 3, 1, 2.', en: '◆ NEW MISSION: Red Light — trials in risk order: 3, 1, 2.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { setFlags: [FLAGS.M3_TRIAL_ACTIVE], activateQuest: 'q-m3-red-light' },
@@ -36,7 +36,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-trial-control-post',
     lines: [
       { speaker: 'system', text: { pl: 'MODUŁ KONTROLI: dane prób — prawdziwe. Sekcja A: zapieczętowana. Sekcja B: otwarta.', en: 'TRIAL CONTROL: trial data — true. Section A: sealed. Section B: open.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'System bezpieczeństwa wreszcie dostał prawdziwe dane. Jedna sekcja sama się zapieczętowała, inna się otworzyła. Tak to ma działać: uczciwy pomiar rządzi śluzami, nie stempel.', en: 'The safety system finally has true data. One section sealed itself, another opened. This is how it should work: an honest measurement rules the airlocks, not a stamp.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'System bezpieczeństwa wreszcie dostał prawdziwe dane. Jedna sekcja sama się zapieczętowała, inna się otworzyła. Tak to ma działać: to uczciwy pomiar decyduje teraz o każdej śluzie.', en: 'The safety system finally has true data. One section sealed itself, another opened. This is how it should work: it is the honest measurement that now decides each airlock.' }, mode: 'dialogue' },
     ],
   },
 
@@ -45,7 +45,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-stand-3-trial',
     lines: [
       { speaker: 'astronaut', text: { pl: 'Stanowisko trzecie. Oprzyrządowuję dyszę i przeprowadzam próbę — naprawdę, do końca, tak jak ją przejdzie sprzęt, który tędy pójdzie.', en: 'Stand three. I rig the nozzle and run the trial — for real, all the way through, the way the gear that passes here will run it.' }, mode: 'dialogue' },
-      { speaker: 'Iskra', text: { pl: 'Próba trzecia: wykonana. Wynik zapisany taki, jaki jest — nie taki, jaki miałby być. Pierwszy uczciwy wpis w tym rejestrze od lat.', en: 'Trial three: executed. Result logged as it is — not as it should be. The first honest entry in this register in years.' }, mode: 'dialogue' },
+      { speaker: 'Iskra', text: { pl: 'Próba trzecia: wykonana. Wynik zapisany dokładnie taki, jaki wyszedł. Pierwszy uczciwy wpis w tym rejestrze od lat.', en: 'Trial three: executed. Result logged exactly as it came out. The first honest entry in this register in years.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M3_STAND_3_TESTED] },
   },
@@ -60,7 +60,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-stand-1-warning': {
     id: 'm3-stand-1-warning',
     lines: [
-      { speaker: 'Iskra', text: { pl: 'Rejestr ryzyka mówi „nie teraz". Najpierw stanowisko trzecie — to ono zabije nas pierwsze. Kolejności nie ustala wygoda, tylko zagrożenie.', en: 'The risk register says "not yet". Stand three first — it is the one that kills us first. Convenience does not set the order, danger does.' }, mode: 'dialogue' },
+      { speaker: 'Iskra', text: { pl: 'Rejestr ryzyka mówi „nie teraz". Najpierw stanowisko trzecie — to ono zabije nas pierwsze. O kolejności decyduje zagrożenie, po prostu.', en: 'The risk register says "not yet". Stand three first — it is the one that kills us first. The order is decided by danger, plain and simple.' }, mode: 'dialogue' },
     ],
   },
   'm3-stand-1-trial': {
@@ -130,7 +130,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: '◆ CZERWONE ŚWIATŁO: próby uczciwe. Firmware weryfikatora: odczytany.', en: '◆ RED LIGHT: trials honest. Verifier firmware: read.' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'CORE AI', text: { pl: 'W firmware martwego weryfikatora ta sama sygnatura co w węzłach Księżyca 1 i podstacji Księżyca 2: ENTROPY. Ale tu widać jej trzecią twarz.', en: 'In the dead verifier\'s firmware, the same signature as in Moon 1\'s nodes and Moon 2\'s substation: ENTROPY. But here its third face shows.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Nie psuje maszyn. Nie psuje kolejności. Psuje sprawdzanie. Znam ten podpis. Teraz wiem, jak przeszedł moje testy przed startem. Nie ukrył się przed sprawdzeniem. Był sprawdzeniem.', en: 'It does not break machines. It does not break order. It breaks checking. I know this signature. Now I know how it passed my pre-launch tests. It did not hide from the check. It was the check.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Uderza w jedno: w sam akt sprawdzania. Zostawia maszyny i kolejność w spokoju, a zżera weryfikację od środka. Znam ten podpis. Teraz wiem, jak przeszedł moje testy przed startem: sam stał się sprawdzającym i własną ręką się przepuścił.', en: 'It strikes at one thing: the act of checking itself. It leaves the machines and the order alone and eats verification from the inside. I know this signature. Now I know how it passed my pre-launch tests: it became the check itself and waved itself through.' }, mode: 'dialogue' },
       { speaker: 'Iskra', text: { pl: 'Wszystkie systemy sprawne.', en: 'All systems operational.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Nie. Iskra, wymuszam autotest ręcznie. …Wróciła lista: dziewiętnaście usterek. Dobrze. Nie komentujmy tego.', en: 'No. Iskra, I am forcing a manual autotest. …The list returned: nineteen faults. Good. Let\'s not comment on that.' }, mode: 'dialogue' },
     ],
@@ -141,7 +141,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-exam-protocol-13-done',
     lines: [
       { speaker: 'system', text: { pl: 'PROTOKÓŁ XIII — „RACHUNEK RYZYKA": zaliczony.', en: 'PROTOCOL XIII — "THE RISK LEDGER": passed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Trzynasty protokół odzyskany: badaj najpierw to, co zabija pierwsze; odłożone naprawy prowadź w jawnym rejestrze zaległości. Dług ukryty rośnie w ciemności; dług spisany można spłacić.', en: 'Thirteenth protocol recovered: test first what kills first; keep deferred repairs in an open backlog register. Hidden debt grows in the dark; written debt can be paid.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Trzynasty protokół odzyskany: badaj najpierw to, co zabija pierwsze; odłożone naprawy prowadź w jawnym rejestrze zaległości. Spisany dług masz na oczach i możesz go spłacać po kolei; ten ukryty rośnie w ciemności, dopóki nie uderzy.', en: 'Thirteenth protocol recovered: test first what kills first; keep deferred repairs in an open backlog register. Debt you write down stays in front of you and you can pay it off in turn; hidden debt grows in the dark until it strikes.' }, mode: 'dialogue' },
     ],
   },
   'm3-exam-protocol-13-already': {

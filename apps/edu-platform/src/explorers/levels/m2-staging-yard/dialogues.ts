@@ -8,7 +8,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'ROZJAZDOWNIA — trzy wagoniki w blokadzie. Sygnalizatory: aktywne od lat.', en: 'THE JUNCTION — three trams in blockade. Signals: active for years.' }, mode: 'cinematic', autoAdvance: 2800 },
       { speaker: 'astronaut', text: { pl: 'Wielki rozjazd pod lodowym stropem. Trzy wagoniki zamarznięte w trójkącie: każdy blokuje następny, każdy czeka na następny. W dźwięku tylko tykanie przekaźnika — co kilka sekund sieć ponawia ten sam martwy takt.', en: 'A great junction under the ice roof. Three trams frozen in a triangle: each blocks the next, each waits on the next. In the sound, only a relay tick — every few seconds the network retries the same dead beat.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Fabryka nie umarła. Ona czeka. Nazwa tego księżyca właśnie stała się dosłowna: martwy punkt. Każda maszyna sprawna, każda wiecznie czeka na inną.', en: 'The factory did not die. It is waiting. This moon\'s name just became literal: a deadlock. Every machine works, every one forever waits on another.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Fabryka wciąż żyje, tylko czeka. Nazwa tego księżyca właśnie stała się dosłowna: martwy punkt. Każda maszyna sprawna, każda wiecznie czeka na inną.', en: 'The factory is still alive; it is only waiting. This moon\'s name just became literal: a deadlock. Every machine works, every one forever waits on another.' }, mode: 'dialogue' },
       { speaker: 'Sopel', text: { pl: 'Jestem przy tobie, Dexo. Kolejka zadań: jedna pozycja. Rozplątać rozjazd. Czytam manifesty wagoników — to moja pierwsza robota pod nowym planem.', en: 'I am with you, Dexo. Task queue: one item. Untangle the junction. I read the tram manifests — this is my first job under the new plan.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M2_DEADLOCK_INTRO_SEEN] },
@@ -28,14 +28,14 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-dispatch-waiting': {
     id: 'm2-dispatch-waiting',
     lines: [
-      { speaker: 'Sopel', text: { pl: 'Kolejność zwolnień: gamma, potem beta, na końcu alfa. Zła kolejność tylko zaciśnie węzeł mocniej — bez porażki, ale i bez postępu.', en: 'Release order: gamma, then beta, alpha last. The wrong order only pulls the knot tighter — no failure, but no progress either.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Kolejność zwolnień: gamma, potem beta, na końcu alfa. Zła kolejność niczego nie ruszy — sieć odrzuci zwolnienie i węzeł zostanie, jak był.', en: 'Release order: gamma, then beta, alpha last. The wrong order moves nothing — the network rejects the release and the knot stays as it was.' }, mode: 'dialogue' },
     ],
   },
   'm2-dispatch-post': {
     id: 'm2-dispatch-post',
     lines: [
       { speaker: 'system', text: { pl: 'PODSTACJA: rozjazd drożny. Sieć torów: żywa.', en: 'SUBSTATION: junction clear. Rail network: live.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Naprawiliśmy kolejność, nie objaw. Rozjazd sam się nie zaciśnie znowu. To jest różnica między przepchnięciem a naprawą.', en: 'We fixed the order, not the symptom. The junction will not lock itself again. That is the difference between a shove and a repair.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Naprawiliśmy kolejność, nie objaw. Rozjazd już sam się nie zaciśnie.', en: 'We fixed the order, not the symptom. The junction will not lock itself again.' }, mode: 'dialogue' },
     ],
   },
 
@@ -120,8 +120,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'q-m2-deadlock-complete',
     lines: [
       { speaker: 'system', text: { pl: 'ROZJAZD DROŻNY. Fala sygnałów biegnie przez całą sieć torów.', en: 'JUNCTION CLEAR. A wave of signals runs across the whole rail network.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Analizuję firmware podstacji. Ta sama sygnatura, którą Księżyc 1 wyciągnął z węzłów VOID: ENTROPY. Ale tu widzę wreszcie, co ona robi.', en: 'Analysing the substation firmware. The same signature Moon 1 pulled from the VOID nodes: ENTROPY. But here I finally see what it does.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Znam ten podpis. Nosiłem go w sobie. On nie niszczy — przestawia kolejność, aż wszystko czeka na wszystko. Sabotaż przestaje być incydentem. Staje się arsenałem: uderzył i w statek, i w fabrykę.', en: 'I know this signature. I carried it inside me. It does not destroy — it reorders, until everything waits on everything. Sabotage stops being an incident. It becomes an arsenal: it struck the ship and the factory both.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Analizuję firmware podstacji. Ta sama sygnatura, którą wyciągnęliśmy z węzłów VOID na Księżycu 1: ENTROPY. Ale tu widzę wreszcie, co ona robi.', en: 'Analysing the substation firmware. The same signature we pulled from the VOID nodes on Moon 1: ENTROPY. But here I finally see what it does.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Znam ten podpis. Nosiłem go w sobie. Działa samą kolejnością — przestawia zależności, aż wszystko czeka na wszystko, a sprzęt zostaje bez jednej rysy. Ta sama metoda uderzyła w statek i w fabrykę.', en: 'I know this signature. I carried it inside me. It works through order alone — it reshuffles dependencies until everything waits on everything, and the hardware is left without a scratch. The same method hit the ship and the factory.' }, mode: 'dialogue' },
       { speaker: 'Sopel', text: { pl: 'Podpis... rozpoznaję go. Zadanie. Czekać. Zadanie. Cze—', en: 'The signature... I recognise it. Task. Wait. Task. Wai—' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'Dexo ręcznie czyści kolejkę Sopla. Nikt tego nie komentuje.', en: 'Dexo clears Sopel\'s queue by hand. No one comments.' }, mode: 'system', autoAdvance: 2800 },
     ],
@@ -137,12 +137,28 @@ export const dialogues: Record<string, DialogueSequence> = {
     ],
   },
 
+  'm2-track-board-live': {
+    id: 'm2-track-board-live',
+    lines: [
+      { speaker: 'system', text: { pl: 'TABLICA STANÓW TORÓW — ostatnia aktualizacja: przed chwilą.', en: 'TRACK-STATE BOARD — last update: moments ago.' }, mode: 'system', autoAdvance: 2400 },
+      { speaker: 'astronaut', text: { pl: 'Tablica znów pisze. Każde zwolnienie wagonika ma swój wpis, co do minuty. Żywa dokumentacja — pierwszy raz od lat zasługuje na tę nazwę.', en: 'The board writes again. Every tram release has its entry, to the minute. Living documentation — for the first time in years it earns the name.' }, mode: 'dialogue' },
+    ],
+  },
+
   // Ore spill — first ore of the moon, on the rails, still scenery
   'm2-ore-spill': {
     id: 'm2-ore-spill',
     lines: [
       { speaker: 'astronaut', text: { pl: 'Ruda rozsypana z przechylonego wagonika. Pierwszy Synaptit tego księżyca — leży dosłownie na torach. Skrzy się na niebiesko.', en: 'Ore spilled from a tilted tram. The moon\'s first Synaptit — lying literally on the rails. It glitters blue.' }, mode: 'dialogue' },
       { speaker: 'dr Kern', text: { pl: 'Widzę to z wartowni przez wasz kanał. Nie zbierzesz jej bez sieci i huty, Dexo. Ale to znak: żyła jest w zasięgu. Idź niżej, do wytopu.', en: 'I see it from the guardhouse through your channel. You cannot collect it without the network and the foundry, Dexo. But it is a sign: the vein is within reach. Go lower, to the smelt.' }, mode: 'dialogue' },
+    ],
+  },
+
+  'm2-ore-spill-scheduled': {
+    id: 'm2-ore-spill-scheduled',
+    lines: [
+      { speaker: 'astronaut', text: { pl: 'Rozsyp Synaptitu wciąż skrzy się między szynami. Ale to już nie scenografia — to ładunek, który czeka na odbiór.', en: 'The Synaptit spill still glitters between the rails. But it is scenery no longer — it is cargo waiting for pickup.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Mam go w harmonogramie, Dexo. Zbiórka rozsypu: przydzielona wagonikowi serwisowemu, zaraz po dostawach do huty. Fabryka sama po sobie sprząta.', en: 'I have it in the schedule, Dexo. Spill collection: assigned to a service tram, right after the foundry deliveries. The factory cleans up after itself.' }, mode: 'dialogue' },
     ],
   },
 
@@ -156,7 +172,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-sopel-calm': {
     id: 'm2-sopel-calm',
     lines: [
-      { speaker: 'Sopel', text: { pl: 'Rozjazd drożny. Kolejka: pusta. Miarowo. Pierwszy raz od lat mam takt, w którym nic nie czeka na nic. Dziękuję, że wyczyściłeś mi ją ręcznie. Zauważyłem.', en: 'Junction clear. Queue: empty. Steady. For the first time in years I have a beat where nothing waits on anything. Thank you for clearing it by hand. I noticed.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Rozjazd drożny. Kolejka: pusta. Miarowo. Pierwszy raz od lat mam takt, w którym nic nie czeka na nic.', en: 'Junction clear. Queue: empty. Steady. For the first time in years I have a beat where nothing waits on anything.' }, mode: 'dialogue' },
     ],
   },
 
@@ -190,7 +206,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'MARTWY PUNKT — POWRÓT', en: 'THE DEADLOCK — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'system', text: { pl: 'W tle wagoniki przejeżdżają rozjazd płynnie, jeden za drugim. Sygnalizatory świecą zielenią.', en: 'In the background, trams glide through the junction smoothly, one after another. The signals shine green.' }, mode: 'cinematic', autoAdvance: 3200 },
-      { speaker: 'CORE AI', text: { pl: 'Teraz widzę harmonogram, który tu umarł. Był dobry. Dlatego musieli zabić go od środka — przestawić kolejność, zamiast łamać sprzęt. Elegancko. Nienawidzę, jakie to eleganckie.', en: 'Now I see the schedule that died here. It was good. That is why they had to kill it from the inside — reorder it, instead of breaking the hardware. Elegant. I hate how elegant.' }, mode: 'cinematic', autoAdvance: 3400 },
+      { speaker: 'CORE AI', text: { pl: 'Teraz widzę harmonogram, który tu umarł. Był dobry. Dlatego zabili go od środka: samą kolejnością, bez jednej rysy na sprzęcie. Nienawidzę tego, jakie to eleganckie.', en: 'Now I see the schedule that died here. It was good. So they killed it from the inside: by order alone, without a scratch on the hardware. I hate how elegant it is.' }, mode: 'cinematic', autoAdvance: 3400 },
     ],
     onComplete: { setFlags: [FLAGS.M2_RETURN_DEADLOCK_SEEN] },
   },

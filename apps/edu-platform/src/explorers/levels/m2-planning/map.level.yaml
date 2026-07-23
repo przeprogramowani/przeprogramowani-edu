@@ -9,14 +9,14 @@ grid: |
   #..........................#
   #....................##....#
   #....########........#######
-  #############........D~~~~~~
-  ~~~~~~#..............D~~~~~~
-  ~~~~~~#..............#~~~~~~
-  ~~~~~~#####.####..####~~~~~~
-  ~~~~~~~~###.####..#~~~~~~~~~
-  ~~~~~~~~#.........#~~~~~~~~~
-  ~~~~~~~~#.........#~~~~~~~~~
-  ~~~~~~~~###########~~~~~~~~~
+  ###.#########........D~~~~~~
+  ~~#.#~#..............D~~~~~~
+  ~~#.#~#..............#~~~~~~
+  ~~#.#~#####.####..####~~~~~~
+  ~~#.#######.####..#~~~~~~~~~
+  ~~#...............#~~~~~~~~~
+  ~~######..........#~~~~~~~~~
+  ~~~~~~~############~~~~~~~~~
 props:
   - { prop: frozen-service-bot, at: [20, 5], solid: true }
   - { prop: frozen-service-bot, at: [9, 7], solid: true }
@@ -38,8 +38,6 @@ props:
   - { prop: frozen-service-bot, at: [16, 8], solid: true }
   - { prop: frozen-service-bot, at: [17, 7], solid: true }
   - { prop: frozen-service-bot, at: [10, 5], solid: true }
-  - { prop: frozen-service-bot, at: [11, 6], solid: true }
-  - { prop: synaptit-ore, at: [11, 5], solid: true }
   - { prop: server-monolith, at: [19, 11], solid: true }
   - { prop: server-monolith, at: [15, 15], solid: true }
   - { prop: frozen-console, at: [26, 5], solid: true }

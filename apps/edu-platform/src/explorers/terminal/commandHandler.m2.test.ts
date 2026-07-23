@@ -27,26 +27,12 @@ function output(command: string, currentMap: string, flags: GameFlag[]): string 
 afterEach(() => setLocale('pl'));
 
 describe('Moon 2 terminal alignment', () => {
-  it('registers /sopel behind its flag and removes /planner', () => {
-    const sopel = COMMAND_REGISTRY.find((command) => command.name === 'sopel');
-
-    expect(sopel).toMatchObject({ requiredFlag: FLAGS.CMDS_SOPEL });
-    expect(COMMAND_REGISTRY.some((command) => command.name === 'planner')).toBe(false);
+  it('no longer registers the companion ping commands', () => {
+    for (const name of ['sopel', 'drone', 'iskra', 'echo', 'planner']) {
+      expect(COMMAND_REGISTRY.some((command) => command.name === name)).toBe(false);
+    }
     expect(output('/sopel', 'm2-staging-yard', [])).toContain('Nieznana komenda');
-  });
-
-  it('reports Sopel queue states and stays out of range away from Moon 2', () => {
-    const baseFlags = [FLAGS.CMDS_SOPEL];
-
-    expect(output('/sopel', 'm2-staging-yard', baseFlags)).toContain('ponawianie');
-    expect(output('/sopel', 'm2-staging-yard', [...baseFlags, FLAGS.M2_DEADLOCK_CLEARED])).toContain('równy rytm');
-    expect(output('/sopel', 'm2-planning', [...baseFlags, FLAGS.M2_PLANNING_ONLINE])).toContain('Krok 1 z 4 812');
-    expect(output('/sopel', 'm1-landing-pad', baseFlags)).toContain('poza zasięgiem');
-    expect(output('/sopel', 'm3-reactor', baseFlags)).toContain('poza zasięgiem');
-  });
-
-  it('keeps Swierszcz out of range on Moon 2', () => {
-    expect(output('/drone', 'm2-planning', [FLAGS.CMDS_DRONE])).toContain('Świerszcz został na Księżycu 1');
+    expect(output('/drone', 'm2-planning', [])).toContain('Nieznana komenda');
   });
 
   it('returns a location-specific scan for every Moon 2 map and reveals the ring conditionally', () => {
@@ -124,7 +110,6 @@ describe('Moon 2 terminal alignment', () => {
   it('renders the new surfaces in English too', () => {
     setLocale('en');
 
-    expect(output('/sopel', 'm2-staging-yard', [FLAGS.CMDS_SOPEL])).toContain('retrying');
     expect(output('/plan', 'm0-core-ai', [FLAGS.CMDS_PLAN])).toContain('Navigation deck');
   });
 });
