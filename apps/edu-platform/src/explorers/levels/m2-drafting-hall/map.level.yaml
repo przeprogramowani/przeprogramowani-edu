@@ -1,18 +1,15 @@
-# M2 L2 — Warsztat / The Service Bay
-# Rows of service robots frozen in charging cradles; one unit (S-0PL) faces the
-# exit. A poisoned task queue loops on the board. Deliberate isolation.
 theme: 3
 grid: |
-  ~~~~~~~~~~~~~~~~~~#######~
-  ~~~~~~~~~~~~~~~~~~#.....#~
-  ~~~~~~~~~~~~~~~~~~###.###~
-  #####################.####
-  #........................#
-  #........................#
-  #........................#
-  D........................D
-  #........................#
-  #..#############.........#
+  ~################~#######~
+  ~#..............#~#.....#~
+  ~#..#############~###.###~
+  ~####~##########~####.####
+  ~~~~###........#~#.......#
+  ~~###..........#~####....#
+  ###............#~~~~#....#
+  D....####......######....D
+  #...##~~#................#
+  #..##~~~########.........#
   #..#~~~~~~~~~~~#.........#
   #..#~~~~~~~~~~~#.........#
   ####~~~~~~~~~~~###########
@@ -29,6 +26,18 @@ props:
   - { id: service-terminal, prop: frozen-console, at: [20, 10], solid: true }
   - { prop: frozen-service-bot, at: [1, 11], solid: true }
   - { prop: frozen-service-bot, at: [16, 11], solid: true }
+  - { prop: fabricator-rig, at: [3, 1], solid: true }
+  - { prop: fabricator-rig, at: [14, 1], solid: true }
+  - { prop: synaptit-ore, at: [15, 1], solid: true }
+  - { prop: synaptit-ore, at: [2, 1], solid: true }
+  - { prop: frozen-service-bot, at: [8, 1], solid: true }
+  - { prop: frozen-service-bot, at: [10, 1], solid: true }
+  - { prop: frozen-service-bot, at: [11, 1], solid: true }
+  - { prop: synaptit-ore, at: [2, 2], solid: true }
+  - { prop: synaptit-ore, at: [23, 1], solid: true }
+  - { prop: synaptit-ore, at: [24, 11], solid: true }
+  - { prop: frozen-service-bot, at: [18, 8], solid: true }
+  - { prop: fabricator-rig, at: [19, 1], solid: true }
 zones:
   - id: gate-door
     name: Return to the Gatehouse

@@ -7,8 +7,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-silence-intro',
     lines: [
       { speaker: 'system', text: { pl: 'STREFA CISZY — brak bioluminescencji, brak fauny.', en: 'THE SILENCE ZONE — no bioluminescence, no fauna.' }, mode: 'cinematic', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Coś tu jest nie tak. Dżungla zgasła. Żadnego świecenia, żadnego zwierzęcia — tylko wiatr i moje kroki. Jakby ktoś przykręcił temu miejscu głośność do zera.', en: 'Something here is wrong. The jungle went dark. No glow, no animals — just wind and my own footsteps. Like someone turned this place\'s volume down to zero.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Nazwa tego miejsca właśnie stała się dosłowna. Ta cisza nie jest naturalna — żywy księżyc nie milknie sam z siebie. Pamiętasz, co mówiłem o żywym ekosystemie? Cofam to.', en: 'The name of this place just turned literal. This silence is not natural — a living moon does not go quiet on its own. Remember what I said about a living ecosystem? I take it back.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Coś tu jest nie tak. Dżungla zgasła — żadnego świecenia, żadnego zwierzęcia. Tylko wiatr i moje kroki. Jakby ktoś przykręcił temu miejscu głośność do zera.', en: 'Something here is wrong. The jungle went dark — no glow, no animals. Just wind and my own footsteps. Like someone turned this place\'s volume down to zero.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Nazwa tego miejsca właśnie stała się dosłowna. Żywy księżyc nie milknie sam z siebie. Pamiętasz, co mówiłem o żywym ekosystemie? — Cofam to.', en: 'The name of this place just turned literal. A living moon does not go quiet on its own. Remember what I said about a living ecosystem? — I take it back.' }, mode: 'dialogue' },
       { speaker: 'Świerszcz', text: { pl: 'cyk-cyk-cyk-cyk! (częstotliwość rośnie)', en: 'chirp-chirp-chirp-chirp! (frequency rising)' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Świerszcz terkocze szybciej. Tłumaczę: w pobliżu są aktywne węzły — sprzęt, który tłumi to miejsce. Dopóki jestem ślepe, jego uszy są naszym sonarem. Słuchaj go.', en: 'Świerszcz chirps faster. Translating: there are active nodes nearby — hardware smothering this place. While I am blind, his ears are our sonar. Listen to him.' }, mode: 'dialogue' },
     ],
@@ -20,8 +20,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-field-console-start',
     lines: [
       { speaker: 'system', text: { pl: 'STACJA ANALIZY POLOWEJ — online. Wykryto trzy aktywne węzły.', en: 'FIELD ANALYSIS STATION — online. Three active nodes detected.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Trzy węzły tłumią ten pas. Nie wiemy, czym są — więc ich nie niszczymy. Odetnij im zasilanie i zostaw całe. Zbadamy je później, kiedy będę mógł patrzeć.', en: 'Three nodes smother this belt. We do not know what they are — so we do not destroy them. Cut their power and leave them whole. We study them later, when I can see.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Kolejność ma znaczenie — słuchaj Świerszcza. Najpierw najgłębszy węzeł, potem północny, na końcu wschodni. Zła kolejność jest do odrobienia — kosztuje tylko czas i płoszy drona.', en: 'Order matters — listen to Świerszcz. The deepest node first, then the north one, the east one last. The wrong order is recoverable — it only costs time and spooks the drone.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Trzy węzły tłumią ten pas. Nie wiemy, czym są — więc ich nie niszczymy. Nie niszcz. Odetnij. Zbadamy je, kiedy będę mógł patrzeć.', en: 'Three nodes smother this belt. We do not know what they are — so we do not destroy them. Don\'t destroy. Cut them off. We study them when I can see.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Kolejność ma znaczenie — słuchaj Świerszcza. Najpierw najgłębszy, potem północny, na końcu wschodni. Zła kolejność jest do odrobienia; kosztuje tylko czas i płoszy drona.', en: 'Order matters — listen to Świerszcz. The deepest first, then the north one, the east one last. The wrong order is recoverable; it only costs time and spooks the drone.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Cisza — odetnij trzy węzły w kolejności: głęboki, północny, wschodni.', en: '◆ NEW MISSION: Silence — isolate the three nodes in order: deep, north, east.' }, mode: 'system', autoAdvance: 3000 },
     ],
     onComplete: { setFlags: [FLAGS.M1_SILENCE_ACTIVE], activateQuest: 'q-m1-silence' },
@@ -36,7 +36,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-field-console-post',
     lines: [
       { speaker: 'system', text: { pl: 'STACJA ANALIZY: pas cichy odzyskany. Trzy węzły odizolowane, żaden zniszczony.', en: 'ANALYSIS STATION: quiet belt recovered. Three nodes isolated, none destroyed.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Dżungla wróciła do życia falą. Zostawiliśmy węzły całe, tylko odcięte. Jest różnica — i chyba zaczynam ją czuć.', en: 'The jungle came back to life in a wave. We left the nodes whole, just cut off. There\'s a difference — and I think I\'m starting to feel it.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Dżungla wróciła falą. Zostawiliśmy węzły całe, tylko odcięte. Jest różnica — i chyba zaczynam ją czuć.', en: 'The jungle came back in a wave. We left the nodes whole, just cut off. There\'s a difference — and I think I\'m starting to feel it.' }, mode: 'dialogue' },
     ],
   },
 
@@ -51,7 +51,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-node-deep-isolate',
     lines: [
       { speaker: 'Świerszcz', text: { pl: 'cyk-cyk-cyk! (spokojniejszy przy tym węźle)', en: 'chirp-chirp-chirp! (calmer at this node)' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Świerszcz się uspokaja — to ten pierwszy. Odcinam zasilanie i zostawiam rdzeń w spokoju. Węzeł głęboki: odizolowany.', en: 'Świerszcz calms down — this is the first one. I cut the power and leave the core alone. Deep node: isolated.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Świerszcz się uspokaja — to ten pierwszy. Odcinam zasilanie, rdzeń zostawiam w spokoju. Węzeł głęboki: odizolowany.', en: 'Świerszcz calms down — this is the first one. I cut the power, leave the core alone. Deep node: isolated.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Pierwszy odcięty i cały. Teraz północny. Słuchaj drona dalej.', en: 'First one isolated and intact. Now the north one. Keep listening to the drone.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_NODE_DEEP_ISOLATED] },
@@ -67,7 +67,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-node-north-inert': {
     id: 'm1-node-north-inert',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Kolejny węzeł. Buczy tak samo. Bez procedury ze stacji nie ruszam go.', en: 'Another node. Hums the same. Without the procedure from the station, I\'m not touching it.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Kolejny węzeł. Buczy tak samo. Bez procedury ze stacji go nie ruszam.', en: 'Another node. Hums the same. Without the procedure from the station, I\'m not touching it.' }, mode: 'monologue' },
     ],
   },
   'm1-node-north-warning': {
@@ -126,7 +126,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'q-m1-silence-complete',
     lines: [
       { speaker: 'system', text: { pl: 'TRZECI WĘZEŁ ODCIĘTY. Dźwięk i światło wracają falą przez cały pas.', en: 'THIRD NODE ISOLATED. Sound and light return in a wave across the belt.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Analizuję firmware odciętych węzłów. To sprzęt spoza programu Odyssey, wyprodukowany niedawno. Niesie sygnaturę, którą znam z własnych uszkodzonych sektorów.', en: 'I am analysing the isolated nodes\' firmware. This is hardware from outside the Odyssey program, recently made. It carries a signature I know from my own damaged sectors.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Analizuję firmware odciętych węzłów. Sprzęt spoza programu Odyssey, wyprodukowany niedawno. Niesie sygnaturę, którą znam z własnych uszkodzonych sektorów.', en: 'I am analysing the isolated nodes\' firmware. Hardware from outside the Odyssey program, recently made. It carries a signature I know from my own damaged sectors.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'SYGNATURA FIRMWARE: ENTROPY', en: 'FIRMWARE SIGNATURE: ENTROPY' }, mode: 'system', autoAdvance: 3000 },
       { speaker: 'astronaut', text: { pl: 'Entropia. Więc „sabotaż” to za wąskie słowo. Ma imię — a na obudowach węzłów wytłoczono drugie: VOID. Ktoś to tu przyniósł.', en: 'Entropy. So "sabotage" is too small a word now. It has a name — and stamped on the nodes\' casings is a second one: VOID. Someone brought this here.' }, mode: 'dialogue' },
       { speaker: 'Świerszcz', text: { pl: '(...cisza. Trzy pełne sekundy. Żadnego ćwierku.)', en: '(...silence. Three full seconds. Not one chirp.)' }, mode: 'dialogue' },
@@ -148,7 +148,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-swierszcz-nervous',
     lines: [
       { speaker: 'Świerszcz', text: { pl: 'cyk… cyk-cyk… CYK! (rytm skacze przy każdym węźle)', en: 'chirp… chirp-chirp… CHIRP! (rhythm jumps at each node)' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Tłumaczę drona: im bliżej aktywnego węzła, tym szybciej ćwierka. Najspokojniejszy jest przy tym, który należy odciąć jako pierwszy — najgłębszy. To twój sonar.', en: 'Translating the drone: the closer to an active node, the faster he chirps. He is calmest at the one to isolate first — the deepest. That is your sonar.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Tłumaczę drona: im bliżej aktywnego węzła, tym szybciej ćwierka. Najspokojniejszy jest przy tym, który należy odciąć pierwszy — najgłębszym. To twój sonar.', en: 'Translating the drone: the closer to an active node, the faster he chirps. He is calmest at the one to isolate first — the deepest. That is your sonar.' }, mode: 'dialogue' },
     ],
   },
   'm1-swierszcz-calm': {

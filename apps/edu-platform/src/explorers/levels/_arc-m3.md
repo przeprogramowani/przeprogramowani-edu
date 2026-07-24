@@ -255,18 +255,17 @@ pokładzie nawigacyjnym m0-core-ai.
   na l5; maszyna bada, człowiek ręczy). Linia zamykająca kalibruje stawkę:
   „Partia 03: 480 kilogramów. Czystość: 99,4 procent. Pierwsza dostawa, za
   którą ktoś będzie ręczył imiennie."
-- **NOWA GRA ARCADE (jedyna nowa gra m3): „Zwarcie" / `fault-trace`** — konsola
+- **NOWA GRA ARCADE (jedyna nowa gra m3): „Regresja" / `fault-trace`** — konsola
   CRT w ustalonej estetyce wektorowej starej technologii (spójnej z `deep-scan`
-  i `switchyard`): schemat pętli chłodzenia z ukrytą usterką; kursorem (`WSAD`)
-  wybierasz punkty pomiaru, `SPACE` wpina sondę — każda sonda raportuje
-  „powyżej: OK / poniżej: BŁĄD", a budżet sond jest ograniczony; połowienie
-  odcinka zamiast zgadywania. Haczyk tematyczny: jeden czujnik w pętli
-  **kłamie** (raportuje zielone niezależnie od stanu) — pojedynczy odczyt
-  trzeba potwierdzić drugim. Wynik = trafność lokalizacji usterki w budżecie
-  sond; ramowanie misyjne: certyfikuj chłodzenie wyżarzalni, każda zmarnowana
-  sonda to ubytek chłodziwa, a kłamiący czujnik to teza księżyca w miniaturze.
-  (Tematycznie *ta* gra m3: hipoteza → pomiar → zawężenie — i nigdy nie ufaj
-  jednemu zielonemu.)
+  i `switchyard`): historia szesnastu rewizji sterownika chłodzenia. Pierwszy
+  commit jest znany jako sprawny, ostatni jako wadliwy; kursorem (`A/D`) wybierasz
+  rewizję, `SPACE` uruchamia test, a `ENTER` wskazuje pierwszy wadliwy commit.
+  Gracz zawęża podświetlony zakres jak w `git bisect`, zamiast sprawdzać historię
+  po kolei. Niestabilny runner zwraca widocznie podejrzany wynik i wymaga
+  powtórzenia przed aktualizacją granic. Trudność skaluje historię / testy /
+  anomalie: `1: 8/5/0`, `2: 12/5/1`, `3: 16/6/2`, `4: 24/7/2`,
+  `5: 32/8/3`. Wynik = trafność diagnozy w budżecie testów. Tematycznie:
+  hipoteza → test → zawężenie oraz weryfikacja niewiarygodnego wyniku.
 - **Egzaminy do rozwiązania:** **Protokół XIV — „Samonaprawa"** — maszynie
   wolno bez pytania powtórzyć znane lekarstwo na znaną chorobę; ale każda
   samonaprawa zostawia bliznę w dzienniku, a blizny czyta człowiek — trzecie

@@ -3,42 +3,45 @@ import { DEPTH } from '../config/constants';
 import { audioManager } from '../audio/AudioManager';
 import { SfxKey } from '../audio/AudioKeys';
 import { t } from '../i18n';
+import {
+  FIRST_REVISION,
+  applyRevisionTest,
+  getFaultTraceDifficulty,
+  getIdealMidpoints,
+  resolveRevisionTest,
+  scoreFaultTrace,
+  type RevisionTestState,
+} from './FaultTraceLogic';
 
 /**
- * Fault Trace — certify the annealing yard's cooling loop before the first batch.
- * The loop is a segmented schematic with one hidden fault segment. The player
- * moves a cursor across the measure points (A/D), pins probes (SPACE) that read
- * „POWYŻEJ: OK" upstream of the fault or „PONIŻEJ: BŁĄD" downstream — a binary
- * search that beats guessing. The catch, and the moon's thesis in miniature: one
- * measure point always reports green (the lying sensor), so a single reading must
- * be confirmed by a second probe. Probe budget is coolant — a wasted probe is
- * coolant lost. The player commits the faulty segment with ENTER.
+ * Fault Trace — find the first controller revision that breaks the cooling
+ * loop. The first revision is known good and the last is known bad. Testing a
+ * midpoint narrows the highlighted range exactly like `git bisect`.
+ *
+ * Depending on difficulty, selected CI runs return a visibly suspicious false
+ * pass the first time. Those results do not move the range until the player
+ * repeats them, keeping the reliability wrinkle fair and legible instead of
+ * silently corrupting the investigation.
  */
 
-interface ProbeMarker {
-  container: Phaser.GameObjects.Container;
-  index: number;
-}
-
-// CRT palette (mirrors the other arcade renderers)
-const COLOR_BG = 0x05100c;
-const COLOR_GRID = 0x123326;
-const COLOR_PIPE = 0x2f6f5a;
-const COLOR_NODE = 0x3f8f77;
-const COLOR_OK = 0x7cff7c;
-const COLOR_FAULT = 0xe74c3c;
-const COLOR_LIAR = 0xffd166;
-const COLOR_CURSOR = 0x00d4aa;
-const COLOR_TEXT_PRIMARY = '#a6f5df';
+const COLOR_BG = 0x06110e;
+const COLOR_GRID = 0x17382e;
+const COLOR_MUTED = 0x37695b;
+const COLOR_GOOD = 0x6fffa1;
+const COLOR_BAD = 0xff635f;
+const COLOR_UNSTABLE = 0xffc857;
+const COLOR_CURSOR = 0x00e0b8;
+const COLOR_TEXT_PRIMARY = '#b9f7e6';
 const COLOR_TEXT_CONTROLS = '#ffffff';
 
-const SEGMENTS = 16;
-const POINTS = SEGMENTS + 1;
-const PROBE_BUDGET = 6;
-const OPTIMAL_PROBES = 4; // log2(16); extra probes past this cost score on an exact hit
-const HEADER_H = 46;
-const FOOTER_H = 26;
-const SIDE_PAD = 34;
+const HEADER_H = 72;
+const FOOTER_H = 30;
+const SIDE_PAD = 38;
+
+interface LastTest {
+  revision: number;
+  state: RevisionTestState;
+}
 
 export class FaultTraceRenderer implements ArcadeGameRenderer {
   private scene!: Phaser.Scene;
@@ -46,29 +49,36 @@ export class FaultTraceRenderer implements ArcadeGameRenderer {
 
   private maskGraphics!: Phaser.GameObjects.Graphics;
   private geometryMask!: Phaser.Display.Masks.GeometryMask;
-
   private background!: Phaser.GameObjects.Rectangle;
   private schematicGraphics!: Phaser.GameObjects.Graphics;
   private cursorGraphics!: Phaser.GameObjects.Graphics;
   private revealGraphics: Phaser.GameObjects.Graphics | null = null;
   private titleText!: Phaser.GameObjects.Text;
   private statusText!: Phaser.GameObjects.Text;
+  private boundaryText!: Phaser.GameObjects.Text;
+  private selectionText!: Phaser.GameObjects.Text;
   private reportText!: Phaser.GameObjects.Text;
   private hintText!: Phaser.GameObjects.Text;
+  private revisionLabels: Phaser.GameObjects.Text[] = [];
   private scanlines: Phaser.GameObjects.Rectangle[] = [];
-  private probeMarkers: ProbeMarker[] = [];
 
-  // Geometry
-  private pointsX: number[] = [];
-  private lineY = 0;
+  private revisionX: number[] = [];
+  private timelineY = 0;
 
-  // Round state
-  private faultSegment = 0; // 0..SEGMENTS-1
-  private liarPoint = 0; // 0..SEGMENTS — always reports OK regardless of truth
-  private cursorIndex = 0; // 0..SEGMENTS (measure points)
-  private probesLeft = PROBE_BUDGET;
-  private probesUsed = 0;
-  private probedFault = new Map<number, boolean>(); // index -> reported-as-faulty (post-lie)
+  private revisionCount = 16;
+  private lastRevision = 15;
+  private unstableRuns = 2;
+  private parTests = 6;
+  private firstBadRevision = 1;
+  private unstableRevisions = new Set<number>();
+  private cursorRevision = 7;
+  private knownGood = FIRST_REVISION;
+  private knownBad = 15;
+  private testsLeft = 6;
+  private testsUsed = 0;
+  private testStates = new Map<number, RevisionTestState>();
+  private lastTest: LastTest | null = null;
+  private selectedRevision: number | null = null;
   private committed = false;
   private finished = false;
   private score = 0;
@@ -86,31 +96,39 @@ export class FaultTraceRenderer implements ArcadeGameRenderer {
   create(scene: Phaser.Scene, config: ArcadeGameDefinition, bounds: Phaser.Geom.Rectangle): void {
     this.scene = scene;
     this.bounds = bounds;
-    this.probeMarkers = [];
+    this.revisionLabels = [];
     this.scanlines = [];
-    this.probedFault = new Map();
+    this.testStates = new Map();
+    this.lastTest = null;
+    this.selectedRevision = null;
     this.committed = false;
     this.finished = false;
     this.score = 0;
     this.revealGraphics = null;
     this.finishDelayTimer = null;
-    // Probe budget from difficulty: the annealing yard runs this at 3 → 6 probes,
-    // a comfortable margin over log2(16)=4 if played cleanly, punishing if guessed.
-    this.probesLeft = PROBE_BUDGET + (3 - config.difficulty);
-    this.probesUsed = 0;
+    const difficulty = getFaultTraceDifficulty(config.difficulty);
+    this.revisionCount = difficulty.revisionCount;
+    this.lastRevision = difficulty.revisionCount - 1;
+    this.unstableRuns = difficulty.unstableRuns;
+    this.parTests = difficulty.parTests;
+    this.unstableRevisions = new Set();
+    this.knownGood = FIRST_REVISION;
+    this.knownBad = this.lastRevision;
+    this.testsLeft = difficulty.testBudget;
+    this.testsUsed = 0;
 
     this.generateRound();
 
-    // Geometry — measure points evenly spaced along a horizontal loop line.
     const left = bounds.x + SIDE_PAD;
     const right = bounds.right - SIDE_PAD;
-    const step = (right - left) / SEGMENTS;
-    this.pointsX = [];
-    for (let i = 0; i < POINTS; i++) this.pointsX.push(left + i * step);
-    this.lineY = bounds.y + HEADER_H + (bounds.height - HEADER_H - FOOTER_H) * 0.42;
-    this.cursorIndex = Math.floor(SEGMENTS / 2);
+    const step = (right - left) / this.lastRevision;
+    this.revisionX = Array.from(
+      { length: this.revisionCount },
+      (_, index) => left + index * step
+    );
+    this.timelineY = bounds.y + Math.min(178, bounds.height * 0.44);
+    this.cursorRevision = Math.floor(this.lastRevision / 2);
 
-    // Mask
     this.maskGraphics = scene.make.graphics({ x: 0, y: 0 }, false);
     this.maskGraphics.fillStyle(0xffffff);
     this.maskGraphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -122,64 +140,99 @@ export class FaultTraceRenderer implements ArcadeGameRenderer {
       .setDepth(DEPTH.ARCADE + 3)
       .setMask(this.geometryMask);
 
-    this.schematicGraphics = scene.add.graphics()
+    this.schematicGraphics = scene.add
+      .graphics()
       .setScrollFactor(0)
       .setDepth(DEPTH.ARCADE + 4)
       .setMask(this.geometryMask);
 
-    this.cursorGraphics = scene.add.graphics()
+    this.cursorGraphics = scene.add
+      .graphics()
       .setScrollFactor(0)
       .setDepth(DEPTH.ARCADE + 8)
       .setMask(this.geometryMask);
 
-    this.titleText = scene.add
-      .text(bounds.x + 12, bounds.y + 10, t('arcade.ft.title'), {
-        fontFamily: 'monospace',
-        fontSize: '10px',
-        color: '#7cff7c',
-        fontStyle: 'bold',
-      })
-      .setScrollFactor(0)
-      .setDepth(DEPTH.ARCADE + 8)
-      .setMask(this.geometryMask);
+    this.titleText = this.makeText(
+      bounds.x + 12,
+      bounds.y + 9,
+      t('arcade.ft.title'),
+      '10px',
+      '#6fffa1',
+      'left',
+      true
+    );
 
-    this.statusText = scene.add
-      .text(bounds.x + 12, bounds.y + 26, '', {
-        fontFamily: 'monospace',
-        fontSize: '10px',
-        color: COLOR_TEXT_PRIMARY,
-        lineSpacing: 3,
-      })
-      .setScrollFactor(0)
-      .setDepth(DEPTH.ARCADE + 8)
-      .setMask(this.geometryMask);
+    this.statusText = this.makeText(
+      bounds.x + 12,
+      bounds.y + 26,
+      '',
+      '9px',
+      COLOR_TEXT_PRIMARY,
+      'left'
+    ).setWordWrapWidth(bounds.width - 24);
 
-    this.reportText = scene.add
-      .text(bounds.centerX, this.lineY + 46, '', {
-        fontFamily: 'monospace',
-        fontSize: '11px',
-        color: COLOR_TEXT_PRIMARY,
-        align: 'center',
-      })
-      .setOrigin(0.5, 0.5)
-      .setScrollFactor(0)
-      .setDepth(DEPTH.ARCADE + 8)
-      .setMask(this.geometryMask);
+    this.boundaryText = this.makeText(
+      bounds.centerX,
+      bounds.y + 48,
+      '',
+      '9px',
+      '#8ecfbd',
+      'center'
+    ).setOrigin(0.5, 0);
 
-    this.hintText = scene.add
-      .text(bounds.x + 12, bounds.bottom - 18, t('arcade.ft.controls'), {
-        fontFamily: 'monospace',
-        fontSize: '9px',
-        color: COLOR_TEXT_CONTROLS,
-      })
-      .setScrollFactor(0)
-      .setDepth(DEPTH.ARCADE + 8)
-      .setMask(this.geometryMask);
+    this.selectionText = this.makeText(
+      bounds.centerX,
+      this.timelineY + 40,
+      '',
+      '11px',
+      COLOR_TEXT_PRIMARY,
+      'center',
+      true
+    ).setOrigin(0.5, 0);
 
-    // Scanlines
+    this.reportText = this.makeText(
+      bounds.centerX,
+      this.timelineY + 63,
+      '',
+      '9px',
+      COLOR_TEXT_PRIMARY,
+      'center'
+    )
+      .setOrigin(0.5, 0)
+      .setWordWrapWidth(bounds.width - 50);
+
+    this.hintText = this.makeText(
+      bounds.x + 12,
+      bounds.bottom - 19,
+      t('arcade.ft.controls'),
+      '9px',
+      COLOR_TEXT_CONTROLS,
+      'left'
+    );
+
+    const labelInterval = this.revisionCount > 20 ? 2 : 1;
+    for (let index = 0; index < this.revisionCount; index++) {
+      if (
+        index !== FIRST_REVISION &&
+        index !== this.lastRevision &&
+        index % labelInterval !== 0
+      ) {
+        continue;
+      }
+      const label = this.makeText(
+        this.revisionX[index],
+        this.timelineY + 14,
+        `#${index.toString().padStart(2, '0')}`,
+        '8px',
+        '#78aa9c',
+        'center'
+      ).setOrigin(0.5, 0);
+      this.revisionLabels.push(label);
+    }
+
     for (let y = bounds.y; y < bounds.bottom; y += 3) {
       const line = scene.add
-        .rectangle(bounds.centerX, y, bounds.width, 1, 0x000000, 0.14)
+        .rectangle(bounds.centerX, y, bounds.width, 1, 0x000000, 0.13)
         .setScrollFactor(0)
         .setDepth(DEPTH.ARCADE + 9)
         .setMask(this.geometryMask);
@@ -188,15 +241,14 @@ export class FaultTraceRenderer implements ArcadeGameRenderer {
 
     this.drawSchematic();
     this.drawCursor(scene.time.now);
-    this.updateStatusText();
+    this.refreshCopy();
 
-    // Input — discrete stepping (A/D), edge-triggered SPACE/ENTER.
     this.keydownHandler = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase();
-      if (key === 'a') this.step(-1);
-      else if (key === 'd') this.step(1);
+      if (key === 'a' || key === 'arrowleft') this.step(-1);
+      else if (key === 'd' || key === 'arrowright') this.step(1);
     };
-    this.spaceHandler = () => this.probe();
+    this.spaceHandler = () => this.runTest();
     this.enterHandler = () => this.commit();
 
     scene.input.keyboard?.on('keydown', this.keydownHandler);
@@ -207,7 +259,7 @@ export class FaultTraceRenderer implements ArcadeGameRenderer {
       if (dir === 'left') this.step(-1);
       else if (dir === 'right') this.step(1);
     };
-    this.virtualSpaceHandler = () => this.probe();
+    this.virtualSpaceHandler = () => this.runTest();
     this.virtualEnterHandler = () => this.commit();
 
     scene.game.events.on('virtual-dir-down', this.virtualDirDownHandler);
@@ -220,191 +272,218 @@ export class FaultTraceRenderer implements ArcadeGameRenderer {
     this.drawCursor(time);
   }
 
+  private makeText(
+    x: number,
+    y: number,
+    text: string,
+    fontSize: string,
+    color: string,
+    align: 'left' | 'center',
+    bold = false
+  ): Phaser.GameObjects.Text {
+    return this.scene.add
+      .text(x, y, text, {
+        fontFamily: 'monospace',
+        fontSize,
+        color,
+        align,
+        fontStyle: bold ? 'bold' : 'normal',
+      })
+      .setScrollFactor(0)
+      .setDepth(DEPTH.ARCADE + 8)
+      .setMask(this.geometryMask);
+  }
+
   private generateRound(): void {
-    this.faultSegment = Phaser.Math.Between(0, SEGMENTS - 1);
-    // The lying sensor sits downstream of the fault, where it would otherwise read
-    // BŁĄD — that is the only placement that actually deceives. If the fault is in
-    // the last segment there is no downstream point; fall back to any point.
-    if (this.faultSegment < SEGMENTS - 1) {
-      this.liarPoint = Phaser.Math.Between(this.faultSegment + 1, SEGMENTS);
-    } else {
-      this.liarPoint = Phaser.Math.Between(0, SEGMENTS);
-    }
+    this.firstBadRevision = Phaser.Math.Between(1, this.lastRevision - 1);
+    const idealMidpoints = getIdealMidpoints(this.firstBadRevision, this.lastRevision);
+    const shuffledMidpoints = Phaser.Utils.Array.Shuffle([...idealMidpoints]);
+    this.unstableRevisions = new Set(shuffledMidpoints.slice(0, this.unstableRuns));
   }
 
-  /** Truthful reading at a measure point: faulty (BŁĄD) if downstream of the fault. */
-  private trueFaulty(index: number): boolean {
-    return index > this.faultSegment;
-  }
-
-  /** Reported reading — the lying sensor always reports clean (OK). */
-  private reportedFaulty(index: number): boolean {
-    if (index === this.liarPoint) return false;
-    return this.trueFaulty(index);
-  }
-
-  private step(dir: number): void {
+  private step(direction: number): void {
     if (this.committed || this.finished) return;
-    this.cursorIndex = Phaser.Math.Clamp(this.cursorIndex + dir, 0, SEGMENTS);
+    this.cursorRevision = Phaser.Math.Clamp(
+      this.cursorRevision + direction,
+      FIRST_REVISION + 1,
+      this.lastRevision
+    );
+    this.drawSchematic();
     this.drawCursor(this.scene.time.now);
+    this.refreshCopy();
   }
 
-  private probe(): void {
+  private runTest(): void {
     if (this.committed || this.finished) return;
-    if (this.probesLeft <= 0) {
+    if (this.testsLeft <= 0) {
       audioManager.playSfx(SfxKey.ERROR_BUZZ);
       return;
     }
-    this.probesLeft--;
-    this.probesUsed++;
-    audioManager.playSfx(SfxKey.SIGNAL_BEEP);
 
-    const faulty = this.reportedFaulty(this.cursorIndex);
-    this.probedFault.set(this.cursorIndex, faulty);
-    this.spawnProbeMarker(this.cursorIndex, faulty);
+    this.testsLeft--;
+    this.testsUsed++;
+    const previousState = this.testStates.get(this.cursorRevision);
+    const state = resolveRevisionTest(
+      this.cursorRevision,
+      this.firstBadRevision,
+      this.unstableRevisions,
+      previousState
+    );
+    this.testStates.set(this.cursorRevision, state);
+    this.lastTest = { revision: this.cursorRevision, state };
 
-    this.reportText.setText(faulty ? t('arcade.ft.reportFault') : t('arcade.ft.reportOk'));
-    this.reportText.setColor(faulty ? '#ffb347' : '#7cff7c');
-
-    this.updateStatusText();
-
-    if (this.probesLeft <= 0) {
-      this.hintText.setText(t('arcade.ft.outOfProbes'));
-      this.hintText.setColor('#ffb347');
+    if (state === 'unstable') {
+      audioManager.playSfx(SfxKey.ERROR_BUZZ);
     } else {
-      this.hintText.setText(t('arcade.ft.confirmHint'));
-      this.hintText.setColor('#8fd7c4');
+      audioManager.playSfx(SfxKey.SIGNAL_BEEP);
+      const nextBounds = applyRevisionTest(
+        { knownGood: this.knownGood, knownBad: this.knownBad },
+        this.cursorRevision,
+        state
+      );
+      this.knownGood = nextBounds.knownGood;
+      this.knownBad = nextBounds.knownBad;
     }
-  }
 
-  private spawnProbeMarker(index: number, faulty: boolean): void {
-    // Drop a stacked pin above the point; repeated probes on one point stack up.
-    const existing = this.probeMarkers.filter((m) => m.index === index).length;
-    const x = this.pointsX[index];
-    const y = this.lineY - 16 - existing * 12;
-    const tint = faulty ? COLOR_FAULT : COLOR_OK;
-
-    const container = this.scene.add.container(x, y)
-      .setScrollFactor(0)
-      .setDepth(DEPTH.ARCADE + 6)
-      .setMask(this.geometryMask);
-
-    const g = this.scene.add.graphics();
-    g.lineStyle(1, tint, 0.9);
-    g.lineBetween(0, 4, 0, 14); // stem down to the pipe
-    g.fillStyle(tint, 0.85);
-    g.fillCircle(0, 0, 4);
-    g.lineStyle(1, tint, 1);
-    g.strokeCircle(0, 0, 6);
-    container.add(g);
-
-    const label = this.scene.add
-      .text(0, -14, faulty ? '×' : '✓', {
-        fontFamily: 'monospace',
-        fontSize: '10px',
-        color: faulty ? '#e74c3c' : '#7cff7c',
-      })
-      .setOrigin(0.5, 0.5);
-    container.add(label);
-
-    this.probeMarkers.push({ container, index });
+    this.drawSchematic();
+    this.drawCursor(this.scene.time.now);
+    this.refreshCopy();
   }
 
   private commit(): void {
     if (this.committed || this.finished) return;
     this.committed = true;
-    const guess = Math.min(this.cursorIndex, SEGMENTS - 1);
-    const dist = Math.abs(guess - this.faultSegment);
-
-    if (dist === 0) {
-      const penalty = 10 * Math.max(0, this.probesUsed - OPTIMAL_PROBES);
-      this.score = Phaser.Math.Clamp(100 - penalty, 0, 100);
-    } else {
-      // Wrong localization — partial credit by distance, capped below the pass line
-      // so „prawie" never certifies the loop (never trust a near-miss green).
-      this.score = Phaser.Math.Clamp(Math.round(60 * (1 - dist / SEGMENTS)), 0, 60);
-    }
+    this.selectedRevision = this.cursorRevision;
+    this.score = scoreFaultTrace(
+      this.selectedRevision,
+      this.firstBadRevision,
+      this.testsUsed,
+      this.parTests,
+      this.lastRevision
+    );
 
     audioManager.playSfx(this.score >= 70 ? SfxKey.SUCCESS_CHIME : SfxKey.ERROR_BUZZ);
-    this.revealResult(guess);
-
-    this.finishDelayTimer = this.scene.time.delayedCall(2000, () => {
+    this.revealResult();
+    this.finishDelayTimer = this.scene.time.delayedCall(2400, () => {
       this.finished = true;
       this.finishDelayTimer = null;
     });
-  }
-
-  private revealResult(guess: number): void {
-    this.revealGraphics = this.scene.add.graphics()
-      .setScrollFactor(0)
-      .setDepth(DEPTH.ARCADE + 7)
-      .setMask(this.geometryMask);
-    const g = this.revealGraphics;
-
-    // True fault segment — burn it red.
-    const fx0 = this.pointsX[this.faultSegment];
-    const fx1 = this.pointsX[this.faultSegment + 1];
-    g.lineStyle(4, COLOR_FAULT, 1);
-    g.lineBetween(fx0, this.lineY, fx1, this.lineY);
-    g.fillStyle(COLOR_FAULT, 0.9);
-    g.fillCircle((fx0 + fx1) / 2, this.lineY, 4);
-
-    // The lying sensor — mark it amber so the player learns which green lied.
-    const lx = this.pointsX[this.liarPoint];
-    g.lineStyle(2, COLOR_LIAR, 1);
-    g.strokeCircle(lx, this.lineY, 9);
-    const liarLabel = this.scene.add
-      .text(lx, this.lineY + 16, '≠', {
-        fontFamily: 'monospace',
-        fontSize: '12px',
-        color: '#ffd166',
-      })
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0)
-      .setDepth(DEPTH.ARCADE + 8)
-      .setMask(this.geometryMask);
-    // Fold the liar label into the scanline cleanup list so destroy() clears it.
-    this.scanlines.push(liarLabel as unknown as Phaser.GameObjects.Rectangle);
-
-    // Player's guess — a caret under the guessed segment.
-    const gx = (this.pointsX[guess] + this.pointsX[guess + 1]) / 2;
-    g.lineStyle(2, COLOR_CURSOR, 1);
-    g.lineBetween(gx - 6, this.lineY + 30, gx, this.lineY + 22);
-    g.lineBetween(gx + 6, this.lineY + 30, gx, this.lineY + 22);
-
-    this.statusText.setText(t('arcade.ft.result', { score: this.score }));
-    this.statusText.setColor(this.score >= 70 ? COLOR_TEXT_PRIMARY : '#e74c3c');
-    this.reportText.setText('');
-    this.hintText.setText(t('arcade.ft.finishHint'));
-    this.hintText.setColor('#00d4aa');
   }
 
   private drawSchematic(): void {
     const g = this.schematicGraphics;
     g.clear();
 
-    const left = this.pointsX[0];
-    const right = this.pointsX[SEGMENTS];
-    const y = this.lineY;
-
-    // Faint frame + return-loop decoration (aesthetic; mechanics live on the line).
-    g.lineStyle(1, COLOR_GRID, 0.5);
-    g.strokeRect(this.bounds.x + 10, this.bounds.y + HEADER_H - 6, this.bounds.width - 20, this.bounds.height - HEADER_H - FOOTER_H + 6);
-    const returnY = y + 70;
-    g.lineStyle(2, COLOR_GRID, 0.9);
-    g.lineBetween(left, y, left, returnY);
-    g.lineBetween(right, y, right, returnY);
-    g.lineBetween(left, returnY, right, returnY);
-
-    // Main cooling line — segment by segment.
-    g.lineStyle(3, COLOR_PIPE, 1);
-    g.lineBetween(left, y, right, y);
-
-    // Measure nodes.
-    for (let i = 0; i < POINTS; i++) {
-      g.fillStyle(COLOR_NODE, 1);
-      g.fillCircle(this.pointsX[i], y, 3);
+    for (let x = this.bounds.x + 10; x < this.bounds.right; x += 32) {
+      g.lineStyle(1, COLOR_GRID, 0.18);
+      g.lineBetween(x, this.bounds.y + HEADER_H, x, this.bounds.bottom - FOOTER_H);
     }
+    for (let y = this.bounds.y + HEADER_H; y < this.bounds.bottom - FOOTER_H; y += 28) {
+      g.lineStyle(1, COLOR_GRID, 0.18);
+      g.lineBetween(this.bounds.x + 10, y, this.bounds.right - 10, y);
+    }
+
+    const y = this.timelineY;
+    for (let index = 0; index < this.lastRevision; index++) {
+      let color = COLOR_UNSTABLE;
+      let alpha = 0.58;
+      if (index < this.knownGood) {
+        color = COLOR_GOOD;
+        alpha = 0.8;
+      } else if (index >= this.knownBad) {
+        color = COLOR_BAD;
+        alpha = 0.8;
+      }
+      g.lineStyle(4, color, alpha);
+      g.lineBetween(this.revisionX[index], y, this.revisionX[index + 1], y);
+    }
+
+    for (let index = 0; index < this.revisionCount; index++) {
+      const state = this.testStates.get(index);
+      const insideRange = index > this.knownGood && index < this.knownBad;
+      let color = COLOR_MUTED;
+      let fillAlpha = 0.9;
+
+      if (state === 'unstable') {
+        color = COLOR_UNSTABLE;
+      } else if (index <= this.knownGood) {
+        color = COLOR_GOOD;
+      } else if (index >= this.knownBad) {
+        color = COLOR_BAD;
+      } else if (insideRange) {
+        color = COLOR_UNSTABLE;
+        fillAlpha = 0.24;
+      }
+
+      g.fillStyle(color, fillAlpha);
+      g.fillCircle(this.revisionX[index], y, 5);
+      g.lineStyle(state === 'unstable' ? 2 : 1, color, 1);
+      g.strokeCircle(this.revisionX[index], y, state === 'unstable' ? 9 : 6);
+
+      if (state === 'good') {
+        g.lineStyle(2, COLOR_GOOD, 1);
+        g.lineBetween(this.revisionX[index] - 3, y, this.revisionX[index] - 1, y + 3);
+        g.lineBetween(this.revisionX[index] - 1, y + 3, this.revisionX[index] + 4, y - 4);
+      } else if (state === 'bad') {
+        g.lineStyle(2, COLOR_BAD, 1);
+        g.lineBetween(this.revisionX[index] - 3, y - 3, this.revisionX[index] + 3, y + 3);
+        g.lineBetween(this.revisionX[index] + 3, y - 3, this.revisionX[index] - 3, y + 3);
+      } else if (state === 'unstable') {
+        g.lineStyle(2, COLOR_UNSTABLE, 1);
+        g.lineBetween(this.revisionX[index], y - 4, this.revisionX[index], y + 1);
+        g.fillStyle(COLOR_UNSTABLE, 1);
+        g.fillCircle(this.revisionX[index], y + 4, 1);
+      }
+    }
+
+    const rangeStart = this.revisionX[this.knownGood] + 8;
+    const rangeEnd = this.revisionX[this.knownBad] - 8;
+    const bracketY = y - 36;
+    g.lineStyle(2, COLOR_UNSTABLE, 0.85);
+    g.lineBetween(rangeStart, bracketY, rangeEnd, bracketY);
+    g.lineBetween(rangeStart, bracketY, rangeStart, bracketY + 7);
+    g.lineBetween(rangeEnd, bracketY, rangeEnd, bracketY + 7);
+
+    this.drawTelemetry(g);
+  }
+
+  private drawTelemetry(g: Phaser.GameObjects.Graphics): void {
+    const state = this.testStates.get(this.cursorRevision);
+    const x0 = this.bounds.x + 92;
+    const x1 = this.bounds.right - 92;
+    const y = this.timelineY + 111;
+
+    g.lineStyle(1, COLOR_GRID, 0.8);
+    g.lineBetween(x0, y, x1, y);
+
+    if (!state) {
+      g.lineStyle(2, COLOR_MUTED, 0.65);
+      for (let x = x0; x < x1; x += 14) g.lineBetween(x, y, Math.min(x + 6, x1), y);
+      return;
+    }
+
+    const color =
+      state === 'good' ? COLOR_GOOD : state === 'bad' ? COLOR_BAD : COLOR_UNSTABLE;
+    const points = 44;
+    g.lineStyle(2, color, 0.95);
+    for (let index = 0; index < points - 1; index++) {
+      const progress0 = index / (points - 1);
+      const progress1 = (index + 1) / (points - 1);
+      const px0 = Phaser.Math.Linear(x0, x1, progress0);
+      const px1 = Phaser.Math.Linear(x0, x1, progress1);
+      const wave0 = this.telemetryOffset(state, progress0);
+      const wave1 = this.telemetryOffset(state, progress1);
+      g.lineBetween(px0, y + wave0, px1, y + wave1);
+    }
+  }
+
+  private telemetryOffset(state: RevisionTestState, progress: number): number {
+    if (state === 'good') return Math.sin(progress * Math.PI * 8) * 5;
+    if (state === 'unstable') {
+      return Math.sin(progress * Math.PI * 8) * 5 + Math.sin(progress * Math.PI * 25) * 4;
+    }
+    if (progress < 0.45) return Math.sin(progress * Math.PI * 8) * 5;
+    return Math.sin(progress * Math.PI * 17) * 12 - progress * 12;
   }
 
   private drawCursor(time: number): void {
@@ -412,30 +491,136 @@ export class FaultTraceRenderer implements ArcadeGameRenderer {
     g.clear();
     if (this.committed) return;
 
-    const pulse = 0.6 + 0.4 * Math.sin(time / 180);
-    const x = this.pointsX[this.cursorIndex];
-    const y = this.lineY;
-
-    // Candidate segment (what ENTER will commit) — the segment right of the cursor.
-    const seg = Math.min(this.cursorIndex, SEGMENTS - 1);
-    const sx0 = this.pointsX[seg];
-    const sx1 = this.pointsX[seg + 1];
-    g.lineStyle(4, COLOR_CURSOR, 0.35 * pulse);
-    g.lineBetween(sx0, y, sx1, y);
-
-    // Cursor caret over the measure point.
-    g.lineStyle(2, COLOR_CURSOR, 0.9 * pulse);
-    g.lineBetween(x - 6, y - 30, x, y - 22);
-    g.lineBetween(x + 6, y - 30, x, y - 22);
-    g.lineBetween(x, y - 22, x, y - 8);
-    g.fillStyle(COLOR_CURSOR, 1);
-    g.fillCircle(x, y, 4);
+    const pulse = 0.68 + 0.32 * Math.sin(time / 180);
+    const x = this.revisionX[this.cursorRevision];
+    const y = this.timelineY;
+    g.lineStyle(2, COLOR_CURSOR, 0.95 * pulse);
+    g.strokeCircle(x, y, 12 + pulse * 2);
+    g.lineBetween(x - 6, y - 22, x, y - 15);
+    g.lineBetween(x + 6, y - 22, x, y - 15);
+    g.fillStyle(COLOR_CURSOR, 0.9);
+    g.fillTriangle(x - 4, y - 25, x + 4, y - 25, x, y - 19);
   }
 
-  private updateStatusText(): void {
+  private refreshCopy(): void {
     if (this.committed) return;
-    this.statusText.setText(t('arcade.ft.status', { probes: this.probesLeft.toString().padStart(2, '0') }));
-    this.statusText.setColor(this.probesLeft > 0 ? COLOR_TEXT_PRIMARY : '#8fd7c4');
+
+    const candidates = this.knownBad - this.knownGood;
+    this.statusText.setText(
+      t('arcade.ft.status', {
+        tests: this.testsLeft.toString().padStart(2, '0'),
+        candidates,
+        unstable: this.unstableRuns,
+      })
+    );
+    this.boundaryText.setText(
+      t('arcade.ft.range', {
+        good: this.formatRevision(this.knownGood),
+        bad: this.formatRevision(this.knownBad),
+      })
+    );
+
+    const selectedState = this.testStates.get(this.cursorRevision);
+    const selectedKey =
+      selectedState === 'good'
+        ? 'arcade.ft.selectedGood'
+        : selectedState === 'bad'
+          ? 'arcade.ft.selectedBad'
+          : selectedState === 'unstable'
+            ? 'arcade.ft.selectedUnstable'
+            : 'arcade.ft.selectedUnknown';
+    this.selectionText.setText(
+      t(selectedKey, { revision: this.formatRevision(this.cursorRevision) })
+    );
+    this.selectionText.setColor(
+      selectedState === 'good'
+        ? '#6fffa1'
+        : selectedState === 'bad'
+          ? '#ff7f7b'
+          : selectedState === 'unstable'
+            ? '#ffd978'
+            : COLOR_TEXT_PRIMARY
+    );
+
+    this.updateReportText();
+
+    if (candidates === 1) {
+      this.hintText.setText(
+        t('arcade.ft.readyHint', { revision: this.formatRevision(this.knownBad) })
+      );
+      this.hintText.setColor('#6fffa1');
+    } else if (this.testsLeft <= 0) {
+      this.hintText.setText(t('arcade.ft.outOfTests'));
+      this.hintText.setColor('#ffb36b');
+    } else if (this.lastTest?.state === 'unstable') {
+      this.hintText.setText(t('arcade.ft.repeatHint'));
+      this.hintText.setColor('#ffd978');
+    } else {
+      this.hintText.setText(t('arcade.ft.controls'));
+      this.hintText.setColor(COLOR_TEXT_CONTROLS);
+    }
+  }
+
+  private updateReportText(): void {
+    if (!this.lastTest) {
+      this.reportText.setText(t('arcade.ft.startHint'));
+      this.reportText.setColor('#8ecfbd');
+      return;
+    }
+
+    const key =
+      this.lastTest.state === 'good'
+        ? 'arcade.ft.reportGood'
+        : this.lastTest.state === 'bad'
+          ? 'arcade.ft.reportBad'
+          : 'arcade.ft.reportUnstable';
+    this.reportText.setText(
+      t(key, { revision: this.formatRevision(this.lastTest.revision) })
+    );
+    this.reportText.setColor(
+      this.lastTest.state === 'good'
+        ? '#6fffa1'
+        : this.lastTest.state === 'bad'
+          ? '#ff7f7b'
+          : '#ffd978'
+    );
+  }
+
+  private revealResult(): void {
+    this.revealGraphics = this.scene.add
+      .graphics()
+      .setScrollFactor(0)
+      .setDepth(DEPTH.ARCADE + 7)
+      .setMask(this.geometryMask);
+    const g = this.revealGraphics;
+    const trueX = this.revisionX[this.firstBadRevision];
+    const selectedX = this.revisionX[this.selectedRevision ?? this.cursorRevision];
+
+    g.lineStyle(3, COLOR_BAD, 1);
+    g.strokeCircle(trueX, this.timelineY, 14);
+    g.lineBetween(trueX, this.timelineY - 30, trueX, this.timelineY - 17);
+
+    g.lineStyle(2, COLOR_CURSOR, 1);
+    g.lineBetween(selectedX - 7, this.timelineY + 36, selectedX, this.timelineY + 27);
+    g.lineBetween(selectedX + 7, this.timelineY + 36, selectedX, this.timelineY + 27);
+
+    this.statusText.setText(t('arcade.ft.result', { score: this.score }));
+    this.statusText.setColor(this.score >= 70 ? COLOR_TEXT_PRIMARY : '#ff7f7b');
+    this.boundaryText.setText(
+      t('arcade.ft.resultDetail', {
+        fault: this.formatRevision(this.firstBadRevision),
+        selected: this.formatRevision(this.selectedRevision ?? this.cursorRevision),
+      })
+    );
+    this.boundaryText.setColor(this.score >= 70 ? '#6fffa1' : '#ff7f7b');
+    this.selectionText.setText('');
+    this.reportText.setText('');
+    this.hintText.setText(t('arcade.ft.finishHint'));
+    this.hintText.setColor('#00e0b8');
+  }
+
+  private formatRevision(revision: number): string {
+    return `#${revision.toString().padStart(2, '0')}`;
   }
 
   destroy(): void {
@@ -468,8 +653,8 @@ export class FaultTraceRenderer implements ArcadeGameRenderer {
       this.finishDelayTimer = null;
     }
 
-    for (const marker of this.probeMarkers) marker.container.destroy();
-    this.probeMarkers = [];
+    for (const label of this.revisionLabels) label.destroy();
+    this.revisionLabels = [];
     for (const line of this.scanlines) line.destroy();
     this.scanlines = [];
 
@@ -480,6 +665,8 @@ export class FaultTraceRenderer implements ArcadeGameRenderer {
     this.background?.destroy();
     this.titleText?.destroy();
     this.statusText?.destroy();
+    this.boundaryText?.destroy();
+    this.selectionText?.destroy();
     this.reportText?.destroy();
     this.hintText?.destroy();
     this.maskGraphics?.destroy();
@@ -490,12 +677,15 @@ export class FaultTraceRenderer implements ArcadeGameRenderer {
     this.titleText.setText(t('arcade.ft.title'));
     if (this.committed) {
       this.statusText.setText(t('arcade.ft.result', { score: this.score }));
+      this.boundaryText.setText(
+        t('arcade.ft.resultDetail', {
+          fault: this.formatRevision(this.firstBadRevision),
+          selected: this.formatRevision(this.selectedRevision ?? this.cursorRevision),
+        })
+      );
       this.hintText.setText(t('arcade.ft.finishHint'));
     } else {
-      this.updateStatusText();
-      this.hintText.setText(
-        this.probesLeft > 0 ? t('arcade.ft.controls') : t('arcade.ft.outOfProbes')
-      );
+      this.refreshCopy();
     }
   }
 

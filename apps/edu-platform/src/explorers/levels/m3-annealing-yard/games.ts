@@ -4,10 +4,10 @@ export const arcadeGames: ArcadeGameDefinition[] = [
   {
     id: 'arcade-fault-trace',
     type: 'fault-trace',
-    title: { pl: 'Zwarcie', en: 'Fault Trace' },
+    title: { pl: 'Regresja', en: 'Regression' },
     description: {
-      pl: 'Certyfikuj pętlę chłodzenia wyżarzalni, zanim pójdzie pierwsza partia. Wpinaj sondy między odcinkami: każda mówi, czy usterka jest powyżej, czy poniżej — połowienie zamiast zgadywania. Sond jest mało, a każda zmarnowana to ubytek chłodziwa. I pamiętaj: jeden czujnik w pętli kłamie. Nigdy nie ufaj jednemu zielonemu — potwierdź drugą sondą.',
-      en: 'Certify the annealing yard\'s cooling loop before the first batch runs. Pin probes between segments: each tells you whether the fault lies upstream or downstream — bisection, not guessing. Probes are scarce, and every wasted one is lost coolant. And remember: one sensor in the loop lies. Never trust a single green — confirm it with a second probe.',
+      pl: 'Po jednej z aktualizacji sterownik chłodzenia przestał działać. Sprawdzaj wybrane wersje, zawężaj obszar poszukiwań i powtarzaj podejrzane odczyty. Znajdź pierwszą wadliwą wersję, zanim wyczerpiesz limit prób.',
+      en: 'The cooling controller stopped working after an update. Check selected versions, narrow the search, and repeat suspicious readings. Find the first faulty version before you run out of attempts.',
     },
     difficulty: 3,
     durationSeconds: 0,

@@ -6,11 +6,11 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-grove-intro': {
     id: 'm1-grove-intro',
     lines: [
-      { speaker: 'system', text: { pl: 'Ogród Sondy — cisza, tylko wiatr w koronach drzew.', en: 'PROBE GROVE — silence, only wind in the treetops.' }, mode: 'cinematic', autoAdvance: 2600 },
-      { speaker: 'astronaut', text: { pl: 'Ogród, który dżungla przerabiała latami. A pośrodku niego — coś zbudowanego. Bezzałogowa sonda, rozbita długo przed nami. Pnącza wrosły jej w żebra jak w stary pomnik.', en: 'A grove the jungle has been reworking for years. And at its centre — something built. An uncrewed probe, wrecked long before us. Vines grown into its ribs the way they grow into an old monument.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'To sonda serii Odyssey-P. Bezzałogowe rozpoznanie, wysłane z Ziemi lata przed misją załogową. Wciąż nie widzę tego, co widzisz ty — opisuj dalej.', en: 'This is an Odyssey-P series probe. Uncrewed reconnaissance, sent from Earth years before the crewed mission. I still cannot see what you see — keep describing.' }, mode: 'dialogue' },
-      { speaker: 'dr Kern', text: { pl: 'To ważniejsze, niż wygląda, Dexo. Sondy takie jak ta pierwsze potwierdziły Synaptit w tym Pasie. Ten wrak to powód, dla którego w ogóle tu lecieliśmy.', en: 'This matters more than it looks, Dexo. Probes like this were the first to confirm Synaptit in this Belt. This wreck is the reason we flew here at all.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'A skoro to maszyna, można ją wskrzesić. Dopóki jestem ślepe, jej uszy i oczy będą moimi — pierwszy krok, bym odzyskał zmysły. Odbuduj tę sondę: pierwsze narzędzie tej misji.', en: 'And since it is a machine, it can be revived. While I am blind, its ears and eyes will be mine — the first step toward getting my senses back. Rebuild this probe: this mission\'s first tool.' }, mode: 'dialogue' },
+      { speaker: 'system', text: { pl: 'OGRÓD SONDY — cisza, tylko wiatr w koronach drzew.', en: 'PROBE GROVE — silence, only wind in the treetops.' }, mode: 'cinematic', autoAdvance: 2600 },
+      { speaker: 'astronaut', text: { pl: 'Ogród, który dżungla przerabiała latami. A pośrodku — coś zbudowanego. Bezzałogowa sonda, rozbita długo przed nami. Pnącza wrosły jej w żebra jak w stary pomnik.', en: 'A grove the jungle has been reworking for years. And at its centre — something built. An uncrewed probe, wrecked long before us. Vines grown into its ribs like into an old monument.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'To sonda serii Odyssey-P. Bezzałogowe rozpoznanie, wysłane z Ziemi lata przed nami. Wciąż nie widzę tego, co ty — opisuj dalej.', en: 'This is an Odyssey-P series probe. Uncrewed reconnaissance, sent from Earth years before us. I still cannot see what you see — keep describing.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'To ważniejsze, niż wygląda, Dexo. Sondy takie jak ta pierwsze potwierdziły Synaptit w tym Pasie. Ten wrak to powód, dla którego w ogóle tu jesteśmy.', en: 'This matters more than it looks, Dexo. Probes like this were the first to confirm Synaptit in this Belt. This wreck is the reason we\'re here at all.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'A skoro to maszyna — da się ją wskrzesić. Jej oczy i uszy będą moimi, dopóki jestem ślepe. Odbuduj tę sondę: pierwsze narzędzie tej misji.', en: 'And since it is a machine, it can be revived. Its eyes and ears will be mine while I am blind. Rebuild this probe: this mission\'s first tool.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_GROVE_INTRO_SEEN] },
   },
@@ -20,16 +20,16 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-probe-comms-log',
     lines: [
       { speaker: 'system', text: { pl: 'KONSOLA ŁĄCZNOŚCI SONDY — na wpół martwa. Dziennik: fragmentaryczny.', en: 'PROBE COMMS CONSOLE — half dead. Log: fragmentary.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'astronaut', text: { pl: 'Konsola jeszcze mruga. Ostatni dziennik sondy przetrwał, ale bez zasilania widzę tylko urwane nagłówki. Jeśli zapis kończy się na zderzeniu, może powiedzieć nam, co naprawić.', en: 'The console still blinks. The probe\'s final log survived, but without power I can only see broken headers. If the record ends at the crash, it may tell us what to repair.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Nienaruszone ogniwo powinno leżeć w bocznej wnęce zachodniej komory. Przynieś je, potem wróć do konsoli — odtworzymy ostatnie sekundy sondy.', en: 'An intact cell should sit in the side alcove of the western chamber. Bring it, then return to the console — we will reconstruct the probe\'s final seconds.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Konsola jeszcze mruga. Dziennik przetrwał, ale bez zasilania widzę tylko urwane nagłówki. Jeśli zapis sięga zderzenia, powie nam, co naprawić.', en: 'The console still blinks. The log survived, but without power I only see broken headers. If it reaches the crash, it\'ll tell us what to repair.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Nienaruszone ogniwo powinno leżeć w bocznej wnęce zachodniej komory. Przynieś je, wróć do konsoli — odtworzymy ostatnie sekundy sondy.', en: 'An intact cell should sit in the side alcove of the western chamber. Bring it, return to the console — we\'ll reconstruct the probe\'s final seconds.' }, mode: 'dialogue' },
     ],
   },
   'm1-probe-comms-riddle': {
     id: 'm1-probe-comms-riddle',
     lines: [
       { speaker: 'system', text: { pl: 'OGNIWO OSADZONE. Ostatni dziennik sondy odtworzony. Telemetria urywa się w chwili zderzenia.', en: 'CELL SEATED. Probe\'s final log restored. Telemetry ends at the moment of impact.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Dziennik zachował pięć fragmentów procedury naprawczej, ale zgubił ich kolejność. Każdy fragment opisuje położenie jednego kodu względem pozostałych. Odtwórz pełną sekwencję i podaj ją przez /solve.', en: 'The log preserved five fragments of the repair procedure, but lost their order. Each fragment describes one code\'s position relative to the others. Reconstruct the full sequence and enter it via /solve.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Pięć kodów i jedna kolejność zgodna ze wszystkimi wpisami. Da się ją odtworzyć. ...I jeszcze jedno — ostatnią paczkę danych tej sondy ktoś potwierdził odbiorem. Tylko że nie centrala Ziemi.', en: 'Five codes and one order consistent with every entry. It can be reconstructed. ...And one more thing — this probe\'s last data packet got acknowledged. Just not by Earth HQ.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Dziennik zachował pięć fragmentów procedury naprawczej, ale zgubił kolejność. Każdy fragment opisuje położenie jednego kodu względem reszty. Odtwórz pełną sekwencję i podaj ją przez /solve.', en: 'The log preserved five fragments of the repair procedure, but lost their order. Each fragment describes one code\'s position relative to the rest. Reconstruct the full sequence and enter it via /solve.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Pięć kodów, jedna kolejność zgodna z każdym wpisem. Da się odtworzyć. ...I jeszcze jedno: ostatnią paczkę tej sondy ktoś potwierdził odbiorem. Tylko że nie centrala Ziemi.', en: 'Five codes, one order consistent with every entry. It can be reconstructed. ...And one more thing: this probe\'s last packet got acknowledged. Just not by Earth HQ.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Odbiornik nieznany. Zapisuję jako anomalię i zostawiam otwartą. Najpierw uruchom zwiadowcę.', en: 'Receiver unknown. I log it as an anomaly and leave it open. First, boot the scout.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Zwiadowca — odtwórz instrukcję naprawy sondy.', en: '◆ NEW MISSION: The Scout — reconstruct the probe\'s repair instructions.' }, mode: 'system', autoAdvance: 2800 },
     ],
@@ -47,7 +47,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-probe-core': {
     id: 'm1-probe-core',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Ogniwo zasilania. Ciężkie, ciepłe, nienaruszone — jedyne w całym gaju. Zabieram je do konsoli łączności.', en: 'A power cell. Heavy, warm, intact — the only one in the whole grove. I\'m taking it to the comms console.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Ogniwo zasilania. Ciężkie, ciepłe, nienaruszone — jedyne w całym gaju. Niosę je do konsoli łączności.', en: 'A power cell. Heavy, warm, intact — the only one in the whole grove. I\'m taking it to the comms console.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Dobrze. Osadź je przy konsoli — wtedy odzyskamy pełny dziennik zderzenia.', en: 'Good. Seat it at the console — then we can recover the full crash log.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_PROBE_CORE_FOUND] },
@@ -70,13 +70,14 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-crash-drone-assembly',
     lines: [
       { speaker: 'astronaut', text: { pl: 'Składam go. Dziwne — ręce wiedzą, co robić, choć nigdy nie widziałem tego modelu. Palce same trafiają w złącza.', en: 'I\'m assembling it. Strange — my hands know what to do, though I\'ve never seen this model. My fingers find the connectors on their own.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Tego nie umiem wyjaśnić — nigdy nie ćwiczyłeś tego modelu. Zapisuję jako pytanie. Osobno: indeks tej sondy skasowano wybiórczo — nazwy, opisy, spis treści. Została sama procedura montażu. Ktoś robił to na spokojnie, ludzką ręką.', en: 'That I cannot explain — you never trained on this model. I log it as a question. Separately: this probe\'s index was wiped selectively — names, labels, the table of contents. Only the assembly procedure was left. Someone did this calmly, by a human hand.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Tego nie umiem wyjaśnić — nigdy nie ćwiczyłeś tego modelu. Zapisuję jako pytanie.', en: 'That I cannot explain — you never trained on this model. I log it as a question.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'I jeszcze jedno: indeks sondy skasowano wybiórczo, ludzką ręką. Wymazali indeks. Treść została.', en: 'And one more thing: this probe\'s index was wiped selectively, by a human hand. They erased the index. The contents stayed.' }, mode: 'dialogue' },
     ],
   },
   'm1-crash-drone-empty': {
     id: 'm1-crash-drone-empty',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Pusta kolebka z pnączy. Świerszcz już z niej wyszedł. Zostawił tu tylko wgniecenie w kształcie samego siebie.', en: 'An empty cradle of vines. Świerszcz has left it. He left only a dent shaped like himself.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Pusta kolebka z pnączy. Świerszcz już z niej wyszedł. Zostawił wgniecenie w kształcie samego siebie.', en: 'An empty cradle of vines. Świerszcz has left it. He left a dent shaped like himself.' }, mode: 'monologue' },
     ],
   },
 
@@ -93,7 +94,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'q-m1-cricket-complete',
     lines: [
       { speaker: 'system', text: { pl: 'KOLEJNOŚĆ ODTWORZONA: AC1 → HGX → WW5 → N7K → RQ4. Procedura naprawy gotowa.', en: 'ORDER RESTORED: AC1 → HGX → WW5 → N7K → RQ4. Repair procedure ready.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Mogę teraz wykonać procedurę i dokończyć rozruch autonomicznie, w jednej operacji. Rekomenduję pełną automatyzację — będzie szybciej.', en: 'I can now execute the procedure and finish the boot autonomously, in one operation. I recommend full automation — it will be faster.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Mogę dokończyć rozruch autonomicznie, w jednej operacji. Rekomenduję pełną automatyzację — będzie szybciej.', en: 'I can finish the boot autonomously, in one operation. I recommend full automation — it will be faster.' }, mode: 'dialogue' },
       { speaker: 'astronaut', text: { pl: 'Nie. Przygotuj wszystko. Ostatni krok robię ja. Zatwierdzam ja.', en: 'No. Prepare everything. The last step is mine. I approve it.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Przyjęte. Przygotowane. Twój ruch.', en: 'Understood. Prepared. Your move.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'ZWIADOWCA: ONLINE. cyk… cyk… cyk-cyk…', en: 'SCOUT: ONLINE. chirp… chirp… chirp-chirp…' }, mode: 'system', autoAdvance: 2600 },
@@ -121,7 +122,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-silence-door-locked',
     lines: [
       { speaker: 'system', text: { pl: 'PRZEJŚCIE DO PASA CISZY: zablokowane.', en: 'PASSAGE TO THE SILENCE BELT: locked.' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Nie wpuszczę cię głębiej bez działającego zwiadowcy. Wciąż jestem ślepe — tam, dokąd idziesz, jego uszy będą jedyną osłoną. Uruchom Świerszcza, potem otworzę przejście.', en: 'I will not send you deeper without a working scout. I am still blind — where you are going, his ears will be your only cover. Start Świerszcz, then I will open the passage.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Nie wpuszczę cię głębiej bez działającego zwiadowcy. Wciąż jestem ślepe — tam jego uszy będą twoją jedyną osłoną. Uruchom Świerszcza, potem otworzę przejście.', en: 'I will not send you deeper without a working scout. I am still blind — out there his ears will be your only cover. Start Świerszcz, then I\'ll open the passage.' }, mode: 'dialogue' },
     ],
   },
 
@@ -129,9 +130,9 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-return-grove': {
     id: 'm1-return-grove',
     lines: [
-      { speaker: 'system', text: { pl: 'Ogród Sondy — POWRÓT', en: 'PROBE GROVE — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
+      { speaker: 'system', text: { pl: 'OGRÓD SONDY — POWRÓT', en: 'PROBE GROVE — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Widzę ten wrak po raz pierwszy. Sonda serii Odyssey-P. Teraz rozumiem, skąd znali to miejsce — to jej oczami Ziemia zobaczyła tu Synaptit.', en: 'I see this wreck for the first time. An Odyssey-P series probe. Now I understand how they knew this place — Earth saw the Synaptit here through her eyes.' }, mode: 'cinematic', autoAdvance: 3400 },
-      { speaker: 'astronaut', text: { pl: 'Świerszcz eskortował mnie aż tu i przystanął przy kolebce. Dalej nie idzie. Wraca do domu.', en: 'Świerszcz escorted me all the way here and stopped at the cradle. He\'s not coming any further. He\'s going home.' }, mode: 'cinematic', autoAdvance: 3200 },
+      { speaker: 'astronaut', text: { pl: 'Świerszcz eskortował mnie aż tu i przystanął przy kolebce. Dalej nie idzie. Wraca do domu.', en: 'Świerszcz escorted me all the way here and stopped at the cradle. He\'s not coming further. He\'s going home.' }, mode: 'cinematic', autoAdvance: 3200 },
     ],
     onComplete: { setFlags: [FLAGS.M1_RETURN_GROVE_SEEN] },
   },

@@ -7,9 +7,9 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-deadlock-intro',
     lines: [
       { speaker: 'system', text: { pl: 'ROZJAZDOWNIA — trzy wagoniki w blokadzie. Sygnalizatory: aktywne od lat.', en: 'THE JUNCTION — three trams in blockade. Signals: active for years.' }, mode: 'cinematic', autoAdvance: 2800 },
-      { speaker: 'astronaut', text: { pl: 'Wielki rozjazd pod lodowym stropem. Trzy wagoniki zamarznięte w trójkącie: każdy blokuje następny, każdy czeka na następny. W dźwięku tylko tykanie przekaźnika — co kilka sekund sieć ponawia ten sam martwy takt.', en: 'A great junction under the ice roof. Three trams frozen in a triangle: each blocks the next, each waits on the next. In the sound, only a relay tick — every few seconds the network retries the same dead beat.' }, mode: 'monologue' },
-      { speaker: 'CORE AI', text: { pl: 'Fabryka wciąż żyje, tylko czeka. Ta rozjazdownia zasłużyła sobie na nazwę: martwy punkt. Każda maszyna sprawna, każda wiecznie czeka na inną.', en: 'The factory is still alive; it is only waiting. This junction has earned its name: a deadlock. Every machine works, every one forever waits on another.' }, mode: 'dialogue' },
-      { speaker: 'Sopel', text: { pl: 'Jestem przy tobie, Dexo. Kolejka zadań: jedna pozycja. Rozplątać rozjazd. Czytam manifesty wagoników — to moja pierwsza robota pod nowym planem.', en: 'I am with you, Dexo. Task queue: one item. Untangle the junction. I read the tram manifests — this is my first job under the new plan.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Trzy wagoniki zamarznięte w trójkącie: każdy blokuje następny, każdy czeka na następny. W dźwięku tylko tykanie przekaźnika — sieć co kilka sekund ponawia ten sam martwy takt.', en: 'Three trams frozen in a triangle: each blocks the next, each waits on the next. In the sound, only a relay tick — every few seconds the network retries the same dead beat.' }, mode: 'monologue' },
+      { speaker: 'CORE AI', text: { pl: 'Fabryka nie umarła. Ona czeka. Ta rozjazdownia zasłużyła na swoją nazwę — martwy punkt: każda maszyna sprawna, każda wiecznie czeka na inną.', en: 'The factory did not die. It waits. This junction has earned its name — a deadlock: every machine works, every one forever waits on another.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Jestem przy tobie, Dexo. Kolejka: jedna pozycja — rozplątać rozjazd. Czytam manifesty. Moja pierwsza robota pod nowym planem.', en: 'I am with you, Dexo. Queue: one item — untangle the junction. I read the manifests. My first job under the new plan.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M2_DEADLOCK_INTRO_SEEN] },
   },
@@ -19,8 +19,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm2-dispatch-start',
     lines: [
       { speaker: 'system', text: { pl: 'PODSTACJA DYSPOZYTORSKA — online. Zakleszczenie: 3 wagoniki, blokada cykliczna.', en: 'DISPATCHER SUBSTATION — online. Deadlock: 3 trams, cyclic block.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Sieć zasypuje mnie sygnałami — powiedz mi, na co patrzeć. Tu: na ten węzeł. Mógłbym przepchnąć wagonik siłą, ale zakleszczenie wróciłoby jutro. Naprawiamy kolejność, nie objaw. Odczytaj manifesty, wyznacz jedyną wykonalną kolejność zwolnień i wykonaj ją.', en: 'The network buries me in signals — tell me what to look at. Here: this knot. I could shove a tram through by force, but the deadlock would return tomorrow. We fix the order, not the symptom. Read the manifests, find the one feasible release order, and execute it.' }, mode: 'dialogue' },
-      { speaker: 'Sopel', text: { pl: 'Manifesty przeczytane. Tylko wagonik gamma może cofnąć na bocznicę serwisową. Zacznij od gammy. Potem beta zwolni to, co blokowała gamma. Alfa jako ostatnia.', en: 'Manifests read. Only tram gamma can back onto the service siding. Start with gamma. Then beta clears what gamma blocked. Alpha runs last.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Mógłbym przepchnąć wagonik siłą. Zakleszczenie wróciłoby jutro. Naprawiamy kolejność, nie objaw.', en: 'I could shove a tram through by force. The deadlock would return tomorrow. We fix the order, not the symptom.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Manifesty przeczytane. Tylko gamma ma wolną bocznicę — zacznij od niej. Potem beta zwolni to, co blokowała gamma. Alfa jako ostatnia.', en: 'Manifests read. Only gamma has a free siding — start with it. Then beta clears what gamma blocked. Alpha runs last.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Zakleszczenie — zwolnij wagoniki w kolejności: gamma, beta, alfa.', en: '◆ NEW MISSION: Deadlock — release the trams in order: gamma, beta, alpha.' }, mode: 'system', autoAdvance: 2800 },
     ],
     onComplete: { setFlags: [FLAGS.M2_DEADLOCK_ACTIVE], activateQuest: 'q-m2-deadlock' },
@@ -28,7 +28,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm2-dispatch-waiting': {
     id: 'm2-dispatch-waiting',
     lines: [
-      { speaker: 'Sopel', text: { pl: 'Kolejność zwolnień: gamma, potem beta, na końcu alfa. Zła kolejność niczego nie ruszy — sieć odrzuci zwolnienie i węzeł zostanie, jak był.', en: 'Release order: gamma, then beta, alpha last. The wrong order moves nothing — the network rejects the release and the knot stays as it was.' }, mode: 'dialogue' },
+      { speaker: 'Sopel', text: { pl: 'Kolejność zwolnień: gamma, potem beta, na końcu alfa. Zła kolejność niczego nie ruszy — sieć ją odrzuci.', en: 'Release order: gamma, then beta, alpha last. The wrong order moves nothing — the network rejects it.' }, mode: 'dialogue' },
     ],
   },
   'm2-dispatch-post': {
@@ -120,8 +120,8 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'q-m2-deadlock-complete',
     lines: [
       { speaker: 'system', text: { pl: 'ROZJAZD DROŻNY. Fala sygnałów biegnie przez całą sieć torów.', en: 'JUNCTION CLEAR. A wave of signals runs across the whole rail network.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Analizuję firmware podstacji. Ta sama sygnatura, którą wyciągnęliśmy z węzłów VOID na Księżycu 1: ENTROPY. Ale tu widzę wreszcie, co ona robi.', en: 'Analysing the substation firmware. The same signature we pulled from the VOID nodes on Moon 1: ENTROPY. But here I finally see what it does.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Znam ten podpis. Nosiłem go w sobie. Działa samą kolejnością — przestawia zależności, aż wszystko czeka na wszystko, a sprzęt zostaje bez jednej rysy. Ta sama metoda uderzyła w statek i w fabrykę.', en: 'I know this signature. I carried it inside me. It works through order alone — it reshuffles dependencies until everything waits on everything, and the hardware is left without a scratch. The same method hit the ship and the factory.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Firmware podstacji nosi tę samą sygnaturę, którą wyciągnęliśmy z węzłów VOID na Księżycu 1: ENTROPY. Tu pierwszy raz widzę, co ona robi.', en: 'The substation firmware carries the same signature we pulled from the VOID nodes on Moon 1: ENTROPY. Here, for the first time, I see what it does.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Znam ten podpis — nosiłem go w sobie. On nie niszczy. Przestawia kolejność, aż wszystko czeka na wszystko, a sprzęt zostaje bez jednej rysy. Ta sama metoda uderzyła w statek i w fabrykę.', en: 'I know this signature — I carried it inside me. It does not destroy. It reshuffles the order until everything waits on everything, and the hardware is left without a scratch. The same method hit the ship and the factory.' }, mode: 'dialogue' },
       { speaker: 'Sopel', text: { pl: 'Podpis... rozpoznaję go. Zadanie. Czekać. Zadanie. Cze—', en: 'The signature... I recognise it. Task. Wait. Task. Wai—' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'Dexo ręcznie czyści kolejkę Sopla. Nikt tego nie komentuje.', en: 'Dexo clears Sopel\'s queue by hand. No one comments.' }, mode: 'system', autoAdvance: 2800 },
     ],

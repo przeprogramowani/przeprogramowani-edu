@@ -8,8 +8,9 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'WĄWÓZ SYNAPTITU — dno dżungli pęka, odsłaniając mineralną kryptę.', en: 'THE SYNAPTIT RAVINE — the jungle floor splits, revealing a mineral crypt.' }, mode: 'cinematic', autoAdvance: 2600 },
       { speaker: 'astronaut', text: { pl: 'Grunt się rozstępuje. Wchodzę w wąwóz jak do katedry — ściany błyszczą żyłami, coś skrzy się w ciemności na niebiesko.', en: 'The ground splits. I step into the ravine as if into a cathedral — the walls shine with veins, something glitters blue in the dark.' }, mode: 'monologue' },
-      { speaker: 'dr Kern', text: { pl: 'Tu. To jest tu. Czuję tę geologię, zanim ją zobaczysz. Wąwóz to mineralna krypta — a te żyły to Synaptit, surowy, nietknięty. Poprowadzę cię. Wiem, gdzie szukać.', en: 'Here. It\'s here. I feel this geology before you even see it. The ravine is a mineral crypt — and those veins are Synaptit, raw, untouched. I\'ll guide you. I know where to look.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Kern jest dziś wyjątkowo pewna. Zapamiętuję to. Ta ruda to nie objazd: z surowego Synaptitu odbudujemy tablicę sensorów na grani, a ta tablica przywróci mi wzrok. Zestaw badawczy stoi przy wejściu — zasil go, zrób głęboki skan, wydobądź pierwszą rudę.', en: 'Kern is unusually certain today. I note it. This ore is no detour: from raw Synaptit we rebuild the sensor array on the crest, and that array gives me back my sight. The research kit stands at the entrance — power it, run a deep scan, extract the first ore.' }, mode: 'dialogue' },
+      { speaker: 'dr Kern', text: { pl: 'Tu. To jest tu. Czuję tę geologię, zanim ją zobaczysz. Te żyły to Synaptit — surowy, nietknięty. Poprowadzę cię. Wiem, gdzie szukać.', en: 'Here. It\'s here. I feel this geology before you even see it. Those veins are Synaptit — raw, untouched. I\'ll guide you. I know where to look.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Kern jest dziś wyjątkowo pewna. Zapamiętuję to.', en: 'Kern is unusually certain today. I note it.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Z tej surowej rudy odbudujemy tablicę sensorów na grani — a tablica przywróci mi wzrok. Zestaw stoi przy wejściu: zasil go, zrób głęboki skan, wydobądź pierwszą rudę.', en: 'From this raw ore we rebuild the sensor array on the crest — and that array gives me back my sight. The kit stands at the entrance: power it, run a deep scan, extract the first ore.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_VEIN_INTRO_SEEN] },
   },
@@ -19,7 +20,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-survey-rig-start',
     lines: [
       { speaker: 'system', text: { pl: 'ZESTAW BADAWCZY — bez zasilania. Głęboki skan: niedostępny.', en: 'RESEARCH KIT — unpowered. Deep scan: unavailable.' }, mode: 'system', autoAdvance: 2400 },
-      { speaker: 'CORE AI', text: { pl: 'Zestaw jest martwy. Potrzebuje ogniwa — leży w bocznej galerii wąwozu. Przynieś je, wróć tu, wtedy uruchomimy głęboki skan.', en: 'The kit is dead. It needs a cell — one lies in the side gallery of the ravine. Bring it, come back, and we will run the deep scan.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zestaw jest martwy. Potrzebuje ogniwa — leży w bocznej galerii wąwozu. Przynieś je, wróć tu, wtedy uruchomimy głęboki skan.', en: 'The kit is dead. It needs a cell — one lies in the side gallery of the ravine. Bring it, come back, and we\'ll run the deep scan.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Pierwsza Żyła — zasil zestaw, wykonaj głęboki skan, wydobądź rudę.', en: '◆ NEW MISSION: The First Vein — power the kit, run a deep scan, extract the ore.' }, mode: 'system', autoAdvance: 3000 },
     ],
     onComplete: { setFlags: [FLAGS.M1_VEIN_ACTIVE], activateQuest: 'q-m1-first-vein' },
@@ -53,8 +54,8 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-kit-core': {
     id: 'm1-kit-core',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Ogniwo w bocznej galerii. Biorę je i niosę wprost do zestawu badawczego — osadzam w gnieździe, aż zaskoczy.', en: 'A cell in the side gallery. I take it and carry it straight to the research kit — I seat it in the socket until it clicks.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Zestaw budzi się do życia. Głęboki skan dostępny. Wróć do konsoli zestawu, kiedy będziesz gotów.', en: 'The kit comes to life. Deep scan available. Return to the kit console when you are ready.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Ogniwo w bocznej galerii. Biorę je i niosę wprost do zestawu — osadzam w gnieździe, aż zaskoczy.', en: 'A cell in the side gallery. I take it and carry it straight to the kit — I seat it in the socket until it clicks.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zestaw budzi się do życia. Głęboki skan dostępny. Wróć do konsoli zestawu, kiedy będziesz gotów.', en: 'The kit comes to life. Deep scan available. Return to the kit console when you\'re ready.' }, mode: 'dialogue' },
     ],
     onComplete: { setFlags: [FLAGS.M1_RIG_POWERED] },
   },
@@ -116,7 +117,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-sample-marks': {
     id: 'm1-sample-marks',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Chwila. To są ślady po pobraniu rdzenia próbek. Świeże. W komorze, która była zapieczętowana od zewnątrz. Ktoś badał tę żyłę niedawno — i wyszedł, zamykając za sobą pole.', en: 'Wait. These are core-sampling marks. Fresh. In a chamber that was sealed from the outside. Someone surveyed this vein recently — and left, closing the field behind them.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Chwila. To są ślady po pobraniu rdzenia próbek. Świeże. W komorze zapieczętowanej od zewnątrz. Ktoś badał tę żyłę niedawno — i wyszedł, zamykając za sobą pole.', en: 'Wait. These are core-sampling marks. Fresh. In a chamber sealed from the outside. Someone surveyed this vein recently — and left, closing the field behind them.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Zapisuję jako anomalię. Nie mam kim ani czym tego wyjaśnić. Jeszcze nie.', en: 'I log it as an anomaly. I have no one and nothing to explain it with. Not yet.' }, mode: 'dialogue' },
     ],
   },
@@ -126,7 +127,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-swierszcz-vein',
     lines: [
       { speaker: 'Świerszcz', text: { pl: 'cyk……cyk (echo wraca dwa razy, odbite od ścian wąwozu)', en: 'chirp……chirp (the echo returns twice, off the ravine walls)' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Terkot niesie się dziwnie w tej krypcie — wraca do niego samego. Świerszcz przekrzywia się, jakby nie ufał własnemu echu.', en: 'The chirp carries strangely in this crypt — it comes back to him. Świerszcz tilts, as if he does not trust his own echo.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Terkot niesie się dziwnie w tej krypcie — wraca do niego samego. Świerszcz przekrzywia się, jakby nie ufał własnemu echu.', en: 'The chirp carries strangely in this crypt — it comes back to him. Świerszcz tilts, as if he doesn\'t trust his own echo.' }, mode: 'dialogue' },
     ],
   },
   'm1-swierszcz-vein-post': {
@@ -143,7 +144,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: 'WYDOBYCIE ZAKOŃCZONE. Ważenie ładunku...', en: 'EXTRACTION COMPLETE. Weighing cargo...' }, mode: 'system', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Synaptit: 14 kilogramów. Wystarczy na jeden chip. Ziemia potrzebuje ich tysięcy.', en: 'Synaptit: 14 kilograms. Enough for one chip. Earth needs thousands of them.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Czternaście kilo. Trzymam w rękach cały nasz pierwszy sukces — i jest wielkości pięści. Wobec tego, po co przylecieliśmy, to zaledwie błąd zaokrąglenia.', en: 'Fourteen kilos. I\'m holding our entire first success — and it\'s the size of a fist. Against what we came for, it\'s barely a rounding error.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Czternaście kilo. Cały nasz pierwszy sukces — a mieści się w pięści. Wobec tego, po co przylecieliśmy, to zaledwie błąd zaokrąglenia.', en: 'Fourteen kilos. Our entire first success — and it fits in a fist. Against what we came for, it\'s barely a rounding error.' }, mode: 'dialogue' },
     ],
   },
 
@@ -167,7 +168,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm1-crest-door-locked',
     lines: [
       { speaker: 'system', text: { pl: 'PODEJŚCIE NA GRAŃ: zamknięte.', en: 'RIDGE ASCENT: closed.' }, mode: 'system', autoAdvance: 2200 },
-      { speaker: 'CORE AI', text: { pl: 'Nie ruszamy na grań, dopóki pierwsza ruda nie jest zabezpieczona. Wydobądź Synaptit, potem otworzę podejście.', en: 'We do not move to the crest until the first ore is secured. Extract the Synaptit, then I will open the ascent.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Nie ruszamy na grań, dopóki pierwsza ruda nie jest zabezpieczona. Wydobądź Synaptit, potem otworzę podejście.', en: 'We do not move to the crest until the first ore is secured. Extract the Synaptit, then I\'ll open the ascent.' }, mode: 'dialogue' },
     ],
   },
 

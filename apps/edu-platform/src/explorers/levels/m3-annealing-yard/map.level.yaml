@@ -1,46 +1,78 @@
-# M3 L4 — Wyżarzalnia / The Annealing Yard
-# Cathedral scale. A long nave runs door to door; three anneal bays stand off the
-# north ridge like a vineyard's rows, the dead relay dish rusting in the first of
-# them. The whole east wall is a crystal garden — a tall chimney wing veined with
-# Synaptit and crowned by a lava-obelisk. The south apse holds the assay rig and the
-# cooling-loop fault trace. The first controlled fire of the moon.
 theme: 4
 grid: |
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~~~~######~~######~~######~~~~~~~~
   ~~~~#....#~~#....#~~#....#~#######
   ~~~~#....#~~#....#~~#....#~#.....#
-  ~~~~#....#~~#....#~~#....#~#.....#
-  #####....####....####....###.....#
-  #................................#
-  D................................D
-  #................................#
+  ~~~##....####....####....#~#.....#
+  ####.....................###.....#
+  #....####....####....####.....##.#
+  D....#~~#....#~~#....#~~#.....##.D
+  #....####....####....####........#
   #................................#
   #................................#
   ############..........######.....#
   ~~~~~~~~~~~#..........#~~~~#.....#
-  ~~~~~~~~~~~#..........#~~~~#.....#
-  ~~~~~~~~~~~#..........#~~~~#######
-  ~~~~~~~~~~~#..........#~~~~~~~~~~~
-  ~~~~~~~~~~~############~~~~~~~~~~~
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~#####~~~#..........#~~~~#.....#
+  ~~~#...##~~#..........#~~~~#######
+  ~~~###..#~~####.####..#~~~~~~~~~~~
+  ~~~~~####~~~~~#.#~~##.#~~~~~~~~~~~
+  ~~~~~~~~~~~~~~###~~~###~~~~~~~~~~~
 props:
-  - { id: ridge-antenna, prop: satellite-dish, at: [6, 3], solid: true }
-  - { id: anneal-row, prop: lava-geyser, at: [14, 3], solid: true }
-  - { prop: lava-geyser, at: [22, 3], solid: true }
-  - { prop: magma-crystals, at: [7, 4], solid: false }
-  - { prop: magma-crystals, at: [15, 4], solid: false }
-  - { prop: synaptit-ore, at: [30, 4], solid: true }
-  - { prop: synaptit-ore, at: [31, 6], solid: false }
-  - { prop: lava-geyser, at: [25, 8], solid: true }
-  - { prop: synaptit-ore, at: [29, 8], solid: true }
-  - { id: ore-veins, prop: synaptit-ore, at: [31, 8], solid: true }
-  - { prop: magma-crystals, at: [9, 9], solid: false }
-  - { prop: synaptit-ore, at: [30, 10], solid: false }
-  - { prop: lava-obelisk, at: [30, 12], solid: true }
+  - { id: ridge-antenna, prop: magma-crystals, at: [6, 3], solid: true }
+  - { id: anneal-row, prop: magma-crystals, at: [14, 3], solid: true }
+  - { prop: magma-crystals, at: [22, 3], solid: true }
+  - { prop: lava-geyser, at: [7, 4], solid: true }
+  - { prop: lava-geyser, at: [15, 4], solid: true }
   - { id: assay-rig, prop: survey-lander, at: [15, 13], solid: true }
   - { id: assay-terminal, prop: survey-lander, at: [17, 13], solid: true }
-  - { id: fault-trace-station, prop: satellite-dish, at: [19, 13], solid: true }
+  - { prop: lava-geyser, at: [14, 4], solid: true }
+  - { prop: magma-crystals, at: [14, 5], solid: true }
+  - { prop: magma-crystals, at: [14, 9], solid: true }
+  - { prop: lava-obelisk, at: [14, 10], solid: true }
+  - { prop: magma-crystals, at: [15, 3], solid: true }
+  - { prop: magma-crystals, at: [15, 5], solid: true }
+  - { prop: magma-crystals, at: [15, 9], solid: true }
+  - { prop: satellite-dish, at: [15, 10], solid: true }
+  - { prop: lava-geyser, at: [22, 4], solid: true }
+  - { prop: magma-crystals, at: [22, 5], solid: true }
+  - { prop: magma-crystals, at: [22, 9], solid: true }
+  - { prop: lava-obelisk, at: [22, 10], solid: true }
+  - { prop: satellite-dish, at: [23, 10], solid: true }
+  - { prop: magma-crystals, at: [23, 9], solid: true }
+  - { prop: magma-crystals, at: [23, 5], solid: true }
+  - { prop: lava-geyser, at: [23, 4], solid: true }
+  - { prop: magma-crystals, at: [23, 3], solid: true }
+  - { prop: magma-crystals, at: [7, 3], solid: true }
+  - { prop: magma-crystals, at: [7, 5], solid: true }
+  - { prop: magma-crystals, at: [7, 9], solid: true }
+  - { prop: satellite-dish, at: [7, 10], solid: true }
+  - { prop: lava-obelisk, at: [6, 10], solid: true }
+  - { prop: magma-crystals, at: [6, 9], solid: true }
+  - { prop: magma-crystals, at: [6, 5], solid: true }
+  - { prop: lava-geyser, at: [6, 4], solid: true }
+  - { prop: magma-crystals, at: [30, 4], solid: true }
+  - { prop: lava-geyser, at: [30, 5], solid: true }
+  - { prop: magma-crystals, at: [30, 8], solid: true }
+  - { prop: lava-geyser, at: [30, 9], solid: true }
+  - { prop: satellite-dish, at: [30, 10], solid: true }
+  - { prop: lava-geyser, at: [30, 3], solid: true }
+  - { prop: lava-geyser, at: [31, 3], solid: true }
+  - { prop: magma-crystals, at: [31, 4], solid: true }
+  - { prop: lava-geyser, at: [31, 5], solid: true }
+  - { prop: magma-crystals, at: [31, 8], solid: true }
+  - { prop: lava-geyser, at: [31, 9], solid: true }
+  - { prop: synaptit-ore, at: [31, 10], solid: true }
+  - { prop: exploration-rover, at: [16, 10], solid: true }
+  - { prop: exploration-rover, at: [8, 10], solid: true }
+  - { prop: exploration-rover, at: [24, 10], solid: true }
+  - { prop: exploration-rover, at: [29, 10], solid: true }
+  - { prop: exploration-rover, at: [5, 10], solid: true }
+  - { prop: exploration-rover, at: [13, 10], solid: true }
+  - { prop: exploration-rover, at: [21, 10], solid: true }
+  - { prop: satellite-dish, at: [15, 16], solid: true }
+  - { prop: satellite-dish, at: [21, 16], solid: true }
+  - { prop: exploration-rover, at: [4, 14], solid: true }
 zones:
   - id: trial-door
     name: Return to the Fire Trial
@@ -66,7 +98,7 @@ zones:
   - id: fault-trace-station
     name: Cooling-Loop Fault Trace
     type: arcade
-    propId: fault-trace-station
+    at: [21, 16]
     properties:
       arcadeGameId: arcade-fault-trace
   - id: anneal-row
@@ -76,15 +108,15 @@ zones:
   - id: ridge-antenna
     name: Ridge Relay Antenna
     type: trigger
-    propId: ridge-antenna
+    at: [15, 16]
   - id: ore-veins
     name: Chimney Synaptit Veins
     type: trigger
-    propId: ore-veins
+    at: [31, 10]
   - id: iskra-yard
     name: Iskra
     type: npc
-    at: [7, 8]
+    at: [2, 10]
     properties:
       npcType: robot
       npcVariant: crimson-red

@@ -12,7 +12,7 @@ export const quests: EventQuest[] = [
     },
     hints: [
       { pl: 'Zacznij przy module probierczym — pierwsze dotknięcie go zasila.', en: 'Start at the assay rig — the first touch powers it up.' },
-      { pl: 'Stacja „Zwarcie" certyfikuje pętlę chłodzenia. Nie ufaj jednemu zielonemu — jeden czujnik kłamie.', en: 'The Fault Trace station certifies the cooling loop. Do not trust a single green — one sensor lies.' },
+      { pl: 'Stacja „Regresja" certyfikuje pętlę chłodzenia. Sprawdzaj wersje ze środka podejrzanego zakresu; każdy niespójny odczyt sprawdź ponownie.', en: 'The Regression station certifies the cooling loop. Check versions from the middle of the suspect range; check every inconsistent reading again.' },
       { pl: 'Po certyfikacji pętli poprowadź partię przez rząd wygrzewu.', en: 'Once the loop is certified, run the batch through the anneal row.' },
     ],
     objectives: [
