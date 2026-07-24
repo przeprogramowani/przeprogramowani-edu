@@ -53,7 +53,7 @@ export const manifest: LevelManifest = {
   arcadeGames,
   introDialogue: 'm1-vein-intro',
   introFlag: FLAGS.M1_VEIN_INTRO_SEEN,
-  introCinematicTitle: 'Księżyc 1 — Strefa Ciszy',
+  introCinematicTitle: 'Księżyc 1 — Dżungla',
   introCinematicSubtitle: 'Żyła',
   conditionalIntros: [
     {

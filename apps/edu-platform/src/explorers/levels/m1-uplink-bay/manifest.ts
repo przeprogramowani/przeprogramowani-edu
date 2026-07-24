@@ -56,6 +56,6 @@ export const manifest: LevelManifest = {
   examCompletionDialogues: { 'm1-exam-protocol-5': 'm1-exam-protocol-5-done' },
   introDialogue: 'm1-crest-intro',
   introFlag: FLAGS.M1_CREST_INTRO_SEEN,
-  introCinematicTitle: 'Księżyc 1 — Strefa Ciszy',
+  introCinematicTitle: 'Księżyc 1 — Dżungla',
   introCinematicSubtitle: 'Grań Przekaźnika',
 };

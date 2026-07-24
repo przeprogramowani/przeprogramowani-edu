@@ -55,7 +55,7 @@ export const manifest: LevelManifest = {
   arcadeGames,
   introDialogue: 'm2-foundry-intro',
   introFlag: FLAGS.M2_FOUNDRY_INTRO_SEEN,
-  introCinematicTitle: 'Księżyc 2 — Martwy Punkt',
+  introCinematicTitle: 'Księżyc 2 — Zamrożony Plan',
   introCinematicSubtitle: 'Huta',
   conditionalIntros: [
     {

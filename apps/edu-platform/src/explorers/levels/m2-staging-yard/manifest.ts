@@ -67,7 +67,7 @@ export const manifest: LevelManifest = {
   examCompletionDialogues: { 'm2-exam-protocol-8': 'm2-exam-protocol-8-done' },
   introDialogue: 'm2-deadlock-intro',
   introFlag: FLAGS.M2_DEADLOCK_INTRO_SEEN,
-  introCinematicTitle: 'Księżyc 2 — Martwy Punkt',
+  introCinematicTitle: 'Księżyc 2 — Zamrożony Plan',
   introCinematicSubtitle: 'Martwy Punkt',
   conditionalIntros: [
     {

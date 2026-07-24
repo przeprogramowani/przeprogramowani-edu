@@ -59,7 +59,7 @@ export const manifest: LevelManifest = {
   examCompletionDialogues: { 'm1-exam-protocol-3': 'm1-exam-protocol-3-done' },
   introDialogue: 'm1-silence-intro',
   introFlag: FLAGS.M1_SILENCE_INTRO_SEEN,
-  introCinematicTitle: 'Księżyc 1 — Strefa Ciszy',
+  introCinematicTitle: 'Księżyc 1 — Dżungla',
   introCinematicSubtitle: 'Strefa Ciszy',
   conditionalIntros: [
     {

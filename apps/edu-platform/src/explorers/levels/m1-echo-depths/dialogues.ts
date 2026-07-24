@@ -128,9 +128,9 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'system', text: { pl: 'TRZECI WĘZEŁ ODCIĘTY. Dźwięk i światło wracają falą przez cały pas.', en: 'THIRD NODE ISOLATED. Sound and light return in a wave across the belt.' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'CORE AI', text: { pl: 'Analizuję firmware odciętych węzłów. To sprzęt spoza programu Odyssey, wyprodukowany niedawno. Niesie sygnaturę, którą znam z własnych uszkodzonych sektorów.', en: 'I am analysing the isolated nodes\' firmware. This is hardware from outside the Odyssey program, recently made. It carries a signature I know from my own damaged sectors.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: 'SYGNATURA FIRMWARE: ENTROPY', en: 'FIRMWARE SIGNATURE: ENTROPY' }, mode: 'system', autoAdvance: 3000 },
-      { speaker: 'astronaut', text: { pl: 'Entropia. Więc „sabotaż” to za wąskie słowo. Ma imię. Ma autora. Ktoś to tu przyniósł.', en: 'Entropy. So "sabotage" is too small a word now. It has a name. An author. Someone brought this here.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Entropia. Więc „sabotaż” to za wąskie słowo. Ma imię — a na obudowach węzłów wytłoczono drugie: VOID. Ktoś to tu przyniósł.', en: 'Entropy. So "sabotage" is too small a word now. It has a name — and stamped on the nodes\' casings is a second one: VOID. Someone brought this here.' }, mode: 'dialogue' },
       { speaker: 'Świerszcz', text: { pl: '(...cisza. Trzy pełne sekundy. Żadnego ćwierku.)', en: '(...silence. Three full seconds. Not one chirp.)' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Zapisane jako pewnik. Idziemy dalej.', en: 'Logged as established fact. We move on.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zapisane jako pewnik. Idziemy dalej — w dół, do żyły.', en: 'Logged as established fact. We move on — down, to the vein.' }, mode: 'dialogue' },
     ],
   },
 
