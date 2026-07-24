@@ -130,7 +130,7 @@ export const dialogues: Record<string, DialogueSequence> = {
       { speaker: 'system', text: { pl: 'SYGNATURA FIRMWARE: ENTROPY', en: 'FIRMWARE SIGNATURE: ENTROPY' }, mode: 'system', autoAdvance: 3000 },
       { speaker: 'astronaut', text: { pl: 'Entropia. Więc „sabotaż” to za wąskie słowo. Ma imię — a na obudowach węzłów wytłoczono drugie: VOID. Ktoś to tu przyniósł.', en: 'Entropy. So "sabotage" is too small a word now. It has a name — and stamped on the nodes\' casings is a second one: VOID. Someone brought this here.' }, mode: 'dialogue' },
       { speaker: 'Świerszcz', text: { pl: '(...cisza. Trzy pełne sekundy. Żadnego ćwierku.)', en: '(...silence. Three full seconds. Not one chirp.)' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Zapisane jako pewnik. Idziemy dalej — w dół, do żyły.', en: 'Logged as established fact. We move on — down, to the vein.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Zapisane jako pewnik. Idziemy dalej — w dół, do Wąwozu Synaptitu.', en: 'Logged as established fact. We move on — down, to the Synaptit Ravine.' }, mode: 'dialogue' },
     ],
   },
 
@@ -189,7 +189,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-vein-door-locked': {
     id: 'm1-vein-door-locked',
     lines: [
-      { speaker: 'system', text: { pl: 'PRZEJŚCIE DO ŻYŁY: bariera aktywna.', en: 'PASSAGE TO THE VEIN: barrier active.' }, mode: 'system', autoAdvance: 2200 },
+      { speaker: 'system', text: { pl: 'PRZEJŚCIE DO WĄWOZU SYNAPTITU: bariera aktywna.', en: 'PASSAGE TO THE SYNAPTIT RAVINE: barrier active.' }, mode: 'system', autoAdvance: 2200 },
       { speaker: 'CORE AI', text: { pl: 'Bariera trzyma się na zasilaniu z węzłów. Odetnij wszystkie trzy — w kolejności — a wtedy opadnie sama.', en: 'The barrier holds on power from the nodes. Isolate all three — in order — and it will drop on its own.' }, mode: 'dialogue' },
     ],
   },

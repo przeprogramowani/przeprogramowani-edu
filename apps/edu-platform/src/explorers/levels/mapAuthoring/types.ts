@@ -90,4 +90,13 @@ export const CELL_CHARS: Record<CellKind, string> = {
   DOOR: 'D',
 };
 
-export const ZONE_TYPES: readonly ZoneType[] = ['trigger', 'door', 'terminal', 'npc', 'exam', 'arcade', 'navigation'];
+export const ZONE_TYPES: readonly ZoneType[] = [
+  'trigger',
+  'door',
+  'terminal',
+  'npc',
+  'exam',
+  'arcade',
+  'navigation',
+  'label',
+];

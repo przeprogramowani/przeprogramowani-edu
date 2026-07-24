@@ -50,7 +50,7 @@ props:
   - { prop: energy-barrier, at: [17, 15], solid: true }
 zones:
   - id: vein-door
-    name: Return to the Vein
+    name: Return to the Synaptit Ravine
     type: door
     at: [0, 11]
     properties:

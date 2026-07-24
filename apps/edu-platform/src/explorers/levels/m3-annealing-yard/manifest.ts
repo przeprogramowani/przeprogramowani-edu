@@ -46,7 +46,7 @@ export const manifest: LevelManifest = {
   arcadeGames,
   introDialogue: 'm3-annealing-intro',
   introFlag: FLAGS.M3_ANNEALING_INTRO_SEEN,
-  introCinematicTitle: 'Księżyc 3 — Próba Ognia',
+  introCinematicTitle: 'Księżyc 3 — Uczciwa Próba',
   introCinematicSubtitle: 'Wyżarzalnia',
   conditionalIntros: [
     {

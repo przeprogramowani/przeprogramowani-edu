@@ -1,22 +1,17 @@
-# M3 L1 — Przedpole / The Apron
-# A survey clearing carved into the black-glass apron: molten lava on every side,
-# three finger-piers reaching out to the audit points (cooling tower NW, telemetry
-# mast NE, seismic anchor SE), the shuttle in a west landing bay, and the survey
-# camp under the main board. A sea of green readouts over a dead station.
 theme: 4
 grid: |
   ~~~######~~~~~~~~~~######~~~~~
   ~~~#....#~~~~~~~~~~#....#~~~~~
-  ~~~#....############....#~~~~~
-  ~~~####.##..........##.##~~~~~
-  ~~~~~~#.##..........##.#~~~~~~
-  #######................#~~~~~~
+  ~~~#....#~~~~#######....#~~~~~
+  ~~~####.#~~~~#......##.##~~~~~
+  ~~~~~~#.#~~~~#......##.#~~~~~~
+  #######.######.........#~~~~~~
   #......................#######
   #............................D
-  #............................#
-  #......................#######
-  #######................#~~~~~~
-  ~~~~~~##############.###~~~~~~
+  #..........###...............#
+  #########..#~#.........#######
+  ~~~~~~~~#..#~#.........#~~~~~~
+  ~~~~~~~~####~#######.###~~~~~~
   ~~~~~~~~~~~~~~~~~###.###~~~~~~
   ~~~~~~~~~~~~~~~~~#.....#~~~~~~
   ~~~~~~~~~~~~~~~~~#.....#~~~~~~
@@ -29,10 +24,17 @@ props:
   - { id: camp-terminal, prop: survey-lander, at: [13, 6], solid: true }
   - { prop: magma-crystals, at: [20, 6], solid: false }
   - { id: ship-teleport, prop: ship-teleport, at: [2, 7], solid: true }
-  - { prop: magma-crystals, at: [9, 8], solid: false }
   - { prop: lava-geyser, at: [18, 9], solid: true }
-  - { prop: magma-crystals, at: [16, 10], solid: false }
   - { id: audit-anchor, prop: magma-crystals, at: [20, 14], solid: true }
+  - { prop: magma-crystals, at: [10, 10], solid: true }
+  - { prop: magma-crystals, at: [9, 10], solid: true }
+  - { prop: magma-crystals, at: [14, 10], solid: true }
+  - { prop: magma-crystals, at: [22, 10], solid: true }
+  - { prop: magma-crystals, at: [20, 1], solid: true }
+  - { prop: lava-geyser, at: [17, 4], solid: true }
+  - { prop: lava-geyser, at: [7, 8], solid: true }
+  - { prop: lava-geyser, at: [26, 7], solid: true }
+  - { prop: lava-geyser, at: [4, 6], solid: true }
 zones:
   - id: ship-teleport
     name: Landed Shuttle
@@ -54,7 +56,7 @@ zones:
   - id: camp-module
     name: Survey Camp Module
     type: trigger
-    propId: camp-module
+    at: [11, 6]
   - id: main-board
     name: Station Main Board
     type: trigger

@@ -20,7 +20,7 @@ export interface TileLayer {
 export interface ZoneObject {
   id: number;
   name: string;
-  type: 'trigger' | 'door' | 'terminal' | 'npc' | 'exam' | 'arcade' | 'navigation';
+  type: 'trigger' | 'door' | 'terminal' | 'npc' | 'exam' | 'arcade' | 'navigation' | 'label';
   x: number;
   y: number;
   width: number;
@@ -83,4 +83,5 @@ export const ZONE_COLORS: Record<ZoneObject['type'], string> = {
   exam: '#a78bfa', // violet
   arcade: '#e67e22', // orange
   navigation: '#3b82f6', // blue
+  label: '#94a3b8', // slate
 };

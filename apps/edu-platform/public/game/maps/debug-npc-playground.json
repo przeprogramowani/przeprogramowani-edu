@@ -2439,7 +2439,7 @@
               "value": "scene.debugNpcOriginal"
             }
           ],
-          "type": "trigger",
+          "type": "label",
           "visible": true,
           "width": 640,
           "x": 64,
@@ -2461,7 +2461,7 @@
               "value": "scene.debugNpcBlueTint"
             }
           ],
-          "type": "trigger",
+          "type": "label",
           "visible": true,
           "width": 640,
           "x": 832,
@@ -2483,7 +2483,7 @@
               "value": "scene.debugNpcGreenTint"
             }
           ],
-          "type": "trigger",
+          "type": "label",
           "visible": true,
           "width": 640,
           "x": 1600,
@@ -2505,7 +2505,7 @@
               "value": "scene.debugNpcMagentaTint"
             }
           ],
-          "type": "trigger",
+          "type": "label",
           "visible": true,
           "width": 640,
           "x": 64,
@@ -2527,7 +2527,7 @@
               "value": "scene.debugNpcAdd"
             }
           ],
-          "type": "trigger",
+          "type": "label",
           "visible": true,
           "width": 640,
           "x": 832,
@@ -2549,7 +2549,7 @@
               "value": "scene.debugNpcScreen"
             }
           ],
-          "type": "trigger",
+          "type": "label",
           "visible": true,
           "width": 640,
           "x": 1600,

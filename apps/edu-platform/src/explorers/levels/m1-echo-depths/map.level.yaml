@@ -74,7 +74,7 @@ zones:
       npcVariant: jungle-dark-green
       requiredFlags: m1-sensors-online
   - id: vein-door
-    name: Route to the Vein
+    name: Route to the Synaptit Ravine
     type: door
     at: [21, 6]
     properties:

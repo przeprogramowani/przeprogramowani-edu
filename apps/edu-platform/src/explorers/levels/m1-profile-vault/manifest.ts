@@ -7,7 +7,7 @@ import { arcadeGames } from './games';
 
 export const manifest: LevelManifest = {
   id: 'm1-profile-vault',
-  displayName: { pl: 'Żyła', en: 'The Vein' },
+  displayName: { pl: 'Wąwóz Synaptitu', en: 'The Synaptit Ravine' },
   dialogues,
   interactionRoutes: [
     {
@@ -54,13 +54,13 @@ export const manifest: LevelManifest = {
   introDialogue: 'm1-vein-intro',
   introFlag: FLAGS.M1_VEIN_INTRO_SEEN,
   introCinematicTitle: 'Księżyc 1 — Dżungla',
-  introCinematicSubtitle: 'Żyła',
+  introCinematicSubtitle: 'Wąwóz Synaptitu',
   conditionalIntros: [
     {
       dialogue: 'm1-return-vein',
       flag: FLAGS.M1_RETURN_VEIN_SEEN,
       requiredFlags: [FLAGS.M1_SENSORS_ONLINE],
-      cinematicTitle: 'Powrót — Żyła',
+      cinematicTitle: 'Powrót — Wąwóz Synaptitu',
     },
   ],
 };

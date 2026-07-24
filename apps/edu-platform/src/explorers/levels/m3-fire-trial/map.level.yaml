@@ -1,28 +1,20 @@
-# M3 L3 — Próba Ognia / The Fire Trial
-# A formal test range under open sky: a north control gallery overlooks three test
-# bays set in a dead-straight row, each a stand planted over a lava nozzle. Under
-# stand 3 the trench splits open on the moon's first exposed Synaptit vein. Everything
-# here is square, ordered, symmetric — the range that passed every trial and checked nothing.
 theme: 4
 grid: |
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~~~~~~~~~~##########~~~~~~~~~~
-  ~~~~~~~~~~#........#~~~~~~~~~~
-  ~~~~~~~~~~#........#~~~~~~~~~~
-  ###########........###########
-  #............................#
-  D............................D
-  #............................#
-  #####....####....####....#####
-  ~~~~#....#~~#....#~~#....#~~~~
-  ~~~~#....#~~#....#~~#....#~~~~
-  ~~~~######~~######~~######~~~~
+  ~~~~~~~~####################~~
+  ~~~~~~~##..................##~
+  ~~~~~~##......############..#~
+  ~~~~~~#..######~~~~~~~~~##.##~
+  ~~~~~~#.##~~~~~~#######~#..###
+  #######.#~~~#####.....#~#....#
+  #.......#~~~#.........###....#
+  D....####~##.................D
+  #...##~~~~#.......###........#
+  ###########......##~#....#####
+  ~~~~~#...........#~~#....#~~~~
+  ~~~~~#...####....#~~#....#~~~~
+  ~~~~~#####~~######~~######~~~~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 props:
-  - { id: trial-control, prop: survey-lander, at: [13, 4], solid: true }
-  - { id: trial-terminal, prop: survey-lander, at: [16, 4], solid: true }
-  - { prop: magma-crystals, at: [11, 6], solid: false }
   - { prop: magma-crystals, at: [18, 6], solid: false }
   - { id: geyser-1, prop: lava-geyser, at: [6, 10], solid: true }
   - { id: geyser-2, prop: lava-geyser, at: [14, 10], solid: true }
@@ -30,6 +22,13 @@ props:
   - { prop: magma-crystals, at: [7, 11], solid: false }
   - { prop: magma-crystals, at: [15, 11], solid: false }
   - { id: ore-vein, prop: synaptit-ore, at: [23, 11], solid: true }
+  - { prop: satellite-dish, at: [17, 5], solid: true }
+  - { prop: survey-lander, at: [19, 5], solid: true }
+  - { prop: lava-geyser, at: [28, 5], solid: true }
+  - { prop: magma-crystals, at: [28, 8], solid: true }
+  - { prop: lava-geyser, at: [13, 6], solid: true }
+  - { prop: lava-geyser, at: [13, 2], solid: true }
+  - { prop: magma-crystals, at: [27, 2], solid: true }
 zones:
   - id: boneyard-door
     name: Return to the Boneyard
@@ -51,7 +50,7 @@ zones:
   - id: trial-control
     name: Trial Control Module
     type: trigger
-    propId: trial-control
+    at: [19, 5]
   - id: stand-1
     name: Test Stand 1
     type: trigger
@@ -78,6 +77,6 @@ zones:
   - id: exam-protocol-13
     name: Expedition Protocol Terminal XIII
     type: exam
-    propId: trial-terminal
+    at: [17, 5]
     properties:
       examId: m3-exam-protocol-13

@@ -39,6 +39,6 @@ export const manifest: LevelManifest = {
   examCompletionDialogues: { 'm3-exam-protocol-15': 'm3-exam-protocol-15-done' },
   introDialogue: 'm3-assay-intro',
   introFlag: FLAGS.M3_ASSAY_INTRO_SEEN,
-  introCinematicTitle: 'Księżyc 3 — Próba Ognia',
+  introCinematicTitle: 'Księżyc 3 — Uczciwa Próba',
   introCinematicSubtitle: 'Izba Probiercza',
 };

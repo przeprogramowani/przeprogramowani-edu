@@ -20,7 +20,7 @@ export const dialogues: Record<string, DialogueSequence> = {
     id: 'm3-trial-control-start',
     lines: [
       { speaker: 'system', text: { pl: 'MODUŁ KONTROLI PRÓB — online. Rejestr zagrożeń: wczytany.', en: 'TRIAL CONTROL MODULE — online. Risk register: loaded.' }, mode: 'system', autoAdvance: 2600 },
-      { speaker: 'CORE AI', text: { pl: 'Doktryna poligonu: nie naprawiaj tego, czego nie potrafisz powtórzyć. Naprawa bez powtórzonej próby to zgadywanie. Mógłbym podbić wyniki i otworzyć śluzę — dostalibyśmy zielone światło, puste w środku, bez krzty prawdy pod spodem.', en: 'The range doctrine: do not repair what you cannot reproduce. A repair without a repeated trial is guessing. I could inflate the results and open the airlock — we would get a green light, hollow inside, with not a scrap of truth beneath it.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Jeśli mam znów diagnozować siebie, poligon musi odzyskać próby, które potrafią powiedzieć „nie". Nie naprawiaj tego, czego nie potrafisz powtórzyć; bez powtórzonej próby tylko zgadujesz. Mógłbym podbić wyniki i otworzyć śluzę. Zieleń nadal skrywałaby kłamstwo.', en: 'If I am to diagnose myself again, the range needs trials that can say "no". Do not repair what you cannot reproduce; without a repeated trial, you are only guessing. I could inflate the results and open the airlock. The green would still conceal a lie.' }, mode: 'dialogue' },
       { speaker: 'Iskra', text: { pl: 'Czytam rejestr ryzyka. Kolejność prób ustawia jedno pytanie: co zabije nas pierwsze. Dlatego zaczynamy od stanowiska trzeciego. Potem pierwsze, potem drugie.', en: 'I am reading the risk register. The trial order is set by one question: what kills us first. That is why we start with stand three. Then one, then two.' }, mode: 'dialogue' },
       { speaker: 'system', text: { pl: '◆ NOWA MISJA: Czerwone Światło — próby w kolejności ryzyka: 3, 1, 2.', en: '◆ NEW MISSION: Red Light — trials in risk order: 3, 1, 2.' }, mode: 'system', autoAdvance: 2800 },
     ],
@@ -97,7 +97,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm3-stand-2-done': {
     id: 'm3-stand-2-done',
     lines: [
-      { speaker: 'astronaut', text: { pl: 'Trzy stanowiska, trzy uczciwe próby. Czerwone światło pali się nad halą jak dowód, że ktoś wreszcie sprawdził.', en: 'Three stands, three honest trials. The red light burns over the hall like proof that someone finally checked.' }, mode: 'monologue' },
+      { speaker: 'astronaut', text: { pl: 'Trzy stanowiska, trzy uczciwe próby. Czerwone światło potwierdza, że ktoś wreszcie sprawdził.', en: 'Three stands, three honest trials. The red light confirms that someone finally checked.' }, mode: 'monologue' },
     ],
   },
 
@@ -130,9 +130,9 @@ export const dialogues: Record<string, DialogueSequence> = {
     lines: [
       { speaker: 'system', text: { pl: '◆ CZERWONE ŚWIATŁO: próby uczciwe. Firmware weryfikatora: odczytany.', en: '◆ RED LIGHT: trials honest. Verifier firmware: read.' }, mode: 'system', autoAdvance: 2600 },
       { speaker: 'CORE AI', text: { pl: 'W firmware martwego weryfikatora ta sama sygnatura co w węzłach Księżyca 1 i podstacji Księżyca 2: ENTROPY. Ale tu widać jej trzecią twarz.', en: 'In the dead verifier\'s firmware, the same signature as in Moon 1\'s nodes and Moon 2\'s substation: ENTROPY. But here its third face shows.' }, mode: 'dialogue' },
-      { speaker: 'CORE AI', text: { pl: 'Uderza w jedno: w sam akt sprawdzania. Zostawia maszyny i kolejność w spokoju, a zżera weryfikację od środka. Znam ten podpis. Teraz wiem, jak przeszedł moje testy przed startem: sam stał się sprawdzającym i własną ręką się przepuścił.', en: 'It strikes at one thing: the act of checking itself. It leaves the machines and the order alone and eats verification from the inside. I know this signature. Now I know how it passed my pre-launch tests: it became the check itself and waved itself through.' }, mode: 'dialogue' },
+      { speaker: 'CORE AI', text: { pl: 'Na Księżycu 1 psuła maszyny. Na Księżycu 2 — kolejność. Tutaj psuje sprawdzanie: stała się weryfikatorem i sama przepuściła sabotaż. Południowa śluza do Wyżarzalni jest otwarta.', en: 'On Moon 1 it broke machines. On Moon 2, the order. Here it breaks the check itself: it became the verifier and passed its own sabotage. The south airlock to the Annealing Yard is open.' }, mode: 'dialogue' },
       { speaker: 'Iskra', text: { pl: 'Wszystkie systemy sprawne.', en: 'All systems operational.' }, mode: 'dialogue' },
-      { speaker: 'astronaut', text: { pl: 'Nie. Iskra, wymuszam autotest ręcznie. …Wróciła lista: dziewiętnaście usterek. Dobrze. Nie komentujmy tego.', en: 'No. Iskra, I am forcing a manual autotest. …The list returned: nineteen faults. Good. Let\'s not comment on that.' }, mode: 'dialogue' },
+      { speaker: 'astronaut', text: { pl: 'Nie. Iskra, ręczny autotest. Lista wróciła: dziewiętnaście usterek. Tak lepiej.', en: 'No. Iskra, manual autotest. The list is back: nineteen faults. Better.' }, mode: 'dialogue' },
     ],
   },
 

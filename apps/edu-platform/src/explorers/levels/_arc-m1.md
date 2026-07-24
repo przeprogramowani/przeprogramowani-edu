@@ -166,7 +166,7 @@ m0-core-ai.
   kolejne księżyce, zdyscyplinowany podobnie jak zadrapania z m0: echo, nie
   wyjaśnienie.
 
-### m1 · Poziom 4 — „Żyła" / The Vein
+### m1 · Poziom 4 — „Wąwóz Synaptitu" / The Synaptit Ravine
 
 - **Rozwój fabuły (big picture):** Misja materiałowa po raz pierwszy kończy się
   sukcesem na ekranie (wątek: *złoże Synaptitu znalezione i wydobyte* — m5 Beat 5

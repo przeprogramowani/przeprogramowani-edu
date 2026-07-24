@@ -68,7 +68,7 @@ export const FLAGS = {
   M1_NODE_EAST_ISOLATED: 'm1-node-east-isolated',
   M1_SILENCE_DONE: 'm1-silence-done',
   M1_ENTROPY_NAMED: 'm1-entropy-named',
-  // l4 — Pierwsza Żyła (The Vein)
+  // l4 — Wąwóz Synaptitu (The Synaptit Ravine)
   M1_VEIN_ACTIVE: 'm1-vein-active',
   M1_RIG_POWERED: 'm1-rig-powered',
   M1_DEEP_SCAN_DONE: 'm1-deep-scan-done',

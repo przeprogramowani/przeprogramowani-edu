@@ -25,32 +25,32 @@ grid: |
 props: []
 zones:
   - id: debug-label-original
-    type: trigger
+    type: label
     at: [1, 7]
     size: [10, 1]
     properties: { displayLabelKey: scene.debugNpcOriginal }
   - id: debug-label-blue
-    type: trigger
+    type: label
     at: [13, 7]
     size: [10, 1]
     properties: { displayLabelKey: scene.debugNpcBlueTint }
   - id: debug-label-green
-    type: trigger
+    type: label
     at: [25, 7]
     size: [10, 1]
     properties: { displayLabelKey: scene.debugNpcGreenTint }
   - id: debug-label-magenta
-    type: trigger
+    type: label
     at: [1, 14]
     size: [10, 1]
     properties: { displayLabelKey: scene.debugNpcMagentaTint }
   - id: debug-label-add
-    type: trigger
+    type: label
     at: [13, 14]
     size: [10, 1]
     properties: { displayLabelKey: scene.debugNpcAdd }
   - id: debug-label-screen
-    type: trigger
+    type: label
     at: [25, 14]
     size: [10, 1]
     properties: { displayLabelKey: scene.debugNpcScreen }

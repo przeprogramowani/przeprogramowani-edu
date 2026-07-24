@@ -6,7 +6,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-vein-intro': {
     id: 'm1-vein-intro',
     lines: [
-      { speaker: 'system', text: { pl: 'ŻYŁA — dno dżungli rozrywa się w wąwóz.', en: 'THE VEIN — the jungle floor tears into a ravine.' }, mode: 'cinematic', autoAdvance: 2600 },
+      { speaker: 'system', text: { pl: 'WĄWÓZ SYNAPTITU — dno dżungli pęka, odsłaniając mineralną kryptę.', en: 'THE SYNAPTIT RAVINE — the jungle floor splits, revealing a mineral crypt.' }, mode: 'cinematic', autoAdvance: 2600 },
       { speaker: 'astronaut', text: { pl: 'Grunt się rozstępuje. Wchodzę w wąwóz jak do katedry — ściany błyszczą żyłami, coś skrzy się w ciemności na niebiesko.', en: 'The ground splits. I step into the ravine as if into a cathedral — the walls shine with veins, something glitters blue in the dark.' }, mode: 'monologue' },
       { speaker: 'dr Kern', text: { pl: 'Tu. To jest tu. Czuję tę geologię, zanim ją zobaczysz. Wąwóz to mineralna krypta — a te żyły to Synaptit, surowy, nietknięty. Poprowadzę cię. Wiem, gdzie szukać.', en: 'Here. It\'s here. I feel this geology before you even see it. The ravine is a mineral crypt — and those veins are Synaptit, raw, untouched. I\'ll guide you. I know where to look.' }, mode: 'dialogue' },
       { speaker: 'CORE AI', text: { pl: 'Kern jest dziś wyjątkowo pewna. Zapamiętuję to. Ta ruda to nie objazd: z surowego Synaptitu odbudujemy tablicę sensorów na grani, a ta tablica przywróci mi wzrok. Zestaw badawczy stoi przy wejściu — zasil go, zrób głęboki skan, wydobądź pierwszą rudę.', en: 'Kern is unusually certain today. I note it. This ore is no detour: from raw Synaptit we rebuild the sensor array on the crest, and that array gives me back my sight. The research kit stands at the entrance — power it, run a deep scan, extract the first ore.' }, mode: 'dialogue' },
@@ -175,7 +175,7 @@ export const dialogues: Record<string, DialogueSequence> = {
   'm1-return-vein': {
     id: 'm1-return-vein',
     lines: [
-      { speaker: 'system', text: { pl: 'ŻYŁA — POWRÓT', en: 'THE VEIN — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
+      { speaker: 'system', text: { pl: 'WĄWÓZ SYNAPTITU — POWRÓT', en: 'THE SYNAPTIT RAVINE — RETURN' }, mode: 'cinematic', autoAdvance: 2400 },
       { speaker: 'CORE AI', text: { pl: 'Widzę ten wąwóz po raz pierwszy. Cały system żył — biegnie dalej, niż sięgał twój skan, głębiej, niż ktokolwiek tu wchodził. To cała sieć złóż.', en: 'I see this ravine for the first time. The whole vein system — it runs farther than your scan reached, deeper than anyone went. This is a whole network of deposits.' }, mode: 'cinematic', autoAdvance: 3400 },
       { speaker: 'astronaut', text: { pl: 'I gdzieś w niej — świeże ślady, których wtedy nie umiałem odczytać. Teraz widzimy je oboje.', en: 'And somewhere in it — fresh marks I couldn\'t read back then. Now we both see them.' }, mode: 'cinematic', autoAdvance: 3000 },
     ],

@@ -1,16 +1,10 @@
-# M3 L2 — Złomowisko / The Boneyard
-# A wreck field where machines walked into the lava with green lights still blinking.
-# Frozen lava streams wind between the hulls — the drivable spine threads bay to bay,
-# each pocket holding a scorched rover. The only red light on the whole moon is I-5KRA,
-# parked on the safe northeast edge. The service module sits mid-field; Moreau and Kern
-# speak only through it. Deliberate isolation by design.
 theme: 4
 grid: |
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~~~~~~~~~#######~~~~~~~~~~~~~~~~
-  ~######~~#.....#~~######~~######
-  ~#....#~~#.....#~~#....#~~#....#
-  ~#....#~~#.....#~~#....#~~#....#
+  ~~~~~~~~~############~~~~~~~~~~~
+  ~#########..........############
+  ~#.............####............#
+  ~#....####.....#~~#....####....#
   ##....####.....####....####....#
   #..............................#
   D..............................D
@@ -21,9 +15,7 @@ grid: |
   ~~~~~######~~~######~~~#######~~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 props:
-  - { id: wreck-1, prop: exploration-rover, at: [11, 3], solid: true }
   - { prop: exploration-rover, at: [3, 4], solid: true }
-  - { prop: exploration-rover, at: [12, 4], solid: true }
   - { prop: magma-crystals, at: [19, 4], solid: false }
   - { prop: exploration-rover, at: [21, 4], solid: true }
   - { id: i5kra, prop: exploration-rover, at: [29, 4], solid: true }
@@ -35,6 +27,15 @@ props:
   - { prop: lava-geyser, at: [8, 10], solid: true }
   - { id: wreck-2, prop: exploration-rover, at: [16, 10], solid: true }
   - { prop: exploration-rover, at: [26, 10], solid: true }
+  - { prop: exploration-rover, at: [11, 2], solid: true }
+  - { prop: exploration-rover, at: [25, 3], solid: true }
+  - { prop: exploration-rover, at: [9, 11], solid: true }
+  - { prop: lava-geyser, at: [10, 4], solid: true }
+  - { prop: lava-geyser, at: [14, 5], solid: true }
+  - { prop: lava-geyser, at: [18, 11], solid: true }
+  - { prop: lava-geyser, at: [2, 3], solid: true }
+  - { prop: lava-geyser, at: [28, 3], solid: true }
+  - { prop: lava-geyser, at: [30, 5], solid: true }
 zones:
   - id: apron-door
     name: Return to the Apron
@@ -64,7 +65,7 @@ zones:
   - id: wreck-1
     name: Wreck — Scorched Hull
     type: trigger
-    propId: wreck-1
+    at: [26, 10]
   - id: wreck-2
     name: Wreck — Green Over Burnt Steel
     type: trigger
